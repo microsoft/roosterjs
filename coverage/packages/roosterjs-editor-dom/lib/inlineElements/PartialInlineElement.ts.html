@@ -197,9 +197,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">129x</span>
-<span class="cline-any cline-yes">156x</span>
-<span class="cline-any cline-yes">167x</span>
+<span class="cline-any cline-yes">121x</span>
+<span class="cline-any cline-yes">144x</span>
+<span class="cline-any cline-yes">155x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -213,7 +213,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">68x</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -227,23 +227,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">116x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">108x</span>
+<span class="cline-any cline-yes">111x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">103x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -257,7 +257,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -273,16 +273,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -351,7 +351,7 @@ export default class PartialInlineElement implements InlineElement {
      * Gets the text content
      */
     public getTextContent(): string {
-        let range = createRange(this.getStartPosition(), this.getEndPosition());
+        const range = createRange(this.getStartPosition(), this.getEndPosition());
 &nbsp;
         return range.toString();
     }
@@ -404,8 +404,8 @@ export default class PartialInlineElement implements InlineElement {
      * Check if this inline element is after the other inline element
      */
     public isAfter(inlineElement: InlineElement): boolean {
-        let thisStart = this.getStartPosition();
-        let otherEnd = inlineElement &amp;&amp; inlineElement.getEndPosition();
+        const thisStart = this.getStartPosition();
+        const otherEnd = inlineElement &amp;&amp; inlineElement.getEndPosition();
         return otherEnd &amp;&amp; (thisStart.isAfter(otherEnd) || thisStart.equalTo(otherEnd));
     }
 &nbsp;
@@ -415,14 +415,14 @@ export default class PartialInlineElement implements InlineElement {
     public applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) =&gt; any) {
         let from: NodePosition | null = this.getStartPosition().normalize();
         let to: NodePosition | null = this.getEndPosition().normalize();
-        let container = this.getContainerNode();
+        const container = this.getContainerNode();
 &nbsp;
         <span class="missing-if-branch" title="if path not taken" >I</span>if (from.isAtEnd) {
-            let nextNode = <span class="cstat-no" title="statement not covered" >getNextLeafSibling(container, from.node);</span>
+            const nextNode = <span class="cstat-no" title="statement not covered" >getNextLeafSibling(container, from.node);</span>
 <span class="cstat-no" title="statement not covered" >            from = nextNode ? new Position(nextNode, PositionType.Begin) : null;</span>
         }
         <span class="missing-if-branch" title="if path not taken" >I</span>if (to.offset == 0) {
-            let previousNode = <span class="cstat-no" title="statement not covered" >getPreviousLeafSibling(container, to.node);</span>
+            const previousNode = <span class="cstat-no" title="statement not covered" >getPreviousLeafSibling(container, to.node);</span>
 <span class="cstat-no" title="statement not covered" >            to = previousNode ? new Position(previousNode, PositionType.End) : null;</span>
         }
 &nbsp;
@@ -436,7 +436,7 @@ export default class PartialInlineElement implements InlineElement {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Oct 12 2023 16:05:58 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 12 2023 16:38:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

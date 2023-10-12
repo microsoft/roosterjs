@@ -120,7 +120,9 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -150,8 +152,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1542x</span>
-<span class="cline-any cline-yes">1542x</span>
+<span class="cline-any cline-yes">1314x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1314x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -160,28 +164,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">952x</span>
-<span class="cline-any cline-yes">952x</span>
-<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-yes">787x</span>
+<span class="cline-any cline-yes">787x</span>
+<span class="cline-any cline-yes">787x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">870x</span>
+<span class="cline-any cline-yes">601x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">952x</span>
-<span class="cline-any cline-yes">1783x</span>
-<span class="cline-any cline-yes">1783x</span>
-<span class="cline-any cline-yes">1783x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">1751x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">787x</span>
+<span class="cline-any cline-yes">1376x</span>
+<span class="cline-any cline-yes">1376x</span>
+<span class="cline-any cline-yes">1376x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">1362x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-yes">787x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getTagOfNode from '../utils/getTagOfNode';
@@ -213,7 +217,9 @@ export default function getInlineElementAtNode(
     node: Node | null
 ): InlineElement | null {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
-    let parentBlock = safeInstanceOf(parent, 'Node') ? getBlockElementAtNode(parent, node) : parent;
+    const parentBlock = safeInstanceOf(parent, 'Node')
+        ? getBlockElementAtNode(parent, node)
+        : parent;
     return node &amp;&amp; parentBlock &amp;&amp; resolveInlineElement(node, parentBlock);
 }
 &nbsp;
@@ -223,7 +229,7 @@ export default function getInlineElementAtNode(
  * @param parentBlock The parent block element
  */
 function resolveInlineElement(node: Node, parentBlock: BlockElement): InlineElement {
-    let nodeChain = [node];
+    const nodeChain = [node];
     for (
         let parent = node.parentNode;
         parent &amp;&amp; parentBlock.contains(parent);
@@ -235,8 +241,8 @@ function resolveInlineElement(node: Node, parentBlock: BlockElement): InlineElem
     let inlineElement: InlineElement | undefined;
 &nbsp;
     for (let i = nodeChain.length - 1; i &gt;= 0 &amp;&amp; !inlineElement; i--) {
-        let currentNode = nodeChain[i];
-        let tag = getTagOfNode(currentNode);
+        const currentNode = nodeChain[i];
+        const tag = getTagOfNode(currentNode);
         if (tag == 'A') {
             inlineElement = new LinkInlineElement(currentNode, parentBlock);
         } else if (tag == 'IMG') {
@@ -253,7 +259,7 @@ function resolveInlineElement(node: Node, parentBlock: BlockElement): InlineElem
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Oct 12 2023 16:05:58 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 12 2023 16:38:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

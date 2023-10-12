@@ -575,12 +575,12 @@ const TabInTable: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =&gt;
         cacheGetTableCell(event, editor) &amp;&amp; !cacheIsWholeTableSelected(event, editor),
     handleEvent: (event, editor) =&gt; {
-        let shift = event.rawEvent.shiftKey;
-        let td = cacheGetTableCell(event, editor);
+        const shift = event.rawEvent.shiftKey;
+        const td = cacheGetTableCell(event, editor);
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!td) {
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
-        let vtable = cacheVTable(event, td);
+        const vtable = cacheVTable(event, td);
 &nbsp;
         for (
             let step = shift ? -1 : 1, row = vtable.row ?? <span class="branch-1 cbranch-no" title="branch not covered" >0,</span> col = (vtable.col ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span> + step;
@@ -599,7 +599,7 @@ const TabInTable: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
                 }
                 col = shift ? tableCells[row].length - 1 : 0;
             }
-            let cell = vtable.getCell(row, col);
+            const cell = vtable.getCell(row, col);
             <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td) {
                 const newPos = new Position(cell.td, PositionType.Begin).normalize();
                 editor.select(newPos);
@@ -621,13 +621,13 @@ const IndentTableOnTab: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
         event.rawEvent.preventDefault();
 &nbsp;
         editor.addUndoSnapshot(() =&gt; {
-            let shift = event.rawEvent.shiftKey;
-            let selection = editor.getSelectionRangeEx() as TableSelectionRange;
-            let td = cacheGetTableCell(event, editor);
+            const shift = event.rawEvent.shiftKey;
+            const selection = editor.getSelectionRangeEx() as TableSelectionRange;
+            const td = cacheGetTableCell(event, editor);
             <span class="missing-if-branch" title="if path not taken" >I</span>if (!td) {
 <span class="cstat-no" title="statement not covered" >                return;</span>
             }
-            let vtable = cacheVTable(event, td);
+            const vtable = cacheVTable(event, td);
 &nbsp;
             if (shift &amp;&amp; editor.getElementAtCursor('blockquote', vtable.table, event)) {
                 setIndentation(editor, Indentation.Decrease);
@@ -663,14 +663,14 @@ const UpDownInTable: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
         let targetTd: HTMLTableCellElement | null = null;
 &nbsp;
         <span class="missing-if-branch" title="else path not taken" >E</span>if (selection) {
-            let { anchorNode, anchorOffset } = selection;
+            const { anchorNode, anchorOffset } = selection;
 &nbsp;
             for (
                 let row = vtable.row ?? <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
                 row &gt;= 0 &amp;&amp; vtable.cells &amp;&amp; row &lt; vtable.cells.length;
                 row += step
             ) {
-                let cell = vtable.getCell(row, vtable.col ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span>;
+                const cell = vtable.getCell(row, vtable.col ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span>;
                 if (cell.td &amp;&amp; cell.td != td) {
                     targetTd = cell.td;
                     break;
@@ -678,7 +678,7 @@ const UpDownInTable: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
             }
 &nbsp;
             editor.runAsync(editor =&gt; {
-                let newContainer = editor.getElementAtCursor();
+                const newContainer = editor.getElementAtCursor();
                 if (
                     contains(vtable.table, newContainer) &amp;&amp;
                     !contains(td, newContainer, true /*treatSameNodeAsContain*/)
@@ -738,8 +738,8 @@ const DeleteTableWithBackspace: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = 
 &nbsp;
 function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement | null {
     return cacheGetEventData(event, 'TABLE_CELL_FOR_TABLE_FEATURES', () =&gt; {
-        let pos = editor.getFocusedPosition();
-        let firstTd = pos &amp;&amp; editor.getElementAtCursor('TD,TH,LI', pos.node);
+        const pos = editor.getFocusedPosition();
+        const firstTd = pos &amp;&amp; editor.getElementAtCursor('TD,TH,LI', pos.node);
         return (
             firstTd &amp;&amp; (getTagOfNode(firstTd) == 'LI' ? <span class="branch-0 cbranch-no" title="branch not covered" >null </span>: (firstTd as HTMLTableCellElement))
         );
@@ -752,8 +752,8 @@ function cacheIsWholeTableSelected(event: PluginEvent, editor: IEditor) {
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!td) {
 <span class="cstat-no" title="statement not covered" >            return false;</span>
         }
-        let vtable = cacheVTable(event, td);
-        let selection = editor.getSelectionRangeEx();
+        const vtable = cacheVTable(event, td);
+        const selection = editor.getSelectionRangeEx();
         return (
             selection.type == SelectionRangeTypes.TableSelection &amp;&amp;
             selection.coordinates &amp;&amp;
@@ -787,7 +787,7 @@ export const TableFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Oct 12 2023 16:05:58 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 12 2023 16:38:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../prettify.js"></script>

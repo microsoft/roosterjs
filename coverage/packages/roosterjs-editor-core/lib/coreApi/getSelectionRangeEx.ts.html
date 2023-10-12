@@ -169,8 +169,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">6451x</span>
-<span class="cline-any cline-yes">6451x</span>
+<span class="cline-any cline-yes">6036x</span>
+<span class="cline-any cline-yes">6036x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -220,36 +220,25 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6449x</span>
-<span class="cline-any cline-yes">1101x</span>
+<span class="cline-any cline-yes">6034x</span>
+<span class="cline-any cline-yes">836x</span>
 <span class="cline-any cline-yes">105x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">996x</span>
+<span class="cline-any cline-yes">731x</span>
 <span class="cline-any cline-yes">29x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">967x</span>
-<span class="cline-any cline-yes">967x</span>
-<span class="cline-any cline-yes">967x</span>
-<span class="cline-any cline-yes">967x</span>
-<span class="cline-any cline-yes">967x</span>
+<span class="cline-any cline-yes">702x</span>
+<span class="cline-any cline-yes">702x</span>
+<span class="cline-any cline-yes">702x</span>
+<span class="cline-any cline-yes">702x</span>
+<span class="cline-any cline-yes">702x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5348x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6315x</span>
+<span class="cline-any cline-yes">5198x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -257,7 +246,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6316x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5872x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5873x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { contains, createRange, findClosestElementAncestor } from 'roosterjs-editor-dom';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
@@ -270,7 +270,7 @@ import type { EditorCore, GetSelectionRangeEx, SelectionRangeEx } from 'roosterj
  * @returns A Range object of the selection range
  */
 export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) =&gt; {
-    let result: SelectionRangeEx | null = null;
+    const result: SelectionRangeEx | null = null;
     if (core.lifecycle.shadowEditFragment) {
         const {
             shadowEditTableSelectionPath,
@@ -330,9 +330,9 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) =&gt;
                 return core.domEvent.imageSelectionRange;
             }
 &nbsp;
-            let selection = core.contentDiv.ownerDocument.defaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSelection();
+            const selection = core.contentDiv.ownerDocument.defaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSelection();
             <span class="missing-if-branch" title="else path not taken" >E</span>if (!result &amp;&amp; selection &amp;&amp; selection.rangeCount &gt; 0) {
-                let range = selection.getRangeAt(0);
+                const range = selection.getRangeAt(0);
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (contains(core.contentDiv, range)) {
                     return createNormalSelectionEx([range]);
                 }
@@ -367,7 +367,7 @@ function checkAllCollapsed(ranges: Range[]): boolean {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Oct 12 2023 16:05:58 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 12 2023 16:38:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

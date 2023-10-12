@@ -1381,7 +1381,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
 <span class="cstat-no" title="statement not covered" >                        wordToReplace = this.getWord(null);</span>
                     }
 &nbsp;
-                    let insertNode = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
+                    const insertNode = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >                        if (wordToReplace &amp;&amp; this.editor) {</span>
 <span class="cstat-no" title="statement not covered" >                            replaceWithNode(</span>
                                 this.editor,
@@ -1456,7 +1456,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
 &nbsp;
                     // Undo and other major changes to document content fire this type of event.
                     // Inform the data provider of the current picker placed elements in the body.
-                    let elementIds: string[] = [];
+                    const elementIds: string[] = [];
                     this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.q</span>ueryElements(
                         "[id^='" + this.pickerOptions.elementIdPrefix + "']",
 <span class="fstat-no" title="function not covered" >                        element </span>=&gt; {
@@ -1544,7 +1544,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
     }
 &nbsp;
     private getWordBeforeCursor(event: PluginKeyboardEvent | null): string | null {
-        let searcher = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etContentSearcherOfCursor(event);
+        const searcher = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etContentSearcherOfCursor(event);
         return searcher ? searcher.getWordBefore() : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
     }
 &nbsp;
@@ -1558,12 +1558,12 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
     }
 &nbsp;
     private getRangeUntilAt(event: PluginKeyboardEvent | null): Range | null {
-        let positionContentSearcher = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etContentSearcherOfCursor(event);
+        const positionContentSearcher = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etContentSearcherOfCursor(event);
         let startPos: NodePosition | undefined = undefined;
         let endPos: NodePosition | undefined = undefined;
         positionContentSearcher<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>orEachTextInlineElement(textInline =&gt; {
             let hasMatched = false;
-            let nodeContent = textInline.getTextContent();
+            const nodeContent = textInline.getTextContent();
             let nodeIndex = nodeContent ? nodeContent.length : <span class="branch-1 cbranch-no" title="branch not covered" >-1;</span>
             while (nodeIndex &gt;= 0) {
                 if (nodeContent[nodeIndex] == this.pickerOptions.triggerCharacter) {
@@ -1628,7 +1628,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
                     }
                 }
             } else {
-                let wordBeforeCursor = this.getWordBeforeCursor(event);
+                const wordBeforeCursor = this.getWordBeforeCursor(event);
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.blockSuggestions) {
                     <span class="missing-if-branch" title="else path not taken" >E</span>if (
                         wordBeforeCursor != null &amp;&amp;
@@ -1637,7 +1637,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
                     ) {
                         this.setIsSuggesting(true);
                         const wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);
-                        let trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
+                        const trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
                         this.dataProvider.queryStringUpdated(
                             trimmedWordBeforeCursor,
                             wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor
@@ -1645,14 +1645,14 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
                         this.setLastKnownRange(this.editor.getSelectionRange() ?? <span class="branch-1 cbranch-no" title="branch not covered" >null)</span>;
                         <span class="missing-if-branch" title="if path not taken" >I</span>if (this.dataProvider.setCursorPoint) {
                             // Determine the bounding rectangle for the @mention
-                            let searcher = <span class="cstat-no" title="statement not covered" >this.editor.getContentSearcherOfCursor(event);</span>
-                            let rangeNode = <span class="cstat-no" title="statement not covered" >this.editor.getDocument().createRange();</span>
+                            const searcher = <span class="cstat-no" title="statement not covered" >this.editor.getContentSearcherOfCursor(event);</span>
+                            const rangeNode = <span class="cstat-no" title="statement not covered" >this.editor.getDocument().createRange();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                            if (rangeNode) {</span>
-                                let nodeBeforeCursor =
+                                const nodeBeforeCursor =
 <span class="cstat-no" title="statement not covered" >                                    searcher?.getInlineElementBefore()?.getContainerNode() ?? null;</span>
 &nbsp;
-                                let rangeStartSuccessfullySet = <span class="cstat-no" title="statement not covered" >this.setRangeStart(</span>
+                                const rangeStartSuccessfullySet = <span class="cstat-no" title="statement not covered" >this.setRangeStart(</span>
                                     rangeNode,
                                     nodeBeforeCursor,
                                     wordBeforeCursor
@@ -1661,7 +1661,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
                                     // VSO 24891: Out of range error is occurring because nodeBeforeCursor
                                     // is not including the trigger character. In this case, the node before
                                     // the node before cursor is the trigger character, and this is where the range should start.
-                                    let nodeBeforeNodeBeforeCursor =
+                                    const nodeBeforeNodeBeforeCursor =
 <span class="cstat-no" title="statement not covered" >                                        nodeBeforeCursor?.previousSibling ?? null;</span>
 <span class="cstat-no" title="statement not covered" >                                    this.setRangeStart(</span>
                                         rangeNode,
@@ -1681,11 +1681,11 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
 <span class="cstat-no" title="statement not covered" >                                    rangeNode.detach();</span>
 &nbsp;
                                     // Display the @mention popup in the correct place
-                                    let targetPoint = <span class="cstat-no" title="statement not covered" >{</span>
+                                    const targetPoint = <span class="cstat-no" title="statement not covered" >{</span>
                                         x: rect.left,
                                         y: (rect.bottom + rect.top) / 2,
                                     };
-                                    let bufferZone = <span class="cstat-no" title="statement not covered" >(rect.bottom - rect.top) / 2;</span>
+                                    const bufferZone = <span class="cstat-no" title="statement not covered" >(rect.bottom - rect.top) / 2;</span>
 <span class="cstat-no" title="statement not covered" >                                    this.dataProvider.setCursorPoint(targetPoint, bufferZone);</span>
                                 }
                             }
@@ -1704,7 +1704,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
     }
 &nbsp;
     private onKeyDownEvent(event: PluginKeyboardEvent) {
-        let keyboardEvent = event.rawEvent;
+        const keyboardEvent = event.rawEvent;
         <span class="missing-if-branch" title="else path not taken" >E</span>if (this.isSuggesting) {
             if (keyboardEvent.key == ESC_CHAR_CODE) {
                 this.setIsSuggesting(false);
@@ -1752,20 +1752,20 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
 <span class="cstat-no" title="statement not covered" >                    this.cancelDefaultKeyDownEvent(event);</span>
                 }
             } else <span class="cstat-no" title="statement not covered" >if (keyboardEvent.key == DELETE_CHAR_CODE) {</span>
-                let searcher = <span class="cstat-no" title="statement not covered" >this.editor?.getContentSearcherOfCursor(event);</span>
+                const searcher = <span class="cstat-no" title="statement not covered" >this.editor?.getContentSearcherOfCursor(event);</span>
 <span class="cstat-no" title="statement not covered" >                if (searcher) {</span>
                     const inlineElementAfter = <span class="cstat-no" title="statement not covered" >searcher.getInlineElementAfter();</span>
                     let nodeAfterCursor = <span class="cstat-no" title="statement not covered" >inlineElementAfter</span>
                         ? inlineElementAfter.getContainerNode()
                         : null;
 <span class="cstat-no" title="statement not covered" >                    nodeAfterCursor = this.getParentNodeIfTextNode(nodeAfterCursor);</span>
-                    let nodeId = <span class="cstat-no" title="statement not covered" >nodeAfterCursor ? this.getIdValue(nodeAfterCursor) : null;</span>
+                    const nodeId = <span class="cstat-no" title="statement not covered" >nodeAfterCursor ? this.getIdValue(nodeAfterCursor) : null;</span>
 <span class="cstat-no" title="statement not covered" >                    if (</span>
                         nodeId &amp;&amp;
                         nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &amp;&amp;
                         nodeAfterCursor
                     ) {
-                        let replacementNode = <span class="cstat-no" title="statement not covered" >this.dataProvider.onRemove(nodeAfterCursor, false);</span>
+                        const replacementNode = <span class="cstat-no" title="statement not covered" >this.dataProvider.onRemove(nodeAfterCursor, false);</span>
 <span class="cstat-no" title="statement not covered" >                        this.replaceNode(nodeAfterCursor, replacementNode);</span>
 <span class="cstat-no" title="statement not covered" >                        this.cancelDefaultKeyDownEvent(event);</span>
                     }
@@ -1843,8 +1843,8 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
     }
 &nbsp;
     private getWord(event: PluginKeyboardEvent | null) {
-        let wordFromRange = this.getRangeUntilAt(event)<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>oString() ?? <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
-        let wordFromCache = this.getWordBeforeCursor(event);
+        const wordFromRange = this.getRangeUntilAt(event)<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>oString() ?? <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
+        const wordFromCache = this.getWordBeforeCursor(event);
         // VSO 24891: In picker, trigger and mention are separated into two nodes.
         // In this case, wordFromRange is the trigger character while wordFromCache is the whole string,
         // so wordFromCache is what we want to return.
@@ -1858,7 +1858,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
     }
 &nbsp;
 <span class="fstat-no" title="function not covered" >    private s</span>etRangeStart(rangeNode: Range, node: Node | null, target: string) {
-        let nodeOffset = <span class="cstat-no" title="statement not covered" >node?.textContent ? node.textContent.lastIndexOf(target) : -1;</span>
+        const nodeOffset = <span class="cstat-no" title="statement not covered" >node?.textContent ? node.textContent.lastIndexOf(target) : -1;</span>
 <span class="cstat-no" title="statement not covered" >        if (node &amp;&amp; nodeOffset &gt; -1) {</span>
 <span class="cstat-no" title="statement not covered" >            rangeNode.setStart(node, nodeOffset);</span>
 <span class="cstat-no" title="statement not covered" >            return true;</span>
@@ -1909,7 +1909,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Oct 12 2023 16:05:58 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 12 2023 16:38:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
