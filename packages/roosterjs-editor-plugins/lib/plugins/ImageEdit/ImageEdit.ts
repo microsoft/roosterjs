@@ -713,7 +713,7 @@ function isRtl(element: Node): boolean {
 }
 
 function handleRadIndexCalculator(angleRad: number): number {
-    let idx = Math.round(angleRad / DirectionRad) % DIRECTIONS;
+    const idx = Math.round(angleRad / DirectionRad) % DIRECTIONS;
     return idx < 0 ? idx + DIRECTIONS : idx;
 }
 

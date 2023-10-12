@@ -4,7 +4,7 @@
  */
 export default function unwrap(node: Node): Node | null {
     // Unwrap requires a parentNode
-    let parentNode = node ? node.parentNode : null;
+    const parentNode = node ? node.parentNode : null;
     if (!parentNode) {
         return null;
     }

@@ -12,7 +12,7 @@ export default function cacheGetEventData<T>(
     key: string,
     getter: () => T
 ): T {
-    let result =
+    const result =
         event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)
             ? <T>event.eventDataCache[key]
             : getter();

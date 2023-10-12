@@ -46,7 +46,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 
     try {
         if (callback) {
-            let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+            const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
             data = callback(
                 range && Position.getStart(range).normalize(),
                 range && Position.getEnd(range).normalize()
@@ -64,7 +64,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     }
 
     if (callback && changeSource) {
-        let event: ContentChangedEvent = {
+        const event: ContentChangedEvent = {
             eventType: PluginEventType.ContentChanged,
             source: changeSource,
             data: data,

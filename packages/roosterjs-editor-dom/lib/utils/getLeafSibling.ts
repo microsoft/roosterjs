@@ -19,10 +19,10 @@ export function getLeafSibling(
     ignoreSpace?: boolean
 ): Node | null {
     let result = null;
-    let getSibling = isNext
+    const getSibling = isNext
         ? (node: Node | null) => node?.nextSibling || null
         : (node: Node | null) => node?.previousSibling || null;
-    let getChild = isNext ? (node: Node) => node.firstChild : (node: Node) => node.lastChild;
+    const getChild = isNext ? (node: Node) => node.firstChild : (node: Node) => node.lastChild;
     if (contains(rootNode, startNode)) {
         let curNode: Node | null = startNode;
         let shouldContinue: boolean = true;

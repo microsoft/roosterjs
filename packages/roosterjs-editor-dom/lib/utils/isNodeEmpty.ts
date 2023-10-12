@@ -22,8 +22,8 @@ export default function isNodeEmpty(
     } else if (node.nodeType == NodeType.Text) {
         return trim(node.nodeValue || '', trimContent) == '';
     } else if (node.nodeType == NodeType.Element) {
-        let element = node as Element;
-        let textContent = trim(element.textContent || '', trimContent);
+        const element = node as Element;
+        const textContent = trim(element.textContent || '', trimContent);
         const visibleSelector = shouldCountBrAsVisible
             ? `${VISIBLE_CHILD_ELEMENT_SELECTOR},BR`
             : VISIBLE_CHILD_ELEMENT_SELECTOR;

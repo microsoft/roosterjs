@@ -226,10 +226,10 @@ export function getAllowedCssClassesRegex(
  * @internal
  */
 export function getDefaultStyleValues(additionalDefaultStyles: StringMap | undefined): StringMap {
-    let result = cloneObject(DEFAULT_STYLE_VALUES);
+    const result = cloneObject(DEFAULT_STYLE_VALUES);
     if (additionalDefaultStyles) {
         Object.keys(additionalDefaultStyles).forEach(name => {
-            let value = additionalDefaultStyles[name];
+            const value = additionalDefaultStyles[name];
             if (value !== null && value !== undefined) {
                 result[name] = value;
             } else {
@@ -247,7 +247,7 @@ export function getDefaultStyleValues(additionalDefaultStyles: StringMap | undef
 export function getStyleCallbacks(
     callbacks: CssStyleCallbackMap | null | undefined
 ): CssStyleCallbackMap {
-    let result = cloneObject(callbacks);
+    const result = cloneObject(callbacks);
     result.position = result.position || removeValue;
     result.width = result.width || removeWidthForLiAndDiv;
     return result;
@@ -258,7 +258,7 @@ function removeValue(): null {
 }
 
 function removeWidthForLiAndDiv(value: string, element: HTMLElement) {
-    let tag = element.tagName;
+    const tag = element.tagName;
     return !(tag == 'LI' || tag == 'DIV');
 }
 

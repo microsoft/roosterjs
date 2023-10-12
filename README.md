@@ -155,7 +155,7 @@ editor.setContent('Welcome to <b>RoosterJs</b>!');
 
 3. Compile the javascript file using webpack:
 
-`webpack source.js editor.js`
+`webpack ./source.js editor.js`
 
 4. Navigate to editor.htm, you will see a editor shown in the page.
 

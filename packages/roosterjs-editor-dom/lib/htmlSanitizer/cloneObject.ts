@@ -11,9 +11,9 @@ function customClone<T>(
     source: Record<string, T> | null | undefined,
     existingObj?: Record<string, T>
 ): Record<string, T> {
-    let result: Record<string, T> = existingObj || {};
+    const result: Record<string, T> = existingObj || {};
     if (source) {
-        for (let key of getObjectKeys(source)) {
+        for (const key of getObjectKeys(source)) {
             result[key] = source[key];
         }
     }

@@ -51,7 +51,7 @@ export default function mergeBlocksInRegion(region: RegionBase, refNode: Node, t
     }
 
     let nodeToRemove: Node | null = null;
-    let nodeToMerge =
+    const nodeToMerge =
         blockRoot.childNodes.length == 1 && blockRoot.attributes.length == 0
             ? blockRoot.firstChild!
             : changeElementTag(blockRoot, 'SPAN')!;
