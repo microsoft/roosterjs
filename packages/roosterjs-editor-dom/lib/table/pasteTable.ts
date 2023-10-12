@@ -21,17 +21,17 @@ export default function pasteTable(
     range?: Range
 ) {
     // This is the table on the clipboard
-    let newTable = new VTable(rootNodeToInsert);
+    const newTable = new VTable(rootNodeToInsert);
     // This table is already on the editor
-    let currentTable = new VTable(currentTd);
+    const currentTable = new VTable(currentTd);
 
     // Which cell in the currentTable is the cursor placed
-    let cursorRow = currentTable.row!;
-    let cursorCol = currentTable.col!;
+    const cursorRow = currentTable.row!;
+    const cursorCol = currentTable.col!;
 
     // Total rows and columns of the final table
-    let rows = cursorRow + newTable.cells?.length! ?? 0;
-    let columns = cursorCol + newTable.cells?.[0].length! ?? 0;
+    const rows = cursorRow + newTable.cells?.length! ?? 0;
+    const columns = cursorCol + newTable.cells?.[0].length! ?? 0;
 
     // Add new rows
     currentTable.row = currentTable.cells!.length! - 1;
@@ -48,8 +48,8 @@ export default function pasteTable(
     // Create final table
     for (let i = cursorRow; i < rows; i++) {
         for (let j = cursorCol; j < columns; j++) {
-            let cell = currentTable.getCell(i, j);
-            let newCell = newTable.getTd(i - cursorRow, j - cursorCol);
+            const cell = currentTable.getCell(i, j);
+            const newCell = newTable.getTd(i - cursorRow, j - cursorCol);
             if (cell.td && newCell) {
                 moveChildNodes(cell.td, newCell);
                 cloneCellStyles(cell.td, newCell);

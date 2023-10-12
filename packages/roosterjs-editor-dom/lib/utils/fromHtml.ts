@@ -8,7 +8,7 @@ import toArray from '../jsUtils/toArray';
  * @returns An HTML node array to represent the given html string
  */
 export default function fromHtml(html: string, ownerDocument: HTMLDocument): Node[] {
-    let element = ownerDocument.createElement('DIV');
+    const element = ownerDocument.createElement('DIV');
     element.innerHTML = html;
 
     return toArray(element.childNodes);

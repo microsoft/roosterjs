@@ -59,8 +59,8 @@ export function excelHandler(html: string, htmlBefore: string): string {
         html = tr + html + '</TR>';
     }
     if (html.match(LAST_TR_END_REGEX)) {
-        let tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
-        let table = tableMatch ? tableMatch[0] : '<TABLE>';
+        const tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
+        const table = tableMatch ? tableMatch[0] : '<TABLE>';
         html = table + html + '</TABLE>';
     }
 

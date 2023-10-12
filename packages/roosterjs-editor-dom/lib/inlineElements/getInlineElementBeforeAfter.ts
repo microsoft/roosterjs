@@ -42,7 +42,7 @@ export function getInlineElementBeforeAfter(root: Node, position: NodePosition, 
     }
 
     position = position.normalize();
-    let { offset, isAtEnd } = position;
+    const { offset, isAtEnd } = position;
     let node: Node | null = position.node;
     let isPartial = false;
 
