@@ -1,4 +1,4 @@
-import { DarkColorHandler } from 'roosterjs-editor-types';
+import { ColorManager } from 'roosterjs-content-model-types';
 import { getColor, setColor } from '../../../lib/formatHandlers/utils/color';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 
@@ -7,33 +7,33 @@ describe('getColor with darkColorHandler', () => {
         const parseColorValue = jasmine.createSpy().and.returnValue({
             lightModeColor: 'green',
         });
-        const darkColorHandler = ({ parseColorValue } as any) as DarkColorHandler;
+        const darkColorHandler = ({ parseColorValue } as any) as ColorManager;
         const div = document.createElement('div');
         const color = getColor(div, false, darkColorHandler, false);
 
         expect(color).toBe('green');
         expect(parseColorValue).toHaveBeenCalledTimes(1);
-        expect(parseColorValue).toHaveBeenCalledWith(undefined);
+        expect(parseColorValue).toHaveBeenCalledWith(undefined, false);
     });
 
     it('getColor from no color, dark mode', () => {
         const parseColorValue = jasmine.createSpy().and.returnValue({
             lightModeColor: 'green',
         });
-        const darkColorHandler = ({ parseColorValue } as any) as DarkColorHandler;
+        const darkColorHandler = ({ parseColorValue } as any) as ColorManager;
         const div = document.createElement('div');
         const color = getColor(div, false, darkColorHandler, true);
 
         expect(color).toBe('green');
         expect(parseColorValue).toHaveBeenCalledTimes(1);
-        expect(parseColorValue).toHaveBeenCalledWith(undefined);
+        expect(parseColorValue).toHaveBeenCalledWith(undefined, true);
     });
 
-    it('getColor from style color, light mode', () => {
+    it('getColor from style color, dark mode', () => {
         const parseColorValue = jasmine.createSpy().and.returnValue({
             lightModeColor: 'green',
         });
-        const darkColorHandler = ({ parseColorValue } as any) as DarkColorHandler;
+        const darkColorHandler = ({ parseColorValue } as any) as ColorManager;
         const div = document.createElement('div');
 
         div.style.color = 'red';
@@ -42,14 +42,14 @@ describe('getColor with darkColorHandler', () => {
 
         expect(color).toBe('green');
         expect(parseColorValue).toHaveBeenCalledTimes(1);
-        expect(parseColorValue).toHaveBeenCalledWith('red');
+        expect(parseColorValue).toHaveBeenCalledWith('red', true);
     });
 
-    it('getColor from attr color, light mode', () => {
+    it('getColor from attr color, dark mode', () => {
         const parseColorValue = jasmine.createSpy().and.returnValue({
             lightModeColor: 'green',
         });
-        const darkColorHandler = ({ parseColorValue } as any) as DarkColorHandler;
+        const darkColorHandler = ({ parseColorValue } as any) as ColorManager;
         const div = document.createElement('div');
 
         div.setAttribute('color', 'blue');
@@ -57,14 +57,14 @@ describe('getColor with darkColorHandler', () => {
 
         expect(color).toBe('green');
         expect(parseColorValue).toHaveBeenCalledTimes(1);
-        expect(parseColorValue).toHaveBeenCalledWith('blue');
+        expect(parseColorValue).toHaveBeenCalledWith('blue', true);
     });
 
-    it('getColor from attr color with var, light mode', () => {
+    it('getColor from attr color with var, dark mode', () => {
         const parseColorValue = jasmine.createSpy().and.returnValue({
             lightModeColor: 'green',
         });
-        const darkColorHandler = ({ parseColorValue } as any) as DarkColorHandler;
+        const darkColorHandler = ({ parseColorValue } as any) as ColorManager;
         const div = document.createElement('div');
 
         div.style.color = 'var(--varName, blue)';
@@ -72,14 +72,14 @@ describe('getColor with darkColorHandler', () => {
 
         expect(color).toBe('green');
         expect(parseColorValue).toHaveBeenCalledTimes(1);
-        expect(parseColorValue).toHaveBeenCalledWith('var(--varName, blue)');
+        expect(parseColorValue).toHaveBeenCalledWith('var(--varName, blue)', true);
     });
 
-    it('getColor from style color with data-ogsc, light mode', () => {
+    it('getColor from style color with data-ogsc, dark mode', () => {
         const parseColorValue = jasmine.createSpy().and.returnValue({
             lightModeColor: 'green',
         });
-        const darkColorHandler = ({ parseColorValue } as any) as DarkColorHandler;
+        const darkColorHandler = ({ parseColorValue } as any) as ColorManager;
         const div = document.createElement('div');
 
         div.dataset.ogsc = 'yellow';
@@ -88,36 +88,14 @@ describe('getColor with darkColorHandler', () => {
 
         expect(color).toBe('green');
         expect(parseColorValue).toHaveBeenCalledTimes(1);
-        expect(parseColorValue).toHaveBeenCalledWith('red');
-    });
-
-    it('get color from FONT tag in dark mode', () => {
-        const parseColorValue = jasmine.createSpy().and.returnValue({
-            lightModeColor: 'green',
-        });
-        const findLightColorFromDarkColor = jasmine.createSpy().and.returnValue('red');
-        const darkColorHandler = ({
-            parseColorValue,
-            findLightColorFromDarkColor,
-        } as any) as DarkColorHandler;
-        const font = document.createElement('font');
-
-        font.color = '#112233';
-
-        const color = getColor(font, false, darkColorHandler, true);
-
-        expect(color).toBe('green');
-        expect(parseColorValue).toHaveBeenCalledTimes(1);
-        expect(parseColorValue).toHaveBeenCalledWith('red');
-        expect(findLightColorFromDarkColor).toHaveBeenCalledTimes(1);
-        expect(findLightColorFromDarkColor).toHaveBeenCalledWith('#112233');
+        expect(parseColorValue).toHaveBeenCalledWith('red', true);
     });
 });
 
 describe('setColor with darkColorHandler', () => {
     it('setColor from no color, light mode', () => {
         const registerColor = jasmine.createSpy().and.returnValue('green');
-        const darkColorHandler = ({ registerColor } as any) as DarkColorHandler;
+        const darkColorHandler = ({ registerColor } as any) as ColorManager;
         const div = document.createElement('div');
         setColor(div, '', false, darkColorHandler, false);
 
@@ -128,7 +106,7 @@ describe('setColor with darkColorHandler', () => {
 
     it('setColor from no color, dark mode', () => {
         const registerColor = jasmine.createSpy().and.returnValue('green');
-        const darkColorHandler = ({ registerColor } as any) as DarkColorHandler;
+        const darkColorHandler = ({ registerColor } as any) as ColorManager;
         const div = document.createElement('div');
         setColor(div, '', false, darkColorHandler, true);
 
@@ -146,7 +124,7 @@ describe('setColor with darkColorHandler', () => {
 
     itChromeOnly('setColor from a color with existing color, dark mode', () => {
         const registerColor = jasmine.createSpy().and.returnValue('green');
-        const darkColorHandler = ({ registerColor } as any) as DarkColorHandler;
+        const darkColorHandler = ({ registerColor } as any) as ColorManager;
         const div = document.createElement('div');
 
         div.style.color = 'blue';
