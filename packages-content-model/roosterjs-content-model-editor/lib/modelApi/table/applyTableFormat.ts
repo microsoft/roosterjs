@@ -29,6 +29,7 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
 type MetaOverrides = {
     bgColorOverrides: boolean[][];
     vAlignOverrides: boolean[][];
+    borderOverrides: boolean[][];
 };
 
 /**
@@ -71,14 +72,20 @@ function clearCache(rows: ContentModelTableRow[]) {
 }
 
 function updateOverrides(rows: ContentModelTableRow[], removeCellShade: boolean): MetaOverrides {
-    const overrides: MetaOverrides = { bgColorOverrides: [], vAlignOverrides: [] };
+    const overrides: MetaOverrides = {
+        bgColorOverrides: [],
+        vAlignOverrides: [],
+        borderOverrides: [],
+    };
 
     rows.forEach(row => {
         const bgColorOverrides: boolean[] = [];
         const vAlignOverrides: boolean[] = [];
+        const borderOverrides: boolean[] = [];
 
         overrides.bgColorOverrides.push(bgColorOverrides);
         overrides.vAlignOverrides.push(vAlignOverrides);
+        overrides.borderOverrides?.push(borderOverrides);
 
         row.cells.forEach(cell => {
             updateTableCellMetadata(cell, metadata => {
@@ -89,6 +96,7 @@ function updateOverrides(rows: ContentModelTableRow[], removeCellShade: boolean)
                     bgColorOverrides.push(!!metadata?.bgColorOverride);
                 }
                 vAlignOverrides.push(!!metadata?.vAlignOverride);
+                borderOverrides.push(!!metadata?.borderOverride);
 
                 return metadata;
             });
@@ -170,31 +178,33 @@ function formatCells(
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, colIndex) => {
             // Format Borders
-            const transparentBorderMatrix = BorderFormatters[
-                format.tableBorderFormat as TableBorderFormat
-            ]({
-                firstRow: rowIndex === 0,
-                lastRow: rowIndex === rows.length - 1,
-                firstColumn: colIndex === 0,
-                lastColumn: colIndex === row.cells.length - 1,
-            });
-
-            const formatColor = [
-                format.topBorderColor,
-                format.verticalBorderColor,
-                format.bottomBorderColor,
-                format.verticalBorderColor,
-            ];
-
-            transparentBorderMatrix.forEach((alwaysUseTransparent, i) => {
-                const borderColor = (!alwaysUseTransparent && formatColor[i]) || '';
-
-                cell.format[BorderKeys[i]] = combineBorderValue({
-                    style: getBorderStyleFromColor(borderColor),
-                    width: '1px',
-                    color: borderColor,
+            if (!metaOverrides.borderOverrides[rowIndex][colIndex]) {
+                const transparentBorderMatrix = BorderFormatters[
+                    format.tableBorderFormat as TableBorderFormat
+                ]({
+                    firstRow: rowIndex === 0,
+                    lastRow: rowIndex === rows.length - 1,
+                    firstColumn: colIndex === 0,
+                    lastColumn: colIndex === row.cells.length - 1,
                 });
-            });
+
+                const formatColor = [
+                    format.topBorderColor,
+                    format.verticalBorderColor,
+                    format.bottomBorderColor,
+                    format.verticalBorderColor,
+                ];
+
+                transparentBorderMatrix.forEach((alwaysUseTransparent, i) => {
+                    const borderColor = (!alwaysUseTransparent && formatColor[i]) || '';
+
+                    cell.format[BorderKeys[i]] = combineBorderValue({
+                        style: getBorderStyleFromColor(borderColor),
+                        width: '1px',
+                        color: borderColor,
+                    });
+                });
+            }
 
             // Format Background Color
             if (!metaOverrides.bgColorOverrides[rowIndex][colIndex]) {

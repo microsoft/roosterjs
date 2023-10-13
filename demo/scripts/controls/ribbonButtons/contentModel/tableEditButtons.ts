@@ -9,6 +9,7 @@ import {
     TableEditMenuItemStringKey,
     TableEditMergeMenuItemStringKey,
     TableEditSplitMenuItemStringKey,
+    TableBorder_unfinished,
 } from 'roosterjs-react';
 
 const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOperation>> = {
@@ -35,6 +36,7 @@ const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOpe
     menuNameTableAlignTableLeft: TableOperation.AlignLeft,
     menuNameTableAlignTableCenter: TableOperation.AlignCenter,
     menuNameTableAlignTableRight: TableOperation.AlignRight,
+    menuNameTableBorder: TableOperation.Border,
 };
 
 export const tableInsertButton: RibbonButton<
@@ -166,6 +168,25 @@ export const tableAlignTableButton: RibbonButton<
     onClick: (editor, key) => {
         if (isContentModelEditor(editor) && key != 'ribbonButtonTableAlignTable') {
             editTable(editor, TableEditOperationMap[key]);
+        }
+    },
+};
+
+export const tableBorderApplyButton: RibbonButton<
+    'ribbonButtonTableBorder' | TableBorder_unfinished
+> = {
+    key: 'ribbonButtonTableBorder',
+    iconName: 'TableComputed',
+    unlocalizedText: 'Table Border',
+    isDisabled: formatState => !formatState.isInTable,
+    dropDownMenu: {
+        items: {
+            menuNameTableBorder: 'All Borders',
+        },
+    },
+    onClick: (editor, key) => {
+        if (isContentModelEditor(editor) && key != 'ribbonButtonTableBorder') {
+            editTable(editor, TableEditOperationMap[key], editor.getTableBorder());
         }
     },
 };

@@ -55,6 +55,18 @@ function hasValign(cell: VCell) {
 }
 
 /**
+ * Check if the cell has any modified border
+ * @param cell
+ * @returns
+ */
+function hasBorder(cell: VCell) {
+    if (!cell.td) {
+        return false;
+    }
+
+    return !!getTableCellMetadata(cell.td)?.borderOverride;
+}
+/**
  * Set color and vertical align to the table
  * @param format the format that must be applied
  * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
@@ -274,7 +286,7 @@ function formatBorders(
 function setBordersType(cells: VCell[][], format: TableFormat) {
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
-            if (cell.td) {
+            if (cell.td && !hasBorder(cell)) {
                 formatBorders(
                     format,
                     cell.td,

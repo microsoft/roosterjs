@@ -3,6 +3,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { TableMetadataFormat } from 'roosterjs-content-model-types';
+import { updateTableCellMetadata } from 'roosterjs-content-model/lib';
 
 /**
  * Format current focused table with the given format
@@ -19,8 +20,17 @@ export default function formatTable(
         const [tableModel] = getFirstSelectedTable(model);
 
         if (tableModel) {
+            // Wipe border metadata
+            tableModel.rows.forEach(row => {
+                row.cells.forEach(cell => {
+                    updateTableCellMetadata(cell, metadata => {
+                        metadata = metadata || {};
+                        metadata.borderOverride = false;
+                        return metadata;
+                    });
+                });
+            });
             applyTableFormat(tableModel, format, keepCellShade);
-
             return true;
         } else {
             return false;

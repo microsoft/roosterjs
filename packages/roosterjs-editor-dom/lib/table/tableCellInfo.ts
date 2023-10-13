@@ -12,6 +12,7 @@ const TableCellFormatMetadata = createObjectDefinition<Required<TableCellMetadat
     {
         bgColorOverride: BooleanDefinition,
         vAlignOverride: BooleanDefinition,
+        borderOverride: BooleanDefinition,
     },
     false /* isOptional */,
     true /** allowNull */

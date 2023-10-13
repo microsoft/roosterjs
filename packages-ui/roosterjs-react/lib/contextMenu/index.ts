@@ -15,4 +15,5 @@ export {
     TableEditShadeMenuItemStringKey,
     TableEditMenuItemStringKey,
     TableEditAlignTableMenuItemStringKey,
+    TableBorder_unfinished,
 } from './types/ContextMenuItemStringKeys';

@@ -1,7 +1,9 @@
+import applyBorderFormat from '../../modelApi/table/applyTableBorders_unfinished';
 import hasSelectionInBlock from '../selection/hasSelectionInBlock';
 import { alignTable } from '../../modelApi/table/alignTable';
 import { alignTableCell } from '../../modelApi/table/alignTableCell';
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
+import { Border } from 'roosterjs-editor-types';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
@@ -30,7 +32,11 @@ import {
  * @param editor The editor instance
  * @param operation The table operation to apply
  */
-export default function editTable(editor: IContentModelEditor, operation: TableOperation) {
+export default function editTable(
+    editor: IContentModelEditor,
+    operation: TableOperation,
+    border?: Border
+) {
     formatWithContentModel(editor, 'editTable', model => {
         const [tableModel, path] = getFirstSelectedTable(model);
 
@@ -94,6 +100,12 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
 
                 case TableOperation.SplitVertically:
                     splitTableCellVertically(tableModel);
+                    break;
+
+                case TableOperation.Border:
+                    if (border) {
+                        applyBorderFormat(tableModel, border, operation);
+                    }
                     break;
             }
 
