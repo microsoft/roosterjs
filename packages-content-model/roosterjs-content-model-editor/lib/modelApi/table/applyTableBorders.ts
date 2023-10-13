@@ -1,19 +1,19 @@
-import { Border } from 'roosterjs-editor-types';
-import { ContentModelTable } from 'roosterjs-content-model-types';
 import { extractBorderValues } from '../../domUtils/borderValues';
 import { getSelectedCells } from './getSelectedCells';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { TableOperation } from 'roosterjs-editor-types';
-import { updateTableCellMetadata } from 'roosterjs-content-model';
+import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import type { ContentModelTable } from 'roosterjs-content-model-types';
+import type { Border } from 'roosterjs-editor-types';
 
 /**
  * @internal
- * UNFINISHED
+ * UNFINISHED - only All Borders is implemented
  */
 export default function applyBorderFormat(
     table: ContentModelTable,
     border: Border | null,
-    operation: TableOperation
+    operation: TableOperation.Border
 ) {
     const sel = getSelectedCells(table);
     let borderFormat = '';

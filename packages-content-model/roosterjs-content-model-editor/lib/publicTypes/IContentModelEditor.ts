@@ -1,5 +1,4 @@
-import { Border } from 'roosterjs-editor-types';
-import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
+import type { Border, EditorOptions, IEditor } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     DOMSelection,

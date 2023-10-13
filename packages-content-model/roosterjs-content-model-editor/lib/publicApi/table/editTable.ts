@@ -1,9 +1,8 @@
-import applyBorderFormat from '../../modelApi/table/applyTableBorders_unfinished';
+import applyBorderFormat from '../../modelApi/table/applyTableBorders';
 import hasSelectionInBlock from '../selection/hasSelectionInBlock';
 import { alignTable } from '../../modelApi/table/alignTable';
 import { alignTableCell } from '../../modelApi/table/alignTableCell';
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
-import { Border } from 'roosterjs-editor-types';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
@@ -20,6 +19,7 @@ import { setSelection } from '../../modelApi/selection/setSelection';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import { TableOperation } from 'roosterjs-editor-types';
+import type { Border } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     createSelectionMarker,

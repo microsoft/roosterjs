@@ -3,13 +3,13 @@ import * as ReactDOM from 'react-dom';
 import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
-import { Border } from 'roosterjs-content-model-editor';
 import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+import type { Border } from 'roosterjs-content-model-editor';
 import {
     createUpdateContentPlugin,
     Rooster,

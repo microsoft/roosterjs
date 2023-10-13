@@ -1,6 +1,5 @@
-import { Border } from 'roosterjs-editor-types';
 import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
-import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
+import type { Border, CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     DOMSelection,

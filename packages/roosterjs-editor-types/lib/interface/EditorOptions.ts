@@ -1,4 +1,4 @@
-import Border from './Border';
+import type Border from './Border';
 import type CorePlugins from './CorePlugins';
 import type DarkColorHandler from './DarkColorHandler';
 import type DefaultFormat from './DefaultFormat';

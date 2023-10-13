@@ -1,6 +1,6 @@
-import { Border } from 'roosterjs-editor-types';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
+import type { Border } from 'roosterjs-editor-types';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type {
     ContentModelEditorOptions,
