@@ -1,6 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setModelDirection } from '../../modelApi/block/setModelDirection';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set text direction of selected paragraphs (Left to right or Right to left)
@@ -8,5 +8,7 @@ import { setModelDirection } from '../../modelApi/block/setModelDirection';
  * @param direction Direction value: ltr (Left to right) or rtl (Right to left)
  */
 export default function setDirection(editor: IContentModelEditor, direction: 'ltr' | 'rtl') {
+    editor.focus();
+
     formatWithContentModel(editor, 'setDirection', model => setModelDirection(model, direction));
 }

@@ -6,18 +6,20 @@ import {
     Position,
     queryElements,
 } from 'roosterjs-editor-dom';
-import {
+import type {
     BuildInEditFeature,
     IEditor,
-    Indentation,
     TextFeatureSettings,
-    Keys,
     PluginKeyboardEvent,
+    NodePosition,
+} from 'roosterjs-editor-types';
+import {
+    Indentation,
+    Keys,
     SelectionRangeTypes,
     ContentPosition,
     PositionType,
     ExperimentalFeatures,
-    NodePosition,
     QueryScope,
 } from 'roosterjs-editor-types';
 
@@ -38,7 +40,7 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
             editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures) &&
             !event.rawEvent.shiftKey
         ) {
-            let activeElement = editor.getDocument().activeElement as HTMLElement;
+            const activeElement = editor.getDocument().activeElement as HTMLElement;
             const listOrTable = editor.getElementAtCursor(
                 'LI,TABLE',
                 undefined /*startFrom*/,
@@ -187,7 +189,7 @@ function isRangeEmpty(range: Range) {
 
 function insertTab(editor: IEditor, event: PluginKeyboardEvent) {
     const span = editor.getDocument().createElement('span');
-    let searcher = editor.getContentSearcherOfCursor(event);
+    const searcher = editor.getContentSearcherOfCursor(event);
     if (!searcher) {
         return;
     }

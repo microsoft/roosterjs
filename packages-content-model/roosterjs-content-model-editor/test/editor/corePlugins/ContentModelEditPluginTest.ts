@@ -1,18 +1,14 @@
 import * as keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
-import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
+import ContentModelEditPlugin from '../../../lib/editor/corePlugins/ContentModelEditPlugin';
 import { EntityOperation, Keys, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('ContentModelEditPlugin', () => {
     let editor: IContentModelEditor;
-    let invalidateCache: jasmine.Spy;
 
     beforeEach(() => {
-        invalidateCache = jasmine.createSpy('invalidateCache');
-
         editor = ({
-            invalidateCache,
-            getSelectionRangeEx: () =>
+            getDOMSelection: () =>
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
@@ -38,7 +34,6 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(invalidateCache).not.toHaveBeenCalled();
         });
 
         it('Delete', () => {
@@ -53,7 +48,6 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(invalidateCache).not.toHaveBeenCalled();
         });
 
         it('Other key', () => {
@@ -68,7 +62,6 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
-            expect(invalidateCache).not.toHaveBeenCalled();
         });
 
         it('Default prevented', () => {
@@ -82,7 +75,6 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
-            expect(invalidateCache).toHaveBeenCalled();
         });
 
         it('Trigger entity event first', () => {
@@ -118,7 +110,6 @@ describe('ContentModelEditPlugin', () => {
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
                 which: Keys.DELETE,
             } as any);
-            expect(invalidateCache).not.toHaveBeenCalled();
         });
 
         it('SelectionChanged event should clear cached model', () => {
@@ -129,8 +120,6 @@ describe('ContentModelEditPlugin', () => {
                 eventType: PluginEventType.SelectionChanged,
                 selectionRangeEx: null!,
             });
-
-            expect(invalidateCache).not.toHaveBeenCalled();
         });
 
         it('keyboardDelete returns false', () => {
@@ -143,8 +132,6 @@ describe('ContentModelEditPlugin', () => {
                 eventType: PluginEventType.SelectionChanged,
                 selectionRangeEx: null!,
             });
-
-            expect(invalidateCache).not.toHaveBeenCalled();
         });
     });
 });

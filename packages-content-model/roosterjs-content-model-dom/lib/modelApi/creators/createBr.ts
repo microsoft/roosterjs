@@ -1,4 +1,4 @@
-import { ContentModelBr, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { ContentModelBr, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelBr model

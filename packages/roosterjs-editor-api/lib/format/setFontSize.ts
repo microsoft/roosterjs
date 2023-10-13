@@ -1,6 +1,6 @@
 import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import { getComputedStyle } from 'roosterjs-editor-dom';
-import { IEditor } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Set font size at selection
@@ -16,7 +16,7 @@ export default function setFontSize(editor: IEditor, fontSize: string) {
         'font-size',
         (element, isInnerNode) => {
             element.style.fontSize = isInnerNode ? '' : fontSize;
-            let lineHeight = getComputedStyle(element, 'line-height');
+            const lineHeight = getComputedStyle(element, 'line-height');
             if (lineHeight && lineHeight != 'normal') {
                 element.style.lineHeight = 'normal';
             }

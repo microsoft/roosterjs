@@ -1,5 +1,5 @@
 import hasSelectionInBlockGroup from '../../publicApi/selection/hasSelectionInBlockGroup';
-import { ContentModelTable } from 'roosterjs-content-model-types';
+import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 /**
  * @internal

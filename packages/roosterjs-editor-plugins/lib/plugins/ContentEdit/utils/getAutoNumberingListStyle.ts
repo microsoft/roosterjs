@@ -1,6 +1,6 @@
 import convertAlphaToDecimals from './convertAlphaToDecimals';
 import { NumberingListType } from 'roosterjs-editor-types';
-import { VListChain } from 'roosterjs-editor-dom';
+import type { VListChain } from 'roosterjs-editor-dom';
 
 const enum NumberingTypes {
     Decimal = 1,
@@ -146,7 +146,7 @@ export default function getAutoNumberingListStyle(
     const listIndex = isDoubleParenthesis ? trigger.slice(1, -1) : trigger.slice(0, -1);
 
     const indexNumber = parseInt(listIndex);
-    let index = !isNaN(indexNumber) ? indexNumber : convertAlphaToDecimals(listIndex);
+    const index = !isNaN(indexNumber) ? indexNumber : convertAlphaToDecimals(listIndex);
 
     if (!index || index < 1) {
         return null;

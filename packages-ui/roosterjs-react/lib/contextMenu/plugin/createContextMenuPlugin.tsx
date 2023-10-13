@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { ContextMenu } from 'roosterjs-editor-plugins';
-import { ContextualMenu, IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
-import { ReactEditorPlugin, UIUtilities } from '../../common/index';
+import { ContextualMenu } from '@fluentui/react/lib/ContextualMenu';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
+import type { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
+import type { ReactEditorPlugin, UIUtilities } from '../../common/index';
 
 function normalizeItems(items: (IContextualMenuItem | null)[]) {
     let dividerKey = 0;

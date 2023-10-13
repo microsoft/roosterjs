@@ -18,14 +18,9 @@ import splitTextNode from '../utils/splitTextNode';
 import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
+import { NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
-import {
-    BlockElement,
-    NodePosition,
-    NodeType,
-    PositionType,
-    QueryScope,
-} from 'roosterjs-editor-types';
+import type { BlockElement, NodePosition } from 'roosterjs-editor-types';
 
 const NOT_EDITABLE_SELECTOR = '[contenteditable=false]';
 
@@ -53,7 +48,7 @@ function adjustInsertPositionForHyperLink(
     position: NodePosition,
     range: Range
 ): NodePosition {
-    let blockElement = getBlockElementAtNode(root, position.node);
+    const blockElement = getBlockElementAtNode(root, position.node);
 
     if (blockElement) {
         // Find the first <A> tag within current block which covers current selection
@@ -80,9 +75,9 @@ function adjustInsertPositionForHyperLink(
             (<ParentNode>(nodeToInsert as HTMLElement))?.querySelector &&
             (<ParentNode>(nodeToInsert as HTMLElement))?.querySelector('a[href]')
         ) {
-            let normalizedPosition = position.normalize();
-            let parentNode = normalizedPosition.node.parentNode!;
-            let nextNode =
+            const normalizedPosition = position.normalize();
+            const parentNode = normalizedPosition.node.parentNode!;
+            const nextNode =
                 normalizedPosition.node.nodeType == NodeType.Text
                     ? splitTextNode(
                           <Text>normalizedPosition.node,
@@ -123,18 +118,18 @@ function adjustInsertPositionForStructuredNode(
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
         isFragment = true;
-        let rootNodes = toArray(rootNodeToInsert.childNodes).filter(
+        const rootNodes = toArray(rootNodeToInsert.childNodes).filter(
             (n: ChildNode) => getTagOfNode(n) != 'BR'
         );
         rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
     }
 
     let tag = getTagOfNode(rootNodeToInsert);
-    let hasBrNextToRoot =
+    const hasBrNextToRoot =
         tag && rootNodeToInsert && getTagOfNode(rootNodeToInsert.nextSibling) == 'BR';
-    let listItem = findClosestElementAncestor(position.node, root, 'LI');
-    let listNode = listItem && findClosestElementAncestor(listItem, root, 'OL,UL');
-    let tdNode = findClosestElementAncestor(position.node, root, 'TD,TH');
+    const listItem = findClosestElementAncestor(position.node, root, 'LI');
+    const listNode = listItem && findClosestElementAncestor(listItem, root, 'OL,UL');
+    const tdNode = findClosestElementAncestor(position.node, root, 'TD,TH');
 
     if (tag == 'LI') {
         tag = listNode ? getTagOfNode(listNode) : 'UL';
@@ -146,7 +141,8 @@ function adjustInsertPositionForStructuredNode(
         rootNodeToInsert &&
         getTagOfNode(rootNodeToInsert.firstChild) == 'LI'
     ) {
-        let shouldInsertListAsText = !rootNodeToInsert.firstChild!.nextSibling && !hasBrNextToRoot;
+        const shouldInsertListAsText =
+            !rootNodeToInsert.firstChild!.nextSibling && !hasBrNextToRoot;
 
         if (hasBrNextToRoot && rootNodeToInsert.parentNode) {
             safeRemove(rootNodeToInsert.nextSibling!);
@@ -193,8 +189,8 @@ function adjustInsertPositionForParagraph(
     if (getTagOfNode(position.node) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
-        let pos = position.normalize();
-        let div = changeElementTag(<HTMLElement>position.node, 'div');
+        const pos = position.normalize();
+        const div = changeElementTag(<HTMLElement>position.node, 'div');
         if (pos.node != div) {
             position = pos;
         }

@@ -1,14 +1,18 @@
 import * as React from 'react';
 import getLocalizedString from '../../common/utils/getLocalizedString';
-import RibbonButton from '../type/RibbonButton';
-import RibbonProps from '../type/RibbonProps';
-import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
+import { CommandBar } from '@fluentui/react/lib/CommandBar';
 import { FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
-import { FormatState } from 'roosterjs-editor-types';
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import { IContextualMenuItem, IContextualMenuItemProps } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { moreCommands } from './buttons/moreCommands';
+import type RibbonButton from '../type/RibbonButton';
+import type RibbonProps from '../type/RibbonProps';
+import type { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
+import type { FormatState } from 'roosterjs-editor-types';
+import type {
+    IContextualMenuItem,
+    IContextualMenuItemProps,
+} from '@fluentui/react/lib/ContextualMenu';
 import type { IRenderFunction } from '@fluentui/react/lib/Utilities';
 
 const ribbonClassName = mergeStyles({

@@ -1,4 +1,4 @@
-import {
+import type {
     ContentModelSegmentFormat,
     ContentModelSelectionMarker,
 } from 'roosterjs-content-model-types';

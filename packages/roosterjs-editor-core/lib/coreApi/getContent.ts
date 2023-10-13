@@ -1,10 +1,5 @@
-import {
-    ColorTransformDirection,
-    EditorCore,
-    GetContent,
-    GetContentMode,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { ColorTransformDirection, GetContentMode, PluginEventType } from 'roosterjs-editor-types';
+import type { EditorCore, GetContent } from 'roosterjs-editor-types';
 import {
     createRange,
     getHtmlWithSelectionPath,

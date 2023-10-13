@@ -1,5 +1,5 @@
-import { Emoji } from '../type/Emoji';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import type { Emoji } from '../type/Emoji';
 
 const Common1 = createEmoji('1f60a', ':) :-)');
 const common2 = createEmoji('1f609', ';) ;-)');
@@ -761,7 +761,7 @@ export function forEachEmoji(callback: (emoji: Emoji) => boolean): void {
 
 // get emoji code point from an emoji key
 function getEmojiCodePoint(key: string): string | null {
-    let unicode = parseInt(key, 16);
+    const unicode = parseInt(key, 16);
     if (isNaN(unicode)) {
         return null;
     }
@@ -771,8 +771,8 @@ function getEmojiCodePoint(key: string): string | null {
     // 0x00023 - 0x04000 -> does not have surrogate pairs
     let surrogatePairs: number[];
     if (unicode >= 0x1f000 && unicode <= 0x1f700) {
-        let hi = Math.floor((unicode - 0x10000) / 0x400) + 0xd800;
-        let lo = ((unicode - 0x10000) % 0x400) + 0xdc00;
+        const hi = Math.floor((unicode - 0x10000) / 0x400) + 0xd800;
+        const lo = ((unicode - 0x10000) % 0x400) + 0xdc00;
         surrogatePairs = [hi, lo];
     } else if (unicode >= 0x00023 && unicode <= 0x04000) {
         surrogatePairs = [unicode];

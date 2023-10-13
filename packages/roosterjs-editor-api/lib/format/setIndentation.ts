@@ -1,14 +1,13 @@
 import blockFormat from '../utils/blockFormat';
 import normalizeBlockquote from '../utils/normalizeBlockquote';
+import type { BlockElement, IEditor, RegionBase } from 'roosterjs-editor-types';
 import {
-    BlockElement,
     ExperimentalFeatures,
-    IEditor,
     Indentation,
     KnownCreateElementDataIndex,
-    RegionBase,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import type { VList } from 'roosterjs-editor-dom';
 import {
     collapseNodesInRegion,
     createVListFromRegion,
@@ -20,7 +19,6 @@ import {
     splitBalancedNodeRange,
     toArray,
     unwrap,
-    VList,
     VTable,
     wrap,
 } from 'roosterjs-editor-dom';

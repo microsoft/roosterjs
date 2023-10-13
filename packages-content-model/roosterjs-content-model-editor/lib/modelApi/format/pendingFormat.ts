@@ -1,6 +1,5 @@
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { NodePosition } from 'roosterjs-editor-types';
+import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * @internal
@@ -16,17 +15,20 @@ export function getPendingFormat(editor: IContentModelEditor): ContentModelSegme
  * Set pending segment format to editor
  * @param editor The editor to set pending format to
  * @param format The format to set.
- * @param position Cursor position when set this format
+ * @param posContainer Container node of current focus position
+ * @param posOffset Offset number of current focus position
  */
 export function setPendingFormat(
     editor: IContentModelEditor,
     format: ContentModelSegmentFormat,
-    position: NodePosition
+    posContainer: Node,
+    posOffset: number
 ) {
     const holder = getPendingFormatHolder(editor);
 
     holder.format = format;
-    holder.position = position;
+    holder.posContainer = posContainer;
+    holder.posOffset = posOffset;
 }
 
 /**
@@ -37,7 +39,8 @@ export function clearPendingFormat(editor: IContentModelEditor) {
     const holder = getPendingFormatHolder(editor);
 
     holder.format = null;
-    holder.position = null;
+    holder.posContainer = null;
+    holder.posOffset = null;
 }
 
 /**
@@ -49,10 +52,10 @@ export function canApplyPendingFormat(editor: IContentModelEditor): boolean {
     const holder = getPendingFormatHolder(editor);
     let result = false;
 
-    if (holder.format && holder.position) {
+    if (holder.format && holder.posContainer && holder.posOffset !== null) {
         const position = editor.getFocusedPosition();
 
-        if (position?.equalTo(holder.position)) {
+        if (position?.node == holder.posContainer && position?.offset == holder.posOffset) {
             result = true;
         }
     }
@@ -61,7 +64,8 @@ export function canApplyPendingFormat(editor: IContentModelEditor): boolean {
 }
 interface PendingFormatHolder {
     format: ContentModelSegmentFormat | null;
-    position: NodePosition | null;
+    posContainer: Node | null;
+    posOffset: number | null;
 }
 
 const PendingFormatHolderKey = '__ContentModelPendingFormat';
@@ -69,6 +73,7 @@ const PendingFormatHolderKey = '__ContentModelPendingFormat';
 function getPendingFormatHolder(editor: IContentModelEditor): PendingFormatHolder {
     return editor.getCustomData<PendingFormatHolder>(PendingFormatHolderKey, () => ({
         format: null,
-        position: null,
+        posContainer: null,
+        posOffset: null,
     }));
 }

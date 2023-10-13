@@ -1,4 +1,4 @@
-import EditorPlugin from './EditorPlugin';
+import type EditorPlugin from './EditorPlugin';
 
 /**
  * An editor plugin which have a state object stored on editor core

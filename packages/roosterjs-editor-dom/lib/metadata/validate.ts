@@ -1,5 +1,6 @@
 import getObjectKeys from '../jsUtils/getObjectKeys';
-import { Definition, DefinitionType } from 'roosterjs-editor-types';
+import { DefinitionType } from 'roosterjs-editor-types';
+import type { Definition } from 'roosterjs-editor-types';
 
 /**
  * Validate the given object with a type definition object

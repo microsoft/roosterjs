@@ -17,6 +17,7 @@ import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEdito
 import paste, * as pasteF from '../../../lib/publicApi/utils/paste';
 import {
     BeforePasteEvent,
+    ChangeSource,
     ClipboardData,
     KnownPasteSourceType,
     PasteType,
@@ -42,7 +43,7 @@ describe('Paste ', () => {
     let getDocument: jasmine.Spy;
     let getTrustedHTMLHandler: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
-    let undoSnapshotResult: any;
+    let getVisibleViewport: jasmine.Spy;
 
     const mockedPos = 'POS' as any;
 
@@ -63,9 +64,7 @@ describe('Paste ', () => {
         mockedModel = ({} as any) as ContentModelDocument;
         mockedMergeModel = ({} as any) as ContentModelDocument;
 
-        addUndoSnapshot = jasmine
-            .createSpy('addUndoSnapshot')
-            .and.callFake(callback => (undoSnapshotResult = callback()));
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
@@ -97,6 +96,8 @@ describe('Paste ', () => {
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')
             .and.returnValue((html: string) => html);
+
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         spyOn(mergeModelFile, 'mergeModel').and.callFake(() => (mockedModel = mockedMergeModel));
         spyOn(getSelectedSegmentsF, 'default').and.returnValue([
             {
@@ -118,6 +119,7 @@ describe('Paste ', () => {
             getDocument,
             getTrustedHTMLHandler,
             triggerPluginEvent,
+            getVisibleViewport,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
@@ -139,7 +141,6 @@ describe('Paste ', () => {
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);
-        expect(clipboardData).toEqual(undoSnapshotResult);
     });
 
     it('Execute | As plain text', () => {
@@ -150,11 +151,19 @@ describe('Paste ', () => {
         expect(addUndoSnapshot).toHaveBeenCalled();
         expect(getFocusedPosition).not.toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+            contentModel: mockedModel,
+            selection: undefined,
+            data: clipboardData,
+            source: ChangeSource.Paste,
+            additionalData: {
+                formatApiName: 'Paste',
+            },
+        });
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);
-        expect(clipboardData).toEqual(undoSnapshotResult);
     });
 });
 
@@ -215,7 +224,7 @@ describe('paste with content model & paste plugin', () => {
 
         pasteF.default(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(1);
     });
@@ -226,7 +235,7 @@ describe('paste with content model & paste plugin', () => {
 
         pasteF.default(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(1);
     });
@@ -439,7 +448,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             pasteModel,
             false /* applyCurrentFormat */,
             undefined /* customizedMerge */
@@ -448,7 +457,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'none',
                 mergeTable: true,
@@ -527,7 +536,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             pasteModel,
             false /* applyCurrentFormat */,
             customizedMerge /* customizedMerge */
@@ -545,7 +554,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             pasteModel,
             true /* applyCurrentFormat */,
             undefined /* customizedMerge */
@@ -554,7 +563,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
                 mergeTable: false,

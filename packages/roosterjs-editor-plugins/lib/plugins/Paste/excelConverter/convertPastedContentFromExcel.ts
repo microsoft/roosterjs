@@ -1,5 +1,5 @@
-import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import { chainSanitizerCallback, getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
+import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
@@ -59,8 +59,8 @@ export function excelHandler(html: string, htmlBefore: string): string {
         html = tr + html + '</TR>';
     }
     if (html.match(LAST_TR_END_REGEX)) {
-        let tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
-        let table = tableMatch ? tableMatch[0] : '<TABLE>';
+        const tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
+        const table = tableMatch ? tableMatch[0] : '<TABLE>';
         html = table + html + '</TABLE>';
     }
 

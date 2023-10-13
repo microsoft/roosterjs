@@ -1,5 +1,5 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Change the capitalization of text in the selection
@@ -14,6 +14,8 @@ export default function changeCapitalization(
     capitalization: 'sentence' | 'lowerCase' | 'upperCase' | 'capitalize',
     language?: string
 ) {
+    editor.focus();
+
     formatSegmentWithContentModel(editor, 'changeCapitalization', (_, __, segment) => {
         if (segment?.segmentType == 'Text') {
             switch (capitalization) {

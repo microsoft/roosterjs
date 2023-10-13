@@ -1,13 +1,8 @@
 import applyTextStyle from './applyTextStyle';
 import isNodeAfter from '../utils/isNodeAfter';
 import Position from '../selection/Position';
-import {
-    BlockElement,
-    InlineElement,
-    NodePosition,
-    NodeType,
-    PositionType,
-} from 'roosterjs-editor-types';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
+import type { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
 
 /**
  * This presents an inline element that can be represented by a single html node.
@@ -78,8 +73,8 @@ export default class NodeInlineElement implements InlineElement {
      * Checks if the given position is contained in the inline element
      */
     public contains(pos: NodePosition): boolean {
-        let start = this.getStartPosition();
-        let end = this.getEndPosition();
+        const start = this.getStartPosition();
+        const end = this.getEndPosition();
         return pos && pos.isAfter(start) && end.isAfter(pos);
     }
 

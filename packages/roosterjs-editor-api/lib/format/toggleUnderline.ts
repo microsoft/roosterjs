@@ -1,5 +1,6 @@
 import execCommand from '../utils/execCommand';
-import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
+import { DocumentCommand } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Toggle underline at selection

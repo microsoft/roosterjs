@@ -1,5 +1,5 @@
 import getObjectKeys from '../jsUtils/getObjectKeys';
-import { LinkData } from 'roosterjs-editor-types';
+import type { LinkData } from 'roosterjs-editor-types';
 
 interface LinkMatchRule {
     match: RegExp;
@@ -77,9 +77,9 @@ const linkMatchRules: Record<string, LinkMatchRule> = {
  */
 export default function matchLink(url: string): LinkData | null {
     if (url) {
-        for (let schema of getObjectKeys(linkMatchRules)) {
-            let rule = linkMatchRules[schema];
-            let matches = url.match(rule.match);
+        for (const schema of getObjectKeys(linkMatchRules)) {
+            const rule = linkMatchRules[schema];
+            const matches = url.match(rule.match);
             if (matches && matches[0] == url && (!rule.except || !rule.except.test(url))) {
                 return {
                     scheme: schema,

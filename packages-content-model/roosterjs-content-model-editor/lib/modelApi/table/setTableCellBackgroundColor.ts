@@ -1,6 +1,6 @@
-import { ContentModelTableCell } from 'roosterjs-content-model-types';
 import { parseColor } from 'roosterjs-editor-dom';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import type { ContentModelTableCell } from 'roosterjs-content-model-types';
 
 // Using the HSL (hue, saturation and lightness) representation for RGB color values.
 // If the value of the lightness is less than 20, the color is dark.
@@ -16,7 +16,8 @@ const Black = '#000000';
 export function setTableCellBackgroundColor(
     cell: ContentModelTableCell,
     color: string | null | undefined,
-    isColorOverride?: boolean
+    isColorOverride?: boolean,
+    applyToSegments?: boolean
 ) {
     if (color) {
         cell.format.backgroundColor = color;
@@ -37,6 +38,23 @@ export function setTableCellBackgroundColor(
             cell.format.textColor = Black;
         } else {
             delete cell.format.textColor;
+        }
+
+        if (applyToSegments && cell.format.textColor) {
+            cell.blocks.forEach(block => {
+                if (block.blockType == 'Paragraph') {
+                    block.segmentFormat = {
+                        ...block.segmentFormat,
+                        textColor: cell.format.textColor,
+                    };
+                    block.segments.forEach(segment => {
+                        segment.format = {
+                            ...segment.format,
+                            textColor: cell.format.textColor,
+                        };
+                    });
+                }
+            });
         }
     } else {
         delete cell.format.backgroundColor;

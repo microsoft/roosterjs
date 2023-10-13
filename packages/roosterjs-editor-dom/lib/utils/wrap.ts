@@ -1,7 +1,7 @@
 import createElement from './createElement';
 import fromHtml from './fromHtml';
 import safeInstanceOf from './safeInstanceOf';
-import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
+import type { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
 import type { CompatibleKnownCreateElementDataIndex } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -64,7 +64,7 @@ export default function wrap(
     }
 
     if (!safeInstanceOf(wrapper, 'HTMLElement')) {
-        let document = nodes[0].ownerDocument;
+        const document = nodes[0].ownerDocument;
 
         if (typeof wrapper === 'string') {
             wrapper = /^\w+$/.test(wrapper)
@@ -75,13 +75,13 @@ export default function wrap(
         }
     }
 
-    let parentNode = nodes[0].parentNode;
+    const parentNode = nodes[0].parentNode;
 
     if (parentNode) {
         parentNode.insertBefore(wrapper, nodes[0]);
     }
 
-    for (let node of nodes) {
+    for (const node of nodes) {
         wrapper.appendChild(node);
     }
 

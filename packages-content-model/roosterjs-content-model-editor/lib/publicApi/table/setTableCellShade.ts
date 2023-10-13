@@ -1,9 +1,9 @@
 import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set table cell shade color
@@ -11,6 +11,8 @@ import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBa
  * @param color The color to set. Pass null to remove existing shade color
  */
 export default function setTableCellShade(editor: IContentModelEditor, color: string | null) {
+    editor.focus();
+
     formatWithContentModel(editor, 'setTableCellShade', model => {
         const [table] = getFirstSelectedTable(model);
 

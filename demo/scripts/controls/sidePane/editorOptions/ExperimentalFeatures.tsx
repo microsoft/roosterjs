@@ -14,8 +14,6 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         "Reuse ancestor list elements even if they don't match the types from the list item.",
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
-    [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
-        'Add read entities around read only entities to handle browser edge cases.',
     [ExperimentalFeatures.DisableListChain]: 'Disable list chain functionality',
 };
 

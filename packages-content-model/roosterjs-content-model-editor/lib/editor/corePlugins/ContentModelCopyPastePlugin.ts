@@ -3,40 +3,34 @@ import { cloneModel } from '../../modelApi/common/cloneModel';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
     contentModelToDom,
     createModelToDomContext,
+    isElementOfType,
+    isNodeOfType,
+    moveChildNodes,
     normalizeContentModel,
+    toArray,
 } from 'roosterjs-content-model-dom';
-import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDecorator,
-    ContentModelSegment,
-    ContentModelTableRow,
-} from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
-    moveChildNodes,
-    createRange,
     extractClipboardItems,
-    toArray,
     wrap,
-    safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     CopyPastePluginState,
     IEditor,
-    PluginEventType,
     PluginWithState,
-    KnownCreateElementDataIndex,
     ClipboardData,
-    SelectionRangeTypes,
-    SelectionRangeEx,
+} from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    PluginEventType,
+    KnownCreateElementDataIndex,
     ColorTransformDirection,
 } from 'roosterjs-editor-types';
 
@@ -95,8 +89,11 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         if (!this.editor) {
             return;
         }
-        const selection = this.editor.getSelectionRangeEx();
-        if (selection && !selection.areAllCollapsed) {
+
+        const doc = this.editor.getDocument();
+        const selection = this.editor.getDOMSelection();
+
+        if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const model = this.editor.createContentModel();
 
             const pasteModel = cloneModel(model, {
@@ -112,12 +109,16 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                                   ColorTransformDirection.DarkToLight
                               );
 
+                              result.style.color = result.style.color || 'inherit';
+                              result.style.backgroundColor =
+                                  result.style.backgroundColor || 'inherit';
+
                               return result;
                           }
                       }
                     : false,
             });
-            if (selection.type === SelectionRangeTypes.TableSelection) {
+            if (selection.type === 'table') {
                 iterateSelections([pasteModel], (path, tableContext) => {
                     if (tableContext?.table) {
                         const table = tableContext?.table;
@@ -143,7 +144,9 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 onNodeCreated
             );
 
-            let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
+            let newRange: Range | null = selectionForCopy
+                ? domSelectionToRange(doc, selectionForCopy, tempDiv)
+                : null;
             if (newRange) {
                 newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                     clonedRoot: tempDiv,
@@ -159,7 +162,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 this.editor.runAsync(editor => {
                     cleanUpAndRestoreSelection(tempDiv);
                     editor.focus();
-                    editor.select(selection);
+                    (editor as IContentModelEditor).setDOMSelection(selection);
 
                     if (isCut) {
                         formatWithContentModel(
@@ -181,6 +184,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                         );
                     }
                 });
+            } else {
+                cleanUpAndRestoreSelection(tempDiv);
             }
         }
     }
@@ -246,27 +251,29 @@ function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
 }
 
-function selectionExToRange(
-    selection: SelectionRangeEx | null,
+function domSelectionToRange(
+    doc: Document,
+    selection: DOMSelection,
     tempDiv: HTMLDivElement
 ): Range | null {
-    if (!selection) {
-        return null;
-    }
     let newRange: Range | null = null;
-    if (selection.type === SelectionRangeTypes.TableSelection && selection.coordinates) {
+
+    if (selection.type === 'table') {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
         const elementToSelect =
             table.parentElement?.childElementCount == 1 ? table.parentElement : table;
-        newRange = createRange(elementToSelect);
-    } else if (selection.type === SelectionRangeTypes.ImageSelection) {
+
+        newRange = doc.createRange();
+        newRange.selectNode(elementToSelect);
+    } else if (selection.type === 'image') {
         const image = tempDiv.querySelector('#' + selection.image.id);
 
         if (image) {
-            newRange = createRange(image);
+            newRange = doc.createRange();
+            newRange.selectNode(image);
         }
     } else {
-        newRange = selection.ranges[0];
+        newRange = selection.range;
     }
 
     return newRange;
@@ -276,16 +283,11 @@ function selectionExToRange(
  * @internal
  * Exported only for unit testing
  */
-export const onNodeCreated = (
-    _:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow,
-    node: Node
-): void => {
-    if (safeInstanceOf(node, 'HTMLTableElement')) {
+export const onNodeCreated: OnNodeCreated = (_, node): void => {
+    if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'table')) {
         wrap(node, 'div');
+    }
+    if (isNodeOfType(node, 'ELEMENT_NODE') && !node.isContentEditable) {
+        node.removeAttribute('contenteditable');
     }
 };

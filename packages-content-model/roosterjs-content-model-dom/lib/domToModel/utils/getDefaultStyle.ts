@@ -1,5 +1,5 @@
 import { defaultHTMLStyleMap } from '../../config/defaultHTMLStyleMap';
-import { DefaultStyleMap, DomToModelContext } from 'roosterjs-content-model-types';
+import type { DefaultStyleMap, DomToModelContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -12,7 +12,7 @@ export function getDefaultStyle(
     element: HTMLElement,
     context: DomToModelContext
 ): Partial<CSSStyleDeclaration> {
-    let tag = element.tagName.toLowerCase() as keyof DefaultStyleMap;
+    const tag = element.tagName.toLowerCase() as keyof DefaultStyleMap;
 
     return defaultHTMLStyleMap[tag] || {};
 }

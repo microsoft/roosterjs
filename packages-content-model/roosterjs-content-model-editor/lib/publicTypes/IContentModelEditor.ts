@@ -1,8 +1,8 @@
 import { Border } from 'roosterjs-editor-types';
-import { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
-import {
+import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
+    DOMSelection,
     DomToModelOption,
     ModelToDomOption,
     OnNodeCreated,
@@ -22,7 +22,7 @@ export interface IContentModelEditor extends IEditor {
      */
     createContentModel(
         option?: DomToModelOption,
-        selectionOverride?: SelectionRangeEx
+        selectionOverride?: DOMSelection
     ): ContentModelDocument;
 
     /**
@@ -35,19 +35,20 @@ export interface IContentModelEditor extends IEditor {
         model: ContentModelDocument,
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
-    ): void;
+    ): DOMSelection | null;
 
     /**
-     * Notify editor the current cache may be invalid
+     * Get current DOM selection.
+     * This is the replacement of IEditor.getSelectionRangeEx.
      */
-    invalidateCache(): void;
+    getDOMSelection(): DOMSelection | null;
 
     /**
-     * Get default format as ContentModelSegmentFormat.
-     * This is a replacement of IEditor.getDefaultFormat for Content Model.
-     * @returns The default format
+     * Set DOMSelection into editor content.
+     * This is the replacement of IEditor.select.
+     * @param selection The selection to set
      */
-    getContentModelDefaultFormat(): ContentModelSegmentFormat;
+    setDOMSelection(selection: DOMSelection): void;
 
     /**
      * Get table border
@@ -87,4 +88,9 @@ export interface ContentModelEditorOptions extends EditorOptions {
      * Default options used for Content Model to DOM conversion
      */
     defaultModelToDomOptions?: ModelToDomOption;
+
+    /**
+     * Reuse existing DOM structure if possible, and update the model when content or selection is changed
+     */
+    cacheModel?: boolean;
 }

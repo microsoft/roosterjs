@@ -1,16 +1,16 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { listStylePositionFormatHandler } from '../../../lib/formatHandlers/list/listStylePositionFormatHandler';
+import { listStyleFormatHandler } from '../../../lib/formatHandlers/list/listStyleFormatHandler';
 import {
     DomToModelContext,
-    ListStylePositionFormat,
+    ListStyleFormat,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
-describe('listStylePositionFormatHandler.parse', () => {
+describe('listStyleFormatHandler.parse', () => {
     let div: HTMLElement;
     let context: DomToModelContext;
-    let format: ListStylePositionFormat;
+    let format: ListStyleFormat;
 
     beforeEach(() => {
         div = document.createElement('div');
@@ -19,22 +19,24 @@ describe('listStylePositionFormatHandler.parse', () => {
     });
 
     it('Not format', () => {
-        listStylePositionFormatHandler.parse(format, div, context, {});
+        listStyleFormatHandler.parse(format, div, context, {});
 
         expect(format.listStylePosition).toBeUndefined();
     });
 
-    it('with letter spacing', () => {
+    it('with list style position', () => {
         div.style.listStylePosition = 'inside';
-        listStylePositionFormatHandler.parse(format, div, context, {});
+        listStyleFormatHandler.parse(format, div, context, {});
 
-        expect(format.listStylePosition).toBe('inside');
+        expect(format).toEqual({
+            listStylePosition: 'inside',
+        });
     });
 });
 
-describe('listStylePositionFormatHandler.apply', () => {
+describe('listStyleFormatHandler.apply', () => {
     let div: HTMLElement;
-    let format: ListStylePositionFormat;
+    let format: ListStyleFormat;
     let context: ModelToDomContext;
 
     beforeEach(() => {
@@ -44,7 +46,7 @@ describe('listStylePositionFormatHandler.apply', () => {
     });
 
     it('no format', () => {
-        listStylePositionFormatHandler.apply(format, div, context);
+        listStyleFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toEqual('<div></div>');
     });
@@ -52,7 +54,7 @@ describe('listStylePositionFormatHandler.apply', () => {
     it('with value', () => {
         format.listStylePosition = 'inside';
 
-        listStylePositionFormatHandler.apply(format, div, context);
+        listStyleFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toEqual('<div style="list-style-position: inside;"></div>');
     });

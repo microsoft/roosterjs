@@ -1,4 +1,4 @@
-import { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
+import type { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 
 export const RESIZE_HANDLE_SIZE = 10;
 export const RESIZE_HANDLE_MARGIN = 6;

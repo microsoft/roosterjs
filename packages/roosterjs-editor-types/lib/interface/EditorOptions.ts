@@ -1,15 +1,15 @@
 import Border from './Border';
-import CorePlugins from './CorePlugins';
-import DarkColorHandler from './DarkColorHandler';
-import DefaultFormat from './DefaultFormat';
-import EditorPlugin from './EditorPlugin';
-import Rect from './Rect';
-import Snapshot from './Snapshot';
-import UndoSnapshotsService from './UndoSnapshotsService';
-import { CoreApiMap } from './EditorCore';
-import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
-import { SizeTransformer } from '../type/SizeTransformer';
-import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
+import type CorePlugins from './CorePlugins';
+import type DarkColorHandler from './DarkColorHandler';
+import type DefaultFormat from './DefaultFormat';
+import type EditorPlugin from './EditorPlugin';
+import type Rect from './Rect';
+import type Snapshot from './Snapshot';
+import type UndoSnapshotsService from './UndoSnapshotsService';
+import type { CoreApiMap } from './EditorCore';
+import type { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
+import type { SizeTransformer } from '../type/SizeTransformer';
+import type { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -149,4 +149,11 @@ export default interface EditorOptions {
      * Initial Table Border Format
      */
     initialTableBorder?: Border;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 }

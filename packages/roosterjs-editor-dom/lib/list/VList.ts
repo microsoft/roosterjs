@@ -9,13 +9,14 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
-import VListItem, { ListStyleDefinitionMetadata, ListStyleMetadata } from './VListItem';
+import VListItem, { ListStyleDefinitionMetadata } from './VListItem';
 import wrap from '../utils/wrap';
 import { getMetadata, setMetadata } from '../metadata/metadata';
+import type { ListStyleMetadata } from './VListItem';
+import type { NodePosition } from 'roosterjs-editor-types';
 import {
     Indentation,
     ListType,
-    NodePosition,
     PositionType,
     NodeType,
     Alignment,

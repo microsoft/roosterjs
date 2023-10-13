@@ -1,5 +1,5 @@
 import hasSelectionInBlock from './hasSelectionInBlock';
-import { ContentModelSegment } from 'roosterjs-content-model-types';
+import type { ContentModelSegment } from 'roosterjs-content-model-types';
 
 /**
  * Check if there is selection within the given segment

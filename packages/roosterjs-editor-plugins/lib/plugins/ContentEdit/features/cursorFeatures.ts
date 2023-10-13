@@ -1,8 +1,8 @@
 import { Browser, getComputedStyle, Position } from 'roosterjs-editor-dom';
-import {
+import { Keys } from 'roosterjs-editor-types';
+import type {
     BuildInEditFeature,
     CursorFeatureSettings,
-    Keys,
     PluginKeyboardEvent,
 } from 'roosterjs-editor-types';
 
@@ -23,8 +23,8 @@ const NoCycleCursorMove: BuildInEditFeature<PluginKeyboardEvent> = {
             return false;
         }
 
-        let rtl = getComputedStyle(position.element, 'direction') == 'rtl';
-        let rawEvent = event.rawEvent;
+        const rtl = getComputedStyle(position.element, 'direction') == 'rtl';
+        const rawEvent = event.rawEvent;
 
         return (!rtl && rawEvent.which == Keys.LEFT) || (rtl && rawEvent.which == Keys.RIGHT);
     },

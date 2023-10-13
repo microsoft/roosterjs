@@ -1,7 +1,8 @@
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import Position from './Position';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * Create a range around the given node(s)
@@ -83,7 +84,7 @@ export default function createRange(
     }
 
     if (start?.node?.ownerDocument) {
-        let range = start.node.ownerDocument.createRange();
+        const range = start.node.ownerDocument.createRange();
         start = getFocusablePosition(start);
         end = getFocusablePosition(end || start);
         range.setStart(start.node, start.offset);

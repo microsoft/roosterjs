@@ -1,3 +1,4 @@
+import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 import {
     applyFormat,
     applyTextStyle,
@@ -9,14 +10,12 @@ import {
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
-import {
+import type {
     BeforePasteEvent,
     ClipboardData,
     CreatePasteFragment,
     EditorCore,
-    PluginEventType,
     NodePosition,
-    PasteType,
     DefaultFormat,
 } from 'roosterjs-editor-types';
 
@@ -102,7 +101,7 @@ function createFragmentFromClipboardData(
 ) {
     const { fragment } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
-    let doc: Document | undefined = rawHtml
+    const doc: Document | undefined = rawHtml
         ? new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html')
         : undefined;
 

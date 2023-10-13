@@ -1,6 +1,6 @@
-import { Nullable } from '../TableCellSelectionState';
 import { Position } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
+import type { Nullable } from '../TableCellSelectionState';
 
 /**
  * @internal

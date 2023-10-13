@@ -1,6 +1,6 @@
-import { ContentModelCode } from './ContentModelCode';
-import { ContentModelLink } from './ContentModelLink';
-import { ContentModelListLevel } from './ContentModelListLevel';
+import type { ContentModelCode } from './ContentModelCode';
+import type { ContentModelLink } from './ContentModelLink';
+import type { ContentModelListLevel } from './ContentModelListLevel';
 
 /**
  * Union type for segment decorators

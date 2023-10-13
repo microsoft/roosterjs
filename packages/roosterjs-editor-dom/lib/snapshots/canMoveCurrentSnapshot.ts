@@ -1,4 +1,4 @@
-import { Snapshots } from 'roosterjs-editor-types';
+import type { Snapshots } from 'roosterjs-editor-types';
 
 /**
  * Check whether can move current snapshot with the given step
@@ -10,6 +10,6 @@ export default function canMoveCurrentSnapshot<T = string>(
     snapshots: Snapshots<T>,
     step: number
 ): boolean {
-    let newIndex = snapshots.currentIndex + step;
+    const newIndex = snapshots.currentIndex + step;
     return newIndex >= 0 && newIndex < snapshots.snapshots.length;
 }

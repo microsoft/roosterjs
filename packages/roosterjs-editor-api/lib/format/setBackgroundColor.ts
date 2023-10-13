@@ -1,6 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 import { setColor } from 'roosterjs-editor-dom';
+import type { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
  * Set background color at current selection

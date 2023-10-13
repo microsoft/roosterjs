@@ -1,7 +1,7 @@
-import RibbonButton from '../../type/RibbonButton';
-import { BackgroundColorButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { renderColorPicker } from '../../../colorPicker/component/renderColorPicker';
 import { setBackgroundColor } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { BackgroundColorButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import {
     getColorPickerContainerClassName,
     getColorPickerItemClassName,

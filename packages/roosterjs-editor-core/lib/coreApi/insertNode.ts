@@ -1,13 +1,15 @@
-import {
+import type {
     BlockElement,
-    ContentPosition,
-    ColorTransformDirection,
     EditorCore,
     InsertNode,
     InsertOption,
+    NodePosition,
+} from 'roosterjs-editor-types';
+import {
+    ContentPosition,
+    ColorTransformDirection,
     NodeType,
     PositionType,
-    NodePosition,
     RegionType,
 } from 'roosterjs-editor-types';
 import {
@@ -64,7 +66,7 @@ export const insertNode: InsertNode = (
         replaceSelection: true,
         insertToRegionRoot: false,
     };
-    let contentDiv = core.contentDiv;
+    const contentDiv = core.contentDiv;
 
     if (option.updateCursor) {
         core.api.focus(core);
@@ -86,11 +88,11 @@ export const insertNode: InsertNode = (
             switch (option.position) {
                 case ContentPosition.Begin:
                 case ContentPosition.End: {
-                    let isBegin = option.position == ContentPosition.Begin;
-                    let block = getFirstLastBlockElement(contentDiv, isBegin);
+                    const isBegin = option.position == ContentPosition.Begin;
+                    const block = getFirstLastBlockElement(contentDiv, isBegin);
                     let insertedNode: Node | Node[] | undefined;
                     if (block) {
-                        let refNode = isBegin ? block.getStartNode() : block.getEndNode();
+                        const refNode = isBegin ? block.getStartNode() : block.getEndNode();
                         if (
                             option.insertOnNewLine ||
                             refNode.nodeType == NodeType.Text ||
@@ -139,7 +141,7 @@ export const insertNode: InsertNode = (
                 }
                 case ContentPosition.DomEnd:
                     // Use appendChild to insert the node at the end of the content div.
-                    let insertedNode = contentDiv.appendChild(node);
+                    const insertedNode = contentDiv.appendChild(node);
                     // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
                     // add a DIV wrapping
                     if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
@@ -172,7 +174,7 @@ export const insertNode: InsertNode = (
                         pos = adjustInsertPosition(contentDiv, node, pos, range);
                     }
 
-                    let nodeForCursor =
+                    const nodeForCursor =
                         node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
 
                     range = createRange(pos);

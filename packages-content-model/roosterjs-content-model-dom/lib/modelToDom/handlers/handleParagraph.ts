@@ -1,9 +1,10 @@
 import { applyFormat } from '../utils/applyFormat';
-import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import { unwrap } from 'roosterjs-editor-dom';
+import type {
     ContentModelBlockHandler,
     ContentModelParagraph,
     ModelToDomContext,
@@ -74,6 +75,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                     paragraph.segments.forEach(segment => {
                         const newSegments: Node[] = [];
                         context.modelHandlers.segment(doc, parent, segment, context, newSegments);
+
+                        newSegments.forEach(node => {
+                            context.domIndexer?.onSegment(node, paragraph, [segment]);
+                        });
                     });
                 }
             };
@@ -103,18 +108,20 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             // to make sure the value is correct.
             refNode = container.nextSibling;
 
+            if (container) {
+                context.onNodeCreated?.(paragraph, container);
+                context.domIndexer?.onParagraph(container);
+            }
+
             if (needParagraphWrapper) {
                 if (context.allowCacheElement) {
                     paragraph.cachedElement = container;
                 }
             } else {
                 unwrap(container);
+                container = undefined;
             }
         });
-    }
-
-    if (container) {
-        context.onNodeCreated?.(paragraph, container);
     }
 
     return refNode;

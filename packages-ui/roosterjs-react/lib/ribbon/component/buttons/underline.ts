@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
 import { toggleUnderline } from 'roosterjs-editor-api';
-import { UnderlineButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import type RibbonButton from '../../type/RibbonButton';
+import type { UnderlineButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

@@ -4,7 +4,7 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import NodeBlockElement from './NodeBlockElement';
 import StartEndBlockElement from './StartEndBlockElement';
-import { BlockElement } from 'roosterjs-editor-types';
+import type { BlockElement } from 'roosterjs-editor-types';
 
 /**
  * This produces a block element from a a node
@@ -42,7 +42,7 @@ export default function getBlockElementAtNode(
     // Identify the containing block. This serves as ceiling for traversing down below
     // NOTE: this container block could be just the rootNode,
     // which cannot be used to create block element. We will special case handle it later on
-    let containerBlockNode = StartEndBlockElement.getBlockContext(node!);
+    const containerBlockNode = StartEndBlockElement.getBlockContext(node!);
     if (!containerBlockNode) {
         return null;
     } else if (containerBlockNode == node) {
@@ -62,7 +62,7 @@ export default function getBlockElementAtNode(
     // 2) &lt;root&gt;&lt;div&gt;hello&lt;span style="font-family: Arial"&gt;world&lt;/span&gt;&lt;/div&gt;&lt;/root&gt;, head: hello, tail: world
     // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
     // So we shall try to collapse as much as we can to the nearest common ancestor
-    let nodes = collapseNodes(rootNode, headNode, tailNode, false /*canSplitParent*/);
+    const nodes = collapseNodes(rootNode, headNode, tailNode, false /*canSplitParent*/);
 
     if (nodes.length === 0) {
         return null;
@@ -77,7 +77,7 @@ export default function getBlockElementAtNode(
     } else {
         // Balanced start and end (point to same parent), need to see if further collapsing can be done
         while (!headNode.previousSibling && !tailNode.nextSibling) {
-            let parentNode = headNode.parentNode;
+            const parentNode = headNode.parentNode;
             if (parentNode == containerBlockNode) {
                 // Has reached the container block
                 if (containerBlockNode != rootNode) {

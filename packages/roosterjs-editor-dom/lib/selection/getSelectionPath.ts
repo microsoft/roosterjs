@@ -1,6 +1,7 @@
 import contains from '../utils/contains';
 import Position from './Position';
-import { NodePosition, NodeType, SelectionPath } from 'roosterjs-editor-types';
+import { NodeType } from 'roosterjs-editor-types';
+import type { NodePosition, SelectionPath } from 'roosterjs-editor-types';
 
 /**
  * Get path of the given selection range related to the given rootNode
@@ -15,7 +16,7 @@ export default function getSelectionPath(
         return null;
     }
 
-    let selectionPath: SelectionPath = {
+    const selectionPath: SelectionPath = {
         start: getPositionPath(Position.getStart(range), rootNode),
         end: getPositionPath(Position.getEnd(range), rootNode),
     };
@@ -42,7 +43,7 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
 
     let node: Node | null = position.node;
     let offset = position.offset;
-    let result: number[] = [];
+    const result: number[] = [];
     let parent: Node | null;
 
     if (!contains(rootNode, node, true)) {

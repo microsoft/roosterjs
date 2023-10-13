@@ -1,6 +1,6 @@
 import { createEditorCore } from './createEditorCore';
 import { EditorBase } from './EditorBase';
-import { EditorCore, EditorOptions } from 'roosterjs-editor-types';
+import type { EditorCore, EditorOptions } from 'roosterjs-editor-types';
 
 /**
  * RoosterJs core editor class

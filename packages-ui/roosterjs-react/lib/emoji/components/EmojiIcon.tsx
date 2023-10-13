@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
-import { Emoji } from '../type/Emoji';
-import { EmojiPaneStyle } from '../type/EmojiPaneStyles';
-import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
+import type { Emoji } from '../type/Emoji';
+import type { EmojiPaneStyle } from '../type/EmojiPaneStyles';
+import type { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 /**
  * @internal
  * Emoji icon data

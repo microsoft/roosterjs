@@ -1,6 +1,6 @@
 import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
-import ImageEditInfo from '../types/ImageEditInfo';
 import { getMetadata, removeMetadata, setMetadata } from 'roosterjs-editor-dom';
+import type ImageEditInfo from '../types/ImageEditInfo';
 
 /**
  * @internal

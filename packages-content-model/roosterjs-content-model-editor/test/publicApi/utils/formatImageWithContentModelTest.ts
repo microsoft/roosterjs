@@ -20,8 +20,9 @@ describe('formatImageWithContentModel', () => {
     ) {
         segmentTestForPluginEvent(
             'apiTest',
-            editor =>
-                formatImageWithContentModel(editor, 'apiTest', callback, shouldCallPluginEvent),
+            editor => {
+                formatImageWithContentModel(editor, 'apiTest', callback, shouldCallPluginEvent);
+            },
             model,
             result,
             shouldCallPluginEvent,
@@ -209,11 +210,12 @@ function segmentTestForPluginEvent(
     const addUndoSnapshot = jasmine
         .createSpy()
         .and.callFake((callback: () => void, source: string, canUndoByBackspace, param: any) => {
-            expect(source).toBe('Format');
+            expect(source).toBe(undefined!);
             expect(param.formatApiName).toBe(apiName);
             callback();
         });
     const triggerPluginEvent = jasmine.createSpy().and.callFake(() => {});
+    const getVisibleViewport = jasmine.createSpy().and.callFake(() => {});
     const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
         expect(model).toEqual(result);
     });
@@ -226,11 +228,12 @@ function segmentTestForPluginEvent(
         getFocusedPosition: () => null as NodePosition,
         triggerPluginEvent,
         isDarkMode: () => false,
+        getVisibleViewport,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);
     if (shouldCallPluginEvent) {
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(calledTimes);
+        expect(triggerPluginEvent).toHaveBeenCalled();
     }
     expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
     expect(setContentModel).toHaveBeenCalledTimes(calledTimes);

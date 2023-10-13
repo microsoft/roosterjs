@@ -1,5 +1,5 @@
-import { BoxShadowFormat } from 'roosterjs-content-model-types';
-import { FormatHandler } from '../FormatHandler';
+import type { BoxShadowFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal

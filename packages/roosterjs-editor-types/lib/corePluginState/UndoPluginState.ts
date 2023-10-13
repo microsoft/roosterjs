@@ -1,6 +1,6 @@
-import NodePosition from '../interface/NodePosition';
-import Snapshot from '../interface/Snapshot';
-import UndoSnapshotsService from '../interface/UndoSnapshotsService';
+import type NodePosition from '../interface/NodePosition';
+import type Snapshot from '../interface/Snapshot';
+import type UndoSnapshotsService from '../interface/UndoSnapshotsService';
 
 /**
  * The state object for UndoPlugin

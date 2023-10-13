@@ -1,34 +1,30 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import { ChangeSource, GetContentMode, PasteType, PluginEventType } from 'roosterjs-editor-types';
 import { formatWithContentModel } from './formatWithContentModel';
-import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
-import { NodePosition } from 'roosterjs-editor-types';
+import type {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
+import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ClipboardData } from 'roosterjs-editor-types';
 import {
     applySegmentFormatToElement,
     createDomToModelContext,
     domToContentModel,
+    moveChildNodes,
 } from 'roosterjs-content-model-dom';
-import ContentModelBeforePasteEvent, {
-    ContentModelBeforePasteEventData,
-} from '../../publicTypes/event/ContentModelBeforePasteEvent';
+import type { ContentModelBeforePasteEventData } from '../../publicTypes/event/ContentModelBeforePasteEvent';
+import type ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import {
     createDefaultHtmlSanitizerOptions,
     getPasteType,
     handleImagePaste,
     handleTextPaste,
-    moveChildNodes,
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    ClipboardData,
-    GetContentMode,
-    PasteType,
-    PluginEventType,
-} from 'roosterjs-editor-types';
 
 /**
  * Paste into editor using a clipboardData object
@@ -52,6 +48,8 @@ export default function paste(
         clipboardData.snapshotBeforePaste = editor.getContent(GetContentMode.RawHTMLWithSelection);
     }
 
+    editor.focus();
+
     formatWithContentModel(
         editor,
         'Paste',
@@ -71,7 +69,6 @@ export default function paste(
             } = triggerPluginEventAndCreatePasteFragment(
                 editor,
                 clipboardData,
-                null /* position */,
                 pasteAsText,
                 pasteAsImage,
                 eventData,
@@ -162,7 +159,6 @@ function createBeforePasteEventData(
 function triggerPluginEventAndCreatePasteFragment(
     editor: IContentModelEditor,
     clipboardData: ClipboardData,
-    position: NodePosition | null,
     pasteAsText: boolean,
     pasteAsImage: boolean,
     eventData: ContentModelBeforePasteEventData,
@@ -177,7 +173,7 @@ function triggerPluginEventAndCreatePasteFragment(
     const { rawHtml, text, imageDataUri } = clipboardData;
     const trustedHTMLHandler = editor.getTrustedHTMLHandler();
 
-    let doc: Document | undefined = rawHtml
+    const doc: Document | undefined = rawHtml
         ? new DOMParser().parseFromString(trustedHTMLHandler(rawHtml), 'text/html')
         : undefined;
 
@@ -192,7 +188,7 @@ function triggerPluginEventAndCreatePasteFragment(
         moveChildNodes(fragment, doc?.body);
     } else if (text) {
         // Paste text
-        handleTextPaste(text, position, fragment);
+        handleTextPaste(text, null /*position*/, fragment);
     }
 
     const formatContainer = fragment.ownerDocument.createElement('span');
@@ -213,7 +209,7 @@ function triggerPluginEventAndCreatePasteFragment(
     }
 
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
-    sanitizePasteContent(event, position);
+    sanitizePasteContent(event, null /*position*/);
 
     return pluginEvent;
 }

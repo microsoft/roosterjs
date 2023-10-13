@@ -1,10 +1,9 @@
 import { clearFormat } from 'roosterjs-editor-api';
-import {
+import { Keys, PositionType } from 'roosterjs-editor-types';
+import type {
     BuildInEditFeature,
     IEditor,
-    Keys,
     PluginKeyboardEvent,
-    PositionType,
     QuoteFeatureSettings,
 } from 'roosterjs-editor-types';
 import {
@@ -28,7 +27,7 @@ const STRUCTURED_TAGS = [QUOTE_TAG, 'LI', 'TD', 'TH'].join(',');
 const UnquoteWhenBackOnEmpty1stLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let childOfQuote = cacheGetQuoteChild(event, editor);
+        const childOfQuote = cacheGetQuoteChild(event, editor);
         return childOfQuote && isNodeEmpty(childOfQuote) && !childOfQuote.previousSibling;
     },
     handleEvent: splitQuote,
@@ -41,8 +40,8 @@ const UnquoteWhenBackOnEmpty1stLine: BuildInEditFeature<PluginKeyboardEvent> = {
 const UnquoteWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
-        let childOfQuote = cacheGetQuoteChild(event, editor);
-        let shift = event.rawEvent.shiftKey;
+        const childOfQuote = cacheGetQuoteChild(event, editor);
+        const shift = event.rawEvent.shiftKey;
         return !shift && childOfQuote && isNodeEmpty(childOfQuote);
     },
     handleEvent: (event, editor) =>
@@ -55,12 +54,12 @@ const UnquoteWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
 
 function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: IEditor): Node | null {
     return cacheGetEventData(event, 'QUOTE_CHILD', () => {
-        let quote = editor.getElementAtCursor(STRUCTURED_TAGS);
+        const quote = editor.getElementAtCursor(STRUCTURED_TAGS);
         if (quote && getTagOfNode(quote) == QUOTE_TAG) {
-            let pos = editor.getFocusedPosition();
-            let block = pos && editor.getBlockElementAtNode(pos.normalize().node);
+            const pos = editor.getFocusedPosition();
+            const block = pos && editor.getBlockElementAtNode(pos.normalize().node);
             if (block) {
-                let node =
+                const node =
                     block.getStartNode() == quote
                         ? block.getStartNode()
                         : block.collapseToSingleElement();

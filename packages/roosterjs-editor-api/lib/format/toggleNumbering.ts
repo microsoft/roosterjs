@@ -1,5 +1,6 @@
 import toggleListType from '../utils/toggleListType';
-import { IEditor, ListType, NumberingListType } from 'roosterjs-editor-types';
+import { ListType } from 'roosterjs-editor-types';
+import type { IEditor, NumberingListType } from 'roosterjs-editor-types';
 import type { CompatibleNumberingListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

@@ -32,17 +32,9 @@ export const setNumberedListStyleButton: RibbonButton<'ribbonButtonNumberedListS
     iconName: 'NumberedList',
     isDisabled: formatState => !formatState.isNumbering,
     onClick: (editor, key) => {
-        const li = editor.getElementAtCursor('li') as HTMLLIElement;
         const value = parseInt(key) as NumberingListType;
 
-        if (
-            isContentModelEditor(editor) &&
-            li &&
-            value >= NumberingListType.Min &&
-            value <= NumberingListType.Max
-        ) {
-            editor.select(li);
-
+        if (isContentModelEditor(editor)) {
             setListStyle(editor, {
                 orderedStyleType: value,
             });

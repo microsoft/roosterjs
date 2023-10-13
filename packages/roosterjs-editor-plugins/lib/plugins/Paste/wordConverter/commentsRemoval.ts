@@ -1,4 +1,4 @@
-import { CssStyleCallbackMap, ElementCallbackMap } from 'roosterjs-editor-types';
+import type { CssStyleCallbackMap, ElementCallbackMap } from 'roosterjs-editor-types';
 import {
     chainSanitizerCallback,
     getStyles,

@@ -1,10 +1,7 @@
 import readFile from '../utils/readFile';
 import toArray from '../jsUtils/toArray';
-import {
-    ClipboardData,
-    ContentTypePrefix,
-    ExtractClipboardItemsForIEOptions,
-} from 'roosterjs-editor-types';
+import { ContentTypePrefix } from 'roosterjs-editor-types';
+import type { ClipboardData, ExtractClipboardItemsForIEOptions } from 'roosterjs-editor-types';
 
 /**
  * Extract clipboard items to be a ClipboardData object for IE
@@ -34,7 +31,7 @@ export default function extractClipboardItemsForIE(
     };
 
     for (let i = 0; i < (dataTransfer.files ? dataTransfer.files.length : 0); i++) {
-        let file = dataTransfer.files.item(i);
+        const file = dataTransfer.files.item(i);
         if (file?.type?.indexOf(ContentTypePrefix.Image) == 0) {
             clipboardData.image = file;
             break;

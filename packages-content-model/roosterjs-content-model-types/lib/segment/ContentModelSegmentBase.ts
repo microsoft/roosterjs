@@ -1,9 +1,9 @@
-import { ContentModelCode } from '../decorator/ContentModelCode';
-import { ContentModelLink } from '../decorator/ContentModelLink';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { ContentModelSegmentType } from '../enum/SegmentType';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
-import { Selectable } from '../selection/Selectable';
+import type { ContentModelCode } from '../decorator/ContentModelCode';
+import type { ContentModelLink } from '../decorator/ContentModelLink';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentType } from '../enum/SegmentType';
+import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type { Selectable } from '../selection/Selectable';
 
 /**
  * Base type of Content Model Segment

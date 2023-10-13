@@ -1,17 +1,18 @@
 import applyChange from './editInfoUtils/applyChange';
 import canRegenerateImage from './api/canRegenerateImage';
-import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAndDropContext';
-import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
-import ImageEditInfo from './types/ImageEditInfo';
-import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator, updateRotateHandleState } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { MIN_HEIGHT_WIDTH } from './constants/constants';
 import { tryToConvertGifToPng } from './editInfoUtils/tryToConvertGifToPng';
+import type { DNDDirectionX, DnDDirectionY } from './types/DragAndDropContext';
+import type DragAndDropContext from './types/DragAndDropContext';
+import type DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
+import type ImageEditInfo from './types/ImageEditInfo';
+import type ImageHtmlOptions from './types/ImageHtmlOptions';
 import {
     arrayPush,
     Browser,
@@ -23,24 +24,26 @@ import {
     unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
+import type { OnShowResizeHandle } from './imageEditors/Resizer';
 import {
     Resizer,
     doubleCheckResize,
     getSideResizeHTML,
     getCornerResizeHTML,
-    OnShowResizeHandle,
     getResizeBordersHTML,
 } from './imageEditors/Resizer';
-import {
-    ImageEditOperation,
+import type {
     ImageEditOptions,
     EditorPlugin,
     IEditor,
     PluginEvent,
-    PluginEventType,
     CreateElementData,
-    KnownCreateElementDataIndex,
     ModeIndependentColor,
+} from 'roosterjs-editor-types';
+import {
+    ImageEditOperation,
+    PluginEventType,
+    KnownCreateElementDataIndex,
     SelectionRangeTypes,
     ChangeSource,
 } from 'roosterjs-editor-types';
@@ -424,6 +427,7 @@ export default class ImageEdit implements EditorPlugin {
             this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
             this.clonedImage.removeAttribute('id');
             this.clonedImage.style.removeProperty('max-width');
+            this.clonedImage.style.removeProperty('max-height');
             this.clonedImage.style.width = this.editInfo.widthPx + 'px';
             this.clonedImage.style.height = this.editInfo.heightPx + 'px';
             this.wrapper = createElement(
@@ -709,7 +713,7 @@ function isRtl(element: Node): boolean {
 }
 
 function handleRadIndexCalculator(angleRad: number): number {
-    let idx = Math.round(angleRad / DirectionRad) % DIRECTIONS;
+    const idx = Math.round(angleRad / DirectionRad) % DIRECTIONS;
     return idx < 0 ? idx + DIRECTIONS : idx;
 }
 

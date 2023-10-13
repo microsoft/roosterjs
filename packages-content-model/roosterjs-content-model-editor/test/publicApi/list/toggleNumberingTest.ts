@@ -8,8 +8,10 @@ describe('toggleNumbering', () => {
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
+    let triggerPluginEvent: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
+    let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -17,7 +19,9 @@ describe('toggleNumbering', () => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         focus = jasmine.createSpy('focus');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
             focus,
@@ -27,6 +31,8 @@ describe('toggleNumbering', () => {
             getCustomData: () => ({}),
             getFocusedPosition: () => ({}),
             isDarkMode: () => false,
+            triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);

@@ -1,6 +1,6 @@
 import getInlineElementAtNode from './getInlineElementAtNode';
 import { getFirstLeafNode, getLastLeafNode } from '../utils/getLeafNode';
-import { InlineElement } from 'roosterjs-editor-types';
+import type { InlineElement } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -9,7 +9,7 @@ import { InlineElement } from 'roosterjs-editor-types';
 export function getFirstInlineElement(rootNode: Node): InlineElement | null {
     // getFirstLeafNode can return null for empty container
     // do check null before passing on to get inline from the node
-    let node = getFirstLeafNode(rootNode);
+    const node = getFirstLeafNode(rootNode);
     return node ? getInlineElementAtNode(rootNode, node) : null;
 }
 
@@ -20,6 +20,6 @@ export function getFirstInlineElement(rootNode: Node): InlineElement | null {
 export function getLastInlineElement(rootNode: Node): InlineElement | null {
     // getLastLeafNode can return null for empty container
     // do check null before passing on to get inline from the node
-    let node = getLastLeafNode(rootNode);
+    const node = getLastLeafNode(rootNode);
     return node ? getInlineElementAtNode(rootNode, node) : null;
 }

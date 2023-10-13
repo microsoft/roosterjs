@@ -1,5 +1,5 @@
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Sets current selected block(s) line-height property and wipes such property from child segments
@@ -7,6 +7,8 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
  * @param spacing Unitless/px value to set line height
  */
 export default function setSpacing(editor: IContentModelEditor, spacing: number | string) {
+    editor.focus();
+
     formatParagraphWithContentModel(editor, 'setSpacing', paragraph => {
         paragraph.format.lineHeight = spacing.toString();
         paragraph.segments.forEach(segment => {

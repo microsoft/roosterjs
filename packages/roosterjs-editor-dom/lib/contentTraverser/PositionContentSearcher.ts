@@ -1,6 +1,6 @@
 import ContentTraverser from './ContentTraverser';
 import createRange from '../selection/createRange';
-import {
+import type {
     IContentTraverser,
     InlineElement,
     IPositionContentSearcher,
@@ -121,7 +121,7 @@ export default class PositionContentSearcher implements IPositionContentSearcher
         let textIndex = text.length - 1;
 
         this.forEachTextInlineElement(textInline => {
-            let nodeContent = textInline.getTextContent() || '';
+            const nodeContent = textInline.getTextContent() || '';
             let nodeIndex = nodeContent.length - 1;
             for (; nodeIndex >= 0 && textIndex >= 0; nodeIndex--) {
                 if (text.charCodeAt(textIndex) == nodeContent.charCodeAt(nodeIndex)) {
@@ -194,13 +194,13 @@ export default class PositionContentSearcher implements IPositionContentSearcher
             this.inlineBefore = this.inlineBefore || previousInline;
 
             if (previousInline && previousInline.isTextualInlineElement()) {
-                let textContent = previousInline.getTextContent();
+                const textContent = previousInline.getTextContent();
 
                 // build the word before position if it is not built yet
                 if (!this.word) {
                     // Match on the white space, the portion after space is on the index of 1 of the matched result
                     // (index at 0 is whole match result, index at 1 is the word)
-                    let matches = WHITESPACE_REGEX.exec(textContent);
+                    const matches = WHITESPACE_REGEX.exec(textContent);
                     if (matches && matches.length == 2) {
                         this.word = matches[1] + this.text;
                     }

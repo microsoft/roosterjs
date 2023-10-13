@@ -1,7 +1,10 @@
-import { DomToModelSelectionContext } from './DomToModelSelectionContext';
-import { DomToModelSettings } from './DomToModelSettings';
-import { EditorContext } from './EditorContext';
-import { DomToModelFormatContext, DomToModelDecoratorContext } from './DomToModelFormatContext';
+import type { DomToModelSelectionContext } from './DomToModelSelectionContext';
+import type { DomToModelSettings } from './DomToModelSettings';
+import type { EditorContext } from './EditorContext';
+import type {
+    DomToModelFormatContext,
+    DomToModelDecoratorContext,
+} from './DomToModelFormatContext';
 
 /**
  * Context of DOM to Model conversion, used for parse HTML element according to current context

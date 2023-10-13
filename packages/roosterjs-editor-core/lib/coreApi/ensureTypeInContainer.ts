@@ -1,11 +1,5 @@
-import {
-    ContentPosition,
-    EditorCore,
-    EnsureTypeInContainer,
-    KnownCreateElementDataIndex,
-    NodePosition,
-    PositionType,
-} from 'roosterjs-editor-types';
+import { ContentPosition, KnownCreateElementDataIndex, PositionType } from 'roosterjs-editor-types';
+import type { EditorCore, EnsureTypeInContainer, NodePosition } from 'roosterjs-editor-types';
 import {
     applyFormat,
     createElement,

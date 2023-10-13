@@ -1,4 +1,4 @@
-import ListMetadata from './ListMetadata';
+import type ListMetadata from './ListMetadata';
 
 /**
  * @internal

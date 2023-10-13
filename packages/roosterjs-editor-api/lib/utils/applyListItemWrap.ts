@@ -1,6 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { IEditor } from 'roosterjs-editor-types';
 import { safeInstanceOf, setListItemStyle } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -21,7 +21,7 @@ export default function applyListItemStyleWrap(
         (element, isInnerNode) => {
             formatCallback(element, isInnerNode);
 
-            let parent = editor.getElementAtCursor('LI', element);
+            const parent = editor.getElementAtCursor('LI', element);
             if (parent && parentNodes.indexOf(parent) === -1) {
                 parentNodes.push(parent);
             }

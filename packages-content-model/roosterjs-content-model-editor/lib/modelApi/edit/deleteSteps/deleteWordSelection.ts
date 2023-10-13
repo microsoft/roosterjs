@@ -1,11 +1,8 @@
-import { ContentModelParagraph } from 'roosterjs-content-model-types';
+import { DeleteResult } from '../utils/DeleteSelectionStep';
 import { isPunctuation, isSpace, normalizeText } from '../../../domUtils/stringUtil';
 import { isWhiteSpacePreserved } from 'roosterjs-content-model-dom';
-import {
-    DeleteResult,
-    DeleteSelectionContext,
-    DeleteSelectionStep,
-} from '../utils/DeleteSelectionStep';
+import type { ContentModelParagraph } from 'roosterjs-content-model-types';
+import type { DeleteSelectionContext, DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
 const enum DeleteWordState {
     Start,
@@ -28,7 +25,7 @@ function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelect
         const startIndex = paragraph.segments.indexOf(marker);
         const deleteNext = direction == 'forward';
 
-        let iterator = iterateSegments(paragraph, startIndex, deleteNext, context);
+        const iterator = iterateSegments(paragraph, startIndex, deleteNext, context);
         let curr = iterator.next();
 
         for (let state = DeleteWordState.Start; state != DeleteWordState.End && !curr.done; ) {

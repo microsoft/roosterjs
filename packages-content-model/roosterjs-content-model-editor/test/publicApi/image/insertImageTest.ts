@@ -22,7 +22,7 @@ describe('insertImage', () => {
             .createSpy()
             .and.callFake(
                 (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
+                    expect(source).toBe(undefined!);
                     expect(param.formatApiName).toBe(apiName);
                     callback();
                 }
@@ -30,6 +30,8 @@ describe('insertImage', () => {
         const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
             expect(model).toEqual(result);
         });
+        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         const editor = ({
             createContentModel: () => model,
             addUndoSnapshot,
@@ -38,6 +40,8 @@ describe('insertImage', () => {
             isDisposed: () => false,
             getDocument: () => document,
             isDarkMode: () => false,
+            triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
 
         executionCallback(editor);

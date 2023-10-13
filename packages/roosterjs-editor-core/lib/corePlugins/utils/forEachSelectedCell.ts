@@ -1,5 +1,5 @@
-import { VCell } from 'roosterjs-editor-types';
-import { VTable } from 'roosterjs-editor-dom';
+import type { VCell } from 'roosterjs-editor-types';
+import type { VTable } from 'roosterjs-editor-dom';
 
 /**
  * @internal

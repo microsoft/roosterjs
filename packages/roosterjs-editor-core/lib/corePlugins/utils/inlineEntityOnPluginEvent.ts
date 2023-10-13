@@ -12,16 +12,13 @@ import {
     safeInstanceOf,
     splitTextNode,
 } from 'roosterjs-editor-dom';
+import type { Entity, IEditor, PluginEvent, PluginKeyDownEvent } from 'roosterjs-editor-types';
 import {
     ChangeSource,
     DelimiterClasses,
-    Entity,
-    IEditor,
     Keys,
     NodeType,
-    PluginEvent,
     PluginEventType,
-    PluginKeyDownEvent,
     PositionType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';

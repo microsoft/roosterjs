@@ -15,6 +15,10 @@ export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
 export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
+export { isElementOfType } from './domUtils/isElementOfType';
+export { getObjectKeys } from './domUtils/getObjectKeys';
+export { default as toArray } from './domUtils/toArray';
+export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
@@ -36,6 +40,8 @@ export { createListLevel } from './modelApi/creators/createListLevel';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
+export { ensureParagraph } from './modelApi/common/ensureParagraph';
+
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';
 export { unwrapBlock } from './modelApi/common/unwrapBlock';

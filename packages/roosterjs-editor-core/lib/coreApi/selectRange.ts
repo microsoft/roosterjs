@@ -1,5 +1,5 @@
-import { EditorCore, SelectRange } from 'roosterjs-editor-types';
 import { hasFocus } from './hasFocus';
+import type { EditorCore, SelectRange } from 'roosterjs-editor-types';
 import {
     contains,
     getPendableFormatState,
@@ -54,7 +54,7 @@ function restorePendingFormatState(core: EditorCore) {
 
     if (pendingFormatState.pendableFormatState) {
         const document = contentDiv.ownerDocument;
-        let formatState = getPendableFormatState(document);
+        const formatState = getPendableFormatState(document);
         getObjectKeys(PendableFormatCommandMap).forEach(key => {
             if (!!pendingFormatState.pendableFormatState?.[key] != formatState[key]) {
                 document.execCommand(
@@ -66,7 +66,7 @@ function restorePendingFormatState(core: EditorCore) {
         });
 
         const range = getSelectionRange(core, true /*tryGetFromCache*/);
-        let position: Position | null = range && Position.getStart(range);
+        const position: Position | null = range && Position.getStart(range);
         if (position) {
             pendingFormatState.pendableFormatPosition = position;
         }

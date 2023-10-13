@@ -8,6 +8,8 @@ import {
     createListItem,
     createListLevel,
     createParagraph,
+    createTable,
+    createTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
 
@@ -536,6 +538,115 @@ describe('indent', () => {
                     format: {},
                 },
                 para3,
+            ],
+        });
+    });
+
+    it('do not turn on list for table', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph();
+        const table = createTable(1);
+        const para2 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const cell = createTableCell();
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        table.rows[0].cells.push(cell);
+        group.blocks.push(para1, table, para2);
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+        cell.isSelected = true;
+
+        const result = setListType(group, 'OL');
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para1],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 1,
+                                direction: undefined,
+                                textAlign: undefined,
+                                marginTop: undefined,
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [table],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {
+                                startNumberOverride: undefined,
+                                direction: undefined,
+                                textAlign: undefined,
+                                marginTop: undefined,
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para2],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {
+                                marginTop: undefined,
+                                direction: undefined,
+                                textAlign: undefined,
+                                startNumberOverride: undefined,
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {},
+                },
             ],
         });
     });

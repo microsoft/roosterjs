@@ -1,4 +1,5 @@
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 import {
     Browser,
     findClosestElementAncestor,
@@ -67,7 +68,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             // there is already content under the selection (e.g. Ctrl+a -> type new content).
             //
             // Only schedule when the range is not collapsed to catch this edge case.
-            let range = this.editor.getSelectionRange();
+            const range = this.editor.getSelectionRange();
 
             const styledAncestor =
                 range &&

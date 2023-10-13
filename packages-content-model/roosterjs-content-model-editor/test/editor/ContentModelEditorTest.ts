@@ -4,7 +4,7 @@ import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelT
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
-import { EditorPlugin, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
 
 const editorContext: EditorContext = {
     isDarkMode: false,
@@ -32,11 +32,11 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext, {
-            type: SelectionRangeTypes.Normal,
-            ranges: [],
-            areAllCollapsed: true,
-        });
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
+            div,
+            mockedContext,
+            undefined
+        );
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
             editorContext
@@ -63,11 +63,11 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext, {
-            type: SelectionRangeTypes.Normal,
-            ranges: [],
-            areAllCollapsed: true,
-        });
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
+            div,
+            mockedContext,
+            undefined
+        );
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
             editorContext
@@ -75,19 +75,15 @@ describe('ContentModelEditor', () => {
     });
 
     it('setContentModel with normal selection', () => {
-        const mockedFragment = 'Fragment' as any;
         const mockedRange = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [document.createRange()],
+            type: 'range',
+            range: document.createRange(),
         } as any;
-        const mockedPairs = 'Pairs' as any;
-
-        const mockedResult = [mockedFragment, mockedRange, mockedPairs] as any;
         const mockedModel = 'MockedModel' as any;
         const mockedContext = 'MockedContext' as any;
         const mockedConfig = 'MockedConfig' as any;
 
-        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedResult);
+        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedRange);
         spyOn(createModelToDomContext, 'createModelToDomContextWithConfig').and.returnValue(
             mockedContext
         );
@@ -98,7 +94,7 @@ describe('ContentModelEditor', () => {
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
 
-        editor.setContentModel(mockedModel);
+        const selection = editor.setContentModel(mockedModel);
 
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(1);
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
@@ -112,22 +108,19 @@ describe('ContentModelEditor', () => {
             mockedConfig,
             editorContext
         );
+        expect(selection).toBe(mockedRange);
     });
 
     it('setContentModel', () => {
-        const mockedFragment = 'Fragment' as any;
         const mockedRange = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [document.createRange()],
+            type: 'range',
+            range: document.createRange(),
         } as any;
-        const mockedPairs = 'Pairs' as any;
-
-        const mockedResult = [mockedFragment, mockedRange, mockedPairs] as any;
         const mockedModel = 'MockedModel' as any;
         const mockedContext = 'MockedContext' as any;
         const mockedConfig = 'MockedConfig' as any;
 
-        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedResult);
+        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedRange);
         spyOn(createModelToDomContext, 'createModelToDomContextWithConfig').and.returnValue(
             mockedContext
         );
@@ -138,7 +131,7 @@ describe('ContentModelEditor', () => {
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
 
-        editor.setContentModel(mockedModel);
+        const selection = editor.setContentModel(mockedModel);
 
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(1);
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
@@ -152,6 +145,7 @@ describe('ContentModelEditor', () => {
             mockedConfig,
             editorContext
         );
+        expect(selection).toBe(mockedRange);
     });
 
     it('createContentModel in EditorReady event', () => {
@@ -252,28 +246,5 @@ describe('ContentModelEditor', () => {
         editor.dispose();
 
         expect(div.style.fontFamily).toBe('Arial');
-    });
-
-    it('getContentModelDefaultFormat', () => {
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
-            defaultFormat: {
-                fontFamily: 'Tahoma',
-                fontSize: '20pt',
-            },
-        });
-        const format = editor.getContentModelDefaultFormat();
-
-        editor.dispose();
-
-        expect(format).toEqual({
-            fontWeight: undefined,
-            italic: undefined,
-            underline: undefined,
-            fontFamily: 'Tahoma',
-            fontSize: '20pt',
-            textColor: undefined,
-            backgroundColor: undefined,
-        });
     });
 });

@@ -1,9 +1,9 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { TableMetadataFormat } from 'roosterjs-content-model-types';
 import { updateTableCellMetadata } from 'roosterjs-content-model/lib';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * Format current focused table with the given format
@@ -16,6 +16,8 @@ export default function formatTable(
     format: TableMetadataFormat,
     keepCellShade?: boolean
 ) {
+    editor.focus();
+
     formatWithContentModel(editor, 'formatTable', model => {
         const [tableModel] = getFirstSelectedTable(model);
 

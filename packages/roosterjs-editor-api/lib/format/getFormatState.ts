@@ -1,12 +1,11 @@
 import { getTableFormatInfo, getTagOfNode, toArray } from 'roosterjs-editor-dom';
-import {
+import type {
     ElementBasedFormatState,
     FormatState,
     IEditor,
     PluginEvent,
-    QueryScope,
-    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import { QueryScope, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * Get element based Format State at cursor
@@ -29,8 +28,8 @@ export function getElementBasedFormatState(
     let multiline = false;
 
     if (range && !range.collapsed) {
-        let startingBlock = editor.getBlockElementAtNode(range.startContainer);
-        let endingBlock = editor.getBlockElementAtNode(range.endContainer);
+        const startingBlock = editor.getBlockElementAtNode(range.startContainer);
+        const endingBlock = editor.getBlockElementAtNode(range.endContainer);
         multiline = endingBlock && startingBlock ? !endingBlock.equals(startingBlock) : false;
     }
 

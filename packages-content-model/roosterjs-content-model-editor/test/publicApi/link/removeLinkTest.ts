@@ -13,10 +13,14 @@ describe('removeLink', () => {
     let editor: IContentModelEditor;
     let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+    let triggerPluginEvent: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
             focus: () => {},
@@ -24,6 +28,8 @@ describe('removeLink', () => {
             setContentModel,
             createContentModel,
             isDarkMode: () => false,
+            triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
     });
 

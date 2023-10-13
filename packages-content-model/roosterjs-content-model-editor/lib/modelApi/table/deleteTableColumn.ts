@@ -1,6 +1,6 @@
 import { collapseTableSelection } from '../selection/collapseTableSelection';
-import { ContentModelTable } from 'roosterjs-content-model-types';
 import { getSelectedCells } from './getSelectedCells';
+import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 /**
  * @internal

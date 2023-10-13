@@ -1,10 +1,6 @@
 import { contains, createRange, findClosestElementAncestor } from 'roosterjs-editor-dom';
-import {
-    EditorCore,
-    GetSelectionRangeEx,
-    SelectionRangeEx,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { EditorCore, GetSelectionRangeEx, SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -13,7 +9,7 @@ import {
  * @returns A Range object of the selection range
  */
 export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
-    let result: SelectionRangeEx | null = null;
+    const result: SelectionRangeEx | null = null;
     if (core.lifecycle.shadowEditFragment) {
         const {
             shadowEditTableSelectionPath,
@@ -73,9 +69,9 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
                 return core.domEvent.imageSelectionRange;
             }
 
-            let selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
+            const selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
             if (!result && selection && selection.rangeCount > 0) {
-                let range = selection.getRangeAt(0);
+                const range = selection.getRangeAt(0);
                 if (contains(core.contentDiv, range)) {
                     return createNormalSelectionEx([range]);
                 }

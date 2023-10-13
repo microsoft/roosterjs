@@ -1,7 +1,8 @@
 import { clearState } from '../utils/clearState';
-import { IEditor, Keys, PluginKeyUpEvent } from 'roosterjs-editor-types';
 import { isCharacterValue } from 'roosterjs-editor-dom';
-import { TableCellSelectionState } from '../TableCellSelectionState';
+import { Keys } from 'roosterjs-editor-types';
+import type { IEditor, PluginKeyUpEvent } from 'roosterjs-editor-types';
+import type { TableCellSelectionState } from '../TableCellSelectionState';
 
 const IGNORE_KEY_UP_KEYS = [
     Keys.SHIFT,

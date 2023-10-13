@@ -1,6 +1,6 @@
-import { ContentModelParagraphDecorator } from 'roosterjs-content-model-types';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelParagraphDecorator } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 type HeadingLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
@@ -22,6 +22,8 @@ export default function setHeadingLevel(
     editor: IContentModelEditor,
     headingLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6
 ) {
+    editor.focus();
+
     formatParagraphWithContentModel(editor, 'setHeadingLevel', para => {
         const tagName =
             headingLevel > 0

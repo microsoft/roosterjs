@@ -1,11 +1,12 @@
 import getTagOfNode from '../utils/getTagOfNode';
 import Position from '../selection/Position';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';
 import wrap from '../utils/wrap';
 import { getNextLeafSibling } from '../utils/getLeafSibling';
-import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
-import safeInstanceOf from '../utils/safeInstanceOf';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL,SUP,SUB'.split(',');
 
@@ -24,14 +25,14 @@ export default function applyTextStyle(
 ) {
     let formatNodes: Node[] = [];
     let fromPosition: NodePosition | null = from;
-    let toPosition: NodePosition | null = to;
+    const toPosition: NodePosition | null = to;
 
     while (fromPosition && toPosition && toPosition.isAfter(fromPosition)) {
         let formatNode = fromPosition.node;
-        let parentTag = getTagOfNode(formatNode.parentNode);
+        const parentTag = getTagOfNode(formatNode.parentNode);
 
         // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
-        let nextNode = getNextLeafSibling(container, formatNode);
+        const nextNode = getNextLeafSibling(container, formatNode);
 
         if (formatNode.nodeType == NodeType.Text && ['TR', 'TABLE'].indexOf(parentTag) < 0) {
             if (formatNode == toPosition.node && !toPosition.isAtEnd) {
@@ -58,7 +59,7 @@ export default function applyTextStyle(
 
     if (formatNodes.length > 0) {
         if (formatNodes.every(node => node.parentNode == formatNodes[0].parentNode)) {
-            let newNode = formatNodes.shift()!;
+            const newNode = formatNodes.shift()!;
             formatNodes.forEach(node => {
                 const newNodeValue = (newNode.nodeValue || '') + (node.nodeValue || '');
                 newNode.nodeValue = newNodeValue;

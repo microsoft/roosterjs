@@ -1,6 +1,7 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { DocumentCommand, IEditor, QueryScope } from 'roosterjs-editor-types';
+import { DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { HtmlSanitizer, moveChildNodes } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Set heading level at selection
@@ -30,15 +31,15 @@ export default function setHeadingLevel(editor: IEditor, level: number) {
             });
 
             if (level > 0) {
-                let traverser = editor.getSelectionTraverser();
+                const traverser = editor.getSelectionTraverser();
                 let blockElement = traverser?.currentBlockElement;
-                let sanitizer = new HtmlSanitizer({
+                const sanitizer = new HtmlSanitizer({
                     cssStyleCallbacks: {
                         'font-size': () => false,
                     },
                 });
                 while (blockElement) {
-                    let element = blockElement.collapseToSingleElement();
+                    const element = blockElement.collapseToSingleElement();
                     sanitizer.sanitize(element);
                     blockElement = traverser?.getNextBlockElement();
                 }

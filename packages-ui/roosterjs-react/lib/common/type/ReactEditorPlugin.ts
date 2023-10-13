@@ -1,5 +1,5 @@
-import UIUtilities from './UIUtilities';
-import { EditorPlugin } from 'roosterjs-editor-types';
+import type UIUtilities from './UIUtilities';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * A sub interface of EditorPlugin to provide additional functionalities for rendering react component from the plugin

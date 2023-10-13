@@ -1,7 +1,9 @@
-import { EntityOperation, SelectionRangeEx } from 'roosterjs-editor-types';
-import {
+import type { EntityOperation } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ContentModelEntity,
+    ContentModelImage,
+    DOMSelection,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -33,6 +35,11 @@ export interface FormatWithContentModelContext {
      * Entities got deleted during formatting. Need to be set by the formatter function
      */
     readonly deletedEntities: DeletedEntity[];
+
+    /**
+     * Images inserted in the editor that needs to have their size adjusted
+     */
+    readonly newImages: ContentModelImage[];
 
     /**
      * Raw Event that triggers this format call
@@ -81,7 +88,7 @@ export interface FormatWithContentModelOptions {
     /**
      * When specified, use this selection range to override current selection inside editor
      */
-    selectionOverride?: SelectionRangeEx;
+    selectionOverride?: DOMSelection;
 }
 
 /**

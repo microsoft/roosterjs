@@ -2,11 +2,11 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
+import { isElementOfType } from '../../domUtils/isElementOfType';
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { parseFormat } from '../utils/parseFormat';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelTableCellFormat,
     DatasetFormat,
     ElementProcessor,
@@ -41,20 +41,15 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             parseFormat(tableElement, context.formatParsers.block, context.blockFormat, context);
 
             const table = createTable(tableElement.rows.length, context.blockFormat);
-            const tableSelection =
-                context.rangeEx?.type == SelectionRangeTypes.TableSelection
-                    ? context.rangeEx
-                    : null;
+            const tableSelection = context.selection?.type == 'table' ? context.selection : null;
             const selectedTable = tableSelection?.table;
-            const coordinates = tableSelection?.coordinates;
-            const hasTableSelection =
-                selectedTable == tableElement &&
-                !!coordinates?.firstCell &&
-                !!coordinates?.lastCell;
+            const hasTableSelection = selectedTable == tableElement;
 
             if (context.allowCacheElement) {
                 table.cachedElement = tableElement;
             }
+
+            context.domIndexer?.onTable(tableElement, table);
 
             parseFormat(tableElement, context.formatParsers.table, table.format, context);
             parseFormat(tableElement, context.formatParsers.tableBorder, table.format, context);
@@ -77,7 +72,12 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                 const tbody = tr.parentNode;
 
-                if (safeInstanceOf(tbody, 'HTMLTableSectionElement')) {
+                if (
+                    isNodeOfType(tbody, 'ELEMENT_NODE') &&
+                    (isElementOfType(tbody, 'tbody') ||
+                        isElementOfType(tbody, 'thead') ||
+                        isElementOfType(tbody, 'tfoot'))
+                ) {
                     parseFormat(tbody, context.formatParsers.tableRow, tableRow.format, context);
                 } else if (context.allowCacheElement) {
                     tableRow.cachedElement = tr;
@@ -227,10 +227,11 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                         if (
                                             (hasSelectionBeforeCell && hasSelectionAfterCell) ||
                                             (hasTableSelection &&
-                                                row >= coordinates.firstCell.y &&
-                                                row <= coordinates.lastCell.y &&
-                                                targetCol >= coordinates.firstCell.x &&
-                                                targetCol <= coordinates.lastCell.x)
+                                                tableSelection &&
+                                                row >= tableSelection.firstRow &&
+                                                row <= tableSelection.lastRow &&
+                                                targetCol >= tableSelection.firstColumn &&
+                                                targetCol <= tableSelection.lastColumn)
                                         ) {
                                             cell.isSelected = true;
                                         }
@@ -267,7 +268,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 };
 
 function calcSizes(positions: number[]): number[] {
-    let result: number[] = [];
+    const result: number[] = [];
     let lastPos = positions[positions.length - 1];
 
     for (let i = positions.length - 2; i >= 0; i--) {

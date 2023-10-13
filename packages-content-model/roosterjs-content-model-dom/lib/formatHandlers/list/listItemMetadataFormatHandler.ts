@@ -1,9 +1,8 @@
-import { FormatHandler } from '../FormatHandler';
-import { getObjectKeys, getTagOfNode } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { ListMetadataFormat } from 'roosterjs-content-model-types';
-import { NodeType } from 'roosterjs-editor-types';
 import { OrderedMap, UnorderedMap } from './listLevelMetadataFormatHandler';
+import type { FormatHandler } from '../FormatHandler';
+import type { ListMetadataFormat } from 'roosterjs-content-model-types';
 
 const OrderedMapPlaceholderRegex = /\$\{(\w+)\}/;
 const DefaultOrderedListStyles = ['decimal', 'lower-alpha', 'lower-roman'];
@@ -36,8 +35,8 @@ export const listItemMetadataFormatHandler: FormatHandler<ListMetadataFormat> = 
         const parent = element.parentNode;
         const depth = context.listFormat.nodeStack.length - 2; // Minus two for the parent element and convert length to index
 
-        if (depth >= 0 && isNodeOfType(parent, NodeType.Element) && !parent.style.listStyleType) {
-            const parentTag = getTagOfNode(parent);
+        if (depth >= 0 && isNodeOfType(parent, 'ELEMENT_NODE') && !parent.style.listStyleType) {
+            const parentTag = parent.tagName;
             const style =
                 parentTag == 'OL'
                     ? getOrderedListStyleValue(
@@ -95,8 +94,8 @@ function convertDecimalsToAlpha(decimal: number, isLowerCase?: boolean): string 
 
 function convertDecimalsToRoman(decimal: number, isLowerCase?: boolean) {
     let romanValue = '';
-    for (let i of getObjectKeys(RomanValues)) {
-        let timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
+    for (const i of getObjectKeys(RomanValues)) {
+        const timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
         decimal = decimal - timesRomanCharAppear * RomanValues[i];
         romanValue = romanValue + i.repeat(timesRomanCharAppear);
     }

@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { SpacingFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { SpacingFormat } from 'roosterjs-content-model-types';
 
 const BorderCollapsed = 'collapse';
 

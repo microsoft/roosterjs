@@ -1,6 +1,6 @@
-import IEditor from './IEditor';
-import { CompatiblePluginKeyboardEvent, PluginKeyboardEvent } from '../event/PluginDomEvent';
-import { PluginEvent } from '../event/PluginEvent';
+import type IEditor from './IEditor';
+import type { CompatiblePluginKeyboardEvent, PluginKeyboardEvent } from '../event/PluginDomEvent';
+import type { PluginEvent } from '../event/PluginEvent';
 
 /**
  * Generic ContentEditFeature interface

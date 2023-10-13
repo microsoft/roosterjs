@@ -16,13 +16,15 @@ export function segmentTestCommon(
     const addUndoSnapshot = jasmine
         .createSpy()
         .and.callFake((callback: () => void, source: string, canUndoByBackspace, param: any) => {
-            expect(source).toBe('Format');
+            expect(source).toBe(undefined!);
             expect(param.formatApiName).toBe(apiName);
             callback();
         });
     const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
         expect(model).toEqual(result);
     });
+    const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+    const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
     const editor = ({
         createContentModel: () => model,
         addUndoSnapshot,
@@ -31,6 +33,8 @@ export function segmentTestCommon(
         isDisposed: () => false,
         getFocusedPosition: () => null as NodePosition,
         isDarkMode: () => false,
+        triggerPluginEvent,
+        getVisibleViewport,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);
