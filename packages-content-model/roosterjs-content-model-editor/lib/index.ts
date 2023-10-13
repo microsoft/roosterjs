@@ -40,6 +40,7 @@ export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
 export { default as setTableCellShade } from './publicApi/table/setTableCellShade';
 export { default as editTable } from './publicApi/table/editTable';
+export { default as applyTableBorderFormat } from './publicApi/table/applyTableBorderFormat';
 export { default as toggleBullet } from './publicApi/list/toggleBullet';
 export { default as toggleNumbering } from './publicApi/list/toggleNumbering';
 export { default as toggleBold } from './publicApi/segment/toggleBold';

@@ -46,6 +46,7 @@ import { spacingButton } from './spacingButton';
 import { strikethroughButton } from './strikethroughButton';
 import { subscriptButton } from './subscriptButton';
 import { superscriptButton } from './superscriptButton';
+import { tableBorderApplyButton } from './tableBorderApplyButton';
 import { tableBorderColorButton } from './tableBorderColorButton';
 import { tableBorderStyleButton } from './tableBorderStyleButton';
 import { tableBorderWidthButton } from './tableBorderWidthButton';
@@ -59,7 +60,6 @@ import {
     tableInsertButton,
     tableMergeButton,
     tableSplitButton,
-    tableBorderApplyButton,
 } from './tableEditButtons';
 
 const buttons = [
