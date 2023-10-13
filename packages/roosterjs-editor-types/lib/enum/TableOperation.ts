@@ -116,9 +116,4 @@ export const enum TableOperation {
      * Align current table cell at the bottom
      */
     AlignCellBottom,
-
-    /**
-     * Unfinished Border operation
-     */
-    Border,
 }

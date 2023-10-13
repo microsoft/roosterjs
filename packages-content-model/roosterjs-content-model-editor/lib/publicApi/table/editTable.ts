@@ -1,4 +1,3 @@
-import applyBorderFormat from '../../modelApi/table/applyTableBorders';
 import hasSelectionInBlock from '../selection/hasSelectionInBlock';
 import { alignTable } from '../../modelApi/table/alignTable';
 import { alignTableCell } from '../../modelApi/table/alignTableCell';
@@ -101,12 +100,6 @@ export default function editTable(
 
                 case TableOperation.SplitVertically:
                     splitTableCellVertically(tableModel);
-                    break;
-
-                case TableOperation.Border:
-                    if (border) {
-                        applyBorderFormat(tableModel, border, operation);
-                    }
                     break;
             }
 

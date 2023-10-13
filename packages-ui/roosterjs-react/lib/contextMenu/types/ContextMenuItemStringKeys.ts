@@ -118,10 +118,6 @@ export type TableEditAlignTableMenuItemStringKey =
 export type TableEditShadeMenuItemStringKey = 'menuNameTableCellShade' | BackgroundColorKeys;
 
 /**
- * Key of localized strings of Table Border menu item.
- */
-export type TableBorder_unfinished = 'menuNameTableBorder';
-/**
  * Key of localized strings of Table Edit menu item.
  * Including:
  * - Menu item "Insert"
@@ -137,5 +133,4 @@ export type TableEditMenuItemStringKey =
     | TableEditSplitMenuItemStringKey
     | TableEditAlignMenuItemStringKey
     | TableEditShadeMenuItemStringKey
-    | TableEditAlignTableMenuItemStringKey
-    | TableBorder_unfinished;
+    | TableEditAlignTableMenuItemStringKey;
