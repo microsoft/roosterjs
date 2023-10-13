@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
+import { Border } from 'roosterjs-content-model-editor';
 import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
@@ -24,6 +25,7 @@ export interface MainPaneBaseState {
     isDarkMode: boolean;
     editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
     isRtl: boolean;
+    initialTableBorder?: Border;
 }
 
 const PopoutRoot = 'mainPane';
@@ -192,6 +194,7 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
                             initialContent={this.content}
                             editorCreator={this.state.editorCreator}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
+                            initialTableBorder={this.state.initialTableBorder}
                         />
                     )}
                 </div>
