@@ -1,3 +1,4 @@
+import Border from './Border';
 import CorePlugins from './CorePlugins';
 import DarkColorHandler from './DarkColorHandler';
 import DefaultFormat from './DefaultFormat';
@@ -10,7 +11,6 @@ import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
-
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
  */
@@ -144,4 +144,9 @@ export default interface EditorOptions {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
+
+    /**
+     * Initial Table Border Format
+     */
+    initialTableBorder?: Border;
 }

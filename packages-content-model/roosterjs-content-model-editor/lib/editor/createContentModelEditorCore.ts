@@ -109,6 +109,12 @@ function promoteContentModelInfo(
         experimentalFeatures,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters
     );
+
+    cmCore.tableBorder = options.initialTableBorder ?? {
+        width: '1px',
+        color: '#ABABAB',
+        style: 'solid',
+    };
 }
 
 function promoteCoreApi(cmCore: ContentModelEditorCore) {
