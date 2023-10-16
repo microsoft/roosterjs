@@ -1,22 +1,14 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
 import { getSelectedCells } from './getSelectedCells';
-import { TableOperation } from 'roosterjs-editor-types';
+import { TableVerticalInsertOperation } from '../../publicTypes/parameter/TableOperation';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
-import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
  */
-export function insertTableRow(
-    table: ContentModelTable,
-    operation:
-        | TableOperation.InsertAbove
-        | TableOperation.InsertBelow
-        | CompatibleTableOperation.InsertAbove
-        | CompatibleTableOperation.InsertBelow
-) {
+export function insertTableRow(table: ContentModelTable, operation: TableVerticalInsertOperation) {
     const sel = getSelectedCells(table);
-    const insertAbove = operation == TableOperation.InsertAbove;
+    const insertAbove = operation == 'insertAbove';
 
     if (sel) {
         for (let i = sel.firstRow; i <= sel.lastRow; i++) {

@@ -1,22 +1,17 @@
 import { canMergeCells } from './canMergeCells';
 import { getSelectedCells } from './getSelectedCells';
-import { TableOperation } from 'roosterjs-editor-types';
+import { TableHorizontalMergeOperation } from '../../publicTypes/parameter/TableOperation';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
-import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
  */
 export function mergeTableColumn(
     table: ContentModelTable,
-    operation:
-        | TableOperation.MergeLeft
-        | TableOperation.MergeRight
-        | CompatibleTableOperation.MergeLeft
-        | CompatibleTableOperation.MergeRight
+    operation: TableHorizontalMergeOperation
 ) {
     const sel = getSelectedCells(table);
-    const mergeLeft = operation == TableOperation.MergeLeft;
+    const mergeLeft = operation == 'mergeLeft';
 
     if (sel) {
         const mergingColIndex = mergeLeft ? sel.firstCol : sel.lastCol + 1;

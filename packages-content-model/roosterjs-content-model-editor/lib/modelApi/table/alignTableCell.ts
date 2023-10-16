@@ -1,46 +1,66 @@
 import { getSelectedCells } from './getSelectedCells';
-import { TableOperation } from 'roosterjs-editor-types';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
-import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
+import {
+    TableCellHorizontalAlignOperation,
+    TableCellVerticalAlignOperation,
+} from '../../publicTypes/parameter/TableOperation';
+import type { ContentModelTable, ContentModelTableCell } from 'roosterjs-content-model-types';
 
-const TextAlignValueMap: Partial<Record<TableOperation, 'start' | 'center' | 'end'>> = {
-    [TableOperation.AlignCellLeft]: 'start',
-    [TableOperation.AlignCellCenter]: 'center',
-    [TableOperation.AlignCellRight]: 'end',
+const TextAlignValueMap: Partial<Record<
+    TableCellHorizontalAlignOperation,
+    'start' | 'center' | 'end'
+>> = {
+    alignCellLeft: 'start',
+    alignCellCenter: 'center',
+    alignCellRight: 'end',
 };
 
-const VerticalAlignValueMap: Partial<Record<TableOperation, 'top' | 'middle' | 'bottom'>> = {
-    [TableOperation.AlignCellTop]: 'top',
-    [TableOperation.AlignCellMiddle]: 'middle',
-    [TableOperation.AlignCellBottom]: 'bottom',
+const VerticalAlignValueMap: Partial<Record<
+    TableCellVerticalAlignOperation,
+    'top' | 'middle' | 'bottom'
+>> = {
+    alignCellTop: 'top',
+    alignCellMiddle: 'middle',
+    alignCellBottom: 'bottom',
 };
 
 /**
  * @internal
  */
-export function alignTableCell(
+export function alignTableCellHorizontally(
     table: ContentModelTable,
-    operation:
-        | TableOperation.AlignCellCenter
-        | TableOperation.AlignCellLeft
-        | TableOperation.AlignCellRight
-        | TableOperation.AlignCellTop
-        | TableOperation.AlignCellMiddle
-        | TableOperation.AlignCellBottom
-        | CompatibleTableOperation.AlignCellCenter
-        | CompatibleTableOperation.AlignCellLeft
-        | CompatibleTableOperation.AlignCellRight
-        | CompatibleTableOperation.AlignCellTop
-        | CompatibleTableOperation.AlignCellMiddle
-        | CompatibleTableOperation.AlignCellBottom
+    operation: TableCellHorizontalAlignOperation
+) {
+    alignTableCellInternal(table, cell => {
+        cell.format.textAlign = TextAlignValueMap[operation];
+    });
+}
+
+/**
+ * @internal
+ */
+export function alignTableCellVertically(
+    table: ContentModelTable,
+    operation: TableCellVerticalAlignOperation
+) {
+    alignTableCellInternal(table, cell => {
+        cell.format.verticalAlign = VerticalAlignValueMap[operation];
+
+        updateTableCellMetadata(cell, metadata => {
+            metadata = metadata || {};
+            metadata.vAlignOverride = true;
+            return metadata;
+        });
+    });
+}
+
+function alignTableCellInternal(
+    table: ContentModelTable,
+    callback: (cell: ContentModelTableCell) => void
 ) {
     const sel = getSelectedCells(table);
 
     if (sel) {
-        const textAlign = TextAlignValueMap[operation];
-        const verticalAlign = VerticalAlignValueMap[operation];
-
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
             for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
                 const cell = table.rows[rowIndex]?.cells[colIndex];
@@ -49,16 +69,7 @@ export function alignTableCell(
                 if (format) {
                     delete cell.cachedElement;
 
-                    format.textAlign = textAlign || format.textAlign;
-                    format.verticalAlign = verticalAlign || format.verticalAlign;
-
-                    if (verticalAlign) {
-                        updateTableCellMetadata(cell, metadata => {
-                            metadata = metadata || {};
-                            metadata.vAlignOverride = true;
-                            return metadata;
-                        });
-                    }
+                    callback(cell);
 
                     cell.blocks.forEach(block => {
                         if (block.blockType === 'Paragraph') {

@@ -1,22 +1,17 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
 import { getSelectedCells } from './getSelectedCells';
-import { TableOperation } from 'roosterjs-editor-types';
+import { TableHorizontalInsertOperation } from '../../publicTypes/parameter/TableOperation';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
-import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
  */
 export function insertTableColumn(
     table: ContentModelTable,
-    operation:
-        | TableOperation.InsertLeft
-        | TableOperation.InsertRight
-        | CompatibleTableOperation.InsertLeft
-        | CompatibleTableOperation.InsertRight
+    operation: TableHorizontalInsertOperation
 ) {
     const sel = getSelectedCells(table);
-    const insertLeft = operation == TableOperation.InsertLeft;
+    const insertLeft = operation == 'insertLeft';
 
     if (sel) {
         for (let i = sel?.firstCol; i <= sel.lastCol; i++) {

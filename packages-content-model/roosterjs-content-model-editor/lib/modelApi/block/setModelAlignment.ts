@@ -1,6 +1,6 @@
 import { alignTable } from '../table/alignTable';
 import { getOperationalBlocks } from '../selection/collectSelections';
-import { TableOperation } from 'roosterjs-editor-types';
+import { TableAlignOperation } from '../../publicTypes/parameter/TableOperation';
 import type { ContentModelDocument, ContentModelListItem } from 'roosterjs-content-model-types';
 
 const ResultMap: Record<
@@ -23,22 +23,19 @@ const ResultMap: Record<
 
 const TableAlignMap: Record<
     'left' | 'center' | 'right',
-    Record<
-        'ltr' | 'rtl',
-        TableOperation.AlignLeft | TableOperation.AlignCenter | TableOperation.AlignRight
-    >
+    Record<'ltr' | 'rtl', TableAlignOperation>
 > = {
     left: {
-        ltr: TableOperation.AlignLeft,
-        rtl: TableOperation.AlignRight,
+        ltr: 'alignLeft',
+        rtl: 'alignRight',
     },
     center: {
-        ltr: TableOperation.AlignCenter,
-        rtl: TableOperation.AlignCenter,
+        ltr: 'alignCenter',
+        rtl: 'alignCenter',
     },
     right: {
-        ltr: TableOperation.AlignRight,
-        rtl: TableOperation.AlignLeft,
+        ltr: 'alignRight',
+        rtl: 'alignLeft',
     },
 };
 
