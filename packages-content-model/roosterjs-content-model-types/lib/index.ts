@@ -153,3 +153,4 @@ export {
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { ContentModelDomIndexer } from './context/ContentModelDomIndexer';
+export { ColorManager, Colors } from './context/ColorManager';
