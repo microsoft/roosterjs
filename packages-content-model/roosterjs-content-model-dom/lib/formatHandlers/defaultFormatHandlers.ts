@@ -121,16 +121,16 @@ export const defaultFormatKeysPerCategory: {
 } = {
     block: sharedBlockFormats,
     listItemThread: ['listItemThread'],
-    listItemElement: [...sharedBlockFormats, 'direction', 'textAlign', 'lineHeight', 'margin'],
-    listLevel: [
-        'listLevelThread',
+    listLevelThread: ['listLevelThread'],
+    listItemElement: [
+        ...sharedBlockFormats,
         'direction',
         'textAlign',
+        'lineHeight',
         'margin',
-        'padding',
         'listStyle',
-        'backgroundColor',
     ],
+    listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     elementBasedSegment: elementBasedSegmentFormats,
     segment: [

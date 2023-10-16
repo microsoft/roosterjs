@@ -86,6 +86,7 @@ export function createModelToDomConfig(
         ),
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers,
+        metadataAppliers: Object.assign({}, ...options.map(x => x?.metadataAppliers)),
     };
 }
 

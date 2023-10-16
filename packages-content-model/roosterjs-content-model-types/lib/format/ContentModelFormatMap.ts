@@ -92,6 +92,11 @@ export interface ContentModelFormatMap {
     listLevel: ContentModelListItemLevelFormat;
 
     /**
+     * Format type for listLevel
+     */
+    listLevelThread: ContentModelListItemLevelFormat;
+
+    /**
      * Format type for image
      */
     image: ContentModelImageFormat;

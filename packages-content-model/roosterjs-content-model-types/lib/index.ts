@@ -113,6 +113,9 @@ export {
     OnNodeCreated,
     ModelToDomSettings,
     FormatApplier,
+    ApplyMetadata,
+    MetadataApplier,
+    MetadataAppliers,
 } from './context/ModelToDomSettings';
 export {
     DefaultStyleMap,

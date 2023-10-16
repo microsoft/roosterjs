@@ -13,6 +13,10 @@ import { setContentModel } from './coreApi/setContentModel';
 import { setDOMSelection } from './coreApi/setDOMSelection';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import { tablePreProcessor } from './overrides/tablePreProcessor';
+import {
+    listItemMetadataApplier,
+    listLevelMetadataApplier,
+} from '../domUtils/metadata/updateListMetadata';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import type { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
@@ -84,7 +88,15 @@ function promoteContentModelInfo(
         },
         options.defaultDomToModelOptions,
     ];
-    cmCore.defaultModelToDomOptions = [options.defaultModelToDomOptions];
+    cmCore.defaultModelToDomOptions = [
+        {
+            metadataAppliers: {
+                listItem: listItemMetadataApplier,
+                listLevel: listLevelMetadataApplier,
+            },
+        },
+        options.defaultModelToDomOptions,
+    ];
     cmCore.defaultDomToModelConfig = createDomToModelConfig(cmCore.defaultDomToModelOptions);
     cmCore.defaultModelToDomConfig = createModelToDomConfig(cmCore.defaultModelToDomOptions);
 }
