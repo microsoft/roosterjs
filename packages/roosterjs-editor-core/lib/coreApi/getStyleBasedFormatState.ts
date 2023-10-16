@@ -39,6 +39,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
               'margin-bottom',
               'text-align',
               'direction',
+              'font-weight',
           ])
         : [];
     const { contentDiv, darkColorHandler } = core;
@@ -90,5 +91,6 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
         marginBottom: styles[6],
         textAlign: styles[7],
         direction: styles[8],
+        fontWeight: styles[9],
     };
 };

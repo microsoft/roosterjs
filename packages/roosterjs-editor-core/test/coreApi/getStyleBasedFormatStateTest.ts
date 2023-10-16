@@ -17,7 +17,7 @@ describe('getStyleBasedFormatState', () => {
     it('light mode', () => {
         const core = createEditorCore(div, {});
         div.innerHTML =
-            '<div style="font-family: arial; font-size: 12pt; color: black; background-color: white"><div id="div1">test</div></div>';
+            '<div style="font-family: arial; font-size: 12pt; color: black; background-color: white; font-weight: 600"><div id="div1">test</div></div>';
         const node = document.getElementById('div1');
         const style = getStyleBasedFormatState(core, node);
         expect(style.fontName).toBe('arial');
@@ -26,6 +26,7 @@ describe('getStyleBasedFormatState', () => {
         expect(style.backgroundColor).toBe('white');
         expect(style.textColors).toBeUndefined();
         expect(style.backgroundColors).toBeUndefined();
+        expect(style.fontWeight).toBe('600');
     });
 
     it('dark mode, no color node', () => {

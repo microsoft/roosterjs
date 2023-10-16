@@ -45,6 +45,7 @@ describe('retrieveModelFormatState', () => {
         isUnderline: true,
         canUnlink: false,
         canAddImageAltText: false,
+        fontWeight: 'bold',
     };
 
     it('Empty model', () => {
@@ -332,6 +333,7 @@ describe('retrieveModelFormatState', () => {
             fontSize: '7.5pt',
             backgroundColor: 'red',
             textColor: 'green',
+            fontWeight: 'bold',
         });
     });
 
@@ -491,6 +493,7 @@ describe('retrieveModelFormatState', () => {
             isUnderline: true,
             isStrikeThrough: true,
             fontSize: '7.5pt',
+            fontWeight: 'bold',
         });
     });
 
