@@ -34,6 +34,19 @@ export {
     InsertEntityOptions,
     InsertEntityPosition,
 } from './publicTypes/parameter/InsertEntityOptions';
+export {
+    TableOperation,
+    TableVerticalInsertOperation,
+    TableHorizontalInsertOperation,
+    TableDeleteOperation,
+    TableVerticalMergeOperation,
+    TableHorizontalMergeOperation,
+    TableCellMergeOperation,
+    TableSplitOperation,
+    TableAlignOperation,
+    TableCellHorizontalAlignOperation,
+    TableCellVerticalAlignOperation,
+} from './publicTypes/parameter/TableOperation';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
