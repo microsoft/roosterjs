@@ -148,7 +148,7 @@ export interface FormatHandlerTypeMap {
     margin: MarginFormat;
 
     /**
-     * Format for MarginFormat
+     * Format for MarginBlockFormat
      */
     marginBlock: MarginBlockFormat;
 
