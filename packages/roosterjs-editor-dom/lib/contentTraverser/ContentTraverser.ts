@@ -106,19 +106,19 @@ export default class ContentTraverser implements IContentTraverser {
     }
 
     private getPreviousNextBlockElement(isNext: boolean): BlockElement | null {
-        let current = this.currentBlockElement;
+        const current = this.currentBlockElement;
 
         if (!current) {
             return null;
         }
 
-        let leaf = getLeafSibling(
+        const leaf = getLeafSibling(
             this.scoper.rootNode,
             isNext ? current.getEndNode() : current.getStartNode(),
             isNext,
             this.skipTags
         );
-        let newBlock = leaf ? getBlockElementAtNode(this.scoper.rootNode, leaf) : null;
+        const newBlock = leaf ? getBlockElementAtNode(this.scoper.rootNode, leaf) : null;
 
         // Make sure this is right block:
         // 1) the block is in scope per scoper
@@ -164,7 +164,7 @@ export default class ContentTraverser implements IContentTraverser {
     }
 
     private getPreviousNextInlineElement(isNext: boolean): InlineElement | null {
-        let current = this.currentInlineElement || this.currentInline;
+        const current = this.currentInlineElement || this.currentInline;
         let newInline: InlineElement | null;
 
         if (!current) {
@@ -214,7 +214,7 @@ function getNextPreviousInlineElement(
     }
     if (current instanceof PartialInlineElement) {
         // if current is partial, get the other half of the inline unless it is no more
-        let result = isNext ? current.nextInlineElement : current.previousInlineElement;
+        const result = isNext ? current.nextInlineElement : current.previousInlineElement;
 
         if (result) {
             return result;

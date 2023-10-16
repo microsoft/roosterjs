@@ -129,7 +129,7 @@ export default class PendingFormatStatePlugin
     }
 
     private getCurrentPosition() {
-        let range = this.editor?.getSelectionRange();
+        const range = this.editor?.getSelectionRange();
         return (range && Position.getStart(range).normalize()) ?? null;
     }
 

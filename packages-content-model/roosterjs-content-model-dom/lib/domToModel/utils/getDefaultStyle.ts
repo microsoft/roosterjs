@@ -12,7 +12,7 @@ export function getDefaultStyle(
     element: HTMLElement,
     context: DomToModelContext
 ): Partial<CSSStyleDeclaration> {
-    let tag = element.tagName.toLowerCase() as keyof DefaultStyleMap;
+    const tag = element.tagName.toLowerCase() as keyof DefaultStyleMap;
 
     return defaultHTMLStyleMap[tag] || {};
 }

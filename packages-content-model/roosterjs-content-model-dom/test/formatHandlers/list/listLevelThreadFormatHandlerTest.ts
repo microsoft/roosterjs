@@ -195,15 +195,16 @@ describe('listLevelThreadFormatHandler.parse', () => {
 
     it('Simple OL with valid context', () => {
         const ol = document.createElement('ol');
-        const parent = ({} as any) as ModelToDomListStackItem;
+        const parent1 = ({} as any) as ModelToDomListStackItem;
+        const parent2 = ({} as any) as ModelToDomListStackItem;
 
-        context.listFormat.nodeStack = [parent];
+        context.listFormat.nodeStack = [parent1, parent2];
         listLevelThreadFormatHandler.apply(format, ol, context);
 
         expect(ol.outerHTML).toBe('<ol start="1"></ol>');
         expect(context.listFormat).toEqual({
             threadItemCounts: [0],
-            nodeStack: [parent],
+            nodeStack: [parent1, parent2],
         });
     });
 
@@ -213,12 +214,12 @@ describe('listLevelThreadFormatHandler.parse', () => {
         const parent2 = ({} as any) as ModelToDomListStackItem;
 
         context.listFormat.nodeStack = [parent1, parent2];
-        context.listFormat.threadItemCounts = [1];
+        context.listFormat.threadItemCounts = [0, 1];
         listLevelThreadFormatHandler.apply(format, ol, context);
 
         expect(ol.outerHTML).toBe('<ol start="1"></ol>');
         expect(context.listFormat).toEqual({
-            threadItemCounts: [1, 0],
+            threadItemCounts: [0],
             nodeStack: [parent1, parent2],
         });
     });
@@ -227,15 +228,16 @@ describe('listLevelThreadFormatHandler.parse', () => {
         const ol = document.createElement('ol');
         const parent1 = ({} as any) as ModelToDomListStackItem;
         const parent2 = ({} as any) as ModelToDomListStackItem;
+        const parent3 = ({} as any) as ModelToDomListStackItem;
 
-        context.listFormat.nodeStack = [parent1, parent2];
+        context.listFormat.nodeStack = [parent1, parent2, parent3];
         context.listFormat.threadItemCounts = [1, 2];
         listLevelThreadFormatHandler.apply(format, ol, context);
 
         expect(ol.outerHTML).toBe('<ol start="3"></ol>');
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 2],
-            nodeStack: [parent1, parent2],
+            nodeStack: [parent1, parent2, parent3],
         });
     });
 
@@ -243,9 +245,10 @@ describe('listLevelThreadFormatHandler.parse', () => {
         const ol = document.createElement('ol');
         const parent1 = ({} as any) as ModelToDomListStackItem;
         const parent2 = ({} as any) as ModelToDomListStackItem;
+        const parent3 = ({} as any) as ModelToDomListStackItem;
 
-        context.listFormat.nodeStack = [parent1, parent2];
-        context.listFormat.threadItemCounts = [1, 2];
+        context.listFormat.nodeStack = [parent1, parent2, parent3];
+        context.listFormat.threadItemCounts = [1, 2, 5];
         format.startNumberOverride = 4;
 
         listLevelThreadFormatHandler.apply(format, ol, context);
@@ -253,7 +256,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
         expect(ol.outerHTML).toBe('<ol start="4"></ol>');
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 3],
-            nodeStack: [parent1, parent2],
+            nodeStack: [parent1, parent2, parent3],
         });
     });
 

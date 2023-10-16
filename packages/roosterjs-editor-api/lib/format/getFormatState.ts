@@ -28,8 +28,8 @@ export function getElementBasedFormatState(
     let multiline = false;
 
     if (range && !range.collapsed) {
-        let startingBlock = editor.getBlockElementAtNode(range.startContainer);
-        let endingBlock = editor.getBlockElementAtNode(range.endContainer);
+        const startingBlock = editor.getBlockElementAtNode(range.startContainer);
+        const endingBlock = editor.getBlockElementAtNode(range.endContainer);
         multiline = endingBlock && startingBlock ? !endingBlock.equals(startingBlock) : false;
     }
 

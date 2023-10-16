@@ -169,7 +169,7 @@ function getNextTD(
         state.lastTarget && editor.getElementAtCursor(TABLE_CELL_SELECTOR, state.lastTarget);
 
     if (safeInstanceOf(state.lastTarget, 'HTMLTableCellElement') && state.vTable?.cells) {
-        let coordinates = getCellCoordinates(state.vTable, state.lastTarget);
+        const coordinates = getCellCoordinates(state.vTable, state.lastTarget);
 
         if (state.tableSelection && coordinates) {
             switch (event.rawEvent.which) {

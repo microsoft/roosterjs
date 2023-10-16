@@ -225,10 +225,10 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
     ) {
         const core = this.getCore();
         const result: HTMLElement[] = [];
-        let scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
+        const scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
         callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
 
-        let selectionEx = scope == QueryScope.Body ? null : this.getSelectionRangeEx();
+        const selectionEx = scope == QueryScope.Body ? null : this.getSelectionRangeEx();
         if (selectionEx) {
             selectionEx.ranges.forEach(range => {
                 result.push(...queryElements(core.contentDiv, selector, callback, scope, range));
@@ -315,7 +315,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
                 allNodes = [wrap(allNodes)];
             }
 
-            let fragment = doc.createDocumentFragment();
+            const fragment = doc.createDocumentFragment();
             allNodes.forEach(node => fragment.appendChild(node));
 
             this.insertNode(fragment, option);
@@ -449,12 +449,12 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     public getFocusedPosition(): NodePosition | null {
-        let sel = this.getDocument().defaultView?.getSelection();
+        const sel = this.getDocument().defaultView?.getSelection();
         if (sel?.focusNode && this.contains(sel.focusNode)) {
             return new Position(sel.focusNode, sel.focusOffset);
         }
 
-        let range = this.getSelectionRange();
+        const range = this.getSelectionRange();
         if (range) {
             return Position.getStart(range);
         }
@@ -484,7 +484,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         return (
             cacheGetEventData(event ?? null, 'GET_ELEMENT_AT_CURSOR_' + selector, () => {
                 if (!startFrom) {
-                    let position = this.getFocusedPosition();
+                    const position = this.getFocusedPosition();
                     startFrom = position?.node;
                 }
                 return (
@@ -550,7 +550,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         broadcast: boolean = false
     ): PluginEventFromType<T> {
         const core = this.getCore();
-        let event = ({
+        const event = ({
             eventType,
             ...data,
         } as any) as PluginEventFromType<T>;
@@ -711,7 +711,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
     public getBlockTraverser(
         startFrom: ContentPosition | CompatibleContentPosition = ContentPosition.SelectionStart
     ): IContentTraverser | null {
-        let range = this.getSelectionRange();
+        const range = this.getSelectionRange();
         return range
             ? ContentTraverser.createBlockTraverser(this.getCore().contentDiv, range, startFrom)
             : null;
@@ -725,7 +725,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      */
     public getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher | null {
         return cacheGetEventData(event ?? null, 'ContentSearcher', () => {
-            let range = this.getSelectionRange();
+            const range = this.getSelectionRange();
             return (
                 range &&
                 new PositionContentSearcher(this.getCore().contentDiv, Position.getStart(range))
@@ -739,7 +739,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      * @returns a function to cancel this async run
      */
     public runAsync(callback: (editor: IEditor) => void) {
-        let win = this.getCore().contentDiv.ownerDocument.defaultView || window;
+        const win = this.getCore().contentDiv.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
                 callback(this);
@@ -810,7 +810,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         const core = this.getCore();
         feature?.keys.forEach(key => {
-            let array = core.edit.features[key] || [];
+            const array = core.edit.features[key] || [];
             array.push(feature);
             core.edit.features[key] = array;
         });

@@ -42,7 +42,7 @@ export default function insertLink(
 ) {
     editor.focus();
 
-    let url = (checkXss(link) || '').trim();
+    const url = (checkXss(link) || '').trim();
     if (url) {
         const linkData = matchLink(url);
         const linkUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);

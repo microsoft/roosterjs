@@ -173,7 +173,7 @@ function triggerPluginEventAndCreatePasteFragment(
     const { rawHtml, text, imageDataUri } = clipboardData;
     const trustedHTMLHandler = editor.getTrustedHTMLHandler();
 
-    let doc: Document | undefined = rawHtml
+    const doc: Document | undefined = rawHtml
         ? new DOMParser().parseFromString(trustedHTMLHandler(rawHtml), 'text/html')
         : undefined;
 

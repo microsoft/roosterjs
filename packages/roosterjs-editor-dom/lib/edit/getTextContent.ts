@@ -8,7 +8,7 @@ import ContentTraverser from '../contentTraverser/ContentTraverser';
 export default function getTextContent(rootNode: Node): string {
     const traverser = ContentTraverser.createBodyTraverser(rootNode);
     let block = traverser && traverser.currentBlockElement;
-    let textContent: string[] = [];
+    const textContent: string[] = [];
 
     while (block) {
         textContent.push(block.getTextContent());

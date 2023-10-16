@@ -120,7 +120,7 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
             const currentLevel = lastblock.levels[lastblock.levels.length - 1];
 
             // Get item level from 'data-aria-level' attribute
-            let level = parseInt(element.getAttribute('data-aria-level') ?? '');
+            const level = parseInt(element.getAttribute('data-aria-level') ?? '');
             if (level > 0) {
                 if (level > lastblock.levels.length) {
                     while (level != lastblock.levels.length) {
@@ -200,7 +200,7 @@ function shouldClearListContext(
  */
 export function processPastedContentWacComponents(ev: ContentModelBeforePasteEvent) {
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
-    addParser(ev.domToModelOption, 'listItem', wacListItemParser);
+    addParser(ev.domToModelOption, 'listItemThread', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
     addParser(ev.domToModelOption, 'container', wacBlockParser);
 

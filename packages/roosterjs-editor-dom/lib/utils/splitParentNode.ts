@@ -16,7 +16,7 @@ export default function splitParentNode(node: Node, splitBefore: boolean): Node 
         return null;
     }
 
-    let parentNode = node.parentNode;
+    const parentNode = node.parentNode;
     let newParent: HTMLElement | null = parentNode.cloneNode(false /*deep*/) as HTMLElement;
     newParent.removeAttribute('id');
     if (splitBefore) {
@@ -54,7 +54,7 @@ export function splitBalancedNodeRange(nodes: Node | Node[]): Node | null {
     const parentNode = start && end && start.parentNode == end.parentNode ? start.parentNode : null;
     if (parentNode) {
         if (isNodeAfter(start, end)) {
-            let temp = end;
+            const temp = end;
             end = start;
             start = temp;
         }

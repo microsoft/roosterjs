@@ -128,81 +128,36 @@ In order to run the code below, you may also need to install [webpack](https://w
 
 ### A quick start
 
-1. Create `editor.htm` contains a DIV with some styles, and a reference to a
-   .js file:
+1. Create `editor.htm` which contains a DIV with some styles, buttons to handle some click events and a reference to rooster.js (update with the path to your rooster.js file):
 
 ```html
 <html>
-    <body>
-        <div
-            id="editorDiv"
-            style="width: 500px; height: 300px; overflow: auto;
-        border: solid 1px black"
-        ></div>
-        <script src="editor.js"></script>
-    </body>
-</html>
-```
-
-2. Create `source.js` to import roosterjs and create an editor:
-
-```javascript
-var roosterjs = require('roosterjs');
-var editorDiv = document.getElementById('editorDiv');
-var editor = roosterjs.createEditor(editorDiv);
-editor.setContent('Welcome to <b>RoosterJs</b>!');
-```
-
-3. Compile the javascript file using webpack:
-
-`webpack source.js editor.js`
-
-4. Navigate to editor.htm, you will see a editor shown in the page.
-
-### Add some format buttons
-
-1. Add some buttons into `editor.htm`:
-
-```html
-<html>
-    <body>
-        <div
-            id="editorDiv"
-            style="width: 500px; height: 300px; overflow: auto;
-        border: solid 1px black"
-        ></div>
-        <button id="buttonB">B</button> <button id="buttonI">I</button>
+<body>
+    <div style="width: 500px; height: 400px; border: solid 1px black" id="contentDiv"></div>
+    <button id="buttonB">B</button> <button id="buttonI">I</button>
         <button id="buttonU">U</button>
-        <script src="editor.js"></script>
-    </body>
+    <script src="rooster.js"></script>
+    <script>
+    var contentDiv = document.getElementById("contentDiv");
+    var editor = roosterjs.createEditor(contentDiv);
+
+    editor.setContent('Welcome to <b>RoosterJs</b>!');
+    document.getElementById('buttonB').addEventListener('click', function () {
+        roosterjs.toggleBold(editor);
+    });
+    document.getElementById('buttonI').addEventListener('click', function () {
+        roosterjs.toggleItalic(editor);
+    });
+    document.getElementById('buttonU').addEventListener('click', function () {
+        roosterjs.toggleUnderline(editor);
+    });
+    </script>
+</body>
 </html>
 ```
 
-2. Add code to `source.js` to handle click event of the buttons:
-
-```javascript
-var roosterjs = require('roosterjs');
-var editorDiv = document.getElementById('editorDiv');
-var editor = roosterjs.createEditor(editorDiv);
-editor.setContent('Welcome to <b>RoosterJs</b>!');
-
-document.getElementById('buttonB').addEventListener('click', function () {
-    roosterjs.toggleBold(editor);
-});
-document.getElementById('buttonI').addEventListener('click', function () {
-    roosterjs.toggleItalic(editor);
-});
-document.getElementById('buttonU').addEventListener('click', function () {
-    roosterjs.toggleUnderline(editor);
-});
-```
-
-3. Compile the javascript file using webpack:
-
-`webpack source.js editor.js`
-
-4. Navigate to editor.htm, you will see buttons with bold, italic, underline
-   actions in the page.
+2. Navigate to editor.htm, you will see a editor shown in the page which includes buttons with bold, italic, underline
+   actions.
 
 ## Sample code
 
