@@ -1,5 +1,5 @@
 import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
-import { createNumberDefinition, createObjectDefinition } from 'roosterjs-editor-dom';
+import { createNumberDefinition, createObjectDefinition } from './definitionCreators';
 import { getObjectKeys, updateMetadata } from 'roosterjs-content-model-dom';
 import type {
     ContentModelListItemFormat,
