@@ -1,5 +1,5 @@
 import paste from '../../publicApi/utils/paste';
-import { addRangeToSelection, extractClipboardItems, wrap } from 'roosterjs-editor-dom';
+import { addRangeToSelection, extractClipboardItems } from 'roosterjs-editor-dom';
 import { ChangeSource, ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
@@ -14,6 +14,7 @@ import {
     moveChildNodes,
     normalizeContentModel,
     toArray,
+    wrap,
 } from 'roosterjs-content-model-dom';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
@@ -281,7 +282,7 @@ function domSelectionToRange(
  */
 export const onNodeCreated: OnNodeCreated = (_, node): void => {
     if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'table')) {
-        wrap(node, 'div');
+        wrap(node.ownerDocument, node, 'div');
     }
     if (isNodeOfType(node, 'ELEMENT_NODE') && !node.isContentEditable) {
         node.removeAttribute('contenteditable');

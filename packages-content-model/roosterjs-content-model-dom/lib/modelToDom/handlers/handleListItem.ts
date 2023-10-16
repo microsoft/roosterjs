@@ -1,7 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
-import { unwrap } from 'roosterjs-editor-dom';
+import { unwrap } from '../../domUtils/unwrap';
 import type {
     ContentModelBlockHandler,
     ContentModelListItem,

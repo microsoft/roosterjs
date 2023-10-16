@@ -1,4 +1,4 @@
-import type { Definition } from 'roosterjs-editor-types';
+import type { Definition } from '../metadata/Definition';
 import type { ContentModelBlock } from '../block/ContentModelBlock';
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';

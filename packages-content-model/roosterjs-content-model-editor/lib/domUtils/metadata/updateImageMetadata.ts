@@ -1,10 +1,10 @@
 import { updateMetadata } from 'roosterjs-content-model-dom';
-import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import {
     createNumberDefinition,
     createObjectDefinition,
     createStringDefinition,
-} from 'roosterjs-editor-dom';
+} from './definitionCreators';
+import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 const NumberDefinition = createNumberDefinition();
 
