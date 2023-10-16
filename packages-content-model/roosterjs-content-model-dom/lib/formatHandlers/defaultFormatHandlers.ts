@@ -20,6 +20,7 @@ import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
 import { listStyleFormatHandler } from './list/listStyleFormatHandler';
+import { marginBlockFormatHandler } from './block/marginBlockFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
@@ -72,6 +73,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listLevelThread: listLevelThreadFormatHandler,
     listStyle: listStyleFormatHandler,
     margin: marginFormatHandler,
+    marginBlock: marginBlockFormatHandler,
     padding: paddingFormatHandler,
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
@@ -130,7 +132,15 @@ export const defaultFormatKeysPerCategory: {
         'margin',
         'listStyle',
     ],
-    listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
+    listLevel: [
+        'direction',
+        'textAlign',
+        'margin',
+        'padding',
+        'listStyle',
+        'backgroundColor',
+        'marginBlock',
+    ],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     elementBasedSegment: elementBasedSegmentFormats,
     segment: [

@@ -316,7 +316,11 @@ describe('VListChain.commit', () => {
     }
 
     it('No op', () => {
-        runTest('<ol><li>test</li></ol>', () => {}, '<ol><li>test</li></ol>');
+        runTest(
+            '<ol><li>test</li></ol>',
+            () => {},
+            '<ol style="margin-block: 0px;"><li>test</li></ol>'
+        );
     });
 
     it('Add a new list', () => {
@@ -332,7 +336,7 @@ describe('VListChain.commit', () => {
                 );
                 vList.writeBack();
             },
-            '<ol><li>test</li></ol><ol start="2"><li id="div1">test2</li></ol>'
+            '<ol style="margin-block: 0px;"><li>test</li></ol><ol style="margin-block: 0px;" start="2"><li id="div1">test2</li></ol>'
         );
     });
 
@@ -349,7 +353,7 @@ describe('VListChain.commit', () => {
                 );
                 vList.writeBack();
             },
-            '<ol><li>item1</li></ol><ol start="2"><li id="div1">item2</li></ol><ol start="3"><li>item3</li></ol>'
+            '<ol style="margin-block: 0px;"><li>item1</li></ol><ol style="margin-block: 0px;" start="2"><li id="div1">item2</li></ol><ol start="3" style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -366,7 +370,7 @@ describe('VListChain.commit', () => {
                 );
                 vList.writeBack();
             },
-            '<ol><li>item1</li></ol><ol><li>itemA</li><li>itemB</li><li>itemC</li></ol><ol start="2"><li id="div1">item2</li></ol><ol start="3"><li>item3</li></ol>'
+            '<ol style="margin-block: 0px;"><li>item1</li></ol><ol style="margin-block: 0px;"><li>itemA</li><li>itemB</li><li>itemC</li></ol><ol style="margin-block: 0px;" start="2"><li id="div1">item2</li></ol><ol start="3" style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -379,7 +383,7 @@ describe('VListChain.commit', () => {
                 li.innerHTML = 'item2';
                 ol1.appendChild(li);
             },
-            '<ol id="ol1"><li>item1</li><li>item2</li></ol><ol start="3"><li>item3</li></ol>'
+            '<ol id="ol1" style="margin-block: 0px;"><li>item1</li><li>item2</li></ol><ol start="3" style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -390,7 +394,7 @@ describe('VListChain.commit', () => {
                 const li = document.getElementById('li2');
                 li.parentNode.removeChild(li);
             },
-            '<ol><li>item1</li></ol><ol start="3"><li>item3</li></ol>'
+            '<ol style="margin-block: 0px;"><li>item1</li></ol><ol start="3" style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -401,7 +405,7 @@ describe('VListChain.commit', () => {
                 const ol = document.getElementById('ol2');
                 ol.parentNode.removeChild(ol);
             },
-            '<ol><li>item1</li><li>item2</li></ol><ol start="4"><li>item4</li></ol>'
+            '<ol style="margin-block: 0px;"><li>item1</li><li>item2</li></ol><ol start="4" style="margin-block: 0px;"><li>item4</li></ol>'
         );
     });
 
@@ -412,7 +416,7 @@ describe('VListChain.commit', () => {
                 const li = document.getElementById('li1');
                 li.parentNode.removeChild(li);
             },
-            '<ol><li>item2</li></ol><ol start="3"><li>item3</li></ol>'
+            '<ol style="margin-block: 0px;"><li>item2</li></ol><ol start="3" style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -423,7 +427,7 @@ describe('VListChain.commit', () => {
                 const ol = document.getElementById('ol1');
                 ol.parentNode.removeChild(ol);
             },
-            '<ol start="3"><li>item3</li></ol><ol start="4"><li>item4</li></ol>'
+            '<ol start="3" style="margin-block: 0px;"><li>item3</li></ol><ol start="4" style="margin-block: 0px;"><li>item4</li></ol>'
         );
     });
 });

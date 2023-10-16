@@ -53,16 +53,19 @@ describe('VList.ctor', () => {
     });
 
     it('nested UL in OL', () => {
-        runTest(`<ol id="${ListRoot}"><li>line1</li><ul><li>line2</li></ul></ol>`, [
-            {
-                listTypes: [ListType.None, ListType.Ordered],
-                outerHTML: '<li>line1</li>',
-            },
-            {
-                listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
-                outerHTML: '<li>line2</li>',
-            },
-        ]);
+        runTest(
+            `<ol id="${ListRoot}"><li>line1</li><ul style="margin-block: 0px;"><li>line2</li></ul></ol>`,
+            [
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line1</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
+                    outerHTML: '<li>line2</li>',
+                },
+            ]
+        );
     });
 
     it('orphan item that will be merged', () => {
@@ -109,7 +112,7 @@ describe('VList.ctor', () => {
         runTest(
             `<ol id="${ListRoot}">` +
                 '<li>line0</li>' +
-                '<ul>' +
+                '<ul style="margin-block: 0px;">' +
                 '<div>line1</div>' +
                 '<li>line2</li>' +
                 '<div>line3</div>' +
@@ -197,14 +200,14 @@ describe('VList.ctor', () => {
     it('disconnected nested list', () => {
         runTest(
             `<ol id="${ListRoot}">` +
-                '<li>line1<div><ul><li>line2</li><li>line3</li></ul></div>line4</li>' +
+                '<li>line1<div><ul style="margin-block: 0px;"><li>line2</li><li>line3</li></ul></div>line4</li>' +
                 '<li>line5</li>' +
                 '</ol>',
             [
                 {
                     listTypes: [ListType.None, ListType.Ordered],
                     outerHTML:
-                        '<li>line1<div><ul><li>line2</li><li>line3</li></ul></div>line4</li>',
+                        '<li>line1<div><ul style="margin-block: 0px;"><li>line2</li><li>line3</li></ul></div>line4</li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -294,7 +297,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol><li>test</li></ol>'
+            '<ol style="margin-block: 0px;"><li>test</li></ol>'
         );
     });
 
@@ -310,7 +313,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol><li>item1</li><li>item2</li></ol>'
+            '<ol style="margin-block: 0px;"><li>item1</li><li>item2</li></ol>'
         );
     });
 
@@ -330,7 +333,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol><li>item1</li></ol><ul><li>bullet</li></ul><ol start="2"><li>item2</li></ol>'
+            '<ol style="margin-block: 0px;"><li>item1</li></ol><ul style="margin-block: 0px;"><li>bullet</li></ul><ol style="margin-block: 0px;" start="2"><li>item2</li></ol>'
         );
     });
 
@@ -346,7 +349,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><li>item1</li></ul><ol><li>item2</li></ol>'
+            '<ul style="margin-block: 0px;"><li>item1</li></ul><ol style="margin-block: 0px;"><li>item2</li></ol>'
         );
     });
 
@@ -366,7 +369,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><ol style="list-style-type: lower-alpha;"><li>item1</li></ol><li>item2</li></ul><ol><li>item3</li></ol>'
+            '<ul style="margin-block: 0px;"><ol style="list-style-type: lower-alpha;"><li>item1</li></ol><li>item2</li></ul><ol style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -386,7 +389,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol><li>item3</li></ol>'
+            '<ul style="margin-block: 0px;"><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -406,7 +409,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol><li>item3</li></ol>'
+            '<ul style="margin-block: 0px;"><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -426,7 +429,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><li>item1</li></ul><div><span>item2</span></div><ol><li>item3</li></ol>'
+            '<ul style="margin-block: 0px;"><li>item1</li></ul><div><span>item2</span></div><ol style="margin-block: 0px;"><li>item3</li></ol>'
         );
     });
 
@@ -440,7 +443,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol data-test="test"><li>item1</li></ol>',
+            '<ol data-test="test" style="margin-block: 0px;"><li>item1</li></ol>',
             ol
         );
     });
@@ -467,7 +470,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol start="3"><li>item3</li><ol style="list-style-type: lower-alpha;"><li>item3.1</li></ol></ol><ul><li>bullet</li></ul><ol start="4"><li>item4</li></ol>',
+            '<ol start="3" style="margin-block: 0px;"><li>item3</li><ol style="list-style-type: lower-alpha;"><li>item3.1</li></ol></ol><ul style="margin-block: 0px;"><li>bullet</li></ul><ol start="4" style="margin-block: 0px;"><li>item4</li></ol>',
             ol
         );
     });
@@ -498,14 +501,14 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<div><span>text</span></div><ol start="3"><li>item3</li><li>item4</li></ol><div><span>text</span></div><ol start="5"><li>item5</li></ol>',
+            '<div><span>text</span></div><ol start="3" style="margin-block: 0px;"><li>item3</li><li>item4</li></ol><div><span>text</span></div><ol start="5" style="margin-block: 0px;"><li>item5</li></ol>',
             ol
         );
     });
 
     it('Write back with Lists with list item types', () => {
         const styledList =
-            '<ol><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol><li><br></li></ol></ol></ol></ol>';
+            '<ol style="margin-block: 0px;"><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol><li><br></li></ol></ol></ol></ol>';
         const div = document.createElement('div');
         document.body.append(div);
         div.innerHTML = styledList;
@@ -598,7 +601,7 @@ describe('VList.setIndentation', () => {
 
     it('deep list', () => {
         runTest(
-            `<ol id="${ListRoot}"><li id="${FocusNode1}">line1</li><ul><li id="${FocusNode2}">line2</li></ul></ol>`,
+            `<ol id="${ListRoot}"><li id="${FocusNode1}">line1</li><ul style="margin-block: 0px;"><li id="${FocusNode2}">line2</li></ul></ol>`,
             [
                 {
                     listTypes: [ListType.None, ListType.Ordered, ListType.Ordered],
@@ -632,7 +635,7 @@ describe('VList.setIndentation', () => {
             `<ol id="${ListRoot}">` +
                 '<li>line1</li>' +
                 `<li id="${FocusNode1}">line2</li>` +
-                '<ul>' +
+                '<ul style="margin-block: 0px;">' +
                 `<li id="${FocusNode2}">line3</li>` +
                 '<li>line4</li>' +
                 '</ul>' +
@@ -686,7 +689,7 @@ describe('VList.setIndentation', () => {
             `<ol id="${ListRoot}">` +
                 '<li>line1</li>' +
                 `<li id="${FocusNode1}">line2</li>` +
-                '<ul>' +
+                '<ul style="margin-block: 0px;">' +
                 `<li id="${FocusNode2}">line3</li>` +
                 '<li>line4</li>' +
                 '</ul>' +
@@ -830,7 +833,7 @@ describe('VList.changeListType', () => {
 
     it('deep list', () => {
         runTest(
-            `<ol id="${ListRoot}"><li id="${FocusNode1}">line1</li><ul><li id="${FocusNode2}">line2</li></ul></ol>`,
+            `<ol id="${ListRoot}"><li id="${FocusNode1}">line1</li><ul style="margin-block: 0px;"><li id="${FocusNode2}">line2</li></ul></ol>`,
             [
                 {
                     listTypes: [ListType.None],
@@ -869,7 +872,7 @@ describe('VList.changeListType', () => {
             `<ol id="${ListRoot}">` +
                 '<li>line1</li>' +
                 `<li id="${FocusNode1}">line2</li>` +
-                '<ul>' +
+                '<ul style="margin-block: 0px;">' +
                 `<li id="${FocusNode2}">line3</li>` +
                 '<li>line4</li>' +
                 '</ul>' +
@@ -935,9 +938,9 @@ describe('VList.changeListType', () => {
         runTest(
             `<ol id="${ListRoot}">` +
                 `<li id="${FocusNode1}">line1</li>` +
-                '<ol>' +
+                '<ol style="margin-block: 0px;">' +
                 '<li>line2</li>' +
-                '<ol>' +
+                '<ol style="margin-block: 0px;">' +
                 `<li id="${FocusNode2}">line3</li>` +
                 '</ol>' +
                 '</ol>' +
@@ -1194,7 +1197,7 @@ describe('VList.mergeVList', () => {
     it('List 2 has deep orphan item that cannot be merged', () => {
         runTest(
             `<ol id="${ListRoot1}"><li>line1</li></ol>` +
-                `<ol id="${ListRoot2}"><ul><div>line2</div><li>line3</li></ul></ol>`,
+                `<ol id="${ListRoot2}"><ul style="margin-block: 0px;"><div>line2</div><li>line3</li></ul></ol>`,
             [
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -1214,8 +1217,8 @@ describe('VList.mergeVList', () => {
 
     it('List 2 has deep orphan item that can be merged', () => {
         runTest(
-            `<ol id="${ListRoot1}"><ul><li>line1</li></ul></ol>` +
-                `<ol id="${ListRoot2}"><ul><div>line2</div><li>line3</li></ul></ol>`,
+            `<ol id="${ListRoot1}"><ul style="margin-block: 0px;"><li>line1</li></ul></ol>` +
+                `<ol id="${ListRoot2}"><ul style="margin-block: 0px;"><div>line2</div><li>line3</li></ul></ol>`,
             [
                 {
                     listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
@@ -1258,30 +1261,30 @@ describe('VList.split', () => {
     it('split List', () => {
         runTest(
             `<ol id=${listId}><li>item1</li><li id="${separatorElementId}">bullet</li><li>item2</li></ol>`,
-            '<ol id="listId"><li>item1</li></ol><ol><li id="separatorId">bullet</li><li>item2</li></ol>'
+            '<ol id="listId" style="margin-block: 0px;"><li>item1</li></ol><ol style="margin-block: 0px;"><li id="separatorId">bullet</li><li>item2</li></ol>'
         );
     });
 
     it('split List 2', () => {
         runTest(
             `<ol id=${listId}><li>item1</li><li id="${separatorElementId}">bullet</li><li>item2</li></ol>`,
-            '<ol id="listId"><li>item1</li></ol><ol start="5"><li id="separatorId">bullet</li><li>item2</li></ol>',
+            '<ol id="listId" style="margin-block: 0px;"><li>item1</li></ol><ol style="margin-block: 0px;" start="5"><li id="separatorId">bullet</li><li>item2</li></ol>',
             5
         );
     });
 
     it('split List 3', () => {
         runTest(
-            `<ol id=${listId}><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li id='${separatorElementId}'>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
-            '<ol id="listId"><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li></ol></ol><ol><ol style="list-style-type: lower-alpha;"><li id="separatorId">2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            `<ol id=${listId}><li>1</li><ol style="margin-block: 0px;list-style-type: lower-alpha;"><li>1</li><li id='${separatorElementId}'>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
+            '<ol id="listId" style="margin-block: 0px;"><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li></ol></ol><ol style="margin-block: 0px;"><ol style="list-style-type: lower-alpha;"><li id="separatorId">2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             1
         );
     });
 
     it('split List 4', () => {
         runTest(
-            `<ol id=${listId}><li id='${separatorElementId}'>1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
-            '<ol id="listId" start="9"><li id="separatorId">1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            `<ol id=${listId}><li id='${separatorElementId}'>1</li><ol style="margin-block: 0px;list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
+            '<ol id="listId" style="margin-block: 0px;" start="9"><li id="separatorId">1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             9
         );
     });

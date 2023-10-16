@@ -1,3 +1,4 @@
+import type { MarginBlockFormat } from './formatParts/MarginBlockFormat';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BoldFormat } from './formatParts/BoldFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
@@ -145,6 +146,11 @@ export interface FormatHandlerTypeMap {
      * Format for MarginFormat
      */
     margin: MarginFormat;
+
+    /**
+     * Format for MarginFormat
+     */
+    marginBlock: MarginBlockFormat;
 
     /**
      * Format for PaddingFormat

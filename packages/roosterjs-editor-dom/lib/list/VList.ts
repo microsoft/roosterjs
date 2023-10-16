@@ -195,6 +195,7 @@ export default class VList {
 
         // Use a placeholder to hold the position since the root list may be moved into document fragment later
         this.rootList.parentNode!.replaceChild(placeholder, this.rootList);
+        this.rootList.style.marginBlock = '0px';
 
         this.items.forEach(item => {
             const newListStart = item.getNewListStart();
@@ -205,7 +206,11 @@ export default class VList {
             }
 
             item.writeBack(listStack, this.rootList, shouldReuseAllAncestorListElements);
-            const topList = listStack[1];
+            const topList = listStack[1] as HTMLElement;
+            if (topList) {
+                topList.style.marginBlockStart = '0px';
+                topList.style.marginBlockEnd = '0px';
+            }
 
             item.applyListStyle(this.rootList, start);
 
@@ -309,7 +314,6 @@ export default class VList {
      * @param end End position to operate to
      * @param alignment Align items left, center or right
      */
-
     setAlignment(
         start: NodePosition,
         end: NodePosition,
@@ -326,6 +330,13 @@ export default class VList {
             }
             item.getNode().style.alignSelf = align;
         });
+    }
+
+    /**
+     * AdjustListMarginBlock
+     */
+    adjustListMarginBlock() {
+        this.rootList.style.marginBlock = '0px';
     }
 
     /**

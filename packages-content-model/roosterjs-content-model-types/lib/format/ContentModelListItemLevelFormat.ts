@@ -1,3 +1,4 @@
+import { MarginBlockFormat } from './formatParts/MarginBlockFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { ListStyleFormat } from './formatParts/ListStyleFormat';
 import type { ListThreadFormat } from './formatParts/ListThreadFormat';
@@ -12,5 +13,6 @@ export type ContentModelListItemLevelFormat = ListThreadFormat &
     DirectionFormat &
     TextAlignFormat &
     MarginFormat &
+    MarginBlockFormat &
     PaddingFormat &
     ListStyleFormat;

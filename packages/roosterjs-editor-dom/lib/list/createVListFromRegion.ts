@@ -139,6 +139,5 @@ function createVListFromItemNode(node: Node): VList {
     // Create the VList and append items
     const vList = new VList(listNode);
     vList.appendItem(nodeForItem, ListType.None);
-
     return vList;
 }
