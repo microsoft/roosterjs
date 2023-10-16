@@ -166,3 +166,4 @@ export {
     ObjectDefinition,
     Definition,
 } from './metadata/Definition';
+export { ColorManager, Colors } from './context/ColorManager';

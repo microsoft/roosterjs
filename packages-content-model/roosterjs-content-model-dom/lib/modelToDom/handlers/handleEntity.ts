@@ -19,7 +19,7 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
     context,
     refNode
 ) => {
-    let { entityFormat, wrapper } = entityModel;
+    const { entityFormat, wrapper } = entityModel;
 
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
@@ -39,7 +39,7 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     context,
     newSegments
 ) => {
-    let { entityFormat, wrapper, format } = entityModel;
+    const { entityFormat, wrapper, format } = entityModel;
 
     parent.appendChild(wrapper);
     newSegments?.push(wrapper);

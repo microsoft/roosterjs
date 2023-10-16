@@ -68,7 +68,7 @@ export default class Position implements NodePosition {
                 break;
 
             default:
-                let endOffset = getEndOffset(this.node);
+                const endOffset = getEndOffset(this.node);
                 this.offset = Math.max(0, Math.min(<number>offsetOrPosType, endOffset));
                 this.isAtEnd = offsetOrPosType > 0 && offsetOrPosType >= endOffset;
                 break;

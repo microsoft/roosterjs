@@ -164,7 +164,7 @@ function getLongestReplacementSourceLength(replacements: CustomReplacement[]): n
 
 function getReplacementEndCharacters(replacements: CustomReplacement[]): Set<string> {
     const endChars = new Set<string>();
-    for (let replacement of replacements) {
+    for (const replacement of replacements) {
         const sourceString = replacement.sourceString;
         if (sourceString.length == 0) {
             continue;

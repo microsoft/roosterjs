@@ -99,8 +99,9 @@ function convertDecimalsToAlpha(decimal: number, isLowerCase?: boolean): string 
 
 function convertDecimalsToRoman(decimal: number, isLowerCase?: boolean) {
     let romanValue = '';
-    for (let i of getObjectKeys(RomanValues)) {
-        let timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
+
+    for (const i of getObjectKeys(RomanValues)) {
+        const timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
         decimal = decimal - timesRomanCharAppear * RomanValues[i];
         romanValue = romanValue + i.repeat(timesRomanCharAppear);
     }

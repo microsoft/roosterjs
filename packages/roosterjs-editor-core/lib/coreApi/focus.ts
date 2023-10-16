@@ -24,7 +24,7 @@ export const focus: Focus = (core: EditorCore) => {
                 !core.domEvent.selectionRange ||
                 !core.api.selectRange(core, core.domEvent.selectionRange, true /*skipSameRange*/)
             ) {
-                let node = getFirstLeafNode(core.contentDiv) || core.contentDiv;
+                const node = getFirstLeafNode(core.contentDiv) || core.contentDiv;
                 core.api.selectRange(
                     core,
                     createRange(node, PositionType.Begin),

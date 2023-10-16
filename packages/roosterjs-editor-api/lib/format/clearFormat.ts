@@ -43,13 +43,13 @@ const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
  * @returns if the current selection is composed of two or more block elements
  */
 function isMultiBlockSelection(editor: IEditor): boolean {
-    let transverser = editor.getSelectionTraverser();
-    let blockElement = transverser?.currentBlockElement;
+    const transverser = editor.getSelectionTraverser();
+    const blockElement = transverser?.currentBlockElement;
     if (!blockElement) {
         return false;
     }
 
-    let nextBlockElement = transverser?.getNextBlockElement();
+    const nextBlockElement = transverser?.getNextBlockElement();
 
     //At least two blocks are selected
     return !!nextBlockElement;
@@ -58,8 +58,8 @@ function isMultiBlockSelection(editor: IEditor): boolean {
 function clearNodeFormat(node: Node): boolean {
     // 1. Recursively clear format of all its child nodes
     const areBlockElements = toArray(node.childNodes).map(clearNodeFormat);
-    let areAllChildrenBlock = areBlockElements.every(b => b);
-    let returnBlockElement = isBlockElement(node);
+    const areAllChildrenBlock = areBlockElements.every(b => b);
+    const returnBlockElement = isBlockElement(node);
 
     // 2. Unwrap the tag if necessary
     const tag = getTagOfNode(node);
@@ -87,7 +87,7 @@ function clearAttribute(element: HTMLElement) {
     const isTableCell = safeInstanceOf(element, 'HTMLTableCellElement');
     const isTable = safeInstanceOf(element, 'HTMLTableElement');
 
-    for (let attr of toArray(element.attributes)) {
+    for (const attr of toArray(element.attributes)) {
         if (isTableCell && attr.name == 'style') {
             removeNonBorderStyles(element);
         } else if (isTable && attr.name == 'style') {
@@ -280,7 +280,7 @@ function setDefaultFormat(editor: IEditor) {
                 QueryScope.OnSelection
             );
 
-            let shouldApplyInlineStyle =
+            const shouldApplyInlineStyle =
                 setColorIgnoredElements.length > 0
                     ? (element: HTMLElement) => setColorIgnoredElements.indexOf(element) == -1
                     : undefined;

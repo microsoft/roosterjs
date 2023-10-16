@@ -199,7 +199,7 @@ function select(
     coordinates: TableSelection
 ): { ranges: Range[]; isWholeTableSelected: boolean } {
     const contentDivSelector = '#' + core.contentDiv.id;
-    let { cssRules, ranges, isWholeTableSelected } = buildCss(
+    const { cssRules, ranges, isWholeTableSelected } = buildCss(
         table,
         coordinates,
         contentDivSelector

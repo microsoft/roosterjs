@@ -166,12 +166,12 @@ const OutdentWhenAltShiftLeft: BuildInEditFeature<PluginKeyboardEvent> = {
 const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
-        let range = editor.getSelectionRange();
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const range = editor.getSelectionRange();
         return li && range?.collapsed && isPositionAtBeginningOf(Position.getStart(range), li);
     },
     handleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         if (li?.previousSibling) {
             blockFormat(editor, (region, start, end) => {
                 const vList = createVListFromRegion(
@@ -202,7 +202,7 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
 const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         return (
             li &&
             isNodeEmpty(li) &&
@@ -243,7 +243,7 @@ const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
 const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         return !event.rawEvent.shiftKey && li && isNodeEmpty(li);
     },
     handleEvent: (event, editor) => {
@@ -284,12 +284,12 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
         event.rawEvent.preventDefault();
         editor.addUndoSnapshot(
             () => {
-                let searcher = editor.getContentSearcherOfCursor();
+                const searcher = editor.getContentSearcherOfCursor();
                 if (!searcher) {
                     return;
                 }
-                let textBeforeCursor = searcher.getSubStringBefore(5);
-                let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
+                const textBeforeCursor = searcher.getSubStringBefore(5);
+                const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
                 const listStyle = getAutoBulletListStyle(textBeforeCursor);
 
                 if (textRange) {
@@ -438,10 +438,10 @@ function toggleListAndPreventDefault(
     editor: IEditor,
     includeSiblingLists: boolean = true
 ) {
-    let listInfo = cacheGetListElement(event, editor);
+    const listInfo = cacheGetListElement(event, editor);
     if (listInfo) {
-        let listElement = listInfo[0];
-        let tag = getTagOfNode(listElement);
+        const listElement = listInfo[0];
+        const tag = getTagOfNode(listElement);
 
         if (tag == 'UL' || tag == 'OL') {
             toggleListType(
@@ -458,8 +458,8 @@ function toggleListAndPreventDefault(
 }
 
 function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
-    let li = editor.getElementAtCursor('LI,TABLE', undefined /*startFrom*/, event);
-    let listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
+    const li = editor.getElementAtCursor('LI,TABLE', undefined /*startFrom*/, event);
+    const listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
     return listElement ? [listElement, li] : null;
 }
 

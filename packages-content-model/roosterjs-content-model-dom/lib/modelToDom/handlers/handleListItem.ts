@@ -22,7 +22,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
 
     const { nodeStack } = context.listFormat;
 
-    let listParent = nodeStack?.[nodeStack?.length - 1]?.node || parent;
+    const listParent = nodeStack?.[nodeStack?.length - 1]?.node || parent;
     const li = doc.createElement('li');
     const level = listItem.levels[listItem.levels.length - 1];
 

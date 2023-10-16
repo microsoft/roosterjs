@@ -13,8 +13,8 @@ export function getRegularSelectionOffsets(
 ): [number, number] {
     const range = context.selection?.type == 'range' ? context.selection.range : null;
 
-    let startOffset = range?.startContainer == currentContainer ? range.startOffset : -1;
-    let endOffset = range?.endContainer == currentContainer ? range.endOffset! : -1;
+    const startOffset = range?.startContainer == currentContainer ? range.startOffset : -1;
+    const endOffset = range?.endContainer == currentContainer ? range.endOffset! : -1;
 
     return [startOffset, endOffset];
 }

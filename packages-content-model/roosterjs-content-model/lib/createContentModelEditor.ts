@@ -25,7 +25,7 @@ export function createContentModelEditor(
         plugins = plugins.concat(additionalPlugins);
     }
 
-    let options: ContentModelEditorOptions = {
+    const options: ContentModelEditorOptions = {
         plugins: plugins,
         initialContent: initialContent,
         getDarkColor: getDarkColor,
