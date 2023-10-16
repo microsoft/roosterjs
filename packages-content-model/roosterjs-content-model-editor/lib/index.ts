@@ -21,7 +21,11 @@ export {
     ContentModelContentChangedEventData,
 } from './publicTypes/event/ContentModelContentChangedEvent';
 
-export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
+export {
+    IContentModelEditor,
+    ContentModelEditorOptions,
+    EditorEnvironment,
+} from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
 export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
 export {
@@ -96,7 +100,6 @@ export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
 export { formatWithContentModel } from './publicApi/utils/formatWithContentModel';
-export { default as keyboardDelete } from './publicApi/editing/keyboardDelete';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';

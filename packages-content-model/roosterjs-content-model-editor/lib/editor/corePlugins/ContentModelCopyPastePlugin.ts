@@ -1,4 +1,6 @@
 import paste from '../../publicApi/utils/paste';
+import { addRangeToSelection, extractClipboardItems, wrap } from 'roosterjs-editor-dom';
+import { ChangeSource, ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
@@ -15,23 +17,11 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
-import {
-    addRangeToSelection,
-    createElement,
-    extractClipboardItems,
-    wrap,
-} from 'roosterjs-editor-dom';
 import type {
     CopyPastePluginState,
     IEditor,
     PluginWithState,
     ClipboardData,
-} from 'roosterjs-editor-types';
-import {
-    ChangeSource,
-    PluginEventType,
-    KnownCreateElementDataIndex,
-    ColorTransformDirection,
 } from 'roosterjs-editor-types';
 
 /**
@@ -217,10 +207,16 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         const div = editor.getCustomData(
             'CopyPasteTempDiv',
             () => {
-                const tempDiv = createElement(
-                    KnownCreateElementDataIndex.CopyPasteTempDiv,
-                    editor.getDocument()
-                ) as HTMLDivElement;
+                const tempDiv = editor.getDocument().createElement('div');
+
+                tempDiv.style.width = '600px';
+                tempDiv.style.height = '1px';
+                tempDiv.style.overflow = 'hidden';
+                tempDiv.style.position = 'fixed';
+                tempDiv.style.top = '0';
+                tempDiv.style.left = '0';
+                tempDiv.style.userSelect = 'text';
+                tempDiv.contentEditable = 'true';
 
                 editor.getDocument().body.appendChild(tempDiv);
 
