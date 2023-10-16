@@ -16,7 +16,7 @@ import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setSelection } from '../../modelApi/selection/setSelection';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
-import { TableOperation } from '../../publicTypes/parameter/TableOperation';
+import type { TableOperation } from '../../publicTypes/parameter/TableOperation';
 import {
     alignTableCellHorizontally,
     alignTableCellVertically,

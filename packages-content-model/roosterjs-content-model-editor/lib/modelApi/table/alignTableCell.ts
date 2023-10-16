@@ -1,6 +1,6 @@
 import { getSelectedCells } from './getSelectedCells';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
-import {
+import type {
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,
 } from '../../publicTypes/parameter/TableOperation';

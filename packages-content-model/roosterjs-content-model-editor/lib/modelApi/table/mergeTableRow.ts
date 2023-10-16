@@ -1,6 +1,6 @@
 import { canMergeCells } from './canMergeCells';
 import { getSelectedCells } from './getSelectedCells';
-import { TableVerticalMergeOperation } from '../../publicTypes/parameter/TableOperation';
+import type { TableVerticalMergeOperation } from '../../publicTypes/parameter/TableOperation';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 /**

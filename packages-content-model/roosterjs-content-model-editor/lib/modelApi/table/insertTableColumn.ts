@@ -1,6 +1,6 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
 import { getSelectedCells } from './getSelectedCells';
-import { TableHorizontalInsertOperation } from '../../publicTypes/parameter/TableOperation';
+import type { TableHorizontalInsertOperation } from '../../publicTypes/parameter/TableOperation';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 /**

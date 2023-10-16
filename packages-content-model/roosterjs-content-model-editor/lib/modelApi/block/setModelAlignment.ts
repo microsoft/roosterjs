@@ -1,6 +1,6 @@
 import { alignTable } from '../table/alignTable';
 import { getOperationalBlocks } from '../selection/collectSelections';
-import { TableAlignOperation } from '../../publicTypes/parameter/TableOperation';
+import type { TableAlignOperation } from '../../publicTypes/parameter/TableOperation';
 import type { ContentModelDocument, ContentModelListItem } from 'roosterjs-content-model-types';
 
 const ResultMap: Record<
