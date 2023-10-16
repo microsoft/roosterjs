@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/26</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">84.62% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>24/28</span>
+                <span class='fraction'>22/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>22/22</span>
             </div>
         
             
@@ -114,11 +114,7 @@
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -153,14 +149,12 @@
 <span class="cline-any cline-yes">125x</span>
 <span class="cline-any cline-yes">122x</span>
 <span class="cline-any cline-yes">122x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">122x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">122x</span>
-<span class="cline-any cline-yes">122x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">122x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">122x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,10 +172,9 @@
 <span class="cline-any cline-yes">125x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { applyFormat } from '../utils/applyFormat';
-import { listItemMetadataFormatHandler } from '../../formatHandlers/list/listItemMetadataFormatHandler';
+import { applyMetadata } from '../utils/applyMetadata';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { unwrap } from 'roosterjs-editor-dom';
-import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 import type {
     ContentModelBlockHandler,
     ContentModelListItem,
@@ -211,16 +204,14 @@ export const handleListItem: ContentModelBlockHandler&lt;ContentModelListItem&gt
     listParent.insertBefore(li, refNode?.parentNode == listParent ? refNode : null);
 &nbsp;
     if (level) {
-        applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
         applyFormat(li, context.formatAppliers.listItemThread, level.format, context);
 &nbsp;
-        // TODO: Move this out into roosterjs-content-model-editor package
-        updateListMetadata(level, metadata =&gt; {
-            applyFormat(li, [listItemMetadataFormatHandler.apply], metadata || {}, context);
+        // Need to apply metadata after applying listItem format since the list numbers value relies on the result of list thread handling
+        applyMetadata(level, context.metadataAppliers.listItem, listItem.format, context);
 &nbsp;
-            return metadata;
-        });
+        // Need to apply listItemElement formats after applying metadata since the list numbers value relies on the result of metadata handling
+        applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
 &nbsp;
         context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
     } else {
@@ -244,7 +235,7 @@ export const handleListItem: ContentModelBlockHandler&lt;ContentModelListItem&gt
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Oct 16 2023 16:45:51 GMT+0000 (Coordinated Universal Time)
+                at Mon Oct 16 2023 17:03:42 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

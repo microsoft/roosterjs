@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/30</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.1% </span>
+                <span class="strong">95.45% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>27/29</span>
+                <span class='fraction'>21/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.55% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>28/29</span>
+                <span class='fraction'>25/25</span>
             </div>
         
             
@@ -124,19 +124,7 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -187,25 +175,15 @@
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">111x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">111x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">111x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">111x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">111x</span>
@@ -214,8 +192,7 @@
 <span class="cline-any cline-yes">149x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { applyFormat } from '../utils/applyFormat';
-import { listLevelMetadataFormatHandler } from '../../formatHandlers/list/listLevelMetadataFormatHandler';
-import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
+import { applyMetadata } from '../utils/applyMetadata';
 import type {
     ContentModelBlockHandler,
     ContentModelListItem,
@@ -265,26 +242,16 @@ export const handleList: ContentModelBlockHandler&lt;ContentModelListItem&gt; = 
         const lastParent = nodeStack[nodeStack.length - 1].node;
 &nbsp;
         lastParent.insertBefore(newList, layer == 0 ? refNode : null);
-&nbsp;
-        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
-&nbsp;
-        // TODO: Move this out into roosterjs-content-model-editor package
-        updateListMetadata(level, metadata =&gt; {
-            applyFormat(newList, [listLevelMetadataFormatHandler.apply], metadata || {}, context);
-&nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (
-                metadata &amp;&amp;
-                typeof metadata.orderedStyleType == 'undefined' &amp;&amp;
-                typeof metadata.unorderedStyleType == 'undefined'
-            ) {
-<span class="cstat-no" title="statement not covered" >                metadata = null;</span>
-            }
-&nbsp;
-            return metadata;
-        });
-        applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
-&nbsp;
         nodeStack.push({ node: newList, ...level });
+&nbsp;
+        applyFormat(newList, context.formatAppliers.listLevelThread, level.format, context);
+&nbsp;
+        // Need to apply metadata after applying list level format since the list numbers value relies on the result of list thread handling
+        applyMetadata(level, context.metadataAppliers.listLevel, level.format, context);
+&nbsp;
+        // Need to apply listItemElement formats after applying metadata since the list numbers value relies on the result of metadata handling
+        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
+        applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
 &nbsp;
         context.onNodeCreated?.(level, newList);
     }
@@ -298,7 +265,7 @@ export const handleList: ContentModelBlockHandler&lt;ContentModelListItem&gt; = 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Oct 16 2023 16:45:51 GMT+0000 (Coordinated Universal Time)
+                at Mon Oct 16 2023 17:03:42 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
