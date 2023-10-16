@@ -1,4 +1,5 @@
 import paste from '../../publicApi/utils/paste';
+import { addRangeToSelection, createElement, extractClipboardItems } from 'roosterjs-editor-dom';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
@@ -12,15 +13,10 @@ import {
     moveChildNodes,
     normalizeContentModel,
     toArray,
+    wrap,
 } from 'roosterjs-content-model-dom';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
-import {
-    addRangeToSelection,
-    createElement,
-    extractClipboardItems,
-    wrap,
-} from 'roosterjs-editor-dom';
 import type {
     CopyPastePluginState,
     IEditor,
@@ -285,7 +281,7 @@ function domSelectionToRange(
  */
 export const onNodeCreated: OnNodeCreated = (_, node): void => {
     if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'table')) {
-        wrap(node, 'div');
+        wrap(node.ownerDocument, node, 'div');
     }
     if (isNodeOfType(node, 'ELEMENT_NODE') && !node.isContentEditable) {
         node.removeAttribute('contenteditable');

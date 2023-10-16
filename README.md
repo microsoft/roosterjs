@@ -132,27 +132,27 @@ In order to run the code below, you may also need to install [webpack](https://w
 
 ```html
 <html>
-<body>
-    <div style="width: 500px; height: 400px; border: solid 1px black" id="contentDiv"></div>
-    <button id="buttonB">B</button> <button id="buttonI">I</button>
+    <body>
+        <div style="width: 500px; height: 400px; border: solid 1px black" id="contentDiv"></div>
+        <button id="buttonB">B</button> <button id="buttonI">I</button>
         <button id="buttonU">U</button>
-    <script src="rooster.js"></script>
-    <script>
-    var contentDiv = document.getElementById("contentDiv");
-    var editor = roosterjs.createEditor(contentDiv);
+        <script src="rooster.js"></script>
+        <script>
+            var contentDiv = document.getElementById('contentDiv');
+            var editor = roosterjs.createEditor(contentDiv);
 
-    editor.setContent('Welcome to <b>RoosterJs</b>!');
-    document.getElementById('buttonB').addEventListener('click', function () {
-        roosterjs.toggleBold(editor);
-    });
-    document.getElementById('buttonI').addEventListener('click', function () {
-        roosterjs.toggleItalic(editor);
-    });
-    document.getElementById('buttonU').addEventListener('click', function () {
-        roosterjs.toggleUnderline(editor);
-    });
-    </script>
-</body>
+            editor.setContent('Welcome to <b>RoosterJs</b>!');
+            document.getElementById('buttonB').addEventListener('click', function () {
+                roosterjs.toggleBold(editor);
+            });
+            document.getElementById('buttonI').addEventListener('click', function () {
+                roosterjs.toggleItalic(editor);
+            });
+            document.getElementById('buttonU').addEventListener('click', function () {
+                roosterjs.toggleUnderline(editor);
+            });
+        </script>
+    </body>
 </html>
 ```
 
