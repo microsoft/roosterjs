@@ -1,4 +1,4 @@
-import { EditorEnvironment } from './IContentModelEditor';
+import type { EditorEnvironment } from './IContentModelEditor';
 import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
 import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import type {

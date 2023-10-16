@@ -1,5 +1,5 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import { PluginEventType } from 'roosterjs-editor-types/lib';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { readFile } from '../../domUtils/readFile';
 import { updateImageMetadata } from '../../domUtils/metadata/updateImageMetadata';
 import type { ContentModelImage } from 'roosterjs-content-model-types';

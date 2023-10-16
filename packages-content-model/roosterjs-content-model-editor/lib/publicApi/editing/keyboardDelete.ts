@@ -22,6 +22,7 @@ import {
 } from '../../modelApi/edit/deleteSteps/deleteCollapsedSelection';
 
 /**
+ * @internal
  * Do keyboard event handling for DELETE/BACKSPACE key
  * @param editor The Content Model Editor
  * @param rawEvent DOM keyboard event
