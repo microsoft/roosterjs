@@ -1,8 +1,9 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
-import * as readFile from 'roosterjs-editor-dom/lib/utils/readFile';
+import * as readFile from '../../../lib/domUtils/readFile';
 import changeImage from '../../../lib/publicApi/image/changeImage';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { PluginEventType } from 'roosterjs-editor-types';
 import {
     addSegment,
     createContentModelDocument,
@@ -13,6 +14,8 @@ import {
 describe('changeImage', () => {
     const testUrl = 'http://test.com/test';
     const blob = ({ a: 1 } as any) as File;
+    let imageNode: HTMLImageElement;
+    let triggerPluginEvent: jasmine.Spy;
 
     function runTest(
         model: ContentModelDocument,
@@ -36,12 +39,10 @@ describe('changeImage', () => {
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
-        const image = document.createElement('img');
-
         const getDOMSelection = jasmine
             .createSpy()
-            .and.returnValues({ type: 'image', image: image });
-        const triggerPluginEvent = jasmine.createSpy().and.callThrough();
+            .and.returnValues({ type: 'image', image: imageNode });
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.callThrough();
         const getVisibleViewport = jasmine.createSpy().and.callThrough();
 
         const editor = ({
@@ -65,7 +66,9 @@ describe('changeImage', () => {
     }
 
     beforeEach(() => {
-        spyOn(readFile, 'default').and.callFake((_, callback) => {
+        imageNode = document.createElement('img');
+
+        spyOn(readFile, 'readFile').and.callFake((_, callback) => {
             callback(testUrl);
         });
     });
@@ -82,6 +85,8 @@ describe('changeImage', () => {
             },
             0
         );
+
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(0);
     });
 
     it('Doc without selection', () => {
@@ -114,6 +119,8 @@ describe('changeImage', () => {
             },
             0
         );
+
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(0);
     });
 
     it('Doc with selection, but no image', () => {
@@ -147,6 +154,15 @@ describe('changeImage', () => {
             },
             1
         );
+
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+            contentModel: doc,
+            selection: undefined,
+            source: 'Format',
+            data: undefined,
+            additionalData: { formatApiName: 'changeImage' },
+        });
     });
 
     it('Doc with selection and image', () => {
@@ -190,5 +206,20 @@ describe('changeImage', () => {
             },
             1
         );
+
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(2);
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EditImage, {
+            image: imageNode,
+            newSrc: testUrl,
+            previousSrc: 'test',
+            originalSrc: '',
+        });
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+            contentModel: doc,
+            selection: undefined,
+            source: 'Format',
+            data: undefined,
+            additionalData: { formatApiName: 'changeImage' },
+        });
     });
 });

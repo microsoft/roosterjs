@@ -1,9 +1,9 @@
-import { Browser, isModifierKey } from 'roosterjs-editor-dom';
 import { ChangeSource, Keys } from 'roosterjs-editor-types';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { isModifierKey } from '../../domUtils/eventUtils';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -22,6 +22,7 @@ import {
 } from '../../modelApi/edit/deleteSteps/deleteCollapsedSelection';
 
 /**
+ * @internal
  * Do keyboard event handling for DELETE/BACKSPACE key
  * @param editor The Content Model Editor
  * @param rawEvent DOM keyboard event
@@ -41,8 +42,11 @@ export default function keyboardDelete(
             editor,
             which == Keys.DELETE ? 'handleDeleteKey' : 'handleBackspaceKey',
             (model, context) => {
-                const result = deleteSelection(model, getDeleteSteps(rawEvent), context)
-                    .deleteResult;
+                const result = deleteSelection(
+                    model,
+                    getDeleteSteps(rawEvent, !!editor.getEnvironment().isMac),
+                    context
+                ).deleteResult;
 
                 isDeleted = result != DeleteResult.NotDeleted;
 
@@ -61,11 +65,11 @@ export default function keyboardDelete(
     return isDeleted;
 }
 
-function getDeleteSteps(rawEvent: KeyboardEvent): (DeleteSelectionStep | null)[] {
+function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelectionStep | null)[] {
     const isForward = rawEvent.which == Keys.DELETE;
     const deleteAllSegmentBeforeStep =
         shouldDeleteAllSegmentsBefore(rawEvent) && !isForward ? deleteAllSegmentBefore : null;
-    const deleteWordSelection = shouldDeleteWord(rawEvent, !!Browser.isMac)
+    const deleteWordSelection = shouldDeleteWord(rawEvent, isMac)
         ? isForward
             ? forwardDeleteWordSelection
             : backwardDeleteWordSelection
