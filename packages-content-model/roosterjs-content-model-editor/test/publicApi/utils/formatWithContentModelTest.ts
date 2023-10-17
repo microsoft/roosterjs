@@ -231,11 +231,11 @@ describe('formatWithContentModel', () => {
                 context.deletedEntities.push(
                     {
                         entity: entity1,
-                        operation: EntityOperation.RemoveFromStart,
+                        operation: 'removeFromStart',
                     },
                     {
                         entity: entity2,
-                        operation: EntityOperation.RemoveFromEnd,
+                        operation: 'removeFromEnd',
                     }
                 );
                 return true;

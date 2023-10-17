@@ -1,4 +1,4 @@
-import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
+import { BulletListType, NumberingListType } from 'roosterjs-content-model-types';
 import { createNumberDefinition, createObjectDefinition } from './definitionCreators';
 import { getObjectKeys, updateMetadata } from 'roosterjs-content-model-dom';
 import type {
