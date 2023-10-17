@@ -2,11 +2,12 @@ import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
 import keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
-import { ChangeSource, Keys } from 'roosterjs-editor-types';
+import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
 import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../../lib/modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { editingTestCommon } from './editingTestCommon';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { Keys } from 'roosterjs-editor-types';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
@@ -29,7 +30,7 @@ describe('keyboardDelete', () => {
 
     function runTest(
         input: ContentModelDocument,
-        key: number,
+        key: string,
         expectedResult: ContentModelDocument,
         expectedSteps: DeleteSelectionStep[],
         expectedDelete: DeleteResult,
@@ -41,7 +42,7 @@ describe('keyboardDelete', () => {
 
         const preventDefault = jasmine.createSpy('preventDefault');
         const mockedEvent = ({
-            which: key,
+            key,
             preventDefault,
         } as any) as KeyboardEvent;
 
@@ -82,7 +83,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            Keys.DELETE,
+            'Delete',
             {
                 blockGroupType: 'Document',
                 blocks: [],
@@ -99,7 +100,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            Keys.BACKSPACE,
+            'Backspace',
             {
                 blockGroupType: 'Document',
                 blocks: [],
@@ -118,7 +119,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            Keys.DELETE,
+            'Delete',
             {
                 blockGroupType: 'Document',
                 blocks: [],
@@ -137,7 +138,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            Keys.BACKSPACE,
+            'Backspace',
             {
                 blockGroupType: 'Document',
                 blocks: [],
@@ -156,7 +157,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            Keys.DELETE,
+            'Delete',
             {
                 blockGroupType: 'Document',
                 blocks: [],
@@ -175,7 +176,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            Keys.BACKSPACE,
+            'Backspace',
             {
                 blockGroupType: 'Document',
                 blocks: [],
@@ -204,7 +205,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            Keys.DELETE,
+            'Delete',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -245,7 +246,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            Keys.BACKSPACE,
+            'Backspace',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -291,7 +292,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            Keys.DELETE,
+            'Delete',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -342,7 +343,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            Keys.BACKSPACE,
+            'Backspace',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -381,9 +382,9 @@ describe('keyboardDelete', () => {
                 range: { collapsed: false },
             }),
         } as any) as IContentModelEditor;
-        const which = Keys.DELETE;
         const event = {
-            which,
+            which: Keys.DELETE,
+            key: 'Delete',
         } as any;
 
         keyboardDelete(editor, event);
@@ -392,7 +393,7 @@ describe('keyboardDelete', () => {
         expect(spy.calls.argsFor(0)[1]).toBe('handleDeleteKey');
         expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(spy.calls.argsFor(0)[3]?.changeSource).toBe(ChangeSource.Keyboard);
-        expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(which);
+        expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(Keys.DELETE);
     });
 
     it('Check parameter of formatWithContentModel, backward', () => {
@@ -407,6 +408,7 @@ describe('keyboardDelete', () => {
         } as any;
         const which = Keys.BACKSPACE;
         const event = {
+            key: 'Backspace',
             which,
             preventDefault,
         } as any;
@@ -420,7 +422,7 @@ describe('keyboardDelete', () => {
     });
 
     it('No need to delete - Backspace', () => {
-        const rawEvent = { which: Keys.BACKSPACE } as any;
+        const rawEvent = { key: 'Backspace' } as any;
         const range: DOMSelection = {
             type: 'range',
             range: ({
@@ -441,7 +443,7 @@ describe('keyboardDelete', () => {
     });
 
     it('No need to delete - Delete', () => {
-        const rawEvent = { which: Keys.DELETE } as any;
+        const rawEvent = { key: 'Delete' } as any;
         const range: DOMSelection = {
             type: 'range',
             range: ({
@@ -462,7 +464,7 @@ describe('keyboardDelete', () => {
     });
 
     it('Backspace from the beginning', () => {
-        const rawEvent = { which: Keys.BACKSPACE } as any;
+        const rawEvent = { key: 'Backspace' } as any;
         const range: DOMSelection = {
             type: 'range',
             range: ({
@@ -484,7 +486,7 @@ describe('keyboardDelete', () => {
     });
 
     it('Delete from the last', () => {
-        const rawEvent = { which: Keys.DELETE } as any;
+        const rawEvent = { key: 'Delete' } as any;
         const range: DOMSelection = {
             type: 'range',
             range: ({

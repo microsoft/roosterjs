@@ -1,8 +1,10 @@
 import addParser from './utils/addParser';
-import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
-import { KnownPasteSourceType, PasteType, PluginEventType } from 'roosterjs-editor-types';
+import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { parseLink } from './utils/linkParser';
+import { PasteType } from '../../../publicTypes/parameter/PasteType';
+import { PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
@@ -18,6 +20,15 @@ import type {
 } from 'roosterjs-editor-types';
 
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
+
+// Map old PasteType to new PasteType
+// TODO: We can remove this once we have standalone editor
+const PasteTypeMap: Record<OldPasteType, PasteType> = {
+    [OldPasteType.AsImage]: 'asImage',
+    [OldPasteType.AsPlainText]: 'asPlainText',
+    [OldPasteType.MergeFormat]: 'mergeFormat',
+    [OldPasteType.Normal]: 'normal',
+};
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -75,28 +86,32 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         }
 
         const ev = event as ContentModelBeforePasteEvent;
+
         if (!ev.domToModelOption) {
             return;
         }
+
         const pasteSource = getPasteSource(ev, false);
+        const pasteType = PasteTypeMap[ev.pasteType];
+
         switch (pasteSource) {
-            case KnownPasteSourceType.WordDesktop:
+            case 'wordDesktop':
                 processPastedContentFromWordDesktop(ev);
                 break;
-            case KnownPasteSourceType.WacComponents:
+            case 'wacComponents':
                 processPastedContentWacComponents(ev);
                 break;
-            case KnownPasteSourceType.ExcelOnline:
-            case KnownPasteSourceType.ExcelDesktop:
-                if (ev.pasteType === PasteType.Normal || ev.pasteType === PasteType.MergeFormat) {
+            case 'excelOnline':
+            case 'excelDesktop':
+                if (pasteType === 'normal' || pasteType === 'mergeFormat') {
                     // Handle HTML copied from Excel
                     processPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
                 }
                 break;
-            case KnownPasteSourceType.GoogleSheets:
+            case 'googleSheets':
                 ev.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
                 break;
-            case KnownPasteSourceType.PowerPointDesktop:
+            case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
                 break;
         }
@@ -106,7 +121,7 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         addParser(ev.domToModelOption, 'table', deprecatedBorderColorParser);
         sanitizeBlockStyles(ev.sanitizingOption);
 
-        if (ev.pasteType === PasteType.MergeFormat) {
+        if (pasteType === 'mergeFormat') {
             addParser(ev.domToModelOption, 'block', blockElementParser);
             addParser(ev.domToModelOption, 'listLevel', blockElementParser);
         }

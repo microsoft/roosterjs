@@ -1,7 +1,9 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { ChangeSource, GetContentMode, PasteType, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { formatWithContentModel } from './formatWithContentModel';
+import { GetContentMode, PluginEventType } from 'roosterjs-editor-types';
 import { mergeModel } from '../../modelApi/common/mergeModel';
+import { PasteType as OldPasteType } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -19,27 +21,32 @@ import type { ContentModelBeforePasteEventData } from '../../publicTypes/event/C
 import type ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import {
     createDefaultHtmlSanitizerOptions,
-    getPasteType,
     handleImagePaste,
     handleTextPaste,
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
+import type { PasteType } from '../../publicTypes/parameter/PasteType';
+
+// Map new PasteType to old PasteType
+// TODO: We can remove this once we have standalone editor
+const PasteTypeMap: Record<PasteType, OldPasteType> = {
+    asImage: OldPasteType.AsImage,
+    asPlainText: OldPasteType.AsPlainText,
+    mergeFormat: OldPasteType.MergeFormat,
+    normal: OldPasteType.Normal,
+};
 
 /**
  * Paste into editor using a clipboardData object
+ * @param editor The editor to paste content into
  * @param clipboardData Clipboard data retrieved from clipboard
- * @param pasteAsText Force pasting as plain text. Default value is false
- * @param applyCurrentStyle True if apply format of current selection to the pasted content,
- * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
- * @param pasteAsImage: When set to true, if the clipboardData contains a imageDataUri will paste the image to the editor
+ * @param pasteType Type of content to paste. @default normal
  */
 export default function paste(
     editor: IContentModelEditor,
     clipboardData: ClipboardData,
-    pasteAsText: boolean = false,
-    applyCurrentFormat: boolean = false,
-    pasteAsImage: boolean = false
+    pasteType: PasteType = 'normal'
 ) {
     if (clipboardData.snapshotBeforePaste) {
         // Restore original content before paste a new one
@@ -54,11 +61,7 @@ export default function paste(
         editor,
         'Paste',
         (model, context) => {
-            const eventData = createBeforePasteEventData(
-                editor,
-                clipboardData,
-                getPasteType(pasteAsText, applyCurrentFormat, pasteAsImage)
-            );
+            const eventData = createBeforePasteEventData(editor, clipboardData, pasteType);
             const currentSegment = getSelectedSegments(model, true /*includingFormatHolder*/)[0];
             const { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight } =
                 currentSegment?.format ?? {};
@@ -69,8 +72,7 @@ export default function paste(
             } = triggerPluginEventAndCreatePasteFragment(
                 editor,
                 clipboardData,
-                pasteAsText,
-                pasteAsImage,
+                pasteType,
                 eventData,
                 { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight }
             );
@@ -80,7 +82,13 @@ export default function paste(
                 createDomToModelContext(undefined /*editorContext*/, domToModelOption)
             );
 
-            mergePasteContent(model, context, pasteModel, applyCurrentFormat, customizedMerge);
+            mergePasteContent(
+                model,
+                context,
+                pasteModel,
+                pasteType == 'mergeFormat',
+                customizedMerge
+            );
 
             return true;
         },
@@ -148,7 +156,7 @@ function createBeforePasteEventData(
         htmlAfter: '',
         htmlAttributes: {},
         domToModelOption: {},
-        pasteType,
+        pasteType: PasteTypeMap[pasteType],
     };
 }
 
@@ -159,8 +167,7 @@ function createBeforePasteEventData(
 function triggerPluginEventAndCreatePasteFragment(
     editor: IContentModelEditor,
     clipboardData: ClipboardData,
-    pasteAsText: boolean,
-    pasteAsImage: boolean,
+    pasteType: PasteType,
     eventData: ContentModelBeforePasteEventData,
     currentFormat: ContentModelSegmentFormat
 ): ContentModelBeforePasteEventData {
@@ -181,10 +188,13 @@ function triggerPluginEventAndCreatePasteFragment(
     retrieveMetadataFromClipboard(doc, event, trustedHTMLHandler);
 
     // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
-    if ((pasteAsImage && imageDataUri) || (!pasteAsText && !text && imageDataUri)) {
+    if (
+        (pasteType == 'asImage' && imageDataUri) ||
+        (pasteType != 'asPlainText' && !text && imageDataUri)
+    ) {
         // Paste image
         handleImagePaste(imageDataUri, fragment);
-    } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
+    } else if (pasteType != 'asPlainText' && rawHtml && doc ? doc.body : false) {
         moveChildNodes(fragment, doc?.body);
     } else if (text) {
         // Paste text
@@ -199,8 +209,9 @@ function triggerPluginEventAndCreatePasteFragment(
     applySegmentFormatToElement(formatContainer, currentFormat);
 
     let pluginEvent: ContentModelBeforePasteEvent = event;
+
     // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste, when the type of paste is different than Plain Text
-    if (event.pasteType !== PasteType.AsPlainText) {
+    if (pasteType !== 'asPlainText') {
         pluginEvent = editor.triggerPluginEvent(
             PluginEventType.BeforePaste,
             event,

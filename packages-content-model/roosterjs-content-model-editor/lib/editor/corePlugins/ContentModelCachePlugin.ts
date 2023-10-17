@@ -1,6 +1,6 @@
 import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
 import { isCharacterValue } from '../../domUtils/eventUtils';
-import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -167,7 +167,7 @@ export default class ContentModelCachePlugin
         // 3. ENTER key is pressed. ENTER key will create new paragraph, so need to update cache to reflect this change
         // TODO: Handle ENTER key to better reuse content model
 
-        if (rawEvent.which == Keys.ENTER) {
+        if (rawEvent.key == 'Enter') {
             return true;
         }
 

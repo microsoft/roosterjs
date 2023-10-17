@@ -1,6 +1,6 @@
 import * as keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
 import ContentModelEditPlugin from '../../../lib/editor/corePlugins/ContentModelEditPlugin';
-import { EntityOperation, Keys, PluginEventType } from 'roosterjs-editor-types';
+import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('ContentModelEditPlugin', () => {
@@ -24,7 +24,7 @@ describe('ContentModelEditPlugin', () => {
 
         it('Backspace', () => {
             const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.BACKSPACE } as any;
+            const rawEvent = { key: 'Backspace' } as any;
 
             plugin.initialize(editor);
 
@@ -38,7 +38,7 @@ describe('ContentModelEditPlugin', () => {
 
         it('Delete', () => {
             const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.DELETE } as any;
+            const rawEvent = { key: 'Delete' } as any;
 
             plugin.initialize(editor);
 
@@ -66,7 +66,7 @@ describe('ContentModelEditPlugin', () => {
 
         it('Default prevented', () => {
             const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.DELETE, defaultPrevented: true } as any;
+            const rawEvent = { key: 'Delete', defaultPrevented: true } as any;
 
             plugin.initialize(editor);
             plugin.onPluginEvent({
@@ -94,21 +94,21 @@ describe('ContentModelEditPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
-                rawEvent: { which: Keys.DELETE } as any,
+                rawEvent: { key: 'Delete' } as any,
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
-                which: Keys.DELETE,
+                key: 'Delete',
             } as any);
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
-                rawEvent: { which: Keys.DELETE } as any,
+                rawEvent: { key: 'Delete' } as any,
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledTimes(2);
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
-                which: Keys.DELETE,
+                key: 'Delete',
             } as any);
         });
 
