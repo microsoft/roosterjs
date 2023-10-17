@@ -1,5 +1,5 @@
 import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
-import type { Border, CoreApiMap, EditorCore } from 'roosterjs-editor-types';
+import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     DOMSelection,
@@ -57,12 +57,6 @@ export type SetContentModel = (
 export type SetDOMSelection = (core: ContentModelEditorCore, selection: DOMSelection) => void;
 
 /**
- * Set table border
- * @param attribute The attribute to set
- */
-export type SetTableBorder = (attribute: string) => void;
-
-/**
  * The interface for the map of core API for Content Model editor.
  * Editor can call call API from this map under ContentModelEditorCore object
  */
@@ -100,24 +94,6 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
      * @param selection The selection to set
      */
     setDOMSelection: SetDOMSelection;
-
-    /**
-     * Set table border color
-     * @param color The color to set
-     */
-    setTableBorderColor: SetTableBorder;
-
-    /**
-     * Set table border style
-     * @param style The style to set
-     */
-    setTableBorderWidth: SetTableBorder;
-
-    /**
-     * Set table border width
-     * @param width The width to set
-     */
-    setTableBorderStyle: SetTableBorder;
 }
 
 /**
@@ -160,9 +136,4 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
      * Whether adding delimiter for entity is allowed
      */
     addDelimiterForEntity: boolean;
-
-    /**
-     * Table border
-     */
-    tableBorder: Border;
 }

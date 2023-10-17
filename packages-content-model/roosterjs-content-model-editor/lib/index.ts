@@ -7,7 +7,6 @@ export {
     ContentModelEditorCore,
     CreateContentModel,
     SetContentModel,
-    SetTableBorder,
     GetDOMSelection,
     SetDOMSelection,
 } from './publicTypes/ContentModelEditorCore';

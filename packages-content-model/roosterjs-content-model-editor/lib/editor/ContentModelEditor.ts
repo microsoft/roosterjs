@@ -1,6 +1,5 @@
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import type { Border } from 'roosterjs-editor-types';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type {
     ContentModelEditorOptions,
@@ -84,25 +83,5 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
-    }
-
-    getTableBorder(): Border {
-        return this.getCore().tableBorder;
-    }
-
-    setTableBorderColor(color: string) {
-        const core = this.getCore();
-
-        core.tableBorder.color = color;
-    }
-    setTableBorderWidth(width: string) {
-        const core = this.getCore();
-
-        core.tableBorder.width = width;
-    }
-    setTableBorderStyle(style: string) {
-        const core = this.getCore();
-
-        core.tableBorder.style = style;
     }
 }

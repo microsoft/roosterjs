@@ -126,7 +126,6 @@ describe('createContentModelEditorCore', () => {
                     backgroundColor: undefined,
                 },
             },
-            tableBorder: { width: '1px', color: '#ABABAB', style: 'solid' },
             contentDiv: {
                 style: {},
             },
@@ -196,7 +195,6 @@ describe('createContentModelEditorCore', () => {
                     backgroundColor: undefined,
                 },
             },
-            tableBorder: { width: '1px', color: '#ABABAB', style: 'solid' },
             contentDiv: {
                 style: {},
             },
@@ -265,7 +263,6 @@ describe('createContentModelEditorCore', () => {
                 { processorOverride: { table: tablePreProcessor } },
                 undefined,
             ],
-            tableBorder: { width: '1px', color: '#ABABAB', style: 'solid' },
             defaultModelToDomOptions: [undefined],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
@@ -340,8 +337,6 @@ describe('createContentModelEditorCore', () => {
                     backgroundColor: undefined,
                 },
             },
-            tableBorder: { width: '1px', color: '#ABABAB', style: 'solid' },
-
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
 
@@ -409,7 +404,6 @@ describe('createContentModelEditorCore', () => {
                     backgroundColor: undefined,
                 },
             },
-            tableBorder: { width: '1px', color: '#ABABAB', style: 'solid' },
             contentDiv: {
                 style: {},
             },

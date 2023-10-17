@@ -1,4 +1,3 @@
-import type Border from './Border';
 import type CorePlugins from './CorePlugins';
 import type DarkColorHandler from './DarkColorHandler';
 import type DefaultFormat from './DefaultFormat';
@@ -144,11 +143,6 @@ export default interface EditorOptions {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
-
-    /**
-     * Initial Table Border Format
-     */
-    initialTableBorder?: Border;
 
     /**
      * A callback to be invoked when any exception is thrown during disposing editor

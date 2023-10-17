@@ -87,12 +87,6 @@ function promoteContentModelInfo(
     cmCore.defaultModelToDomOptions = [options.defaultModelToDomOptions];
     cmCore.defaultDomToModelConfig = createDomToModelConfig(cmCore.defaultDomToModelOptions);
     cmCore.defaultModelToDomConfig = createModelToDomConfig(cmCore.defaultModelToDomOptions);
-
-    cmCore.tableBorder = options.initialTableBorder ?? {
-        width: '1px',
-        color: '#ABABAB',
-        style: 'solid',
-    };
 }
 
 function promoteCoreApi(cmCore: ContentModelEditorCore) {

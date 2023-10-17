@@ -1,4 +1,4 @@
-import type { Border, EditorOptions, IEditor } from 'roosterjs-editor-types';
+import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     DOMSelection,
@@ -48,30 +48,6 @@ export interface IContentModelEditor extends IEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection): void;
-
-    /**
-     * Get table border
-     * @returns The table border
-     */
-    getTableBorder(): Border;
-
-    /**
-     * Set table border color
-     * @param color The color to set
-     */
-    setTableBorderColor(color: string): void;
-
-    /**
-     * Set table border width
-     * @param width The width to set
-     */
-    setTableBorderWidth(width: string): void;
-
-    /**
-     * Set table border style
-     * @param style The style to set
-     */
-    setTableBorderStyle(style: string): void;
 }
 
 /**
