@@ -1,4 +1,4 @@
-import * as readFile from 'roosterjs-editor-dom/lib/utils/readFile';
+import * as readFile from '../../../lib/domUtils/readFile';
 import insertImage from '../../../lib/publicApi/image/insertImage';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
@@ -52,7 +52,7 @@ describe('insertImage', () => {
     }
 
     beforeEach(() => {
-        spyOn(readFile, 'default').and.callFake((_, callback) => {
+        spyOn(readFile, 'readFile').and.callFake((_, callback) => {
             callback(testUrl);
         });
     });

@@ -47,6 +47,8 @@ export const createContentModelEditorCore: CoreCreator<
 
     const core = createEditorCore(contentDiv, modifiedOptions) as ContentModelEditorCore;
 
+    core.environment = {};
+
     promoteToContentModelEditorCore(core, modifiedOptions, pluginState);
 
     return core;
@@ -67,6 +69,7 @@ export function promoteToContentModelEditorCore(
     promoteCorePluginState(cmCore, pluginState);
     promoteContentModelInfo(cmCore, options);
     promoteCoreApi(cmCore);
+    promoteEnvironment(cmCore);
 }
 
 function promoteCorePluginState(
@@ -113,6 +116,10 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.originalApi.setContentModel = setContentModel;
     cmCore.originalApi.getDOMSelection = getDOMSelection;
     cmCore.originalApi.setDOMSelection = setDOMSelection;
+}
+
+function promoteEnvironment(cmCore: ContentModelEditorCore) {
+    cmCore.environment.isMac = window.navigator.appVersion.indexOf('Mac') != -1;
 }
 
 function getPluginState(options: ContentModelEditorOptions): ContentModelPluginState {

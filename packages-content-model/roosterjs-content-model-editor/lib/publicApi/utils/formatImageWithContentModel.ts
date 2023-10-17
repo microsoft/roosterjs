@@ -1,7 +1,5 @@
 import { formatSegmentWithContentModel } from './formatSegmentWithContentModel';
-import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentModelImage } from 'roosterjs-content-model-types';
-import type { EditImageEventData } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
@@ -10,8 +8,7 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
 export default function formatImageWithContentModel(
     editor: IContentModelEditor,
     apiName: string,
-    callback: (segment: ContentModelImage) => void,
-    eventChangeData?: EditImageEventData
+    callback: (segment: ContentModelImage) => void
 ) {
     formatSegmentWithContentModel(
         editor,
@@ -19,9 +16,6 @@ export default function formatImageWithContentModel(
         (_, __, segment) => {
             if (segment?.segmentType == 'Image') {
                 callback(segment);
-                if (eventChangeData) {
-                    editor.triggerPluginEvent(PluginEventType.EditImage, eventChangeData);
-                }
             }
         },
         undefined /** segmentHasStyleCallback **/,

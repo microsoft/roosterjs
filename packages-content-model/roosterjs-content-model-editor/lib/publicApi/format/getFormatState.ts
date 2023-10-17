@@ -1,4 +1,3 @@
-import { contains } from 'roosterjs-editor-dom';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
@@ -96,7 +95,7 @@ function createNodeStack(root: Node, startNode: Node): Node[] {
     const result: Node[] = [];
     let node: Node | null = startNode;
 
-    while (node && contains(root, node)) {
+    while (node && root != node && root.contains(node)) {
         if (isNodeOfType(node, 'ELEMENT_NODE') && node.tagName == 'TABLE') {
             // For table, we can't do a reduced model creation since we need to handle their cells and indexes,
             // so clean up whatever we already have, and just put table into the stack
