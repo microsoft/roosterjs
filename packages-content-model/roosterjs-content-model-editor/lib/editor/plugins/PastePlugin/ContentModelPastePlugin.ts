@@ -3,12 +3,13 @@ import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { parseLink } from './utils/linkParser';
-import { PasteType } from '../../../publicTypes/parameter/PasteType';
+import { PastePropertyNames } from './pasteSourceValidations/constants';
 import { PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
+import type { PasteType } from '../../../publicTypes/parameter/PasteType';
 import type ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
@@ -18,8 +19,6 @@ import type {
     IEditor,
     PluginEvent,
 } from 'roosterjs-editor-types';
-
-const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
 // Map old PasteType to new PasteType
 // TODO: We can remove this once we have standalone editor
@@ -109,7 +108,9 @@ export default class ContentModelPastePlugin implements EditorPlugin {
                 }
                 break;
             case 'googleSheets':
-                ev.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+                ev.sanitizingOption.additionalTagReplacements[
+                    PastePropertyNames.GOOGLE_SHEET_NODE_NAME
+                ] = '*';
                 break;
             case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());

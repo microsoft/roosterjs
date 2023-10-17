@@ -9,10 +9,10 @@ import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDe
 import ContentModelBeforePasteEvent from '../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { PastePropertyNames } from '../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/constants';
 import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 
 const trustedHTMLHandler = <any>'mock';
-const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 3;
 
 describe('Content Model Paste Plugin Test', () => {
@@ -211,7 +211,9 @@ describe('Content Model Paste Plugin Test', () => {
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
             expect(
-                event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME]
+                event.sanitizingOption.additionalTagReplacements[
+                    PastePropertyNames.GOOGLE_SHEET_NODE_NAME
+                ]
             ).toEqual('*');
         });
     });

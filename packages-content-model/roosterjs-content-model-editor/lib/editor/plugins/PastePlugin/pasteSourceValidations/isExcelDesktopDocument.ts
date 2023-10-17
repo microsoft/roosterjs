@@ -1,4 +1,4 @@
-import { EXCEL_DESKTOP_ATTRIBUTE_NAME } from './constants';
+import { PastePropertyNames } from './constants';
 import type { GetSourceFunction } from './getPasteSource';
 
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
@@ -12,5 +12,5 @@ const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 export const isExcelDesktopDocument: GetSourceFunction = props => {
     const { htmlAttributes } = props;
     // The presence of this attribute confirms its origin from Excel Desktop
-    return htmlAttributes[EXCEL_DESKTOP_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE;
+    return htmlAttributes[PastePropertyNames.EXCEL_DESKTOP_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE;
 };

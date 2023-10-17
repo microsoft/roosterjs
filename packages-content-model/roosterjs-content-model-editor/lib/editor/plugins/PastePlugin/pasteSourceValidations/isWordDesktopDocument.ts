@@ -1,4 +1,4 @@
-import { PROG_ID_NAME } from './constants';
+import { PastePropertyNames } from './constants';
 import type { GetSourceFunction } from './getPasteSource';
 
 const WORD_ATTRIBUTE_NAME = 'xmlns:w';
@@ -15,6 +15,6 @@ export const isWordDesktopDocument: GetSourceFunction = props => {
     const { htmlAttributes } = props;
     return (
         htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
-        htmlAttributes[PROG_ID_NAME] == WORD_PROG_ID
+        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == WORD_PROG_ID
     );
 };

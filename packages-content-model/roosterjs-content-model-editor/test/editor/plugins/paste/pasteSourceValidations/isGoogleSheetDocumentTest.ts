@@ -1,12 +1,12 @@
 import { GetSourceInputParams } from '../../../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/getPasteSource';
 import { getWacElement } from './pasteTestUtils';
-import { GOOGLE_SHEET_NODE_NAME } from '../../../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/constants';
 import { isGoogleSheetDocument } from '../../../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/isGoogleSheetDocument';
+import { PastePropertyNames } from '../../../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/constants';
 
 describe('isGoogleSheetDocument |', () => {
     it('Is from Google Sheets', () => {
         const fragment = document.createDocumentFragment();
-        fragment.appendChild(document.createElement(GOOGLE_SHEET_NODE_NAME));
+        fragment.appendChild(document.createElement(PastePropertyNames.GOOGLE_SHEET_NODE_NAME));
 
         const result = isGoogleSheetDocument(<GetSourceInputParams>{ fragment });
 

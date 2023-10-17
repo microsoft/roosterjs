@@ -18,6 +18,7 @@ export type GetSourceInputParams = {
 };
 
 /**
+ * @internal
  * Represent the types of sources to handle in the Paste Plugin
  */
 export type KnownPasteSourceType =
@@ -46,6 +47,7 @@ const getSourceFunctions = new Map<KnownPasteSourceType, GetSourceFunction>([
 ]);
 
 /**
+ * @internal
  * This function tries to get the source of the Pasted content
  * @param event the before paste event
  * @param shouldConvertSingleImage Whether convert single image is enabled.

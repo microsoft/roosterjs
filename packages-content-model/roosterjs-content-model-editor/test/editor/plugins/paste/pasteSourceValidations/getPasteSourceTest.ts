@@ -1,6 +1,6 @@
 import { BeforePasteEvent, ClipboardData } from 'roosterjs-editor-types';
 import { getPasteSource } from '../../../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/getPasteSource';
-import { GOOGLE_SHEET_NODE_NAME } from '../../../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/constants';
+import { PastePropertyNames } from '../../../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/constants';
 import {
     EXCEL_ATTRIBUTE_VALUE,
     getWacElement,
@@ -67,7 +67,7 @@ function excelParam(): BeforePasteEvent {
 
 function googleSheetParam(): BeforePasteEvent {
     const fragment = document.createDocumentFragment();
-    fragment.appendChild(document.createElement(GOOGLE_SHEET_NODE_NAME));
+    fragment.appendChild(document.createElement(PastePropertyNames.GOOGLE_SHEET_NODE_NAME));
 
     return <BeforePasteEvent>{ fragment, htmlAttributes: {}, clipboardData: {} };
 }
