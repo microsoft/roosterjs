@@ -148,6 +148,7 @@ export default class ContentModelOptionsPane extends React.Component<
             defaultFormat: { ...this.state.defaultFormat },
             experimentalFeatures: this.state.experimentalFeatures,
             forcePreserveRatio: this.state.forcePreserveRatio,
+            applyChangesOnMouseUp: this.state.applyChangesOnMouseUp,
             isRtl: this.state.isRtl,
             cacheModel: this.state.cacheModel,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
