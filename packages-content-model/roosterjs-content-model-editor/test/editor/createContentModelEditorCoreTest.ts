@@ -15,6 +15,10 @@ import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { setDOMSelection } from '../../lib/editor/coreApi/setDOMSelection';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
 import { tablePreProcessor } from '../../lib/editor/overrides/tablePreProcessor';
+import {
+    listItemMetadataApplier,
+    listLevelMetadataApplier,
+} from '../../lib/domUtils/metadata/updateListMetadata';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
 const mockedDomToModelConfig = {
@@ -112,7 +116,15 @@ describe('createContentModelEditorCore', () => {
                 { processorOverride: { table: tablePreProcessor } },
                 undefined,
             ],
-            defaultModelToDomOptions: [undefined],
+            defaultModelToDomOptions: [
+                {
+                    metadataAppliers: {
+                        listItem: listItemMetadataApplier,
+                        listLevel: listLevelMetadataApplier,
+                    },
+                },
+                undefined,
+            ],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
             format: {
@@ -181,7 +193,15 @@ describe('createContentModelEditorCore', () => {
                 { processorOverride: { table: tablePreProcessor } },
                 defaultDomToModelOptions,
             ],
-            defaultModelToDomOptions: [defaultModelToDomOptions],
+            defaultModelToDomOptions: [
+                {
+                    metadataAppliers: {
+                        listItem: listItemMetadataApplier,
+                        listLevel: listLevelMetadataApplier,
+                    },
+                },
+                defaultModelToDomOptions,
+            ],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
             format: {
@@ -263,7 +283,15 @@ describe('createContentModelEditorCore', () => {
                 { processorOverride: { table: tablePreProcessor } },
                 undefined,
             ],
-            defaultModelToDomOptions: [undefined],
+            defaultModelToDomOptions: [
+                {
+                    metadataAppliers: {
+                        listItem: listItemMetadataApplier,
+                        listLevel: listLevelMetadataApplier,
+                    },
+                },
+                undefined,
+            ],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
             format: {
@@ -325,7 +353,15 @@ describe('createContentModelEditorCore', () => {
                 { processorOverride: { table: tablePreProcessor } },
                 undefined,
             ],
-            defaultModelToDomOptions: [undefined],
+            defaultModelToDomOptions: [
+                {
+                    metadataAppliers: {
+                        listItem: listItemMetadataApplier,
+                        listLevel: listLevelMetadataApplier,
+                    },
+                },
+                undefined,
+            ],
             format: {
                 defaultFormat: {
                     fontWeight: undefined,
@@ -390,7 +426,15 @@ describe('createContentModelEditorCore', () => {
                 { processorOverride: { table: tablePreProcessor } },
                 undefined,
             ],
-            defaultModelToDomOptions: [undefined],
+            defaultModelToDomOptions: [
+                {
+                    metadataAppliers: {
+                        listItem: listItemMetadataApplier,
+                        listLevel: listLevelMetadataApplier,
+                    },
+                },
+                undefined,
+            ],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
             format: {

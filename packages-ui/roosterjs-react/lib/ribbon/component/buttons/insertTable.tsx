@@ -107,7 +107,7 @@ function InsertTablePane(props: {
     const ariaLabels = React.useMemo<string[][]>(() => {
         const result: string[][] = [];
         for (let i = 1; i <= MaxCols; i++) {
-            let col: string[] = [];
+            const col: string[] = [];
             for (let j = 1; j <= MaxRows; j++) {
                 col[j] = formatText(item.text ?? '', i, j);
             }

@@ -16,11 +16,11 @@ export default function normalizeTableSelection(vTable: VTable): TableSelection 
 
     const cells = vTable.cells;
 
-    let newFirst = {
+    const newFirst = {
         x: Math.min(firstCell.x, lastCell.x),
         y: Math.min(firstCell.y, lastCell.y),
     };
-    let newLast = {
+    const newLast = {
         x: Math.max(firstCell.x, lastCell.x),
         y: Math.max(firstCell.y, lastCell.y),
     };

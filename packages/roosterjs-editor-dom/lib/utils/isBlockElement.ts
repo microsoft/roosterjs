@@ -11,7 +11,7 @@ const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
  * @returns True if the node is a block element, otherwise false
  */
 export default function isBlockElement(node: Node): node is HTMLElement {
-    let tag = getTagOfNode(node);
+    const tag = getTagOfNode(node);
     return !!(
         tag &&
         (BLOCK_DISPLAY_STYLES.indexOf((<HTMLElement>node).style.display) >= 0 ||

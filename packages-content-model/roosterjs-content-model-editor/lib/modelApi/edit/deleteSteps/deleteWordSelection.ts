@@ -25,7 +25,7 @@ function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelect
         const startIndex = paragraph.segments.indexOf(marker);
         const deleteNext = direction == 'forward';
 
-        let iterator = iterateSegments(paragraph, startIndex, deleteNext, context);
+        const iterator = iterateSegments(paragraph, startIndex, deleteNext, context);
         let curr = iterator.next();
 
         for (let state = DeleteWordState.Start; state != DeleteWordState.End && !curr.done; ) {

@@ -268,7 +268,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 };
 
 function calcSizes(positions: number[]): number[] {
-    let result: number[] = [];
+    const result: number[] = [];
     let lastPos = positions[positions.length - 1];
 
     for (let i = positions.length - 2; i >= 0; i--) {

@@ -45,7 +45,7 @@ export { LinkFormat } from './format/formatParts/LinkFormat';
 export { SizeFormat } from './format/formatParts/SizeFormat';
 export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
-export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
+export { ListStyleFormat } from './format/formatParts/ListStyleFormat';
 export { FloatFormat } from './format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './format/formatParts/EntityInfoFormat';
 
@@ -113,6 +113,9 @@ export {
     OnNodeCreated,
     ModelToDomSettings,
     FormatApplier,
+    ApplyMetadata,
+    MetadataApplier,
+    MetadataAppliers,
 } from './context/ModelToDomSettings';
 export {
     DefaultStyleMap,
@@ -150,3 +153,17 @@ export {
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { ContentModelDomIndexer } from './context/ContentModelDomIndexer';
+
+export { DefinitionType } from './metadata/DefinitionType';
+export {
+    ArrayItemType,
+    DefinitionBase,
+    StringDefinition,
+    NumberDefinition,
+    BooleanDefinition,
+    ArrayDefinition,
+    ObjectPropertyDefinition,
+    ObjectDefinition,
+    Definition,
+} from './metadata/Definition';
+export { ColorManager, Colors } from './context/ColorManager';

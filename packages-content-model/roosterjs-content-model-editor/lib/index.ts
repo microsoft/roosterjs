@@ -34,6 +34,19 @@ export {
     InsertEntityOptions,
     InsertEntityPosition,
 } from './publicTypes/parameter/InsertEntityOptions';
+export {
+    TableOperation,
+    TableVerticalInsertOperation,
+    TableHorizontalInsertOperation,
+    TableDeleteOperation,
+    TableVerticalMergeOperation,
+    TableHorizontalMergeOperation,
+    TableCellMergeOperation,
+    TableSplitOperation,
+    TableAlignOperation,
+    TableCellHorizontalAlignOperation,
+    TableCellVerticalAlignOperation,
+} from './publicTypes/parameter/TableOperation';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -103,6 +116,7 @@ export { combineBorderValue, extractBorderValues } from './domUtils/borderValues
 export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
+export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 
 export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';

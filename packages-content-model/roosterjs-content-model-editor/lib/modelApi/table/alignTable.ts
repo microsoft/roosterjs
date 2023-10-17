@@ -1,22 +1,12 @@
-import { TableOperation } from 'roosterjs-editor-types';
+import type { TableAlignOperation } from '../../publicTypes/parameter/TableOperation';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
-import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
  */
-export function alignTable(
-    table: ContentModelTable,
-    operation:
-        | TableOperation.AlignCenter
-        | TableOperation.AlignLeft
-        | TableOperation.AlignRight
-        | CompatibleTableOperation.AlignCenter
-        | CompatibleTableOperation.AlignLeft
-        | CompatibleTableOperation.AlignRight
-) {
-    table.format.marginLeft = operation == TableOperation.AlignLeft ? '' : 'auto';
-    table.format.marginRight = operation == TableOperation.AlignRight ? '' : 'auto';
+export function alignTable(table: ContentModelTable, operation: TableAlignOperation) {
+    table.format.marginLeft = operation == 'alignLeft' ? '' : 'auto';
+    table.format.marginRight = operation == 'alignRight' ? '' : 'auto';
 
     delete table.cachedElement;
 }

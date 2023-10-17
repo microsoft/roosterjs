@@ -28,7 +28,9 @@ export default function getInlineElementAtNode(
     node: Node | null
 ): InlineElement | null {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
-    let parentBlock = safeInstanceOf(parent, 'Node') ? getBlockElementAtNode(parent, node) : parent;
+    const parentBlock = safeInstanceOf(parent, 'Node')
+        ? getBlockElementAtNode(parent, node)
+        : parent;
     return node && parentBlock && resolveInlineElement(node, parentBlock);
 }
 
@@ -38,7 +40,7 @@ export default function getInlineElementAtNode(
  * @param parentBlock The parent block element
  */
 function resolveInlineElement(node: Node, parentBlock: BlockElement): InlineElement {
-    let nodeChain = [node];
+    const nodeChain = [node];
     for (
         let parent = node.parentNode;
         parent && parentBlock.contains(parent);
@@ -50,8 +52,8 @@ function resolveInlineElement(node: Node, parentBlock: BlockElement): InlineElem
     let inlineElement: InlineElement | undefined;
 
     for (let i = nodeChain.length - 1; i >= 0 && !inlineElement; i--) {
-        let currentNode = nodeChain[i];
-        let tag = getTagOfNode(currentNode);
+        const currentNode = nodeChain[i];
+        const tag = getTagOfNode(currentNode);
         if (tag == 'A') {
             inlineElement = new LinkInlineElement(currentNode, parentBlock);
         } else if (tag == 'IMG') {

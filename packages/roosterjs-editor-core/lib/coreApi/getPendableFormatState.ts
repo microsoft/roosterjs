@@ -80,8 +80,8 @@ function queryCommandStateFromDOM(
     currentPosition: NodePosition
 ): PendableFormatState {
     let node: Node | null = currentPosition.node;
-    let formatState: PendableFormatState = {};
-    let pendableKeys: PendableFormatNames[] = [];
+    const formatState: PendableFormatState = {};
+    const pendableKeys: PendableFormatNames[] = [];
     while (node && contains(core.contentDiv, node)) {
         const tag = getTagOfNode(node);
         const style = node.nodeType == NodeType.Element && (node as HTMLElement).style;

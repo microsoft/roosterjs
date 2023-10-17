@@ -95,7 +95,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
 
             if (!cell.spanAbove && !cell.spanLeft) {
-                let td =
+                const td =
                     (context.allowCacheElement && cell.cachedElement) ||
                     doc.createElement(cell.isHeader ? 'th' : 'td');
 

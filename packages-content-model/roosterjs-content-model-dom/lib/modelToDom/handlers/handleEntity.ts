@@ -1,7 +1,8 @@
-import { addDelimiters, wrap } from 'roosterjs-editor-dom';
+import { addDelimiters } from '../../domUtils/entityUtils';
 import { applyFormat } from '../utils/applyFormat';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
+import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,
     ContentModelEntity,
@@ -18,7 +19,7 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
     context,
     refNode
 ) => {
-    let { entityFormat, wrapper } = entityModel;
+    const { entityFormat, wrapper } = entityModel;
 
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
@@ -32,19 +33,19 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
  * @internal
  */
 export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity> = (
-    _,
+    doc,
     parent,
     entityModel,
     context,
     newSegments
 ) => {
-    let { entityFormat, wrapper, format } = entityModel;
+    const { entityFormat, wrapper, format } = entityModel;
 
     parent.appendChild(wrapper);
     newSegments?.push(wrapper);
 
     if (getObjectKeys(format).length > 0) {
-        const span = wrap(wrapper, 'span');
+        const span = wrap(doc, wrapper, 'span');
 
         applyFormat(span, context.formatAppliers.segment, format, context);
     }
@@ -52,7 +53,7 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     if (context.addDelimiterForEntity && entityFormat.isReadonly) {
-        const [after, before] = addDelimiters(wrapper);
+        const [after, before] = addDelimiters(doc, wrapper);
 
         newSegments?.push(after, before);
         context.regularSelection.current.segment = after;
