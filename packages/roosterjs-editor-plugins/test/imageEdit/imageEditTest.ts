@@ -414,13 +414,10 @@ describe('ImageEdit | applyChangesOnMouseUp', () => {
     });
 
     const mouseUp = (target: HTMLElement, keyNumber: number) => {
-        const rect = target.getBoundingClientRect();
         const event = new MouseEvent('mouseup', {
             view: window,
             bubbles: true,
             cancelable: true,
-            clientX: rect.left,
-            clientY: rect.top,
             shiftKey: false,
             button: keyNumber,
         });
@@ -429,15 +426,15 @@ describe('ImageEdit | applyChangesOnMouseUp', () => {
 
     it('should call apply changed', () => {
         const IMG_ID = 'IMAGE_ID_MOUSE';
-        const content = `<img id="${IMG_ID}" src='test'/>`;
+        const wrapperId = 'WRAPPER_ID';
+        const content = `<span id="${wrapperId}"></span><img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);
         const applyChangeSpy = spyOn(applyChange, 'default');
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
-        const imageParent = image.parentElement;
-        const shadowRoot = imageParent?.shadowRoot;
-        const wrapper = shadowRoot?.querySelector('span');
+        const wrapper = document.getElementById(wrapperId) as HTMLImageElement;
         editor.focus();
         editor.select(image);
+        plugin.insertImageWrapper(wrapper);
         mouseUp(wrapper!, 2);
         expect(applyChangeSpy).toHaveBeenCalled();
     });
