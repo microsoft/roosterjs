@@ -1,3 +1,4 @@
+import MainPaneBase from '../../MainPaneBase';
 import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 
@@ -27,7 +28,8 @@ export const tableBorderStyleButton: RibbonButton<'buttonNameTableBorderStyle'> 
     },
     onClick: (editor, style) => {
         if (isContentModelEditor(editor)) {
-            editor.setTableBorderStyle(style);
+            MainPaneBase.getInstance().setTableBorderStyle(style);
+            editor.focus();
         }
         return true;
     },

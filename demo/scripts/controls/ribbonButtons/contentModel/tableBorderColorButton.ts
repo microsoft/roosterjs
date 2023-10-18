@@ -1,3 +1,4 @@
+import MainPaneBase from '../../MainPaneBase';
 import { getButtons, getTextColorValue, KnownRibbonButtonKey } from 'roosterjs-react';
 import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
@@ -18,7 +19,7 @@ export const tableBorderColorButton: RibbonButton<'buttonNameTableBorderColor'> 
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
         if (key != 'buttonNameTableBorderColor' && isContentModelEditor(editor)) {
-            editor.setTableBorderColor(getTextColorValue(key).lightModeColor);
+            MainPaneBase.getInstance().setTableBorderColor(getTextColorValue(key).lightModeColor);
             editor.focus();
         }
     },
