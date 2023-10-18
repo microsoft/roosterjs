@@ -1,21 +1,14 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
+import { BorderOperations } from '../../publicTypes/enum/BorderOperations';
 import { extractBorderValues } from '../../domUtils/borderValues';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { getSelectedCells } from '../../modelApi/table/getSelectedCells';
-import { hasMetadata, parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { Border } from 'roosterjs-content-model';
+import type { Border } from '../../publicTypes/interface/Border';
 import type { ContentModelTableCell } from 'roosterjs-content-model-types';
-
-/**
- * All Border operations
- * @internal
- */
-export const enum BorderOperations {
-    AllBorders,
-}
 
 /**
  * UNFINISHED - only All Borders is implemented
@@ -23,7 +16,7 @@ export const enum BorderOperations {
  * @param border The border to apply
  * @param operation The operation to apply
  */
-export default function applyTableBorderFormatOperation(
+export default function applyTableBorderFormat(
     editor: IContentModelEditor,
     border: Border,
     operation: BorderOperations
@@ -39,42 +32,37 @@ export default function applyTableBorderFormatOperation(
                 Left: false,
                 Right: false,
             };
+
+            // Create border format with table format as backup
             let borderFormat = '';
-            if (border) {
-                const format = tableModel.format;
-                const { width, style, color } = border;
-                const borderKey = 'borderTop';
-                const extractedBorder = extractBorderValues(format[borderKey]);
-                const borderColor = extractedBorder.color;
-                const borderWidth = extractedBorder.width;
-                const borderStyle = extractedBorder.style;
+            const format = tableModel.format;
+            const { width, style, color } = border;
+            const borderKey = 'borderTop';
+            const extractedBorder = extractBorderValues(format[borderKey]);
+            const borderColor = extractedBorder.color;
+            const borderWidth = extractedBorder.width;
+            const borderStyle = extractedBorder.style;
 
-                if (width) {
-                    borderFormat = parseValueWithUnit(width) + 'px';
-                } else if (borderWidth) {
-                    borderFormat = borderWidth;
-                } else {
-                    borderFormat = '1px';
-                }
-
-                if (style) {
-                    borderFormat = `${borderFormat} ${style}`;
-                } else if (borderStyle) {
-                    borderFormat = `${borderFormat} ${borderStyle}`;
-                } else {
-                    borderFormat = `${borderFormat} solid`;
-                }
-
-                if (color) {
-                    borderFormat = `${borderFormat} ${color}`;
-                } else if (borderColor) {
-                    borderFormat = `${borderFormat} ${borderColor}`;
-                }
+            if (width) {
+                borderFormat = parseValueWithUnit(width) + 'px';
+            } else if (borderWidth) {
+                borderFormat = borderWidth;
             } else {
-                delete tableModel.format.borderLeft;
-                delete tableModel.format.borderTop;
-                delete tableModel.format.borderBottom;
-                delete tableModel.format.borderRight;
+                borderFormat = '1px';
+            }
+
+            if (style) {
+                borderFormat = `${borderFormat} ${style}`;
+            } else if (borderStyle) {
+                borderFormat = `${borderFormat} ${borderStyle}`;
+            } else {
+                borderFormat = `${borderFormat} solid`;
+            }
+
+            if (color) {
+                borderFormat = `${borderFormat} ${color}`;
+            } else if (borderColor) {
+                borderFormat = `${borderFormat} ${borderColor}`;
             }
 
             if (sel) {
@@ -93,12 +81,13 @@ export default function applyTableBorderFormatOperation(
                         Perimeter.Bottom = true;
                         Perimeter.Left = true;
                         Perimeter.Right = true;
+                        break;
 
                     default:
                         break;
                 }
 
-                // Format perimeter if necessary
+                //Format perimeter if necessary
                 // Top of selection
                 if (Perimeter.Top && sel.firstRow - 1 >= 0) {
                     for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
@@ -128,9 +117,10 @@ export default function applyTableBorderFormatOperation(
                     }
                 }
             }
-            if (hasMetadata(tableModel)) {
-                applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
-            }
+
+            // Apply format changes
+            applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+
             return true;
         } else {
             return false;

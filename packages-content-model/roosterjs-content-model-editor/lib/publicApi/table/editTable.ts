@@ -18,7 +18,6 @@ import { setSelection } from '../../modelApi/selection/setSelection';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import { TableOperation } from 'roosterjs-editor-types';
-import type { Border } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     createSelectionMarker,
@@ -31,11 +30,7 @@ import {
  * @param editor The editor instance
  * @param operation The table operation to apply
  */
-export default function editTable(
-    editor: IContentModelEditor,
-    operation: TableOperation,
-    border?: Border
-) {
+export default function editTable(editor: IContentModelEditor, operation: TableOperation) {
     editor.focus();
     formatWithContentModel(editor, 'editTable', model => {
         const [tableModel, path] = getFirstSelectedTable(model);
