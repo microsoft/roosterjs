@@ -26,8 +26,9 @@ export default function formatTable(
             tableModel.rows.forEach(row => {
                 row.cells.forEach(cell => {
                     updateTableCellMetadata(cell, metadata => {
-                        metadata = metadata || {};
-                        metadata.borderOverride = false;
+                        if (metadata) {
+                            delete metadata.borderOverride;
+                        }
                         return metadata;
                     });
                 });

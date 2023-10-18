@@ -1,6 +1,5 @@
 import MainPaneBase from '../../MainPaneBase';
 import { applyTableBorderFormat, isContentModelEditor } from 'roosterjs-content-model-editor';
-import { BorderOperations } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 
 /**
@@ -20,7 +19,7 @@ export const tableBorderApplyButton: RibbonButton<'ribbonButtonTableBorder'> = {
     onClick: (editor, key) => {
         if (isContentModelEditor(editor) && key != 'ribbonButtonTableBorder') {
             const border = MainPaneBase.getInstance().getTableBorder();
-            applyTableBorderFormat(editor, border, BorderOperations.AllBorders);
+            applyTableBorderFormat(editor, border, 'AllBorders');
         }
     },
 };

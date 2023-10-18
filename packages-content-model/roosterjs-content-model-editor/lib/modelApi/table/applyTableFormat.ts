@@ -85,7 +85,7 @@ function updateOverrides(rows: ContentModelTableRow[], removeCellShade: boolean)
 
         overrides.bgColorOverrides.push(bgColorOverrides);
         overrides.vAlignOverrides.push(vAlignOverrides);
-        overrides.borderOverrides?.push(borderOverrides);
+        overrides.borderOverrides.push(borderOverrides);
 
         row.cells.forEach(cell => {
             updateTableCellMetadata(cell, metadata => {
