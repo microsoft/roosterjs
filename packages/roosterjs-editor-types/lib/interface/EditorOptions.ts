@@ -10,6 +10,7 @@ import type { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import type { SizeTransformer } from '../type/SizeTransformer';
 import type { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
+
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
  */

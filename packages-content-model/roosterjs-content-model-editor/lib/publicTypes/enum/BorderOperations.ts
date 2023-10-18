@@ -1,6 +1,4 @@
 /**
  * All Border operations
  */
-export const enum BorderOperations {
-    AllBorders,
-}
+export type BorderOperations = 'AllBorders';
