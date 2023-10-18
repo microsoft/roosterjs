@@ -69,6 +69,7 @@ export default class FormatStatePane extends React.Component<
                             {this.renderSpan(format.isStrikeThrough, 'Strike')}
                             {this.renderSpan(format.isSubscript, 'Subscript')}
                             {this.renderSpan(format.isSuperscript, 'Superscript')}
+                            {`Font-weight: ${format.fontWeight}`}
                         </td>
                     </tr>
                     <tr>

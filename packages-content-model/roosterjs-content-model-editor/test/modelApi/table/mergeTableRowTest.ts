@@ -1,13 +1,12 @@
 import { ContentModelTableCell } from 'roosterjs-content-model-types';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { mergeTableRow } from '../../../lib/modelApi/table/mergeTableRow';
-import { TableOperation } from 'roosterjs-editor-types';
 
 describe('mergeTableRow', () => {
     it('empty table', () => {
         const table = createTable(0);
 
-        mergeTableRow(table, TableOperation.MergeAbove);
+        mergeTableRow(table, 'mergeAbove');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -17,7 +16,7 @@ describe('mergeTableRow', () => {
             dataset: {},
         });
 
-        mergeTableRow(table, TableOperation.MergeBelow);
+        mergeTableRow(table, 'mergeBelow');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -40,7 +39,7 @@ describe('mergeTableRow', () => {
         table.rows[0].cells.push(cells[0], cells[1]);
         table.rows[1].cells.push(cells[2], cells[3]);
 
-        mergeTableRow(table, TableOperation.MergeAbove);
+        mergeTableRow(table, 'mergeAbove');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -56,7 +55,7 @@ describe('mergeTableRow', () => {
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
         expect(cells.map(c => c.spanAbove)).toEqual([false, false, false, false]);
 
-        mergeTableRow(table, TableOperation.MergeBelow);
+        mergeTableRow(table, 'mergeBelow');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -94,7 +93,7 @@ describe('mergeTableRow', () => {
         cells[2].isSelected = true;
         cells[4].isSelected = true;
 
-        mergeTableRow(table, TableOperation.MergeAbove);
+        mergeTableRow(table, 'mergeAbove');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -130,7 +129,7 @@ describe('mergeTableRow', () => {
             false,
         ]);
 
-        mergeTableRow(table, TableOperation.MergeBelow);
+        mergeTableRow(table, 'mergeBelow');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -188,7 +187,7 @@ describe('mergeTableRow', () => {
         cells[2].isSelected = true;
         cells[3].isSelected = true;
 
-        mergeTableRow(table, TableOperation.MergeAbove);
+        mergeTableRow(table, 'mergeAbove');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -229,7 +228,7 @@ describe('mergeTableRow', () => {
         cells[4].isSelected = true;
         cells[5].isSelected = true;
 
-        mergeTableRow(table, TableOperation.MergeBelow);
+        mergeTableRow(table, 'mergeBelow');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -286,7 +285,7 @@ describe('mergeTableRow', () => {
         cells[2].isSelected = true;
         cells[3].isSelected = true;
 
-        mergeTableRow(table, TableOperation.MergeAbove);
+        mergeTableRow(table, 'mergeAbove');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -338,7 +337,7 @@ describe('mergeTableRow', () => {
         cells[4].isSelected = true;
         cells[5].isSelected = true;
 
-        mergeTableRow(table, TableOperation.MergeBelow);
+        mergeTableRow(table, 'mergeBelow');
 
         expect(table).toEqual({
             blockType: 'Table',

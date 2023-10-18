@@ -113,6 +113,9 @@ export {
     OnNodeCreated,
     ModelToDomSettings,
     FormatApplier,
+    ApplyMetadata,
+    MetadataApplier,
+    MetadataAppliers,
 } from './context/ModelToDomSettings';
 export {
     DefaultStyleMap,
@@ -150,3 +153,17 @@ export {
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { ContentModelDomIndexer } from './context/ContentModelDomIndexer';
+
+export { DefinitionType } from './metadata/DefinitionType';
+export {
+    ArrayItemType,
+    DefinitionBase,
+    StringDefinition,
+    NumberDefinition,
+    BooleanDefinition,
+    ArrayDefinition,
+    ObjectPropertyDefinition,
+    ObjectDefinition,
+    Definition,
+} from './metadata/Definition';
+export { ColorManager, Colors } from './context/ColorManager';

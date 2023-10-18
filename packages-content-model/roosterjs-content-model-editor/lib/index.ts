@@ -22,7 +22,11 @@ export {
     ContentModelContentChangedEventData,
 } from './publicTypes/event/ContentModelContentChangedEvent';
 
-export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
+export {
+    IContentModelEditor,
+    ContentModelEditorOptions,
+    EditorEnvironment,
+} from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
 export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
 export {
@@ -35,6 +39,19 @@ export {
     InsertEntityOptions,
     InsertEntityPosition,
 } from './publicTypes/parameter/InsertEntityOptions';
+export {
+    TableOperation,
+    TableVerticalInsertOperation,
+    TableHorizontalInsertOperation,
+    TableDeleteOperation,
+    TableVerticalMergeOperation,
+    TableHorizontalMergeOperation,
+    TableCellMergeOperation,
+    TableSplitOperation,
+    TableAlignOperation,
+    TableCellHorizontalAlignOperation,
+    TableCellVerticalAlignOperation,
+} from './publicTypes/parameter/TableOperation';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -85,7 +102,6 @@ export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
 export { formatWithContentModel } from './publicApi/utils/formatWithContentModel';
-export { default as keyboardDelete } from './publicApi/editing/keyboardDelete';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';
@@ -105,6 +121,7 @@ export { combineBorderValue, extractBorderValues } from './domUtils/borderValues
 export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
+export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 
 export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';

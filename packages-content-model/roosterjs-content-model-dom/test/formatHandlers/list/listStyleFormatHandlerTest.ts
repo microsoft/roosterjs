@@ -32,6 +32,15 @@ describe('listStyleFormatHandler.parse', () => {
             listStylePosition: 'inside',
         });
     });
+
+    it('with list style type', () => {
+        div.style.listStyleType = 'a';
+        listStyleFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            listStyleType: 'a',
+        });
+    });
 });
 
 describe('listStyleFormatHandler.apply', () => {
@@ -53,9 +62,12 @@ describe('listStyleFormatHandler.apply', () => {
 
     it('with value', () => {
         format.listStylePosition = 'inside';
+        format.listStyleType = 'a';
 
         listStyleFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual('<div style="list-style-position: inside;"></div>');
+        expect(div.outerHTML).toEqual(
+            '<div style="list-style-position: inside; list-style-type: a;"></div>'
+        );
     });
 });

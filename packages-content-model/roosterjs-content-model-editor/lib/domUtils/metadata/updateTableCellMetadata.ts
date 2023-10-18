@@ -1,4 +1,4 @@
-import { createBooleanDefinition, createObjectDefinition } from 'roosterjs-editor-dom';
+import { createBooleanDefinition, createObjectDefinition } from './definitionCreators';
 import { updateMetadata } from 'roosterjs-content-model-dom';
 import type { ContentModelTableCell } from 'roosterjs-content-model-types';
 import type { TableCellMetadataFormat } from 'roosterjs-editor-types';

@@ -247,7 +247,7 @@ Currently we have very few external dependencies. Before adding any new dependen
 If you still feel a new dependency is required after checking these questions, we can review it and
 finally decide whether we should add the new dependency.
 
-For build time dependencies, it is more flexable to add new dependencies since it won't increase runtime
+For build time dependencies, it is more flexible to add new dependencies since it won't increase runtime
 code size or dependencies.
 
 ## More documentation

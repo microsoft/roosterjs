@@ -1,5 +1,5 @@
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
-import * as unwrap from 'roosterjs-editor-dom/lib/utils/unwrap';
+import * as unwrap from '../../../lib/domUtils/unwrap';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createText } from '../../../lib/modelApi/creators/createText';
@@ -628,7 +628,7 @@ describe('handleParagraph', () => {
 
         context.domIndexer = domIndexer;
 
-        const unwrapSpy = spyOn(unwrap, 'default').and.callThrough();
+        const unwrapSpy = spyOn(unwrap, 'unwrap').and.callThrough();
         handleSegment.and.callFake(originalHandleSegment);
 
         handleParagraph(document, parent, paragraph, context, null);

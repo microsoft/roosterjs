@@ -1,3 +1,4 @@
+import type { EditorEnvironment } from './IContentModelEditor';
 import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
 import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import type {
@@ -133,7 +134,7 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
     defaultModelToDomConfig: ModelToDomSettings;
 
     /**
-     * Whether adding delimiter for entity is allowed
+     * Editor running environment
      */
-    addDelimiterForEntity: boolean;
+    environment: EditorEnvironment;
 }
