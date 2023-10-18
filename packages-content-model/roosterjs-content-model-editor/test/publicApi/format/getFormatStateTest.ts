@@ -1,7 +1,7 @@
 import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
+import { ContentModelFormatState } from '../../../lib/publicTypes/format/formatState/ContentModelFormatState';
 import { DomToModelContext } from 'roosterjs-content-model-types';
-import { FormatState } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import getFormatState, {
     reducedModelChildProcessor,
@@ -28,7 +28,7 @@ describe('getFormatState', () => {
         html: string,
         pendingFormat: ContentModelSegmentFormat | null,
         expectedModel: ContentModelDocument,
-        expectedFormat: FormatState
+        expectedFormat: ContentModelFormatState
     ) {
         const editor = ({
             getUndoState: () => ({

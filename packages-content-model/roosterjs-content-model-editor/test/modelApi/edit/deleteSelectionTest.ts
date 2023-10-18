@@ -2,7 +2,6 @@ import { ContentModelEntity, ContentModelSelectionMarker } from 'roosterjs-conte
 import { DeletedEntity } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../../lib/modelApi/edit/deleteSelection';
-import { EntityOperation } from 'roosterjs-editor-types';
 import {
     createBr,
     createContentModelDocument,
@@ -574,7 +573,7 @@ describe('deleteSelection - selectionOnly', () => {
             ],
         });
 
-        expect(deletedEntities).toEqual([{ entity, operation: EntityOperation.Overwrite }]);
+        expect(deletedEntities).toEqual([{ entity, operation: 'overwrite' }]);
     });
 
     it('Entity selection, callback returns true', () => {
@@ -633,7 +632,7 @@ describe('deleteSelection - selectionOnly', () => {
             ],
         });
 
-        expect(deletedEntities).toEqual([{ entity, operation: EntityOperation.Overwrite }]);
+        expect(deletedEntities).toEqual([{ entity, operation: 'overwrite' }]);
     });
 
     it('delete with default format', () => {
@@ -1525,7 +1524,7 @@ describe('deleteSelection - forward', () => {
                 },
             ],
         });
-        expect(deletedEntities).toEqual([{ entity, operation: EntityOperation.RemoveFromStart }]);
+        expect(deletedEntities).toEqual([{ entity, operation: 'removeFromStart' }]);
     });
 
     it('Single selection marker before entity, with callback returns true', () => {
@@ -1573,7 +1572,7 @@ describe('deleteSelection - forward', () => {
                 },
             ],
         });
-        expect(deletedEntities).toEqual([{ entity, operation: EntityOperation.RemoveFromStart }]);
+        expect(deletedEntities).toEqual([{ entity, operation: 'removeFromStart' }]);
     });
 
     it('Single selection marker before list item', () => {
@@ -3283,7 +3282,7 @@ describe('deleteSelection - backward', () => {
                 },
             ],
         });
-        expect(deletedEntities).toEqual([{ entity, operation: EntityOperation.RemoveFromEnd }]);
+        expect(deletedEntities).toEqual([{ entity, operation: 'removeFromEnd' }]);
     });
 
     it('Single selection marker after entity, with callback returns true', () => {
@@ -3332,7 +3331,7 @@ describe('deleteSelection - backward', () => {
                 },
             ],
         });
-        expect(deletedEntities).toEqual([{ entity, operation: EntityOperation.RemoveFromEnd }]);
+        expect(deletedEntities).toEqual([{ entity, operation: 'removeFromEnd' }]);
     });
 
     it('Single selection marker after list item', () => {

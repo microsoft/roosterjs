@@ -1,4 +1,4 @@
-import { BulletListType } from 'roosterjs-editor-types';
+import { BulletListType } from 'roosterjs-content-model-types';
 import { isContentModelEditor, setListStyle } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 const dropDownMenuItems = {

@@ -33,6 +33,9 @@ export {
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
     ContentModelFormatter,
+    EntityLifecycleOperation,
+    EntityOperation,
+    EntityRemovalOperation,
 } from './publicTypes/parameter/FormatWithContentModelContext';
 export {
     InsertEntityOptions,
