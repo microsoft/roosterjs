@@ -1,5 +1,5 @@
 import { isContentModelEditor, setListStyle } from 'roosterjs-content-model-editor';
-import { NumberingListType } from 'roosterjs-editor-types';
+import { NumberingListType } from 'roosterjs-content-model-types';
 import { RibbonButton } from 'roosterjs-react';
 
 const dropDownMenuItems = {

@@ -1,6 +1,9 @@
-import { ContentModelTable, TableMetadataFormat } from 'roosterjs-content-model-types';
-import { TableBorderFormat } from 'roosterjs-editor-types';
 import { updateTableMetadata } from '../../../lib/domUtils/metadata/updateTableMetadata';
+import {
+    ContentModelTable,
+    TableBorderFormat,
+    TableMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 describe('updateTableMetadata', () => {
     it('No value', () => {
