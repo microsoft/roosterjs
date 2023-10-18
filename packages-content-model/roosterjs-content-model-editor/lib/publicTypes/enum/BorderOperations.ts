@@ -1,4 +1,8 @@
 /**
  * All Border operations
  */
-export type BorderOperations = 'AllBorders';
+export type BorderOperations =
+    /**
+     * Apply border format to all borders
+     */
+    'AllBorders';
