@@ -13,7 +13,7 @@ import { KnownPasteSourceType, PasteType, PluginEventType } from 'roosterjs-edit
 
 const trustedHTMLHandler = <any>'mock';
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
-const DEFAULT_TIMES_ADD_PARSER_CALLED = 3;
+const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Content Model Paste Plugin Test', () => {
     let editor: IContentModelEditor;
