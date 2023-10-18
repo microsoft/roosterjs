@@ -1,4 +1,5 @@
-import { ChangeSource, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import type { Entity } from 'roosterjs-editor-types';
 import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';

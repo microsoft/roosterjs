@@ -20,6 +20,7 @@ export {
     default as ContentModelContentChangedEvent,
     CompatibleContentModelContentChangedEvent,
     ContentModelContentChangedEventData,
+    ChangeSource,
 } from './publicTypes/event/ContentModelContentChangedEvent';
 
 export {
@@ -55,6 +56,7 @@ export {
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,
 } from './publicTypes/parameter/TableOperation';
+export { PasteType } from './publicTypes/parameter/PasteType';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
