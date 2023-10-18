@@ -2,7 +2,7 @@ import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import { isCharacterValue } from 'roosterjs-editor-dom';
+import { isCharacterValue } from '../../domUtils/eventUtils';
 import { Keys, PluginEventType } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';

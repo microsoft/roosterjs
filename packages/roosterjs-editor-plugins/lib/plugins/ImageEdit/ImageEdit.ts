@@ -69,6 +69,7 @@ const DefaultOptions: Required<ImageEditOptions> = {
     disableRotate: false,
     disableSideResize: false,
     onSelectState: ImageEditOperation.ResizeAndRotate,
+    applyChangesOnMouseUp: false,
 };
 
 /**
@@ -222,11 +223,12 @@ export default class ImageEdit implements EditorPlugin {
                 }
                 break;
             case PluginEventType.MouseUp:
-                // When mouse up, if the image and the shadow span exists, the editing mode is on.
-                // To make sure the selection did not jump to the shadow root, reselect the image.
-                if (this.image && this.shadowSpan) {
-                    this.editor?.select(this.image);
+                if (this.editor && this.image && this.shadowSpan) {
+                    // When mouse up, if the image and the shadow span exists, the editing mode is on.
+                    // To make sure the selection did not jump to the shadow root, reselect the image.
+                    this.editor.select(this.image);
                 }
+
                 break;
             case PluginEventType.KeyDown:
                 this.setEditingImage(null);
@@ -474,7 +476,12 @@ export default class ImageEdit implements EditorPlugin {
         }
     }
 
-    private insertImageWrapper(wrapper: HTMLSpanElement) {
+    /**
+     * EXPORTED FOR TESTING PURPOSES ONLY
+     * @param wrapper
+     */
+
+    public insertImageWrapper(wrapper: HTMLSpanElement) {
         if (this.image) {
             this.shadowSpan = wrap(this.image, 'span');
             if (this.shadowSpan) {
@@ -484,7 +491,13 @@ export default class ImageEdit implements EditorPlugin {
 
                 this.shadowSpan.style.verticalAlign = 'bottom';
                 wrapper.style.fontSize = '24px';
-
+                if (this.options.applyChangesOnMouseUp) {
+                    wrapper.addEventListener(
+                        'mouseup',
+                        this.changesWhenMouseUp,
+                        true /* useCapture*/
+                    );
+                }
                 shadowRoot.appendChild(wrapper);
             }
         }
@@ -497,8 +510,29 @@ export default class ImageEdit implements EditorPlugin {
         if (this.shadowSpan) {
             unwrap(this.shadowSpan);
         }
+        if (this.options.applyChangesOnMouseUp) {
+            this.wrapper?.removeEventListener(
+                'mouseup',
+                this.changesWhenMouseUp,
+                true /* useCapture*/
+            );
+        }
         this.wrapper = null;
         this.shadowSpan = null;
+    };
+
+    private changesWhenMouseUp = () => {
+        if (this.editor && this.image && this.editInfo && this.lastSrc && this.clonedImage) {
+            applyChange(
+                this.editor,
+                this.image,
+                this.editInfo,
+                this.lastSrc,
+                this.wasResized,
+                this.clonedImage,
+                this.options.applyChangesOnMouseUp
+            );
+        }
     };
 
     /**

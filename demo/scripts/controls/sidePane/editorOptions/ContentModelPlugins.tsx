@@ -14,6 +14,7 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
     private linkTitle = React.createRef<HTMLInputElement>();
     private watermarkText = React.createRef<HTMLInputElement>();
     private forcePreserveRatio = React.createRef<HTMLInputElement>();
+    private applyChangesOnMouseUp = React.createRef<HTMLInputElement>();
 
     render() {
         return (
@@ -50,6 +51,16 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                             this.forcePreserveRatio,
                             this.props.state.forcePreserveRatio,
                             (state, value) => (state.forcePreserveRatio = value)
+                        )
+                    )}
+                    {this.renderPluginItem(
+                        'imageEdit',
+                        'Image Edit Plugin',
+                        this.renderCheckBox(
+                            'Apply changed on mouse up',
+                            this.applyChangesOnMouseUp,
+                            this.props.state.applyChangesOnMouseUp,
+                            (state, value) => (state.applyChangesOnMouseUp = value)
                         )
                     )}
                     {this.renderPluginItem('tableResize', 'Table Resize Plugin')}

@@ -1,12 +1,11 @@
 import { alignTable } from '../../../lib/modelApi/table/alignTable';
 import { createTable } from 'roosterjs-content-model-dom';
-import { TableOperation } from 'roosterjs-editor-types';
 
 describe('alignTable', () => {
     it('Align table to left', () => {
         const table = createTable(1);
 
-        alignTable(table, TableOperation.AlignLeft);
+        alignTable(table, 'alignLeft');
 
         expect(table.format).toEqual({
             marginRight: 'auto',
@@ -17,7 +16,7 @@ describe('alignTable', () => {
     it('Align table to center', () => {
         const table = createTable(1);
 
-        alignTable(table, TableOperation.AlignCenter);
+        alignTable(table, 'alignCenter');
 
         expect(table.format).toEqual({
             marginLeft: 'auto',
@@ -28,7 +27,7 @@ describe('alignTable', () => {
     it('Align table to right', () => {
         const table = createTable(1);
 
-        alignTable(table, TableOperation.AlignRight);
+        alignTable(table, 'alignRight');
 
         expect(table.format).toEqual({
             marginLeft: 'auto',
@@ -43,7 +42,7 @@ describe('alignTable', () => {
         table.format.marginBottom = '10px';
         table.format.marginLeft = '10px';
 
-        alignTable(table, TableOperation.AlignRight);
+        alignTable(table, 'alignRight');
 
         expect(table.format).toEqual({
             marginTop: '10px',
@@ -62,7 +61,7 @@ describe('alignTable', () => {
 
         table.cachedElement = tableNode;
 
-        alignTable(table, TableOperation.AlignRight);
+        alignTable(table, 'alignRight');
 
         expect(table.format).toEqual({
             marginRight: '',

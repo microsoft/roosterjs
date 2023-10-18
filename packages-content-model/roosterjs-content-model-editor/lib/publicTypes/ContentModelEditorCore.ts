@@ -1,3 +1,4 @@
+import type { EditorEnvironment } from './IContentModelEditor';
 import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
 import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import type {
@@ -131,4 +132,9 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
      * will be used for setting content model if there is no other customized options
      */
     defaultModelToDomConfig: ModelToDomSettings;
+
+    /**
+     * Editor running environment
+     */
+    environment: EditorEnvironment;
 }
