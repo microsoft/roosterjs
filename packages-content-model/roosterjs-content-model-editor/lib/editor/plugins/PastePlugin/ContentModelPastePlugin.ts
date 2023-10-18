@@ -1,4 +1,5 @@
 import addParser from './utils/addParser';
+import { BorderKeys } from 'roosterjs-content-model-dom';
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
@@ -11,7 +12,12 @@ import { processPastedContentFromWordDesktop } from './WordDesktop/processPasted
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import type { PasteType } from '../../../publicTypes/parameter/PasteType';
 import type ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
-import type { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
+import type {
+    BorderFormat,
+    ContentModelBlockFormat,
+    ContentModelTableCellFormat,
+    FormatParser,
+} from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
 import type {
     EditorPlugin,
@@ -119,6 +125,7 @@ export default class ContentModelPastePlugin implements EditorPlugin {
 
         addParser(ev.domToModelOption, 'link', parseLink);
         addParser(ev.domToModelOption, 'tableCell', deprecatedBorderColorParser);
+        addParser(ev.domToModelOption, 'tableCell', tableBorderParser);
         addParser(ev.domToModelOption, 'table', deprecatedBorderColorParser);
         sanitizeBlockStyles(ev.sanitizingOption);
 
@@ -147,5 +154,35 @@ const blockElementParser: FormatParser<ContentModelBlockFormat> = (
 function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
     chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, 'display', (value: string) => {
         return value != 'flex'; // return whether we keep the style
+    });
+}
+
+const ElementBorderKeys = new Map<
+    keyof BorderFormat,
+    {
+        c: keyof CSSStyleDeclaration;
+        s: keyof CSSStyleDeclaration;
+        w: keyof CSSStyleDeclaration;
+    }
+>([
+    ['borderTop', { w: 'borderTopWidth', s: 'borderTopStyle', c: 'borderTopColor' }],
+    ['borderRight', { w: 'borderRightWidth', s: 'borderRightStyle', c: 'borderRightColor' }],
+    ['borderBottom', { w: 'borderBottomWidth', s: 'borderBottomStyle', c: 'borderBottomColor' }],
+    ['borderLeft', { w: 'borderLeftWidth', s: 'borderLeftStyle', c: 'borderLeftColor' }],
+]);
+
+function tableBorderParser(format: ContentModelTableCellFormat, element: HTMLElement): void {
+    BorderKeys.forEach(key => {
+        if (!format[key]) {
+            const styleSet = ElementBorderKeys.get(key);
+            if (
+                styleSet &&
+                element.style[styleSet.w] &&
+                element.style[styleSet.s] &&
+                !element.style[styleSet.c]
+            ) {
+                format[key] = `${element.style[styleSet.w]} ${element.style[styleSet.s]}`;
+            }
+        }
     });
 }

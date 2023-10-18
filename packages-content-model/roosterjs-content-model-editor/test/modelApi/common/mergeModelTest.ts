@@ -1,7 +1,6 @@
 import * as applyTableFormat from '../../../lib/modelApi/table/applyTableFormat';
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
 import { ContentModelDocument, ContentModelImage } from 'roosterjs-content-model-types';
-import { EntityOperation } from 'roosterjs-editor-types';
 import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
 import {
@@ -3021,7 +3020,7 @@ describe('mergeModel', () => {
             deletedEntities: [
                 {
                     entity: sourceEntity,
-                    operation: EntityOperation.Overwrite,
+                    operation: 'overwrite',
                 },
             ],
             newImages: [],

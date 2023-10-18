@@ -13,7 +13,7 @@ import { PastePropertyNames } from '../../../lib/editor/plugins/PastePlugin/past
 import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 
 const trustedHTMLHandler = <any>'mock';
-const DEFAULT_TIMES_ADD_PARSER_CALLED = 3;
+const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Content Model Paste Plugin Test', () => {
     let editor: IContentModelEditor;

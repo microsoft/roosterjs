@@ -1,9 +1,9 @@
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
-import { TableBorderFormat } from 'roosterjs-editor-types';
 import {
     ContentModelTable,
     ContentModelTableCell,
     ContentModelTableRow,
+    TableBorderFormat,
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
 

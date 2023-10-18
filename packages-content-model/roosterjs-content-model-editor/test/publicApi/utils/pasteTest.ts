@@ -26,7 +26,7 @@ import {
 
 let clipboardData: ClipboardData;
 
-const DEFAULT_TIMES_ADD_PARSER_CALLED = 3;
+const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Paste ', () => {
     let editor: IContentModelEditor;
