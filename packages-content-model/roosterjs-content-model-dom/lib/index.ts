@@ -11,6 +11,7 @@ export { tableProcessor } from './domToModel/processors/tableProcessor';
 export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelectionOffsets';
 export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
+export { isBlockElement } from './domToModel/utils/isBlockElement';
 
 export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
