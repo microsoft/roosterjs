@@ -3,7 +3,6 @@ import { getDefaultStyle } from './getDefaultStyle';
 const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table', 'table-cell', 'flex'];
 
 /**
- * @internal
  * Check if the given element will be layout as a block
  * @param element The element to check
  * @param context The context of DOM to Content Model conversion
