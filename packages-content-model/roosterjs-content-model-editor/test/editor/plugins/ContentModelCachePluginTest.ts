@@ -2,7 +2,7 @@ import { ContentModelCachePluginState } from '../../../lib/publicTypes/pluginSta
 import { ContentModelDomIndexer } from 'roosterjs-content-model-types';
 import { default as ContentModelCachePlugin } from '../../../lib/editor/corePlugins/ContentModelCachePlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 
 describe('ContentModelCachePlugin', () => {
     let plugin: ContentModelCachePlugin;
@@ -64,7 +64,7 @@ describe('ContentModelCachePlugin', () => {
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
-                    which: Keys.ENTER,
+                    key: 'Enter',
                 } as any,
             });
 
@@ -78,7 +78,6 @@ describe('ContentModelCachePlugin', () => {
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
-                    which: Keys.B,
                     key: 'B',
                 } as any,
             });
@@ -95,7 +94,7 @@ describe('ContentModelCachePlugin', () => {
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
-                    which: Keys.B,
+                    key: 'B',
                 } as any,
             });
 
@@ -113,7 +112,6 @@ describe('ContentModelCachePlugin', () => {
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
-                    which: Keys.B,
                     key: 'B',
                 } as any,
             });
@@ -130,8 +128,7 @@ describe('ContentModelCachePlugin', () => {
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
-                    which: Keys.UP,
-                    key: 'Up',
+                    key: 'ArrowUp',
                 } as any,
             });
 
@@ -151,7 +148,6 @@ describe('ContentModelCachePlugin', () => {
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
-                    which: Keys.B,
                     key: 'B',
                 } as any,
             });
@@ -167,7 +163,6 @@ describe('ContentModelCachePlugin', () => {
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
-                    which: Keys.B,
                     key: 'B',
                 } as any,
             });
@@ -181,7 +176,7 @@ describe('ContentModelCachePlugin', () => {
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
-                    which: Keys.ENTER,
+                    key: 'Enter',
                 } as any,
             });
 
