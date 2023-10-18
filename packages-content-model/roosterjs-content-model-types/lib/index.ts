@@ -34,7 +34,6 @@ export { BorderFormat } from './format/formatParts/BorderFormat';
 export { DirectionFormat } from './format/formatParts/DirectionFormat';
 export { HtmlAlignFormat } from './format/formatParts/HtmlAlignFormat';
 export { MarginFormat } from './format/formatParts/MarginFormat';
-export { MarginBlockFormat } from './format/formatParts/MarginBlockFormat';
 export { PaddingFormat } from './format/formatParts/PaddingFormat';
 export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
 export { WhiteSpaceFormat } from './format/formatParts/WhiteSpaceFormat';
