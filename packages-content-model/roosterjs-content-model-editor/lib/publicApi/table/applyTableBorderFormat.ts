@@ -146,4 +146,7 @@ function updateBorderMetaOverride(cell: ContentModelTableCell) {
         metadata.borderOverride = true;
         return metadata;
     });
+
+    // Cell was modified, so delete cached element
+    delete cell.cachedElement;
 }
