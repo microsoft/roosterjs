@@ -76,21 +76,21 @@ describe('toggleBlockQuote', () => {
     it('Multi-level list', () => {
         runTest(
             '<div><ol><li><span>a</span></li><ol><li>b</li><ol><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div><!--{"start":[0,0,1,1,1,0,0],"end":[0,1,0,1]}-->',
-            '<div><ol style="margin-block: 0px;"><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li></ol></ol></ol><blockquote><ol start="2" style="margin-block: 0px;"><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></blockquote></div><div>h</div>'
+            '<div><ol><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li></ol></ol></ol><blockquote><ol start="2"><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></blockquote></div><div>h</div>'
         );
     });
 
     it('Two multilevel lists', () => {
         runTest(
             '<div><ol><li><span>a</span></li><ol><li>b</li><ol><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div><div><ol><li><span>a</span></li><ol><li>b</li><ol><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol></div><!--{"start":[0,0,1,1,1,0,0],"end":[2,0,1,1,0,0,1]}-->',
-            '<div><ol style="margin-block: 0px;"><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li></ol></ol></ol></div><blockquote><div><ol start="2" style="margin-block: 0px;"><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div><div><ol style="margin-block: 0px;"><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li></ol></ol></ol></div></blockquote><div><ol start="2" style="margin-block: 0px;"><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>d</li></ol><li>e</li></ol><li>f</li></ol></div>'
+            '<div><ol><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li></ol></ol></ol></div><blockquote><div><ol start="2"><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div><div><ol><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li></ol></ol></ol></div></blockquote><div><ol start="2"><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>d</li></ol><li>e</li></ol><li>f</li></ol></div>'
         );
     });
 
     it('Whole list selected', () => {
         runTest(
             '<div><ol><li><span>a</span></li><ol><li>b</li><ol><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div><!--{"start":[0,0],"end":[1,1,0,1]}-->',
-            '<blockquote><div><ol style="margin-block: 0px;"><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div></blockquote>'
+            '<blockquote><div><ol><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div></blockquote>'
         );
     });
 
@@ -118,7 +118,7 @@ describe('toggleBlockQuote', () => {
     it('Mixed table and list', () => {
         runTest(
             '<div><table><tbody><tr><td>test1</td><td>test2</td></tr><tr><td>test3</td><td>test4</td></tr></tbody></table>test5</div><div><ol><li>test6</li><li>test7</li></ol></div><!--{"start":[0,0,0,1,0,0,2],"end":[1,0,0,0,2]}-->',
-            '<div><table><tbody><tr><td>test1</td><td>test2</td></tr><tr><td><blockquote>test3</blockquote></td><td><blockquote>test4</blockquote></td></tr></tbody></table></div><blockquote><div>test5</div><div><ol style="margin-block: 0px;"><li>test6</li></ol></div></blockquote><div><ol start="2" style="margin-block: 0px;"><li>test7</li></ol></div>'
+            '<div><table><tbody><tr><td>test1</td><td>test2</td></tr><tr><td><blockquote>test3</blockquote></td><td><blockquote>test4</blockquote></td></tr></tbody></table></div><blockquote><div>test5</div><div><ol><li>test6</li></ol></div></blockquote><div><ol start="2"><li>test7</li></ol></div>'
         );
     });
 

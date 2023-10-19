@@ -47,7 +47,6 @@ export default function createVListFromRegion(
         );
         blocks.forEach(block => {
             const list = getRootListNode(region, ListSelector, block.getStartNode());
-
             if (list) {
                 if (nodes[nodes.length - 1] != list) {
                     nodes.push(list);
@@ -134,6 +133,10 @@ function createVListFromItemNode(node: Node): VList {
 
     // Create a temporary OL root element for this list.
     const listNode = node.ownerDocument!.createElement('ol'); // Either OL or UL is ok here
+
+    listNode.style.marginBlockStart = '0px';
+    listNode.style.marginBlockEnd = '0px';
+
     node.appendChild(listNode);
 
     // Create the VList and append items

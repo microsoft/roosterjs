@@ -182,7 +182,11 @@ export default class VList {
      * @param shouldReuseAllAncestorListElements Optional - defaults to false.
      * @param disableListChain Whether we want to disable list chain functionality. @default false
      */
-    writeBack(shouldReuseAllAncestorListElements?: boolean, disableListChain?: boolean) {
+    writeBack(
+        shouldReuseAllAncestorListElements?: boolean,
+        disableListChain?: boolean,
+        newList?: boolean
+    ) {
         if (!this.rootList) {
             throw new Error('rootList must not be null');
         }
@@ -206,9 +210,9 @@ export default class VList {
 
             item.writeBack(listStack, this.rootList, shouldReuseAllAncestorListElements);
             const topList = listStack[1] as HTMLElement;
-            if (topList) {
-                topList.style.marginBlockStart = !topList.style.marginTop ? '0px' : '';
-                topList.style.marginBlockEnd = !topList.style.marginBottom ? '0px' : '';
+            if (newList && topList) {
+                topList.style.marginBlockEnd = '0px';
+                topList.style.marginBlockStart = '0px';
             }
 
             item.applyListStyle(this.rootList, start);
@@ -516,6 +520,11 @@ export default class VList {
                 this.items.push(new VListItem(item, ...newListTypes));
             }
         });
+    }
+
+    removeMargins(list: VList) {
+        list.rootList.style.marginBlockEnd = '0px';
+        list.rootList.style.marginBlockStart = '0px';
     }
 }
 

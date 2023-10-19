@@ -297,7 +297,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol style="margin-block: 0px;"><li>test</li></ol>'
+            '<ol><li>test</li></ol>'
         );
     });
 
@@ -313,7 +313,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol style="margin-block: 0px;"><li>item1</li><li>item2</li></ol>'
+            '<ol><li>item1</li><li>item2</li></ol>'
         );
     });
 
@@ -333,7 +333,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol style="margin-block: 0px;"><li>item1</li></ol><ul style="margin-block: 0px;"><li>bullet</li></ul><ol style="margin-block: 0px;" start="2"><li>item2</li></ol>'
+            '<ol><li>item1</li></ol><ul><li>bullet</li></ul><ol start="2"><li>item2</li></ol>'
         );
     });
 
@@ -349,7 +349,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul style="margin-block: 0px;"><li>item1</li></ul><ol style="margin-block: 0px;"><li>item2</li></ol>'
+            '<ul><li>item1</li></ul><ol><li>item2</li></ol>'
         );
     });
 
@@ -369,7 +369,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul style="margin-block: 0px;"><ol style="list-style-type: lower-alpha;"><li>item1</li></ol><li>item2</li></ul><ol style="margin-block: 0px;"><li>item3</li></ol>'
+            '<ul><ol style="list-style-type: lower-alpha;"><li>item1</li></ol><li>item2</li></ul><ol><li>item3</li></ol>'
         );
     });
 
@@ -389,7 +389,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul style="margin-block: 0px;"><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol style="margin-block: 0px;"><li>item3</li></ol>'
+            '<ul><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol><li>item3</li></ol>'
         );
     });
 
@@ -409,7 +409,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul style="margin-block: 0px;"><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol style="margin-block: 0px;"><li>item3</li></ol>'
+            '<ul><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol><li>item3</li></ol>'
         );
     });
 
@@ -429,7 +429,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul style="margin-block: 0px;"><li>item1</li></ul><div><span>item2</span></div><ol style="margin-block: 0px;"><li>item3</li></ol>'
+            '<ul><li>item1</li></ul><div><span>item2</span></div><ol><li>item3</li></ol>'
         );
     });
 
@@ -443,7 +443,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol data-test="test" style="margin-block: 0px;"><li>item1</li></ol>',
+            '<ol data-test="test"><li>item1</li></ol>',
             ol
         );
     });
@@ -470,7 +470,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ol start="3" style="margin-block: 0px;"><li>item3</li><ol style="list-style-type: lower-alpha;"><li>item3.1</li></ol></ol><ul style="margin-block: 0px;"><li>bullet</li></ul><ol start="4" style="margin-block: 0px;"><li>item4</li></ol>',
+            '<ol start="3"><li>item3</li><ol style="list-style-type: lower-alpha;"><li>item3.1</li></ol></ol><ul><li>bullet</li></ul><ol start="4"><li>item4</li></ol>',
             ol
         );
     });
@@ -501,7 +501,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<div><span>text</span></div><ol start="3" style="margin-block: 0px;"><li>item3</li><li>item4</li></ol><div><span>text</span></div><ol start="5" style="margin-block: 0px;"><li>item5</li></ol>',
+            '<div><span>text</span></div><ol start="3"><li>item3</li><li>item4</li></ol><div><span>text</span></div><ol start="5"><li>item5</li></ol>',
             ol
         );
     });
@@ -1261,14 +1261,14 @@ describe('VList.split', () => {
     it('split List', () => {
         runTest(
             `<ol id=${listId}><li>item1</li><li id="${separatorElementId}">bullet</li><li>item2</li></ol>`,
-            '<ol id="listId" style="margin-block: 0px;"><li>item1</li></ol><ol style="margin-block: 0px;"><li id="separatorId">bullet</li><li>item2</li></ol>'
+            '<ol id="listId"><li>item1</li></ol><ol><li id="separatorId">bullet</li><li>item2</li></ol>'
         );
     });
 
     it('split List 2', () => {
         runTest(
             `<ol id=${listId}><li>item1</li><li id="${separatorElementId}">bullet</li><li>item2</li></ol>`,
-            '<ol id="listId" style="margin-block: 0px;"><li>item1</li></ol><ol style="margin-block: 0px;" start="5"><li id="separatorId">bullet</li><li>item2</li></ol>',
+            '<ol id="listId"><li>item1</li></ol><ol start="5"><li id="separatorId">bullet</li><li>item2</li></ol>',
             5
         );
     });
@@ -1276,7 +1276,7 @@ describe('VList.split', () => {
     it('split List 3', () => {
         runTest(
             `<ol id=${listId}><li>1</li><ol style="margin-block: 0px;list-style-type: lower-alpha;"><li>1</li><li id='${separatorElementId}'>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
-            '<ol id="listId" style="margin-block: 0px;"><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li></ol></ol><ol style="margin-block: 0px;"><ol style="list-style-type: lower-alpha;"><li id="separatorId">2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            '<ol id="listId"><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li></ol></ol><ol><ol style="list-style-type: lower-alpha;"><li id="separatorId">2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             1
         );
     });
@@ -1284,7 +1284,7 @@ describe('VList.split', () => {
     it('split List 4', () => {
         runTest(
             `<ol id=${listId}><li id='${separatorElementId}'>1</li><ol style="margin-block: 0px;list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
-            '<ol id="listId" style="margin-block: 0px;" start="9"><li id="separatorId">1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            '<ol id="listId" start="9"><li id="separatorId">1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             9
         );
     });
