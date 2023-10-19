@@ -10,4 +10,8 @@ export type TableCellMetadataFormat = {
      * Override default vertical align value
      */
     vAlignOverride?: boolean;
+    /**
+     * Override default border value
+     */
+    borderOverride?: boolean;
 };
