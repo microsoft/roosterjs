@@ -13,7 +13,7 @@ import type { ElementProcessor } from 'roosterjs-content-model-types';
  * @param context DOM to Content Model context
  */
 export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const isBlockEntity = isBlockElement(element, context);
+    const isBlockEntity = isBlockElement(element);
 
     stackFormat(
         context,

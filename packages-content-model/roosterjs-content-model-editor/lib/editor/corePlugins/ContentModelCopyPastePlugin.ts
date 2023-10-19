@@ -1,10 +1,11 @@
 import paste from '../../publicApi/utils/paste';
-import { addRangeToSelection, extractClipboardItems } from 'roosterjs-editor-dom';
+import { addRangeToSelection } from '../../domUtils/addRangeToSelection';
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import { extractClipboardItems } from 'roosterjs-editor-dom';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
@@ -148,7 +149,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 }).range;
 
                 if (newRange) {
-                    addRangeToSelection(newRange);
+                    addRangeToSelection(doc, newRange);
                 }
 
                 this.editor.runAsync(editor => {

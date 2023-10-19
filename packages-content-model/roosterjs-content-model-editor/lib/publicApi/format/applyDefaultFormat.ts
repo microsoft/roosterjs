@@ -2,8 +2,7 @@ import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
-import { isBlockElement } from 'roosterjs-editor-dom';
+import { isBlockElement, isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
@@ -24,13 +23,15 @@ export default function applyDefaultFormat(
     let node = posContainer;
 
     while (node && editor.contains(node)) {
-        if (isNodeOfType(node, 'ELEMENT_NODE') && node.getAttribute?.('style')) {
-            return;
-        } else if (isBlockElement(node)) {
-            break;
-        } else {
-            node = node.parentNode;
+        if (isNodeOfType(node, 'ELEMENT_NODE')) {
+            if (node.getAttribute?.('style')) {
+                return;
+            } else if (isBlockElement(node)) {
+                break;
+            }
         }
+
+        node = node.parentNode;
     }
 
     formatWithContentModel(editor, 'input', (model, context) => {

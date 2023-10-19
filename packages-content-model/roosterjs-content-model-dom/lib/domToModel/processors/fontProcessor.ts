@@ -26,7 +26,7 @@ export const fontProcessor: ElementProcessor<HTMLFontElement> = (group, element,
     stackFormat(
         context,
         {
-            segment: isBlockElement(element, context) ? 'shallowCloneForBlock' : 'shallowClone',
+            segment: isBlockElement(element) ? 'shallowCloneForBlock' : 'shallowClone',
         },
         () => {
             const fontFamily = element.getAttribute('face');
