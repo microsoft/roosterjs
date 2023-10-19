@@ -80,7 +80,7 @@ export default class ImageSelection implements EditorPlugin {
                         } else {
                             const position = new Position(
                                 keyDownSelection.image,
-                                PositionType.Begin
+                                PositionType.Before
                             );
 
                             this.editor.select(position);
