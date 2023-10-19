@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.88% </span>
+                <span class="strong">52.15% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>83/160</span>
+                <span class='fraction'>85/163</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.13% </span>
+                <span class="strong">38.29% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>62/167</span>
+                <span class='fraction'>67/175</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>23/23</span>
+                <span class='fraction'>24/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.57% </span>
+                <span class="strong">51.85% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>82/159</span>
+                <span class='fraction'>84/162</span>
             </div>
         
             
@@ -436,7 +436,19 @@
 <a name='L377'></a><a href='#L377'>377</a>
 <a name='L378'></a><a href='#L378'>378</a>
 <a name='L379'></a><a href='#L379'>379</a>
-<a name='L380'></a><a href='#L380'>380</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L380'></a><a href='#L380'>380</a>
+<a name='L381'></a><a href='#L381'>381</a>
+<a name='L382'></a><a href='#L382'>382</a>
+<a name='L383'></a><a href='#L383'>383</a>
+<a name='L384'></a><a href='#L384'>384</a>
+<a name='L385'></a><a href='#L385'>385</a>
+<a name='L386'></a><a href='#L386'>386</a>
+<a name='L387'></a><a href='#L387'>387</a>
+<a name='L388'></a><a href='#L388'>388</a>
+<a name='L389'></a><a href='#L389'>389</a>
+<a name='L390'></a><a href='#L390'>390</a>
+<a name='L391'></a><a href='#L391'>391</a>
+<a name='L392'></a><a href='#L392'>392</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -492,6 +504,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -847,11 +871,11 @@ export default function applyTableFormat(
 }
 &nbsp;
 /**
- * Check if the cell has shade
+ * Check if the cell has shade meta override
  * @param cell
  * @returns
  */
-function hasCellShade(cell: VCell) {
+function hasCellShadeOverride(cell: VCell) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!cell.td) {
 <span class="cstat-no" title="statement not covered" >        return false;</span>
     }
@@ -860,11 +884,11 @@ function hasCellShade(cell: VCell) {
 }
 &nbsp;
 /**
- * Check if the cell has vertical align
+ * Check if the cell has vertical align meta override
  * @param cell
  * @returns
  */
-function hasValign(cell: VCell) {
+function hasValignOverride(cell: VCell) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!cell.td) {
 <span class="cstat-no" title="statement not covered" >        return false;</span>
     }
@@ -872,6 +896,18 @@ function hasValign(cell: VCell) {
     return !!getTableCellMetadata(cell.td)<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >?.v</span>AlignOverride;</span>
 }
 &nbsp;
+/**
+ * Check if the cell has any modified border meta override
+ * @param cell
+ * @returns
+ */
+function hasBorderOverride(cell: VCell) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!cell.td) {
+<span class="cstat-no" title="statement not covered" >        return false;</span>
+    }
+&nbsp;
+    return !!getTableCellMetadata(cell.td)<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >?.b</span>orderOverride;</span>
+}
 /**
  * Set color and vertical align to the table
  * @param format the format that must be applied
@@ -889,7 +925,7 @@ function setCellFormat(
         row.forEach(cell =&gt; {
             <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td) {
                 // Set cell color
-                <span class="missing-if-branch" title="else path not taken" >E</span>if (!hasCellShade(cell)) {
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (!hasCellShadeOverride(cell)) {
                     if (hasBandedRows) {
                         const backgroundColor = color(index);
                         setColor(
@@ -921,7 +957,7 @@ function setCellFormat(
                     }
                 }
                 // Set cell vertical align
-                if (format.verticalAlign &amp;&amp; !hasValign(cell)) {
+                if (format.verticalAlign &amp;&amp; !hasValignOverride(cell)) {
                     cell.td.style.verticalAlign = format.verticalAlign;
                 }
             }
@@ -931,7 +967,7 @@ function setCellFormat(
         cells.forEach(row =&gt; {
             row.forEach((cell, index) =&gt; {
                 const backgroundColor = color(index);
-                <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; backgroundColor &amp;&amp; !hasCellShade(cell)) {
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; backgroundColor &amp;&amp; !hasCellShadeOverride(cell)) {
                     setColor(
                         cell.td,
                         backgroundColor,
@@ -1092,7 +1128,7 @@ function formatBorders(
 function setBordersType(cells: VCell[][], format: TableFormat) {
     cells.forEach((row, rowIndex) =&gt; {
         row.forEach((cell, cellIndex) =&gt; {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; !hasBorderOverride(cell)) {
                 formatBorders(
                     format,
                     cell.td,
@@ -1129,7 +1165,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial&lt;TableFormat&g
     cells.forEach((row, rowIndex) =&gt; {
         row.forEach((cell, cellIndex) =&gt; {
             <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; cellIndex === 0) {
-                if (rowIndex !== 0 &amp;&amp; !hasCellShade(cell)) {
+                if (rowIndex !== 0 &amp;&amp; !hasCellShadeOverride(cell)) {
                     cell.td.style.borderTopColor = TRANSPARENT;
                     setColor(
                         cell.td,
@@ -1171,7 +1207,7 @@ function setHeaderRowFormat(
     }
     cells[0]<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>orEach(cell =&gt; {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; format.headerRowColor) {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (!hasCellShade(cell)) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!hasCellShadeOverride(cell)) {
                 setColor(
                     cell.td,
                     format.headerRowColor,
@@ -1201,7 +1237,7 @@ function getBorderStyle(style?: string | null) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Oct 18 2023 19:58:03 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 19 2023 16:16:36 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

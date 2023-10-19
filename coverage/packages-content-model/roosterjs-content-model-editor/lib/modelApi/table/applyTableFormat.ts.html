@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.19% </span>
+                <span class="strong">81.9% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>82/101</span>
+                <span class='fraction'>86/105</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.31% </span>
+                <span class="strong">75.86% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>61/81</span>
+                <span class='fraction'>66/87</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.68% </span>
+                <span class="strong">81.52% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>71/88</span>
+                <span class='fraction'>75/92</span>
             </div>
         
             
@@ -348,7 +348,17 @@
 <a name='L289'></a><a href='#L289'>289</a>
 <a name='L290'></a><a href='#L290'>290</a>
 <a name='L291'></a><a href='#L291'>291</a>
-<a name='L292'></a><a href='#L292'>292</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -362,6 +372,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -423,10 +434,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -438,6 +455,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">102x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">103x</span>
 <span class="cline-any cline-yes">103x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">103x</span>
@@ -521,6 +539,7 @@
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">103x</span>
+<span class="cline-any cline-yes">103x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -540,6 +559,7 @@
 <span class="cline-any cline-yes">412x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">412x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -670,6 +690,7 @@ const DEFAULT_FORMAT: Required&lt;TableMetadataFormat&gt; = {
 type MetaOverrides = {
     bgColorOverrides: boolean[][];
     vAlignOverrides: boolean[][];
+    borderOverrides: boolean[][];
 };
 &nbsp;
 /**
@@ -712,14 +733,20 @@ function clearCache(rows: ContentModelTableRow[]) {
 }
 &nbsp;
 function updateOverrides(rows: ContentModelTableRow[], removeCellShade: boolean): MetaOverrides {
-    const overrides: MetaOverrides = { bgColorOverrides: [], vAlignOverrides: [] };
+    const overrides: MetaOverrides = {
+        bgColorOverrides: [],
+        vAlignOverrides: [],
+        borderOverrides: [],
+    };
 &nbsp;
     rows.forEach(row =&gt; {
         const bgColorOverrides: boolean[] = [];
         const vAlignOverrides: boolean[] = [];
+        const borderOverrides: boolean[] = [];
 &nbsp;
         overrides.bgColorOverrides.push(bgColorOverrides);
         overrides.vAlignOverrides.push(vAlignOverrides);
+        overrides.borderOverrides.push(borderOverrides);
 &nbsp;
         row.cells.forEach(cell =&gt; {
             updateTableCellMetadata(cell, metadata =&gt; {
@@ -730,6 +757,7 @@ function updateOverrides(rows: ContentModelTableRow[], removeCellShade: boolean)
                     bgColorOverrides.push(!!metadata?.bgColorOverride);
                 }
                 vAlignOverrides.push(!!metadata?.vAlignOverride);
+                borderOverrides.push(!!metadata?.borderOverride);
 &nbsp;
                 return metadata;
             });
@@ -811,31 +839,33 @@ function formatCells(
     rows.forEach((row, rowIndex) =&gt; {
         row.cells.forEach((cell, colIndex) =&gt; {
             // Format Borders
-            const transparentBorderMatrix = BorderFormatters[
-                format.tableBorderFormat as TableBorderFormat
-            ]({
-                firstRow: rowIndex === 0,
-                lastRow: rowIndex === rows.length - 1,
-                firstColumn: colIndex === 0,
-                lastColumn: colIndex === row.cells.length - 1,
-            });
-&nbsp;
-            const formatColor = [
-                format.topBorderColor,
-                format.verticalBorderColor,
-                format.bottomBorderColor,
-                format.verticalBorderColor,
-            ];
-&nbsp;
-            transparentBorderMatrix.forEach((alwaysUseTransparent, i) =&gt; {
-                const borderColor = (!alwaysUseTransparent &amp;&amp; formatColor[i]) || '';
-&nbsp;
-                cell.format[BorderKeys[i]] = combineBorderValue({
-                    style: getBorderStyleFromColor(borderColor),
-                    width: '1px',
-                    color: borderColor,
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!metaOverrides.borderOverrides[rowIndex][colIndex]) {
+                const transparentBorderMatrix = BorderFormatters[
+                    format.tableBorderFormat as TableBorderFormat
+                ]({
+                    firstRow: rowIndex === 0,
+                    lastRow: rowIndex === rows.length - 1,
+                    firstColumn: colIndex === 0,
+                    lastColumn: colIndex === row.cells.length - 1,
                 });
-            });
+&nbsp;
+                const formatColor = [
+                    format.topBorderColor,
+                    format.verticalBorderColor,
+                    format.bottomBorderColor,
+                    format.verticalBorderColor,
+                ];
+&nbsp;
+                transparentBorderMatrix.forEach((alwaysUseTransparent, i) =&gt; {
+                    const borderColor = (!alwaysUseTransparent &amp;&amp; formatColor[i]) || '';
+&nbsp;
+                    cell.format[BorderKeys[i]] = combineBorderValue({
+                        style: getBorderStyleFromColor(borderColor),
+                        width: '1px',
+                        color: borderColor,
+                    });
+                });
+            }
 &nbsp;
             // Format Background Color
             if (!metaOverrides.bgColorOverrides[rowIndex][colIndex]) {
@@ -937,7 +967,7 @@ function getBorderStyleFromColor(color?: string): string {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Oct 18 2023 19:58:03 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 19 2023 16:16:36 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
