@@ -30,11 +30,11 @@ export default function applyTableFormat(
 }
 
 /**
- * Check if the cell has shade
+ * Check if the cell has shade meta override
  * @param cell
  * @returns
  */
-function hasCellShade(cell: VCell) {
+function hasCellShadeOverride(cell: VCell) {
     if (!cell.td) {
         return false;
     }
@@ -43,11 +43,11 @@ function hasCellShade(cell: VCell) {
 }
 
 /**
- * Check if the cell has vertical align
+ * Check if the cell has vertical align meta override
  * @param cell
  * @returns
  */
-function hasValign(cell: VCell) {
+function hasValignOverride(cell: VCell) {
     if (!cell.td) {
         return false;
     }
@@ -55,6 +55,18 @@ function hasValign(cell: VCell) {
     return !!getTableCellMetadata(cell.td)?.vAlignOverride;
 }
 
+/**
+ * Check if the cell has any modified border meta override
+ * @param cell
+ * @returns
+ */
+function hasBorderOverride(cell: VCell) {
+    if (!cell.td) {
+        return false;
+    }
+
+    return !!getTableCellMetadata(cell.td)?.borderOverride;
+}
 /**
  * Set color and vertical align to the table
  * @param format the format that must be applied
@@ -72,7 +84,7 @@ function setCellFormat(
         row.forEach(cell => {
             if (cell.td) {
                 // Set cell color
-                if (!hasCellShade(cell)) {
+                if (!hasCellShadeOverride(cell)) {
                     if (hasBandedRows) {
                         const backgroundColor = color(index);
                         setColor(
@@ -104,7 +116,7 @@ function setCellFormat(
                     }
                 }
                 // Set cell vertical align
-                if (format.verticalAlign && !hasValign(cell)) {
+                if (format.verticalAlign && !hasValignOverride(cell)) {
                     cell.td.style.verticalAlign = format.verticalAlign;
                 }
             }
@@ -114,7 +126,7 @@ function setCellFormat(
         cells.forEach(row => {
             row.forEach((cell, index) => {
                 const backgroundColor = color(index);
-                if (cell.td && backgroundColor && !hasCellShade(cell)) {
+                if (cell.td && backgroundColor && !hasCellShadeOverride(cell)) {
                     setColor(
                         cell.td,
                         backgroundColor,
@@ -275,7 +287,7 @@ function formatBorders(
 function setBordersType(cells: VCell[][], format: TableFormat) {
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
-            if (cell.td) {
+            if (cell.td && !hasBorderOverride(cell)) {
                 formatBorders(
                     format,
                     cell.td,
@@ -312,7 +324,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
             if (cell.td && cellIndex === 0) {
-                if (rowIndex !== 0 && !hasCellShade(cell)) {
+                if (rowIndex !== 0 && !hasCellShadeOverride(cell)) {
                     cell.td.style.borderTopColor = TRANSPARENT;
                     setColor(
                         cell.td,
@@ -354,7 +366,7 @@ function setHeaderRowFormat(
     }
     cells[0]?.forEach(cell => {
         if (cell.td && format.headerRowColor) {
-            if (!hasCellShade(cell)) {
+            if (!hasCellShadeOverride(cell)) {
                 setColor(
                     cell.td,
                     format.headerRowColor,
