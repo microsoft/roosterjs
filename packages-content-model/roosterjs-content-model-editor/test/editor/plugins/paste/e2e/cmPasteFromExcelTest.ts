@@ -51,7 +51,7 @@ describe(ID, () => {
         }
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData, false, false, true);
+        paste(editor, clipboardData, 'asImage');
 
         const model = editor.createContentModel({
             processorOverride: {

@@ -1,10 +1,12 @@
-import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import type { Entity } from 'roosterjs-editor-types';
 import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     ContentModelFormatter,
+    EntityRemovalOperation,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
 } from '../../publicTypes/parameter/FormatWithContentModelContext';
@@ -101,6 +103,14 @@ function handleNewEntities(editor: IContentModelEditor, context: FormatWithConte
     }
 }
 
+// This is only used for compatibility with old editor
+// TODO: Remove this map once we have standalone editor
+const EntityOperationMap: Record<EntityRemovalOperation, EntityOperation> = {
+    overwrite: EntityOperation.Overwrite,
+    removeFromEnd: EntityOperation.RemoveFromEnd,
+    removeFromStart: EntityOperation.RemoveFromStart,
+};
+
 function handleDeletedEntities(
     editor: IContentModelEditor,
     context: FormatWithContentModelContext
@@ -123,7 +133,7 @@ function handleDeletedEntities(
                 };
                 editor.triggerPluginEvent(PluginEventType.EntityOperation, {
                     entity,
-                    operation,
+                    operation: EntityOperationMap[operation],
                     rawEvent: context.rawEvent,
                 });
             }

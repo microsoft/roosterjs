@@ -1,4 +1,4 @@
-import { ChangeSource, Keys } from 'roosterjs-editor-types';
+import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
@@ -32,7 +32,6 @@ export default function keyboardDelete(
     editor: IContentModelEditor,
     rawEvent: KeyboardEvent
 ): boolean {
-    const which = rawEvent.which;
     const selection = editor.getDOMSelection();
     const range = selection?.type == 'range' ? selection.range : null;
     let isDeleted = false;
@@ -40,7 +39,7 @@ export default function keyboardDelete(
     if (shouldDeleteWithContentModel(range, rawEvent)) {
         formatWithContentModel(
             editor,
-            which == Keys.DELETE ? 'handleDeleteKey' : 'handleBackspaceKey',
+            rawEvent.key == 'Delete' ? 'handleDeleteKey' : 'handleBackspaceKey',
             (model, context) => {
                 const result = deleteSelection(
                     model,
@@ -55,7 +54,7 @@ export default function keyboardDelete(
             {
                 rawEvent,
                 changeSource: ChangeSource.Keyboard,
-                getChangeData: () => which,
+                getChangeData: () => rawEvent.which,
             }
         );
 
@@ -66,7 +65,7 @@ export default function keyboardDelete(
 }
 
 function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelectionStep | null)[] {
-    const isForward = rawEvent.which == Keys.DELETE;
+    const isForward = rawEvent.key == 'Delete';
     const deleteAllSegmentBeforeStep =
         shouldDeleteAllSegmentsBefore(rawEvent) && !isForward ? deleteAllSegmentBefore : null;
     const deleteWordSelection = shouldDeleteWord(rawEvent, isMac)
@@ -91,14 +90,14 @@ function shouldDeleteWithContentModel(range: Range | null, rawEvent: KeyboardEve
 
 function canDeleteBefore(rawEvent: KeyboardEvent, range: Range) {
     return (
-        rawEvent.which == Keys.BACKSPACE &&
+        rawEvent.key == 'Backspace' &&
         (range.startOffset > 1 || range.startContainer.previousSibling)
     );
 }
 
 function canDeleteAfter(rawEvent: KeyboardEvent, range: Range) {
     return (
-        rawEvent.which == Keys.DELETE &&
+        rawEvent.key == 'Delete' &&
         (range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1 ||
             range.startContainer.nextSibling)
     );

@@ -1,16 +1,17 @@
-import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
+import {
+    BulletListType,
+    ContentModelListItemFormat,
+    ContentModelWithDataset,
+    ListMetadataFormat,
+    ModelToDomContext,
+    NumberingListType,
+} from 'roosterjs-content-model-types';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
     updateListMetadata,
 } from '../../../lib/domUtils/metadata/updateListMetadata';
-import {
-    ContentModelListItemFormat,
-    ContentModelWithDataset,
-    ListMetadataFormat,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 describe('updateListMetadata', () => {
     it('No value', () => {

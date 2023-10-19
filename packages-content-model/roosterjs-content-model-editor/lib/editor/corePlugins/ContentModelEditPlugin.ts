@@ -1,5 +1,5 @@
 import keyboardDelete from '../../publicApi/editing/keyboardDelete';
-import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     EditorPlugin,
@@ -62,13 +62,12 @@ export default class ContentModelEditPlugin implements EditorPlugin {
 
     private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
         const rawEvent = event.rawEvent;
-        const which = rawEvent.which;
 
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
-            switch (which) {
-                case Keys.BACKSPACE:
-                case Keys.DELETE:
+            switch (rawEvent.key) {
+                case 'Backspace':
+                case 'Delete':
                     // Use our API to handle BACKSPACE/DELETE key.
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     keyboardDelete(editor, rawEvent);
