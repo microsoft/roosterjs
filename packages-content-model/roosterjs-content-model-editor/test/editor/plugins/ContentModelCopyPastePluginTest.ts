@@ -1,3 +1,4 @@
+import * as addRangeToSelection from '../../../lib/domUtils/addRangeToSelection';
 import * as cloneModelFile from '../../../lib/modelApi/common/cloneModel';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
@@ -71,6 +72,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             (model: any) => pasteModelValue
         );
         transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
+        spyOn(addRangeToSelection, 'addRangeToSelection');
 
         plugin = new ContentModelCopyPastePlugin({
             allowedCustomPasteType,
