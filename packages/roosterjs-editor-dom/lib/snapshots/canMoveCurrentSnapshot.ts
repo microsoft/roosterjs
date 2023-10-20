@@ -10,6 +10,6 @@ export default function canMoveCurrentSnapshot<T = string>(
     snapshots: Snapshots<T>,
     step: number
 ): boolean {
-    let newIndex = snapshots.currentIndex + step;
+    const newIndex = snapshots.currentIndex + step;
     return newIndex >= 0 && newIndex < snapshots.snapshots.length;
 }

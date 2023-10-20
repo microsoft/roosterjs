@@ -34,12 +34,12 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =>
         cacheGetTableCell(event, editor) && !cacheIsWholeTableSelected(event, editor),
     handleEvent: (event, editor) => {
-        let shift = event.rawEvent.shiftKey;
-        let td = cacheGetTableCell(event, editor);
+        const shift = event.rawEvent.shiftKey;
+        const td = cacheGetTableCell(event, editor);
         if (!td) {
             return;
         }
-        let vtable = cacheVTable(event, td);
+        const vtable = cacheVTable(event, td);
 
         for (
             let step = shift ? -1 : 1, row = vtable.row ?? 0, col = (vtable.col ?? 0) + step;
@@ -58,7 +58,7 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
                 }
                 col = shift ? tableCells[row].length - 1 : 0;
             }
-            let cell = vtable.getCell(row, col);
+            const cell = vtable.getCell(row, col);
             if (cell.td) {
                 const newPos = new Position(cell.td, PositionType.Begin).normalize();
                 editor.select(newPos);
@@ -80,13 +80,13 @@ const IndentTableOnTab: BuildInEditFeature<PluginKeyboardEvent> = {
         event.rawEvent.preventDefault();
 
         editor.addUndoSnapshot(() => {
-            let shift = event.rawEvent.shiftKey;
-            let selection = editor.getSelectionRangeEx() as TableSelectionRange;
-            let td = cacheGetTableCell(event, editor);
+            const shift = event.rawEvent.shiftKey;
+            const selection = editor.getSelectionRangeEx() as TableSelectionRange;
+            const td = cacheGetTableCell(event, editor);
             if (!td) {
                 return;
             }
-            let vtable = cacheVTable(event, td);
+            const vtable = cacheVTable(event, td);
 
             if (shift && editor.getElementAtCursor('blockquote', vtable.table, event)) {
                 setIndentation(editor, Indentation.Decrease);
@@ -122,14 +122,14 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
         let targetTd: HTMLTableCellElement | null = null;
 
         if (selection) {
-            let { anchorNode, anchorOffset } = selection;
+            const { anchorNode, anchorOffset } = selection;
 
             for (
                 let row = vtable.row ?? 0;
                 row >= 0 && vtable.cells && row < vtable.cells.length;
                 row += step
             ) {
-                let cell = vtable.getCell(row, vtable.col ?? 0);
+                const cell = vtable.getCell(row, vtable.col ?? 0);
                 if (cell.td && cell.td != td) {
                     targetTd = cell.td;
                     break;
@@ -137,7 +137,7 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
             }
 
             editor.runAsync(editor => {
-                let newContainer = editor.getElementAtCursor();
+                const newContainer = editor.getElementAtCursor();
                 if (
                     contains(vtable.table, newContainer) &&
                     !contains(td, newContainer, true /*treatSameNodeAsContain*/)
@@ -197,8 +197,8 @@ const DeleteTableWithBackspace: BuildInEditFeature<PluginKeyboardEvent> = {
 
 function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement | null {
     return cacheGetEventData(event, 'TABLE_CELL_FOR_TABLE_FEATURES', () => {
-        let pos = editor.getFocusedPosition();
-        let firstTd = pos && editor.getElementAtCursor('TD,TH,LI', pos.node);
+        const pos = editor.getFocusedPosition();
+        const firstTd = pos && editor.getElementAtCursor('TD,TH,LI', pos.node);
         return (
             firstTd && (getTagOfNode(firstTd) == 'LI' ? null : (firstTd as HTMLTableCellElement))
         );
@@ -211,8 +211,8 @@ function cacheIsWholeTableSelected(event: PluginEvent, editor: IEditor) {
         if (!td) {
             return false;
         }
-        let vtable = cacheVTable(event, td);
-        let selection = editor.getSelectionRangeEx();
+        const vtable = cacheVTable(event, td);
+        const selection = editor.getSelectionRangeEx();
         return (
             selection.type == SelectionRangeTypes.TableSelection &&
             selection.coordinates &&

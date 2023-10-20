@@ -1,6 +1,5 @@
 import hasSelectionInBlock from '../selection/hasSelectionInBlock';
 import { alignTable } from '../../modelApi/table/alignTable';
-import { alignTableCell } from '../../modelApi/table/alignTableCell';
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
@@ -17,7 +16,11 @@ import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setSelection } from '../../modelApi/selection/setSelection';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
-import { TableOperation } from 'roosterjs-editor-types';
+import type { TableOperation } from '../../publicTypes/parameter/TableOperation';
+import {
+    alignTableCellHorizontally,
+    alignTableCellVertically,
+} from '../../modelApi/table/alignTableCell';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     createSelectionMarker,
@@ -38,63 +41,63 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
 
         if (tableModel) {
             switch (operation) {
-                case TableOperation.AlignCellLeft:
-                case TableOperation.AlignCellCenter:
-                case TableOperation.AlignCellRight:
-                    alignTableCell(tableModel, operation);
+                case 'alignCellLeft':
+                case 'alignCellCenter':
+                case 'alignCellRight':
+                    alignTableCellHorizontally(tableModel, operation);
                     break;
-                case TableOperation.AlignCellTop:
-                case TableOperation.AlignCellMiddle:
-                case TableOperation.AlignCellBottom:
-                    alignTableCell(tableModel, operation);
+                case 'alignCellTop':
+                case 'alignCellMiddle':
+                case 'alignCellBottom':
+                    alignTableCellVertically(tableModel, operation);
                     break;
-                case TableOperation.AlignCenter:
-                case TableOperation.AlignLeft:
-                case TableOperation.AlignRight:
+                case 'alignCenter':
+                case 'alignLeft':
+                case 'alignRight':
                     alignTable(tableModel, operation);
                     break;
 
-                case TableOperation.DeleteColumn:
+                case 'deleteColumn':
                     deleteTableColumn(tableModel);
                     break;
 
-                case TableOperation.DeleteRow:
+                case 'deleteRow':
                     deleteTableRow(tableModel);
                     break;
 
-                case TableOperation.DeleteTable:
+                case 'deleteTable':
                     deleteTable(tableModel);
                     break;
 
-                case TableOperation.InsertAbove:
-                case TableOperation.InsertBelow:
+                case 'insertAbove':
+                case 'insertBelow':
                     insertTableRow(tableModel, operation);
                     break;
 
-                case TableOperation.InsertLeft:
-                case TableOperation.InsertRight:
+                case 'insertLeft':
+                case 'insertRight':
                     insertTableColumn(tableModel, operation);
                     break;
 
-                case TableOperation.MergeAbove:
-                case TableOperation.MergeBelow:
+                case 'mergeAbove':
+                case 'mergeBelow':
                     mergeTableRow(tableModel, operation);
                     break;
 
-                case TableOperation.MergeCells:
+                case 'mergeCells':
                     mergeTableCells(tableModel);
                     break;
 
-                case TableOperation.MergeLeft:
-                case TableOperation.MergeRight:
+                case 'mergeLeft':
+                case 'mergeRight':
                     mergeTableColumn(tableModel, operation);
                     break;
 
-                case TableOperation.SplitHorizontally:
+                case 'splitHorizontally':
                     splitTableCellHorizontally(tableModel);
                     break;
 
-                case TableOperation.SplitVertically:
+                case 'splitVertically':
                     splitTableCellVertically(tableModel);
                     break;
             }

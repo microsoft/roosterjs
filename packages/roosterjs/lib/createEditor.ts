@@ -22,7 +22,7 @@ export default function createEditor(
         plugins = plugins.concat(additionalPlugins);
     }
 
-    let options: EditorOptions = {
+    const options: EditorOptions = {
         plugins: plugins,
         initialContent: initialContent,
         getDarkColor: getDarkColor,

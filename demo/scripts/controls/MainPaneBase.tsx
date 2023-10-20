@@ -3,12 +3,13 @@ import * as ReactDOM from 'react-dom';
 import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
+import { Border } from 'roosterjs-content-model-editor';
+import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import {
     createUpdateContentPlugin,
     Rooster,
@@ -24,6 +25,7 @@ export interface MainPaneBaseState {
     isDarkMode: boolean;
     editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
     isRtl: boolean;
+    tableBorderFormat?: Border;
 }
 
 const PopoutRoot = 'mainPane';
@@ -126,6 +128,28 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     setScale(scale: number): void {
         this.setState({
             scale: scale,
+        });
+    }
+
+    getTableBorder(): Border {
+        return this.state.tableBorderFormat;
+    }
+
+    setTableBorderColor(color: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), color },
+        });
+    }
+
+    setTableBorderWidth(width: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), width },
+        });
+    }
+
+    setTableBorderStyle(style: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), style },
         });
     }
 

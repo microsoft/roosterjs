@@ -21,7 +21,7 @@ import type {
  * @param arg4 (optional) An offset number, or a PositionType
  */
 export const select: Select = (core, arg1, arg2, arg3, arg4) => {
-    let rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+    const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
 
     if (rangeEx) {
         const skipReselectOnFocus = core.domEvent.skipReselectOnFocus;
@@ -70,7 +70,7 @@ function buildRangeEx(
             image: arg1,
         };
     } else {
-        let range = !arg1
+        const range = !arg1
             ? null
             : safeInstanceOf(arg1, 'Range')
             ? arg1

@@ -1,4 +1,4 @@
-import * as addDelimiters from 'roosterjs-editor-dom/lib/delimiter/addDelimiters';
+import * as entityUtils from '../../../lib/domUtils/entityUtils';
 import { ContentModelEntity, ModelToDomContext } from 'roosterjs-content-model-types';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import {
@@ -13,7 +13,7 @@ describe('handleEntity', () => {
         context = createModelToDomContext({
             allowCacheElement: true,
         });
-        spyOn(addDelimiters, 'default').and.callThrough();
+        spyOn(entityUtils, 'addDelimiters').and.callThrough();
     });
 
     it('Simple block entity', () => {
@@ -41,7 +41,7 @@ describe('handleEntity', () => {
         expect(div.outerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
         );
-        expect(addDelimiters.default).toHaveBeenCalledTimes(0);
+        expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(0);
     });
 
     it('Fake entity', () => {
@@ -65,7 +65,31 @@ describe('handleEntity', () => {
 
         expect(parent.innerHTML).toBe('<div>test</div>');
         expect(div.outerHTML).toBe('<div>test</div>');
-        expect(addDelimiters.default).toHaveBeenCalledTimes(0);
+        expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(0);
+    });
+
+    it('Readonly fake entity', () => {
+        const div = document.createElement('div');
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            wrapper: div,
+            entityFormat: {
+                isFakeEntity: true,
+                isReadonly: true,
+            },
+        };
+
+        div.textContent = 'test';
+
+        const parent = document.createElement('div');
+
+        handleEntityBlock(document, parent, entityModel, context, null);
+
+        expect(parent.innerHTML).toBe('<div contenteditable="false">test</div>');
+        expect(div.outerHTML).toBe('<div contenteditable="false">test</div>');
+        expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(0);
     });
 
     it('Readonly fake entity', () => {
@@ -116,7 +140,7 @@ describe('handleEntity', () => {
         expect(span.outerHTML).toBe(
             '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span>'
         );
-        expect(addDelimiters.default).toHaveBeenCalledTimes(1);
+        expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(1);
     });
 
     it('Entity with refNode', () => {
@@ -295,7 +319,7 @@ describe('handleEntity', () => {
         expect(span.outerHTML).toBe(
             '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span>'
         );
-        expect(addDelimiters.default).toHaveBeenCalledTimes(1);
+        expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(1);
         expect(newSegments.length).toBe(3);
         expect(newSegments[0]).toBe(span);
         expect(newSegments[1]).toBe(span.nextSibling!);
@@ -328,7 +352,7 @@ describe('handleEntity', () => {
         expect(span.outerHTML).toBe(
             '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span>'
         );
-        expect(addDelimiters.default).toHaveBeenCalledTimes(0);
+        expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(0);
         expect(newSegments.length).toBe(1);
         expect(newSegments[0]).toBe(span);
     });

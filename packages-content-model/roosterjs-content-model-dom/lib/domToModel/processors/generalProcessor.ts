@@ -58,9 +58,7 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
  * @internal
  */
 export const generalProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const processor = isBlockElement(element, context)
-        ? generalBlockProcessor
-        : generalSegmentProcessor;
+    const processor = isBlockElement(element) ? generalBlockProcessor : generalSegmentProcessor;
 
     processor(group, element, context);
 };

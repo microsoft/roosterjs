@@ -4,7 +4,8 @@ import {
     createNumberDefinition,
     createObjectDefinition,
     createStringDefinition,
-} from 'roosterjs-editor-dom';
+} from './definitionCreators';
+import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 const NumberDefinition = createNumberDefinition();
 

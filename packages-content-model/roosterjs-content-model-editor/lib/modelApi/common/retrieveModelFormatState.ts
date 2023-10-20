@@ -151,6 +151,7 @@ function retrieveSegmentFormat(
     mergeValue(result, 'fontSize', mergedFormat.fontSize, isFirst);
     mergeValue(result, 'backgroundColor', mergedFormat.backgroundColor, isFirst);
     mergeValue(result, 'textColor', mergedFormat.textColor, isFirst);
+    mergeValue(result, 'fontWeight', mergedFormat.fontWeight, isFirst);
 
     //TODO: handle block owning segments with different line-heights
     mergeValue(result, 'lineHeight', mergedFormat.lineHeight, isFirst);
@@ -167,7 +168,6 @@ function retrieveParagraphFormat(
     mergeValue(result, 'marginBottom', paragraph.format.marginBottom, isFirst);
     mergeValue(result, 'marginTop', paragraph.format.marginTop, isFirst);
     mergeValue(result, 'headingLevel', validHeadingLevel, isFirst);
-    mergeValue(result, 'headerLevel', validHeadingLevel, isFirst);
     mergeValue(result, 'textAlign', paragraph.format.textAlign, isFirst);
     mergeValue(result, 'direction', paragraph.format.direction, isFirst);
 }

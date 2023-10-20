@@ -1,13 +1,12 @@
 import { ContentModelTableCell } from 'roosterjs-content-model-types';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { mergeTableColumn } from '../../../lib/modelApi/table/mergeTableColumn';
-import { TableOperation } from 'roosterjs-editor-types';
 
 describe('mergeTableColumn', () => {
     it('empty table', () => {
         const table = createTable(0);
 
-        mergeTableColumn(table, TableOperation.MergeLeft);
+        mergeTableColumn(table, 'mergeLeft');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -17,7 +16,7 @@ describe('mergeTableColumn', () => {
             dataset: {},
         });
 
-        mergeTableColumn(table, TableOperation.MergeRight);
+        mergeTableColumn(table, 'mergeRight');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -40,7 +39,7 @@ describe('mergeTableColumn', () => {
         table.rows[0].cells.push(cells[0], cells[1]);
         table.rows[1].cells.push(cells[2], cells[3]);
 
-        mergeTableColumn(table, TableOperation.MergeLeft);
+        mergeTableColumn(table, 'mergeLeft');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -56,7 +55,7 @@ describe('mergeTableColumn', () => {
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
         expect(cells.map(c => c.spanAbove)).toEqual([false, false, false, false]);
 
-        mergeTableColumn(table, TableOperation.MergeRight);
+        mergeTableColumn(table, 'mergeRight');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -92,7 +91,7 @@ describe('mergeTableColumn', () => {
         cells[1].isSelected = true;
         cells[2].isSelected = true;
 
-        mergeTableColumn(table, TableOperation.MergeLeft);
+        mergeTableColumn(table, 'mergeLeft');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -126,7 +125,7 @@ describe('mergeTableColumn', () => {
             false,
         ]);
 
-        mergeTableColumn(table, TableOperation.MergeRight);
+        mergeTableColumn(table, 'mergeRight');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -180,7 +179,7 @@ describe('mergeTableColumn', () => {
         cells[1].isSelected = true;
         cells[5].isSelected = true;
 
-        mergeTableColumn(table, TableOperation.MergeLeft);
+        mergeTableColumn(table, 'mergeLeft');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -219,7 +218,7 @@ describe('mergeTableColumn', () => {
         cells[2].isSelected = true;
         cells[6].isSelected = true;
 
-        mergeTableColumn(table, TableOperation.MergeRight);
+        mergeTableColumn(table, 'mergeRight');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -272,7 +271,7 @@ describe('mergeTableColumn', () => {
         cells[1].isSelected = true;
         cells[5].isSelected = true;
 
-        mergeTableColumn(table, TableOperation.MergeLeft);
+        mergeTableColumn(table, 'mergeLeft');
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -322,7 +321,7 @@ describe('mergeTableColumn', () => {
         cells[2].isSelected = true;
         cells[6].isSelected = true;
 
-        mergeTableColumn(table, TableOperation.MergeRight);
+        mergeTableColumn(table, 'mergeRight');
 
         expect(table).toEqual({
             blockType: 'Table',

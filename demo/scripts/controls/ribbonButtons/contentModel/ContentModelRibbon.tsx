@@ -46,6 +46,10 @@ import { spacingButton } from './spacingButton';
 import { strikethroughButton } from './strikethroughButton';
 import { subscriptButton } from './subscriptButton';
 import { superscriptButton } from './superscriptButton';
+import { tableBorderApplyButton } from './tableBorderApplyButton';
+import { tableBorderColorButton } from './tableBorderColorButton';
+import { tableBorderStyleButton } from './tableBorderStyleButton';
+import { tableBorderWidthButton } from './tableBorderWidthButton';
 import { textColorButton } from './textColorButton';
 import { underlineButton } from './underlineButton';
 import { zoom } from '../zoom';
@@ -101,6 +105,10 @@ const buttons = [
     tableSplitButton,
     tableAlignCellButton,
     tableAlignTableButton,
+    tableBorderApplyButton,
+    tableBorderColorButton,
+    tableBorderWidthButton,
+    tableBorderStyleButton,
     imageBorderColorButton,
     imageBorderWidthButton,
     imageBorderStyleButton,

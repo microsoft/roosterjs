@@ -1,14 +1,23 @@
 import addParser from './utils/addParser';
-import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
+import { BorderKeys } from 'roosterjs-content-model-dom';
+import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
-import { KnownPasteSourceType, PasteType, PluginEventType } from 'roosterjs-editor-types';
+import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { parseLink } from './utils/linkParser';
+import { PastePropertyNames } from './pasteSourceValidations/constants';
+import { PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
+import type { PasteType } from '../../../publicTypes/parameter/PasteType';
 import type ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
-import type { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
+import type {
+    BorderFormat,
+    ContentModelBlockFormat,
+    ContentModelTableCellFormat,
+    FormatParser,
+} from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
 import type {
     EditorPlugin,
@@ -17,7 +26,14 @@ import type {
     PluginEvent,
 } from 'roosterjs-editor-types';
 
-const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
+// Map old PasteType to new PasteType
+// TODO: We can remove this once we have standalone editor
+const PasteTypeMap: Record<OldPasteType, PasteType> = {
+    [OldPasteType.AsImage]: 'asImage',
+    [OldPasteType.AsPlainText]: 'asPlainText',
+    [OldPasteType.MergeFormat]: 'mergeFormat',
+    [OldPasteType.Normal]: 'normal',
+};
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -75,38 +91,45 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         }
 
         const ev = event as ContentModelBeforePasteEvent;
+
         if (!ev.domToModelOption) {
             return;
         }
+
         const pasteSource = getPasteSource(ev, false);
+        const pasteType = PasteTypeMap[ev.pasteType];
+
         switch (pasteSource) {
-            case KnownPasteSourceType.WordDesktop:
+            case 'wordDesktop':
                 processPastedContentFromWordDesktop(ev);
                 break;
-            case KnownPasteSourceType.WacComponents:
+            case 'wacComponents':
                 processPastedContentWacComponents(ev);
                 break;
-            case KnownPasteSourceType.ExcelOnline:
-            case KnownPasteSourceType.ExcelDesktop:
-                if (ev.pasteType === PasteType.Normal || ev.pasteType === PasteType.MergeFormat) {
+            case 'excelOnline':
+            case 'excelDesktop':
+                if (pasteType === 'normal' || pasteType === 'mergeFormat') {
                     // Handle HTML copied from Excel
                     processPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
                 }
                 break;
-            case KnownPasteSourceType.GoogleSheets:
-                ev.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+            case 'googleSheets':
+                ev.sanitizingOption.additionalTagReplacements[
+                    PastePropertyNames.GOOGLE_SHEET_NODE_NAME
+                ] = '*';
                 break;
-            case KnownPasteSourceType.PowerPointDesktop:
+            case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
                 break;
         }
 
         addParser(ev.domToModelOption, 'link', parseLink);
         addParser(ev.domToModelOption, 'tableCell', deprecatedBorderColorParser);
+        addParser(ev.domToModelOption, 'tableCell', tableBorderParser);
         addParser(ev.domToModelOption, 'table', deprecatedBorderColorParser);
         sanitizeBlockStyles(ev.sanitizingOption);
 
-        if (ev.pasteType === PasteType.MergeFormat) {
+        if (pasteType === 'mergeFormat') {
             addParser(ev.domToModelOption, 'block', blockElementParser);
             addParser(ev.domToModelOption, 'listLevel', blockElementParser);
         }
@@ -131,5 +154,35 @@ const blockElementParser: FormatParser<ContentModelBlockFormat> = (
 function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
     chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, 'display', (value: string) => {
         return value != 'flex'; // return whether we keep the style
+    });
+}
+
+const ElementBorderKeys = new Map<
+    keyof BorderFormat,
+    {
+        c: keyof CSSStyleDeclaration;
+        s: keyof CSSStyleDeclaration;
+        w: keyof CSSStyleDeclaration;
+    }
+>([
+    ['borderTop', { w: 'borderTopWidth', s: 'borderTopStyle', c: 'borderTopColor' }],
+    ['borderRight', { w: 'borderRightWidth', s: 'borderRightStyle', c: 'borderRightColor' }],
+    ['borderBottom', { w: 'borderBottomWidth', s: 'borderBottomStyle', c: 'borderBottomColor' }],
+    ['borderLeft', { w: 'borderLeftWidth', s: 'borderLeftStyle', c: 'borderLeftColor' }],
+]);
+
+function tableBorderParser(format: ContentModelTableCellFormat, element: HTMLElement): void {
+    BorderKeys.forEach(key => {
+        if (!format[key]) {
+            const styleSet = ElementBorderKeys.get(key);
+            if (
+                styleSet &&
+                element.style[styleSet.w] &&
+                element.style[styleSet.s] &&
+                !element.style[styleSet.c]
+            ) {
+                format[key] = `${element.style[styleSet.w]} ${element.style[styleSet.s]}`;
+            }
+        }
     });
 }

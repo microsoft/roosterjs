@@ -4,6 +4,10 @@ import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import { processPastedContentFromWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import {
+    listItemMetadataApplier,
+    listLevelMetadataApplier,
+} from '../../../../lib/domUtils/metadata/updateListMetadata';
+import {
     contentModelToDom,
     createDomToModelContext,
     createModelToDomContext,
@@ -42,9 +46,17 @@ describe('processPastedContentFromWordDesktopTest', () => {
             document,
             div,
             model,
-            createModelToDomContext({
-                isDarkMode: false,
-            })
+            createModelToDomContext(
+                {
+                    isDarkMode: false,
+                },
+                {
+                    metadataAppliers: {
+                        listItem: listItemMetadataApplier,
+                        listLevel: listLevelMetadataApplier,
+                    },
+                }
+            )
         );
 
         //Assert
@@ -873,8 +885,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     '</ol>' +
                     '</ol>',
                 [
-                    '<ol start="1"><li>123123</li><ol start="1"><li style="list-style-type: lower-alpha;">123123</li><ol style="margin-top: 1em;" start="1"><li style="margin-top: 1em; margin-bottom: 1em; list-style-type: lower-roman;">123123</li><ol start="1"><li style="list-style-type: decimal;">123123123</li></ol></ol></ol></ol>',
-                    '<ol start="1"><li>123123</li><ol start="1"><li style="list-style-type: lower-alpha;">123123</li><ol start="1" style="margin-top: 1em;"><li style="margin-top: 1em; margin-bottom: 1em; list-style-type: lower-roman;">123123</li><ol start="1"><li style="list-style-type: decimal;">123123123</li></ol></ol></ol></ol>',
+                    '<ol start="1" style="list-style-type: decimal;"><li>123123</li><ol start="1" style="list-style-type: lower-alpha;"><li>123123</li><ol start="1" style="margin-top: 1em; list-style-type: lower-roman;"><li style="margin-top: 1em; margin-bottom: 1em;">123123</li><ol start="1" style="list-style-type: decimal;"><li>123123123</li></ol></ol></ol></ol>',
                 ],
                 {
                     blockGroupType: 'Document',
@@ -1186,7 +1197,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 '<p class="MsoNormal"><span style="font-family:Arial,sans-serif">it went:<o:p></o:p></span></p><p class="MsoListParagraphCxSpFirst" style="text-indent:-.25in;mso-list:l0 level1 lfo1"><![if !supportLists]><span style="font-family:Arial,sans-serif;mso-fareast-font-family:Arial"><span style="mso-list:Ignore">1.<span style="font:7pt "Times New Roman"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]><span style="font-family:Arial,sans-serif">Test<o:p></o:p></span></p><p class="MsoListParagraphCxSpLast" style="text-indent:-.25in;mso-list:l0 level1 lfo1"><![if !supportLists]><span style="font-family:Arial,sans-serif;mso-fareast-font-family:Arial"><span style="mso-list:Ignore">2.<span style="font:7pt "Times New Roman"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]><span style="font-family:Arial,sans-serif">Test2<o:p></o:p></span></p>',
                 [
                     '<p><span style="font-family: Arial, sans-serif;">it went:</span></p><ol style="margin-top: 1em;" start="1"><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test</span></li><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test2</span></li></ol>',
-                    '<p><span style="font-family: Arial, sans-serif;">it went:</span></p><ol start="1" style="margin-top: 1em;"><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test</span></li><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test2</span></li></ol>',
+                    '<p><span style="font-family: Arial, sans-serif;">it went:</span></p><ol start="1" style="margin-top: 1em; list-style-type: decimal;"><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test</span></li><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test2</span></li></ol>',
                 ],
                 {
                     blockGroupType: 'Document',

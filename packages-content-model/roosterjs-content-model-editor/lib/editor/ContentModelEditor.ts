@@ -3,6 +3,7 @@ import { EditorBase } from 'roosterjs-editor-core';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type {
     ContentModelEditorOptions,
+    EditorEnvironment,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
 import type {
@@ -63,6 +64,13 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         return core.api.setContentModel(core, model, option, onNodeCreated);
+    }
+
+    /**
+     * Get current running environment, such as if editor is running on Mac
+     */
+    getEnvironment(): EditorEnvironment {
+        return this.getCore().environment;
     }
 
     /**

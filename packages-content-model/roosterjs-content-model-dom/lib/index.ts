@@ -11,14 +11,15 @@ export { tableProcessor } from './domToModel/processors/tableProcessor';
 export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelectionOffsets';
 export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
+export { isBlockElement } from './domToModel/utils/isBlockElement';
 
 export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
-export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';
 export { default as toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
+export { wrap } from './domUtils/wrap';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';

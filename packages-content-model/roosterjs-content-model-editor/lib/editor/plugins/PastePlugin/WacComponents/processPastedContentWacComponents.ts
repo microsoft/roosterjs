@@ -1,5 +1,4 @@
 import addParser from '../utils/addParser';
-import { findClosestElementAncestor, matchesSelector } from 'roosterjs-editor-dom';
 import { setProcessor } from '../utils/setProcessor';
 import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type {
@@ -78,7 +77,8 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
     context: DomToModelContext
 ): void => {
     const elementTag = element.tagName;
-    if (matchesSelector(element, WAC_IDENTIFY_SELECTOR)) {
+
+    if (element.matches(WAC_IDENTIFY_SELECTOR)) {
         element.style.removeProperty('display');
         element.style.removeProperty('margin');
     }
@@ -120,7 +120,7 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
             const currentLevel = lastblock.levels[lastblock.levels.length - 1];
 
             // Get item level from 'data-aria-level' attribute
-            let level = parseInt(element.getAttribute('data-aria-level') ?? '');
+            const level = parseInt(element.getAttribute('data-aria-level') ?? '');
             if (level > 0) {
                 if (level > lastblock.levels.length) {
                     while (level != lastblock.levels.length) {
@@ -187,7 +187,7 @@ function shouldClearListContext(
     return (
         context.listFormat.levels.length > 0 &&
         LIST_ELEMENT_TAGS.every(tag => tag != elementTag) &&
-        !findClosestElementAncestor(element, undefined, LIST_ELEMENT_SELECTOR)
+        !element.closest(LIST_ELEMENT_SELECTOR)
     );
 }
 
@@ -200,7 +200,7 @@ function shouldClearListContext(
  */
 export function processPastedContentWacComponents(ev: ContentModelBeforePasteEvent) {
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
-    addParser(ev.domToModelOption, 'listItem', wacListItemParser);
+    addParser(ev.domToModelOption, 'listItemThread', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
     addParser(ev.domToModelOption, 'container', wacBlockParser);
 
@@ -232,11 +232,7 @@ const wacListProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement> = 
     context: DomToModelContext
 ): void => {
     const lastBlock = group.blocks[group.blocks.length - 1];
-    const isWrappedInContainer = findClosestElementAncestor(
-        element,
-        undefined,
-        `.${LIST_CONTAINER_ELEMENT_CLASS_NAME}`
-    );
+    const isWrappedInContainer = element.closest(`.${LIST_CONTAINER_ELEMENT_CLASS_NAME}`);
     if (
         isWrappedInContainer?.previousElementSibling?.classList.contains(
             LIST_CONTAINER_ELEMENT_CLASS_NAME

@@ -15,17 +15,15 @@ describe('formatImageWithContentModel', () => {
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number,
-        callback: (image: ContentModelImage) => void,
-        shouldCallPluginEvent: boolean | any = false
+        callback: (image: ContentModelImage) => void
     ) {
         segmentTestForPluginEvent(
             'apiTest',
             editor => {
-                formatImageWithContentModel(editor, 'apiTest', callback, shouldCallPluginEvent);
+                formatImageWithContentModel(editor, 'apiTest', callback);
             },
             model,
             result,
-            shouldCallPluginEvent,
             calledTimes
         );
     }
@@ -188,9 +186,6 @@ describe('formatImageWithContentModel', () => {
             (image: ContentModelImage) => {
                 image.format.borderTop = '1px solid green';
                 image.format.boxShadow = '0px 0px 3px 3px #aaaaaa';
-            },
-            {
-                test: 'test',
             }
         );
     });
@@ -201,7 +196,6 @@ function segmentTestForPluginEvent(
     executionCallback: (editor: IContentModelEditor) => void,
     model: ContentModelDocument,
     result: ContentModelDocument,
-    shouldCallPluginEvent: boolean,
     calledTimes: number
 ) {
     spyOn(pendingFormat, 'setPendingFormat');
@@ -232,9 +226,6 @@ function segmentTestForPluginEvent(
     } as any) as IContentModelEditor;
 
     executionCallback(editor);
-    if (shouldCallPluginEvent) {
-        expect(triggerPluginEvent).toHaveBeenCalled();
-    }
     expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
     expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
     expect(model).toEqual(result);

@@ -45,6 +45,7 @@ describe('retrieveModelFormatState', () => {
         isUnderline: true,
         canUnlink: false,
         canAddImageAltText: false,
+        fontWeight: 'bold',
     };
 
     it('Empty model', () => {
@@ -158,7 +159,6 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             ...baseFormatResult,
             headingLevel: 1,
-            headerLevel: 1,
             isBlockQuote: false,
             isCodeInline: false,
         });
@@ -332,6 +332,7 @@ describe('retrieveModelFormatState', () => {
             fontSize: '7.5pt',
             backgroundColor: 'red',
             textColor: 'green',
+            fontWeight: 'bold',
         });
     });
 
@@ -491,6 +492,7 @@ describe('retrieveModelFormatState', () => {
             isUnderline: true,
             isStrikeThrough: true,
             fontSize: '7.5pt',
+            fontWeight: 'bold',
         });
     });
 

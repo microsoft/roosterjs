@@ -1,3 +1,4 @@
+import type { Definition } from '../metadata/Definition';
 import type { ContentModelBlock } from '../block/ContentModelBlock';
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
@@ -12,6 +13,8 @@ import type { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock
 import type { ContentModelGeneralSegment } from '../segment/ContentModelGeneralSegment';
 import type { ContentModelImage } from '../segment/ContentModelImage';
 import type { ContentModelListItem } from '../group/ContentModelListItem';
+import type { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
+import type { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import type { ContentModelParagraph } from '../block/ContentModelParagraph';
 import type { ContentModelSegment } from '../segment/ContentModelSegment';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
@@ -20,6 +23,7 @@ import type { ContentModelTableRow } from '../block/ContentModelTableRow';
 import type { ContentModelText } from '../segment/ContentModelText';
 import type { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
 import type { ModelToDomContext } from './ModelToDomContext';
+import type { ListMetadataFormat } from '../format/metadata/ListMetadataFormat';
 import type {
     ContentModelHandler,
     ContentModelBlockHandler,
@@ -151,6 +155,48 @@ export type ContentModelHandlerMap = {
 };
 
 /**
+ * Function type to apply metadata value into format
+ * @param metadata The metadata object to apply
+ * @param format The format object to apply metadata to
+ * @param context Content Model to DOM context
+ */
+export type ApplyMetadata<TMetadata, TFormat extends ContentModelFormatBase> = (
+    metadata: TMetadata | null,
+    format: TFormat,
+    context: ModelToDomContext
+) => void;
+
+/**
+ * Metadata applier interface
+ */
+export interface MetadataApplier<TMetadata, TFormat extends ContentModelFormatBase> {
+    /**
+     * The metadata applier function
+     */
+    applierFunction: ApplyMetadata<TMetadata, TFormat>;
+
+    /**
+     * @optional Metadata definition, used for validate the metadata object
+     */
+    metadataDefinition?: Definition<TMetadata>;
+}
+
+/**
+ * Map of metadata handlers
+ */
+export type MetadataAppliers = {
+    /**
+     * Metadata handler for list item
+     */
+    listItem?: MetadataApplier<ListMetadataFormat, ContentModelListItemFormat>;
+
+    /**
+     * Metadata handler for list level
+     */
+    listLevel?: MetadataApplier<ListMetadataFormat, ContentModelListItemLevelFormat>;
+};
+
+/**
  * An optional callback that will be called when a DOM node is created
  * @param modelElement The related Content Model element
  * @param node The node created for this model element
@@ -178,6 +224,11 @@ export interface ModelToDomSettings {
      * Map of format appliers
      */
     formatAppliers: FormatAppliersPerCategory;
+
+    /**
+     * Map of metadata appliers
+     */
+    metadataAppliers: MetadataAppliers;
 
     /**
      * Default Content Model to DOM handlers before overriding.

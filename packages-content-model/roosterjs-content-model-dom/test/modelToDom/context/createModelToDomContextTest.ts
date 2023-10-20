@@ -26,6 +26,7 @@ describe('createModelToDomContext', () => {
             formatAppliers: buildFormatAppliers(),
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
+            metadataAppliers: {},
         });
     });
 
@@ -53,6 +54,7 @@ describe('createModelToDomContext', () => {
             formatAppliers: buildFormatAppliers(),
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
+            metadataAppliers: {},
         });
     });
 
@@ -99,6 +101,7 @@ describe('createModelToDomContext', () => {
             formatAppliers: appliers,
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
+            metadataAppliers: {},
         });
     });
 });

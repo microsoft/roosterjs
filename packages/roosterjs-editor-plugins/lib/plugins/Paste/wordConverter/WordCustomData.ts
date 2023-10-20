@@ -33,7 +33,7 @@ export function createCustomData(): WordCustomData {
 export function setObject(wordCustomData: WordCustomData, element: Node, key: string, value: any) {
     // Get the id for the element
     if (element.nodeType == NodeType.Element) {
-        let id = getAndSetNodeId(wordCustomData, element as HTMLElement);
+        const id = getAndSetNodeId(wordCustomData, element as HTMLElement);
         if (id != '') {
             // Get the values for the element
             if (!wordCustomData.dict[id]) {
@@ -51,7 +51,7 @@ export function setObject(wordCustomData: WordCustomData, element: Node, key: st
  */
 export function getObject(wordCustomData: WordCustomData, element: Node, key: string): any {
     if (element.nodeType == NodeType.Element) {
-        let id = getAndSetNodeId(wordCustomData, element as HTMLElement);
+        const id = getAndSetNodeId(wordCustomData, element as HTMLElement);
         if (id != '') {
             return wordCustomData.dict[id] && wordCustomData.dict[id][key];
         }

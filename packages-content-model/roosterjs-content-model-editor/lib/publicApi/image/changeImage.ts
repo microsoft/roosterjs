@@ -1,5 +1,7 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import { getMetadata, readFile } from 'roosterjs-editor-dom';
+import { PluginEventType } from 'roosterjs-editor-types';
+import { readFile } from '../../domUtils/readFile';
+import { updateImageMetadata } from '../../domUtils/metadata/updateImageMetadata';
 import type { ContentModelImage } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
@@ -14,28 +16,23 @@ export default function changeImage(editor: IContentModelEditor, file: File) {
     const selection = editor.getDOMSelection();
     readFile(file, dataUrl => {
         if (dataUrl && !editor.isDisposed() && selection?.type === 'image') {
-            formatImageWithContentModel(
-                editor,
-                'changeImage',
-                (image: ContentModelImage) => {
-                    image.src = dataUrl;
-                    image.dataset = {};
-                    image.format.width = '';
-                    image.format.height = '';
-                    image.alt = '';
-                },
-                {
+            formatImageWithContentModel(editor, 'changeImage', (image: ContentModelImage) => {
+                const originalSrc = updateImageMetadata(image)?.src ?? '';
+                const previousSrc = image.src;
+
+                image.src = dataUrl;
+                image.dataset = {};
+                image.format.width = '';
+                image.format.height = '';
+                image.alt = '';
+
+                editor.triggerPluginEvent(PluginEventType.EditImage, {
                     image: selection.image,
-                    previousSrc: selection.image.src,
+                    previousSrc,
                     newSrc: dataUrl,
-                    originalSrc: getImageSrc(selection.image),
-                }
-            );
+                    originalSrc,
+                });
+            });
         }
     });
 }
-
-const getImageSrc = (image: HTMLImageElement) => {
-    const obj = getMetadata<{ src: string }>(image);
-    return (obj && obj.src) || '';
-};

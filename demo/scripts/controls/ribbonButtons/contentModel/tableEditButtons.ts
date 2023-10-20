@@ -1,5 +1,4 @@
-import { editTable, isContentModelEditor } from 'roosterjs-content-model-editor';
-import { TableOperation } from 'roosterjs-editor-types';
+import { editTable, isContentModelEditor, TableOperation } from 'roosterjs-content-model-editor';
 import {
     RibbonButton,
     TableEditAlignMenuItemStringKey,
@@ -12,29 +11,29 @@ import {
 } from 'roosterjs-react';
 
 const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOperation>> = {
-    menuNameTableInsertAbove: TableOperation.InsertAbove,
-    menuNameTableInsertBelow: TableOperation.InsertBelow,
-    menuNameTableInsertLeft: TableOperation.InsertLeft,
-    menuNameTableInsertRight: TableOperation.InsertRight,
-    menuNameTableDeleteTable: TableOperation.DeleteTable,
-    menuNameTableDeleteColumn: TableOperation.DeleteColumn,
-    menuNameTableDeleteRow: TableOperation.DeleteRow,
-    menuNameTableMergeAbove: TableOperation.MergeAbove,
-    menuNameTableMergeBelow: TableOperation.MergeBelow,
-    menuNameTableMergeLeft: TableOperation.MergeLeft,
-    menuNameTableMergeRight: TableOperation.MergeRight,
-    menuNameTableMergeCells: TableOperation.MergeCells,
-    menuNameTableSplitHorizontally: TableOperation.SplitHorizontally,
-    menuNameTableSplitVertically: TableOperation.SplitVertically,
-    menuNameTableAlignLeft: TableOperation.AlignCellLeft,
-    menuNameTableAlignCenter: TableOperation.AlignCellCenter,
-    menuNameTableAlignRight: TableOperation.AlignCellRight,
-    menuNameTableAlignTop: TableOperation.AlignCellTop,
-    menuNameTableAlignMiddle: TableOperation.AlignCellMiddle,
-    menuNameTableAlignBottom: TableOperation.AlignCellBottom,
-    menuNameTableAlignTableLeft: TableOperation.AlignLeft,
-    menuNameTableAlignTableCenter: TableOperation.AlignCenter,
-    menuNameTableAlignTableRight: TableOperation.AlignRight,
+    menuNameTableInsertAbove: 'insertAbove',
+    menuNameTableInsertBelow: 'insertBelow',
+    menuNameTableInsertLeft: 'insertLeft',
+    menuNameTableInsertRight: 'insertRight',
+    menuNameTableDeleteTable: 'deleteTable',
+    menuNameTableDeleteColumn: 'deleteColumn',
+    menuNameTableDeleteRow: 'deleteRow',
+    menuNameTableMergeAbove: 'mergeAbove',
+    menuNameTableMergeBelow: 'mergeBelow',
+    menuNameTableMergeLeft: 'mergeLeft',
+    menuNameTableMergeRight: 'mergeRight',
+    menuNameTableMergeCells: 'mergeCells',
+    menuNameTableSplitHorizontally: 'splitHorizontally',
+    menuNameTableSplitVertically: 'splitVertically',
+    menuNameTableAlignLeft: 'alignCellLeft',
+    menuNameTableAlignCenter: 'alignCellCenter',
+    menuNameTableAlignRight: 'alignCellRight',
+    menuNameTableAlignTop: 'alignCellTop',
+    menuNameTableAlignMiddle: 'alignCellMiddle',
+    menuNameTableAlignBottom: 'alignCellBottom',
+    menuNameTableAlignTableLeft: 'alignLeft',
+    menuNameTableAlignTableCenter: 'alignCenter',
+    menuNameTableAlignTableRight: 'alignRight',
 };
 
 export const tableInsertButton: RibbonButton<

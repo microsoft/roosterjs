@@ -84,7 +84,7 @@ export default function createRange(
     }
 
     if (start?.node?.ownerDocument) {
-        let range = start.node.ownerDocument.createRange();
+        const range = start.node.ownerDocument.createRange();
         start = getFocusablePosition(start);
         end = getFocusablePosition(end || start);
         range.setStart(start.node, start.offset);

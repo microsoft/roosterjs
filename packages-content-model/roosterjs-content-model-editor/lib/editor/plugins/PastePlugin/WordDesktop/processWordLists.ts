@@ -1,4 +1,4 @@
-import { getStyles } from 'roosterjs-editor-dom';
+import { getStyles } from '../utils/getStyles';
 import {
     addBlock,
     createListItem,
@@ -202,7 +202,7 @@ function getFakeBulletText(node: Node, levels?: number): string {
  */
 function isIgnoreNode(node: Node): boolean {
     if (isNodeOfType(node, 'ELEMENT_NODE')) {
-        let listAttribute = getStyles(node as HTMLElement)[MSO_LIST];
+        const listAttribute = getStyles(node as HTMLElement)[MSO_LIST];
         if (
             listAttribute &&
             listAttribute.length > 0 &&

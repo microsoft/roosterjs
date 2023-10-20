@@ -1,7 +1,7 @@
 import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { mergeModel } from '../../modelApi/common/mergeModel';
-import { readFile } from 'roosterjs-editor-dom';
+import { readFile } from '../../domUtils/readFile';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**

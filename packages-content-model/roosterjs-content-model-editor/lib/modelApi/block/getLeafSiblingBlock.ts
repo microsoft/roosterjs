@@ -38,7 +38,7 @@ export function getLeafSiblingBlock(
     const newPath = [...path];
 
     while (newPath.length > 0) {
-        let group = newPath[0];
+        const group = newPath[0];
         const index = group.blocks.indexOf(block);
 
         if (index < 0) {
