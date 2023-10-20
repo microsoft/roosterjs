@@ -89,8 +89,8 @@ describe('toggleBlockQuote', () => {
 
     it('Whole list selected', () => {
         runTest(
-            '<div><ol><li><span>a</span></li><ol><li>b</li><ol><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div><!--{"start":[0,0],"end":[1,1,0,1]}-->',
-            '<blockquote><div><ol><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div></blockquote>'
+            '0<div><ol><li><span>a</span></li><ol><li>b</li><ol><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div><div>h</div><!--{"start":[0,0],"end":[1,1,0,1]}-->',
+            '<blockquote>0<div><ol><li><span>a</span></li><ol style="list-style-type: lower-alpha;"><li>b</li><ol style="list-style-type: lower-roman;"><li>c</li><li>d</li></ol><li>e</li></ol><li>f</li></ol><div>g</div></div></blockquote><div>h</div>'
         );
     });
 

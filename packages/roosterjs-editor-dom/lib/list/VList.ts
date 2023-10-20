@@ -519,11 +519,6 @@ export default class VList {
             }
         });
     }
-
-    removeMargins(list: VList) {
-        list.rootList.style.marginBlockEnd = '0px';
-        list.rootList.style.marginBlockStart = '0px';
-    }
 }
 
 //Normalization
