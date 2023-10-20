@@ -161,7 +161,9 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
     private onFocus = () => {
         // Always quit shadow edit once editor got focus, to fix the problem when editor.stopShadowEdit() didn't get called correctly
-        this.editor?.stopShadowEdit();
+        if (this.editor?.isInShadowEdit()) {
+            this.editor.stopShadowEdit();
+        }
 
         if (!this.state.skipReselectOnFocus) {
             const { table, coordinates } = this.state.tableSelectionRange || {};
