@@ -70,7 +70,6 @@ describe(ID, () => {
                             src: 'https://github.com/microsoft/roosterjs',
                             format: {
                                 maxWidth: '100px',
-                                maxHeight: '100px',
                             },
                             dataset: {},
                         },
