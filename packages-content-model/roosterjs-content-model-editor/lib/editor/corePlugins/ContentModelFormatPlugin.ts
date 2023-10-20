@@ -3,13 +3,23 @@ import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue } from '../../domUtils/eventUtils';
-import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
+const CursorMovingKeys = new Set<string>([
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'Home',
+    'End',
+    'PageUp',
+    'PageDown',
+]);
 
 /**
  * ContentModelFormat plugins helps editor to do formatting on top of content model.
@@ -92,7 +102,7 @@ export default class ContentModelFormatPlugin
                 break;
 
             case PluginEventType.KeyDown:
-                if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
+                if (CursorMovingKeys.has(event.rawEvent.key)) {
                     clearPendingFormat(this.editor);
                 } else if (
                     this.hasDefaultFormat &&

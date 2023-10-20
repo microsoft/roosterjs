@@ -1,10 +1,14 @@
-import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
-import { ContentModelListItem, ModelToDomContext } from 'roosterjs-content-model-types';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { handleList } from '../../../lib/modelToDom/handlers/handleList';
+import {
+    BulletListType,
+    ContentModelListItem,
+    ModelToDomContext,
+    NumberingListType,
+} from 'roosterjs-content-model-types';
 
 describe('handleList without format handlers', () => {
     let context: ModelToDomContext;

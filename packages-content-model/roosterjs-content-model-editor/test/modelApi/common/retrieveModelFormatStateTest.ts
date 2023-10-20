@@ -159,7 +159,6 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             ...baseFormatResult,
             headingLevel: 1,
-            headerLevel: 1,
             isBlockQuote: false,
             isCodeInline: false,
         });

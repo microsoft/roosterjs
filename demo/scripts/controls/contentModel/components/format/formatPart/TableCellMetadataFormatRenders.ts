@@ -13,4 +13,9 @@ export const TableCellMetadataFormatRenders: FormatRenderer<TableCellMetadataFor
         format => format.vAlignOverride,
         (format, value) => (format.vAlignOverride = value)
     ),
+    createCheckboxFormatRenderer<TableCellMetadataFormat>(
+        'BorderOverride',
+        format => format.borderOverride,
+        (format, value) => (format.borderOverride = value)
+    ),
 ];

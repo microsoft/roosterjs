@@ -118,6 +118,11 @@ class ContentModelEditorMainPane extends MainPaneBase {
             isDarkMode: this.themeMatch?.matches || false,
             editorCreator: null,
             isRtl: false,
+            tableBorderFormat: {
+                width: '1px',
+                style: 'solid',
+                color: '#ABABAB',
+            },
         };
     }
 

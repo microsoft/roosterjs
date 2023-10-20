@@ -1,9 +1,11 @@
 import { deleteSingleChar } from './deleteSingleChar';
-import { EntityOperation } from 'roosterjs-editor-types';
 import { isWhiteSpacePreserved, normalizeSingleSegment } from 'roosterjs-content-model-dom';
 import { normalizeText } from '../../../domUtils/stringUtil';
 import type { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
-import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
+import type {
+    EntityRemovalOperation,
+    FormatWithContentModelContext,
+} from '../../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
  * @internal
@@ -32,12 +34,12 @@ export function deleteSegment(
             return true;
 
         case 'Entity':
-            const operation = segmentToDelete.isSelected
-                ? EntityOperation.Overwrite
+            const operation: EntityRemovalOperation | undefined = segmentToDelete.isSelected
+                ? 'overwrite'
                 : isForward
-                ? EntityOperation.RemoveFromStart
+                ? 'removeFromStart'
                 : isBackward
-                ? EntityOperation.RemoveFromEnd
+                ? 'removeFromEnd'
                 : undefined;
             if (operation !== undefined) {
                 segments.splice(index, 1);

@@ -1,6 +1,7 @@
 export { ContentModelFormatState } from './publicTypes/format/formatState/ContentModelFormatState';
 export { ImageFormatState } from './publicTypes/format/formatState/ImageFormatState';
 export { Border } from './publicTypes/interface/Border';
+export { BorderOperations } from './publicTypes/enum/BorderOperations';
 export {
     CreateEditorContext,
     ContentModelCoreApiMap,
@@ -19,6 +20,7 @@ export {
     default as ContentModelContentChangedEvent,
     CompatibleContentModelContentChangedEvent,
     ContentModelContentChangedEventData,
+    ChangeSource,
 } from './publicTypes/event/ContentModelContentChangedEvent';
 
 export {
@@ -33,6 +35,9 @@ export {
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
     ContentModelFormatter,
+    EntityLifecycleOperation,
+    EntityOperation,
+    EntityRemovalOperation,
 } from './publicTypes/parameter/FormatWithContentModelContext';
 export {
     InsertEntityOptions,
@@ -51,11 +56,13 @@ export {
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,
 } from './publicTypes/parameter/TableOperation';
+export { PasteType } from './publicTypes/parameter/PasteType';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
 export { default as setTableCellShade } from './publicApi/table/setTableCellShade';
 export { default as editTable } from './publicApi/table/editTable';
+export { default as applyTableBorderFormat } from './publicApi/table/applyTableBorderFormat';
 export { default as toggleBullet } from './publicApi/list/toggleBullet';
 export { default as toggleNumbering } from './publicApi/list/toggleNumbering';
 export { default as toggleBold } from './publicApi/segment/toggleBold';

@@ -1,9 +1,8 @@
-import { CompatibleTableBorderFormat } from 'roosterjs-editor-types/lib/compatibleTypes';
 import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRenderer';
 import { createColorFormatRenderer } from '../utils/createColorFormatRender';
 import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { TableMetadataFormat } from 'roosterjs-content-model-types';
+import { TableBorderFormat, TableMetadataFormat } from 'roosterjs-content-model-types';
 
 export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] = [
     createColorFormatRenderer<TableMetadataFormat>(
@@ -58,7 +57,7 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
         format => format.bgColorOdd,
         (format, value) => (format.bgColorOdd = value)
     ),
-    createDropDownFormatRenderer<TableMetadataFormat, keyof typeof CompatibleTableBorderFormat>(
+    createDropDownFormatRenderer<TableMetadataFormat, keyof typeof TableBorderFormat>(
         'TableBorderFormat',
         [
             'DEFAULT',
@@ -71,10 +70,7 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
             'ESPECIAL_TYPE_3',
             'CLEAR',
         ],
-        format =>
-            CompatibleTableBorderFormat[
-                format.tableBorderFormat
-            ] as keyof typeof CompatibleTableBorderFormat,
-        (format, newValue) => (format.tableBorderFormat = CompatibleTableBorderFormat[newValue])
+        format => TableBorderFormat[format.tableBorderFormat] as keyof typeof TableBorderFormat,
+        (format, newValue) => (format.tableBorderFormat = TableBorderFormat[newValue])
     ),
 ];
