@@ -1,4 +1,4 @@
-import { getStyles } from 'roosterjs-editor-dom';
+import { getStyles } from '../utils/getStyles';
 import {
     addBlock,
     createListItem,
