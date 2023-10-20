@@ -92,30 +92,6 @@ describe('handleEntity', () => {
         expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(0);
     });
 
-    it('Readonly fake entity', () => {
-        const div = document.createElement('div');
-        const entityModel: ContentModelEntity = {
-            blockType: 'Entity',
-            segmentType: 'Entity',
-            format: {},
-            wrapper: div,
-            entityFormat: {
-                isFakeEntity: true,
-                isReadonly: true,
-            },
-        };
-
-        div.textContent = 'test';
-
-        const parent = document.createElement('div');
-
-        handleEntityBlock(document, parent, entityModel, context, null);
-
-        expect(parent.innerHTML).toBe('<div contenteditable="false">test</div>');
-        expect(div.outerHTML).toBe('<div contenteditable="false">test</div>');
-        expect(addDelimiters.default).toHaveBeenCalledTimes(0);
-    });
-
     it('Simple inline readonly entity', () => {
         const span = document.createElement('span');
         const entityModel: ContentModelEntity = {

@@ -29,7 +29,6 @@ import type {
 
 /**
  * @internal
- * Options for cloneModel API
  */
 export type CachedElementHandler = (
     node: HTMLElement,
