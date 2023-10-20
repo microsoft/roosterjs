@@ -49,7 +49,6 @@ export default function toggleListType(
             if (!block) {
                 return;
             }
-
             const vList =
                 chain && end && start?.equalTo(end)
                     ? chain.createVListAtBlock(block, startNumber)
