@@ -71,7 +71,6 @@ describe('applyTableBorderFormat', () => {
 
         applyTableBorderFormat(editor, border, operation);
 
-        console.log('>>', operation, table);
         if (expectedTable) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(
