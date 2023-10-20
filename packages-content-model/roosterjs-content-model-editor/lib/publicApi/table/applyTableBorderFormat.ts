@@ -83,15 +83,15 @@ export default function applyTableBorderFormat(
             }
 
             if (sel) {
-                const operations = [operation];
+                const operations: BorderOperations[] = [operation];
                 while (operations.length) {
                     switch (operations.pop()) {
-                        case 'NoBorders':
+                        case 'noBorders':
                             // Do All borders but with empty border format
                             borderFormat = '';
-                            operations.push('AllBorders');
+                            operations.push('allBorders');
                             break;
-                        case 'AllBorders':
+                        case 'allBorders':
                             const allBorders: BorderPositions[] = [
                                 'borderTop',
                                 'borderBottom',
@@ -116,7 +116,7 @@ export default function applyTableBorderFormat(
                             perimeter.Left = true;
                             perimeter.Right = true;
                             break;
-                        case 'LeftBorders':
+                        case 'leftBorders':
                             const leftBorder: BorderPositions[] = ['borderLeft'];
                             for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
                                 const cell = tableModel.rows[rowIndex].cells[sel.firstCol];
@@ -127,7 +127,7 @@ export default function applyTableBorderFormat(
                             // Format perimeter
                             perimeter.Left = true;
                             break;
-                        case 'RightBorders':
+                        case 'rightBorders':
                             const rightBorder: BorderPositions[] = ['borderRight'];
                             for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
                                 const cell = tableModel.rows[rowIndex].cells[sel.lastCol];
@@ -138,7 +138,7 @@ export default function applyTableBorderFormat(
                             // Format perimeter
                             perimeter.Right = true;
                             break;
-                        case 'TopBorders':
+                        case 'topBorders':
                             const topBorder: BorderPositions[] = ['borderTop'];
                             for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
                                 const cell = tableModel.rows[sel.firstRow].cells[colIndex];
@@ -149,7 +149,7 @@ export default function applyTableBorderFormat(
                             // Format perimeter
                             perimeter.Top = true;
                             break;
-                        case 'BottomBorders':
+                        case 'bottomBorders':
                             const bottomBorder: BorderPositions[] = ['borderBottom'];
                             for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
                                 const cell = tableModel.rows[sel.lastRow].cells[colIndex];
@@ -160,7 +160,7 @@ export default function applyTableBorderFormat(
                             // Format perimeter
                             perimeter.Bottom = true;
                             break;
-                        case 'InsideBorders':
+                        case 'insideBorders':
                             // Format cells - Inside borders
                             // Top left cell
                             applyBorderFormat(
@@ -243,14 +243,14 @@ export default function applyTableBorderFormat(
                             sel.firstRow++;
                             sel.lastCol--;
                             sel.lastRow--;
-                            operations.push('AllBorders');
+                            operations.push('allBorders');
                             break;
-                        case 'OutsideBorders':
+                        case 'outsideBorders':
                             // Format cells - Outside borders
-                            operations.push('TopBorders');
-                            operations.push('BottomBorders');
-                            operations.push('LeftBorders');
-                            operations.push('RightBorders');
+                            operations.push('topBorders');
+                            operations.push('bottomBorders');
+                            operations.push('leftBorders');
+                            operations.push('rightBorders');
                             break;
                         default:
                             break;

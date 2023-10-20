@@ -329,7 +329,7 @@ describe('applyTableBorderFormat', () => {
                 widths: [],
             },
             testBorder,
-            'AllBorders'
+            'allBorders'
         );
     });
     it('No Borders', () => {
@@ -625,7 +625,7 @@ describe('applyTableBorderFormat', () => {
                 dataset: {},
             },
             testBorder,
-            'NoBorders'
+            'noBorders'
         );
     });
     it('Top Borders', () => {
@@ -748,7 +748,7 @@ describe('applyTableBorderFormat', () => {
                 dataset: {},
             },
             testBorder,
-            'TopBorders'
+            'topBorders'
         );
     });
     it('Bottom Borders', () => {
@@ -871,7 +871,7 @@ describe('applyTableBorderFormat', () => {
                 dataset: {},
             },
             testBorder,
-            'BottomBorders'
+            'bottomBorders'
         );
     });
     it('Left Borders', () => {
@@ -994,7 +994,7 @@ describe('applyTableBorderFormat', () => {
                 dataset: {},
             },
             testBorder,
-            'LeftBorders'
+            'leftBorders'
         );
     });
     it('Right Borders', () => {
@@ -1117,7 +1117,7 @@ describe('applyTableBorderFormat', () => {
                 dataset: {},
             },
             testBorder,
-            'RightBorders'
+            'rightBorders'
         );
     });
     it('Outside Borders', () => {
@@ -1356,7 +1356,7 @@ describe('applyTableBorderFormat', () => {
                 dataset: {},
             },
             testBorder,
-            'OutsideBorders'
+            'outsideBorders'
         );
     });
     it('Inside Borders', () => {
@@ -1563,7 +1563,7 @@ describe('applyTableBorderFormat', () => {
                 dataset: {},
             },
             testBorder,
-            'InsideBorders'
+            'insideBorders'
         );
     });
 });

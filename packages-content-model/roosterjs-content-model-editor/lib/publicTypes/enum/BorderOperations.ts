@@ -5,32 +5,32 @@ export type BorderOperations =
     /**
      * Apply border format to all borders
      */
-    | 'AllBorders'
+    | 'allBorders'
     /**
      * Remove al borders
      */
-    | 'NoBorders'
+    | 'noBorders'
     /**
      * Apply border format to left borders
      */
-    | 'LeftBorders'
+    | 'leftBorders'
     /**
      * Apply border format to right borders
      */
-    | 'RightBorders'
+    | 'rightBorders'
     /**
      * Apply border format to top borders
      */
-    | 'TopBorders'
+    | 'topBorders'
     /**
      * Apply border format to bottom borders
      */
-    | 'BottomBorders'
+    | 'bottomBorders'
     /**
      * Apply border format to inside borders
      */
-    | 'InsideBorders'
+    | 'insideBorders'
     /**
      * Apply border format to outside borders
      */
-    | 'OutsideBorders';
+    | 'outsideBorders';
