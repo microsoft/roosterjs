@@ -486,4 +486,28 @@ describe('applyTableFormat', () => {
         expect(table.rows[0].cells[0].format.backgroundColor).toBe('blue');
         expect(table.rows[0].cells[0].dataset.editingInfo).toBe('{"bgColorOverride":true}');
     });
+    it('Has borderOverride', () => {
+        const table = createTable(1, 1);
+        table.rows[0].cells[0].format.borderLeft = '1px solid red';
+
+        // Try to apply green
+        applyTableFormat(table, {
+            topBorderColor: 'green',
+        });
+
+        // Should apply green
+        expect(table.rows[0].cells[0].format.borderTop).toBe('1px solid green');
+        expect(table.rows[0].cells[0].dataset.editingInfo).toBeUndefined();
+
+        table.rows[0].cells[0].dataset.editingInfo = '{"borderOverride":true}';
+
+        // Try to apply blue
+        applyTableFormat(table, {
+            topBorderColor: 'blue',
+        });
+
+        // Should not apply blue
+        expect(table.rows[0].cells[0].format.borderTop).toBe('1px solid green');
+        expect(table.rows[0].cells[0].dataset.editingInfo).toBe('{"borderOverride":true}');
+    });
 });
