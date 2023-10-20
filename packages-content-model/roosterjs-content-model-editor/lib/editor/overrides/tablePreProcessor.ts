@@ -1,4 +1,3 @@
-import { contains } from 'roosterjs-editor-dom';
 import { entityProcessor, hasMetadata, tableProcessor } from 'roosterjs-content-model-dom';
 import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
 import type { DomToModelContext, ElementProcessor } from 'roosterjs-content-model-types';
@@ -13,6 +12,7 @@ export const tablePreProcessor: ElementProcessor<HTMLTableElement> = (group, ele
 };
 
 function shouldUseTableProcessor(element: HTMLTableElement, context: DomToModelContext) {
+    const selectionRoot = getSelectionRootNode(context.selection);
     // Treat table as a real table when:
     // 1. It is a roosterjs table (has metadata)
     // 2. Table is in selection
@@ -21,6 +21,6 @@ function shouldUseTableProcessor(element: HTMLTableElement, context: DomToModelC
     return (
         hasMetadata(element) ||
         context.isInSelection ||
-        contains(element, getSelectionRootNode(context.selection), true /*treatSameNodeAsContain*/)
+        (selectionRoot && element.contains(selectionRoot))
     );
 }

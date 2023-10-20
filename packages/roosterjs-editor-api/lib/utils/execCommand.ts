@@ -22,9 +22,9 @@ export default function execCommand(
 ) {
     editor.focus();
 
-    let formatter = () => editor.getDocument().execCommand(command, false, undefined);
+    const formatter = () => editor.getDocument().execCommand(command, false, undefined);
 
-    let selection = editor.getSelectionRangeEx();
+    const selection = editor.getSelectionRangeEx();
     if (selection && selection.areAllCollapsed) {
         editor.addUndoSnapshot();
         const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);

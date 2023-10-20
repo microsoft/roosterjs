@@ -1,12 +1,12 @@
-import { TableBorderFormat } from 'roosterjs-editor-types';
+import { TableBorderFormat } from 'roosterjs-content-model-types';
 import { updateMetadata } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, TableMetadataFormat } from 'roosterjs-content-model-types';
 import {
     createBooleanDefinition,
     createNumberDefinition,
     createObjectDefinition,
     createStringDefinition,
-} from 'roosterjs-editor-dom';
+} from './definitionCreators';
+import type { ContentModelTable, TableMetadataFormat } from 'roosterjs-content-model-types';
 
 const NullStringDefinition = createStringDefinition(
     false /** isOptional */,

@@ -1,11 +1,10 @@
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { insertTableColumn } from '../../../lib/modelApi/table/insertTableColumn';
-import { TableOperation } from 'roosterjs-editor-types';
 
 describe('insertTableColumn', () => {
     it('empty table', () => {
         const table = createTable(0);
-        insertTableColumn(table, TableOperation.InsertLeft);
+        insertTableColumn(table, 'insertLeft');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -14,7 +13,7 @@ describe('insertTableColumn', () => {
             dataset: {},
         });
 
-        insertTableColumn(table, TableOperation.InsertRight);
+        insertTableColumn(table, 'insertRight');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -29,7 +28,7 @@ describe('insertTableColumn', () => {
         const cell1 = createTableCell();
         table.rows[0].cells.push(cell1);
 
-        insertTableColumn(table, TableOperation.InsertLeft);
+        insertTableColumn(table, 'insertLeft');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -38,7 +37,7 @@ describe('insertTableColumn', () => {
             dataset: {},
         });
 
-        insertTableColumn(table, TableOperation.InsertRight);
+        insertTableColumn(table, 'insertRight');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -59,7 +58,7 @@ describe('insertTableColumn', () => {
         const cell2 = { ...cell1 };
         delete cell2.isSelected;
 
-        insertTableColumn(table, TableOperation.InsertLeft);
+        insertTableColumn(table, 'insertLeft');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -68,7 +67,7 @@ describe('insertTableColumn', () => {
             dataset: {},
         });
 
-        insertTableColumn(table, TableOperation.InsertRight);
+        insertTableColumn(table, 'insertRight');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -94,7 +93,7 @@ describe('insertTableColumn', () => {
         const cell4 = { ...cell2 };
         delete cell4.isSelected;
 
-        insertTableColumn(table, TableOperation.InsertLeft);
+        insertTableColumn(table, 'insertLeft');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -103,7 +102,7 @@ describe('insertTableColumn', () => {
             dataset: {},
         });
 
-        insertTableColumn(table, TableOperation.InsertRight);
+        insertTableColumn(table, 'insertRight');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -132,7 +131,7 @@ describe('insertTableColumn', () => {
         const cell4 = { ...cell2 };
         delete cell4.isSelected;
 
-        insertTableColumn(table, TableOperation.InsertLeft);
+        insertTableColumn(table, 'insertLeft');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -144,7 +143,7 @@ describe('insertTableColumn', () => {
             dataset: {},
         });
 
-        insertTableColumn(table, TableOperation.InsertRight);
+        insertTableColumn(table, 'insertRight');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -187,7 +186,7 @@ describe('insertTableColumn', () => {
         delete cell6Clone.isSelected;
         delete cell11Clone.isSelected;
 
-        insertTableColumn(table, TableOperation.InsertLeft);
+        insertTableColumn(table, 'insertLeft');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
@@ -204,7 +203,7 @@ describe('insertTableColumn', () => {
             dataset: {},
         });
 
-        insertTableColumn(table, TableOperation.InsertRight);
+        insertTableColumn(table, 'insertRight');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},

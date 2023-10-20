@@ -20,15 +20,15 @@ export default function applyInlineStyle(
     apiName: string
 ) {
     editor.focus();
-    let selection = editor.getSelectionRangeEx();
+    const selection = editor.getSelectionRangeEx();
 
     const safeCallback = (element: HTMLElement, isInnerNode?: boolean) =>
         element.isContentEditable && callback(element, isInnerNode);
 
     if (selection && selection.areAllCollapsed) {
         const range = selection.ranges[0];
-        let node = range.startContainer;
-        let isEmptySpan =
+        const node = range.startContainer;
+        const isEmptySpan =
             getTagOfNode(node) == 'SPAN' &&
             (!node.firstChild ||
                 (getTagOfNode(node.firstChild) == 'BR' && !node.firstChild.nextSibling));
@@ -53,13 +53,13 @@ export default function applyInlineStyle(
                 let firstNode: Node | undefined;
                 let lastNode: Node | undefined;
                 selection.ranges.forEach(range => {
-                    let contentTraverser = editor.getSelectionTraverser(range);
+                    const contentTraverser = editor.getSelectionTraverser(range);
                     if (!contentTraverser) {
                         return;
                     }
                     let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
                     while (inlineElement) {
-                        let nextInlineElement = contentTraverser.getNextInlineElement();
+                        const nextInlineElement = contentTraverser.getNextInlineElement();
                         inlineElement.applyStyle((element, isInnerNode) => {
                             safeCallback(element, isInnerNode);
                             firstNode = firstNode || element;

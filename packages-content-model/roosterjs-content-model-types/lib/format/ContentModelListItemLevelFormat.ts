@@ -1,5 +1,5 @@
 import type { DirectionFormat } from './formatParts/DirectionFormat';
-import type { ListStylePositionFormat } from './formatParts/ListStylePositionFormat';
+import type { ListStyleFormat } from './formatParts/ListStyleFormat';
 import type { ListThreadFormat } from './formatParts/ListThreadFormat';
 import type { MarginFormat } from './formatParts/MarginFormat';
 import type { PaddingFormat } from './formatParts/PaddingFormat';
@@ -13,4 +13,4 @@ export type ContentModelListItemLevelFormat = ListThreadFormat &
     TextAlignFormat &
     MarginFormat &
     PaddingFormat &
-    ListStylePositionFormat;
+    ListStyleFormat;

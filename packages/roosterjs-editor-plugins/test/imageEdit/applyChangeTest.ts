@@ -1,6 +1,6 @@
 import applyChange from '../../lib/plugins/ImageEdit/editInfoUtils/applyChange';
+import { ChangeSource, IEditor, PluginEventType } from 'roosterjs-editor-types';
 import { getEditInfoFromImage } from '../../lib/plugins/ImageEdit/editInfoUtils/editInfo';
-import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 const IMG_SRC =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAALUlEQVQ4EWNgYGD4T2U8lAz8TyZACzKEl8k0Dz0OhpKBaGGB7hVi+QgvD0oDATe/bqDDw39VAAAAAElFTkSuQmCC';
@@ -366,6 +366,16 @@ xdescribe('applyChange', () => {
         expect(img.width).toBe(21);
         expect(img.height).toBe(21);
         expect(img.src).toBe(newSrc);
+    });
+
+    it('trigger Content Change', async () => {
+        let editInfo = getEditInfoFromImage(img);
+        applyChange(editor, img, editInfo, IMG_SRC, false, undefined, true);
+        const triggerPluginEventSpy = spyOn(editor, 'triggerPluginEvent');
+        expect(triggerPluginEventSpy).toHaveBeenCalled();
+        expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+            source: ChangeSource.ImageResize,
+        });
     });
 });
 

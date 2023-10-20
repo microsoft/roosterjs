@@ -1,7 +1,7 @@
 import * as addParser from '../../../lib/editor/plugins/PastePlugin/utils/addParser';
 import * as chainSanitizerCallbackFile from 'roosterjs-editor-dom/lib/htmlSanitizer/chainSanitizerCallback';
 import * as ExcelFile from '../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
-import * as getPasteSource from 'roosterjs-editor-dom/lib/pasteSourceValidations/getPasteSource';
+import * as getPasteSource from '../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/getPasteSource';
 import * as PowerPointFile from '../../../lib/editor/plugins/PastePlugin/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../../lib/editor/plugins/PastePlugin/utils/setProcessor';
 import * as WacFile from '../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
@@ -9,11 +9,11 @@ import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDe
 import ContentModelBeforePasteEvent from '../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { KnownPasteSourceType, PasteType, PluginEventType } from 'roosterjs-editor-types';
+import { PastePropertyNames } from '../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/constants';
+import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 
 const trustedHTMLHandler = <any>'mock';
-const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
-const DEFAULT_TIMES_ADD_PARSER_CALLED = 3;
+const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Content Model Paste Plugin Test', () => {
     let editor: IContentModelEditor;
@@ -80,7 +80,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('WordDesktop', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.WordDesktop);
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('wordDesktop');
             spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
             plugin.initialize(editor);
@@ -96,7 +96,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Excel | merge format', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.ExcelDesktop);
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelDesktop');
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             (<any>event).pasteType = PasteType.MergeFormat;
@@ -113,7 +113,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Excel | image', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.ExcelDesktop);
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelDesktop');
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             (<any>event).pasteType = PasteType.AsImage;
@@ -130,7 +130,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Excel', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.ExcelDesktop);
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelDesktop');
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             plugin.initialize(editor);
@@ -146,7 +146,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Excel Online', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.ExcelOnline);
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelOnline');
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             plugin.initialize(editor);
@@ -162,9 +162,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Power Point', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(
-                KnownPasteSourceType.PowerPointDesktop
-            );
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('powerPointDesktop');
             spyOn(PowerPointFile, 'processPastedContentFromPowerPoint').and.callThrough();
 
             plugin.initialize(editor);
@@ -180,7 +178,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Wac', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.WacComponents);
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('wacComponents');
             spyOn(WacFile, 'processPastedContentWacComponents').and.callThrough();
 
             plugin.initialize(editor);
@@ -193,7 +191,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Default', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.Default);
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('default');
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
@@ -204,7 +202,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Google Sheets', () => {
-            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.GoogleSheets);
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('googleSheets');
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
@@ -213,7 +211,9 @@ describe('Content Model Paste Plugin Test', () => {
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
             expect(
-                event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME]
+                event.sanitizingOption.additionalTagReplacements[
+                    PastePropertyNames.GOOGLE_SHEET_NODE_NAME
+                ]
             ).toEqual('*');
         });
     });

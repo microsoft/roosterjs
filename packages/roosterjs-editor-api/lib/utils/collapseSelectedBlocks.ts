@@ -12,12 +12,12 @@ export default function collapseSelectedBlocks(
     editor: IEditor,
     forEachCallback: (element: HTMLElement) => any
 ) {
-    let traverser = editor.getSelectionTraverser();
+    const traverser = editor.getSelectionTraverser();
     if (!traverser) {
         return;
     }
     let block = traverser.currentBlockElement;
-    let blocks: BlockElement[] = [];
+    const blocks: BlockElement[] = [];
     while (block) {
         if (!isEmptyBlockUnderTR(block)) {
             blocks.push(block);
@@ -26,13 +26,13 @@ export default function collapseSelectedBlocks(
     }
 
     blocks.forEach(block => {
-        let element = block.collapseToSingleElement();
+        const element = block.collapseToSingleElement();
         forEachCallback(element);
     });
 }
 
 function isEmptyBlockUnderTR(block: BlockElement): boolean {
-    let startNode = block.getStartNode();
+    const startNode = block.getStartNode();
 
     return (
         startNode == block.getEndNode() &&

@@ -8,6 +8,16 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
+ * Current running environment
+ */
+export interface EditorEnvironment {
+    /**
+     * Whether editor is running on Mac
+     */
+    isMac?: boolean;
+}
+
+/**
  * An interface of editor with Content Model support.
  * (This interface is still under development, and may still be changed in the future with some breaking changes)
  */
@@ -35,6 +45,11 @@ export interface IContentModelEditor extends IEditor {
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
     ): DOMSelection | null;
+
+    /**
+     * Get current running environment, such as if editor is running on Mac
+     */
+    getEnvironment(): EditorEnvironment;
 
     /**
      * Get current DOM selection.

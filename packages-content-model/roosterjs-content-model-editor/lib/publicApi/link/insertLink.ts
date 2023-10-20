@@ -1,5 +1,5 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
@@ -42,7 +42,7 @@ export default function insertLink(
 ) {
     editor.focus();
 
-    let url = (checkXss(link) || '').trim();
+    const url = (checkXss(link) || '').trim();
     if (url) {
         const linkData = matchLink(url);
         const linkUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);

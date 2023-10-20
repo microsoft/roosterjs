@@ -4,13 +4,13 @@ import { DirectionFormatRenderer } from '../format/formatPart/DirectionFormatRen
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
-import { ListStylePositionFormatRenderer } from '../format/formatPart/ListStylePositionFormatRenderer';
+import { ListStylePositionFormatRenderers } from '../format/formatPart/ListStylePositionFormatRenderers';
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
-import { updateListMetadata } from 'roosterjs-content-model-dom';
+import { updateListMetadata } from 'roosterjs-content-model-editor';
 import { useProperty } from '../../hooks/useProperty';
 import {
     ContentModelListItemLevelFormat,
@@ -25,7 +25,7 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     TextAlignFormatRenderer,
     MarginFormatRenderer,
     PaddingFormatRenderer,
-    ListStylePositionFormatRenderer,
+    ...ListStylePositionFormatRenderers,
 ];
 
 export function ContentModelListLevelView(props: { level: ContentModelListLevel }) {

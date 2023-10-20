@@ -41,6 +41,7 @@ export function editingTestCommon(
         triggerContentChangedEvent,
         getVisibleViewport,
         isDarkMode: () => false,
+        getEnvironment: () => ({}),
     } as any) as IContentModelEditor;
 
     executionCallback(editor);

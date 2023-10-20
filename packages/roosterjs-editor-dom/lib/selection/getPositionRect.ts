@@ -47,7 +47,7 @@ export default function getPositionRect(position: NodePosition): Rect | null {
     }
 
     // 4) try getBoundingClientRect on element
-    let element = position.element;
+    const element = position.element;
     if (element && element.getBoundingClientRect) {
         rect = normalizeRect(element.getBoundingClientRect());
         if (rect) {

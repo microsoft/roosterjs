@@ -37,7 +37,7 @@ const SegmentDecoratorTags = ['A', 'CODE'];
  * @internal
  */
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const isBlock = isBlockElement(element, context);
+    const isBlock = isBlockElement(element);
 
     if (
         (isBlock || element.style.display == 'inline-block') && // For inline-block here, we will also check if it should be represented as Format Container
@@ -101,7 +101,7 @@ function shouldUseFormatContainer(element: HTMLElement, context: DomToModelConte
     }
 
     const style = element.style;
-    const defaultStyle = getDefaultStyle(element, context);
+    const defaultStyle = getDefaultStyle(element);
 
     const bgcolor = style.getPropertyValue('background-color');
 

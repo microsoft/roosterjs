@@ -2,7 +2,7 @@ import * as Color from 'color';
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import ColorPicker from '../../../colorPicker/ColorPicker';
-import { createTableFormat, PREDEFINED_STYLES } from '../../shared/PredefinedTableStyles';
+import { createTableFormat, PREDEFINED_STYLES } from './PredefinedTableStyles';
 import { editTable, formatTable } from 'roosterjs-editor-api';
 import { getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import { IEditor, PositionType, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';

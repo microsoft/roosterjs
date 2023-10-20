@@ -106,7 +106,7 @@ class TableInsertHandler implements Disposable {
     }
 
     private insertTd = () => {
-        let vtable = new VTable(this.td);
+        const vtable = new VTable(this.td);
         if (!this.isHorizontal) {
             vtable.normalizeTableCellSize(this.editor.getZoomScale());
 

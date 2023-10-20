@@ -51,7 +51,7 @@ describe(ID, () => {
         }
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData, false, false, true);
+        paste(editor, clipboardData, 'asImage');
 
         const model = editor.createContentModel({
             processorOverride: {
@@ -70,7 +70,6 @@ describe(ID, () => {
                             src: 'https://github.com/microsoft/roosterjs',
                             format: {
                                 maxWidth: '100px',
-                                maxHeight: '100px',
                             },
                             dataset: {},
                         },

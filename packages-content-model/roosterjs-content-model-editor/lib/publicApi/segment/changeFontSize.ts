@@ -42,7 +42,7 @@ function changeFontSizeInternal(
     paragraph: ContentModelParagraph | null
 ) {
     if (format.fontSize) {
-        let sizeInPt = parseValueWithUnit(format.fontSize, undefined /*element*/, 'pt');
+        const sizeInPt = parseValueWithUnit(format.fontSize, undefined /*element*/, 'pt');
 
         if (sizeInPt > 0) {
             const newSize = getNewFontSize(sizeInPt, change == 'increase' ? 1 : -1, FONT_SIZES);
@@ -54,7 +54,7 @@ function changeFontSizeInternal(
 
 function getNewFontSize(pt: number, changeBase: 1 | -1, fontSizes: number[]): number {
     pt = changeBase == 1 ? Math.floor(pt) : Math.ceil(pt);
-    let last = fontSizes[fontSizes.length - 1];
+    const last = fontSizes[fontSizes.length - 1];
     if (pt <= fontSizes[0]) {
         pt = Math.max(pt + changeBase, MIN_FONT_SIZE);
     } else if (pt > last || (pt == last && changeBase == 1)) {

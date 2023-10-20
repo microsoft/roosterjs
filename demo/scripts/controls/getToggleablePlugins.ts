@@ -24,6 +24,7 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
     const imageEdit = pluginList.imageEdit
         ? new ImageEdit({
               preserveRatio: initState.forcePreserveRatio,
+              applyChangesOnMouseUp: initState.applyChangesOnMouseUp,
           })
         : null;
 

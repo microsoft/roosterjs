@@ -61,12 +61,12 @@ export default function deleteSelectedContent(
             // Make sure there are node before and after the merging point.
             // This is required by mergeBlocksInRegion API.
             // This may create some empty text node as anchor
-            let [beforeEnd, afterEnd] = ensureBeforeAndAfter(
+            const [beforeEnd, afterEnd] = ensureBeforeAndAfter(
                 endContainer,
                 endOffset,
                 false /*isStart*/
             );
-            let [beforeStart, afterStart] = ensureBeforeAndAfter(
+            const [beforeStart, afterStart] = ensureBeforeAndAfter(
                 startContainer,
                 startOffset,
                 true /*isStart*/
