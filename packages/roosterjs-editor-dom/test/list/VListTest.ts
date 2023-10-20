@@ -279,11 +279,12 @@ describe('VList.writeBack', () => {
         const vList = new VList(list);
         const items = (<any>vList).items as VListItem[];
 
-        newItems.forEach(newItem =>
+        newItems.forEach(newItem => {
+            list.append(DomTestHelper.htmlToDom(newItem.html)[0]);
             items.push(
                 new VListItem(DomTestHelper.htmlToDom(newItem.html)[0], ...newItem.listTypes)
-            )
-        );
+            );
+        });
 
         vList.writeBack();
         expect(div.innerHTML).toBe(expectedHtml);

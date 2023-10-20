@@ -49,18 +49,21 @@ export default function toggleListType(
             if (!block) {
                 return;
             }
-            const isExistingList = chain && end && start?.equalTo(end);
-            const vList = isExistingList
-                ? chain.createVListAtBlock(block, startNumber)
-                : createVListFromRegion(region, startNumber === 1 ? false : includeSiblingLists);
+
+            const vList =
+                chain && end && start?.equalTo(end)
+                    ? chain.createVListAtBlock(block, startNumber)
+                    : createVListFromRegion(
+                          region,
+                          startNumber === 1 ? false : includeSiblingLists
+                      );
 
             if (vList && start && end) {
                 vList.changeListType(start, end, listType);
                 vList.setListStyleType(orderedStyle, unorderedStyle);
                 vList.writeBack(
                     editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements),
-                    editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain),
-                    !isExistingList
+                    editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain)
                 );
             }
         },

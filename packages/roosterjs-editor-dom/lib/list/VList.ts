@@ -182,11 +182,7 @@ export default class VList {
      * @param shouldReuseAllAncestorListElements Optional - defaults to false.
      * @param disableListChain Whether we want to disable list chain functionality. @default false
      */
-    writeBack(
-        shouldReuseAllAncestorListElements?: boolean,
-        disableListChain?: boolean,
-        newList?: boolean
-    ) {
+    writeBack(shouldReuseAllAncestorListElements?: boolean, disableListChain?: boolean) {
         if (!this.rootList) {
             throw new Error('rootList must not be null');
         }
@@ -209,8 +205,10 @@ export default class VList {
             }
 
             item.writeBack(listStack, this.rootList, shouldReuseAllAncestorListElements);
+
+            const isNewList = this.rootList.childElementCount === 0; // If the root list is empty, is a new list
             const topList = listStack[1] as HTMLElement;
-            if (newList && topList) {
+            if (isNewList && topList) {
                 topList.style.marginBlockEnd = '0px';
                 topList.style.marginBlockStart = '0px';
             }
