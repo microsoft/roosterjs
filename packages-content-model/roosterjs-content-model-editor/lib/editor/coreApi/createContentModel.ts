@@ -20,7 +20,7 @@ import type {
 export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
     let cachedModel = selectionOverride ? null : core.cache.cachedModel;
 
-    if (cachedModel && core.lifecycle.shadowEditFragment) {
+    if (cachedModel && core.lifecycle.isInShadowEdit) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
         cachedModel = cloneModel(cachedModel, { includeCachedElement: true });
     }

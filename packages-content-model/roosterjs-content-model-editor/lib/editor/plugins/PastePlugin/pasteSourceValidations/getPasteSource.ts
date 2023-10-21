@@ -5,7 +5,10 @@ import { isGoogleSheetDocument } from './isGoogleSheetDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
 import { isWordDesktopDocument } from './isWordDesktopDocument';
 import { shouldConvertToSingleImage } from './shouldConvertToSingleImage';
-import type { BeforePasteEvent, ClipboardData } from 'roosterjs-editor-types';
+import {
+    ClipboardData,
+    ContentModelBeforePasteEvent,
+} from 'roosterjs-content-model-editor/lib/publicTypes/event/ContentModelBeforePasteEvent';
 
 /**
  * @internal
@@ -54,7 +57,7 @@ const getSourceFunctions = new Map<KnownPasteSourceType, GetSourceFunction>([
  * @returns The Type of pasted content, if no type found will return {KnownSourceType.Default}
  */
 export function getPasteSource(
-    event: BeforePasteEvent,
+    event: ContentModelBeforePasteEvent,
     shouldConvertSingleImage: boolean
 ): KnownPasteSourceType {
     const { htmlAttributes, clipboardData, fragment } = event;

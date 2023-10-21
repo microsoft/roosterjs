@@ -1,19 +1,18 @@
-import { BoldButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor, toggleBold } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { BoldButtonStringKey } from 'roosterjs-react';
+import { toggleBold } from 'roosterjs-content-model-editor';
 
 /**
  * @internal
  * "Bold" button on the format ribbon
  */
-export const boldButton: RibbonButton<BoldButtonStringKey> = {
+export const boldButton: ContentModelRibbonButton<BoldButtonStringKey> = {
     key: 'buttonNameBold',
     unlocalizedText: 'Bold',
     iconName: 'Bold',
     isChecked: formatState => formatState.isBold,
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            toggleBold(editor);
-        }
+        toggleBold(editor);
         return true;
     },
 };

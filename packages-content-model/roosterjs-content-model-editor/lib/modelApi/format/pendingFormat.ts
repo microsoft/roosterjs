@@ -7,7 +7,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param editor The editor to get format from
  */
 export function getPendingFormat(editor: IContentModelEditor): ContentModelSegmentFormat | null {
-    return getPendingFormatHolder(editor).format;
+    // return getPendingFormatHolder(editor).format;
+    return null;
 }
 
 /**
@@ -24,11 +25,10 @@ export function setPendingFormat(
     posContainer: Node,
     posOffset: number
 ) {
-    const holder = getPendingFormatHolder(editor);
-
-    holder.format = format;
-    holder.posContainer = posContainer;
-    holder.posOffset = posOffset;
+    // const holder = getPendingFormatHolder(editor);
+    // holder.format = format;
+    // holder.posContainer = posContainer;
+    // holder.posOffset = posOffset;
 }
 
 /**
@@ -36,11 +36,10 @@ export function setPendingFormat(
  * @param editor The editor to set pending format to
  */
 export function clearPendingFormat(editor: IContentModelEditor) {
-    const holder = getPendingFormatHolder(editor);
-
-    holder.format = null;
-    holder.posContainer = null;
-    holder.posOffset = null;
+    // const holder = getPendingFormatHolder(editor);
+    // holder.format = null;
+    // holder.posContainer = null;
+    // holder.posOffset = null;
 }
 
 /**
@@ -49,31 +48,31 @@ export function clearPendingFormat(editor: IContentModelEditor) {
  * @param editor The editor to get format from
  */
 export function canApplyPendingFormat(editor: IContentModelEditor): boolean {
-    const holder = getPendingFormatHolder(editor);
+    // const holder = getPendingFormatHolder(editor);
     let result = false;
 
-    if (holder.format && holder.posContainer && holder.posOffset !== null) {
-        const position = editor.getFocusedPosition();
+    // if (holder.format && holder.posContainer && holder.posOffset !== null) {
+    //     const position = editor.getFocusedPosition();
 
-        if (position?.node == holder.posContainer && position?.offset == holder.posOffset) {
-            result = true;
-        }
-    }
+    //     if (position?.node == holder.posContainer && position?.offset == holder.posOffset) {
+    //         result = true;
+    //     }
+    // }
 
     return result;
 }
-interface PendingFormatHolder {
-    format: ContentModelSegmentFormat | null;
-    posContainer: Node | null;
-    posOffset: number | null;
-}
+// interface PendingFormatHolder {
+//     format: ContentModelSegmentFormat | null;
+//     posContainer: Node | null;
+//     posOffset: number | null;
+// }
 
-const PendingFormatHolderKey = '__ContentModelPendingFormat';
+// const PendingFormatHolderKey = '__ContentModelPendingFormat';
 
-function getPendingFormatHolder(editor: IContentModelEditor): PendingFormatHolder {
-    return editor.getCustomData<PendingFormatHolder>(PendingFormatHolderKey, () => ({
-        format: null,
-        posContainer: null,
-        posOffset: null,
-    }));
-}
+// function getPendingFormatHolder(editor: IContentModelEditor): PendingFormatHolder {
+//     return editor.getCustomData<PendingFormatHolder>(PendingFormatHolderKey, () => ({
+//         format: null,
+//         posContainer: null,
+//         posOffset: null,
+//     }));
+// }

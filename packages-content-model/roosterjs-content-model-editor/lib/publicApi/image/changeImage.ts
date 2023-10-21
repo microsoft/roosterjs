@@ -1,7 +1,5 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { readFile } from '../../domUtils/readFile';
-import { updateImageMetadata } from '../../domUtils/metadata/updateImageMetadata';
 import type { ContentModelImage } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
@@ -17,7 +15,6 @@ export default function changeImage(editor: IContentModelEditor, file: File) {
     readFile(file, dataUrl => {
         if (dataUrl && !editor.isDisposed() && selection?.type === 'image') {
             formatImageWithContentModel(editor, 'changeImage', (image: ContentModelImage) => {
-                const originalSrc = updateImageMetadata(image)?.src ?? '';
                 const previousSrc = image.src;
 
                 image.src = dataUrl;
@@ -26,11 +23,10 @@ export default function changeImage(editor: IContentModelEditor, file: File) {
                 image.format.height = '';
                 image.alt = '';
 
-                editor.triggerPluginEvent(PluginEventType.EditImage, {
-                    image: selection.image,
+                editor.triggerPluginEvent('editImage', {
+                    image,
                     previousSrc,
                     newSrc: dataUrl,
-                    originalSrc,
                 });
             });
         }

@@ -11,23 +11,18 @@ export {
     GetDOMSelection,
     SetDOMSelection,
 } from './publicTypes/ContentModelEditorCore';
+
+export { PluginEventType } from './publicTypes/event/PluginEventType';
+
+export { ContentModelBeforePasteEvent } from './publicTypes/event/ContentModelBeforePasteEvent';
 export {
-    default as ContentModelBeforePasteEvent,
-    ContentModelBeforePasteEventData,
-    CompatibleContentModelBeforePasteEvent,
-} from './publicTypes/event/ContentModelBeforePasteEvent';
-export {
-    default as ContentModelContentChangedEvent,
-    CompatibleContentModelContentChangedEvent,
-    ContentModelContentChangedEventData,
+    ContentModelContentChangedEvent,
     ChangeSource,
+    ContentChangedData,
+    AnnounceData,
 } from './publicTypes/event/ContentModelContentChangedEvent';
 
-export {
-    IContentModelEditor,
-    ContentModelEditorOptions,
-    EditorEnvironment,
-} from './publicTypes/IContentModelEditor';
+export { IContentModelEditor, EditorEnvironment } from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
 export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
 export {
@@ -109,19 +104,13 @@ export { default as insertEntity } from './publicApi/entity/insertEntity';
 export { formatWithContentModel } from './publicApi/utils/formatWithContentModel';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
-export { default as isContentModelEditor } from './editor/isContentModelEditor';
 export { default as ContentModelPastePlugin } from './editor/plugins/PastePlugin/ContentModelPastePlugin';
 
 export { default as ContentModelFormatPlugin } from './editor/corePlugins/ContentModelFormatPlugin';
 export { default as ContentModelEditPlugin } from './editor/corePlugins/ContentModelEditPlugin';
-export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugins/ContentModelTypeInContainerPlugin';
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
 export { default as ContentModelCachePlugin } from './editor/corePlugins/ContentModelCachePlugin';
 
-export {
-    createContentModelEditorCore,
-    promoteToContentModelEditorCore,
-} from './editor/createContentModelEditorCore';
 export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
 export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
@@ -129,5 +118,4 @@ export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
 export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 
 export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
-export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';
 export { ContentModelFormatPluginState } from './publicTypes/pluginState/ContentModelFormatPluginState';

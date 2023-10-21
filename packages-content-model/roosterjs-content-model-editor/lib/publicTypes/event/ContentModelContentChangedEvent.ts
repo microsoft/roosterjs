@@ -1,9 +1,5 @@
+import BasePluginEvent from './BasePluginEvent';
 import type { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
-import type {
-    CompatibleContentChangedEvent,
-    ContentChangedEvent,
-    ContentChangedEventData,
-} from 'roosterjs-editor-types';
 
 /**
  * Possible change sources. Here are the predefined sources.
@@ -66,9 +62,113 @@ export enum ChangeSource {
 }
 
 /**
- * Data of ContentModelContentChangedEvent
+ * State for an entity. This is used for storing entity undo snapshot
  */
-export interface ContentModelContentChangedEventData extends ContentChangedEventData {
+export interface EntityState {
+    /**
+     * Type of the entity
+     */
+    type: string;
+
+    /**
+     * Id of the entity
+     */
+    id: string;
+
+    /**
+     * The state of this entity to store into undo snapshot.
+     * The state can be any string, or a serialized JSON object.
+     * We are using string here instead of a JSON object to make sure the whole state is serializable.
+     */
+    state: string;
+}
+
+/**
+ * Known announce strings
+ */
+export type KnownAnnounceStrings =
+    /**
+     * String announced for a list item in a OL List
+     * @example
+     * Auto corrected, &lcub;0&rcub;
+     * Where &lcub0&rcub is the new list item bullet
+     */
+    | 'announceListItemNumbering'
+    /**
+     * String announced for a list item in a UL List
+     * @example
+     * Auto corrected bullet
+     */
+    | 'announceListItemBullet'
+    /**
+     * String announced when cursor is moved to the last cell in a table
+     */
+    | 'announceOnFocusLastCell';
+
+/**
+ * Represents data, that can be used to announce text to screen reader.
+ */
+export interface AnnounceData {
+    /**
+     * @optional Default announce strings built in Rooster
+     */
+    defaultStrings?: KnownAnnounceStrings;
+
+    /**
+     * @optional string to announce from this Content Changed event, will be the fallback value if default string
+     * is not provided or if it is not found in the strings map.
+     */
+    text?: string;
+
+    /**
+     * @optional if provided, will attempt to replace {n} with each of the values inside of the array.
+     */
+    formatStrings?: string[];
+}
+
+/**
+ * Property that is going to store additional data related to the Content Changed Event
+ */
+export interface ContentChangedData {
+    /**
+     * Optional property to store the format api name when using ChangeSource.Format
+     */
+    formatApiName?: string;
+
+    /**
+     * @optional Get entity states related to the snapshot. If it returns entity states, each state will cause
+     * an EntityOperation event with operation = EntityOperation.UpdateEntityState when undo/redo to this snapshot
+     * @returns Related entity state array
+     */
+    getEntityState?: () => EntityState[];
+
+    /**
+     * @optional
+     * Get Announce data from this content changed event.
+     * @returns
+     */
+    getAnnounceData?: () => AnnounceData | undefined;
+}
+
+/**
+ * Represents a change to the editor made by another plugin with content model inside
+ */
+export interface ContentModelContentChangedEvent extends BasePluginEvent<'contentChanged'> {
+    /**
+     * Source of the change
+     */
+    source: ChangeSource | string;
+
+    /**
+     * Optional related data
+     */
+    data?: any;
+
+    /*
+     * Additional Data Related to the ContentChanged Event
+     */
+    additionalData?: ContentChangedData;
+
     /**
      * The content model that is applied which causes this content changed event
      */
@@ -79,17 +179,3 @@ export interface ContentModelContentChangedEventData extends ContentChangedEvent
      */
     selection?: DOMSelection;
 }
-
-/**
- * Represents a change to the editor made by another plugin with content model inside
- */
-export default interface ContentModelContentChangedEvent
-    extends ContentChangedEvent,
-        ContentModelContentChangedEventData {}
-
-/**
- * Represents a change to the editor made by another plugin with content model inside
- */
-export interface CompatibleContentModelContentChangedEvent
-    extends CompatibleContentChangedEvent,
-        ContentModelContentChangedEventData {}

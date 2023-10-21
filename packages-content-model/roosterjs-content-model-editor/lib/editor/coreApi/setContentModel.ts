@@ -25,7 +25,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         onNodeCreated
     );
 
-    if (!core.lifecycle.shadowEditFragment) {
+    if (!core.lifecycle.isInShadowEdit) {
         core.cache.cachedSelection = selection || undefined;
 
         if (selection) {

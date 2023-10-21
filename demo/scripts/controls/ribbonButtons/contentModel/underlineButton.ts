@@ -1,19 +1,18 @@
-import { isContentModelEditor, toggleUnderline } from 'roosterjs-content-model-editor';
-import { RibbonButton, UnderlineButtonStringKey } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { toggleUnderline } from 'roosterjs-content-model-editor';
+import { UnderlineButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Underline" button on the format ribbon
  */
-export const underlineButton: RibbonButton<UnderlineButtonStringKey> = {
+export const underlineButton: ContentModelRibbonButton<UnderlineButtonStringKey> = {
     key: 'buttonNameUnderline',
     unlocalizedText: 'Underline',
     iconName: 'Underline',
     isChecked: formatState => formatState.isUnderline,
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            toggleUnderline(editor);
-        }
+        toggleUnderline(editor);
         return true;
     },
 };

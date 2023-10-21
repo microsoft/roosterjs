@@ -1,13 +1,15 @@
+import { ContentModelEditorPlugin } from 'roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorPlugin';
+import { ContentModelPluginEvent } from 'roosterjs-content-model-editor/lib/publicTypes/event/ContentModelPluginEvent';
 import { FormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import { LocalizedStrings, RibbonButton, RibbonPlugin, UIUtilities } from 'roosterjs-react';
+import { LocalizedStrings, RibbonButton, UIUtilities } from 'roosterjs-react';
 import {
     ContentModelFormatState,
     getFormatState,
     IContentModelEditor,
 } from 'roosterjs-content-model-editor';
 
-export class ContentModelRibbonPlugin implements RibbonPlugin {
+export class ContentModelRibbonPlugin implements ContentModelEditorPlugin {
     private editor: IContentModelEditor | null = null;
     private onFormatChanged: ((formatState: FormatState) => void) | null = null;
     private timer = 0;
@@ -46,16 +48,16 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
-    onPluginEvent(event: PluginEvent) {
+    onPluginEvent(event: ContentModelPluginEvent) {
         switch (event.eventType) {
-            case PluginEventType.EditorReady:
-            case PluginEventType.ContentChanged:
-            case PluginEventType.ZoomChanged:
+            case 'editorReady':
+            case 'contentChanged':
+            case 'zoomChanged':
                 this.updateFormat();
                 break;
 
-            case PluginEventType.KeyDown:
-            case PluginEventType.MouseUp:
+            case 'keyDown':
+            case 'mouseUp':
                 this.delayUpdate();
                 break;
         }
@@ -87,7 +89,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
      * @param strings The localized string map for this button
      */
     onButtonClick<T extends string>(
-        button: RibbonButton<T>,
+        button: ContentModelRibbonButton<T>,
         key: T,
         strings?: LocalizedStrings<T>
     ) {

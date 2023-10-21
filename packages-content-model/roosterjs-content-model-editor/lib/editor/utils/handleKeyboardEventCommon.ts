@@ -1,6 +1,5 @@
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
-import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -41,7 +40,7 @@ export function handleKeyboardEventResult(
 
             // Trigger an event to let plugins know the content is about to be changed by Content Model keyboard editing.
             // So plugins can do proper handling. e.g. UndoPlugin can decide whether take a snapshot before this change happens.
-            editor.triggerPluginEvent(PluginEventType.BeforeKeyboardEditing, {
+            editor.triggerPluginEvent('beforeKeyboardEditing', {
                 rawEvent,
             });
 

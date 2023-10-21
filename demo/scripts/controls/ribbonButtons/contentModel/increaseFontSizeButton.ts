@@ -1,17 +1,16 @@
-import { changeFontSize, isContentModelEditor } from 'roosterjs-content-model-editor';
-import { IncreaseFontSizeButtonStringKey, RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { changeFontSize } from 'roosterjs-content-model-editor';
+import { IncreaseFontSizeButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Increase font size" button on the format ribbon
  */
-export const increaseFontSizeButton: RibbonButton<IncreaseFontSizeButtonStringKey> = {
+export const increaseFontSizeButton: ContentModelRibbonButton<IncreaseFontSizeButtonStringKey> = {
     key: 'buttonNameIncreaseFontSize',
     unlocalizedText: 'Increase font size',
     iconName: 'FontIncrease',
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            changeFontSize(editor, 'increase');
-        }
+        changeFontSize(editor, 'increase');
     },
 };

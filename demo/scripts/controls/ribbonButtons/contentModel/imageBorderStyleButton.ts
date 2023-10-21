@@ -1,5 +1,5 @@
-import { isContentModelEditor, setImageBorder } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { setImageBorder } from 'roosterjs-content-model-editor';
 
 const STYLES: Record<string, string> = {
     dashed: 'dashed',
@@ -16,7 +16,7 @@ const STYLES: Record<string, string> = {
  * @internal
  * "Image Border Style" button on the format ribbon
  */
-export const imageBorderStyleButton: RibbonButton<'buttonNameImageBorderStyle'> = {
+export const imageBorderStyleButton: ContentModelRibbonButton<'buttonNameImageBorderStyle'> = {
     key: 'buttonNameImageBorderStyle',
     unlocalizedText: 'Image Border Style',
     iconName: 'BorderDash',
@@ -26,9 +26,7 @@ export const imageBorderStyleButton: RibbonButton<'buttonNameImageBorderStyle'> 
         allowLivePreview: true,
     },
     onClick: (editor, style) => {
-        if (isContentModelEditor(editor)) {
-            setImageBorder(editor, { style: style }, '5px');
-        }
+        setImageBorder(editor, { style: style }, '5px');
         return true;
     },
 };

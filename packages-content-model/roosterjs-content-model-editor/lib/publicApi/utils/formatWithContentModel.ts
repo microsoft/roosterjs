@@ -1,12 +1,8 @@
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import type { Entity } from 'roosterjs-editor-types';
-import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
+// import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     ContentModelFormatter,
-    EntityRemovalOperation,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
 } from '../../publicTypes/parameter/FormatWithContentModelContext';
@@ -56,12 +52,11 @@ export function formatWithContentModel(
                 editor.setContentModel(model, undefined /*options*/, onNodeCreated) || undefined;
 
             if (preservePendingFormat) {
-                const pendingFormat = getPendingFormat(editor);
-                const pos = editor.getFocusedPosition();
-
-                if (pendingFormat && pos) {
-                    setPendingFormat(editor, pendingFormat, pos.node, pos.offset);
-                }
+                // const pendingFormat = getPendingFormat(editor);
+                // const pos = editor.getFocusedPosition();
+                // if (pendingFormat && pos) {
+                //     setPendingFormat(editor, pendingFormat, pos.node, pos.offset);
+                // }
             }
         };
 
@@ -78,7 +73,7 @@ export function formatWithContentModel(
             );
         }
 
-        const eventData: ContentModelContentChangedEventData = {
+        const eventData = {
             contentModel: model,
             selection: selection,
             source: changeSource || ChangeSource.Format,
@@ -87,7 +82,7 @@ export function formatWithContentModel(
                 formatApiName: apiName,
             },
         };
-        editor.triggerPluginEvent(PluginEventType.ContentChanged, eventData);
+        editor.triggerPluginEvent('contentChanged', eventData);
     }
 }
 
@@ -95,64 +90,40 @@ function handleNewEntities(editor: IContentModelEditor, context: FormatWithConte
     // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
     // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
     // from EntityPlugin to here
-
-    if (editor.isDarkMode()) {
-        context.newEntities.forEach(entity => {
-            editor.transformToDarkColor(entity.wrapper);
-        });
-    }
+    // if (editor.isDarkMode()) {
+    //     context.newEntities.forEach(entity => {
+    //         editor.transformToDarkColor(entity.wrapper);
+    //     });
+    // }
 }
-
-// This is only used for compatibility with old editor
-// TODO: Remove this map once we have standalone editor
-const EntityOperationMap: Record<EntityRemovalOperation, EntityOperation> = {
-    overwrite: EntityOperation.Overwrite,
-    removeFromEnd: EntityOperation.RemoveFromEnd,
-    removeFromStart: EntityOperation.RemoveFromStart,
-};
 
 function handleDeletedEntities(
     editor: IContentModelEditor,
     context: FormatWithContentModelContext
 ) {
-    context.deletedEntities.forEach(
-        ({
-            entity: {
-                wrapper,
-                entityFormat: { id, entityType, isReadonly },
-            },
-            operation,
-        }) => {
-            if (id && entityType) {
-                // TODO: Revisit this entity parameter for standalone editor, we may just directly pass ContentModelEntity object instead
-                const entity: Entity = {
-                    id,
-                    type: entityType,
-                    isReadonly: !!isReadonly,
-                    wrapper,
-                };
-                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                    entity,
-                    operation: EntityOperationMap[operation],
-                    rawEvent: context.rawEvent,
-                });
-            }
+    context.deletedEntities.forEach(({ entity, operation }) => {
+        if (entity.entityFormat.id && entity.entityFormat.entityType) {
+            editor.triggerPluginEvent('entityOperation', {
+                entity,
+                operation,
+                rawEvent: context.rawEvent,
+            });
         }
-    );
+    });
 }
 
 function handleImages(editor: IContentModelEditor, context: FormatWithContentModelContext) {
-    if (context.newImages.length > 0) {
-        const viewport = editor.getVisibleViewport();
-        if (viewport) {
-            const { top, bottom, left, right } = viewport;
-            const minMaxImageSize = 10;
-            const maxWidth = Math.max(right - left, minMaxImageSize);
-            const maxHeight = Math.max(bottom - top, minMaxImageSize);
-            context.newImages.forEach(image => {
-                image.format.maxHeight = `${maxHeight}px`;
-                image.format.maxWidth = `${maxWidth}px`;
-            });
-        }
-    }
+    // if (context.newImages.length > 0) {
+    //     const viewport = editor.getVisibleViewport();
+    //     if (viewport) {
+    //         const { top, bottom, left, right } = viewport;
+    //         const minMaxImageSize = 10;
+    //         const maxWidth = Math.max(right - left, minMaxImageSize);
+    //         const maxHeight = Math.max(bottom - top, minMaxImageSize);
+    //         context.newImages.forEach(image => {
+    //             image.format.maxHeight = `${maxHeight}px`;
+    //             image.format.maxWidth = `${maxWidth}px`;
+    //         });
+    //     }
+    // }
 }

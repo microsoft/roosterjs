@@ -1,7 +1,7 @@
-import { changeImage, isContentModelEditor } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { changeImage } from 'roosterjs-content-model-editor';
 import { createElement } from 'roosterjs-editor-dom';
 import { CreateElementData } from 'roosterjs-editor-types';
-import { RibbonButton } from 'roosterjs-react';
 
 const FileInput: CreateElementData = {
     tag: 'input',
@@ -16,30 +16,28 @@ const FileInput: CreateElementData = {
  * @internal
  * "Change Image" button on the format ribbon
  */
-export const changeImageButton: RibbonButton<'buttonNameChangeImage'> = {
+export const changeImageButton: ContentModelRibbonButton<'buttonNameChangeImage'> = {
     key: 'buttonNameChangeImage',
     unlocalizedText: 'Change Image',
     iconName: 'ImageSearch',
     isDisabled: formatState => !formatState.canAddImageAltText,
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            const document = editor.getDocument();
-            const fileInput = createElement(FileInput, document) as HTMLInputElement;
-            document.body.appendChild(fileInput);
+        const document = editor.getDocument();
+        const fileInput = createElement(FileInput, document) as HTMLInputElement;
+        document.body.appendChild(fileInput);
 
-            fileInput.addEventListener('change', () => {
-                if (fileInput.files) {
-                    for (let i = 0; i < fileInput.files.length; i++) {
-                        changeImage(editor, fileInput.files[i]);
-                    }
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files) {
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    changeImage(editor, fileInput.files[i]);
                 }
-            });
-
-            try {
-                fileInput.click();
-            } finally {
-                document.body.removeChild(fileInput);
             }
+        });
+
+        try {
+            fileInput.click();
+        } finally {
+            document.body.removeChild(fileInput);
         }
     },
 };

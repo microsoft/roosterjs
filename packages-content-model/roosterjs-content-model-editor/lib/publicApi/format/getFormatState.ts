@@ -23,9 +23,9 @@ export default function getFormatState(editor: IContentModelEditor): ContentMode
         },
     });
     const result: ContentModelFormatState = {
-        ...editor.getUndoState(),
-        isDarkMode: editor.isDarkMode(),
-        zoomScale: editor.getZoomScale(),
+        // ...editor.getUndoState(),
+        // isDarkMode: editor.isDarkMode(),
+        // zoomScale: editor.getZoomScale(),
     };
 
     retrieveModelFormatState(model, pendingFormat, result);

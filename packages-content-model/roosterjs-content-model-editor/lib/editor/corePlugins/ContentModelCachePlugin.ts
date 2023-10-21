@@ -1,29 +1,29 @@
 import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
+import { ContentModelContentChangedEvent } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { contentModelDomIndexer } from '../utils/contentModelDomIndexer';
+import { ContentModelPluginEvent } from '../../publicTypes/event/ContentModelPluginEvent';
+import { ContentModelPluginKeyDownEvent } from '../../publicTypes/event/ContentModelPluginDomEvent';
+import { ContentModelPluginWithState } from '../../publicTypes/ContentModelEditorPlugin';
 import { isCharacterValue } from '../../domUtils/eventUtils';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type {
-    IEditor,
-    PluginEvent,
-    PluginKeyDownEvent,
-    PluginWithState,
-} from 'roosterjs-editor-types';
 
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
 export default class ContentModelCachePlugin
-    implements PluginWithState<ContentModelCachePluginState> {
+    implements ContentModelPluginWithState<ContentModelCachePluginState> {
     private editor: IContentModelEditor | null = null;
+    private state: ContentModelCachePluginState;
 
     /**
      * Construct a new instance of ContentModelEditPlugin class
      * @param state State of this plugin
      */
-    constructor(private state: ContentModelCachePluginState) {
-        // TODO: Remove tempState parameter once we have standalone Content Model editor
+    constructor() {
+        this.state = {
+            domIndexer: contentModelDomIndexer,
+        };
     }
 
     /**
@@ -39,7 +39,7 @@ export default class ContentModelCachePlugin
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
+    initialize(editor: IContentModelEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
         this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
@@ -72,29 +72,29 @@ export default class ContentModelCachePlugin
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(event: PluginEvent) {
+    onPluginEvent(event: ContentModelPluginEvent) {
         if (!this.editor) {
             return;
         }
 
         switch (event.eventType) {
-            case PluginEventType.KeyDown:
+            case 'keyDown':
                 if (this.shouldClearCache(event)) {
                     this.invalidateCache();
                 }
                 break;
 
-            case PluginEventType.Input:
+            case 'input':
                 {
                     this.updateCachedModel(this.editor, true /*forceUpdate*/);
                 }
                 break;
 
-            case PluginEventType.SelectionChanged:
+            case 'selectionChanged':
                 this.updateCachedModel(this.editor);
                 break;
 
-            case PluginEventType.ContentChanged:
+            case 'contentChanged':
                 {
                     const { contentModel, selection } = event as ContentModelContentChangedEvent;
 
@@ -150,7 +150,7 @@ export default class ContentModelCachePlugin
         }
     }
 
-    private shouldClearCache(event: PluginKeyDownEvent) {
+    private shouldClearCache(event: ContentModelPluginKeyDownEvent) {
         const { rawEvent, handledByEditFeature } = event;
 
         // In these cases we can't update the model, so clear cache:
@@ -190,6 +190,6 @@ export default class ContentModelCachePlugin
  * This is mostly for unit test
  * @param state State of this plugin
  */
-export function createContentModelCachePlugin(state: ContentModelCachePluginState) {
-    return new ContentModelCachePlugin(state);
+export function createContentModelCachePlugin() {
+    return new ContentModelCachePlugin();
 }

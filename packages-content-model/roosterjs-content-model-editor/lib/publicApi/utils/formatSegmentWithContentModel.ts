@@ -1,7 +1,7 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { formatWithContentModel } from './formatWithContentModel';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegmentsAndParagraphs } from '../../modelApi/selection/collectSelections';
+import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     ContentModelDocument,
@@ -69,13 +69,13 @@ export function formatSegmentWithContentModel(
 
         afterFormatCallback?.(model);
 
-        if (!pendingFormat && isCollapsedSelection) {
-            const pos = editor.getFocusedPosition();
+        // if (!pendingFormat && isCollapsedSelection) {
+        //     const pos = editor.getFocusedPosition();
 
-            if (pos) {
-                setPendingFormat(editor, segmentAndParagraphs[0][0].format, pos.node, pos.offset);
-            }
-        }
+        //     if (pos) {
+        //         setPendingFormat(editor, segmentAndParagraphs[0][0].format, pos.node, pos.offset);
+        //     }
+        // }
 
         if (isCollapsedSelection) {
             editor.focus();
