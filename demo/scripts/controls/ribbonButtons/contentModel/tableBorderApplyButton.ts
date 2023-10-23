@@ -1,12 +1,12 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import MainPaneBase from '../../MainPaneBase';
-import { applyTableBorderFormat, isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
+import { applyTableBorderFormat } from 'roosterjs-content-model-editor';
 
 /**
  * UNFINISHED
  * A map for all Border options and keys in yet to be made dropdown menu.
  */
-export const tableBorderApplyButton: RibbonButton<'ribbonButtonTableBorder'> = {
+export const tableBorderApplyButton: ContentModelRibbonButton<'ribbonButtonTableBorder'> = {
     key: 'ribbonButtonTableBorder',
     iconName: 'TableComputed',
     unlocalizedText: 'Table Border',
@@ -17,7 +17,7 @@ export const tableBorderApplyButton: RibbonButton<'ribbonButtonTableBorder'> = {
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableBorder') {
+        if (key != 'ribbonButtonTableBorder') {
             const border = MainPaneBase.getInstance().getTableBorder();
             applyTableBorderFormat(editor, border, 'AllBorders');
         }

@@ -1,8 +1,9 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { ContentModelEditorPlugin } from 'roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorPlugin';
 import { ContentModelPluginEvent } from 'roosterjs-content-model-editor/lib/publicTypes/event/ContentModelPluginEvent';
-import { FormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { LocalizedStrings, RibbonButton, UIUtilities } from 'roosterjs-react';
+import { FormatState } from 'roosterjs-editor-types';
 import {
     ContentModelFormatState,
     getFormatState,
@@ -115,18 +116,16 @@ export class ContentModelRibbonPlugin implements ContentModelEditorPlugin {
         key: T,
         strings?: LocalizedStrings<T>
     ) {
-        if (this.editor && this.uiUtilities) {
-            const isInShadowEdit = this.editor.isInShadowEdit();
-
-            // If editor is already in shadow edit, no need to check again.
-            // And the check result may be incorrect because the content is changed from last shadow edit and the cached selection path won't apply
-            const range = !isInShadowEdit && this.editor.getSelectionRangeEx();
-
-            if (isInShadowEdit || (range && !range.areAllCollapsed)) {
-                this.editor.startShadowEdit();
-                button.onClick(this.editor, key, strings, this.uiUtilities);
-            }
-        }
+        // if (this.editor && this.uiUtilities) {
+        //     const isInShadowEdit = this.editor.isInShadowEdit();
+        //     // If editor is already in shadow edit, no need to check again.
+        //     // And the check result may be incorrect because the content is changed from last shadow edit and the cached selection path won't apply
+        //     const range = !isInShadowEdit && this.editor.getSelectionRangeEx();
+        //     if (isInShadowEdit || (range && !range.areAllCollapsed)) {
+        //         this.editor.startShadowEdit();
+        //         button.onClick(this.editor, key, strings, this.uiUtilities);
+        //     }
+        // }
     }
 
     /**

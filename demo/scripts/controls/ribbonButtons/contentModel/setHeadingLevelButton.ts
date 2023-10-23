@@ -1,14 +1,10 @@
-import { isContentModelEditor, setHeadingLevel } from 'roosterjs-content-model-editor';
-import {
-    getButtons,
-    HeadingButtonStringKey,
-    KnownRibbonButtonKey,
-    RibbonButton,
-} from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { getButtons, HeadingButtonStringKey, KnownRibbonButtonKey } from 'roosterjs-react';
+import { setHeadingLevel } from 'roosterjs-content-model-editor';
 
-const originalHeadingButton: RibbonButton<HeadingButtonStringKey> = getButtons([
+const originalHeadingButton: ContentModelRibbonButton<HeadingButtonStringKey> = (getButtons([
     KnownRibbonButtonKey.Heading,
-])[0] as RibbonButton<HeadingButtonStringKey>;
+])[0] as any) as ContentModelRibbonButton<HeadingButtonStringKey>;
 const keys: HeadingButtonStringKey[] = [
     'buttonNameNoHeading',
     'buttonNameHeading1',
@@ -19,7 +15,7 @@ const keys: HeadingButtonStringKey[] = [
     'buttonNameHeading6',
 ];
 
-export const setHeadingLevelButton: RibbonButton<HeadingButtonStringKey> = {
+export const setHeadingLevelButton: ContentModelRibbonButton<HeadingButtonStringKey> = {
     dropDownMenu: {
         ...originalHeadingButton.dropDownMenu,
     },
@@ -29,8 +25,6 @@ export const setHeadingLevelButton: RibbonButton<HeadingButtonStringKey> = {
     onClick: (editor, key) => {
         const headingLevel = keys.indexOf(key);
 
-        if (isContentModelEditor(editor) && headingLevel >= 0) {
-            setHeadingLevel(editor, headingLevel as 0 | 1 | 2 | 3 | 4 | 5 | 6);
-        }
+        setHeadingLevel(editor, headingLevel as 0 | 1 | 2 | 3 | 4 | 5 | 6);
     },
 };

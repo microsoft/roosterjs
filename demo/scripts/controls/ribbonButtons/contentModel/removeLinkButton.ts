@@ -1,18 +1,17 @@
-import { isContentModelEditor, removeLink } from 'roosterjs-content-model-editor';
-import { RemoveLinkButtonStringKey, RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { removeLink } from 'roosterjs-content-model-editor';
+import { RemoveLinkButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Remove link" button on the format ribbon
  */
-export const removeLinkButton: RibbonButton<RemoveLinkButtonStringKey> = {
+export const removeLinkButton: ContentModelRibbonButton<RemoveLinkButtonStringKey> = {
     key: 'buttonNameRemoveLink',
     unlocalizedText: 'Remove link',
     iconName: 'RemoveLink',
     isDisabled: formatState => !formatState.canUnlink,
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            removeLink(editor);
-        }
+        removeLink(editor);
     },
 };

@@ -1,19 +1,18 @@
-import { isContentModelEditor, toggleNumbering } from 'roosterjs-content-model-editor';
-import { NumberedListButtonStringKey, RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { toggleNumbering } from 'roosterjs-content-model-editor';
+import { NumberedListButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Numbering list" button on the format ribbon
  */
-export const numberedListButton: RibbonButton<NumberedListButtonStringKey> = {
+export const numberedListButton: ContentModelRibbonButton<NumberedListButtonStringKey> = {
     key: 'buttonNameNumberedList',
     unlocalizedText: 'Numbered List',
     iconName: 'NumberedList',
     isChecked: formatState => formatState.isNumbering,
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            toggleNumbering(editor);
-        }
+        toggleNumbering(editor);
         return true;
     },
 };

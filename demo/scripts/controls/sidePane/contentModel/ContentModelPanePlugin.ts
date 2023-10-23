@@ -1,8 +1,8 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { createRibbonPlugin, RibbonPlugin } from 'roosterjs-react';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -36,9 +36,7 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.ContentChanged && e.source == 'RefreshModel') {
             this.getComponent(component => {
-                const model = isContentModelEditor(this.editor)
-                    ? this.editor.createContentModel()
-                    : null;
+                const model = ((this.editor as any) as IContentModelEditor).createContentModel();
                 component.setContentModel(model);
                 setCurrentContentModel(this.editor, model);
             });
@@ -72,9 +70,7 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
 
     private onModelChange = () => {
         this.getComponent(component => {
-            const model = isContentModelEditor(this.editor)
-                ? this.editor.createContentModel()
-                : null;
+            const model = ((this.editor as any) as IContentModelEditor).createContentModel();
             component.setContentModel(model);
             setCurrentContentModel(this.editor, model);
         });

@@ -16,7 +16,7 @@ import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import {
     createRibbonPlugin,
@@ -105,7 +105,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
         this.snapshotPlugin = new SnapshotPlugin();
         this.ContentModelPanePlugin = new ContentModelPanePlugin();
         this.ribbonPlugin = createRibbonPlugin();
-        this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
+        this.contentModelRibbonPlugin = (new ContentModelRibbonPlugin() as any) as RibbonPlugin;
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
@@ -180,17 +180,17 @@ class ContentModelEditorMainPane extends MainPaneBase {
 
         plugins.push(this.updateContentPlugin);
 
-        return plugins;
+        return (plugins as any) as EditorPlugin[];
     }
 
     resetEditor() {
         this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new ContentModelEditor(div, {
+                (new ContentModelEditor(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
-                }),
+                } as any) as any) as IEditor,
         });
     }
 

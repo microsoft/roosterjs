@@ -1,16 +1,13 @@
-import { formatTable, isContentModelEditor } from 'roosterjs-content-model-editor';
-import { getFormatState } from 'roosterjs-editor-api';
-import { RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { formatTable, getFormatState } from 'roosterjs-content-model-editor';
 
-export const setTableHeaderButton: RibbonButton<'ribbonButtonSetTableHeader'> = {
+export const setTableHeaderButton: ContentModelRibbonButton<'ribbonButtonSetTableHeader'> = {
     key: 'ribbonButtonSetTableHeader',
     unlocalizedText: 'Toggle table header',
     iconName: 'Header',
     isDisabled: formatState => !formatState.isInTable,
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            const format = getFormatState(editor);
-            formatTable(editor, { hasHeaderRow: !format.tableHasHeader }, true /*keepCellShade*/);
-        }
+        const format = getFormatState(editor);
+        formatTable(editor, { hasHeaderRow: !format.tableHasHeader }, true /*keepCellShade*/);
     },
 };

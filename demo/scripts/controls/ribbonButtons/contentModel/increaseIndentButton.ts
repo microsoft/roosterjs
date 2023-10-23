@@ -1,18 +1,17 @@
-import { IncreaseIndentButtonStringKey, RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { setIndentation } from 'roosterjs-content-model-editor';
+import { IncreaseIndentButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Increase indent" button on the format ribbon
  */
-export const increaseIndentButton: RibbonButton<IncreaseIndentButtonStringKey> = {
+export const increaseIndentButton: ContentModelRibbonButton<IncreaseIndentButtonStringKey> = {
     key: 'buttonNameIncreaseIndent',
     unlocalizedText: 'Increase indent',
     iconName: 'IncreaseIndentLegacy',
     flipWhenRtl: true,
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            setIndentation(editor, 'indent');
-        }
+        setIndentation(editor, 'indent');
     },
 };

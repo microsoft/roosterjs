@@ -1,18 +1,17 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { getButtons, KnownRibbonButtonKey } from 'roosterjs-react';
-import { insertTable, isContentModelEditor } from 'roosterjs-content-model-editor';
-import { InsertTableButtonStringKey, RibbonButton } from 'roosterjs-react';
+import { insertTable } from 'roosterjs-content-model-editor';
+import { InsertTableButtonStringKey } from 'roosterjs-react';
 
-const originalPasteButton: RibbonButton<InsertTableButtonStringKey> = getButtons([
+const originalPasteButton: ContentModelRibbonButton<InsertTableButtonStringKey> = (getButtons([
     KnownRibbonButtonKey.InsertTable,
-])[0] as RibbonButton<InsertTableButtonStringKey>;
+])[0] as any) as ContentModelRibbonButton<InsertTableButtonStringKey>;
 
-export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
+export const insertTableButton: ContentModelRibbonButton<InsertTableButtonStringKey> = {
     ...originalPasteButton,
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor)) {
-            const { row, col } = parseKey(key);
-            insertTable(editor, col, row);
-        }
+        const { row, col } = parseKey(key);
+        insertTable(editor, col, row);
     },
 };
 

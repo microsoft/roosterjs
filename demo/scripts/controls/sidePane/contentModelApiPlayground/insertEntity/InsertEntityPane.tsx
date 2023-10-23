@@ -2,12 +2,6 @@ import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import { Entity } from 'roosterjs-editor-types';
 import { getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
-import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
-import {
-    IContentModelEditor,
-    insertEntity,
-    InsertEntityOptions,
-} from 'roosterjs-content-model-editor';
 
 const styles = require('./InsertEntityPane.scss');
 
@@ -80,9 +74,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                     <input id="focusAfterEntity" type="checkbox" ref={this.focusAfterEntity} />
                     <label htmlFor="focusAfterEntity">Focus after entity</label>
                 </div>
-                <div>
-                    <button onClick={this.insertEntity}>Insert Entity</button>
-                </div>
+                <div></div>
                 <hr />
                 <div>
                     <button onClick={this.onGetEntities}>Get all entities</button>
@@ -95,52 +87,6 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
             </>
         );
     }
-
-    private insertEntity = () => {
-        const entityType = this.entityType.current.value;
-        const node = document.createElement('span');
-        node.innerHTML = trustedHTMLHandler(this.html.current.value);
-        const isBlock = this.styleBlock.current.checked;
-        const focusAfterEntity = this.focusAfterEntity.current.checked;
-        const insertAtTop = this.posTop.current.checked;
-        const insertAtBottom = this.posBottom.current.checked;
-        const insertAtRoot = this.posRegionRoot.current.checked;
-
-        if (node) {
-            const editor = this.props.getEditor();
-
-            editor.addUndoSnapshot(() => {
-                const options: InsertEntityOptions = {
-                    contentNode: node,
-                    focusAfterEntity: focusAfterEntity,
-                };
-
-                if (isBlock) {
-                    insertEntity(
-                        editor as IContentModelEditor,
-                        entityType,
-                        true,
-                        insertAtRoot
-                            ? 'root'
-                            : insertAtTop
-                            ? 'begin'
-                            : insertAtBottom
-                            ? 'end'
-                            : 'focus',
-                        options
-                    );
-                } else {
-                    insertEntity(
-                        editor as IContentModelEditor,
-                        entityType,
-                        isBlock,
-                        insertAtTop ? 'begin' : insertAtBottom ? 'end' : 'focus',
-                        options
-                    );
-                }
-            });
-        }
-    };
 
     private onGetEntities = () => {
         const selector = getEntitySelector();

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { alignCenterButton } from './alignCenterButton';
 import { alignLeftButton } from './alignLeftButton';
 import { alignRightButton } from './alignRightButton';
@@ -32,7 +33,6 @@ import { listStartNumberButton } from './listStartNumberButton';
 import { ltrButton } from './ltrButton';
 import { numberedListButton } from './numberedListButton';
 import { pasteButton } from './pasteButton';
-import { popout } from '../popout';
 import { removeLinkButton } from './removeLinkButton';
 import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import { rtlButton } from './rtlButton';
@@ -128,14 +128,25 @@ export default function ContentModelRibbon(props: {
 }) {
     const { ribbonPlugin, isRtl, isInPopout } = props;
     const ribbonButtons = React.useMemo(() => {
-        const result: RibbonButton<any>[] = [...buttons, darkMode, zoom, exportContent];
+        const result: ContentModelRibbonButton<any>[] = ([
+            ...buttons,
+            darkMode,
+            zoom,
+            exportContent,
+        ] as any) as ContentModelRibbonButton<any>[];
 
         if (!isInPopout) {
-            result.push(popout);
+            // result.push(popout);
         }
 
         return result;
     }, [isInPopout]);
 
-    return <Ribbon buttons={ribbonButtons} plugin={ribbonPlugin} dir={isRtl ? 'rtl' : 'ltr'} />;
+    return (
+        <Ribbon
+            buttons={(ribbonButtons as any) as RibbonButton<any>[]}
+            plugin={ribbonPlugin}
+            dir={isRtl ? 'rtl' : 'ltr'}
+        />
+    );
 }
