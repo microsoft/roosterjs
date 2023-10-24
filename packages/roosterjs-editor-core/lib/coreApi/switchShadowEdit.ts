@@ -98,38 +98,13 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                     shadowEditEntities
                 );
             }
-            core.api.focus(core);
 
             if (shadowEditSelectionPath) {
-                core.api.selectRange(
-                    core,
-                    createRange(
-                        contentDiv,
-                        shadowEditSelectionPath.start,
-                        shadowEditSelectionPath.end
-                    )
+                core.domEvent.selectionRange = createRange(
+                    contentDiv,
+                    shadowEditSelectionPath.start,
+                    shadowEditSelectionPath.end
                 );
-            }
-
-            if (core.domEvent.imageSelectionRange) {
-                const { image } = core.domEvent.imageSelectionRange;
-                const imageElement = core.contentDiv.querySelector('#' + image.id);
-                if (imageElement) {
-                    core.api.selectImage(core, image);
-                }
-            }
-
-            if (core.domEvent.tableSelectionRange) {
-                const { table, coordinates } = core.domEvent.tableSelectionRange;
-                const tableId = table.id;
-                const tableElement = core.contentDiv.querySelector('#' + tableId);
-                if (table) {
-                    core.domEvent.tableSelectionRange = core.api.selectTable(
-                        core,
-                        tableElement as HTMLTableElement,
-                        coordinates
-                    );
-                }
             }
         }
     }
