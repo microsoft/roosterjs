@@ -1,4 +1,3 @@
-import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     DOMSelection,
@@ -6,22 +5,13 @@ import type {
     ModelToDomOption,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
-
-/**
- * Current running environment
- */
-export interface EditorEnvironment {
-    /**
-     * Whether editor is running on Mac
-     */
-    isMac?: boolean;
-}
+import type { EditorEnvironment } from './EditorEnvironment';
 
 /**
  * An interface of editor with Content Model support.
  * (This interface is still under development, and may still be changed in the future with some breaking changes)
  */
-export interface IContentModelEditor extends IEditor {
+export interface IContentModelEditor {
     /**
      * Create Content Model from DOM tree in this editor
      * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),
@@ -63,24 +53,4 @@ export interface IContentModelEditor extends IEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection): void;
-}
-
-/**
- * Options for Content Model editor
- */
-export interface ContentModelEditorOptions extends EditorOptions {
-    /**
-     * Default options used for DOM to Content Model conversion
-     */
-    defaultDomToModelOptions?: DomToModelOption;
-
-    /**
-     * Default options used for Content Model to DOM conversion
-     */
-    defaultModelToDomOptions?: ModelToDomOption;
-
-    /**
-     * Reuse existing DOM structure if possible, and update the model when content or selection is changed
-     */
-    cacheModel?: boolean;
 }

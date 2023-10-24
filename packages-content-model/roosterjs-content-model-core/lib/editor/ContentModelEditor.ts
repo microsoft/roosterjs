@@ -1,25 +1,22 @@
-import { EditorBase } from 'roosterjs-editor-core';
+import { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
+import { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
+import { createContentModelEditorCore } from './createContentModelEditorCore';
+import { EditorEnvironment } from '../publicTypes/editor/EditorEnvironment';
 import {
-    ContentModelEditor,
-    EditorEnvironment,
-    IContentModelEditor,
-} from 'roosterjs-content-model-core';
-import type {
     ContentModelDocument,
     DOMSelection,
     DomToModelOption,
     ModelToDomOption,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../publicTypes/editor/IContentModelEditor';
 
 /**
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export default class ContentModelEditorWrapper
-    extends EditorBase<ContentModelEditorCore, ContentModelEditorOptions>
-    implements IContentModelEditor {
-    private contentModelEditor: IContentModelEditor;
+export class ContentModelEditor implements IContentModelEditor {
+    private core: ContentModelEditorCore;
 
     /**
      * Creates an instance of Editor
@@ -27,22 +24,14 @@ export default class ContentModelEditorWrapper
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        super(contentDiv, options);
+        this.core = createContentModelEditorCore(contentDiv, options);
 
-        const format = options.defaultFormat || {};
-
-        this.contentModelEditor = new ContentModelEditor(contentDiv, {
-            defaultSegmentFormat: {
-                fontWeight: format.bold ? 'bold' : undefined,
-                italic: format.italic || undefined,
-                underline: format.underline || undefined,
-                fontFamily: format.fontFamily || undefined,
-                fontSize: format.fontSize || undefined,
-                textColor: format.textColors?.lightModeColor || format.textColor || undefined,
-                backgroundColor:
-                    format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
-            },
-        });
+        if (options.cacheModel) {
+            // Create an initial content model to cache
+            // TODO: Once we have standalone editor and get rid of `ensureTypeInContainer` function, we can set init content
+            // using content model and cache the model directly
+            this.createContentModel();
+        }
     }
 
     /**
@@ -53,7 +42,9 @@ export default class ContentModelEditorWrapper
         option?: DomToModelOption,
         selectionOverride?: DOMSelection
     ): ContentModelDocument {
-        return this.contentModelEditor.createContentModel(option, selectionOverride);
+        const core = this.getCore();
+
+        return core.api.createContentModel(core, option, selectionOverride);
     }
 
     /**
@@ -67,21 +58,25 @@ export default class ContentModelEditorWrapper
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
     ): DOMSelection | null {
-        return this.contentModelEditor.setContentModel(model, option, onNodeCreated);
+        const core = this.getCore();
+
+        return core.api.setContentModel(core, model, option, onNodeCreated);
     }
 
     /**
      * Get current running environment, such as if editor is running on Mac
      */
     getEnvironment(): EditorEnvironment {
-        return this.contentModelEditor.getEnvironment();
+        return this.getCore().environment;
     }
 
     /**
      * Get current DOM selection
      */
     getDOMSelection(): DOMSelection | null {
-        return this.contentModelEditor.getDOMSelection();
+        const core = this.getCore();
+
+        return core.api.getDOMSelection(core);
     }
 
     /**
@@ -90,6 +85,12 @@ export default class ContentModelEditorWrapper
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection) {
-        this.contentModelEditor.setDOMSelection(selection);
+        const core = this.getCore();
+
+        core.api.setDOMSelection(core, selection);
+    }
+
+    protected getCore() {
+        return this.core;
     }
 }

@@ -1,15 +1,13 @@
+import { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
+import { GetDOMSelection } from '../publicTypes/coreApi/GetDOMSelection';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
-import type {
-    ContentModelEditorCore,
-    GetDOMSelection,
-} from '../../publicTypes/ContentModelEditorCore';
 import type { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const getDOMSelection: GetDOMSelection = core => {
-    return core.cache.cachedSelection ?? getNewSelection(core);
+    return core.pluginState.cache.cachedSelection ?? getNewSelection(core);
 };
 
 function getNewSelection(core: ContentModelEditorCore): DOMSelection | null {

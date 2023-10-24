@@ -1,4 +1,4 @@
-import type { CreateEditorContext } from '../../publicTypes/ContentModelEditorCore';
+import { CreateEditorContext } from '../publicTypes/coreApi/CreateEditorContext';
 import type { EditorContext } from 'roosterjs-content-model-types';
 
 /**
@@ -6,7 +6,11 @@ import type { EditorContext } from 'roosterjs-content-model-types';
  * Create a EditorContext object used by ContentModel API
  */
 export const createEditorContext: CreateEditorContext = core => {
-    const { lifecycle, format, darkColorHandler, contentDiv, cache } = core;
+    const {
+        pluginState: { lifecycle, format, cache },
+        darkColorHandler,
+        contentDiv,
+    } = core;
 
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,

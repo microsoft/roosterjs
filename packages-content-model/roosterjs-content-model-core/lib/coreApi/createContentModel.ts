@@ -1,14 +1,11 @@
-import { cloneModel } from '../../modelApi/common/cloneModel';
+import { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
+import { CreateContentModel } from '../publicTypes/coreApi/CreateContentModel';
 import type { DOMSelection, DomToModelOption } from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,
     createDomToModelContextWithConfig,
     domToContentModel,
 } from 'roosterjs-content-model-dom';
-import type {
-    ContentModelEditorCore,
-    CreateContentModel,
-} from '../../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
@@ -18,9 +15,9 @@ import type {
  * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
-    let cachedModel = selectionOverride ? null : core.cache.cachedModel;
+    let cachedModel = selectionOverride ? null : core.pluginState.cache.cachedModel;
 
-    if (cachedModel && core.lifecycle.shadowEditFragment) {
+    if (cachedModel && core.pluginState.lifecycle.isInShadowEdit) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
         cachedModel = cloneModel(cachedModel, { includeCachedElement: true });
     }
@@ -32,8 +29,8 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         const model = internalCreateContentModel(core, selection, option);
 
         if (!option && !selectionOverride) {
-            core.cache.cachedModel = model;
-            core.cache.cachedSelection = selection;
+            core.pluginState.cache.cachedModel = model;
+            core.pluginState.cache.cachedSelection = selection;
         }
 
         return model;

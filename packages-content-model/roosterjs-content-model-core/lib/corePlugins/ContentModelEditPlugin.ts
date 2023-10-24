@@ -1,12 +1,7 @@
-import keyboardDelete from '../../publicApi/editing/keyboardDelete';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginKeyDownEvent,
-} from 'roosterjs-editor-types';
+import { ContentModelEditorPlugin } from '../publicTypes/plugin/ContentModelEditorPlugin';
+import { ContentModelPluginEvent } from '../publicTypes/event/ContentModelPluginEvent';
+import { ContentModelPluginKeyDownEvent } from '../publicTypes/event/ContentModelPluginDomEvent';
+import { IContentModelEditor } from '../publicTypes/editor/IContentModelEditor';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
@@ -14,7 +9,7 @@ import type {
  * 1. Delete Key
  * 2. Backspace Key
  */
-export default class ContentModelEditPlugin implements EditorPlugin {
+export default class ContentModelEditPlugin implements ContentModelEditorPlugin {
     private editor: IContentModelEditor | null = null;
 
     /**
@@ -30,9 +25,8 @@ export default class ContentModelEditPlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
-        // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IContentModelEditor;
+    initialize(editor: IContentModelEditor) {
+        this.editor = editor;
     }
 
     /**
@@ -50,17 +44,17 @@ export default class ContentModelEditPlugin implements EditorPlugin {
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(event: PluginEvent) {
+    onPluginEvent(event: ContentModelPluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.KeyDown:
+                case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
             }
         }
     }
 
-    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
+    private handleKeyDownEvent(editor: IContentModelEditor, event: ContentModelPluginKeyDownEvent) {
         const rawEvent = event.rawEvent;
 
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {

@@ -1,4 +1,4 @@
-import type { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
+import { SetContentModel } from '../publicTypes/coreApi/SetContentModel';
 import {
     contentModelToDom,
     createModelToDomContext,
