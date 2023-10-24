@@ -1,8 +1,8 @@
-import { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
-import { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
-import { EditorEnvironment } from '../publicTypes/editor/EditorEnvironment';
-import {
+import type { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
+import type { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
+import type { EditorEnvironment } from '../publicTypes/editor/EditorEnvironment';
+import type {
     ContentModelDocument,
     DOMSelection,
     DomToModelOption,

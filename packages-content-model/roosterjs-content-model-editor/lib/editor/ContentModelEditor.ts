@@ -1,9 +1,6 @@
+import { ContentModelEditor } from 'roosterjs-content-model-core';
 import { EditorBase } from 'roosterjs-editor-core';
-import {
-    ContentModelEditor,
-    EditorEnvironment,
-    IContentModelEditor,
-} from 'roosterjs-content-model-core';
+import type { EditorEnvironment, IContentModelEditor } from 'roosterjs-content-model-core';
 import type {
     ContentModelDocument,
     DOMSelection,

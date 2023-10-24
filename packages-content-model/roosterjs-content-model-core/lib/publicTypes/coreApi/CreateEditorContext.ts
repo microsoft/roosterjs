@@ -1,5 +1,5 @@
-import { ContentModelEditorCore } from '../editor/ContentModelEditorCore';
-import { EditorContext } from 'roosterjs-content-model-types';
+import type { ContentModelEditorCore } from '../editor/ContentModelEditorCore';
+import type { EditorContext } from 'roosterjs-content-model-types';
 
 /**
  * Create a EditorContext object used by ContentModel API

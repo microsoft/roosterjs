@@ -1,15 +1,15 @@
-import { ContentModelCorePlugins } from '../publicTypes/plugin/ContentModelCorePlugins';
-import { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
-import { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
-import { ContentModelEditorPlugin } from '../publicTypes/plugin/ContentModelEditorPlugin';
-import { ContentModelPluginState } from '../publicTypes/plugin/ContentModelPluginState';
 import { coreApiMap } from './coreApiMap';
 import { createContentModelCachePlugin } from '../corePlugins/ContentModelCachePlugin';
 import { createContentModelEditPlugin } from '../corePlugins/ContentModelEditPlugin';
 import { createContentModelFormatPlugin } from '../corePlugins/ContentModelFormatPlugin';
-import { DomToModelOption, ModelToDomOption } from 'roosterjs-content-model-types';
 import { listItemMetadataApplier, listLevelMetadataApplier } from '../metadata/updateListMetadata';
 import { tablePreProcessor } from './processOverrides/tablePreProcessor';
+import type { ContentModelCorePlugins } from '../publicTypes/plugin/ContentModelCorePlugins';
+import type { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
+import type { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
+import type { ContentModelEditorPlugin } from '../publicTypes/plugin/ContentModelEditorPlugin';
+import type { ContentModelPluginState } from '../publicTypes/plugin/ContentModelPluginState';
+import type { DomToModelOption, ModelToDomOption } from 'roosterjs-content-model-types';
 import {
     createDomToModelConfig,
     createModelToDomConfig,

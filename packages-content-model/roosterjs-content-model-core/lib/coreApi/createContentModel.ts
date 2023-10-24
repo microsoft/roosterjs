@@ -1,5 +1,5 @@
-import { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
-import { CreateContentModel } from '../publicTypes/coreApi/CreateContentModel';
+import type { ContentModelEditorCore } from '../publicTypes/editor/ContentModelEditorCore';
+import type { CreateContentModel } from '../publicTypes/coreApi/CreateContentModel';
 import type { DOMSelection, DomToModelOption } from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,

@@ -1,9 +1,9 @@
-import { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
-import { ContentModelFormatPluginState } from '../publicTypes/pluginState/ContentModelFormatPluginState';
-import { ContentModelPluginEvent } from '../publicTypes/event/ContentModelPluginEvent';
-import { ContentModelPluginWithState } from '../publicTypes/plugin/ContentModelPluginWithState';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import { IContentModelEditor } from '../publicTypes/editor/IContentModelEditor';
+import type { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
+import type { ContentModelFormatPluginState } from '../publicTypes/pluginState/ContentModelFormatPluginState';
+import type { ContentModelPluginEvent } from '../publicTypes/event/ContentModelPluginEvent';
+import type { ContentModelPluginWithState } from '../publicTypes/plugin/ContentModelPluginWithState';
+import type { IContentModelEditor } from '../publicTypes/editor/IContentModelEditor';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';

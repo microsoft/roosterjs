@@ -1,5 +1,5 @@
-import { ContentModelEditorCore } from '../editor/ContentModelEditorCore';
-import {
+import type { ContentModelEditorCore } from '../editor/ContentModelEditorCore';
+import type {
     ContentModelDocument,
     DOMSelection,
     ModelToDomOption,

@@ -1,10 +1,10 @@
-import { ContentModelCoreApiMap } from '../publicTypes/coreApi/ContentModelCoreApiMap';
 import { createContentModel } from '../coreApi/createContentModel';
 import { createEditorContext } from '../coreApi/createEditorContext';
 import { getDOMSelection } from '../coreApi/getDOMSelection';
 import { setContentModel } from '../coreApi/setContentModel';
 import { setDOMSelection } from '../coreApi/setDOMSelection';
 import { switchShadowEdit } from '../coreApi/switchShadowEdit';
+import type { ContentModelCoreApiMap } from '../publicTypes/coreApi/ContentModelCoreApiMap';
 
 /**
  * @internal

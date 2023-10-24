@@ -1,7 +1,7 @@
-import { ContentModelEditorPlugin } from '../publicTypes/plugin/ContentModelEditorPlugin';
-import { ContentModelPluginEvent } from '../publicTypes/event/ContentModelPluginEvent';
-import { ContentModelPluginKeyDownEvent } from '../publicTypes/event/ContentModelPluginDomEvent';
-import { IContentModelEditor } from '../publicTypes/editor/IContentModelEditor';
+import type { ContentModelEditorPlugin } from '../publicTypes/plugin/ContentModelEditorPlugin';
+import type { ContentModelPluginEvent } from '../publicTypes/event/ContentModelPluginEvent';
+import type { ContentModelPluginKeyDownEvent } from '../publicTypes/event/ContentModelPluginDomEvent';
+import type { IContentModelEditor } from '../publicTypes/editor/IContentModelEditor';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.

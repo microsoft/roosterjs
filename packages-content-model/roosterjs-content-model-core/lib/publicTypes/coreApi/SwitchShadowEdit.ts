@@ -1,4 +1,4 @@
-import { ContentModelEditorCore } from '../editor/ContentModelEditorCore';
+import type { ContentModelEditorCore } from '../editor/ContentModelEditorCore';
 
 /**
  * Switch the Shadow Edit mode of editor On/Off

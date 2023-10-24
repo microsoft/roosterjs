@@ -1,7 +1,7 @@
-import { ContentModelCoreApiMap } from '../coreApi/ContentModelCoreApiMap';
-import { ContentModelEditorPlugin } from '../plugin/ContentModelEditorPlugin';
-import { ContentModelPluginState } from '../plugin/ContentModelPluginState';
-import { EditorEnvironment } from './EditorEnvironment';
+import type { ContentModelCoreApiMap } from '../coreApi/ContentModelCoreApiMap';
+import type { ContentModelEditorPlugin } from '../plugin/ContentModelEditorPlugin';
+import type { ContentModelPluginState } from '../plugin/ContentModelPluginState';
+import type { EditorEnvironment } from './EditorEnvironment';
 import type {
     DomToModelOption,
     DomToModelSettings,

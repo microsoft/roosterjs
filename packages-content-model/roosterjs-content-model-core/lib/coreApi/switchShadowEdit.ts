@@ -1,4 +1,4 @@
-import { SwitchShadowEdit } from '../publicTypes/coreApi/SwitchShadowEdit';
+import type { SwitchShadowEdit } from '../publicTypes/coreApi/SwitchShadowEdit';
 
 /**
  * @internal

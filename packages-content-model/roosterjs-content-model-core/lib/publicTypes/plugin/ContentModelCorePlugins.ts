@@ -1,7 +1,7 @@
-import { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
-import { ContentModelEditorPlugin } from './ContentModelEditorPlugin';
-import { ContentModelFormatPluginState } from '../pluginState/ContentModelFormatPluginState';
-import { ContentModelPluginWithState } from './ContentModelPluginWithState';
+import type { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
+import type { ContentModelEditorPlugin } from './ContentModelEditorPlugin';
+import type { ContentModelFormatPluginState } from '../pluginState/ContentModelFormatPluginState';
+import type { ContentModelPluginWithState } from './ContentModelPluginWithState';
 
 /**
  * An interface for editor core plugins.

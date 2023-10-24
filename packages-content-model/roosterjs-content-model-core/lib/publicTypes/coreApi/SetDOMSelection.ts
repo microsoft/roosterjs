@@ -1,5 +1,5 @@
-import { ContentModelEditorCore } from '../editor/ContentModelEditorCore';
-import { DOMSelection } from 'roosterjs-content-model-types';
+import type { ContentModelEditorCore } from '../editor/ContentModelEditorCore';
+import type { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * Set current DOM selection from editor. This is the replacement of core API select

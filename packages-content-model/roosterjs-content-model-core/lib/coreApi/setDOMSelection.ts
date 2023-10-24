@@ -1,5 +1,5 @@
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
-import { SetDOMSelection } from '../publicTypes/coreApi/SetDOMSelection';
+import type { SetDOMSelection } from '../publicTypes/coreApi/SetDOMSelection';
 import type { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**

@@ -1,4 +1,4 @@
-import { SetContentModel } from '../publicTypes/coreApi/SetContentModel';
+import type { SetContentModel } from '../publicTypes/coreApi/SetContentModel';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -25,14 +25,14 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         onNodeCreated
     );
 
-    if (!core.lifecycle.shadowEditFragment) {
-        core.cache.cachedSelection = selection || undefined;
+    if (!core.pluginState.lifecycle.isInShadowEdit) {
+        core.pluginState.cache.cachedSelection = selection || undefined;
 
         if (selection) {
             core.api.setDOMSelection(core, selection);
         }
 
-        core.cache.cachedModel = model;
+        core.pluginState.cache.cachedModel = model;
     }
 
     return selection;

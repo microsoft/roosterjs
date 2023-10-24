@@ -1,5 +1,5 @@
-import { ContentModelPluginEvent } from '../event/ContentModelPluginEvent';
-import { IContentModelEditor } from '../editor/IContentModelEditor';
+import type { ContentModelPluginEvent } from '../event/ContentModelPluginEvent';
+import type { IContentModelEditor } from '../editor/IContentModelEditor';
 
 /**
  * Interface of an editor plugin

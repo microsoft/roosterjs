@@ -1,5 +1,5 @@
-import { ContentModelCorePlugins } from './ContentModelCorePlugins';
-import { ContentModelPluginWithState } from './ContentModelPluginWithState';
+import type { ContentModelCorePlugins } from './ContentModelCorePlugins';
+import type { ContentModelPluginWithState } from './ContentModelPluginWithState';
 
 /**
  * Names of core plugins

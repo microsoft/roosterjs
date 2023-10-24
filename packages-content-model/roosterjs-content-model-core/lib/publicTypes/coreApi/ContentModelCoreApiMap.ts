@@ -1,9 +1,9 @@
-import { CreateContentModel } from './CreateContentModel';
-import { CreateEditorContext } from './CreateEditorContext';
-import { GetDOMSelection } from './GetDOMSelection';
-import { SetContentModel } from './SetContentModel';
-import { SetDOMSelection } from './SetDOMSelection';
-import { SwitchShadowEdit } from './SwitchShadowEdit';
+import type { CreateContentModel } from './CreateContentModel';
+import type { CreateEditorContext } from './CreateEditorContext';
+import type { GetDOMSelection } from './GetDOMSelection';
+import type { SetContentModel } from './SetContentModel';
+import type { SetDOMSelection } from './SetDOMSelection';
+import type { SwitchShadowEdit } from './SwitchShadowEdit';
 
 /**
  * The interface for the map of core API for Content Model editor.

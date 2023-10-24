@@ -1,10 +1,10 @@
-import { ContentModelCachePluginState } from '../publicTypes/pluginState/ContentModelCachePluginState';
 import { contentModelDomIndexer } from './contentModelDomIndexer';
-import { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
-import { ContentModelPluginEvent } from '../publicTypes/event/ContentModelPluginEvent';
-import { ContentModelPluginKeyDownEvent } from '../publicTypes/event/ContentModelPluginDomEvent';
-import { ContentModelPluginWithState } from '../publicTypes/plugin/ContentModelPluginWithState';
-import { IContentModelEditor } from '../publicTypes/editor/IContentModelEditor';
+import type { ContentModelCachePluginState } from '../publicTypes/pluginState/ContentModelCachePluginState';
+import type { ContentModelEditorOptions } from '../publicTypes/editor/ContentModelEditorOptions';
+import type { ContentModelPluginEvent } from '../publicTypes/event/ContentModelPluginEvent';
+import type { ContentModelPluginKeyDownEvent } from '../publicTypes/event/ContentModelPluginDomEvent';
+import type { ContentModelPluginWithState } from '../publicTypes/plugin/ContentModelPluginWithState';
+import type { IContentModelEditor } from '../publicTypes/editor/IContentModelEditor';
 
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary

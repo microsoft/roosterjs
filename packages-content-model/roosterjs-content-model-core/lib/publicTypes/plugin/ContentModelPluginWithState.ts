@@ -1,4 +1,4 @@
-import { ContentModelEditorPlugin } from './ContentModelEditorPlugin';
+import type { ContentModelEditorPlugin } from './ContentModelEditorPlugin';
 
 /**
  * An editor plugin which have a state object stored on editor core

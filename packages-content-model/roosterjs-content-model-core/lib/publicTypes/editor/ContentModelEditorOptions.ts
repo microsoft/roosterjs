@@ -1,4 +1,4 @@
-import { ContentModelCoreApiMap } from '../coreApi/ContentModelCoreApiMap';
+import type { ContentModelCoreApiMap } from '../coreApi/ContentModelCoreApiMap';
 import type {
     ContentModelSegmentFormat,
     DomToModelOption,
