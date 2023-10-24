@@ -28,4 +28,9 @@ export interface ModelToDomOption {
      * Overrides default metadata appliers
      */
     metadataAppliers?: Partial<MetadataAppliers>;
+
+    /**
+     * When set to true, selection from content model will not be applied
+     */
+    ignoreSelection?: boolean;
 }
