@@ -114,7 +114,7 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
                 }
             }
 
-            normalizeTable(tableModel);
+            normalizeTable(tableModel, model.format);
 
             if (hasMetadata(tableModel)) {
                 applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
