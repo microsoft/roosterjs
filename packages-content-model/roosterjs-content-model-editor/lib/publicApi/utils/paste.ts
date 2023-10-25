@@ -3,6 +3,8 @@ import { ChangeSource } from '../../publicTypes/event/ContentModelContentChanged
 import { formatWithContentModel } from './formatWithContentModel';
 import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { mergeModel } from '../../modelApi/common/mergeModel';
+import { setPendingFormat } from 'roosterjs-content-model-editor/lib/modelApi/format/pendingFormat';
+import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -35,6 +37,19 @@ const PasteTypeMap: Record<PasteType, OldPasteType> = {
     mergeFormat: OldPasteType.MergeFormat,
     normal: OldPasteType.Normal,
 };
+const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
+    backgroundColor: '',
+    fontFamily: '',
+    fontSize: '',
+    fontWeight: '',
+    italic: false,
+    letterSpacing: '',
+    lineHeight: '',
+    strikethrough: false,
+    superOrSubScriptSequence: '',
+    textColor: '',
+    underline: false,
+};
 
 /**
  * Paste into editor using a clipboardData object
@@ -55,6 +70,7 @@ export default function paste(
     }
 
     editor.focus();
+    let originalFormat: ContentModelSegmentFormat | undefined;
 
     formatWithContentModel(
         editor,
@@ -81,13 +97,17 @@ export default function paste(
                 createDomToModelContext(undefined /*editorContext*/, domToModelOption)
             );
 
-            mergePasteContent(
+            const insertPoint = mergePasteContent(
                 model,
                 context,
                 pasteModel,
                 pasteType == 'mergeFormat',
                 customizedMerge
             );
+
+            if (insertPoint) {
+                originalFormat = insertPoint.marker.format;
+            }
 
             return true;
         },
@@ -97,6 +117,17 @@ export default function paste(
             getChangeData: () => clipboardData,
         }
     );
+
+    const pos = editor.getFocusedPosition();
+
+    if (originalFormat && pos) {
+        setPendingFormat(
+            editor,
+            { ...EmptySegmentFormat, ...originalFormat }, // Use empty format as initial value to clear any other format inherits from pasted content
+            pos.node,
+            pos.offset
+        );
+    }
 }
 
 /**
@@ -110,16 +141,14 @@ export function mergePasteContent(
     applyCurrentFormat: boolean,
     customizedMerge:
         | undefined
-        | ((source: ContentModelDocument, target: ContentModelDocument) => void)
-) {
-    if (customizedMerge) {
-        customizedMerge(model, pasteModel);
-    } else {
-        mergeModel(model, pasteModel, context, {
-            mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
-            mergeTable: shouldMergeTable(pasteModel),
-        });
-    }
+        | ((source: ContentModelDocument, target: ContentModelDocument) => InsertPoint | null)
+): InsertPoint | null {
+    return customizedMerge
+        ? customizedMerge(model, pasteModel)
+        : mergeModel(model, pasteModel, context, {
+              mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
+              mergeTable: shouldMergeTable(pasteModel),
+          });
 }
 
 function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined {

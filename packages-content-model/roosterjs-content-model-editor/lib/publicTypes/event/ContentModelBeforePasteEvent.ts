@@ -1,3 +1,4 @@
+import { InsertPoint } from '../selection/InsertPoint';
 import type { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
 import type {
     BeforePasteEvent,
@@ -16,7 +17,10 @@ export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
-    customizedMerge?: (target: ContentModelDocument, source: ContentModelDocument) => void;
+    customizedMerge?: (
+        target: ContentModelDocument,
+        source: ContentModelDocument
+    ) => InsertPoint | null;
 }
 
 /**
