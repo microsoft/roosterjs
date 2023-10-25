@@ -1,4 +1,4 @@
-import { InsertPoint } from '../selection/InsertPoint';
+import type { InsertPoint } from '../selection/InsertPoint';
 import type { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
 import type {
     BeforePasteEvent,

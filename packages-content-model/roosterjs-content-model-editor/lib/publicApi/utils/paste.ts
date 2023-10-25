@@ -3,7 +3,7 @@ import { ChangeSource } from '../../publicTypes/event/ContentModelContentChanged
 import { formatWithContentModel } from './formatWithContentModel';
 import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { mergeModel } from '../../modelApi/common/mergeModel';
-import { setPendingFormat } from 'roosterjs-content-model-editor/lib/modelApi/format/pendingFormat';
+import { setPendingFormat } from '../../modelApi/format/pendingFormat';
 import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import type {
     ContentModelDocument,
