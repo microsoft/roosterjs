@@ -60,6 +60,7 @@ export default function toggleListType(
             if (vList && start && end) {
                 vList.changeListType(start, end, listType);
                 vList.setListStyleType(orderedStyle, unorderedStyle);
+                vList.removeMargins();
                 vList.writeBack(
                     editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements),
                     editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain)
