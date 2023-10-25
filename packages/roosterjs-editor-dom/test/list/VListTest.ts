@@ -509,7 +509,7 @@ describe('VList.writeBack', () => {
 
     it('Write back with Lists with list item types', () => {
         const styledList =
-            '<ol style="margin-block: 0px;"><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol><li><br></li></ol></ol></ol></ol>';
+            '<ol style="margin-block: 0px;"><li>123</li><ol style="margin-block: 0px; list-style-type: decimal;"><li>123</li><ol style="margin-block: 0px; list-style-type: decimal;"><li>123</li><ol style="margin-block: 0px;"><li><br></li></ol></ol></ol></ol>';
         const div = document.createElement('div');
         document.body.append(div);
         div.innerHTML = styledList;
@@ -1516,5 +1516,39 @@ describe('VList.setListStyleType', () => {
             undefined,
             { orderedStyleType: 19, unorderedStyleType: 1 }
         );
+    });
+});
+
+describe('VList.removeMargins', () => {
+    const testId = 'VList_changeListType';
+    const ListRoot = 'listRoot';
+
+    afterEach(() => {
+        DomTestHelper.removeElement(testId);
+    });
+
+    function runTest(source: string) {
+        DomTestHelper.createElementFromContent(testId, source);
+        const list = document.getElementById(ListRoot) as HTMLOListElement;
+
+        if (!list) {
+            throw new Error('No root node');
+        }
+        const vList = new VList(list);
+
+        // Act
+        vList.removeMargins();
+        expect(list.style.marginBlock).toEqual('0px');
+        DomTestHelper.removeElement(testId);
+    }
+
+    it('remove list margins OL list', () => {
+        const list = `<ol id="${ListRoot}"></ol>`;
+        runTest(list);
+    });
+
+    it('remove list margins UL list', () => {
+        const list = `<ul id="${ListRoot}"></ul>`;
+        runTest(list);
     });
 });
