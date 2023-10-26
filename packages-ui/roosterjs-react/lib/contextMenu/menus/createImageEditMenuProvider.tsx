@@ -1,8 +1,13 @@
 import createContextMenuProvider from '../utils/createContextMenuProvider';
 import showInputDialog from '../../inputDialog/utils/showInputDialog';
-import { canRegenerateImage, resetImage, resizeByPercentage } from 'roosterjs-editor-plugins';
-import { DocumentCommand, ImageEditOperation } from 'roosterjs-editor-types';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
+import {
+    canRegenerateImage,
+    isResizedTo,
+    resetImage,
+    resizeByPercentage,
+} from 'roosterjs-editor-plugins';
+import { DocumentCommand, ImageEditOperation, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { getObjectKeys, safeInstanceOf } from 'roosterjs-editor-dom';
 import { setImageAltText } from 'roosterjs-editor-api';
 import type ContextMenuItem from '../types/ContextMenuItem';
 import type { EditorPlugin, IEditor } from 'roosterjs-editor-types';
@@ -40,6 +45,13 @@ const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdi
     },
 };
 
+const sizeMap: { [key in ImageEditMenuItemStringKey]?: number } = {
+    menuNameImageSizeBestFit: 0,
+    menuNameImageSizeSmall: 0.25,
+    menuNameImageSizeMedium: 0.5,
+    menuNameImageSizeOriginal: 1,
+};
+
 const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageResize',
     unlocalizedText: 'Size',
@@ -51,20 +63,9 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     },
     onClick: (key, editor, node) => {
         editor.addUndoSnapshot(() => {
-            let percentage = 0;
-            switch (key) {
-                case 'menuNameImageSizeSmall':
-                    percentage = 0.25;
-                    break;
-                case 'menuNameImageSizeMedium':
-                    percentage = 0.5;
-                    break;
-                case 'menuNameImageSizeOriginal':
-                    percentage = 1;
-                    break;
-            }
+            const percentage = sizeMap[key];
 
-            if (percentage > 0) {
+            if (percentage != undefined && percentage > 0) {
                 resizeByPercentage(
                     editor,
                     node as HTMLImageElement,
@@ -76,6 +77,20 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
                 resetImage(editor, node as HTMLImageElement);
             }
         });
+    },
+    getSelectedId(editor, target) {
+        const selection = editor.getSelectionRangeEx();
+        const image =
+            selection.type == SelectionRangeTypes.ImageSelection
+                ? selection.image
+                : getImageFromTarget(target);
+        return image
+            ? getObjectKeys(sizeMap).find(key =>
+                  image && key == 'menuNameImageSizeBestFit'
+                      ? !image.hasAttribute('width') && !image.hasAttribute('height')
+                      : isResizedTo(image, sizeMap[key]!)
+              ) ?? null
+            : null;
     },
 };
 
@@ -186,6 +201,14 @@ const ImageCutMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> =
 
 function shouldShowImageEditItems(editor: IEditor, node: Node) {
     return safeInstanceOf(node, 'HTMLImageElement') && node.isContentEditable;
+}
+
+function getImageFromTarget(target: Node) {
+    return safeInstanceOf(target, 'HTMLImageElement')
+        ? target
+        : safeInstanceOf(target, 'HTMLElement')
+        ? target.querySelector('img')
+        : null;
 }
 
 /**
