@@ -78,7 +78,7 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
             }
         });
     },
-    getSelectedId(editor, target) {
+    getSelectedId: (editor, target) => {
         const selection = editor.getSelectionRangeEx();
         const image =
             selection.type == SelectionRangeTypes.ImageSelection
