@@ -42,6 +42,8 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
      */
     shouldShow?: (editor: IEditor, targetNode: Node, context?: TContext) => boolean;
 
+    getSelectedId?: (editor: IEditor, targetNode: Node) => TString | null;
+
     /**
      * A key-value map for sub menu items, key is the key of menu item, value is unlocalized string
      * When click on a child item, onClick handler will be triggered with the key of the clicked child item passed in as the second parameter
