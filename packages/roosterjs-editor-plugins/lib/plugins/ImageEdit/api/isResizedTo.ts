@@ -10,7 +10,7 @@ import { getEditInfoFromImage } from '../editInfoUtils/editInfo';
 export default function isResizedTo(
     image: HTMLImageElement,
     percentage: number,
-    maxError = 1
+    maxError: number = 1
 ): boolean {
     const editInfo = getEditInfoFromImage(image);
     if (editInfo) {
