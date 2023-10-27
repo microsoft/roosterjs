@@ -1,8 +1,16 @@
 import * as applyTableFormat from '../../../lib/modelApi/table/applyTableFormat';
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
-import { ContentModelDocument, ContentModelImage } from 'roosterjs-content-model-types';
 import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
+import {
+    ContentModelDocument,
+    ContentModelImage,
+    ContentModelListItem,
+    ContentModelParagraph,
+    ContentModelSelectionMarker,
+    ContentModelTable,
+    ContentModelTableCell,
+} from 'roosterjs-content-model-types';
 import {
     createBr,
     createContentModelDocument,
@@ -27,31 +35,38 @@ describe('mergeModel', () => {
         para.segments.push(marker);
         majorModel.blocks.push(para);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
 
-        expect(majorModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            format: {},
+            segments: [
                 {
-                    blockType: 'Paragraph',
+                    segmentType: 'SelectionMarker',
                     format: {},
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
+                    isSelected: true,
+                },
+                {
+                    segmentType: 'Br',
+                    format: {},
                 },
             ],
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -71,37 +86,43 @@ describe('mergeModel', () => {
         para2.segments.push(text1, text2);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
-
-        expect(majorModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
                 {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test1',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test2',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {},
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
                     format: {},
                 },
             ],
+            format: {},
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -125,50 +146,56 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {
+                textColor: 'green',
+            },
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {
+                        textColor: 'red',
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test3',
+                    format: {
+                        textColor: 'blue',
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test4',
+                    format: {
+                        textColor: 'yellow',
+                    },
+                },
+                marker,
+            ],
+            format: {},
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test1',
-                            format: {
-                                textColor: 'red',
-                            },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test3',
-                            format: {
-                                textColor: 'blue',
-                            },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test4',
-                            format: {
-                                textColor: 'yellow',
-                            },
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {
-                                textColor: 'green',
-                            },
-                        },
-                    ],
-                    format: {},
-                },
-            ],
+            blocks: [paragraph],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -208,11 +235,37 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {
+                textColor: 'green',
+            },
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'newText2',
+                    format: {},
+                },
+                marker,
+                {
+                    segmentType: 'Text',
+                    text: 'test4',
+                    format: {
+                        textColor: 'yellow',
+                    },
+                },
+            ],
+            format: {},
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -235,32 +288,14 @@ describe('mergeModel', () => {
                     ],
                     format: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'newText2',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {
-                                textColor: 'green',
-                            },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test4',
-                            format: {
-                                textColor: 'yellow',
-                            },
-                        },
-                    ],
-                    format: {},
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -307,11 +342,51 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara2);
         sourceModel.blocks.push(newPara3);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'newText3',
+                    format: {},
+                },
+                marker,
+                {
+                    segmentType: 'Text',
+                    text: 'test21',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [paragraph],
+            levels: [
+                {
+                    listType: 'OL',
+                    format: {},
+                    dataset: {},
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: true,
+                format: {},
+            },
+            format: {},
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -381,47 +456,14 @@ describe('mergeModel', () => {
                     },
                     format: {},
                 },
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'newText3',
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test21',
-                                    format: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {},
-                            dataset: {},
-                        },
-                    ],
-                    formatHolder: {
-                        segmentType: 'SelectionMarker',
-                        isSelected: true,
-                        format: {},
-                    },
-                    format: {},
-                },
+                listItem,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [listItem, majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -458,11 +500,27 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                marker,
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -538,22 +596,14 @@ describe('mergeModel', () => {
                     },
                     format: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -628,11 +678,52 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
+
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                marker,
+                {
+                    segmentType: 'Text',
+                    text: 'test22',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [paragraph],
+            levels: [
+                {
+                    listType: 'OL',
+                    dataset: {
+                        editingInfo: JSON.stringify({
+                            startNumberOverride: 1,
+                            unorderedStyleType: 2,
+                        }),
+                    },
+                    format: {},
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: true,
+                format: {},
+            },
+            format: {},
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -752,47 +843,14 @@ describe('mergeModel', () => {
                     },
                     format: {},
                 },
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test22',
-                                    format: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    levels: [
-                        {
-                            listType: 'OL',
-                            dataset: {
-                                editingInfo: JSON.stringify({
-                                    startNumberOverride: 1,
-                                    unorderedStyleType: 2,
-                                }),
-                            },
-                            format: {},
-                        },
-                    ],
-                    formatHolder: {
-                        segmentType: 'SelectionMarker',
-                        isSelected: true,
-                        format: {},
-                    },
-                    format: {},
-                },
+                listItem,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [listItem, majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -820,11 +878,28 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(newTable1);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
+
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                marker,
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -864,22 +939,14 @@ describe('mergeModel', () => {
                     widths: [],
                     dataset: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -925,76 +992,87 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
 
-        expect(normalizeTable.normalizeTable).not.toHaveBeenCalled();
-        expect(majorModel).toEqual({
-            blockGroupType: 'Document',
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                marker,
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const tableCell: ContentModelTableCell = {
+            blockGroupType: 'TableCell',
             blocks: [
                 {
                     blockType: 'Table',
-                    rows: [
-                        { format: {}, height: 0, cells: [cell11, cell12] },
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                cell21,
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Table',
-                                            format: {},
-                                            widths: [],
-                                            dataset: {},
-                                            rows: [
-                                                {
-                                                    format: {},
-                                                    height: 0,
-                                                    cells: [newCell11, newCell12],
-                                                },
-                                                {
-                                                    format: {},
-                                                    height: 0,
-                                                    cells: [newCell21, newCell22],
-                                                },
-                                            ],
-                                        },
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'SelectionMarker',
-                                                    format: {},
-                                                    isSelected: true,
-                                                },
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                    ],
                     format: {},
                     widths: [],
                     dataset: {},
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [newCell11, newCell12],
+                        },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [newCell21, newCell22],
+                        },
+                    ],
+                },
+                paragraph,
+            ],
+            format: {},
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            dataset: {},
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            rows: [
+                { format: {}, height: 0, cells: [cell11, cell12] },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cell21, tableCell],
                 },
             ],
+            format: {},
+            widths: [],
+            dataset: {},
+        };
+
+        expect(normalizeTable.normalizeTable).not.toHaveBeenCalled();
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [table],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [tableCell, majorModel],
+            tableContext: {
+                table,
+                rowIndex: 1,
+                colIndex: 1,
+                isWholeTableSelected: false,
+            },
         });
     });
 
@@ -1046,7 +1124,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -1055,90 +1133,96 @@ describe('mergeModel', () => {
             }
         );
 
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker],
+            format: {},
+            isImplicit: true,
+        };
+        const tableCell: ContentModelTableCell = {
+            blockGroupType: 'TableCell',
+            blocks: [paragraph],
+            format: {
+                backgroundColor: 'n11',
+            },
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            dataset: {},
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        cell01,
+                        cell02,
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {
+                                backgroundColor: '02',
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cell11, tableCell, newCell12],
+                },
+                { format: {}, height: 0, cells: [cell21, newCell21, newCell22] },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        cell31,
+                        cell32,
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {
+                                backgroundColor: '32',
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+            widths: [],
+            dataset: {},
+        };
+
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    rows: [
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                cell01,
-                                cell02,
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [],
-                                    format: {
-                                        backgroundColor: '02',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                cell11,
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'SelectionMarker',
-                                                    isSelected: true,
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                            isImplicit: true,
-                                        },
-                                    ],
-                                    format: {
-                                        backgroundColor: 'n11',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                                newCell12,
-                            ],
-                        },
-                        { format: {}, height: 0, cells: [cell21, newCell21, newCell22] },
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                cell31,
-                                cell32,
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [],
-                                    format: {
-                                        backgroundColor: '32',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                    ],
-                    format: {},
-                    widths: [],
-                    dataset: {},
-                },
-            ],
+            blocks: [table],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [tableCell, majorModel],
+            tableContext: {
+                table,
+                rowIndex: 1,
+                colIndex: 1,
+                isWholeTableSelected: false,
+            },
         });
     });
 
@@ -1188,7 +1272,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -1196,84 +1280,88 @@ describe('mergeModel', () => {
                 mergeTable: true,
             }
         );
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker],
+            format: {},
+            isImplicit: true,
+        };
+        const tableCell: ContentModelTableCell = {
+            blockGroupType: 'TableCell',
+            blocks: [paragraph],
+            format: {
+                backgroundColor: 'n11',
+            },
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            dataset: {},
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            rows: [
+                { format: {}, height: 0, cells: [cell01, cell02, cell03, cell04] },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cell11, tableCell, newCell12, cell14],
+                },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {
+                                backgroundColor: '11',
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                        newCell21,
+                        newCell22,
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {
+                                backgroundColor: '14',
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+            widths: [],
+            dataset: {},
+        };
 
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    rows: [
-                        { format: {}, height: 0, cells: [cell01, cell02, cell03, cell04] },
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                cell11,
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'SelectionMarker',
-                                                    isSelected: true,
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                            isImplicit: true,
-                                        },
-                                    ],
-                                    format: {
-                                        backgroundColor: 'n11',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                                newCell12,
-                                cell14,
-                            ],
-                        },
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [],
-                                    format: {
-                                        backgroundColor: '11',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                                newCell21,
-                                newCell22,
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [],
-                                    format: {
-                                        backgroundColor: '14',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                    ],
-                    format: {},
-                    widths: [],
-                    dataset: {},
-                },
-            ],
+            blocks: [table],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [tableCell, majorModel],
+            tableContext: {
+                table,
+                rowIndex: 1,
+                colIndex: 1,
+                isWholeTableSelected: false,
+            },
         });
     });
 
@@ -1319,7 +1407,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -1328,89 +1416,94 @@ describe('mergeModel', () => {
             }
         );
 
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker],
+            format: {},
+            isImplicit: true,
+        };
+        const tableCell: ContentModelTableCell = {
+            blockGroupType: 'TableCell',
+            blocks: [paragraph],
+            format: {
+                backgroundColor: 'n11',
+            },
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            dataset: {},
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        cell01,
+                        cell02,
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {
+                                backgroundColor: '02',
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cell11, tableCell, newCell12],
+                },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {
+                                backgroundColor: '11',
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                        newCell21,
+                        newCell22,
+                    ],
+                },
+            ],
+            format: {},
+            widths: [],
+            dataset: {},
+        };
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    rows: [
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                cell01,
-                                cell02,
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [],
-                                    format: {
-                                        backgroundColor: '02',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                cell11,
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'SelectionMarker',
-                                                    isSelected: true,
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                            isImplicit: true,
-                                        },
-                                    ],
-                                    format: {
-                                        backgroundColor: 'n11',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                                newCell12,
-                            ],
-                        },
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [],
-                                    format: {
-                                        backgroundColor: '11',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                                newCell21,
-                                newCell22,
-                            ],
-                        },
-                    ],
-                    format: {},
-                    widths: [],
-                    dataset: {},
-                },
-            ],
+            blocks: [table],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [tableCell, majorModel],
+            tableContext: {
+                table,
+                rowIndex: 1,
+                colIndex: 1,
+                isWholeTableSelected: false,
+            },
         });
     });
 
@@ -1421,7 +1514,7 @@ describe('mergeModel', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const marker1 = createSelectionMarker();
-        const marker2 = createSelectionMarker();
+        const marker2 = createSelectionMarker({ fontSize: '10pt' });
         const marker3 = createSelectionMarker();
 
         para1.segments.push(marker1, text1, marker2, text2, marker3);
@@ -1433,7 +1526,7 @@ describe('mergeModel', () => {
         newPara.segments.push(newText);
         sourceModel.blocks.push(newPara);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -1446,46 +1539,47 @@ describe('mergeModel', () => {
             }
         );
 
-        expect(majorModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
                 {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test1',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'new text',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test2',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'new text',
+                    format: {},
+                },
+                marker2,
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {},
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
                     format: {},
                 },
             ],
+            format: {},
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(result).toEqual({
+            marker: marker2,
+            paragraph,
+            path: [majorModel],
         });
     });
 
@@ -1516,7 +1610,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -1525,27 +1619,29 @@ describe('mergeModel', () => {
             }
         );
 
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: MockedFormat,
+                },
+                marker,
+            ],
+            format: {},
+        };
+
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: MockedFormat,
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                    format: {},
-                },
-            ],
+            blocks: [paragraph],
             format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -1578,7 +1674,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -1587,27 +1683,29 @@ describe('mergeModel', () => {
             }
         );
 
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: MockedFormat,
+                },
+                marker,
+            ],
+            format: {},
+        };
+
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: MockedFormat,
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                    format: {},
-                },
-            ],
+            blocks: [paragraph],
             format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -1631,8 +1729,8 @@ describe('mergeModel', () => {
                             format: {
                                 formatName: 'ToBeRemoved',
                                 fontWeight: 'sourceFontWeight',
-                                italic: 'sourceItalic',
-                                underline: 'sourceUnderline',
+                                italic: true,
+                                underline: true,
                             } as any,
                         },
                     ],
@@ -1646,7 +1744,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -1655,32 +1753,34 @@ describe('mergeModel', () => {
             }
         );
 
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        formatName: 'mocked',
+                        fontWeight: 'sourceFontWeight',
+                        italic: true,
+                        underline: true,
+                    } as any,
+                },
+                marker,
+            ],
+            format: {},
+        };
+
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: {
-                                formatName: 'mocked',
-                                fontWeight: 'sourceFontWeight',
-                                italic: 'sourceItalic',
-                                underline: 'sourceUnderline',
-                            } as any,
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                    format: {},
-                },
-            ],
+            blocks: [paragraph],
             format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -1724,8 +1824,8 @@ describe('mergeModel', () => {
                                     format: {
                                         formatName: 'ToBeRemoved',
                                         fontWeight: 'sourceFontWeight',
-                                        italic: 'sourceItalic',
-                                        underline: 'sourceUnderline',
+                                        italic: true,
+                                        underline: true,
                                     } as any,
                                 },
                             ],
@@ -1741,7 +1841,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -1749,6 +1849,12 @@ describe('mergeModel', () => {
                 mergeFormat: 'keepSourceEmphasisFormat',
             }
         );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker, { segmentType: 'Br', format: {} }],
+            format: {},
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1779,8 +1885,8 @@ describe('mergeModel', () => {
                                         backgroundColor: 'rgb(0,0,0)',
                                         color: 'rgb(255,255,255)',
                                         fontWeight: 'sourceFontWeight',
-                                        italic: 'sourceItalic',
-                                        underline: 'sourceUnderline',
+                                        italic: true,
+                                        underline: true,
                                     } as any,
                                 },
                             ],
@@ -1788,20 +1894,15 @@ describe('mergeModel', () => {
                         },
                     ],
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        { segmentType: 'Br', format: {} },
-                    ],
-                    format: {},
-                },
+                paragraph,
             ],
             format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -1820,11 +1921,17 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(divider);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker, { segmentType: 'Text', text: 'test2', format: {} }],
+            format: {},
+            segmentFormat: { fontFamily: 'Arial' },
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1836,16 +1943,14 @@ describe('mergeModel', () => {
                     segmentFormat: { fontFamily: 'Arial' },
                 },
                 { blockType: 'Divider', tagName: 'hr', format: {} },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
-                        { segmentType: 'Text', text: 'test2', format: {} },
-                    ],
-                    format: {},
-                    segmentFormat: { fontFamily: 'Arial' },
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -1891,11 +1996,40 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel, {
+        const result = mergeModel(majorModel, sourceModel, {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
         });
+
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {
+                textColor: 'green',
+            },
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'newText2',
+                    format: {},
+                },
+                marker,
+                {
+                    segmentType: 'Text',
+                    text: 'test4',
+                    format: {
+                        textColor: 'yellow',
+                    },
+                },
+            ],
+            format: {
+                backgroundColor: 'red',
+            },
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1918,34 +2052,14 @@ describe('mergeModel', () => {
                     ],
                     format: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'newText2',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {
-                                textColor: 'green',
-                            },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test4',
-                            format: {
-                                textColor: 'yellow',
-                            },
-                        },
-                    ],
-                    format: {
-                        backgroundColor: 'red',
-                    },
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -1969,8 +2083,8 @@ describe('mergeModel', () => {
                             format: {
                                 formatName: 'ToBeRemoved',
                                 fontWeight: 'sourceFontWeight',
-                                italic: 'sourceItalic',
-                                underline: 'sourceUnderline',
+                                italic: true,
+                                underline: true,
                             } as any,
                         },
                     ],
@@ -1992,7 +2106,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -2001,32 +2115,34 @@ describe('mergeModel', () => {
             }
         );
 
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        formatName: 'mocked',
+                        fontWeight: 'sourceFontWeight',
+                        italic: true,
+                        underline: true,
+                    } as any,
+                },
+                marker,
+            ],
+            format: {},
+        };
+
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: {
-                                formatName: 'mocked',
-                                fontWeight: 'sourceFontWeight',
-                                italic: 'sourceItalic',
-                                underline: 'sourceUnderline',
-                            } as any,
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                    format: {},
-                },
-            ],
+            blocks: [paragraph],
             format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -2049,10 +2165,10 @@ describe('mergeModel', () => {
                             text: 'test',
                             format: {
                                 fontFamily: 'sourceFontFamily',
-                                italic: 'sourceItalic',
-                                underline: 'sourceUnderline',
+                                italic: true,
+                                underline: true,
                                 fontSize: 'sourcefontSize',
-                            } as any,
+                            },
                         },
                     ],
                     format: {},
@@ -2073,7 +2189,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -2082,49 +2198,51 @@ describe('mergeModel', () => {
             }
         );
 
-        expect(majorModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
                 {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: {
-                                fontWeight: 'sourceDecoratorFontWeight',
-                                italic: 'sourceItalic',
-                                underline: 'sourceUnderline',
-                                fontFamily: 'sourceFontFamily',
-                                fontSize: 'sourcefontSize',
-                            } as any,
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                    format: {},
-                    decorator: {
-                        tagName: 'h1',
-                        format: {
-                            fontWeight: 'sourceDecoratorFontWeight',
-                            fontSize: 'sourceDecoratorFontSize',
-                            fontFamily: 'sourceDecoratorFontName',
-                        },
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontWeight: 'sourceDecoratorFontWeight',
+                        italic: true,
+                        underline: true,
+                        fontFamily: 'sourceFontFamily',
+                        fontSize: 'sourcefontSize',
                     },
                 },
+                marker,
             ],
+            format: {},
+            decorator: {
+                tagName: 'h1',
+                format: {
+                    fontWeight: 'sourceDecoratorFontWeight',
+                    fontSize: 'sourceDecoratorFontSize',
+                    fontFamily: 'sourceDecoratorFontName',
+                },
+            },
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
             format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
     it('Merge with default format paragraph and paragraph, mergeFormat: none', () => {
         const MockedFormat = {
             fontFamily: 'sourceSegmentFormatFontFamily',
-            italic: 'sourceSegmentFormatItalic',
-            underline: 'sourceSegmentFormatUnderline',
+            italic: true,
+            underline: true,
             fontSize: 'sourceSegmentFormatFontSize',
         } as any;
         const majorModel = createContentModelDocument(MockedFormat);
@@ -2154,10 +2272,10 @@ describe('mergeModel', () => {
                             text: 'test',
                             format: {
                                 fontFamily: 'sourceFontFamily',
-                                italic: 'sourceItalic',
-                                underline: 'sourceUnderline',
+                                italic: true,
+                                underline: true,
                                 fontSize: 'sourcefontSize',
-                            } as any,
+                            },
                         },
                     ],
                     format: {},
@@ -2170,7 +2288,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -2179,47 +2297,54 @@ describe('mergeModel', () => {
             }
         );
 
+        const resultMarker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {
+                fontFamily: 'sourceSegmentFormatFontFamily',
+                italic: true,
+                underline: true,
+                fontSize: 'sourceSegmentFormatFontSize',
+            },
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontFamily: 'sourceFontFamily',
+                        italic: true,
+                        underline: true,
+                        fontSize: 'sourceSegmentFormatFontSize',
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontFamily: 'sourceFontFamily',
+                        italic: true,
+                        underline: true,
+                        fontSize: 'sourcefontSize',
+                    },
+                },
+                resultMarker,
+            ],
+            format: {},
+        };
+
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        Object({
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: Object({
-                                fontFamily: 'sourceFontFamily',
-                                italic: 'sourceSegmentFormatItalic',
-                                underline: 'sourceSegmentFormatUnderline',
-                                fontSize: 'sourceSegmentFormatFontSize',
-                            }),
-                        }),
-                        Object({
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: Object({
-                                fontFamily: 'sourceFontFamily',
-                                italic: 'sourceItalic',
-                                underline: 'sourceUnderline',
-                                fontSize: 'sourcefontSize',
-                            }),
-                        }),
-                        Object({
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: Object({
-                                fontFamily: 'sourceSegmentFormatFontFamily',
-                                italic: 'sourceSegmentFormatItalic',
-                                underline: 'sourceSegmentFormatUnderline',
-                                fontSize: 'sourceSegmentFormatFontSize',
-                            }),
-                        }),
-                    ],
-                    format: {},
-                },
-            ],
+            blocks: [paragraph],
             format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker: resultMarker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -2360,7 +2485,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(
+        const result = mergeModel(
             majorModel,
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
@@ -2368,6 +2493,24 @@ describe('mergeModel', () => {
                 mergeFormat: 'mergeAll',
             }
         );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'Test',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'black',
+                        fontWeight: 'bold',
+                    },
+                },
+                marker,
+            ],
+            format: {},
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -2479,28 +2622,14 @@ describe('mergeModel', () => {
                             '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
                     },
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'Test',
-                            format: {
-                                fontFamily: 'Calibri',
-                                fontSize: '11pt',
-                                textColor: 'black',
-                                fontWeight: 'bold',
-                            },
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -2535,37 +2664,42 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(heading);
 
-        mergeModel(majorModel, sourceModel);
+        const result = mergeModel(majorModel, sourceModel);
 
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                { segmentType: 'Text', text: 'test1', format: {} },
+                { segmentType: 'Text', text: 'sourceTest1', format: {} },
+                { segmentType: 'Text', text: 'sourceTest2', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2', format: {} },
+            ],
+            format: {},
+            decorator: {
+                tagName: 'h1',
+                format: {
+                    fontFamily: 'Calibri',
+                    fontSize: '16pt',
+                    textColor: 'aliceblue',
+                    italic: true,
+                },
+            },
+            segmentFormat: { backgroundColor: 'red' },
+        };
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        { segmentType: 'Text', text: 'test1', format: {} },
-                        { segmentType: 'Text', text: 'sourceTest1', format: {} },
-                        { segmentType: 'Text', text: 'sourceTest2', format: {} },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        { segmentType: 'Text', text: 'test2', format: {} },
-                    ],
-                    format: {},
-                    decorator: {
-                        tagName: 'h1',
-                        format: {
-                            fontFamily: 'Calibri',
-                            fontSize: '16pt',
-                            textColor: 'aliceblue',
-                            italic: true,
-                        },
-                    },
-                    segmentFormat: { backgroundColor: 'red' },
-                },
-            ],
+            blocks: [paragraph],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -2606,8 +2740,27 @@ describe('mergeModel', () => {
         newTable1.rows[0].cells.push(newCell1);
         sourceModel.blocks.push(newTable1);
 
-        mergeModel(majorModel, sourceModel);
+        const result = mergeModel(majorModel, sourceModel);
 
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2', format: {} },
+            ],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Arial',
+                fontSize: '15px',
+                backgroundColor: 'red',
+                textColor: 'blue',
+                italic: false,
+            },
+        };
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -2668,26 +2821,14 @@ describe('mergeModel', () => {
                     widths: [],
                     dataset: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        { segmentType: 'Text', text: 'test2', format: {} },
-                    ],
-                    format: {},
-                    segmentFormat: {
-                        fontFamily: 'Arial',
-                        fontSize: '15px',
-                        backgroundColor: 'red',
-                        textColor: 'blue',
-                        italic: false,
-                    },
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -2719,8 +2860,27 @@ describe('mergeModel', () => {
         });
 
         sourceModel.blocks.push(newDiv);
-        mergeModel(majorModel, sourceModel);
+        const result = mergeModel(majorModel, sourceModel);
 
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2', format: {} },
+            ],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Arial',
+                fontSize: '15px',
+                backgroundColor: 'red',
+                textColor: 'blue',
+                italic: false,
+            },
+        };
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -2749,26 +2909,14 @@ describe('mergeModel', () => {
                         backgroundColor: 'rgb(255, 255, 255)',
                     },
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        { segmentType: 'Text', text: 'test2', format: {} },
-                    ],
-                    format: {},
-                    segmentFormat: {
-                        fontFamily: 'Arial',
-                        fontSize: '15px',
-                        backgroundColor: 'red',
-                        textColor: 'blue',
-                        italic: false,
-                    },
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -2806,7 +2954,27 @@ describe('mergeModel', () => {
         para2.segments.push(text3);
 
         sourceModel.blocks.push(newList);
-        mergeModel(majorModel, sourceModel);
+        const result = mergeModel(majorModel, sourceModel);
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2', format: {} },
+            ],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Arial',
+                fontSize: '15px',
+                backgroundColor: 'red',
+                textColor: 'blue',
+                italic: false,
+            },
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -2854,26 +3022,14 @@ describe('mergeModel', () => {
                     },
                     format: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        { segmentType: 'Text', text: 'test2', format: {} },
-                    ],
-                    format: {},
-                    segmentFormat: {
-                        fontFamily: 'Arial',
-                        fontSize: '15px',
-                        backgroundColor: 'red',
-                        textColor: 'blue',
-                        italic: false,
-                    },
-                },
+                paragraph,
             ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -2908,7 +3064,27 @@ describe('mergeModel', () => {
         };
 
         sourceModel.blocks.push(newEntity);
-        mergeModel(majorModel, sourceModel, context);
+        const result = mergeModel(majorModel, sourceModel, context);
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2', format: {} },
+            ],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Arial',
+                fontSize: '15px',
+                backgroundColor: 'red',
+                textColor: 'blue',
+                italic: false,
+            },
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -2942,31 +3118,19 @@ describe('mergeModel', () => {
                     },
                     wrapper: newEntity.wrapper,
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        { segmentType: 'Text', text: 'test2', format: {} },
-                    ],
-                    format: {},
-                    segmentFormat: {
-                        fontFamily: 'Arial',
-                        fontSize: '15px',
-                        backgroundColor: 'red',
-                        textColor: 'blue',
-                        italic: false,
-                    },
-                },
+                paragraph,
             ],
         });
         expect(context).toEqual({
             newEntities: [newEntity],
             deletedEntities: [],
             newImages: [],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -2994,26 +3158,22 @@ describe('mergeModel', () => {
             newImages: [],
             newEntities: [],
         };
-        mergeModel(majorModel, sourceModel, context);
+        const result = mergeModel(majorModel, sourceModel, context);
+
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            format: {},
+            segments: [newEntity1, text, newEntity2, marker],
+        };
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        newEntity1,
-                        text,
-                        newEntity2,
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
+            blocks: [paragraph],
         });
         expect(context).toEqual({
             newEntities: [newEntity1, newEntity2],
@@ -3024,6 +3184,12 @@ describe('mergeModel', () => {
                 },
             ],
             newImages: [],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -3058,32 +3224,37 @@ describe('mergeModel', () => {
             newEntities: [],
         };
 
-        mergeModel(majorModel, sourceModel, context, {
+        const result = mergeModel(majorModel, sourceModel, context, {
             mergeFormat: 'mergeAll',
         });
 
-        expect(majorModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                newImage,
                 {
-                    blockType: 'Paragraph',
-                    segments: [
-                        newImage,
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
                     format: {},
                 },
             ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
         });
 
         expect(context).toEqual({
             deletedEntities: [],
             newEntities: [],
             newImages: [newImage],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -3124,33 +3295,38 @@ describe('mergeModel', () => {
             newEntities: [],
         };
 
-        mergeModel(majorModel, sourceModel, context, {
+        const result = mergeModel(majorModel, sourceModel, context, {
             mergeFormat: 'mergeAll',
         });
 
-        expect(majorModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                newImage,
+                newImage1,
                 {
-                    blockType: 'Paragraph',
-                    segments: [
-                        newImage,
-                        newImage1,
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
                     format: {},
                 },
             ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
         });
 
         expect(context).toEqual({
             deletedEntities: [],
             newEntities: [],
             newImages: [newImage, newImage1],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 
@@ -3191,33 +3367,38 @@ describe('mergeModel', () => {
             newImages: [image],
         };
 
-        mergeModel(majorModel, sourceModel, context, {
+        const result = mergeModel(majorModel, sourceModel, context, {
             mergeFormat: 'mergeAll',
         });
 
-        expect(majorModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                image,
+                newImage,
                 {
-                    blockType: 'Paragraph',
-                    segments: [
-                        image,
-                        newImage,
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
                     format: {},
                 },
             ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
         });
 
         expect(context).toEqual({
             deletedEntities: [],
             newEntities: [],
             newImages: [image, newImage],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
         });
     });
 });
