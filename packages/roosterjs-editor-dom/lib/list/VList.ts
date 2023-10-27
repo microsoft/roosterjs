@@ -205,8 +205,7 @@ export default class VList {
             }
 
             item.writeBack(listStack, this.rootList, shouldReuseAllAncestorListElements);
-
-            const topList = listStack[1] as HTMLElement;
+            const topList = listStack[1];
 
             item.applyListStyle(this.rootList, start);
 
@@ -328,6 +327,9 @@ export default class VList {
         });
     }
 
+    /**
+     * Remove margins of a new list
+     */
     removeMargins() {
         if (!this.rootList.style.marginTop && !this.rootList.style.marginBottom) {
             this.rootList.style.marginBlockStart = '0px';
