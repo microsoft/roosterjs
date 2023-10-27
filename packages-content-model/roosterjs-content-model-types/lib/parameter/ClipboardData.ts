@@ -1,5 +1,5 @@
-import { ContentModelDocument } from '../group/ContentModelDocument';
-import { EdgeLinkPreview } from './EdgeLinkPreview';
+import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { EdgeLinkPreview } from './EdgeLinkPreview';
 
 /**
  * An object contains all related data for pasting

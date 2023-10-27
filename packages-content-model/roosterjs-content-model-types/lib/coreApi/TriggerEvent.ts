@@ -1,5 +1,5 @@
-import { CoreEditorCore } from '../editor/CoreEditorCore';
-import { PluginEvent } from '../event/PluginEvent';
+import type { CoreEditorCore } from '../editor/CoreEditorCore';
+import type { PluginEvent } from '../event/PluginEvent';
 
 /**
  * Trigger a plugin event

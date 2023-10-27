@@ -1,4 +1,4 @@
-import { KnownAnnounceStrings } from './KnownAnnounceStrings';
+import type { KnownAnnounceStrings } from './KnownAnnounceStrings';
 
 /**
  * Represents data, that can be used to announce text to screen reader.

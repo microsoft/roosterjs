@@ -1,11 +1,11 @@
-import { ColorManager } from '../context/ColorManager';
-import { CoreEditorApiMap } from './CoreEditorApiMap';
-import { CoreEditorPlugin } from './CoreEditorPlugin';
-import { DomToModelOption } from '../context/DomToModelOption';
-import { DomToModelSettings } from '../context/DomToModelSettings';
-import { EditorEnvironment } from './EditorEnvironment';
-import { ModelToDomOption } from '../context/ModelToDomOption';
-import { ModelToDomSettings } from '../context/ModelToDomSettings';
+import type { ColorManager } from '../context/ColorManager';
+import type { CoreEditorApiMap } from './CoreEditorApiMap';
+import type { CoreEditorPlugin } from './CoreEditorPlugin';
+import type { DomToModelOption } from '../context/DomToModelOption';
+import type { DomToModelSettings } from '../context/DomToModelSettings';
+import type { EditorEnvironment } from './EditorEnvironment';
+import type { ModelToDomOption } from '../context/ModelToDomOption';
+import type { ModelToDomSettings } from '../context/ModelToDomSettings';
 
 /**
  * Represents the core data structure of a CoreEditor

@@ -1,10 +1,10 @@
-import { CreateContentModel } from '../coreApi/CreateContentModel';
-import { CreateEditorContext } from '../coreApi/CreateEditorContext';
-import { GetDOMSelection } from '../coreApi/GetDOMSelection';
-import { SetContentModel } from '../coreApi/SetContentModel';
-import { SetDOMSelection } from '../coreApi/SetDOMSelection';
-import { SwitchShadowEdit } from '../coreApi/SwitchShadowEdit';
-import { TriggerEvent } from '../coreApi/TriggerEvent';
+import type { CreateContentModel } from '../coreApi/CreateContentModel';
+import type { CreateEditorContext } from '../coreApi/CreateEditorContext';
+import type { GetDOMSelection } from '../coreApi/GetDOMSelection';
+import type { SetContentModel } from '../coreApi/SetContentModel';
+import type { SetDOMSelection } from '../coreApi/SetDOMSelection';
+import type { SwitchShadowEdit } from '../coreApi/SwitchShadowEdit';
+import type { TriggerEvent } from '../coreApi/TriggerEvent';
 
 export interface CoreEditorApiMap {
     /**

@@ -1,5 +1,5 @@
-import { AnnounceData } from './AnnounceData';
-import { EntityState } from './EntityState';
+import type { AnnounceData } from './AnnounceData';
+import type { EntityState } from './EntityState';
 
 /**
  * Property that is going to store additional data related to the Content Changed Event

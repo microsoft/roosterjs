@@ -1,9 +1,9 @@
-import { ContentModelDocument } from '../group/ContentModelDocument';
-import { DOMSelection } from '../selection/DOMSelection';
-import { DomToModelOption } from '../context/DomToModelOption';
-import { EditorEnvironment } from './EditorEnvironment';
-import { ModelToDomOption } from '../context/ModelToDomOption';
-import { OnNodeCreated } from '../context/ModelToDomSettings';
+import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { DOMSelection } from '../selection/DOMSelection';
+import type { DomToModelOption } from '../context/DomToModelOption';
+import type { EditorEnvironment } from './EditorEnvironment';
+import type { ModelToDomOption } from '../context/ModelToDomOption';
+import type { OnNodeCreated } from '../context/ModelToDomSettings';
 
 /**
  * An interface of editor based on RoosterJs Content Model

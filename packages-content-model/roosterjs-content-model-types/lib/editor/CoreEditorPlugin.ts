@@ -1,4 +1,4 @@
-import { PluginEvent } from '../event/PluginEvent';
+import type { PluginEvent } from '../event/PluginEvent';
 import type { ICoreEditor } from './ICoreEditor';
 
 /**
