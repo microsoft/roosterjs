@@ -115,12 +115,7 @@ function setSelectionToTable(
                 setIsSelected(currentCell, isSelected);
 
                 if (!isSelected) {
-                    setSelectionToBlockGroup(
-                        currentCell,
-                        false /*isInSelection*/,
-                        null /*start*/,
-                        null /*end*/
-                    );
+                    setSelectionToBlockGroup(currentCell, false /*isInSelection*/, start, end);
                 }
             }
         }

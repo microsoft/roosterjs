@@ -1,3 +1,4 @@
+import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { switchShadowEdit } from '../../../lib/editor/coreApi/switchShadowEdit';
@@ -142,10 +143,14 @@ describe('switchShadowEdit', () => {
         it('with cache, isOff', () => {
             core.cache.cachedModel = mockedCachedModel;
 
+            spyOn(iterateSelections, 'iterateSelections');
+
             switchShadowEdit(core, false);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedCachedModel);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedCachedModel, {
+                ignoreSelection: true,
+            });
             expect(core.cache.cachedModel).toBe(mockedCachedModel);
 
             expect(triggerEvent).toHaveBeenCalledTimes(1);

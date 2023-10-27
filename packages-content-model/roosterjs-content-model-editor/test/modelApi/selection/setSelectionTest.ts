@@ -821,4 +821,22 @@ describe('setSelection', () => {
         expect(cell.isSelected).toBeFalsy();
         expect(segment.isSelected).toBeFalsy();
     });
+
+    it('Set selection under a table', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell = createTableCell();
+        const para = createParagraph();
+        const segment = createBr();
+
+        para.segments.push(segment);
+        cell.blocks.push(para);
+        table.rows[0].cells.push(cell);
+        model.blocks.push(table);
+
+        setSelection(model, segment);
+
+        expect(cell.isSelected).toBeFalsy();
+        expect(segment.isSelected).toBeTrue();
+    });
 });
