@@ -505,7 +505,7 @@ describe('VList.writeBack', () => {
 
     it('Write back with Lists with list item types', () => {
         const styledList =
-            '<ol><li>123</li><ol style="margin-block: 0px; list-style-type: decimal;"><li>123</li><ol style="margin-block: 0px; list-style-type: decimal;"><li>123</li><ol style="margin-block: 0px;"><li><br></li></ol></ol></ol></ol>';
+            '<ol><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol><li><br></li></ol></ol></ol></ol>';
         const div = document.createElement('div');
         document.body.append(div);
         div.innerHTML = styledList;
