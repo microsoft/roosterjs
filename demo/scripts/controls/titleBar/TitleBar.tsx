@@ -7,26 +7,30 @@ const github = require('./iconmonstr-github-1.svg');
 
 export interface TitleBarProps {
     className?: string;
-    isContentModelPane: boolean;
+    mode: 'classical' | 'contentModel' | 'adapter';
 }
 
 export default class TitleBar extends React.Component<TitleBarProps, {}> {
     render() {
-        const { isContentModelPane, className: baseClassName } = this.props;
-        const styles = isContentModelPane ? contentModelStyles : classicalStyles;
+        const { mode, className: baseClassName } = this.props;
+        const styles = mode == 'contentModel' ? contentModelStyles : classicalStyles;
         const className = styles.titleBar + ' ' + (baseClassName || '');
-        const titleText = isContentModelPane
-            ? 'RoosterJs Content Model Demo Site'
-            : 'RoosterJs Demo Site';
-        const switchLink = isContentModelPane ? (
-            <a className={styles.link} href="?cm=0">
-                Switch to classical demo
-            </a>
-        ) : (
-            <a className={styles.link} href="?cm=1">
-                Switch to Content Model demo
-            </a>
-        );
+        const titleText =
+            mode == 'contentModel'
+                ? 'RoosterJs Content Model Demo Site'
+                : mode == 'classical'
+                ? 'RoosterJs Demo Site'
+                : 'RoosterJs Adapter Demo Site';
+        const switchLink =
+            mode == 'contentModel' ? (
+                <a className={styles.link} href="?cm=0">
+                    Switch to classical demo
+                </a>
+            ) : (
+                <a className={styles.link} href="?cm=1">
+                    Switch to Content Model demo
+                </a>
+            );
 
         return (
             <div className={className}>

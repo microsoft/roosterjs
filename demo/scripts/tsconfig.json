@@ -43,6 +43,12 @@
             "roosterjs-content-model-editor/lib/*": [
                 "packages-content-model/roosterjs-content-model-editor/lib/*"
             ],
+            "roosterjs-content-model-adapter": [
+                "packages-content-model/roosterjs-content-model-adapter/lib/index"
+            ],
+            "roosterjs-content-model-adapter/lib/*": [
+                "packages-content-model/roosterjs-content-model-adapter/lib/*"
+            ],
             "roosterjs-react": ["packages-ui/roosterjs-react/lib/index"],
             "roosterjs-react/lib/*": ["packages-ui/roosterjs-react/lib/*"]
         }
