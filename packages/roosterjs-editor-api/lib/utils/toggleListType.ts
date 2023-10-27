@@ -49,6 +49,7 @@ export default function toggleListType(
             if (!block) {
                 return;
             }
+
             const vList =
                 chain && end && start?.equalTo(end)
                     ? chain.createVListAtBlock(block, startNumber)
@@ -57,10 +58,14 @@ export default function toggleListType(
                           startNumber === 1 ? false : includeSiblingLists
                       );
 
+            const isNewList = chains.length === 0 && block.tagName != 'LI';
+
             if (vList && start && end) {
                 vList.changeListType(start, end, listType);
                 vList.setListStyleType(orderedStyle, unorderedStyle);
-                vList.removeMargins();
+                if (isNewList) {
+                    vList.removeMargins();
+                }
                 vList.writeBack(
                     editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements),
                     editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain)
