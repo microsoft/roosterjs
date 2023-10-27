@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';

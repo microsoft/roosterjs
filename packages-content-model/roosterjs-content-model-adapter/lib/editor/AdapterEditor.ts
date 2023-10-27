@@ -1,14 +1,12 @@
 import { createContentModelEditorCore } from 'roosterjs-content-model-editor';
 import { isFeatureEnabled } from './isFeatureEnabled';
-import type {
-    ContentModelEditorCore,
-    EditorEnvironment,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
+import type { ContentModelEditorCore } from 'roosterjs-content-model-editor';
 import type {
     ContentModelDocument,
     DOMSelection,
     DomToModelOption,
+    EditorEnvironment,
+    ICoreEditor,
     ModelToDomOption,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
@@ -85,7 +83,7 @@ import type {
  * RoosterJs adapter editor that supports Content Model and can be used by legacy roosterjs plugin
  * (This class is still under development, temporarily do internal export for now.)
  */
-export class AdapterEditor implements IEditor, IContentModelEditor {
+export class AdapterEditor implements IEditor, ICoreEditor {
     private core: ContentModelEditorCore | null = null;
 
     /**

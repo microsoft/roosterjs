@@ -20,14 +20,9 @@ export {
     default as ContentModelContentChangedEvent,
     CompatibleContentModelContentChangedEvent,
     ContentModelContentChangedEventData,
-    ChangeSource,
 } from './publicTypes/event/ContentModelContentChangedEvent';
 
-export {
-    IContentModelEditor,
-    ContentModelEditorOptions,
-    EditorEnvironment,
-} from './publicTypes/IContentModelEditor';
+export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
 export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
 export {
@@ -35,9 +30,6 @@ export {
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
     ContentModelFormatter,
-    EntityLifecycleOperation,
-    EntityOperation,
-    EntityRemovalOperation,
 } from './publicTypes/parameter/FormatWithContentModelContext';
 export {
     InsertEntityOptions,
@@ -56,7 +48,6 @@ export {
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,
 } from './publicTypes/parameter/TableOperation';
-export { PasteType } from './publicTypes/parameter/PasteType';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';

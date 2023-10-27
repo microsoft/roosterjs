@@ -1,11 +1,12 @@
 import { deleteSingleChar } from './deleteSingleChar';
 import { isWhiteSpacePreserved, normalizeSingleSegment } from 'roosterjs-content-model-dom';
 import { normalizeText } from '../../../domUtils/stringUtil';
-import type { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
 import type {
+    ContentModelParagraph,
+    ContentModelSegment,
     EntityRemovalOperation,
-    FormatWithContentModelContext,
-} from '../../../publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
+import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
  * @internal

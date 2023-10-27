@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from 'roosterjs-content-model-types';
 import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';

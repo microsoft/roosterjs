@@ -1,5 +1,5 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';

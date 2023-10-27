@@ -1,8 +1,5 @@
-import type { ContentModelBlock } from 'roosterjs-content-model-types';
-import type {
-    EntityRemovalOperation,
-    FormatWithContentModelContext,
-} from '../../../publicTypes/parameter/FormatWithContentModelContext';
+import type { ContentModelBlock, EntityRemovalOperation } from 'roosterjs-content-model-types';
+import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
  * @internal

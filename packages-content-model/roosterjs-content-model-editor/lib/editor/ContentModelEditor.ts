@@ -3,13 +3,13 @@ import { EditorBase } from 'roosterjs-editor-core';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type {
     ContentModelEditorOptions,
-    EditorEnvironment,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
 import type {
     ContentModelDocument,
     DOMSelection,
     DomToModelOption,
+    EditorEnvironment,
     ModelToDomOption,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';

@@ -1,5 +1,5 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from './formatWithContentModel';
 import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { mergeModel } from '../../modelApi/common/mergeModel';
@@ -8,6 +8,7 @@ import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
+    PasteType,
 } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -27,7 +28,6 @@ import {
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
-import type { PasteType } from '../../publicTypes/parameter/PasteType';
 
 // Map new PasteType to old PasteType
 // TODO: We can remove this once we have standalone editor

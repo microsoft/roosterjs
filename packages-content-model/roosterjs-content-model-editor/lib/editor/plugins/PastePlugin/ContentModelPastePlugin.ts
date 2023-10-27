@@ -10,13 +10,13 @@ import { processPastedContentFromExcel } from './Excel/processPastedContentFromE
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
-import type { PasteType } from '../../../publicTypes/parameter/PasteType';
 import type ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type {
     BorderFormat,
     ContentModelBlockFormat,
     ContentModelTableCellFormat,
     FormatParser,
+    PasteType,
 } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
 import type {

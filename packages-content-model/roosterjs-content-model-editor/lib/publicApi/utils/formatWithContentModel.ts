@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from 'roosterjs-content-model-types';
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import type { Entity } from 'roosterjs-editor-types';
@@ -6,11 +6,10 @@ import type { ContentModelContentChangedEventData } from '../../publicTypes/even
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     ContentModelFormatter,
-    EntityRemovalOperation,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
 } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import type { DOMSelection } from 'roosterjs-content-model-types';
+import type { DOMSelection, EntityRemovalOperation } from 'roosterjs-content-model-types';
 
 /**
  * The general API to do format change with Content Model
