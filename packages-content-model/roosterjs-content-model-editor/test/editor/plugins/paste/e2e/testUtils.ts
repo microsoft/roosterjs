@@ -3,7 +3,7 @@ import ContentModelPastePlugin from '../../../../../lib/editor/plugins/PastePlug
 import { cloneModel } from '../../../../../lib/modelApi/common/cloneModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import {
-    ContentModelEditorOptions,
+    EditorOptions,
     IContentModelEditor,
 } from '../../../../../lib/publicTypes/IContentModelEditor';
 
@@ -12,7 +12,7 @@ export function initEditor(id: string) {
     node.id = id;
     document.body.insertBefore(node, document.body.childNodes[0]);
 
-    let options: ContentModelEditorOptions = {
+    let options: EditorOptions = {
         plugins: [new ContentModelPastePlugin()],
         getVisibleViewport: () => {
             return {

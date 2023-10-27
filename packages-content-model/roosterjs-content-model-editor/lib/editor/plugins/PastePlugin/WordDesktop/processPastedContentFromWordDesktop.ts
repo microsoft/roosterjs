@@ -1,11 +1,11 @@
 import addParser from '../utils/addParser';
+import { BeforePasteEvent } from 'roosterjs-content-model-core';
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { getStyles } from '../utils/getStyles';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
-import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type {
     ContentModelBlockFormat,
     ContentModelListItemFormat,
@@ -21,9 +21,9 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
 /**
  * @internal
  * Handles Pasted content when source is Word Desktop
- * @param ev ContentModelBeforePasteEvent
+ * @param ev BeforePasteEvent
  */
-export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteEvent) {
+export function processPastedContentFromWordDesktop(ev: BeforePasteEvent) {
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor);
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);

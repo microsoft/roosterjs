@@ -68,7 +68,7 @@ export interface IContentModelEditor extends IEditor {
 /**
  * Options for Content Model editor
  */
-export interface ContentModelEditorOptions extends EditorOptions {
+export interface EditorOptions extends EditorOptions {
     /**
      * Default options used for DOM to Content Model conversion
      */

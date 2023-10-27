@@ -3,7 +3,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { getSelectedCells } from '../../modelApi/table/getSelectedCells';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
-import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import { updateTableCellMetadata } from 'roosterjs-content-model-core';
 import type { BorderOperations } from '../../publicTypes/enum/BorderOperations';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { Border } from '../../publicTypes/interface/Border';

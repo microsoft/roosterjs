@@ -2,7 +2,7 @@ import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
 import keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from '../../../lib/publicTypes/event/ContentChangedEvent';
 import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../../lib/modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { editingTestCommon } from './editingTestCommon';

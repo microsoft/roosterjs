@@ -1,7 +1,6 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource, getPendingFormat } from 'roosterjs-content-model-core';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import type { ContentModelLink } from 'roosterjs-content-model-types';

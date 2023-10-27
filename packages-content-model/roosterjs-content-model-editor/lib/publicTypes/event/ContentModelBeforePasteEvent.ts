@@ -6,7 +6,7 @@ import type {
 } from 'roosterjs-editor-types';
 
 /**
- * Data of ContentModelBeforePasteEvent
+ * Data of BeforePasteEvent
  */
 export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
     /**
@@ -22,7 +22,7 @@ export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
 /**
  * Provides a chance for plugin to change the content before it is pasted into editor.
  */
-export default interface ContentModelBeforePasteEvent
+export default interface BeforePasteEvent
     extends ContentModelBeforePasteEventData,
         BeforePasteEvent {}
 

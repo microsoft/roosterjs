@@ -2,7 +2,7 @@ import getSelectedSegments from '../selection/getSelectedSegments';
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { setSelection } from '../../modelApi/selection/setSelection';
+import { setSelection } from 'roosterjs-content-model-core';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**

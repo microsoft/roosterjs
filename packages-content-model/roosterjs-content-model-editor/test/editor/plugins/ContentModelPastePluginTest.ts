@@ -6,7 +6,7 @@ import * as PowerPointFile from '../../../lib/editor/plugins/PastePlugin/PowerPo
 import * as setProcessor from '../../../lib/editor/plugins/PastePlugin/utils/setProcessor';
 import * as WacFile from '../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
-import ContentModelBeforePasteEvent from '../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
+import BeforePasteEvent from '../../../lib/publicTypes/event/BeforePasteEvent';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PastePropertyNames } from '../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/constants';
@@ -27,7 +27,7 @@ describe('Content Model Paste Plugin Test', () => {
         spyOn(setProcessor, 'setProcessor').and.callThrough();
     });
 
-    let event: ContentModelBeforePasteEvent = <ContentModelBeforePasteEvent>(<any>{
+    let event: BeforePasteEvent = <BeforePasteEvent>(<any>{
         clipboardData: {},
         fragment: document.createDocumentFragment(),
         sanitizingOption: {
@@ -55,7 +55,7 @@ describe('Content Model Paste Plugin Test', () => {
         beforeEach(() => {
             plugin = new ContentModelPastePlugin();
 
-            event = <ContentModelBeforePasteEvent>(<any>{
+            event = <BeforePasteEvent>(<any>{
                 eventType: PluginEventType.BeforePaste,
                 domToModelOption: {},
                 sanitizingOption: {

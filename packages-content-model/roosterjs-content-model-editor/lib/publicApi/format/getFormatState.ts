@@ -1,5 +1,4 @@
-import { getPendingFormat } from '../../modelApi/format/pendingFormat';
-import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
+import { getPendingFormat, getSelectionRootNode } from 'roosterjs-content-model-core';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
 import type { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
 import type { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';

@@ -1,6 +1,6 @@
 import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
-import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
+import { EditorCore } from '../../../lib/publicTypes/EditorCore';
 import { setContentModel } from '../../../lib/editor/coreApi/setContentModel';
 
 const mockedRange = 'RANGE' as any;
@@ -12,7 +12,7 @@ const mockedDiv = { ownerDocument: mockedDoc } as any;
 const mockedConfig = 'CONFIG' as any;
 
 describe('setContentModel', () => {
-    let core: ContentModelEditorCore;
+    let core: EditorCore;
     let contentModelToDomSpy: jasmine.Spy;
     let createEditorContext: jasmine.Spy;
     let createModelToDomContextSpy: jasmine.Spy;
@@ -48,7 +48,7 @@ describe('setContentModel', () => {
             lifecycle: {},
             defaultModelToDomConfig: mockedConfig,
             cache: {},
-        } as any) as ContentModelEditorCore;
+        } as any) as EditorCore;
     });
 
     it('no default option, no shadow edit', () => {

@@ -2,7 +2,7 @@ import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWith
 import * as insertEntityModel from '../../../lib/modelApi/entity/insertEntityModel';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import insertEntity from '../../../lib/publicApi/entity/insertEntity';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from '../../../lib/publicTypes/event/ContentChangedEvent';
 import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 

@@ -1,5 +1,5 @@
 import { getSelectedCells } from './getSelectedCells';
-import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import { updateTableCellMetadata } from 'roosterjs-content-model-core';
 import type {
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,

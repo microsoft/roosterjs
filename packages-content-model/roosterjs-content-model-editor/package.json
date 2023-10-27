@@ -6,6 +6,7 @@
         "roosterjs-editor-types": "",
         "roosterjs-editor-dom": "",
         "roosterjs-editor-core": "",
+        "roosterjs-content-model-core": "",
         "roosterjs-content-model-dom": "",
         "roosterjs-content-model-types": ""
     },

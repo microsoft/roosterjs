@@ -3,10 +3,9 @@ import { createContentModelDocument, createSelectionMarker } from 'roosterjs-con
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getPendingFormat } from '../../modelApi/format/pendingFormat';
+import { getPendingFormat, setSelection } from 'roosterjs-content-model-core';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { setSelection } from '../../modelApi/selection/setSelection';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { TableMetadataFormat } from 'roosterjs-content-model-types';
 

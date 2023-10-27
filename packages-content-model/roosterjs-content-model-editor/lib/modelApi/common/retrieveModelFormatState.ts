@@ -1,10 +1,12 @@
 import { extractBorderValues } from '../../domUtils/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
-import { iterateSelections } from '../selection/iterateSelections';
-import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
+import {
+    iterateSelections,
+    TableSelectionContext,
+    updateTableMetadata,
+} from 'roosterjs-content-model-core';
 import type { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
-import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,

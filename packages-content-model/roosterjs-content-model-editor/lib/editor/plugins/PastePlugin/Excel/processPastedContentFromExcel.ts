@@ -1,7 +1,7 @@
 import addParser from '../utils/addParser';
+import { BeforePasteEvent } from 'roosterjs-content-model-core';
 import { isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
-import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
@@ -17,7 +17,7 @@ const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
  */
 
 export function processPastedContentFromExcel(
-    event: ContentModelBeforePasteEvent,
+    event: BeforePasteEvent,
     trustedHTMLHandler: TrustedHTMLHandler
 ) {
     const { fragment, htmlBefore, clipboardData } = event;

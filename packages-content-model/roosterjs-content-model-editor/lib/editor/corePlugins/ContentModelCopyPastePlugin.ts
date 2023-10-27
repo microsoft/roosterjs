@@ -1,13 +1,16 @@
 import paste from '../../publicApi/utils/paste';
-import { addRangeToSelection } from '../../domUtils/addRangeToSelection';
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import { cloneModel } from '../../modelApi/common/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import {
+    addRangeToSelection,
+    ChangeSource,
+    cloneModel,
+    iterateSelections,
+} from 'roosterjs-content-model-core';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -18,13 +21,12 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-content-model-dom';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
 import type {
     CopyPastePluginState,
     IEditor,
-    PluginWithState,
     ClipboardData,
+    PluginWithState,
 } from 'roosterjs-editor-types';
 
 /**

@@ -2,10 +2,12 @@ import { adjustWordSelection } from '../selection/adjustWordSelection';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { createFormatContainer } from 'roosterjs-content-model-dom';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
-import { iterateSelections } from '../selection/iterateSelections';
-import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
-import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
-import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
+import {
+    iterateSelections,
+    TableSelectionContext,
+    updateTableCellMetadata,
+    updateTableMetadata,
+} from 'roosterjs-content-model-core';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,

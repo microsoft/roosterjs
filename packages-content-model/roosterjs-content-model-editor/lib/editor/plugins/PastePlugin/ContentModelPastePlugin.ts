@@ -1,4 +1,5 @@
 import addParser from './utils/addParser';
+import { BeforePasteEvent } from 'roosterjs-content-model-core';
 import { BorderKeys } from 'roosterjs-content-model-dom';
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
@@ -11,7 +12,6 @@ import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedCo
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import type { PasteType } from '../../../publicTypes/parameter/PasteType';
-import type ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type {
     BorderFormat,
     ContentModelBlockFormat,
@@ -90,7 +90,7 @@ export default class ContentModelPastePlugin implements EditorPlugin {
             return;
         }
 
-        const ev = event as ContentModelBeforePasteEvent;
+        const ev = event as BeforePasteEvent;
 
         if (!ev.domToModelOption) {
             return;

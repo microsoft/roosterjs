@@ -1,4 +1,4 @@
-import ContentModelBeforePasteEvent from '../../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
+import BeforePasteEvent from '../../../../lib/publicTypes/event/BeforePasteEvent';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
@@ -1312,7 +1312,7 @@ export function createBeforePasteEventMock(fragment: DocumentFragment) {
         htmlAfter: '',
         htmlAttributes: {},
         domToModelOption: {},
-    } as any) as ContentModelBeforePasteEvent;
+    } as any) as BeforePasteEvent;
 }
 
 function createListElementFromWord(

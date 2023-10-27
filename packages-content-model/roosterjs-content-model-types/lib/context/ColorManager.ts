@@ -33,4 +33,9 @@ export interface ColorManager {
      * we will treat is as a dark mode color and try to find a matched dark mode color.
      */
     parseColorValue(color: string | null | undefined, isInDarkMode?: boolean): Colors;
+
+    /**
+     * Reset known color record, clean up registered color variables.
+     */
+    reset(): void;
 }

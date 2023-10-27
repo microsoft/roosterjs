@@ -3,33 +3,23 @@ export { ImageFormatState } from './publicTypes/format/formatState/ImageFormatSt
 export { Border } from './publicTypes/interface/Border';
 export { BorderOperations } from './publicTypes/enum/BorderOperations';
 export {
-    CreateEditorContext,
-    ContentModelCoreApiMap,
-    ContentModelEditorCore,
-    CreateContentModel,
-    SetContentModel,
-    GetDOMSelection,
-    SetDOMSelection,
-} from './publicTypes/ContentModelEditorCore';
-export {
-    default as ContentModelBeforePasteEvent,
+    default as BeforePasteEvent,
     ContentModelBeforePasteEventData,
     CompatibleContentModelBeforePasteEvent,
-} from './publicTypes/event/ContentModelBeforePasteEvent';
+} from './publicTypes/event/BeforePasteEvent';
 export {
-    default as ContentModelContentChangedEvent,
+    default as ContentChangedEvent,
     CompatibleContentModelContentChangedEvent,
     ContentModelContentChangedEventData,
     ChangeSource,
-} from './publicTypes/event/ContentModelContentChangedEvent';
+} from './publicTypes/event/ContentChangedEvent';
 
 export {
     IContentModelEditor,
-    ContentModelEditorOptions,
+    EditorOptions,
     EditorEnvironment,
 } from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
-export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
 export {
     DeletedEntity,
     FormatWithContentModelContext,
@@ -95,7 +85,6 @@ export { default as setImageBorder } from './publicApi/image/setImageBorder';
 export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
 export { default as changeImage } from './publicApi/image/changeImage';
 export { default as getFormatState } from './publicApi/format/getFormatState';
-export { default as applyPendingFormat } from './publicApi/format/applyPendingFormat';
 export { default as clearFormat } from './publicApi/format/clearFormat';
 export { default as insertLink } from './publicApi/link/insertLink';
 export { default as removeLink } from './publicApi/link/removeLink';
@@ -112,22 +101,5 @@ export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';
 export { default as ContentModelPastePlugin } from './editor/plugins/PastePlugin/ContentModelPastePlugin';
 
-export { default as ContentModelFormatPlugin } from './editor/corePlugins/ContentModelFormatPlugin';
-export { default as ContentModelEditPlugin } from './editor/corePlugins/ContentModelEditPlugin';
-export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugins/ContentModelTypeInContainerPlugin';
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
-export { default as ContentModelCachePlugin } from './editor/corePlugins/ContentModelCachePlugin';
-
-export {
-    createContentModelEditorCore,
-    promoteToContentModelEditorCore,
-} from './editor/createContentModelEditorCore';
 export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
-export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
-export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
-export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
-export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
-
-export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
-export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';
-export { ContentModelFormatPluginState } from './publicTypes/pluginState/ContentModelFormatPluginState';

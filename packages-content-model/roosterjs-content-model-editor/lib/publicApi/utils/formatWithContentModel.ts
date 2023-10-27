@@ -1,9 +1,12 @@
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
+import {
+    ChangeSource,
+    getPendingFormat,
+    ICoreEditor,
+    setPendingFormat,
+} from 'roosterjs-content-model-core';
 import type { Entity } from 'roosterjs-editor-types';
-import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentChangedEvent';
 import type {
     ContentModelFormatter,
     EntityRemovalOperation,
@@ -23,7 +26,7 @@ import type { DOMSelection } from 'roosterjs-content-model-types';
  * @param options More options, see FormatWithContentModelOptions
  */
 export function formatWithContentModel(
-    editor: IContentModelEditor,
+    editor: ICoreEditor,
     apiName: string,
     formatter: ContentModelFormatter,
     options?: FormatWithContentModelOptions
@@ -91,7 +94,7 @@ export function formatWithContentModel(
     }
 }
 
-function handleNewEntities(editor: IContentModelEditor, context: FormatWithContentModelContext) {
+function handleNewEntities(editor: ICoreEditor, context: FormatWithContentModelContext) {
     // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
     // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
     // from EntityPlugin to here
@@ -111,10 +114,7 @@ const EntityOperationMap: Record<EntityRemovalOperation, EntityOperation> = {
     removeFromStart: EntityOperation.RemoveFromStart,
 };
 
-function handleDeletedEntities(
-    editor: IContentModelEditor,
-    context: FormatWithContentModelContext
-) {
+function handleDeletedEntities(editor: ICoreEditor, context: FormatWithContentModelContext) {
     context.deletedEntities.forEach(
         ({
             entity: {
@@ -141,7 +141,7 @@ function handleDeletedEntities(
     );
 }
 
-function handleImages(editor: IContentModelEditor, context: FormatWithContentModelContext) {
+function handleImages(editor: ICoreEditor, context: FormatWithContentModelContext) {
     if (context.newImages.length > 0) {
         const viewport = editor.getVisibleViewport();
         if (viewport) {

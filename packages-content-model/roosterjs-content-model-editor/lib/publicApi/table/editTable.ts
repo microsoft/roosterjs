@@ -13,7 +13,7 @@ import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
 import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { setSelection } from '../../modelApi/selection/setSelection';
+import { setSelection } from 'roosterjs-content-model-core';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import type { TableOperation } from '../../publicTypes/parameter/TableOperation';

@@ -1,7 +1,7 @@
 import { DeleteResult } from '../edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
-import { setSelection } from '../selection/setSelection';
+import { setSelection } from 'roosterjs-content-model-core';
 import {
     createBr,
     createParagraph,

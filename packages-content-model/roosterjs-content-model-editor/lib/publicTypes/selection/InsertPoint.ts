@@ -1,4 +1,4 @@
-import type { TableSelectionContext } from './TableSelectionContext';
+import { TableSelectionContext } from 'roosterjs-content-model-core';
 import type {
     ContentModelBlockGroup,
     ContentModelParagraph,

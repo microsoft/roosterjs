@@ -1,6 +1,6 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { formatWithContentModel } from './formatWithContentModel';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
+import { getPendingFormat, setPendingFormat } from 'roosterjs-content-model-core';
 import { getSelectedSegmentsAndParagraphs } from '../../modelApi/selection/collectSelections';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {

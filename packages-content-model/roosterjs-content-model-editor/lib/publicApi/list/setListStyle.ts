@@ -1,7 +1,7 @@
 import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
-import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
+import { updateListMetadata } from 'roosterjs-content-model-core';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { ListMetadataFormat } from 'roosterjs-content-model-types';
 

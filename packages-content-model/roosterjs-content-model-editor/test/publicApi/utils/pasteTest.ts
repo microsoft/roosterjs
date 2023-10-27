@@ -10,7 +10,7 @@ import * as WacComponents from '../../../lib/editor/plugins/PastePlugin/WacCompo
 import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from '../../../lib/publicTypes/event/ContentChangedEvent';
 import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from '../../editor/plugins/paste/e2e/testUtils';

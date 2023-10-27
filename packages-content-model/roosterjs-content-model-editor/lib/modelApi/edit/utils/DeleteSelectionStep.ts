@@ -1,7 +1,7 @@
+import type { TableSelectionContext } from 'roosterjs-content-model-core';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 import type { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
-import type { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
 
 /**
  * @internal

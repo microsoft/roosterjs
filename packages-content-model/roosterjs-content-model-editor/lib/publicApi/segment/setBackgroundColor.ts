@@ -1,6 +1,6 @@
 import { createSelectionMarker } from 'roosterjs-content-model-dom';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { setSelection } from '../../modelApi/selection/setSelection';
+import { setSelection } from 'roosterjs-content-model-core';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 

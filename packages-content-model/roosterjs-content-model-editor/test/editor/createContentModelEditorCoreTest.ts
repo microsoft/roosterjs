@@ -6,10 +6,10 @@ import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditor
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { contentModelDomIndexer } from '../../lib/editor/utils/contentModelDomIndexer';
-import { ContentModelEditorOptions } from '../../lib/publicTypes/IContentModelEditor';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
+import { EditorOptions } from '../../lib/publicTypes/IContentModelEditor';
 import { getDOMSelection } from '../../lib/editor/coreApi/getDOMSelection';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { setDOMSelection } from '../../lib/editor/coreApi/setDOMSelection';
@@ -389,7 +389,7 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('Allow dom indexer', () => {
-        const options: ContentModelEditorOptions = {
+        const options: EditorOptions = {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },

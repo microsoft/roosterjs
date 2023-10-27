@@ -1,6 +1,6 @@
 import addParser from '../utils/addParser';
+import { BeforePasteEvent } from 'roosterjs-content-model-core';
 import { setProcessor } from '../utils/setProcessor';
-import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type {
     ContentModelBlockFormat,
     ContentModelBlockGroup,
@@ -196,9 +196,9 @@ function shouldClearListContext(
  * Convert pasted content from Office Online
  * Once it is known that the document is from WAC
  * We need to remove the display property and margin from all the list item
- * @param ev ContentModelBeforePasteEvent
+ * @param ev BeforePasteEvent
  */
-export function processPastedContentWacComponents(ev: ContentModelBeforePasteEvent) {
+export function processPastedContentWacComponents(ev: BeforePasteEvent) {
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItemThread', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);

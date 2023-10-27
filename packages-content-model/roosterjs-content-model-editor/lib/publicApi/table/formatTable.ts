@@ -1,7 +1,7 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import { updateTableCellMetadata } from 'roosterjs-content-model-core';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { TableMetadataFormat } from 'roosterjs-content-model-types';
 

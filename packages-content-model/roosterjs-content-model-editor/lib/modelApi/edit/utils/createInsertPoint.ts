@@ -1,5 +1,5 @@
+import type { TableSelectionContext } from 'roosterjs-content-model-core';
 import type { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
-import type { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
 import type {
     ContentModelBlockGroup,
     ContentModelParagraph,

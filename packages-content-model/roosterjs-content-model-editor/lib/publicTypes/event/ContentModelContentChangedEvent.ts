@@ -66,7 +66,7 @@ export enum ChangeSource {
 }
 
 /**
- * Data of ContentModelContentChangedEvent
+ * Data of ContentChangedEvent
  */
 export interface ContentModelContentChangedEventData extends ContentChangedEventData {
     /**
@@ -83,7 +83,7 @@ export interface ContentModelContentChangedEventData extends ContentChangedEvent
 /**
  * Represents a change to the editor made by another plugin with content model inside
  */
-export default interface ContentModelContentChangedEvent
+export default interface ContentChangedEvent
     extends ContentChangedEvent,
         ContentModelContentChangedEventData {}
 

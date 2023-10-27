@@ -1,4 +1,4 @@
-import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
+import { EditorCore } from '../../../lib/publicTypes/EditorCore';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { switchShadowEdit } from '../../../lib/editor/coreApi/switchShadowEdit';
 
@@ -6,7 +6,7 @@ const mockedModel = 'MODEL' as any;
 const mockedCachedModel = 'CACHEMODEL' as any;
 
 describe('switchShadowEdit', () => {
-    let core: ContentModelEditorCore;
+    let core: EditorCore;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
     let getSelectionRange: jasmine.Spy;
@@ -28,7 +28,7 @@ describe('switchShadowEdit', () => {
             lifecycle: {},
             contentDiv: document.createElement('div'),
             cache: {},
-        } as any) as ContentModelEditorCore;
+        } as any) as EditorCore;
     });
 
     describe('was off', () => {
