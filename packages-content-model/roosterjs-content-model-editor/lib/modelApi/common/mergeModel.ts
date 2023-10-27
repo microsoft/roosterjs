@@ -58,13 +58,19 @@ export interface MergeModelOption {
 
 /**
  * @internal
+ * Merge source model into target mode
+ * @param target Target Content Model that will merge content into
+ * @param source Source Content Model will be merged to target model
+ * @param context Format context. When call this function inside formatWithContentModel, provide this context so that formatWithContentModel will do extra handling to the result
+ * @param options More options, see MergeModelOption
+ * @returns Insert point after merge, or null if there is no insert point
  */
 export function mergeModel(
     target: ContentModelDocument,
     source: ContentModelDocument,
     context?: FormatWithContentModelContext,
     options?: MergeModelOption
-) {
+): InsertPoint | null {
     const insertPosition =
         options?.insertPosition ?? deleteSelection(target, [], context).insertPoint;
 
@@ -119,6 +125,8 @@ export function mergeModel(
     }
 
     normalizeContentModel(target);
+
+    return insertPosition;
 }
 
 function mergeParagraph(
@@ -186,7 +194,7 @@ function mergeTable(
     newTable: ContentModelTable,
     source: ContentModelDocument
 ) {
-    const { tableContext } = markerPosition;
+    const { tableContext, marker } = markerPosition;
 
     if (tableContext && source.blocks.length == 1 && source.blocks[0] == newTable) {
         const { table, colIndex, rowIndex } = tableContext;
@@ -226,10 +234,19 @@ function mergeTable(
                     }
                 }
 
+                const oldCell = table.rows[rowIndex + i].cells[colIndex + j];
                 table.rows[rowIndex + i].cells[colIndex + j] = newCell;
 
                 if (i == 0 && j == 0) {
-                    addSegment(newCell, createSelectionMarker());
+                    const newMarker = createSelectionMarker(marker.format);
+                    const newPara = addSegment(newCell, newMarker);
+
+                    if (markerPosition.path[0] == oldCell) {
+                        // Update insert point to match the change result
+                        markerPosition.path[0] = newCell;
+                        markerPosition.marker = newMarker;
+                        markerPosition.paragraph = newPara;
+                    }
                 }
             }
         }
