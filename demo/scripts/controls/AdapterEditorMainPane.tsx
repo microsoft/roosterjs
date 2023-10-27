@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
+import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
+import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
@@ -12,6 +14,7 @@ import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { AdapterEditor } from 'roosterjs-content-model-adapter';
 import { arrayPush } from 'roosterjs-editor-dom';
+import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
@@ -97,7 +100,9 @@ class MainPane extends MainPaneBase {
     private editorOptionPlugin: EditorOptionsPlugin;
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
+    private contentModelPanePlugin: ContentModelPanePlugin;
     private ribbonPlugin: RibbonPlugin;
+    private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
@@ -114,6 +119,8 @@ class MainPane extends MainPaneBase {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
+        this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
+        this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
@@ -148,11 +155,18 @@ class MainPane extends MainPaneBase {
 
     renderRibbon(isPopout: boolean) {
         return (
-            <Ribbon
-                buttons={isPopout ? this.popoutWindowButtons : this.mainWindowButtons}
-                plugin={this.ribbonPlugin}
-                dir={this.state.isRtl ? 'rtl' : 'ltr'}
-            />
+            <>
+                <Ribbon
+                    buttons={isPopout ? this.popoutWindowButtons : this.mainWindowButtons}
+                    plugin={this.ribbonPlugin}
+                    dir={this.state.isRtl ? 'rtl' : 'ltr'}
+                />
+                <ContentModelRibbon
+                    ribbonPlugin={this.contentModelRibbonPlugin}
+                    isRtl={this.state.isRtl}
+                    isInPopout={isPopout}
+                />
+            </>
         );
     }
 
@@ -178,6 +192,8 @@ class MainPane extends MainPaneBase {
         const plugins = [
             ...this.toggleablePlugins,
             this.ribbonPlugin,
+            this.contentModelRibbonPlugin,
+            this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.sampleEntityPlugin,
@@ -211,6 +227,7 @@ class MainPane extends MainPaneBase {
             this.eventViewPlugin,
             this.apiPlaygroundPlugin,
             this.snapshotPlugin,
+            this.contentModelPanePlugin,
         ];
     }
 }

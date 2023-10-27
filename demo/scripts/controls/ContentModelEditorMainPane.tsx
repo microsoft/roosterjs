@@ -18,12 +18,7 @@ import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
-import {
-    createRibbonPlugin,
-    RibbonPlugin,
-    createPasteOptionPlugin,
-    createEmojiPlugin,
-} from 'roosterjs-react';
+import { RibbonPlugin, createPasteOptionPlugin, createEmojiPlugin } from 'roosterjs-react';
 
 const styles = require('./ContentModelEditorMainPane.scss');
 
@@ -87,7 +82,6 @@ class ContentModelEditorMainPane extends MainPaneBase {
     private eventViewPlugin: ContentModelEventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private ContentModelPanePlugin: ContentModelPanePlugin;
-    private ribbonPlugin: RibbonPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
@@ -104,7 +98,6 @@ class ContentModelEditorMainPane extends MainPaneBase {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
         this.ContentModelPanePlugin = new ContentModelPanePlugin();
-        this.ribbonPlugin = createRibbonPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
@@ -165,7 +158,6 @@ class ContentModelEditorMainPane extends MainPaneBase {
 
         const plugins = [
             ...this.toggleablePlugins,
-            this.ribbonPlugin,
             this.contentModelRibbonPlugin,
             this.ContentModelPanePlugin.getInnerRibbonPlugin(),
             this.pasteOptionPlugin,
