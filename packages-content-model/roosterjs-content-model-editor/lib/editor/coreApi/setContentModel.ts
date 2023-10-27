@@ -17,6 +17,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     const modelToDomContext = option
         ? createModelToDomContext(editorContext, ...(core.defaultModelToDomOptions || []), option)
         : createModelToDomContextWithConfig(core.defaultModelToDomConfig, editorContext);
+
     const selection = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
@@ -29,7 +30,11 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         core.cache.cachedSelection = selection || undefined;
 
         if (selection) {
-            core.api.setDOMSelection(core, selection);
+            if (!option?.ignoreSelection) {
+                core.api.setDOMSelection(core, selection);
+            } else if (selection.type == 'range') {
+                core.domEvent.selectionRange = selection.range;
+            }
         }
 
         core.cache.cachedModel = model;

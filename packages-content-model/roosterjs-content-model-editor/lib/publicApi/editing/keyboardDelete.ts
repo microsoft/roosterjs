@@ -89,16 +89,12 @@ function shouldDeleteWithContentModel(range: Range | null, rawEvent: KeyboardEve
 }
 
 function canDeleteBefore(rawEvent: KeyboardEvent, range: Range) {
-    return (
-        rawEvent.key == 'Backspace' &&
-        (range.startOffset > 1 || range.startContainer.previousSibling)
-    );
+    return rawEvent.key == 'Backspace' && range.startOffset > 1;
 }
 
 function canDeleteAfter(rawEvent: KeyboardEvent, range: Range) {
     return (
         rawEvent.key == 'Delete' &&
-        (range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1 ||
-            range.startContainer.nextSibling)
+        range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1
     );
 }
