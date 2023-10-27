@@ -109,7 +109,7 @@ describe('VList.ctor', () => {
         runTest(
             `<ol id="${ListRoot}">` +
                 '<li>line0</li>' +
-                '<ul style="margin-block: 0px;">' +
+                '<ul>' +
                 '<div>line1</div>' +
                 '<li>line2</li>' +
                 '<div>line3</div>' +
@@ -197,14 +197,14 @@ describe('VList.ctor', () => {
     it('disconnected nested list', () => {
         runTest(
             `<ol id="${ListRoot}">` +
-                '<li>line1<div><ul style="margin-block: 0px;"><li>line2</li><li>line3</li></ul></div>line4</li>' +
+                '<li>line1<div><ul><li>line2</li><li>line3</li></ul></div>line4</li>' +
                 '<li>line5</li>' +
                 '</ol>',
             [
                 {
                     listTypes: [ListType.None, ListType.Ordered],
                     outerHTML:
-                        '<li>line1<div><ul style="margin-block: 0px;"><li>line2</li><li>line3</li></ul></div>line4</li>',
+                        '<li>line1<div><ul><li>line2</li><li>line3</li></ul></div>line4</li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -276,12 +276,11 @@ describe('VList.writeBack', () => {
         const vList = new VList(list);
         const items = (<any>vList).items as VListItem[];
 
-        newItems.forEach(newItem => {
-            list.append(DomTestHelper.htmlToDom(newItem.html)[0]);
+        newItems.forEach(newItem =>
             items.push(
                 new VListItem(DomTestHelper.htmlToDom(newItem.html)[0], ...newItem.listTypes)
-            );
-        });
+            )
+        );
 
         vList.writeBack();
         expect(div.innerHTML).toBe(expectedHtml);
@@ -506,7 +505,7 @@ describe('VList.writeBack', () => {
 
     it('Write back with Lists with list item types', () => {
         const styledList =
-            '<ol style="margin-block: 0px;"><li>123</li><ol style="margin-block: 0px; list-style-type: decimal;"><li>123</li><ol style="margin-block: 0px; list-style-type: decimal;"><li>123</li><ol style="margin-block: 0px;"><li><br></li></ol></ol></ol></ol>';
+            '<ol><li>123</li><ol style="margin-block: 0px; list-style-type: decimal;"><li>123</li><ol style="margin-block: 0px; list-style-type: decimal;"><li>123</li><ol style="margin-block: 0px;"><li><br></li></ol></ol></ol></ol>';
         const div = document.createElement('div');
         document.body.append(div);
         div.innerHTML = styledList;
@@ -633,7 +632,7 @@ describe('VList.setIndentation', () => {
             `<ol id="${ListRoot}">` +
                 '<li>line1</li>' +
                 `<li id="${FocusNode1}">line2</li>` +
-                '<ul style="margin-block: 0px;">' +
+                '<ul>' +
                 `<li id="${FocusNode2}">line3</li>` +
                 '<li>line4</li>' +
                 '</ul>' +
@@ -687,7 +686,7 @@ describe('VList.setIndentation', () => {
             `<ol id="${ListRoot}">` +
                 '<li>line1</li>' +
                 `<li id="${FocusNode1}">line2</li>` +
-                '<ul style="margin-block: 0px;">' +
+                '<ul>' +
                 `<li id="${FocusNode2}">line3</li>` +
                 '<li>line4</li>' +
                 '</ul>' +
@@ -831,7 +830,7 @@ describe('VList.changeListType', () => {
 
     it('deep list', () => {
         runTest(
-            `<ol id="${ListRoot}"><li id="${FocusNode1}">line1</li><ul style="margin-block: 0px;"><li id="${FocusNode2}">line2</li></ul></ol>`,
+            `<ol id="${ListRoot}"><li id="${FocusNode1}">line1</li><ul><li id="${FocusNode2}">line2</li></ul></ol>`,
             [
                 {
                     listTypes: [ListType.None],
@@ -1273,7 +1272,7 @@ describe('VList.split', () => {
 
     it('split List 3', () => {
         runTest(
-            `<ol id=${listId}><li>1</li><ol list-style-type: lower-alpha;"><li>1</li><li id='${separatorElementId}'>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
+            `<ol id=${listId}><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li id='${separatorElementId}'>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
             '<ol id="listId"><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li></ol></ol><ol><ol style="list-style-type: lower-alpha;"><li id="separatorId">2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             1
         );
