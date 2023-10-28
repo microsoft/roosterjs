@@ -189,3 +189,4 @@ export { ContentChangedData } from './parameter/ContentChangedData';
 
 export { ICoreEditor } from './editor/ICoreEditor';
 export { EditorEnvironment } from './editor/EditorEnvironment';
+export { CoreEditorOptions } from './editor/CoreEditorOptions';
