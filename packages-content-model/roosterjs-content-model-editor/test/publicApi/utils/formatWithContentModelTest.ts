@@ -1,6 +1,5 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ChangeSource, ContentModelDocument } from 'roosterjs-content-model-types';
 import { createImage } from 'roosterjs-content-model-dom';
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { formatWithContentModel } from '../../../lib/publicApi/utils/formatWithContentModel';

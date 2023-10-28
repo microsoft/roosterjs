@@ -173,43 +173,6 @@ export {
 } from './metadata/Definition';
 export { ColorManager, Colors } from './context/ColorManager';
 
-export { ICoreEditor } from './editor/ICoreEditor';
-export { EditorEnvironment } from './editor/EditorEnvironment';
-export { CoreEditorCore } from './editor/CoreEditorCore';
-export { CoreEditorPlugin } from './editor/CoreEditorPlugin';
-
-export { BasePluginEvent } from './event/BasePluginEvent';
-export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
-export { BeforeDisposeEvent } from './event/BeforeDisposeEvent';
-export { BeforeKeyboardEditingEvent } from './event/BeforeKeyboardEditingEvent';
-export { BeforePasteEvent } from './event/BeforePasteEvent';
-export { ContentChangedEvent } from './event/ContentChangedEvent';
-export { EditImageEvent } from './event/EditImageEvent';
-export { EditorReadyEvent } from './event/EditorReadyEvent';
-export { EntityOperationEvent } from './event/EntityOperationEvent';
-export { ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';
-export {
-    PluginDomEventBase,
-    PluginMouseUpEvent,
-    PluginMouseDownEvent,
-    PluginContextMenuEvent,
-    PluginScrollEvent,
-    PluginKeyDownEvent,
-    PluginKeyUpEvent,
-    PluginInputEvent,
-    PluginCompositionEvent,
-} from './event/PluginDomEvent';
-export {
-    PluginEvent,
-    PluginEventFromTypeGeneric,
-    PluginEventFromType,
-    PluginEventDataGeneric,
-    PluginEventData,
-} from './event/PluginEvent';
-export { PluginEventType } from './event/PluginEventType';
-export { SelectionChangedEvent } from './event/SelectionChangedEvent';
-export { EnteredShadowEditEvent, LeavingShadowEditEvent } from './event/ShadowEditEvent';
-
 export { PasteType } from './parameter/PasteType';
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
@@ -223,3 +186,6 @@ export { EntityState } from './parameter/EntityState';
 export { KnownAnnounceStrings } from './parameter/KnownAnnounceStrings';
 export { AnnounceData } from './parameter/AnnounceData';
 export { ContentChangedData } from './parameter/ContentChangedData';
+
+export { ICoreEditor } from './editor/ICoreEditor';
+export { EditorEnvironment } from './editor/EditorEnvironment';

@@ -5,8 +5,8 @@ export type KnownAnnounceStrings =
     /**
      * String announced for a list item in a OL List
      * @example
-     * Auto corrected, &lcub;0&rcub;
-     * Where &lcub0&rcub is the new list item bullet
+     * Auto corrected, {0}
+     * Where {0} is the new list item bullet
      */
     | 'announceListItemNumbering'
     /**

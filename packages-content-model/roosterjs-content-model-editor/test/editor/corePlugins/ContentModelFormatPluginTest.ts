@@ -1,7 +1,7 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelFormatPlugin from '../../../lib/editor/corePlugins/ContentModelFormatPlugin';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from 'roosterjs-content-model-types';
 import { ContentModelFormatPluginState } from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
