@@ -9,7 +9,6 @@
         "roosterjs-content-model-types": "",
         "roosterjs-content-model-dom": "",
         "roosterjs-content-model-editor": "",
-        "roosterjs-content-model-adapter": "",
         "roosterjs-color-utils": ""
     },
     "version": "0.0.0",
