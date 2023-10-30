@@ -172,7 +172,7 @@ function collectSelections(
     const selections: SelectionInfo[] = [];
 
     iterateSelections(
-        [model],
+        model,
         (path, tableContext, block, segments) => {
             selections.push({
                 path,

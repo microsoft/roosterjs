@@ -57,15 +57,15 @@ export type IterateSelectionsCallback = (
 
 /**
  * Iterate all selected elements in a given model
- * @param modelOrPath The given Content Model to iterate from
+ * @param group The given Content Model to iterate selection from
  * @param callback The callback function to access the selected element
  * @param option Option to determine how to iterate
  */
 export function iterateSelections(
-    modelOrPath: ContentModelBlockGroup | ContentModelBlockGroup[],
+    group: ContentModelBlockGroup,
     callback: IterateSelectionsCallback,
     option?: IterateSelectionsOption
-) {
+): void {
     const internalCallback: IterateSelectionsCallback = (path, tableContext, block, segments) => {
         if (!!(block as ContentModelBlockWithCache)?.cachedElement) {
             // TODO: This is a temporary solution. A better solution would be making all results from iterationSelection() to be readonly,
@@ -76,11 +76,7 @@ export function iterateSelections(
         return callback(path, tableContext, block, segments);
     };
 
-    internalIterateSelections(
-        Array.isArray(modelOrPath) ? modelOrPath : [modelOrPath],
-        internalCallback,
-        option
-    );
+    internalIterateSelections([group], internalCallback, option);
 }
 
 function internalIterateSelections(
