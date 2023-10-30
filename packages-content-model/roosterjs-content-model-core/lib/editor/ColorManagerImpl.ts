@@ -127,7 +127,8 @@ export default class ColorManagerImpl implements ColorManager {
 
         if (rgbSearch) {
             const key = getObjectKeys(this.knownColors).find(key => {
-                const rgbCurrent = parseColor(this.knownColors[key].darkModeColor);
+                const darkColor = this.knownColors[key].darkModeColor;
+                const rgbCurrent = darkColor ? parseColor(darkColor) : null;
 
                 return (
                     rgbCurrent &&
