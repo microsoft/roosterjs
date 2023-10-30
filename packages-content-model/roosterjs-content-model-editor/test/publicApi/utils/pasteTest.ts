@@ -4,6 +4,7 @@ import * as ExcelF from '../../../lib/editor/plugins/PastePlugin/Excel/processPa
 import * as getPasteSourceF from '../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/getPasteSource';
 import * as getSelectedSegmentsF from '../../../lib/publicApi/selection/getSelectedSegments';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
+import * as pendingFormatF from '../../../lib/modelApi/format/pendingFormat';
 import * as PPT from '../../../lib/editor/plugins/PastePlugin/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from '../../../lib/editor/plugins/PastePlugin/utils/setProcessor';
 import * as WacComponents from '../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
@@ -43,6 +44,8 @@ describe('Paste ', () => {
     let getTrustedHTMLHandler: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
+    let mergeModelSpy: jasmine.Spy;
+    let setPendingFormatSpy: jasmine.Spy;
 
     const mockedPos = 'POS' as any;
 
@@ -70,6 +73,7 @@ describe('Paste ', () => {
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
         getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
+        setPendingFormatSpy = spyOn(pendingFormatF, 'setPendingFormat');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.returnValue({
             clipboardData,
             fragment: document.createDocumentFragment(),
@@ -97,7 +101,10 @@ describe('Paste ', () => {
             .and.returnValue((html: string) => html);
 
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-        spyOn(mergeModelFile, 'mergeModel').and.callFake(() => (mockedModel = mockedMergeModel));
+        mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => {
+            mockedModel = mockedMergeModel;
+            return null;
+        });
         spyOn(getSelectedSegmentsF, 'default').and.returnValue([
             {
                 format: {
@@ -134,7 +141,6 @@ describe('Paste ', () => {
         expect(setContentModel).toHaveBeenCalled();
         expect(focus).toHaveBeenCalled();
         expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(getFocusedPosition).not.toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
         expect(triggerPluginEvent).toHaveBeenCalled();
         expect(getDocument).toHaveBeenCalled();
@@ -148,7 +154,6 @@ describe('Paste ', () => {
         expect(setContentModel).toHaveBeenCalled();
         expect(focus).toHaveBeenCalled();
         expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(getFocusedPosition).not.toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
         expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
@@ -163,6 +168,52 @@ describe('Paste ', () => {
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);
+    });
+
+    it('Preserve segment format after paste', () => {
+        const mockedNode = 'Node' as any;
+        const mockedOffset = 'Offset' as any;
+        const mockedFormat = {
+            fontFamily: 'Arial',
+        };
+        clipboardData.rawHtml =
+            '<span style="font-size: 100px; background-color: black">test</span>';
+        getFocusedPosition.and.returnValue({
+            node: mockedNode,
+            offset: mockedOffset,
+        });
+        mergeModelSpy.and.returnValue({
+            marker: {
+                format: mockedFormat,
+            },
+        });
+
+        paste(editor, clipboardData);
+
+        editor.createContentModel(<DomToModelOption>{
+            processorOverride: {
+                table: tableProcessor,
+            },
+        });
+
+        expect(setPendingFormatSpy).toHaveBeenCalledWith(
+            editor,
+            {
+                backgroundColor: '',
+                fontFamily: 'Arial',
+                fontSize: '',
+                fontWeight: '',
+                italic: false,
+                letterSpacing: '',
+                lineHeight: '',
+                strikethrough: false,
+                superOrSubScriptSequence: '',
+                textColor: '',
+                underline: false,
+            },
+            mockedNode,
+            mockedOffset
+        );
     });
 });
 
