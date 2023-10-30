@@ -1,12 +1,12 @@
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { EditorCore, EditorPlugin, PluginEvent, TriggerEvent } from 'roosterjs-editor-types';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
+import type { CoreEditorPlugin } from '../publicTypes/editor/CoreEditorPlugin';
+import type { PluginEvent } from '../publicTypes/event/PluginEvent';
+import type { TriggerEvent } from '../publicTypes/coreApi/TriggerEvent';
+import type { PluginEventType } from '../publicTypes/event/PluginEventType';
 
-const allowedEventsInShadowEdit: (PluginEventType | CompatiblePluginEventType)[] = [
-    PluginEventType.EditorReady,
-    PluginEventType.BeforeDispose,
-    PluginEventType.ExtractContentWithDom,
-    PluginEventType.ZoomChanged,
+const allowedEventsInShadowEdit: PluginEventType[] = [
+    'editorReady',
+    'beforeDispose',
+    'extractContentWithDom',
 ];
 
 /**
@@ -16,13 +16,9 @@ const allowedEventsInShadowEdit: (PluginEventType | CompatiblePluginEventType)[]
  * @param pluginEvent The event object to trigger
  * @param broadcast Set to true to skip the shouldHandleEventExclusively check
  */
-export const triggerEvent: TriggerEvent = (
-    core: EditorCore,
-    pluginEvent: PluginEvent,
-    broadcast: boolean
-) => {
+export const triggerEvent: TriggerEvent = (core, pluginEvent, broadcast) => {
     if (
-        (!core.lifecycle.shadowEditFragment ||
+        (!core.lifecycle.isInShadowEdit ||
             allowedEventsInShadowEdit.indexOf(pluginEvent.eventType) >= 0) &&
         (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin)))
     ) {
@@ -34,7 +30,7 @@ export const triggerEvent: TriggerEvent = (
     }
 };
 
-function handledExclusively(event: PluginEvent, plugin: EditorPlugin): boolean {
+function handledExclusively(event: PluginEvent, plugin: CoreEditorPlugin): boolean {
     if (plugin.onPluginEvent && plugin.willHandleEventExclusively?.(event)) {
         plugin.onPluginEvent(event);
         return true;

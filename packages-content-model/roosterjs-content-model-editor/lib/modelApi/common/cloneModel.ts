@@ -28,7 +28,12 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Callback function type for clone model when hit a model with cached node
+ * @param node The cached node
+ * @param type Type of the cached node, can be:
+ * - general: node from ContentModelGeneralBlock or ContentModelGeneralSegment
+ * - entity: entity wrapper
+ * - cache: cached node from normal block
  */
 export type CachedElementHandler = (
     node: HTMLElement,
@@ -36,7 +41,6 @@ export type CachedElementHandler = (
 ) => HTMLElement | undefined;
 
 /**
- * @internal
  * Options for cloneModel API
  */
 export interface CloneModelOptions {
@@ -51,7 +55,9 @@ export interface CloneModelOptions {
 }
 
 /**
- * @internal
+ * Clone a Content Model
+ * @param model The model to clone
+ * @param options Options to determine how to clone
  */
 export function cloneModel(
     model: ContentModelDocument,

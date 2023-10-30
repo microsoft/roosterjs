@@ -1,8 +1,9 @@
+import { CoreEditor } from 'roosterjs-content-model-core';
 import { createContentModelEditorCore } from 'roosterjs-content-model-editor';
 import { isFeatureEnabled } from './isFeatureEnabled';
-import type { ContentModelEditorCore } from 'roosterjs-content-model-editor';
 import type {
     ContentModelDocument,
+    CoreEditorOptions,
     DOMSelection,
     DomToModelOption,
     EditorEnvironment,
@@ -27,6 +28,7 @@ import type {
     DarkColorHandler,
     DefaultFormat,
     DOMEventHandler,
+    EditorCore,
     EditorOptions,
     EditorUndoState,
     ExperimentalFeatures,
@@ -84,29 +86,32 @@ import type {
  * (This class is still under development, temporarily do internal export for now.)
  */
 export class AdapterEditor implements IEditor, ICoreEditor {
-    private core: ContentModelEditorCore | null = null;
+    private coreEditor: ICoreEditor;
+    private core: EditorCore | null = null;
 
     /**
      * Creates an instance of EditorBase
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: EditorOptions) {
+    constructor(
+        contentDiv: HTMLDivElement,
+        options: EditorOptions,
+        coreEditorOptions: CoreEditorOptions
+    ) {
         // 1. Make sure all parameters are valid
         if (getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
-        // 2. Create editor core
+        // 2. Create core editor
+        this.coreEditor = new CoreEditor(contentDiv, coreEditorOptions);
+
+        // 3. Create editor core
         this.core = createContentModelEditorCore(contentDiv, options);
 
-        // 3. Initialize plugins
+        // 4. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
-
-        // 4. Ensure user will type in a container node, not the editor content DIV
-        this.ensureTypeInContainer(
-            new Position(this.core.contentDiv, PositionType.Begin).normalize()
-        );
     }
 
     /**
@@ -129,6 +134,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
         core.darkColorHandler.reset();
 
         this.core = null;
+        this.coreEditor.dispose();
     }
 
     /**
@@ -149,9 +155,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
         option?: DomToModelOption,
         selectionOverride?: DOMSelection
     ): ContentModelDocument {
-        const core = this.getCore();
-
-        return core.api.createContentModel(core, option, selectionOverride);
+        return this.coreEditor.createContentModel(option, selectionOverride);
     }
 
     /**
@@ -165,25 +169,21 @@ export class AdapterEditor implements IEditor, ICoreEditor {
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
     ): DOMSelection | null {
-        const core = this.getCore();
-
-        return core.api.setContentModel(core, model, option, onNodeCreated);
+        return this.coreEditor.setContentModel(model, option, onNodeCreated);
     }
 
     /**
      * Get current running environment, such as if editor is running on Mac
      */
     getEnvironment(): EditorEnvironment {
-        return this.getCore().environment;
+        return this.coreEditor.getEnvironment();
     }
 
     /**
      * Get current DOM selection
      */
     getDOMSelection(): DOMSelection | null {
-        const core = this.getCore();
-
-        return core.api.getDOMSelection(core);
+        return this.coreEditor.getDOMSelection();
     }
 
     /**
@@ -192,9 +192,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection) {
-        const core = this.getCore();
-
-        core.api.setDOMSelection(core, selection);
+        this.coreEditor.setDOMSelection(selection);
     }
 
     //#endregion
@@ -1091,7 +1089,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    protected getCore(): ContentModelEditorCore {
+    protected getCore(): EditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }

@@ -10,6 +10,17 @@ import type { OnNodeCreated } from '../context/ModelToDomSettings';
  */
 export interface ICoreEditor {
     /**
+     * Dispose this editor, dispose all plugins and custom data
+     */
+    dispose(): void;
+
+    /**
+     * Get whether this editor is disposed
+     * @returns True if editor is disposed, otherwise false
+     */
+    isDisposed(): boolean;
+
+    /**
      * Create Content Model from DOM tree in this editor
      * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),
      * otherwise it will create Content Model for the whole content in editor.

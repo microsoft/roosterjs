@@ -122,3 +122,18 @@ export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';
 export { ContentModelFormatPluginState } from './publicTypes/pluginState/ContentModelFormatPluginState';
+
+export { tablePreProcessor } from './editor/overrides/tablePreProcessor';
+export {
+    listItemMetadataApplier,
+    listLevelMetadataApplier,
+} from './domUtils/metadata/updateListMetadata';
+export {
+    IterateSelectionsOption,
+    IterateSelectionsCallback,
+    iterateSelections,
+} from './modelApi/selection/iterateSelections';
+export { addRangeToSelection } from './domUtils/addRangeToSelection';
+export { areSameRangeEx } from './modelApi/selection/areSameRangeEx';
+export { CachedElementHandler, CloneModelOptions, cloneModel } from './modelApi/common/cloneModel';
+export { parseColor } from './modelApi/table/setTableCellBackgroundColor';

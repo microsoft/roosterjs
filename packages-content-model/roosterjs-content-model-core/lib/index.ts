@@ -34,3 +34,5 @@ export {
     EnteredShadowEditEvent,
     LeavingShadowEditEvent,
 } from './publicTypes/event/ShadowEditEvent';
+
+export { CoreEditor } from './editor/CoreEditor';

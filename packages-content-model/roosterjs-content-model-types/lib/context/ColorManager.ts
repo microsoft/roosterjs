@@ -14,6 +14,16 @@ export interface Colors {
 }
 
 /**
+ * Represents a combination of color key, light color and dark color, parsed from existing color value
+ */
+export interface ColorsAndKey extends Colors {
+    /**
+     * Key of color, if found, otherwise undefined
+     */
+    key?: string;
+}
+
+/**
  * A handler object for dark color, used for variable-based dark color solution
  */
 export interface ColorManager {
@@ -32,7 +42,7 @@ export interface ColorManager {
      * @param isInDarkMode Whether current content is in dark mode. When set to true, if the color value is not in dark var format,
      * we will treat is as a dark mode color and try to find a matched dark mode color.
      */
-    parseColorValue(color: string | null | undefined, isInDarkMode?: boolean): Colors;
+    parseColorValue(color: string | null | undefined, isInDarkMode?: boolean): ColorsAndKey;
 
     /**
      * Reset known color record, clean up registered color variables.

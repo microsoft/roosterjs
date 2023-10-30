@@ -3,7 +3,7 @@ import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootN
 import type { DomToModelContext, ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Override default table processor to treat unfocused table as entity
  */
 export const tablePreProcessor: ElementProcessor<HTMLTableElement> = (group, element, context) => {
     const processor = shouldUseTableProcessor(element, context) ? tableProcessor : entityProcessor;

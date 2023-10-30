@@ -212,7 +212,7 @@ class MainPane extends MainPaneBase {
         this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new AdapterEditor(div, options),
+                new AdapterEditor(div, options, {}),
         });
     }
 

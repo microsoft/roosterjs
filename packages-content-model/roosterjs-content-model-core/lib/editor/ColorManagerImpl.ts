@@ -1,9 +1,6 @@
-import { getObjectKeys, parseColor, setColor } from 'roosterjs-editor-dom';
-import type {
-    ColorKeyAndValue,
-    DarkColorHandler,
-    ModeIndependentColor,
-} from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { parseColor } from 'roosterjs-content-model-editor';
+import type { ColorManager, Colors, ColorsAndKey } from 'roosterjs-content-model-types';
 
 const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';
@@ -26,8 +23,8 @@ const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
 /**
  * @internal
  */
-export default class DarkColorHandlerImpl implements DarkColorHandler {
-    private knownColors: Record<string, Readonly<ModeIndependentColor>> = {};
+export default class ColorManagerImpl implements ColorManager {
+    private knownColors: Record<string, Readonly<Colors>> = {};
 
     constructor(private contentDiv: HTMLElement, private getDarkColor: (color: string) => string) {}
 
@@ -88,7 +85,7 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
      * @param isInDarkMode Whether current content is in dark mode. When set to true, if the color value is not in dark var format,
      * we will treat is as a dark mode color and try to find a matched dark mode color.
      */
-    parseColorValue(color: string | undefined | null, isInDarkMode?: boolean): ColorKeyAndValue {
+    parseColorValue(color: string | undefined | null, isInDarkMode?: boolean): ColorsAndKey {
         let key: string | undefined;
         let lightModeColor = '';
         let darkModeColor: string | undefined;
@@ -162,12 +159,11 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
                 !!fromDarkMode
             ).lightModeColor;
 
-            element.style.setProperty(names[ColorAttributeEnum.CssColor], null);
+            element.style.setProperty(
+                names[ColorAttributeEnum.CssColor],
+                color && color != 'inherit' ? this.registerColor(color, toDarkMode) : null
+            );
             element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
-
-            if (color && color != 'inherit') {
-                setColor(element, color, i != 0, toDarkMode, false /*shouldAdaptFontColor*/, this);
-            }
         });
     }
 }

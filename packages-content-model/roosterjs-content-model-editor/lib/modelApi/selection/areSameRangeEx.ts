@@ -1,8 +1,9 @@
 import type { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
- * @internal
  * Check if the given selections are the same
+ * @param sel1 The first selection to check
+ * @param sel2 The second selection to check
  */
 export function areSameRangeEx(sel1: DOMSelection, sel2: DOMSelection): boolean {
     if (sel1 == sel2) {
