@@ -16,9 +16,7 @@ import { selectImage } from './selectImage';
 import { selectRange } from './selectRange';
 import { selectTable } from './selectTable';
 import { setContent } from './setContent';
-import { switchShadowEdit } from './switchShadowEdit';
 import { transformColor } from './transformColor';
-import { triggerEvent } from './triggerEvent';
 import type { CoreApiMap } from 'roosterjs-editor-types';
 
 /**
@@ -41,9 +39,7 @@ export const coreApiMap: CoreApiMap = {
     select,
     selectRange,
     setContent,
-    switchShadowEdit,
     transformColor,
-    triggerEvent,
     selectTable,
     selectImage,
 };

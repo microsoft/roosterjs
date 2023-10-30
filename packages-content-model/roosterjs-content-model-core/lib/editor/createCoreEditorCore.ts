@@ -1,9 +1,9 @@
 import ColorManagerImpl from './ColorManagerImpl';
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { CoreEditorCorePlugins } from '../publicTypes/editor/CoreEditorCorePlugins';
-import { CoreEditorPlugin } from '../publicTypes/editor/CoreEditorPlugin';
-import { CoreEditorPluginState } from '../publicTypes/editor/CoreEditorPluginState';
 import { createCorePlugins } from './createCorePlugins';
+import type { CoreEditorCorePlugins } from '../publicTypes/editor/CoreEditorCorePlugins';
+import type { CoreEditorPlugin } from '../publicTypes/editor/CoreEditorPlugin';
+import type { CoreEditorPluginState } from '../publicTypes/editor/CoreEditorPluginState';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,

@@ -1,5 +1,5 @@
-import { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
-import { GetDOMSelection } from '../publicTypes/coreApi/GetDOMSelection';
+import type { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
+import type { GetDOMSelection } from '../publicTypes/coreApi/GetDOMSelection';
 import type { RangeSelection } from 'roosterjs-content-model-types';
 
 /**

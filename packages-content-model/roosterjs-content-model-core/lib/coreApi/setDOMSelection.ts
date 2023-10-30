@@ -1,5 +1,5 @@
 import { addRangeToSelection, areSameRangeEx } from 'roosterjs-content-model-editor';
-import { SetDOMSelection } from '../publicTypes/coreApi/SetDOMSelection';
+import type { SetDOMSelection } from '../publicTypes/coreApi/SetDOMSelection';
 
 /**
  * @internal

@@ -1,4 +1,4 @@
-import { CreateEditorContext } from '../publicTypes/coreApi/CreateEditorContext';
+import type { CreateEditorContext } from '../publicTypes/coreApi/CreateEditorContext';
 import type { EditorContext } from 'roosterjs-content-model-types';
 
 /**

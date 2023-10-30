@@ -1,6 +1,6 @@
 import { cloneModel } from 'roosterjs-content-model-editor';
-import { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
-import { CreateContentModel } from '../publicTypes/coreApi/CreateContentModel';
+import type { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
+import type { CreateContentModel } from '../publicTypes/coreApi/CreateContentModel';
 import type { DOMSelection, DomToModelOption } from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,
