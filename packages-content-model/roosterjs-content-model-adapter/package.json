@@ -5,7 +5,6 @@
         "tslib": "^2.3.1",
         "roosterjs-editor-types": "",
         "roosterjs-editor-dom": "",
-        "roosterjs-editor-core": "",
         "roosterjs-content-model-editor": "",
         "roosterjs-content-model-dom": "",
         "roosterjs-content-model-types": ""
