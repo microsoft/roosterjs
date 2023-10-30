@@ -8,7 +8,6 @@ import {
     PluginEvent,
     PluginEventType,
     DOMEventHandlerFunction,
-    PluginKeyboardEvent,
 } from 'roosterjs-editor-types';
 
 const VERTICAL_INSERTER = 'verticalInserter';
@@ -730,7 +729,7 @@ describe('TableResize', () => {
         editor = TestHelper.initEditor(TEST_ID);
         plugin = new TableResize();
 
-        spyOn(editor, 'getScrollContainer').and.returnValue({
+        spyOn(editor, 'getScrollContainer').and.returnValue(<HTMLElement>(<any>{
             addEventListener: <K extends keyof HTMLElementEventMap>(
                 type: K,
                 listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
@@ -749,7 +748,7 @@ describe('TableResize', () => {
                     mouseOutListener = undefined;
                 }
             },
-        });
+        }));
         plugin.initialize(editor);
     });
 
