@@ -60,7 +60,7 @@ export type IterateSelectionsCallback = (
 /**
  * @internal
  * Iterate all selected elements in a given model
- * @param modelOrPath The given Content Model to iterate from
+ * @param group The given Content Model to iterate selection from
  * @param callback The callback function to access the selected element
  * @param option Option to determine how to iterate
  */
