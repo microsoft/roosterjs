@@ -223,7 +223,6 @@ export default class ImageEdit implements EditorPlugin {
                 }
                 break;
             case PluginEventType.MouseUp:
-            case PluginEventType.ContextMenu:
                 if (this.editor && this.image && this.shadowSpan) {
                     // When mouse up/ context menu, if the image and the shadow span exists, the editing mode is on.
                     // To make sure the selection did not jump to the shadow root, reselect the image.

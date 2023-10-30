@@ -48,12 +48,25 @@ export default class ImageSelection implements EditorPlugin {
                         this.editor.select(target);
                     }
                     break;
+                case PluginEventType.ContextMenu:
+                    const contextMenuTarget = event.rawEvent.target;
+                    const actualSelection = this.editor.getSelectionRangeEx();
+                    if (
+                        safeInstanceOf(contextMenuTarget, 'HTMLImageElement') &&
+                        (actualSelection.type !== SelectionRangeTypes.ImageSelection ||
+                            actualSelection.image !== contextMenuTarget)
+                    ) {
+                        this.editor.select(contextMenuTarget);
+                    }
+                    break;
                 case PluginEventType.MouseDown:
                     const mouseTarget = event.rawEvent.target;
                     const mouseSelection = this.editor.getSelectionRangeEx();
                     if (
                         mouseSelection &&
                         mouseSelection.type === SelectionRangeTypes.ImageSelection &&
+                        safeInstanceOf(mouseTarget, 'HTMLElement') &&
+                        !mouseTarget.shadowRoot &&
                         mouseSelection.image !== mouseTarget
                     ) {
                         this.editor.select(null);
@@ -87,16 +100,6 @@ export default class ImageSelection implements EditorPlugin {
                         }
                     }
                     break;
-                case PluginEventType.ContextMenu:
-                    const contextMenuTarget = event.rawEvent.target;
-                    const actualSelection = this.editor.getSelectionRangeEx();
-                    if (
-                        safeInstanceOf(contextMenuTarget, 'HTMLImageElement') &&
-                        (actualSelection.type !== SelectionRangeTypes.ImageSelection ||
-                            actualSelection.image !== contextMenuTarget)
-                    ) {
-                        this.editor.select(contextMenuTarget);
-                    }
             }
         }
     }

@@ -164,6 +164,20 @@ describe('ImageSelectionPlugin |', () => {
         expect(editor.select).not.toHaveBeenCalled();
     });
 
+    it('should not remove selection on shadow dom', () => {
+        editor.setContent(`<img id=${imageId}></img><span id=${imageId2}>`);
+        const span = document.getElementById(imageId2);
+        span!.attachShadow({ mode: 'open' });
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target!);
+        const mouse = mouseDown(span!);
+        imageSelection.onPluginEvent(mouse);
+        spyOn(editor, 'select');
+        expect(editor.select).not.toHaveBeenCalled();
+    });
+
     const keyDown = (key: string, ctrlKey: boolean = false): PluginEvent => {
         return {
             eventType: PluginEventType.KeyDown,
@@ -201,6 +215,15 @@ describe('ImageSelectionPlugin |', () => {
                 target: target,
             },
             items: [],
+        };
+    };
+
+    const mouseDown = (target: HTMLElement): PluginEvent => {
+        return {
+            eventType: PluginEventType.MouseDown,
+            rawEvent: <any>{
+                target: target,
+            },
         };
     };
 

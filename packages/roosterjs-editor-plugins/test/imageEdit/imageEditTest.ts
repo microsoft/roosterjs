@@ -293,20 +293,6 @@ describe('ImageEdit | plugin events | ', () => {
         target.dispatchEvent(event);
     };
 
-    const contextMenu = (target: HTMLElement, keyNumber: number) => {
-        const rect = target.getBoundingClientRect();
-        const event = new MouseEvent('contextmenu', {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            clientX: rect.left,
-            clientY: rect.top,
-            shiftKey: false,
-            button: keyNumber,
-        });
-        target.dispatchEvent(event);
-    };
-
     it('mouse up | keep image selected if click in a image', () => {
         const IMG_ID = 'IMAGE_ID_MOUSE';
         const SPAN_ID = 'SPAN_ID';
@@ -316,19 +302,6 @@ describe('ImageEdit | plugin events | ', () => {
         editor.focus();
         editor.select(image);
         mouseUp(image, 0);
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-    });
-
-    it('context menu | keep image selected if right click in a image', () => {
-        const IMG_ID = 'IMAGE_ID_MOUSE';
-        const SPAN_ID = 'SPAN_ID';
-        const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
-        editor.setContent(content);
-        const image = document.getElementById(IMG_ID) as HTMLImageElement;
-        editor.focus();
-        editor.select(image);
-        contextMenu(image, 0);
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
     });
