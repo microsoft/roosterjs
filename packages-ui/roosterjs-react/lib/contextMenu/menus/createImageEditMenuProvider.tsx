@@ -6,7 +6,7 @@ import {
     resetImage,
     resizeByPercentage,
 } from 'roosterjs-editor-plugins';
-import { DocumentCommand, ImageEditOperation, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { DocumentCommand, ImageEditOperation } from 'roosterjs-editor-types';
 import { getObjectKeys, safeInstanceOf } from 'roosterjs-editor-dom';
 import { setImageAltText } from 'roosterjs-editor-api';
 import type ContextMenuItem from '../types/ContextMenuItem';
@@ -78,13 +78,8 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
             }
         });
     },
-    getSelectedId: (editor, target) => {
-        const selection = editor.getSelectionRangeEx();
-        const image =
-            selection.type == SelectionRangeTypes.ImageSelection
-                ? selection.image
-                : getImageFromTarget(target);
-        return image
+    getSelectedId: (_, image) => {
+        return safeInstanceOf(image, 'HTMLImageElement')
             ? getObjectKeys(sizeMap).find(key =>
                   image && key == 'menuNameImageSizeBestFit'
                       ? !image.hasAttribute('width') && !image.hasAttribute('height')
@@ -201,14 +196,6 @@ const ImageCutMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> =
 
 function shouldShowImageEditItems(editor: IEditor, node: Node) {
     return safeInstanceOf(node, 'HTMLImageElement') && node.isContentEditable;
-}
-
-function getImageFromTarget(target: Node) {
-    return safeInstanceOf(target, 'HTMLImageElement')
-        ? target
-        : safeInstanceOf(target, 'HTMLElement')
-        ? target.querySelector('img')
-        : null;
 }
 
 /**
