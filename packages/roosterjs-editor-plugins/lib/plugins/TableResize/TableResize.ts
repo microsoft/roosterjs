@@ -132,7 +132,12 @@ export default class TableResize implements EditorPlugin {
         this.tableEditor?.onMouseMove(x, y);
     };
 
-    public setTableEditor(table: HTMLTableElement | null, e?: MouseEvent) {
+    /**
+     * @internal Public only for unit test
+     * @param table Table to use when setting the Editors
+     * @param event (Optional) Mouse event
+     */
+    public setTableEditor(table: HTMLTableElement | null, event?: MouseEvent) {
         if (this.tableEditor && !this.tableEditor.isEditing() && table != this.tableEditor.table) {
             this.disposeTableEditor();
         }
@@ -148,7 +153,7 @@ export default class TableResize implements EditorPlugin {
                 this.invalidateTableRects,
                 this.onShowHelperElement,
                 safeInstanceOf(container, 'HTMLElement') ? container : undefined,
-                e?.currentTarget
+                event?.currentTarget
             );
         }
     }
