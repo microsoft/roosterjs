@@ -1,4 +1,4 @@
-import { createEditorCore } from 'roosterjs-editor-core';
+import { createEditorCore } from './createEditorCore';
 import { isFeatureEnabled } from './isFeatureEnabled';
 import {
     ChangeSource,
