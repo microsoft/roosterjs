@@ -36,7 +36,7 @@ export function deleteExpandedSelection(
     };
 
     iterateSelections(
-        [model],
+        model,
         (path, tableContext, block, segments) => {
             // Set paragraph, format and index for default position where we will put cursor to.
             // Later we can overwrite these info when process the selections
