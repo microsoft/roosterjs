@@ -1,3 +1,4 @@
+import { CoreEditorPlugin } from 'roosterjs-content-model-core/lib';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 
@@ -19,4 +20,9 @@ export interface CoreEditorOptions {
      * Reuse existing DOM structure if possible, and update the model when content or selection is changed
      */
     cacheModel?: boolean;
+
+    /**
+     * Additional plugins
+     */
+    plugins?: CoreEditorPlugin[];
 }

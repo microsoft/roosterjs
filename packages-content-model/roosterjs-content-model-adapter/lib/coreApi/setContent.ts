@@ -1,3 +1,4 @@
+import { AdapterEditorCore, SetContent } from '../editor/AdapterEditorCore';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -10,7 +11,7 @@ import {
     queryElements,
     restoreContentWithEntityPlaceholder,
 } from 'roosterjs-editor-dom';
-import type { ContentMetadata, EditorCore, SetContent } from 'roosterjs-editor-types';
+import type { ContentMetadata } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -22,12 +23,7 @@ import type { ContentMetadata, EditorCore, SetContent } from 'roosterjs-editor-t
  * @param metadata @optional Metadata of the content that helps editor know the selection and color mode.
  * If not passed, we will treat content as in light mode without selection
  */
-export const setContent: SetContent = (
-    core: EditorCore,
-    content: string,
-    triggerContentChangedEvent: boolean,
-    metadata?: ContentMetadata
-) => {
+export const setContent: SetContent = (core, content, triggerContentChangedEvent, metadata) => {
     let contentChanged = false;
     if (core.contentDiv.innerHTML != content) {
         core.api.triggerEvent(
@@ -81,7 +77,7 @@ export const setContent: SetContent = (
     }
 };
 
-function selectContentMetadata(core: EditorCore, metadata: ContentMetadata | undefined) {
+function selectContentMetadata(core: AdapterEditorCore, metadata: ContentMetadata | undefined) {
     if (!core.lifecycle.shadowEditSelectionPath && metadata) {
         core.domEvent.tableSelectionRange = null;
         core.domEvent.imageSelectionRange = null;

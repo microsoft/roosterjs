@@ -30,7 +30,7 @@ export class CoreEditor implements ICoreEditor {
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
-    public dispose(): void {
+    dispose(): void {
         const core = this.getCore();
 
         for (let i = core.plugins.length - 1; i >= 0; i--) {
@@ -49,8 +49,25 @@ export class CoreEditor implements ICoreEditor {
      * Get whether this editor is disposed
      * @returns True if editor is disposed, otherwise false
      */
-    public isDisposed(): boolean {
+    isDisposed(): boolean {
         return !this.core;
+    }
+
+    /**
+     * Check if focus is in editor now
+     * @returns true if focus is in editor, otherwise false
+     */
+    hasFocus(): boolean {
+        const core = this.getCore();
+        return core.api.hasFocus(core);
+    }
+
+    /**
+     * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
+     */
+    focus() {
+        const core = this.getCore();
+        core.api.focus(core);
     }
 
     /**

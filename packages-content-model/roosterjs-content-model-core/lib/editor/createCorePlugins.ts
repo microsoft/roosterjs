@@ -7,8 +7,12 @@ import type { CoreEditorCorePlugins } from '../publicTypes/editor/CoreEditorCore
 export function createCorePlugins(
     contentDiv: HTMLDivElement,
     options: CoreEditorOptions
-): CoreEditorCorePlugins {
+): CoreEditorCorePlugins & {
+    __placeholder: null;
+} {
     return ({
         // TODO: Add implementation
-    } as any) as CoreEditorCorePlugins;
+    } as any) as CoreEditorCorePlugins & {
+        __placeholder: null;
+    };
 }

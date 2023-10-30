@@ -33,7 +33,11 @@ export function createCoreEditorCore(
     const plugins: CoreEditorPlugin[] = [];
 
     getObjectKeys(corePlugins).forEach(name => {
-        plugins.push(corePlugins[name]);
+        if (name == '__placeholder') {
+            plugins.push(...(options.plugins || []));
+        } else {
+            plugins.push(corePlugins[name]);
+        }
     });
 
     const pluginState = getPluginState(corePlugins);

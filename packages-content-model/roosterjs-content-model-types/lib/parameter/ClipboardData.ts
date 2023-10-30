@@ -45,7 +45,7 @@ export interface ClipboardData {
     /**
      * An editor content snapshot before pasting happens. This is used for changing paste format
      */
-    snapshotBeforePaste?: ContentModelDocument;
+    snapshotBeforePaste?: string;
 
     /**
      * BASE64 encoded data uri of the image if any

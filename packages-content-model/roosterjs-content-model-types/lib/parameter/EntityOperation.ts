@@ -23,7 +23,7 @@ export type EntityLifecycleOperation =
      * Notify plugins that a new entity state need to be updated to an entity.
      * This is normally happened when user undo/redo the content with an entity snapshot added by a plugin that handles entity
      */
-    | 'UpdateEntityState';
+    | 'updateEntityState';
 
 /**
  * Define entity removal related operations

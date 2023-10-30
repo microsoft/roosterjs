@@ -61,4 +61,15 @@ export interface ICoreEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection): void;
+
+    /**
+     * Check if focus is in editor now
+     * @returns true if focus is in editor, otherwise false
+     */
+    hasFocus(): boolean;
+
+    /**
+     * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
+     */
+    focus(): void;
 }

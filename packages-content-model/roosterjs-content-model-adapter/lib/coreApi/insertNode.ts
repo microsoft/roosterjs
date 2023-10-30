@@ -1,10 +1,5 @@
-import type {
-    BlockElement,
-    EditorCore,
-    InsertNode,
-    InsertOption,
-    NodePosition,
-} from 'roosterjs-editor-types';
+import type { AdapterEditorCore, InsertNode } from '../editor/AdapterEditorCore';
+import type { BlockElement, InsertOption, NodePosition } from 'roosterjs-editor-types';
 import {
     ContentPosition,
     ColorTransformDirection,
@@ -29,7 +24,7 @@ import {
 } from 'roosterjs-editor-dom';
 
 function getInitialRange(
-    core: EditorCore,
+    core: AdapterEditorCore,
     option: InsertOption
 ): { range: Range | null; rangeToRestore: Range | null } {
     // Selection start replaces based on the current selection.
@@ -54,11 +49,7 @@ function getInitialRange(
  * @param core The EditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-export const insertNode: InsertNode = (
-    core: EditorCore,
-    node: Node,
-    option: InsertOption | null
-) => {
+export const insertNode: InsertNode = (core, node, option: InsertOption | null) => {
     option = option || {
         position: ContentPosition.SelectionStart,
         insertOnNewLine: false,
@@ -69,7 +60,7 @@ export const insertNode: InsertNode = (
     const contentDiv = core.contentDiv;
 
     if (option.updateCursor) {
-        core.api.focus(core);
+        core.coreEditor.focus();
     }
 
     if (option.position == ContentPosition.Outside) {
@@ -199,7 +190,11 @@ export const insertNode: InsertNode = (
     return true;
 };
 
-function adjustInsertPositionRegionRoot(core: EditorCore, range: Range, position: NodePosition) {
+function adjustInsertPositionRegionRoot(
+    core: AdapterEditorCore,
+    range: Range,
+    position: NodePosition
+) {
     const region = getRegionsFromRange(core.contentDiv, range, RegionType.Table)[0];
     let node: Node | null = position.node;
 
@@ -223,7 +218,11 @@ function adjustInsertPositionRegionRoot(core: EditorCore, range: Range, position
     return position;
 }
 
-function adjustInsertPositionNewLine(blockElement: BlockElement, core: EditorCore, pos: Position) {
+function adjustInsertPositionNewLine(
+    blockElement: BlockElement,
+    core: AdapterEditorCore,
+    pos: Position
+) {
     let tempPos = new Position(blockElement.getEndNode(), PositionType.After);
     if (safeInstanceOf(tempPos.node, 'HTMLTableRowElement')) {
         const div = core.contentDiv.ownerDocument.createElement('div');

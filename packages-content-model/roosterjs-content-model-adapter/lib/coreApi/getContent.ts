@@ -1,5 +1,5 @@
 import { ColorTransformDirection, GetContentMode, PluginEventType } from 'roosterjs-editor-types';
-import type { EditorCore, GetContent } from 'roosterjs-editor-types';
+import { GetContent } from '../editor/AdapterEditorCore';
 import {
     createRange,
     getHtmlWithSelectionPath,
@@ -7,7 +7,6 @@ import {
     getTextContent,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
@@ -16,17 +15,14 @@ import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compat
  * @param mode specify what kind of HTML content to retrieve
  * @returns HTML string representing current editor content
  */
-export const getContent: GetContent = (
-    core: EditorCore,
-    mode: GetContentMode | CompatibleGetContentMode
-): string => {
+export const getContent: GetContent = (core, mode): string => {
     let content: string | null = '';
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
 
     // When there is fragment for shadow edit, always use the cached fragment as document since HTML node in editor
     // has been changed by uncommitted shadow edit which should be ignored.
-    const root = core.lifecycle.shadowEditFragment || core.contentDiv;
+    const root = core.coreEditor.createContentModel();
 
     if (mode == GetContentMode.PlainTextFast) {
         content = root.textContent;

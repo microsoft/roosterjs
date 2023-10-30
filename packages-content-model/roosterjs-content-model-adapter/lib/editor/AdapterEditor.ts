@@ -1,5 +1,6 @@
+import { AdapterEditorCore } from './AdapterEditorCore';
 import { CoreEditor } from 'roosterjs-content-model-core';
-import { createContentModelEditorCore } from 'roosterjs-content-model-editor';
+import { createAdapterEditorCore } from './createAdapterEditorCore';
 import { isFeatureEnabled } from './isFeatureEnabled';
 import type {
     ContentModelDocument,
@@ -27,7 +28,6 @@ import type {
     DarkColorHandler,
     DefaultFormat,
     DOMEventHandler,
-    EditorCore,
     EditorOptions,
     EditorUndoState,
     ExperimentalFeatures,
@@ -86,8 +86,7 @@ import type {
  * (This class is still under development, temporarily do internal export for now.)
  */
 export class AdapterEditor implements IEditor, ICoreEditor {
-    private coreEditor: ICoreEditor;
-    private core: EditorCore | null = null;
+    private core: AdapterEditorCore | null = null;
 
     /**
      * Creates an instance of EditorBase
@@ -104,13 +103,10 @@ export class AdapterEditor implements IEditor, ICoreEditor {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
-        // 2. Create core editor
-        this.coreEditor = new CoreEditor(contentDiv, coreEditorOptions);
+        // 2. Create editor core
+        this.core = createAdapterEditorCore(contentDiv, options, coreEditorOptions);
 
-        // 3. Create editor core
-        this.core = createContentModelEditorCore(contentDiv, options);
-
-        // 4. Initialize plugins
+        // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
     }
 
@@ -120,21 +116,17 @@ export class AdapterEditor implements IEditor, ICoreEditor {
     public dispose(): void {
         const core = this.getCore();
 
+        core.coreEditor.dispose();
+
         for (let i = core.plugins.length - 1; i >= 0; i--) {
             const plugin = core.plugins[i];
 
             try {
                 plugin.dispose();
-            } catch (e) {
-                // Cache the error and pass it out, then keep going since dispose should always succeed
-                core.disposeErrorHandler?.(plugin, e as Error);
-            }
+            } catch (e) {}
         }
 
-        core.darkColorHandler.reset();
-
         this.core = null;
-        this.coreEditor.dispose();
     }
 
     /**
@@ -155,7 +147,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
         option?: DomToModelOption,
         selectionOverride?: DOMSelection
     ): ContentModelDocument {
-        return this.coreEditor.createContentModel(option, selectionOverride);
+        return this.getCore().coreEditor.createContentModel(option, selectionOverride);
     }
 
     /**
@@ -169,21 +161,21 @@ export class AdapterEditor implements IEditor, ICoreEditor {
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
     ): DOMSelection | null {
-        return this.coreEditor.setContentModel(model, option, onNodeCreated);
+        return this.getCore().coreEditor.setContentModel(model, option, onNodeCreated);
     }
 
     /**
      * Get current running environment, such as if editor is running on Mac
      */
     getEnvironment(): EditorEnvironment {
-        return this.coreEditor.getEnvironment();
+        return this.getCore().coreEditor.getEnvironment();
     }
 
     /**
      * Get current DOM selection
      */
     getDOMSelection(): DOMSelection | null {
-        return this.coreEditor.getDOMSelection();
+        return this.getCore().coreEditor.getDOMSelection();
     }
 
     /**
@@ -192,7 +184,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection) {
-        this.coreEditor.setDOMSelection(selection);
+        this.getCore().coreEditor.setDOMSelection(selection);
     }
 
     //#endregion
@@ -481,16 +473,14 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      * @returns true if focus is in editor, otherwise false
      */
     public hasFocus(): boolean {
-        const core = this.getCore();
-        return core.api.hasFocus(core);
+        return this.getCore().coreEditor.hasFocus();
     }
 
     /**
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
     public focus() {
-        const core = this.getCore();
-        core.api.focus(core);
+        this.getCore().coreEditor.focus();
     }
 
     public select(
@@ -591,6 +581,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
     ): () => void {
         const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
         const core = this.getCore();
+
         return core.api.attachDomEvent(core, eventsToMap);
     }
 
@@ -1089,7 +1080,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    protected getCore(): EditorCore {
+    protected getCore(): AdapterEditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }
