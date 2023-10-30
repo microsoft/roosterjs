@@ -17,7 +17,7 @@ export function adjustWordSelection(
 ): ContentModelSegment[] {
     let markerBlock: ContentModelParagraph | undefined;
 
-    iterateSelections([model], (path, tableContext, block, segments) => {
+    iterateSelections(model, (_, __, block, segments) => {
         //Find the block with the selection marker
         if (block?.blockType == 'Paragraph' && segments?.length == 1 && segments[0] == marker) {
             markerBlock = block;
