@@ -1,5 +1,5 @@
-import { ContentModelLifecyclePluginState } from '../corePluginState/ContentModelLifecyclePluginState';
-import { ContentModelSelectionPluginState } from '../corePluginState/ContentModelSelectionPluginState';
+import type { ContentModelLifecyclePluginState } from '../corePluginState/ContentModelLifecyclePluginState';
+import type { ContentModelSelectionPluginState } from '../corePluginState/ContentModelSelectionPluginState';
 import type { CoreEditorPlugin } from './CoreEditorPlugin';
 import type {
     ContentModelCachePluginState,
