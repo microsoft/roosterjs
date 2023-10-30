@@ -1,3 +1,4 @@
+import type { CoreEditorPluginState } from './CoreEditorPluginState';
 import type { CoreEditorApiMap } from './CoreEditorApiMap';
 import type { CoreEditorPlugin } from './CoreEditorPlugin';
 import type {
@@ -13,7 +14,7 @@ import type {
  * @internal
  * Represents the core data structure of a CoreEditor
  */
-export interface CoreEditorCore {
+export interface CoreEditorCore extends CoreEditorPluginState {
     /**
      * The content DIV element of this editor
      */
