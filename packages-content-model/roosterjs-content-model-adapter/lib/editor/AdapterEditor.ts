@@ -1,5 +1,4 @@
 import { AdapterEditorCore } from './AdapterEditorCore';
-import { CoreEditor } from 'roosterjs-content-model-core';
 import { createAdapterEditorCore } from './createAdapterEditorCore';
 import { isFeatureEnabled } from './isFeatureEnabled';
 import type {
@@ -581,7 +580,6 @@ export class AdapterEditor implements IEditor, ICoreEditor {
     ): () => void {
         const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
         const core = this.getCore();
-
         return core.api.attachDomEvent(core, eventsToMap);
     }
 
