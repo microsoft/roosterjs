@@ -143,7 +143,7 @@ describe('createContentModelEditorCore', () => {
             },
             cache: { domIndexer: undefined },
             copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false },
+            environment: { isMac: false, isAndroid: false },
         } as any);
     });
 
@@ -223,7 +223,7 @@ describe('createContentModelEditorCore', () => {
                 domIndexer: undefined,
             },
             copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false },
+            environment: { isMac: false, isAndroid: false },
         } as any);
     });
 
@@ -312,7 +312,7 @@ describe('createContentModelEditorCore', () => {
             },
             cache: { domIndexer: undefined },
             copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false },
+            environment: { isMac: false, isAndroid: false },
         } as any);
     });
 
@@ -384,7 +384,7 @@ describe('createContentModelEditorCore', () => {
             },
             cache: { domIndexer: undefined },
             copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false },
+            environment: { isMac: false, isAndroid: false },
         } as any);
     });
 
@@ -457,7 +457,7 @@ describe('createContentModelEditorCore', () => {
             },
             cache: { domIndexer: contentModelDomIndexer },
             copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false },
+            environment: { isMac: false, isAndroid: false },
         } as any);
     });
 });
