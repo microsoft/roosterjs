@@ -64,7 +64,7 @@ describe('retrieveModelFormatState', () => {
         const marker = createSelectionMarker(segmentFormat);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [marker]);
+            callback([path], undefined, para, [marker]);
             return false;
         });
 
@@ -82,7 +82,7 @@ describe('retrieveModelFormatState', () => {
         addCode(marker, { format: { fontFamily: 'monospace' } });
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [marker]);
+            callback([path], undefined, para, [marker]);
             return false;
         });
 
@@ -150,7 +150,7 @@ describe('retrieveModelFormatState', () => {
         const marker = createSelectionMarker(segmentFormat);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [marker]);
+            callback([path], undefined, para, [marker]);
             return false;
         });
 
@@ -175,7 +175,7 @@ describe('retrieveModelFormatState', () => {
         const marker = createSelectionMarker(segmentFormat);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [marker]);
+            callback([path], undefined, para, [marker]);
             return false;
         });
 
@@ -201,7 +201,7 @@ describe('retrieveModelFormatState', () => {
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
             callback(
-                path,
+                [path],
                 {
                     table: table,
                     colIndex: 0,
@@ -238,7 +238,7 @@ describe('retrieveModelFormatState', () => {
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
             callback(
-                path,
+                [path],
                 {
                     table: table,
                     colIndex: 0,
@@ -287,7 +287,12 @@ describe('retrieveModelFormatState', () => {
         model.blocks.push(table);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, { table: table, rowIndex: 0, colIndex: 0, isWholeTableSelected: false });
+            callback([path], {
+                table: table,
+                rowIndex: 0,
+                colIndex: 0,
+                isWholeTableSelected: false,
+            });
             return false;
         });
 
@@ -309,8 +314,8 @@ describe('retrieveModelFormatState', () => {
         const marker2 = createSelectionMarker();
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para1, [marker1]);
-            callback(path, undefined, para2, [marker2]);
+            callback([path], undefined, para1, [marker1]);
+            callback([path], undefined, para2, [marker2]);
             return false;
         });
 
@@ -344,7 +349,7 @@ describe('retrieveModelFormatState', () => {
         const result: ContentModelFormatState = {};
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [text1, text2]);
+            callback([path], undefined, para, [text1, text2]);
             return false;
         });
 
@@ -370,7 +375,7 @@ describe('retrieveModelFormatState', () => {
         const result: ContentModelFormatState = {};
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [text1, text2]);
+            callback([path], undefined, para, [text1, text2]);
             return false;
         });
 
@@ -395,7 +400,7 @@ describe('retrieveModelFormatState', () => {
         const result: ContentModelFormatState = {};
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [text, marker]);
+            callback([path], undefined, para, [text, marker]);
             return false;
         });
 
@@ -421,8 +426,8 @@ describe('retrieveModelFormatState', () => {
         const marker1 = createSelectionMarker(segmentFormat);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para1, [marker1]);
-            callback(path, undefined, divider);
+            callback([path], undefined, para1, [marker1]);
+            callback([path], undefined, divider);
             return false;
         });
 
@@ -444,8 +449,8 @@ describe('retrieveModelFormatState', () => {
         const marker1 = createSelectionMarker(segmentFormat);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, divider);
-            callback(path, undefined, para1, [marker1]);
+            callback([path], undefined, divider);
+            callback([path], undefined, para1, [marker1]);
             return false;
         });
 
@@ -471,7 +476,7 @@ describe('retrieveModelFormatState', () => {
         };
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para1, [marker1]);
+            callback([path], undefined, para1, [marker1]);
             return false;
         });
 
@@ -622,7 +627,7 @@ describe('retrieveModelFormatState', () => {
         para.segments.push(image);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [image]);
+            callback([path], undefined, para, [image]);
             return false;
         });
 
@@ -662,7 +667,7 @@ describe('retrieveModelFormatState', () => {
         para.segments.push(image2);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [image, image2]);
+            callback([path], undefined, para, [image, image2]);
             return false;
         });
 
@@ -691,7 +696,7 @@ describe('retrieveModelFormatState', () => {
         para.segments.push(marker);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [marker]);
+            callback([path], undefined, para, [marker]);
             return false;
         });
 
@@ -726,7 +731,7 @@ describe('retrieveModelFormatState', () => {
         text1.isSelected = true;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [text1]);
+            callback([path], undefined, para, [text1]);
             return false;
         });
 
@@ -760,7 +765,7 @@ describe('retrieveModelFormatState', () => {
         text2.isSelected = true;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, undefined, para, [text1, text2]);
+            callback([path], undefined, para, [text1, text2]);
             return false;
         });
 

@@ -31,7 +31,7 @@ export function retrieveModelFormatState(
     let isFirstSegment = true;
 
     iterateSelections(
-        [model],
+        model,
         (path, tableContext, block, segments) => {
             // Structure formats
             retrieveStructureFormat(formatState, path, isFirst);
