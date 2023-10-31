@@ -119,7 +119,9 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
 }
 
 function promoteEnvironment(cmCore: ContentModelEditorCore) {
+    // It is ok to use global window here since the environment should always be the same for all windows in one session
     cmCore.environment.isMac = window.navigator.appVersion.indexOf('Mac') != -1;
+    cmCore.environment.isAndroid = /android/i.test(window.navigator.userAgent);
 }
 
 function getPluginState(options: ContentModelEditorOptions): ContentModelPluginState {

@@ -56,7 +56,7 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
 
             if (core.cache.cachedModel) {
                 // Force clear cached element from selected block
-                iterateSelections([core.cache.cachedModel], () => {});
+                iterateSelections(core.cache.cachedModel, () => {});
 
                 core.api.setContentModel(core, core.cache.cachedModel, {
                     ignoreSelection: true, // Do not set focus and selection when quit shadow edit, focus may remain in UI control (picker, ...)

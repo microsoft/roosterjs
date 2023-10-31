@@ -28,7 +28,7 @@ describe('iterateSelections', () => {
 
     it('empty group', () => {
         const group = createContentModelDocument();
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).not.toHaveBeenCalled();
     });
@@ -45,7 +45,7 @@ describe('iterateSelections', () => {
         group.blocks.push(para1);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).not.toHaveBeenCalled();
     });
@@ -64,7 +64,7 @@ describe('iterateSelections', () => {
         group.blocks.push(para1);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
@@ -85,7 +85,7 @@ describe('iterateSelections', () => {
         group.blocks.push(para1);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
@@ -110,7 +110,7 @@ describe('iterateSelections', () => {
         group.blocks.push(listItem);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([listItem, group], undefined, para1, [text1]);
@@ -137,7 +137,7 @@ describe('iterateSelections', () => {
         group.blocks.push(quote);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([quote, group], undefined, para1, [text1]);
@@ -163,7 +163,7 @@ describe('iterateSelections', () => {
         group.blocks.push(table);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith(
@@ -202,7 +202,7 @@ describe('iterateSelections', () => {
         group.blocks.push(table);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith(
@@ -250,7 +250,7 @@ describe('iterateSelections', () => {
 
         group.blocks.push(table);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(3);
         expect(callback).toHaveBeenCalledWith(
@@ -309,7 +309,7 @@ describe('iterateSelections', () => {
 
         group.blocks.push(table);
 
-        iterateSelections([group], callback, {
+        iterateSelections(group, callback, {
             contentUnderSelectedTableCell: 'ignoreForTableOrCell',
         });
 
@@ -348,7 +348,7 @@ describe('iterateSelections', () => {
 
         group.blocks.push(table);
 
-        iterateSelections([group], callback, {
+        iterateSelections(group, callback, {
             contentUnderSelectedTableCell: 'ignoreForTable',
         });
 
@@ -410,7 +410,7 @@ describe('iterateSelections', () => {
 
         group.blocks.push(table);
 
-        iterateSelections([group], callback, { contentUnderSelectedTableCell: 'ignoreForTable' });
+        iterateSelections(group, callback, { contentUnderSelectedTableCell: 'ignoreForTable' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([group], undefined, table, undefined);
@@ -429,7 +429,7 @@ describe('iterateSelections', () => {
         group.blocks.push(para1);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [marker]);
@@ -449,7 +449,7 @@ describe('iterateSelections', () => {
         group.blocks.push(para1);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [text]);
@@ -469,7 +469,7 @@ describe('iterateSelections', () => {
         group.blocks.push(para1);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [marker]);
@@ -493,7 +493,7 @@ describe('iterateSelections', () => {
         group.blocks.push(para2);
         group.blocks.push(para3);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(3);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [marker1]);
@@ -524,7 +524,7 @@ describe('iterateSelections', () => {
         group.blocks.push(para2);
         group.blocks.push(para3);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(3);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [marker1, text1]);
@@ -543,7 +543,7 @@ describe('iterateSelections', () => {
         listItem.blocks.push(para);
         group.blocks.push(listItem);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([listItem, group], undefined, para, [text]);
@@ -565,7 +565,7 @@ describe('iterateSelections', () => {
         listItem.blocks.push(para);
         group.blocks.push(listItem);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([listItem, group], undefined, para, [text1]);
@@ -584,7 +584,7 @@ describe('iterateSelections', () => {
         generalSpan.blocks.push(para);
         group.blocks.push(generalSpan);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para, [text1]);
@@ -604,7 +604,7 @@ describe('iterateSelections', () => {
         para2.segments.push(text1, text2);
         group.blocks.push(para1);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [text1]);
@@ -622,14 +622,14 @@ describe('iterateSelections', () => {
         const callback2 = jasmine.createSpy('callback2');
         const callback3 = jasmine.createSpy('callback3');
 
-        iterateSelections([group], callback);
-        iterateSelections([group], callback1, {
+        iterateSelections(group, callback);
+        iterateSelections(group, callback1, {
             contentUnderSelectedGeneralElement: 'contentOnly',
         });
-        iterateSelections([group], callback2, {
+        iterateSelections(group, callback2, {
             contentUnderSelectedGeneralElement: 'generalElementOnly',
         });
-        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+        iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(0);
         expect(callback1).toHaveBeenCalledTimes(0);
@@ -656,14 +656,14 @@ describe('iterateSelections', () => {
         const callback2 = jasmine.createSpy('callback2');
         const callback3 = jasmine.createSpy('callback3');
 
-        iterateSelections([group], callback);
-        iterateSelections([group], callback1, {
+        iterateSelections(group, callback);
+        iterateSelections(group, callback1, {
             contentUnderSelectedGeneralElement: 'contentOnly',
         });
-        iterateSelections([group], callback2, {
+        iterateSelections(group, callback2, {
             contentUnderSelectedGeneralElement: 'generalElementOnly',
         });
-        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+        iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [text2]);
@@ -688,14 +688,14 @@ describe('iterateSelections', () => {
         const callback2 = jasmine.createSpy('callback2');
         const callback3 = jasmine.createSpy('callback3');
 
-        iterateSelections([group], callback);
-        iterateSelections([group], callback1, {
+        iterateSelections(group, callback);
+        iterateSelections(group, callback1, {
             contentUnderSelectedGeneralElement: 'contentOnly',
         });
-        iterateSelections([group], callback2, {
+        iterateSelections(group, callback2, {
             contentUnderSelectedGeneralElement: 'generalElementOnly',
         });
-        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+        iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
@@ -728,81 +728,14 @@ describe('iterateSelections', () => {
         const callback2 = jasmine.createSpy('callback2');
         const callback3 = jasmine.createSpy('callback3');
 
-        iterateSelections([group], callback);
-        iterateSelections([group], callback1, {
+        iterateSelections(group, callback);
+        iterateSelections(group, callback1, {
             contentUnderSelectedGeneralElement: 'contentOnly',
         });
-        iterateSelections([group], callback2, {
+        iterateSelections(group, callback2, {
             contentUnderSelectedGeneralElement: 'generalElementOnly',
         });
-        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
-
-        expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
-            text1,
-            text2,
-        ]);
-
-        expect(callback1).toHaveBeenCalledTimes(1);
-        expect(callback1).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
-            text1,
-            text2,
-        ]);
-
-        expect(callback2).toHaveBeenCalledTimes(1);
-        expect(callback2).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
-
-        expect(callback3).toHaveBeenCalledTimes(2);
-        expect(callback3).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
-            text1,
-            text2,
-        ]);
-        expect(callback3).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
-    });
-
-    it('Get Selection from model that contains general segment, treat all as selected', () => {
-        const group = createContentModelDocument();
-        const generalSpan = createGeneralSegment(document.createElement('span'));
-        const para1 = createParagraph(true /*implicit*/);
-        const para2 = createParagraph(true /*implicit*/);
-        const text1 = createText('test1');
-        const text2 = createText('test1');
-
-        para1.segments.push(generalSpan);
-        generalSpan.blocks.push(para2);
-        para2.segments.push(text1, text2);
-        group.blocks.push(para1);
-
-        const callback1 = jasmine.createSpy('callback1');
-        const callback2 = jasmine.createSpy('callback2');
-        const callback3 = jasmine.createSpy('callback3');
-
-        iterateSelections([group], callback, undefined, undefined, true);
-        iterateSelections(
-            [group],
-            callback1,
-            {
-                contentUnderSelectedGeneralElement: 'contentOnly',
-            },
-            undefined,
-            true
-        );
-        iterateSelections(
-            [group],
-            callback2,
-            {
-                contentUnderSelectedGeneralElement: 'generalElementOnly',
-            },
-            undefined,
-            true
-        );
-        iterateSelections(
-            [group],
-            callback3,
-            { contentUnderSelectedGeneralElement: 'both' },
-            undefined,
-            true
-        );
+        iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
@@ -839,7 +772,7 @@ describe('iterateSelections', () => {
         para2.segments.push(text1, text2);
         group.blocks.push(generalDiv);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [text1]);
@@ -855,14 +788,14 @@ describe('iterateSelections', () => {
         const callback2 = jasmine.createSpy('callback2');
         const callback3 = jasmine.createSpy('callback3');
 
-        iterateSelections([group], callback);
-        iterateSelections([group], callback1, {
+        iterateSelections(group, callback);
+        iterateSelections(group, callback1, {
             contentUnderSelectedGeneralElement: 'contentOnly',
         });
-        iterateSelections([group], callback2, {
+        iterateSelections(group, callback2, {
             contentUnderSelectedGeneralElement: 'generalElementOnly',
         });
-        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+        iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(0);
         expect(callback1).toHaveBeenCalledTimes(0);
@@ -887,14 +820,14 @@ describe('iterateSelections', () => {
         const callback2 = jasmine.createSpy('callback2');
         const callback3 = jasmine.createSpy('callback3');
 
-        iterateSelections([group], callback);
-        iterateSelections([group], callback1, {
+        iterateSelections(group, callback);
+        iterateSelections(group, callback1, {
             contentUnderSelectedGeneralElement: 'contentOnly',
         });
-        iterateSelections([group], callback2, {
+        iterateSelections(group, callback2, {
             contentUnderSelectedGeneralElement: 'generalElementOnly',
         });
-        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+        iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [text2]);
@@ -917,14 +850,14 @@ describe('iterateSelections', () => {
         const callback2 = jasmine.createSpy('callback2');
         const callback3 = jasmine.createSpy('callback3');
 
-        iterateSelections([group], callback);
-        iterateSelections([group], callback1, {
+        iterateSelections(group, callback);
+        iterateSelections(group, callback1, {
             contentUnderSelectedGeneralElement: 'contentOnly',
         });
-        iterateSelections([group], callback2, {
+        iterateSelections(group, callback2, {
             contentUnderSelectedGeneralElement: 'generalElementOnly',
         });
-        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+        iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
@@ -955,79 +888,14 @@ describe('iterateSelections', () => {
         const callback2 = jasmine.createSpy('callback2');
         const callback3 = jasmine.createSpy('callback3');
 
-        iterateSelections([group], callback);
-        iterateSelections([group], callback1, {
+        iterateSelections(group, callback);
+        iterateSelections(group, callback1, {
             contentUnderSelectedGeneralElement: 'contentOnly',
         });
-        iterateSelections([group], callback2, {
+        iterateSelections(group, callback2, {
             contentUnderSelectedGeneralElement: 'generalElementOnly',
         });
-        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
-
-        expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
-            text1,
-            text2,
-        ]);
-
-        expect(callback1).toHaveBeenCalledTimes(1);
-        expect(callback1).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
-            text1,
-            text2,
-        ]);
-
-        expect(callback2).toHaveBeenCalledTimes(1);
-        expect(callback2).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
-
-        expect(callback3).toHaveBeenCalledTimes(2);
-        expect(callback3).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
-            text1,
-            text2,
-        ]);
-        expect(callback3).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
-    });
-
-    it('Get Selection from model that contains general block, treat all as selected', () => {
-        const group = createContentModelDocument();
-        const generalDiv = createGeneralBlock(document.createElement('div'));
-        const para2 = createParagraph(true /*implicit*/);
-        const text1 = createText('test1');
-        const text2 = createText('test1');
-
-        generalDiv.blocks.push(para2);
-        para2.segments.push(text1, text2);
-        group.blocks.push(generalDiv);
-
-        const callback1 = jasmine.createSpy('callback1');
-        const callback2 = jasmine.createSpy('callback2');
-        const callback3 = jasmine.createSpy('callback3');
-
-        iterateSelections([group], callback, undefined, undefined, true);
-        iterateSelections(
-            [group],
-            callback1,
-            {
-                contentUnderSelectedGeneralElement: 'contentOnly',
-            },
-            undefined,
-            true
-        );
-        iterateSelections(
-            [group],
-            callback2,
-            {
-                contentUnderSelectedGeneralElement: 'generalElementOnly',
-            },
-            undefined,
-            true
-        );
-        iterateSelections(
-            [group],
-            callback3,
-            { contentUnderSelectedGeneralElement: 'both' },
-            undefined,
-            true
-        );
+        iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
@@ -1059,7 +927,7 @@ describe('iterateSelections', () => {
         divider.isSelected = true;
         group.blocks.push(divider);
 
-        iterateSelections([group], callback);
+        iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([group], undefined, divider, undefined);
@@ -1086,7 +954,7 @@ describe('iterateSelections', () => {
                 return block == para1;
             });
 
-        iterateSelections([group], newCallback);
+        iterateSelections(group, newCallback);
 
         expect(newCallback).toHaveBeenCalledTimes(1);
         expect(newCallback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
@@ -1114,7 +982,7 @@ describe('iterateSelections', () => {
                 return block == divider;
             });
 
-        iterateSelections([group], newCallback);
+        iterateSelections(group, newCallback);
 
         expect(newCallback).toHaveBeenCalledTimes(2);
         expect(newCallback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
@@ -1146,7 +1014,7 @@ describe('iterateSelections', () => {
                 return block == para1;
             });
 
-        iterateSelections([group], newCallback);
+        iterateSelections(group, newCallback);
 
         expect(newCallback).toHaveBeenCalledTimes(1);
         expect(newCallback).toHaveBeenCalledWith([quote1, group], undefined, para1, [text1]);
@@ -1173,7 +1041,7 @@ describe('iterateSelections', () => {
                 return block == table;
             });
 
-        iterateSelections([group], newCallback, {
+        iterateSelections(group, newCallback, {
             contentUnderSelectedTableCell: 'ignoreForTable',
         });
 
@@ -1207,7 +1075,7 @@ describe('iterateSelections', () => {
                 }
             });
 
-        iterateSelections([group], newCallback);
+        iterateSelections(group, newCallback);
 
         expect(newCallback).toHaveBeenCalledTimes(2);
         expect(newCallback).toHaveBeenCalledWith(
@@ -1247,7 +1115,7 @@ describe('iterateSelections', () => {
         list.blocks.push(para);
         doc.blocks.push(list);
 
-        iterateSelections([doc], callback, { includeListFormatHolder: 'anySegment' });
+        iterateSelections(doc, callback, { includeListFormatHolder: 'anySegment' });
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text2]);
@@ -1273,7 +1141,7 @@ describe('iterateSelections', () => {
         list.blocks.push(para);
         doc.blocks.push(list);
 
-        iterateSelections([doc], callback, { includeListFormatHolder: 'allSegments' });
+        iterateSelections(doc, callback, { includeListFormatHolder: 'allSegments' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text2]);
@@ -1293,7 +1161,7 @@ describe('iterateSelections', () => {
         list.blocks.push(para);
         doc.blocks.push(list);
 
-        iterateSelections([doc], callback, { includeListFormatHolder: 'allSegments' });
+        iterateSelections(doc, callback, { includeListFormatHolder: 'allSegments' });
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
@@ -1320,7 +1188,7 @@ describe('iterateSelections', () => {
         list.blocks.push(para);
         doc.blocks.push(list);
 
-        iterateSelections([doc], callback, { includeListFormatHolder: 'never' });
+        iterateSelections(doc, callback, { includeListFormatHolder: 'never' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
@@ -1336,7 +1204,7 @@ describe('iterateSelections', () => {
         para.segments.push(entity);
         doc.blocks.push(para);
 
-        iterateSelections([doc], callback, { includeListFormatHolder: 'never' });
+        iterateSelections(doc, callback, { includeListFormatHolder: 'never' });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([doc], undefined, para, [entity]);
@@ -1368,7 +1236,7 @@ describe('iterateSelections', () => {
 
         doc.blocks.push(quote1, quote2, para1, para2, divider1, divider2);
 
-        iterateSelections([doc], callback);
+        iterateSelections(doc, callback);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
