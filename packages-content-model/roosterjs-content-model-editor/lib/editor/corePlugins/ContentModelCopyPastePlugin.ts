@@ -112,7 +112,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     : false,
             });
             if (selection.type === 'table') {
-                iterateSelections([pasteModel], (path, tableContext) => {
+                iterateSelections(pasteModel, (_, tableContext) => {
                     if (tableContext?.table) {
                         const table = tableContext?.table;
                         table.rows = table.rows

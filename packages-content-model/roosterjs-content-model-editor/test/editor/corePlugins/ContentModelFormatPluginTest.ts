@@ -51,6 +51,7 @@ describe('ContentModelFormatPlugin', () => {
             setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
+            getEnvironment: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -87,6 +88,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            getEnvironment: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -121,6 +123,7 @@ describe('ContentModelFormatPlugin', () => {
             setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
+            getEnvironment: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -165,6 +168,7 @@ describe('ContentModelFormatPlugin', () => {
             isDarkMode: () => false,
             triggerPluginEvent: jasmine.createSpy('triggerPluginEvent'),
             getVisibleViewport: jasmine.createSpy('getVisibleViewport'),
+            getEnvironment: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -405,6 +409,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            getEnvironment: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
