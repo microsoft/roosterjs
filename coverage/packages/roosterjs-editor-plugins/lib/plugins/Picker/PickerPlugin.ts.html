@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.72% </span>
+                <span class="strong">54.31% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>145/265</span>
+                <span class='fraction'>145/267</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">27.87% </span>
+                <span class="strong">27.51% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>85/305</span>
+                <span class='fraction'>85/309</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.58% </span>
+                <span class="strong">55.88% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>19/33</span>
+                <span class='fraction'>19/34</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.2% </span>
+                <span class="strong">53.99% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>142/262</span>
+                <span class='fraction'>142/263</span>
             </div>
         
             
@@ -672,7 +672,9 @@
 <a name='L613'></a><a href='#L613'>613</a>
 <a name='L614'></a><a href='#L614'>614</a>
 <a name='L615'></a><a href='#L615'>615</a>
-<a name='L616'></a><a href='#L616'>616</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L616'></a><a href='#L616'>616</a>
+<a name='L617'></a><a href='#L617'>617</a>
+<a name='L618'></a><a href='#L618'>618</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -936,9 +938,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1548,13 +1552,15 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
         return searcher ? searcher.getWordBefore() : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    private r</span>eplaceNode(currentNode: Node | null, replacementNode: Node | null) {
-<span class="cstat-no" title="statement not covered" >        if (currentNode) {</span>
-<span class="cstat-no" title="statement not covered" >            this.editor?.deleteNode(currentNode);</span>
-        }
-<span class="cstat-no" title="statement not covered" >        if (replacementNode) {</span>
-<span class="cstat-no" title="statement not covered" >            this.editor?.insertNode(replacementNode);</span>
-        }
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    private r</span></span>eplaceNode(currentNode: Node | null, replacementNode: Node | null) {
+<span class="cstat-no" title="statement not covered" >        this.editor?.addUndoSnapshot(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (currentNode) {</span>
+<span class="cstat-no" title="statement not covered" >                this.editor?.deleteNode(currentNode);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            if (replacementNode) {</span>
+<span class="cstat-no" title="statement not covered" >                this.editor?.insertNode(replacementNode);</span>
+            }
+        }, ChangeSource.Keyboard);
     }
 &nbsp;
     private getRangeUntilAt(event: PluginKeyboardEvent | null): Range | null {
@@ -1786,7 +1792,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (</span>
             this.newInputLength &lt; this.currentInputLength ||
-            (event.rawEvent as any).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
+            event.rawEvent.inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
         ) {
             const nodeRemoved = <span class="cstat-no" title="statement not covered" >this.tryRemoveNode(event);</span>
 <span class="cstat-no" title="statement not covered" >            if (nodeRemoved) {</span>
@@ -1909,7 +1915,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 31 2023 03:44:03 GMT+0000 (Coordinated Universal Time)
+                at Tue Oct 31 2023 17:38:16 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
