@@ -1,17 +1,7 @@
-import { getSelectionPath, Position } from 'roosterjs-editor-dom';
-import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
-import type {
-    EntityState,
-    AddUndoSnapshot,
-    ChangeSource,
-    ContentChangedData,
-    ContentChangedEvent,
-    ContentMetadata,
-    EditorCore,
-    NodePosition,
-    SelectionRangeEx,
-} from 'roosterjs-editor-types';
-import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatibleTypes';
+import { AddUndoSnapshot } from '../publicTypes/coreApi/AddUndoSnapshot';
+import { ChangeSource, ContentChangedData, EntityState } from 'roosterjs-content-model-types';
+import { ContentChangedEvent } from '../publicTypes/event/ContentChangedEvent';
+import { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
 
 /**
  * @internal
@@ -24,9 +14,9 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  * @param additionalData @optional parameter to provide additional data related to the ContentChanged Event.
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
-    core: EditorCore,
-    callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
-    changeSource: ChangeSource | CompatibleChangeSource | string | null,
+    core,
+    callback: (() => any) | null,
+    changeSource: ChangeSource | string | null,
     canUndoByBackspace: boolean,
     additionalData?: ContentChangedData
 ) => {
@@ -65,10 +55,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 
     if (callback && changeSource) {
         const event: ContentChangedEvent = {
-            eventType: PluginEventType.ContentChanged,
+            eventType: 'contentChanged',
             source: changeSource,
-            data: data,
-            additionalData,
+            changeData: additionalData || {},
+            contentModel: {},
+            selection: {},
         };
         core.api.triggerEvent(core, event, true /*broadcast*/);
     }
@@ -84,11 +75,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 };
 
 function addUndoSnapshotInternal(
-    core: EditorCore,
+    core: CoreEditorCore,
     canUndoByBackspace: boolean,
     entityStates?: EntityState[]
 ) {
-    if (!core.lifecycle.shadowEditFragment) {
+    if (!core.lifecycle.isInShadowEdit) {
         const rangeEx = core.api.getSelectionRangeEx(core);
         const isDarkMode = core.lifecycle.isDarkMode;
         const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;
@@ -97,7 +88,7 @@ function addUndoSnapshotInternal(
             {
                 html: core.contentDiv.innerHTML,
                 metadata,
-                knownColors: core.darkColorHandler?.getKnownColorsCopy() || [],
+                knownColors: core.colorManager.getKnownColorsCopy() || [],
                 entityStates,
             },
             canUndoByBackspace

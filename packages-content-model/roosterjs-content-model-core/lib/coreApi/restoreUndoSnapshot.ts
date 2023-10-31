@@ -1,6 +1,4 @@
-import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { getEntityFromElement, getEntitySelector, queryElements } from 'roosterjs-editor-dom';
-import type { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
+import { RestoreUndoSnapshot } from '../publicTypes/coreApi/RestoreUndoSnapshot';
 
 /**
  * @internal
@@ -8,7 +6,7 @@ import type { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
  * @param core The editor core object
  * @param step Steps to move, can be 0, positive or negative
  */
-export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step: number) => {
+export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, step) => {
     if (core.undo.hasNewContent && step < 0) {
         core.api.addUndoSnapshot(
             core,
@@ -30,31 +28,26 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
                 snapshot.metadata ?? undefined
             );
 
-            const darkColorHandler = core.darkColorHandler;
+            const darkColorHandler = core.colorManager;
             const isDarkModel = core.lifecycle.isDarkMode;
 
             snapshot.knownColors.forEach(color => {
-                darkColorHandler.registerColor(
-                    color.lightModeColor,
-                    isDarkModel,
-                    color.darkModeColor
-                );
+                darkColorHandler.registerColor(color.lightModeColor, isDarkModel);
             });
 
             snapshot.entityStates?.forEach(entityState => {
                 const { type, id, state } = entityState;
-                const wrapper = queryElements(
-                    core.contentDiv,
+                const wrapper = core.contentDiv.querySelector(
                     getEntitySelector(type, id)
-                )[0] as HTMLElement;
+                ) as HTMLElement;
                 const entity = wrapper && getEntityFromElement(wrapper);
 
                 if (entity) {
                     core.api.triggerEvent(
                         core,
                         {
-                            eventType: PluginEventType.EntityOperation,
-                            operation: EntityOperation.UpdateEntityState,
+                            eventType: 'entityOperation',
+                            operation: 'updateEntityState',
                             entity: entity,
                             state,
                         },

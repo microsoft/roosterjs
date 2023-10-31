@@ -1,3 +1,5 @@
+import type { ContentModelDOMEventPluginState } from '../corePluginState/ContentModelDOMEventPluginState';
+import type { ContentModelUndoPluginState } from '../corePluginState/ContentModelUndoPluginState';
 import type { ContentModelLifecyclePluginState } from '../corePluginState/ContentModelLifecyclePluginState';
 import type { ContentModelSelectionPluginState } from '../corePluginState/ContentModelSelectionPluginState';
 import type { CoreEditorPlugin } from './CoreEditorPlugin';
@@ -15,5 +17,7 @@ export interface CoreEditorCorePlugins {
     format: CoreEditorPluginWithState<ContentModelFormatPluginState>;
     keyboardEdit: CoreEditorPlugin;
     selection: CoreEditorPluginWithState<ContentModelSelectionPluginState>;
+    undo: CoreEditorPluginWithState<ContentModelUndoPluginState>;
+    domEvent: CoreEditorPluginWithState<ContentModelDOMEventPluginState>;
     lifecycle: CoreEditorPluginWithState<ContentModelLifecyclePluginState>;
 }

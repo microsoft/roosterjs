@@ -1,11 +1,7 @@
-import { getObjectKeys } from 'roosterjs-editor-dom';
-import type {
-    AttachDomEvent,
-    DOMEventHandler,
-    DOMEventHandlerObject,
-    EditorCore,
-    PluginDomEvent,
-} from 'roosterjs-editor-types';
+import { AttachDomEvent } from '../publicTypes/coreApi/AttachDomEvent';
+import { DOMEventHandler, DOMEventHandlerObject } from '../publicTypes/editor/DomEventHandler';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { PluginKeyDownEvent } from '../publicTypes/event/PluginDomEvent';
 
 /**
  * @internal
@@ -15,10 +11,7 @@ import type {
  * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
  * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
  */
-export const attachDomEvent: AttachDomEvent = (
-    core: EditorCore,
-    eventMap: Record<string, DOMEventHandler>
-) => {
+export const attachDomEvent: AttachDomEvent = (core, eventMap) => {
     const disposers = getObjectKeys(eventMap || {}).map(key => {
         const { pluginEventType, beforeDispatch } = extractHandler(eventMap[key]);
         const eventName = key as keyof HTMLElementEventMap;
@@ -29,7 +22,7 @@ export const attachDomEvent: AttachDomEvent = (
             if (pluginEventType != null) {
                 core.api.triggerEvent(
                     core,
-                    <PluginDomEvent>{
+                    <PluginKeyDownEvent>{
                         eventType: pluginEventType,
                         rawEvent: event,
                     },

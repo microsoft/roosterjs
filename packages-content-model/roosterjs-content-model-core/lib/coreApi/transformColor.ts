@@ -1,6 +1,4 @@
-import { ColorTransformDirection } from 'roosterjs-editor-types';
-import type { EditorCore, TransformColor } from 'roosterjs-editor-types';
-import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
+import { TransformColor } from '../publicTypes/coreApi/TransformColor';
 
 /**
  * @internal
@@ -13,33 +11,16 @@ import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/l
  * @param forceTransform By default this function will only work when editor core is in dark mode.
  * Pass true to this value to force do color transformation even editor core is in light mode
  */
-export const transformColor: TransformColor = (
-    core: EditorCore,
-    rootNode: Node | null,
-    includeSelf: boolean,
-    callback: (() => void) | null,
-    direction: ColorTransformDirection | CompatibleColorTransformDirection,
-    forceTransform?: boolean,
-    fromDarkMode: boolean = false
-) => {
-    const {
-        darkColorHandler,
-        lifecycle: { onExternalContentTransform },
-    } = core;
-    const toDarkMode = direction == ColorTransformDirection.LightToDark;
-    if (rootNode && (forceTransform || core.lifecycle.isDarkMode)) {
-        const transformer = onExternalContentTransform
-            ? (element: HTMLElement) => {
-                  onExternalContentTransform(element, fromDarkMode, toDarkMode, darkColorHandler);
-              }
-            : (element: HTMLElement) => {
-                  darkColorHandler.transformElementColor(element, fromDarkMode, toDarkMode);
-              };
+export const transformColor: TransformColor = (core, rootNode, includeSelf, toDarkMode) => {
+    const { colorManager } = core;
+
+    if (rootNode) {
+        const transformer = (element: HTMLElement) => {
+            colorManager.transformElementColor(element, fromDarkMode, toDarkMode);
+        };
 
         iterateElements(rootNode, transformer, includeSelf);
     }
-
-    callback?.();
 };
 
 function iterateElements(
