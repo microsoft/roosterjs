@@ -1,4 +1,4 @@
-import { ICoreEditor } from 'roosterjs-content-model-types/lib';
+import type { ICoreEditor } from 'roosterjs-content-model-core';
 import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     ContentMetadata,

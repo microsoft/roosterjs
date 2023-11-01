@@ -187,6 +187,5 @@ export { KnownAnnounceStrings } from './parameter/KnownAnnounceStrings';
 export { AnnounceData } from './parameter/AnnounceData';
 export { ContentChangedData } from './parameter/ContentChangedData';
 
-export { ICoreEditor } from './editor/ICoreEditor';
 export { EditorEnvironment } from './editor/EditorEnvironment';
 export { CoreEditorOptions } from './editor/CoreEditorOptions';

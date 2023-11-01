@@ -9,22 +9,19 @@ import {
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import type {
-    ICoreEditor,
     EntityOperation,
     PasteType,
     AnnounceData,
     KnownAnnounceStrings,
     DOMSelection,
 } from 'roosterjs-content-model-types';
-import type { CoreEditorPlugin, PluginEvent } from 'roosterjs-content-model-core';
+import type { CoreEditorPlugin, ICoreEditor, PluginEvent } from 'roosterjs-content-model-core';
 import type { PluginEvent as AdapterPluginEvent, SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * @internal
  */
 export class AdapterEditorPlugin implements CoreEditorPlugin {
-    private editor: ICoreEditor | null = null;
-
     constructor(
         private onAdapterPluginEvent: (event: AdapterPluginEvent) => AdapterPluginEvent,
         private willHandleAdapterPluginEventExclusively: (event: AdapterPluginEvent) => boolean
@@ -34,13 +31,9 @@ export class AdapterEditorPlugin implements CoreEditorPlugin {
         return 'AdapterEditor';
     }
 
-    initialize(editor: ICoreEditor) {
-        this.editor = editor;
-    }
+    initialize(editor: ICoreEditor) {}
 
-    dispose() {
-        this.editor = null;
-    }
+    dispose() {}
 
     onPluginEvent(event: PluginEvent) {
         let adapterEvent = this.translateToAdapterEvent(event);
@@ -109,7 +102,9 @@ export class AdapterEditorPlugin implements CoreEditorPlugin {
                         getAnnounceData: this.translateGetAnnounceData(
                             event.changeData.getAnnounceData
                         ),
-                        getEntityState: event.changeData.getEntityState,
+                        getEntityState: this.translateGetEntityState(
+                            event.changeData.getEntityState
+                        ),
                     },
                     eventDataCache: event.eventDataCache,
                 };

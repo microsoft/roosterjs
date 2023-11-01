@@ -1,16 +1,8 @@
 import { AdapterEditorCore } from './AdapterEditorCore';
 import { createAdapterEditorCore } from './createAdapterEditorCore';
 import { isFeatureEnabled } from './isFeatureEnabled';
-import type {
-    ContentModelDocument,
-    CoreEditorOptions,
-    DOMSelection,
-    DomToModelOption,
-    EditorEnvironment,
-    ICoreEditor,
-    ModelToDomOption,
-    OnNodeCreated,
-} from 'roosterjs-content-model-types';
+import { paste } from 'roosterjs-content-model-core';
+import type { CoreEditorOptions, DOMSelection } from 'roosterjs-content-model-types';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -19,6 +11,7 @@ import {
     PluginEventType,
     QueryScope,
     RegionType,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import type {
     BlockElement,
@@ -68,6 +61,8 @@ import {
     wrap,
     isPositionAtBeginningOf,
     toArray,
+    safeInstanceOf,
+    createRange,
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
@@ -84,7 +79,7 @@ import type {
  * RoosterJs adapter editor that supports Content Model and can be used by legacy roosterjs plugin
  * (This class is still under development, temporarily do internal export for now.)
  */
-export class AdapterEditor implements IEditor, ICoreEditor {
+export class AdapterEditor implements IEditor {
     private core: AdapterEditorCore | null = null;
 
     /**
@@ -136,58 +131,6 @@ export class AdapterEditor implements IEditor, ICoreEditor {
         return !this.core;
     }
 
-    //#region Content Model Editor members
-
-    /**
-     * Create Content Model from DOM tree in this editor
-     * @param option The option to customize the behavior of DOM to Content Model conversion
-     */
-    createContentModel(
-        option?: DomToModelOption,
-        selectionOverride?: DOMSelection
-    ): ContentModelDocument {
-        return this.getCore().coreEditor.createContentModel(option, selectionOverride);
-    }
-
-    /**
-     * Set content with content model
-     * @param model The content model to set
-     * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
-     */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ): DOMSelection | null {
-        return this.getCore().coreEditor.setContentModel(model, option, onNodeCreated);
-    }
-
-    /**
-     * Get current running environment, such as if editor is running on Mac
-     */
-    getEnvironment(): EditorEnvironment {
-        return this.getCore().coreEditor.getEnvironment();
-    }
-
-    /**
-     * Get current DOM selection
-     */
-    getDOMSelection(): DOMSelection | null {
-        return this.getCore().coreEditor.getDOMSelection();
-    }
-
-    /**
-     * Set DOMSelection into editor content.
-     * This is the replacement of IEditor.select.
-     * @param selection The selection to set
-     */
-    setDOMSelection(selection: DOMSelection) {
-        this.getCore().coreEditor.setDOMSelection(selection);
-    }
-
-    //#endregion
-
     //#region Node API
 
     /**
@@ -235,13 +178,11 @@ export class AdapterEditor implements IEditor, ICoreEditor {
         const core = this.getCore();
         // Only replace the node when it falls within editor
         if (this.contains(existingNode) && toNode) {
-            core.api.transformColor(
-                core,
-                transformColorForDarkMode ? toNode : null,
-                true /*includeSelf*/,
-                () => existingNode.parentNode?.replaceChild(toNode, existingNode),
-                ColorTransformDirection.LightToDark
-            );
+            if (transformColorForDarkMode && this.isDarkMode()) {
+                core.coreEditor.transformColor(toNode, true /*toDark*/);
+            }
+
+            existingNode.parentNode?.replaceChild(toNode, existingNode);
 
             return true;
         }
@@ -398,35 +339,18 @@ export class AdapterEditor implements IEditor, ICoreEditor {
         pasteAsImage: boolean = false
     ) {
         const core = this.getCore();
-        if (!clipboardData) {
-            return;
-        }
 
-        if (clipboardData.snapshotBeforePaste) {
-            // Restore original content before paste a new one
-            this.setContent(clipboardData.snapshotBeforePaste);
-        } else {
-            clipboardData.snapshotBeforePaste = this.getContent(
-                GetContentMode.RawHTMLWithSelection
-            );
-        }
-
-        const range = this.getSelectionRange();
-        const pos = range && Position.getStart(range);
-        const fragment = core.api.createPasteFragment(
-            core,
+        paste(
+            core.coreEditor,
             clipboardData,
-            pos,
-            pasteAsText,
-            applyCurrentFormat,
-            pasteAsImage
+            pasteAsText
+                ? 'asPlainText'
+                : applyCurrentFormat
+                ? 'mergeFormat'
+                : pasteAsImage
+                ? 'asImage'
+                : 'normal'
         );
-        if (fragment) {
-            this.addUndoSnapshot(() => {
-                this.insertNode(fragment);
-                return clipboardData;
-            }, ChangeSource.Paste);
-        }
     }
 
     //#endregion
@@ -442,7 +366,9 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      */
     public getSelectionRange(tryGetFromCache: boolean = true): Range | null {
         const core = this.getCore();
-        return core.api.getSelectionRange(core, tryGetFromCache);
+        const selection = core.coreEditor.getDOMSelection();
+
+        return selection?.type == 'range' ? selection.range : null;
     }
 
     /**
@@ -454,7 +380,43 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      */
     public getSelectionRangeEx(): SelectionRangeEx {
         const core = this.getCore();
-        return core.api.getSelectionRangeEx(core);
+        const selection = core.coreEditor.getDOMSelection();
+
+        return !selection
+            ? {
+                  type: SelectionRangeTypes.Normal,
+                  ranges: [],
+                  areAllCollapsed: true,
+              }
+            : selection.type == 'range'
+            ? {
+                  type: SelectionRangeTypes.Normal,
+                  ranges: [selection.range],
+                  areAllCollapsed: selection.range.collapsed,
+              }
+            : selection.type == 'image'
+            ? {
+                  type: SelectionRangeTypes.ImageSelection,
+                  ranges: [],
+                  areAllCollapsed: false,
+                  image: selection.image,
+              }
+            : {
+                  type: SelectionRangeTypes.TableSelection,
+                  ranges: [],
+                  areAllCollapsed: false,
+                  table: selection.table,
+                  coordinates: {
+                      firstCell: {
+                          x: selection.firstColumn,
+                          y: selection.firstRow,
+                      },
+                      lastCell: {
+                          x: selection.lastColumn,
+                          y: selection.lastRow,
+                      },
+                  },
+              };
     }
 
     /**
@@ -490,7 +452,54 @@ export class AdapterEditor implements IEditor, ICoreEditor {
     ): boolean {
         const core = this.getCore();
 
-        return core.api.select(core, arg1, arg2, arg3, arg4);
+        let selection: DOMSelection | null = null;
+
+        if (isSelectionRangeEx(arg1)) {
+            rangeEx = arg1;
+        } else if (safeInstanceOf(arg1, 'HTMLTableElement') && isTableSelectionOrNull(arg2)) {
+            selection = {
+                type: 'table',
+                table: arg1 as HTMLTableElement,
+                firstColumn: arg2.firstCell.x,
+                firstRow: arg2.firstCell.y,
+                lastColumn: arg2.lastCell.x,
+                lastRow: arg2.lastCell.y,
+            };
+        } else if (safeInstanceOf(arg1, 'HTMLImageElement') && typeof arg2 == 'undefined') {
+            selection = {
+                type: 'image',
+                image: arg1,
+            };
+        } else {
+            const range = !arg1
+                ? null
+                : safeInstanceOf(arg1, 'Range')
+                ? arg1
+                : isSelectionPath(arg1)
+                ? createRange(core.contentDiv, arg1.start, arg1.end)
+                : isNodePosition(arg1) || safeInstanceOf(arg1, 'Node')
+                ? createRange(
+                      <Node>arg1,
+                      <number | PositionType>arg2,
+                      <Node>arg3,
+                      <number | PositionType>arg4
+                  )
+                : null;
+
+            selection = range
+                ? {
+                      type: 'range',
+                      range: range,
+                  }
+                : null;
+        }
+
+        if (selection) {
+            core.coreEditor.setDOMSelection(selection);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -580,7 +589,8 @@ export class AdapterEditor implements IEditor, ICoreEditor {
     ): () => void {
         const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
         const core = this.getCore();
-        return core.api.attachDomEvent(core, eventsToMap);
+
+        return core.coreEditor.addDomEventHandler(eventsToMap);
     }
 
     /**
@@ -602,6 +612,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
             eventType,
             ...data,
         } as any) as PluginEventFromType<T>;
+
         core.api.triggerEvent(core, event, broadcast);
 
         return event;
@@ -910,8 +921,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      * @param keyboardEvent Optional keyboard event object
      */
     public ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
-        const core = this.getCore();
-        core.api.ensureTypeInContainer(core, position, keyboardEvent);
+        // NO OP
     }
 
     //#endregion
@@ -952,7 +962,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      * @returns True if the editor is in dark mode, otherwise false
      */
     public isDarkMode(): boolean {
-        return this.getCore().lifecycle.isDarkMode;
+        return this.getCore().coreEditor.isDarkMode();
     }
 
     /**
@@ -967,7 +977,8 @@ export class AdapterEditor implements IEditor, ICoreEditor {
             | CompatibleColorTransformDirection = ColorTransformDirection.LightToDark
     ) {
         const core = this.getCore();
-        core.api.transformColor(core, node, true /*includeSelf*/, null /*callback*/, direction);
+
+        core.coreEditor.transformColor(node, direction == ColorTransformDirection.LightToDark);
     }
 
     /**
@@ -987,6 +998,7 @@ export class AdapterEditor implements IEditor, ICoreEditor {
      */
     public startShadowEdit() {
         const core = this.getCore();
+
         core.api.switchShadowEdit(core, true /*isOn*/);
     }
 
@@ -1086,4 +1098,42 @@ export class AdapterEditor implements IEditor, ICoreEditor {
     }
 
     //#endregion
+}
+
+function isSelectionRangeEx(obj: any): obj is SelectionRangeEx {
+    const rangeEx = obj as SelectionRangeEx;
+    return (
+        rangeEx &&
+        typeof rangeEx == 'object' &&
+        typeof rangeEx.type == 'number' &&
+        Array.isArray(rangeEx.ranges)
+    );
+}
+
+function isTableSelectionOrNull(obj: any): obj is TableSelection {
+    const selection = obj as TableSelection;
+
+    return (
+        selection &&
+        typeof selection == 'object' &&
+        typeof selection.firstCell == 'object' &&
+        typeof selection.lastCell == 'object'
+    );
+}
+
+function isSelectionPath(obj: any): obj is SelectionPath {
+    const path = obj as SelectionPath;
+
+    return path && typeof path == 'object' && Array.isArray(path.start) && Array.isArray(path.end);
+}
+
+function isNodePosition(obj: any): obj is NodePosition {
+    const pos = obj as NodePosition;
+
+    return (
+        pos &&
+        typeof pos == 'object' &&
+        typeof pos.node == 'object' &&
+        typeof pos.offset == 'number'
+    );
 }

@@ -27,7 +27,6 @@ import type {
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
 /**
- * @internal
  * Options to specify how to merge models
  */
 export interface MergeModelOption {
@@ -57,7 +56,6 @@ export interface MergeModelOption {
 }
 
 /**
- * @internal
  * Merge source model into target mode
  * @param target Target Content Model that will merge content into
  * @param source Source Content Model will be merged to target model

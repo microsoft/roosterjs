@@ -1,9 +1,9 @@
 import { AdapterEditorPlugin } from './AdapterEditorPlugin';
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { CoreEditor } from 'roosterjs-content-model-core/lib';
+import { CoreEditor, ICoreEditor } from 'roosterjs-content-model-core';
 import type { EditorOptions } from 'roosterjs-editor-types';
 import type { AdapterEditorCore } from './AdapterEditorCore';
-import type { CoreEditorOptions, ICoreEditor } from 'roosterjs-content-model-types';
+import type { CoreEditorOptions } from 'roosterjs-content-model-types';
 
 const ExclusivePluginKey = '__ExclusivelyPlugin';
 

@@ -1,4 +1,7 @@
 import { createCoreEditorCore } from './createCoreEditorCore';
+import { PluginEventData, PluginEventFromType } from '../publicTypes/event/PluginEvent';
+import { PluginEventType } from '../publicTypes/event/PluginEventType';
+import type { ICoreEditor } from '../publicTypes/editor/ICoreEditor';
 import type { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
 import type {
     ContentModelDocument,
@@ -6,7 +9,6 @@ import type {
     DOMSelection,
     DomToModelOption,
     EditorEnvironment,
-    ICoreEditor,
     ModelToDomOption,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
@@ -68,6 +70,48 @@ export class CoreEditor implements ICoreEditor {
     focus() {
         const core = this.getCore();
         core.api.focus(core);
+    }
+
+    /**
+     * Transform node color mode
+     * @param node The root node to transform
+     * @param toDark True to transform from light mode to dark mode, otherwise transform from dark mode to light mode
+     */
+    transformColor(node: Node, toDark: boolean) {
+        const core = this.getCore();
+        core.api.transformColor(core, node, true /*includeSelf*/, toDark);
+    }
+
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    isDarkMode(): boolean {
+        return this.getCore().lifecycle.isDarkMode;
+    }
+
+    /**
+     * Trigger an event to be dispatched to all plugins
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
+     * @param broadcast indicates if the event needs to be dispatched to all plugins
+     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    public triggerPluginEvent<T extends PluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast: boolean = false
+    ): PluginEventFromType<T> {
+        const core = this.getCore();
+        const event = ({
+            eventType,
+            ...data,
+        } as any) as PluginEventFromType<T>;
+        core.api.triggerEvent(core, event, broadcast);
+
+        return event;
     }
 
     /**

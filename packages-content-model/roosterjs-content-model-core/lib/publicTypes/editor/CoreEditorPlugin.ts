@@ -1,5 +1,5 @@
-import type { ICoreEditor } from 'roosterjs-content-model-types';
 import type { PluginEvent } from '../event/PluginEvent';
+import type { ICoreEditor } from './ICoreEditor';
 
 /**
  * Interface of an editor plugin

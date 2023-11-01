@@ -137,3 +137,4 @@ export { addRangeToSelection } from './domUtils/addRangeToSelection';
 export { areSameRangeEx } from './modelApi/selection/areSameRangeEx';
 export { CachedElementHandler, CloneModelOptions, cloneModel } from './modelApi/common/cloneModel';
 export { parseColor } from './modelApi/table/setTableCellBackgroundColor';
+export { mergeModel, MergeModelOption } from './modelApi/common/mergeModel';

@@ -36,3 +36,6 @@ export {
 } from './publicTypes/event/ShadowEditEvent';
 
 export { CoreEditor } from './editor/CoreEditor';
+export { ICoreEditor } from './publicTypes/editor/ICoreEditor';
+
+export { paste } from './api/paste';
