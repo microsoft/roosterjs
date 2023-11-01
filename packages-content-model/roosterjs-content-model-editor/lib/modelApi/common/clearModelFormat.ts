@@ -28,7 +28,7 @@ export function clearModelFormat(
     tablesToClear: [ContentModelTable, boolean][]
 ) {
     iterateSelections(
-        [model],
+        model,
         (path, tableContext, block, segments) => {
             if (segments) {
                 segmentsToClear.push(...segments);

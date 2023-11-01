@@ -143,7 +143,7 @@ class MainPane extends MainPaneBase {
     }
 
     renderTitleBar() {
-        return <TitleBar className={styles.noGrow} isContentModelPane={false} />;
+        return <TitleBar className={styles.noGrow} mode="classical" />;
     }
 
     renderRibbon(isPopout: boolean) {
