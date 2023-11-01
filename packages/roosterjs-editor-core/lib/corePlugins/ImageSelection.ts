@@ -1,9 +1,4 @@
-import {
-    //ChangeSource,
-    PluginEventType,
-    PositionType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import { PluginEventType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Position, safeInstanceOf } from 'roosterjs-editor-dom';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
@@ -59,8 +54,7 @@ export default class ImageSelection implements EditorPlugin {
                     if (
                         mouseSelection &&
                         mouseSelection.type === SelectionRangeTypes.ImageSelection &&
-                        (!safeInstanceOf(mouseTarget, 'HTMLElement') ||
-                            !mouseTarget.contains(mouseSelection.image))
+                        mouseSelection.image !== mouseTarget
                     ) {
                         this.editor.select(null);
                     }
