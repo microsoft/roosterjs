@@ -1,6 +1,7 @@
 import blockFormat from '../utils/blockFormat';
-import { createVListFromRegion, getBlockElementAtNode, VList } from 'roosterjs-editor-dom';
+import { createVListFromRegion, getBlockElementAtNode } from 'roosterjs-editor-dom';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
+import type { VList } from 'roosterjs-editor-dom';
 import type { BulletListType, IEditor, ListType, NumberingListType } from 'roosterjs-editor-types';
 import type {
     CompatibleBulletListType,
