@@ -13,11 +13,13 @@ export default function isResizedTo(
     maxError: number = 1
 ): boolean {
     const editInfo = getEditInfoFromImage(image);
+    //Image selection will sometimes return an image which is currently hidden and wrapped. Use HTML attributes as backup
+    const visibleHeight = editInfo.heightPx || image.height;
+    const visibleWidth = editInfo.widthPx || image.width;
     if (editInfo) {
         const { width, height } = getTargetSizeByPercentage(editInfo, percentage);
         return (
-            Math.abs(width - editInfo.widthPx) < maxError &&
-            Math.abs(height - editInfo.heightPx) < maxError
+            Math.abs(width - visibleWidth) < maxError && Math.abs(height - visibleHeight) < maxError
         );
     }
     return false;
