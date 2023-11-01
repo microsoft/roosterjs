@@ -260,12 +260,14 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private replaceNode(currentNode: Node | null, replacementNode: Node | null) {
-        if (currentNode) {
-            this.editor?.deleteNode(currentNode);
-        }
-        if (replacementNode) {
-            this.editor?.insertNode(replacementNode);
-        }
+        this.editor?.addUndoSnapshot(() => {
+            if (currentNode) {
+                this.editor?.deleteNode(currentNode);
+            }
+            if (replacementNode) {
+                this.editor?.insertNode(replacementNode);
+            }
+        }, ChangeSource.Keyboard);
     }
 
     private getRangeUntilAt(event: PluginKeyboardEvent | null): Range | null {
@@ -497,7 +499,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
         if (
             this.newInputLength < this.currentInputLength ||
-            (event.rawEvent as any).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
+            event.rawEvent.inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
         ) {
             const nodeRemoved = this.tryRemoveNode(event);
             if (nodeRemoved) {

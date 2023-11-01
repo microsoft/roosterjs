@@ -23,7 +23,7 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
         let isChanged = false;
 
         formatWithContentModel(editor, 'applyPendingFormat', (model, context) => {
-            iterateSelections([model], (_, __, block, segments) => {
+            iterateSelections(model, (_, __, block, segments) => {
                 if (
                     block?.blockType == 'Paragraph' &&
                     segments?.length == 1 &&
