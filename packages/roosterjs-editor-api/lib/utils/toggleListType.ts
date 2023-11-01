@@ -1,5 +1,5 @@
 import blockFormat from '../utils/blockFormat';
-import { createVListFromRegion, getBlockElementAtNode } from 'roosterjs-editor-dom';
+import { createVListFromRegion, getBlockElementAtNode, VList } from 'roosterjs-editor-dom';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import type { BulletListType, IEditor, ListType, NumberingListType } from 'roosterjs-editor-types';
 import type {
@@ -58,12 +58,10 @@ export default function toggleListType(
                           startNumber === 1 ? false : includeSiblingLists
                       );
 
-            const isNewList = chains.length === 0 && block.tagName != 'LI';
-
             if (vList && start && end) {
                 vList.changeListType(start, end, listType);
                 vList.setListStyleType(orderedStyle, unorderedStyle);
-                if (isNewList) {
+                if (isNewList(vList)) {
                     vList.removeMargins();
                 }
                 vList.writeBack(
@@ -75,4 +73,12 @@ export default function toggleListType(
         undefined /* beforeRunCallback */,
         apiNameOverride || 'toggleListType'
     );
+}
+
+function isNewList(vList: VList | null) {
+    const list = vList?.rootList;
+    if (list) {
+        return list.childElementCount === 0;
+    }
+    return false;
 }
