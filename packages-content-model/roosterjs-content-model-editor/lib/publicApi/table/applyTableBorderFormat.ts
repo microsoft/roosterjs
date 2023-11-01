@@ -162,6 +162,64 @@ export default function applyTableBorderFormat(
                             break;
                         case 'insideBorders':
                             // Format cells - Inside borders
+                            const singleCol = sel.lastCol == sel.firstCol;
+                            const singleRow = sel.lastRow == sel.firstRow;
+                            // Single cell selection
+                            if (singleCol && singleRow) {
+                                break;
+                            }
+                            // Single column selection
+                            if (singleCol) {
+                                applyBorderFormat(
+                                    tableModel.rows[sel.firstRow].cells[sel.firstCol],
+                                    borderFormat,
+                                    ['borderBottom']
+                                );
+                                for (
+                                    let rowIndex = sel.firstRow + 1;
+                                    rowIndex <= sel.lastRow - 1;
+                                    rowIndex++
+                                ) {
+                                    const cell = tableModel.rows[rowIndex].cells[sel.firstCol];
+                                    applyBorderFormat(cell, borderFormat, [
+                                        'borderTop',
+                                        'borderBottom',
+                                    ]);
+                                }
+                                applyBorderFormat(
+                                    tableModel.rows[sel.lastRow].cells[sel.firstCol],
+                                    borderFormat,
+                                    ['borderTop']
+                                );
+                                break;
+                            }
+                            // Single row selection
+                            if (singleRow) {
+                                applyBorderFormat(
+                                    tableModel.rows[sel.firstRow].cells[sel.firstCol],
+                                    borderFormat,
+                                    ['borderRight']
+                                );
+                                for (
+                                    let colIndex = sel.firstCol + 1;
+                                    colIndex <= sel.lastCol - 1;
+                                    colIndex++
+                                ) {
+                                    const cell = tableModel.rows[sel.firstRow].cells[colIndex];
+                                    applyBorderFormat(cell, borderFormat, [
+                                        'borderLeft',
+                                        'borderRight',
+                                    ]);
+                                }
+                                applyBorderFormat(
+                                    tableModel.rows[sel.firstRow].cells[sel.lastCol],
+                                    borderFormat,
+                                    ['borderLeft']
+                                );
+                                break;
+                            }
+
+                            // For multiple rows and columns selections
                             // Top left cell
                             applyBorderFormat(
                                 tableModel.rows[sel.firstRow].cells[sel.firstCol],
