@@ -1,5 +1,17 @@
-import { createEditorCore } from './createEditorCore';
+import { createContentModelEditorCore } from 'roosterjs-content-model-editor';
 import { isFeatureEnabled } from './isFeatureEnabled';
+import type {
+    ContentModelEditorCore,
+    EditorEnvironment,
+    IContentModelEditor,
+} from 'roosterjs-content-model-editor';
+import type {
+    ContentModelDocument,
+    DOMSelection,
+    DomToModelOption,
+    ModelToDomOption,
+    OnNodeCreated,
+} from 'roosterjs-content-model-types';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -17,7 +29,6 @@ import type {
     DarkColorHandler,
     DefaultFormat,
     DOMEventHandler,
-    EditorCore,
     EditorOptions,
     EditorUndoState,
     ExperimentalFeatures,
@@ -74,8 +85,8 @@ import type {
  * RoosterJs adapter editor that supports Content Model and can be used by legacy roosterjs plugin
  * (This class is still under development, temporarily do internal export for now.)
  */
-export class AdapterEditor implements IEditor {
-    private core: EditorCore | null = null;
+export class AdapterEditor implements IEditor, IContentModelEditor {
+    private core: ContentModelEditorCore | null = null;
 
     /**
      * Creates an instance of EditorBase
@@ -89,7 +100,7 @@ export class AdapterEditor implements IEditor {
         }
 
         // 2. Create editor core
-        this.core = createEditorCore(contentDiv, options);
+        this.core = createContentModelEditorCore(contentDiv, options);
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -128,6 +139,64 @@ export class AdapterEditor implements IEditor {
      */
     public isDisposed(): boolean {
         return !this.core;
+    }
+
+    //#region Content Model Editor members
+
+    /**
+     * Create Content Model from DOM tree in this editor
+     * @param option The option to customize the behavior of DOM to Content Model conversion
+     */
+    createContentModel(
+        option?: DomToModelOption,
+        selectionOverride?: DOMSelection
+    ): ContentModelDocument {
+        const core = this.getCore();
+
+        return core.api.createContentModel(core, option, selectionOverride);
+    }
+
+    /**
+     * Set content with content model
+     * @param model The content model to set
+     * @param option Additional options to customize the behavior of Content Model to DOM conversion
+     * @param onNodeCreated An optional callback that will be called when a DOM node is created
+     */
+    setContentModel(
+        model: ContentModelDocument,
+        option?: ModelToDomOption,
+        onNodeCreated?: OnNodeCreated
+    ): DOMSelection | null {
+        const core = this.getCore();
+
+        return core.api.setContentModel(core, model, option, onNodeCreated);
+    }
+
+    /**
+     * Get current running environment, such as if editor is running on Mac
+     */
+    getEnvironment(): EditorEnvironment {
+        return this.getCore().environment;
+    }
+
+    /**
+     * Get current DOM selection
+     */
+    getDOMSelection(): DOMSelection | null {
+        const core = this.getCore();
+
+        return core.api.getDOMSelection(core);
+    }
+
+    /**
+     * Set DOMSelection into editor content.
+     * This is the replacement of IEditor.select.
+     * @param selection The selection to set
+     */
+    setDOMSelection(selection: DOMSelection) {
+        const core = this.getCore();
+
+        core.api.setDOMSelection(core, selection);
     }
 
     //#endregion
@@ -1024,7 +1093,7 @@ export class AdapterEditor implements IEditor {
      * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    protected getCore(): EditorCore {
+    protected getCore(): ContentModelEditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }
