@@ -1,7 +1,8 @@
 import { AddUndoSnapshot } from '../publicTypes/coreApi/AddUndoSnapshot';
-import { ChangeSource, ContentChangedData, EntityState } from 'roosterjs-content-model-types';
+import { cloneModel, CloneModelOptions } from 'roosterjs-content-model-editor';
 import { ContentChangedEvent } from '../publicTypes/event/ContentChangedEvent';
 import { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
+import { EntityState } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -15,14 +16,13 @@ import { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core,
-    callback: (() => any) | null,
-    changeSource: ChangeSource | string | null,
-    canUndoByBackspace: boolean,
-    additionalData?: ContentChangedData
+    callback,
+    changeSource,
+    canUndoByBackspace,
+    additionalData
 ) => {
     const undoState = core.undo;
     const isNested = undoState.isNested;
-    let data: any;
 
     if (!isNested) {
         undoState.isNested = true;
@@ -36,11 +36,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 
     try {
         if (callback) {
-            const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            data = callback(
-                range && Position.getStart(range).normalize(),
-                range && Position.getEnd(range).normalize()
-            );
+            let data = callback();
+
+            if (additionalData) {
+                additionalData.additionalData = data;
+            }
 
             if (!isNested) {
                 const entityStates = additionalData?.getEntityState?.();
@@ -58,20 +58,22 @@ export const addUndoSnapshot: AddUndoSnapshot = (
             eventType: 'contentChanged',
             source: changeSource,
             changeData: additionalData || {},
-            contentModel: {},
-            selection: {},
         };
         core.api.triggerEvent(core, event, true /*broadcast*/);
     }
 
     if (canUndoByBackspace) {
-        const range = core.api.getSelectionRange(core, false /*tryGetFromCache*/);
+        const selection = core.api.getDOMSelection(core, false /*forceGetNewSelection*/);
 
-        if (range) {
+        if (selection?.type == 'range' && selection.range.collapsed) {
             core.undo.hasNewContent = false;
-            core.undo.autoCompletePosition = Position.getStart(range);
+            core.undo.autoCompleteRange = selection.range;
         }
     }
+};
+
+const cloneOption: CloneModelOptions = {
+    includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
 };
 
 function addUndoSnapshotInternal(
@@ -80,49 +82,16 @@ function addUndoSnapshotInternal(
     entityStates?: EntityState[]
 ) {
     if (!core.lifecycle.isInShadowEdit) {
-        const rangeEx = core.api.getSelectionRangeEx(core);
-        const isDarkMode = core.lifecycle.isDarkMode;
-        const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;
+        const { currentIndex, snapshots } = core.undo;
+        const model = core.api.createContentModel(core);
 
-        core.undo.snapshotsService.addSnapshot(
-            {
-                html: core.contentDiv.innerHTML,
-                metadata,
-                knownColors: core.colorManager.getKnownColorsCopy() || [],
-                entityStates,
-            },
-            canUndoByBackspace
-        );
+        snapshots.splice(currentIndex + 1, snapshots.length - currentIndex - 1);
+        snapshots.push({
+            contentModel: cloneModel(model, cloneOption),
+            entityStates,
+            canUndoByBackspace,
+        });
+
         core.undo.hasNewContent = false;
-    }
-}
-
-function createContentMetadata(
-    root: HTMLElement,
-    rangeEx: SelectionRangeEx,
-    isDarkMode: boolean
-): ContentMetadata | undefined {
-    switch (rangeEx?.type) {
-        case SelectionRangeTypes.TableSelection:
-            return {
-                type: SelectionRangeTypes.TableSelection,
-                tableId: rangeEx.table.id,
-                isDarkMode: !!isDarkMode,
-                ...rangeEx.coordinates!,
-            };
-        case SelectionRangeTypes.ImageSelection:
-            return {
-                type: SelectionRangeTypes.ImageSelection,
-                imageId: rangeEx.image.id,
-                isDarkMode: !!isDarkMode,
-            };
-        case SelectionRangeTypes.Normal:
-            return {
-                type: SelectionRangeTypes.Normal,
-                isDarkMode: !!isDarkMode,
-                start: [],
-                end: [],
-                ...(getSelectionPath(root, rangeEx.ranges[0]) || {}),
-            };
     }
 }

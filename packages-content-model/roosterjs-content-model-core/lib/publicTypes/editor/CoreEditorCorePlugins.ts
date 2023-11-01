@@ -16,6 +16,7 @@ export interface CoreEditorCorePlugins {
     cache: CoreEditorPluginWithState<ContentModelCachePluginState>;
     format: CoreEditorPluginWithState<ContentModelFormatPluginState>;
     keyboardEdit: CoreEditorPlugin;
+    entity: CoreEditorPluginWithState<ContentModelDOMEventPluginState>;
     selection: CoreEditorPluginWithState<ContentModelSelectionPluginState>;
     undo: CoreEditorPluginWithState<ContentModelUndoPluginState>;
     domEvent: CoreEditorPluginWithState<ContentModelDOMEventPluginState>;

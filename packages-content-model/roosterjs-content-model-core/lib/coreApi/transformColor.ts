@@ -16,7 +16,7 @@ export const transformColor: TransformColor = (core, rootNode, includeSelf, toDa
 
     if (rootNode) {
         const transformer = (element: HTMLElement) => {
-            colorManager.transformElementColor(element, fromDarkMode, toDarkMode);
+            colorManager.transformElementColor(element, !toDarkMode, toDarkMode);
         };
 
         iterateElements(rootNode, transformer, includeSelf);

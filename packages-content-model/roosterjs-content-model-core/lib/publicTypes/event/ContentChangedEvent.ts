@@ -23,7 +23,7 @@ export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
     /**
      * The content model that is applied which causes this content changed event
      */
-    contentModel: ContentModelDocument;
+    contentModel?: ContentModelDocument;
 
     /**
      * Selection range applied to the document

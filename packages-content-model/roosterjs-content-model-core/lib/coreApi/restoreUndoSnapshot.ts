@@ -16,47 +16,28 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, step) => {
         );
     }
 
-    const snapshot = core.undo.snapshotsService.move(step);
+    const newIndex = core.undo.currentIndex + step;
+    const snapshot = core.undo.snapshots[newIndex];
 
-    if (snapshot && snapshot.html != null) {
-        try {
-            core.undo.isRestoring = true;
-            core.api.setContent(
-                core,
-                snapshot.html,
-                true /*triggerContentChangedEvent*/,
-                snapshot.metadata ?? undefined
-            );
+    if (snapshot) {
+        core.undo.currentIndex = newIndex;
+        core.api.setContentModel(core, snapshot.contentModel);
 
-            const darkColorHandler = core.colorManager;
-            const isDarkModel = core.lifecycle.isDarkMode;
+        snapshot.entityStates?.forEach(entityState => {
+            const { entity, state } = entityState;
 
-            snapshot.knownColors.forEach(color => {
-                darkColorHandler.registerColor(color.lightModeColor, isDarkModel);
-            });
-
-            snapshot.entityStates?.forEach(entityState => {
-                const { type, id, state } = entityState;
-                const wrapper = core.contentDiv.querySelector(
-                    getEntitySelector(type, id)
-                ) as HTMLElement;
-                const entity = wrapper && getEntityFromElement(wrapper);
-
-                if (entity) {
-                    core.api.triggerEvent(
-                        core,
-                        {
-                            eventType: 'entityOperation',
-                            operation: 'updateEntityState',
-                            entity: entity,
-                            state,
-                        },
-                        false
-                    );
-                }
-            });
-        } finally {
-            core.undo.isRestoring = false;
-        }
+            if (entity) {
+                core.api.triggerEvent(
+                    core,
+                    {
+                        eventType: 'entityOperation',
+                        operation: 'updateEntityState',
+                        entity: entity,
+                        state,
+                    },
+                    false
+                );
+            }
+        });
     }
 };
