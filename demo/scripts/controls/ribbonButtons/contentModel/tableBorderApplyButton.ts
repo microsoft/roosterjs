@@ -3,14 +3,14 @@ import { applyTableBorderFormat, isContentModelEditor } from 'roosterjs-content-
 import { RibbonButton } from 'roosterjs-react';
 
 const TABLE_OPERATIONS = {
-    menuNameTableAllBorder: 'AllBorders',
-    menuNameTableNoBorder: 'NoBorders',
-    menuNameTableLeftBorder: 'LeftBorders',
-    menuNameTableRightBorder: 'RightBorders',
-    menuNameTableTopBorder: 'TopBorders',
-    menuNameTableBottomBorder: 'BottomBorders',
-    menuNameTableInsideBorder: 'InsideBorders',
-    menuNameTableOutsideBorder: 'OutsideBorders',
+    menuNameTableAllBorder: 'allBorders',
+    menuNameTableNoBorder: 'noBorders',
+    menuNameTableLeftBorder: 'leftBorders',
+    menuNameTableRightBorder: 'rightBorders',
+    menuNameTableTopBorder: 'topBorders',
+    menuNameTableBottomBorder: 'bottomBorders',
+    menuNameTableInsideBorder: 'insideBorders',
+    menuNameTableOutsideBorder: 'outsideBorders',
 };
 
 export const tableBorderApplyButton: RibbonButton<'ribbonButtonTableBorder'> = {
