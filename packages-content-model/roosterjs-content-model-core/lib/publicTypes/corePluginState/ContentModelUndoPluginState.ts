@@ -4,8 +4,19 @@ import type { ContentModelDocument, EntityState } from 'roosterjs-content-model-
  * @internal
  */
 export interface UndoSnapshot {
+    /**
+     * Content Model of this snapshot
+     */
     contentModel: ContentModelDocument;
+
+    /**
+     * @optional Entity state of this snapshot
+     */
     entityStates?: EntityState[];
+
+    /**
+     * @optional Whether user can undo to this snapshot by pressing Backspace key
+     */
     canUndoByBackspace?: boolean;
 }
 

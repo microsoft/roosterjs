@@ -1,8 +1,8 @@
-import { AddUndoSnapshot } from '../publicTypes/coreApi/AddUndoSnapshot';
 import { cloneModel, CloneModelOptions } from 'roosterjs-content-model-editor';
-import { ContentChangedEvent } from '../publicTypes/event/ContentChangedEvent';
 import { CoreEditorCore } from '../publicTypes/editor/CoreEditorCore';
-import { EntityState } from 'roosterjs-content-model-types';
+import type { ContentChangedEvent } from '../publicTypes/event/ContentChangedEvent';
+import type { AddUndoSnapshot } from '../publicTypes/coreApi/AddUndoSnapshot';
+import type { EntityState } from 'roosterjs-content-model-types';
 
 /**
  * @internal

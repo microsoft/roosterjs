@@ -85,5 +85,8 @@ function getPluginState(corePlugins: CoreEditorCorePlugins): CoreEditorPluginSta
         format: corePlugins.format.getState(),
         lifecycle: corePlugins.lifecycle.getState(),
         selection: corePlugins.selection.getState(),
+        domEvent: corePlugins.domEvent.getState(),
+        entity: corePlugins.entity.getState(),
+        undo: corePlugins.undo.getState(),
     };
 }

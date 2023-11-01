@@ -1,5 +1,18 @@
 /**
  * @internal
+ * An extended Editor plugin interface which supports providing context menu items
+ */
+export interface ContextMenuProvider<T> {
+    /**
+     * Get context menu items
+     * @param target HTML Node that user is operating on
+     * @returns An array of context menu items, or null if there is no menu item need to show
+     */
+    getContextMenuItems: (target: Node) => T[] | null;
+}
+
+/**
+ * @internal
  * The state object for DOMEventPlugin
  */
 export interface ContentModelDOMEventPluginState {

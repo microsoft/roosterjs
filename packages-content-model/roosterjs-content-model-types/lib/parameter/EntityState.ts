@@ -1,16 +1,13 @@
+import { ContentModelEntity } from '../entity/ContentModelEntity';
+
 /**
  * State for an entity. This is used for storing entity undo snapshot
  */
 export interface EntityState {
     /**
-     * Type of the entity
+     * Related entity model
      */
-    type: string;
-
-    /**
-     * Id of the entity
-     */
-    id: string;
+    entity: ContentModelEntity;
 
     /**
      * The state of this entity to store into undo snapshot.

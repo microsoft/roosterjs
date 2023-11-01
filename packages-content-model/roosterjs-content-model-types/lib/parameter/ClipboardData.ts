@@ -1,4 +1,3 @@
-import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { EdgeLinkPreview } from './EdgeLinkPreview';
 
 /**
