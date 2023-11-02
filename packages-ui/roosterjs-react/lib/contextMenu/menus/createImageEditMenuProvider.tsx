@@ -6,8 +6,8 @@ import {
     resetImage,
     resizeByPercentage,
 } from 'roosterjs-editor-plugins';
-import { DocumentCommand, ImageEditOperation } from 'roosterjs-editor-types';
-import { getObjectKeys, safeInstanceOf } from 'roosterjs-editor-dom';
+import { DocumentCommand, ImageEditOperation, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { setImageAltText } from 'roosterjs-editor-api';
 import type ContextMenuItem from '../types/ContextMenuItem';
 import type { EditorPlugin, IEditor } from 'roosterjs-editor-types';
@@ -61,31 +61,39 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
         menuNameImageSizeMedium: 'Medium',
         menuNameImageSizeOriginal: 'Original',
     },
-    onClick: (key, editor, node) => {
+    onClick: (key, editor, _) => {
+        const selection = editor.getSelectionRangeEx();
+        if (selection.type !== SelectionRangeTypes.ImageSelection) {
+            return;
+        }
         editor.addUndoSnapshot(() => {
             const percentage = sizeMap[key];
 
             if (percentage != undefined && percentage > 0) {
                 resizeByPercentage(
                     editor,
-                    node as HTMLImageElement,
+                    selection.image,
                     percentage,
                     10 /*minWidth*/,
                     10 /*minHeight*/
                 );
             } else {
-                resetImage(editor, node as HTMLImageElement);
+                resetImage(editor, selection.image);
             }
         });
     },
-    getSelectedId: (_, image) => {
-        return safeInstanceOf(image, 'HTMLImageElement')
-            ? getObjectKeys(sizeMap).find(key =>
-                  image && key == 'menuNameImageSizeBestFit'
-                      ? !image.hasAttribute('width') && !image.hasAttribute('height')
-                      : isResizedTo(image, sizeMap[key]!)
-              ) ?? null
-            : null;
+    getSelectedId: (editor, _) => {
+        const selection = editor.getSelectionRangeEx();
+        return (
+            (selection.type === SelectionRangeTypes.ImageSelection &&
+                getObjectKeys(sizeMap).find(key => {
+                    return key == 'menuNameImageSizeBestFit'
+                        ? !selection.image.hasAttribute('width') &&
+                              !selection.image.hasAttribute('height')
+                        : isResizedTo(selection.image, sizeMap[key]!);
+                })) ||
+            null
+        );
     },
 };
 
@@ -194,8 +202,9 @@ const ImageCutMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> =
     },
 };
 
-function shouldShowImageEditItems(editor: IEditor, node: Node) {
-    return safeInstanceOf(node, 'HTMLImageElement') && node.isContentEditable;
+function shouldShowImageEditItems(editor: IEditor, _: Node) {
+    const selection = editor.getSelectionRangeEx();
+    return selection.type === SelectionRangeTypes.ImageSelection && !!selection.image;
 }
 
 /**
