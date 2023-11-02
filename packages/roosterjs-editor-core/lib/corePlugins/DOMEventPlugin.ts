@@ -1,5 +1,5 @@
 import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
-import { ChangeSource, Keys, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
 import type {
     ContextMenuProvider,
     DOMEventHandler,
@@ -233,14 +233,10 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         const allItems: any[] = [];
         const searcher = this.editor?.getContentSearcherOfCursor();
         const elementBeforeCursor = searcher?.getInlineElementBefore();
-        const selection = this.editor?.getSelectionRangeEx();
 
         let eventTargetNode = event.target as Node;
         if (event.button != 2 && elementBeforeCursor) {
             eventTargetNode = elementBeforeCursor.getContainerNode();
-        }
-        if (event.button == 2 && selection?.type === SelectionRangeTypes.ImageSelection) {
-            eventTargetNode = selection.image;
         }
         this.state.contextMenuProviders.forEach(provider => {
             const items = provider.getContextMenuItems(eventTargetNode) ?? [];
