@@ -100,6 +100,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_react.contextmenuitem.html#commandbarsubmenuproperties" class="tsd-kind-icon">command<wbr>Bar<wbr>Sub<wbr>Menu<wbr>Properties</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_react.contextmenuitem.html#getselectedid" class="tsd-kind-icon">get<wbr>Selected<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_react.contextmenuitem.html#itemclassname" class="tsd-kind-icon">item<wbr>Class<wbr>Name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_react.contextmenuitem.html#itemrender" class="tsd-kind-icon">item<wbr>Render</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_react.contextmenuitem.html#key" class="tsd-kind-icon">key</a></li>
@@ -120,7 +121,7 @@
 					<div class="tsd-signature tsd-kind-icon">command<wbr>Bar<wbr>Sub<wbr>Menu<wbr>Properties<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IContextualMenuProps</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c444f3/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L72">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:72</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L80">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:80</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -130,12 +131,62 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="getselectedid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> get<wbr>Selected<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">get<wbr>Selected<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a>, targetNode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">TString</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L51">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:51</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-interface">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a>, targetNode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TString</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<div class="tsd-comment tsd-typography">
+											<div class="lead">
+												<p>A callback function to verify which subitem ID should have a checkmark</p>
+											</div>
+										</div>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>editor: <a href="roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>The editor object that triggers this event</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<h5>targetNode: <span class="tsd-signature-type">Node</span></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>The node that user is clicking onto</p>
+													</div>
+												</div>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TString</span></h4>
+										<p>ID to be shown as selected, null for none</p>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="itemclassname" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> item<wbr>Class<wbr>Name</h3>
 					<div class="tsd-signature tsd-kind-icon">item<wbr>Class<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c444f3/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L67">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L75">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:75</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -150,7 +201,7 @@
 					<div class="tsd-signature tsd-kind-icon">item<wbr>Render<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IContextualMenuItem</span>, onClick<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Element</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">KeyboardEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Element</span><span class="tsd-signature-symbol">&gt;</span>, item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IContextualMenuItem</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">ReactNode</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c444f3/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L56">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L64">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:64</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -220,7 +271,7 @@
 					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TString</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c444f3/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L12">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L12">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -235,7 +286,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Click<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TString</span>, editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a>, targetNode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, strings<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_react.html#localizedstrings" class="tsd-signature-type" data-tsd-kind="Type alias">LocalizedStrings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TString</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span>, uiUtilities<span class="tsd-signature-symbol">: </span><a href="roosterjs_react.uiutilities.html" class="tsd-signature-type" data-tsd-kind="Interface">UIUtilities</a>, context<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c444f3/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L28">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L28">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -316,7 +367,7 @@
 					<div class="tsd-signature tsd-kind-icon">should<wbr>Show<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a>, targetNode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, context<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TContext</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c444f3/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L43">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L43">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -373,7 +424,7 @@
 					<div class="tsd-signature tsd-kind-icon">sub<wbr>Items<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">key</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c444f3/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L49">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L57">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:57</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -389,7 +440,7 @@
 					<div class="tsd-signature tsd-kind-icon">unlocalized<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c444f3/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L17">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/37e8fb5/packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts#L17">packages-ui/roosterjs-react/lib/contextMenu/types/ContextMenuItem.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -456,6 +507,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_react.contextmenuitem.html#commandbarsubmenuproperties" class="tsd-kind-icon">command<wbr>Bar<wbr>Sub<wbr>Menu<wbr>Properties</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_react.contextmenuitem.html#getselectedid" class="tsd-kind-icon">get<wbr>Selected<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_react.contextmenuitem.html#itemclassname" class="tsd-kind-icon">item<wbr>Class<wbr>Name</a>
