@@ -1,16 +1,20 @@
 import MainPaneBase from '../../MainPaneBase';
-import { applyTableBorderFormat, isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
+import {
+    applyTableBorderFormat,
+    BorderOperations,
+    isContentModelEditor,
+} from 'roosterjs-content-model-editor';
 
-const TABLE_OPERATIONS = {
-    menuNameTableAllBorder: 'AllBorders',
-    menuNameTableNoBorder: 'NoBorders',
-    menuNameTableLeftBorder: 'LeftBorders',
-    menuNameTableRightBorder: 'RightBorders',
-    menuNameTableTopBorder: 'TopBorders',
-    menuNameTableBottomBorder: 'BottomBorders',
-    menuNameTableInsideBorder: 'InsideBorders',
-    menuNameTableOutsideBorder: 'OutsideBorders',
+const TABLE_OPERATIONS: Record<string, BorderOperations> = {
+    menuNameTableAllBorder: 'allBorders',
+    menuNameTableNoBorder: 'noBorders',
+    menuNameTableLeftBorder: 'leftBorders',
+    menuNameTableRightBorder: 'rightBorders',
+    menuNameTableTopBorder: 'topBorders',
+    menuNameTableBottomBorder: 'bottomBorders',
+    menuNameTableInsideBorder: 'insideBorders',
+    menuNameTableOutsideBorder: 'outsideBorders',
 };
 
 export const tableBorderApplyButton: RibbonButton<'ribbonButtonTableBorder'> = {
