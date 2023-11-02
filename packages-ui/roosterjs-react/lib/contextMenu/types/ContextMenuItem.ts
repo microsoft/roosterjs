@@ -43,6 +43,14 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
     shouldShow?: (editor: IEditor, targetNode: Node, context?: TContext) => boolean;
 
     /**
+     * A callback function to verify which subitem ID should have a checkmark
+     * @param editor The editor object that triggers this event
+     * @param targetNode The node that user is clicking onto
+     * @returns ID to be shown as selected, null for none
+     */
+    getSelectedId?: (editor: IEditor, targetNode: Node) => TString | null;
+
+    /**
      * A key-value map for sub menu items, key is the key of menu item, value is unlocalized string
      * When click on a child item, onClick handler will be triggered with the key of the clicked child item passed in as the second parameter
      */
