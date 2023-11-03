@@ -3,30 +3,19 @@ import setTableCellShade from '../../../lib/publicApi/table/setTableCellShade';
 import { ContentModelTable } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 
 describe('setTableCellShade', () => {
     let editor: IContentModelEditor;
-    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
-    let triggerPluginEvent: jasmine.Spy;
-    let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-
         spyOn(normalizeTable, 'normalizeTable');
 
         editor = ({
             focus: () => {},
-            addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
-            isDarkMode: () => false,
-            triggerPluginEvent,
-            getVisibleViewport,
         } as any) as IContentModelEditor;
     });
 
@@ -38,22 +27,32 @@ describe('setTableCellShade', () => {
         const model = createContentModelDocument();
         model.blocks.push(table);
 
-        createContentModel.and.returnValue(model);
+        let formatResult: boolean | undefined;
+
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
+
+        editor.formatContentModel = formatContentModel;
 
         setTableCellShade(editor, colorValue);
 
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBe(!!expectedTable);
+
         if (expectedTable) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(
-                {
-                    blockGroupType: 'Document',
-                    blocks: [expectedTable],
-                },
-                undefined,
-                undefined
-            );
-        } else {
-            expect(setContentModel).not.toHaveBeenCalled();
+            expect(model).toEqual({
+                blockGroupType: 'Document',
+                blocks: [expectedTable],
+            });
         }
     }
     it('Empty table', () => {

@@ -11,11 +11,14 @@ import * as WacComponents from '../../../lib/editor/plugins/PastePlugin/WacCompo
 import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
 import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from '../../editor/plugins/paste/e2e/testUtils';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import paste, * as pasteF from '../../../lib/publicApi/utils/paste';
 import {
     BeforePasteEvent,
@@ -31,9 +34,7 @@ const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Paste ', () => {
     let editor: IContentModelEditor;
-    let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
-    let setContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let mockedMergeModel: ContentModelDocument;
@@ -46,6 +47,7 @@ describe('Paste ', () => {
     let getVisibleViewport: jasmine.Spy;
     let mergeModelSpy: jasmine.Spy;
     let setPendingFormatSpy: jasmine.Spy;
+    let formatResult: boolean | undefined;
 
     const mockedPos = 'POS' as any;
 
@@ -66,9 +68,7 @@ describe('Paste ', () => {
         mockedModel = ({} as any) as ContentModelDocument;
         mockedMergeModel = ({} as any) as ContentModelDocument;
 
-        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
-        setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
@@ -113,12 +113,23 @@ describe('Paste ', () => {
                 },
             } as any,
         ]);
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(mockedModel, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
+
+        formatResult = undefined;
 
         editor = ({
             focus,
-            addUndoSnapshot,
             createContentModel,
-            setContentModel,
             getFocusedPosition,
             getContent,
             getSelectionRange,
@@ -127,6 +138,7 @@ describe('Paste ', () => {
             triggerPluginEvent,
             getVisibleViewport,
             isDarkMode: () => false,
+            formatContentModel,
         } as any) as IContentModelEditor;
     });
 
@@ -138,9 +150,8 @@ describe('Paste ', () => {
     it('Execute', () => {
         pasteF.default(editor, clipboardData);
 
-        expect(setContentModel).toHaveBeenCalled();
+        expect(formatResult).toBeTrue();
         expect(focus).toHaveBeenCalled();
-        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
         expect(triggerPluginEvent).toHaveBeenCalled();
         expect(getDocument).toHaveBeenCalled();
@@ -151,20 +162,9 @@ describe('Paste ', () => {
     it('Execute | As plain text', () => {
         pasteF.default(editor, clipboardData, 'asPlainText');
 
-        expect(setContentModel).toHaveBeenCalled();
+        expect(formatResult).toBeTrue();
         expect(focus).toHaveBeenCalled();
-        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
-            contentModel: mockedModel,
-            selection: undefined,
-            data: clipboardData,
-            source: ChangeSource.Paste,
-            additionalData: {
-                formatApiName: 'Paste',
-            },
-        });
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);

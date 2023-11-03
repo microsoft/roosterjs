@@ -1,9 +1,12 @@
-import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import applyPendingFormat from '../../../lib/publicApi/format/applyPendingFormat';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import {
     ContentModelDocument,
     ContentModelParagraph,
@@ -19,7 +22,6 @@ import {
 
 describe('applyPendingFormat', () => {
     it('Has pending format', () => {
-        const editor = ({} as any) as IContentModelEditor;
         const text: ContentModelText = {
             segmentType: 'Text',
             text: 'abc',
@@ -44,16 +46,23 @@ describe('applyPendingFormat', () => {
             fontSize: '10px',
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model, {
-                    newEntities: [],
-                    deletedEntities: [],
-                    newImages: [],
-                });
-            }
-        );
+        const formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    expect(options.apiName).toEqual('applyPendingFormat');
+                    callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
+
+        const editor = ({
+            formatContentModel: formatContentModelSpy,
+        } as any) as IContentModelEditor;
+
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
             return false;
@@ -61,6 +70,7 @@ describe('applyPendingFormat', () => {
 
         applyPendingFormat(editor, 'c');
 
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -92,7 +102,6 @@ describe('applyPendingFormat', () => {
     });
 
     it('Has pending format but wrong text', () => {
-        const editor = ({} as any) as IContentModelEditor;
         const text: ContentModelText = {
             segmentType: 'Text',
             text: 'abc',
@@ -117,12 +126,19 @@ describe('applyPendingFormat', () => {
             fontSize: '10px',
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
-            }
-        );
+        const formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    expect(options.apiName).toEqual('applyPendingFormat');
+                    callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
+                }
+            );
+
+        const editor = ({
+            formatContentModel: formatContentModelSpy,
+        } as any) as IContentModelEditor;
+
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
             return false;
@@ -130,6 +146,7 @@ describe('applyPendingFormat', () => {
 
         applyPendingFormat(editor, 'd');
 
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -154,7 +171,6 @@ describe('applyPendingFormat', () => {
     });
 
     it('No pending format', () => {
-        const editor = ({} as any) as IContentModelEditor;
         const text: ContentModelText = {
             segmentType: 'Text',
             text: 'abc',
@@ -177,12 +193,11 @@ describe('applyPendingFormat', () => {
 
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
-            }
-        );
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = ({
+            formatContentModel: formatContentModelSpy,
+        } as any) as IContentModelEditor;
+
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
             return false;
@@ -190,6 +205,7 @@ describe('applyPendingFormat', () => {
 
         applyPendingFormat(editor, 'd');
 
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -214,7 +230,6 @@ describe('applyPendingFormat', () => {
     });
 
     it('Selection is not collapsed', () => {
-        const editor = ({} as any) as IContentModelEditor;
         const text: ContentModelText = {
             segmentType: 'Text',
             text: 'abc',
@@ -235,12 +250,19 @@ describe('applyPendingFormat', () => {
             fontSize: '10px',
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
-            }
-        );
+        const formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    expect(options.apiName).toEqual('applyPendingFormat');
+                    callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
+                }
+            );
+
+        const editor = ({
+            formatContentModel: formatContentModelSpy,
+        } as any) as IContentModelEditor;
+
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [text]);
             return false;
@@ -248,6 +270,7 @@ describe('applyPendingFormat', () => {
 
         applyPendingFormat(editor, 'd');
 
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -268,7 +291,6 @@ describe('applyPendingFormat', () => {
     });
 
     it('Implicit paragraph', () => {
-        const editor = ({} as any) as IContentModelEditor;
         const text = createText('test');
         const marker = createSelectionMarker();
         const paragraph = createParagraph(true /*isImplicit*/);
@@ -280,12 +302,19 @@ describe('applyPendingFormat', () => {
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
-            }
-        );
+        const formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    expect(options.apiName).toEqual('applyPendingFormat');
+                    callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
+                }
+            );
+
+        const editor = ({
+            formatContentModel: formatContentModelSpy,
+        } as any) as IContentModelEditor;
+
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
             return false;
@@ -294,6 +323,7 @@ describe('applyPendingFormat', () => {
 
         applyPendingFormat(editor, 't');
 
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [

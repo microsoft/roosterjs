@@ -1,4 +1,4 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { formatAndKeepPendingFormat } from '../../modelApi/format/pendingFormat';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -16,9 +16,8 @@ export default function setIndentation(
 ) {
     editor.focus();
 
-    formatWithContentModel(
+    formatAndKeepPendingFormat(
         editor,
-        'setIndentation',
         model => {
             const result = setModelIndentation(model, indentation, length);
 
@@ -29,7 +28,7 @@ export default function setIndentation(
             return result;
         },
         {
-            preservePendingFormat: true,
+            apiName: 'setIndentation',
         }
     );
 }

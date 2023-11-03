@@ -1,5 +1,4 @@
 import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -13,24 +12,29 @@ import type { ListMetadataFormat } from 'roosterjs-content-model-types';
 export default function setListStyle(editor: IContentModelEditor, style: ListMetadataFormat) {
     editor.focus();
 
-    formatWithContentModel(editor, 'setListStyle', model => {
-        const listItem = getFirstSelectedListItem(model);
+    editor.formatContentModel(
+        model => {
+            const listItem = getFirstSelectedListItem(model);
 
-        if (listItem) {
-            const listItems = findListItemsInSameThread(model, listItem);
-            const levelIndex = listItem.levels.length - 1;
+            if (listItem) {
+                const listItems = findListItemsInSameThread(model, listItem);
+                const levelIndex = listItem.levels.length - 1;
 
-            listItems.forEach(listItem => {
-                const level = listItem.levels[levelIndex];
+                listItems.forEach(listItem => {
+                    const level = listItem.levels[levelIndex];
 
-                if (level) {
-                    updateListMetadata(level, metadata => Object.assign({}, metadata, style));
-                }
-            });
+                    if (level) {
+                        updateListMetadata(level, metadata => Object.assign({}, metadata, style));
+                    }
+                });
 
-            return true;
-        } else {
-            return false;
+                return true;
+            } else {
+                return false;
+            }
+        },
+        {
+            apiName: 'setListStyle',
         }
-    });
+    );
 }

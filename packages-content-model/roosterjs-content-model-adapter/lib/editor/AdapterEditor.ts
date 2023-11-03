@@ -2,7 +2,9 @@ import { createContentModelEditorCore } from 'roosterjs-content-model-editor';
 import { isFeatureEnabled } from './isFeatureEnabled';
 import type {
     ContentModelEditorCore,
+    ContentModelFormatter,
     EditorEnvironment,
+    FormatWithContentModelOptions,
     IContentModelEditor,
 } from 'roosterjs-content-model-editor';
 import type {
@@ -197,6 +199,23 @@ export class AdapterEditor implements IEditor, IContentModelEditor {
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
+    }
+
+    /**
+     * The general API to do format change with Content Model
+     * It will grab a Content Model for current editor content, and invoke a callback function
+     * to do format change. Then according to the return value, write back the modified content model into editor.
+     * If there is cached model, it will be used and updated.
+     * @param formatter Formatter function, see ContentModelFormatter
+     * @param options More options, see FormatWithContentModelOptions
+     */
+    formatContentModel(
+        formatter: ContentModelFormatter,
+        options?: FormatWithContentModelOptions
+    ): void {
+        const core = this.getCore();
+
+        core.api.formatContentModel(core, formatter, options);
     }
 
     //#endregion

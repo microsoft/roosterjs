@@ -1,5 +1,4 @@
 import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
@@ -13,23 +12,28 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
 export default function setTableCellShade(editor: IContentModelEditor, color: string | null) {
     editor.focus();
 
-    formatWithContentModel(editor, 'setTableCellShade', model => {
-        const [table] = getFirstSelectedTable(model);
+    editor.formatContentModel(
+        model => {
+            const [table] = getFirstSelectedTable(model);
 
-        if (table) {
-            normalizeTable(table);
+            if (table) {
+                normalizeTable(table);
 
-            table.rows.forEach(row =>
-                row.cells.forEach(cell => {
-                    if (hasSelectionInBlockGroup(cell)) {
-                        setTableCellBackgroundColor(cell, color, true /*isColorOverride*/);
-                    }
-                })
-            );
+                table.rows.forEach(row =>
+                    row.cells.forEach(cell => {
+                        if (hasSelectionInBlockGroup(cell)) {
+                            setTableCellBackgroundColor(cell, color, true /*isColorOverride*/);
+                        }
+                    })
+                );
 
-            return true;
-        } else {
-            return false;
+                return true;
+            } else {
+                return false;
+            }
+        },
+        {
+            apiName: 'setTableCellShade',
         }
-    });
+    );
 }

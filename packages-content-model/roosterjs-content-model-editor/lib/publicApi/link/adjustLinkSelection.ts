@@ -1,7 +1,6 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { setSelection } from '../../modelApi/selection/setSelection';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
@@ -13,29 +12,34 @@ export default function adjustLinkSelection(editor: IContentModelEditor): [strin
     let text = '';
     let url: string | null = null;
 
-    formatWithContentModel(editor, 'adjustLinkSelection', model => {
-        let changed = adjustSegmentSelection(
-            model,
-            target => !!target.isSelected && !!target.link,
-            (target, ref) => !!target.link && target.link.format.href == ref.link!.format.href
-        );
-        let segments = getSelectedSegments(model, false /*includingFormatHolder*/);
-        const firstSegment = segments[0];
+    editor.formatContentModel(
+        model => {
+            let changed = adjustSegmentSelection(
+                model,
+                target => !!target.isSelected && !!target.link,
+                (target, ref) => !!target.link && target.link.format.href == ref.link!.format.href
+            );
+            let segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+            const firstSegment = segments[0];
 
-        if (segments.length == 1 && firstSegment.segmentType == 'SelectionMarker') {
-            segments = adjustWordSelection(model, firstSegment);
+            if (segments.length == 1 && firstSegment.segmentType == 'SelectionMarker') {
+                segments = adjustWordSelection(model, firstSegment);
 
-            if (segments.length > 1) {
-                changed = true;
-                setSelection(model, segments[0], segments[segments.length - 1]);
+                if (segments.length > 1) {
+                    changed = true;
+                    setSelection(model, segments[0], segments[segments.length - 1]);
+                }
             }
+
+            text = segments.map(x => (x.segmentType == 'Text' ? x.text : '')).join('');
+            url = segments[0]?.link?.format.href || null;
+
+            return changed;
+        },
+        {
+            apiName: 'adjustLinkSelection',
         }
-
-        text = segments.map(x => (x.segmentType == 'Text' ? x.text : '')).join('');
-        url = segments[0]?.link?.format.href || null;
-
-        return changed;
-    });
+    );
 
     return [text, url];
 }

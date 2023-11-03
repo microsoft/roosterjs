@@ -61,7 +61,7 @@ export interface MergeModelOption {
  * Merge source model into target mode
  * @param target Target Content Model that will merge content into
  * @param source Source Content Model will be merged to target model
- * @param context Format context. When call this function inside formatWithContentModel, provide this context so that formatWithContentModel will do extra handling to the result
+ * @param context Format context. When call this function inside formatContentModel, provide this context so that formatContentModel will do extra handling to the result
  * @param options More options, see MergeModelOption
  * @returns Insert point after merge, or null if there is no insert point
  */

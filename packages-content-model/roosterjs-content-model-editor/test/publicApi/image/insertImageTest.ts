@@ -3,6 +3,10 @@ import insertImage from '../../../lib/publicApi/image/insertImage';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+import {
     addSegment,
     createContentModelDocument,
     createSelectionMarker,
@@ -18,37 +22,33 @@ describe('insertImage', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        const addUndoSnapshot = jasmine
-            .createSpy()
+        let formatResult: boolean | undefined;
+
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
             .and.callFake(
-                (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe(undefined!);
-                    expect(param.formatApiName).toBe(apiName);
-                    callback();
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
                 }
             );
-        const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-            expect(model).toEqual(result);
-        });
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         const editor = ({
-            createContentModel: () => model,
-            addUndoSnapshot,
             focus: jasmine.createSpy(),
-            setContentModel,
             isDisposed: () => false,
-            getDocument: () => document,
-            isDarkMode: () => false,
-            triggerPluginEvent,
-            getVisibleViewport,
+            formatContentModel,
         } as any) as IContentModelEditor;
 
         executionCallback(editor);
 
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-        expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
         expect(model).toEqual(result);
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatContentModel.calls.argsFor(0)[1]).toEqual({
+            apiName,
+        });
+        expect(formatResult).toBe(calledTimes > 0);
     }
 
     beforeEach(() => {

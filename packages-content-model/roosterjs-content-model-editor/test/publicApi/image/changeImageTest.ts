@@ -5,6 +5,10 @@ import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+import {
     addSegment,
     createContentModelDocument,
     createImage,
@@ -23,19 +27,6 @@ describe('changeImage', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        const addUndoSnapshot = jasmine
-            .createSpy('addUndoSnapshot')
-            .and.callFake(
-                (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe(undefined!);
-                    expect(param.formatApiName).toBe('changeImage');
-                    callback();
-                }
-            );
-        const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-            expect(model).toEqual(result);
-        });
-
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
@@ -43,25 +34,33 @@ describe('changeImage', () => {
             .createSpy()
             .and.returnValues({ type: 'image', image: imageNode });
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.callThrough();
-        const getVisibleViewport = jasmine.createSpy().and.callThrough();
+
+        let formatResult: boolean | undefined;
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                        rawEvent: options.rawEvent,
+                    });
+                }
+            );
 
         const editor = ({
-            createContentModel: () => model,
-            addUndoSnapshot,
             focus: jasmine.createSpy(),
-            setContentModel,
             isDisposed: () => false,
-            getDocument: () => document,
             getDOMSelection,
             triggerPluginEvent,
-            getVisibleViewport,
-            isDarkMode: () => false,
+            formatContentModel,
         } as any) as IContentModelEditor;
 
         executionCallback(editor);
 
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-        expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
+        expect(formatResult).toBe(calledTimes > 0);
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(model).toEqual(result);
     }
 
@@ -154,15 +153,6 @@ describe('changeImage', () => {
             },
             1
         );
-
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
-            contentModel: doc,
-            selection: undefined,
-            source: 'Format',
-            data: undefined,
-            additionalData: { formatApiName: 'changeImage' },
-        });
     });
 
     it('Doc with selection and image', () => {
@@ -207,19 +197,12 @@ describe('changeImage', () => {
             1
         );
 
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(2);
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EditImage, {
             image: imageNode,
             newSrc: testUrl,
             previousSrc: 'test',
             originalSrc: '',
-        });
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
-            contentModel: doc,
-            selection: undefined,
-            source: 'Format',
-            data: undefined,
-            additionalData: { formatApiName: 'changeImage' },
         });
     });
 });
