@@ -97,6 +97,12 @@ export interface FormatWithContentModelContext {
      * Need to be set by the formatter function
      */
     skipUndoSnapshot?: boolean;
+
+    /**
+     * @optional
+     * When set to true, formatWithContentModel API will not keep cached Content Model. Next time when we need a Content Model, a new one will be created
+     */
+    clearModelCache?: boolean;
 }
 
 /**

@@ -47,6 +47,7 @@ describe('formatContentModel', () => {
                 triggerEvent,
             },
             lifecycle: {},
+            cache: {},
             getVisibleViewport,
         } as any) as ContentModelEditorCore;
     });
@@ -458,5 +459,61 @@ describe('formatContentModel', () => {
             },
             true
         );
+    });
+
+    it('Has shouldClearCachedModel', () => {
+        formatContentModel(
+            core,
+            (model, context) => {
+                context.clearModelCache = true;
+                return true;
+            },
+            {
+                apiName,
+            }
+        );
+
+        expect(addUndoSnapshot).toHaveBeenCalled();
+        expect(setContentModel).toHaveBeenCalledTimes(1);
+        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: PluginEventType.ContentChanged,
+                contentModel: undefined,
+                selection: undefined,
+                source: ChangeSource.Format,
+                data: undefined,
+                additionalData: {
+                    formatApiName: apiName,
+                },
+            },
+            true
+        );
+    });
+
+    it('Has shouldClearCachedModel, and callback return false', () => {
+        core.cache.cachedModel = 'Model' as any;
+        core.cache.cachedSelection = 'Selection' as any;
+
+        formatContentModel(
+            core,
+            (model, context) => {
+                context.clearModelCache = true;
+                return false;
+            },
+            {
+                apiName,
+            }
+        );
+
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
+        expect(setContentModel).not.toHaveBeenCalled();
+        expect(triggerEvent).not.toHaveBeenCalled();
+        expect(core.cache).toEqual({
+            cachedModel: undefined,
+            cachedSelection: undefined,
+        });
     });
 });
