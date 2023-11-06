@@ -4,7 +4,7 @@ import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types'
 
 const Escape = 'Escape';
 const Delete = 'Delete';
-const mouseLeftButton = 0;
+const mouseMiddleButton = 1;
 
 /**
  * Detect image selection and help highlight the image
@@ -43,7 +43,7 @@ export default class ImageSelection implements EditorPlugin {
                     if (
                         safeInstanceOf(target, 'HTMLImageElement') &&
                         target.isContentEditable &&
-                        event.rawEvent.button === mouseLeftButton
+                        event.rawEvent.button != mouseMiddleButton
                     ) {
                         this.editor.select(target);
                     }
