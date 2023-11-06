@@ -1,5 +1,4 @@
 import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
-import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
 import keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
 import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
@@ -371,12 +370,11 @@ describe('keyboardDelete', () => {
         );
     });
 
-    it('Check parameter of formatWithContentModel, forward', () => {
-        const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
-        const addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
+    it('Check parameter of formatContentModel, forward', () => {
+        const spy = jasmine.createSpy('formatContentModel');
 
         const editor = ({
-            addUndoSnapshot,
+            formatContentModel: spy,
             getDOMSelection: () => ({
                 type: 'range',
                 range: { collapsed: false },
@@ -389,18 +387,17 @@ describe('keyboardDelete', () => {
 
         keyboardDelete(editor, event);
 
-        expect(spy.calls.argsFor(0)[0]).toBe(editor);
-        expect(spy.calls.argsFor(0)[1]).toBe('handleDeleteKey');
-        expect(addUndoSnapshot).not.toHaveBeenCalled();
-        expect(spy.calls.argsFor(0)[3]?.changeSource).toBe(ChangeSource.Keyboard);
-        expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(Keys.DELETE);
+        expect(spy.calls.argsFor(0)[1]!.changeSource).toBe(ChangeSource.Keyboard);
+        expect(spy.calls.argsFor(0)[1]!.getChangeData?.()).toBe(Keys.DELETE);
+        expect(spy.calls.argsFor(0)[1]!.apiName).toBe('handleDeleteKey');
     });
 
     it('Check parameter of formatWithContentModel, backward', () => {
-        const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
+        const spy = jasmine.createSpy('formatContentModel');
         const preventDefault = jasmine.createSpy('preventDefault');
 
         const editor = {
+            formatContentModel: spy,
             getDOMSelection: () => ({
                 type: 'range',
                 range: { collapsed: false },
@@ -415,14 +412,14 @@ describe('keyboardDelete', () => {
 
         keyboardDelete(editor, event);
 
-        expect(spy.calls.argsFor(0)[0]).toBe(editor);
-        expect(spy.calls.argsFor(0)[1]).toBe('handleBackspaceKey');
-        expect(spy.calls.argsFor(0)[3]?.changeSource).toBe(ChangeSource.Keyboard);
-        expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(which);
+        expect(spy.calls.argsFor(0)[1]!.apiName).toBe('handleBackspaceKey');
+        expect(spy.calls.argsFor(0)[1]?.changeSource).toBe(ChangeSource.Keyboard);
+        expect(spy.calls.argsFor(0)[1]?.getChangeData?.()).toBe(which);
     });
 
     it('No need to delete - Backspace', () => {
         const rawEvent = { key: 'Backspace' } as any;
+        const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
         const range: DOMSelection = {
             type: 'range',
             range: ({
@@ -432,9 +429,9 @@ describe('keyboardDelete', () => {
             } as any) as Range,
         };
         const editor = {
+            formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
         } as any;
-        const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
 
         const result = keyboardDelete(editor, rawEvent);
 
@@ -444,6 +441,7 @@ describe('keyboardDelete', () => {
 
     it('No need to delete - Delete', () => {
         const rawEvent = { key: 'Delete' } as any;
+        const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
         const range: DOMSelection = {
             type: 'range',
             range: ({
@@ -453,9 +451,9 @@ describe('keyboardDelete', () => {
             } as any) as Range,
         };
         const editor = {
+            formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
         } as any;
-        const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
 
         const result = keyboardDelete(editor, rawEvent);
 
@@ -465,6 +463,7 @@ describe('keyboardDelete', () => {
 
     it('Backspace from the beginning', () => {
         const rawEvent = { key: 'Backspace' } as any;
+        const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
         const range: DOMSelection = {
             type: 'range',
             range: ({
@@ -475,9 +474,9 @@ describe('keyboardDelete', () => {
         };
 
         const editor = {
+            formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
         } as any;
-        const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
 
         const result = keyboardDelete(editor, rawEvent);
 
@@ -487,6 +486,7 @@ describe('keyboardDelete', () => {
 
     it('Delete from the last', () => {
         const rawEvent = { key: 'Delete' } as any;
+        const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
         const range: DOMSelection = {
             type: 'range',
             range: ({
@@ -497,9 +497,9 @@ describe('keyboardDelete', () => {
         };
 
         const editor = {
+            formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
         } as any;
-        const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
 
         const result = keyboardDelete(editor, rawEvent);
 

@@ -1,10 +1,12 @@
-import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelFormatPlugin from '../../../lib/editor/corePlugins/ContentModelFormatPlugin';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
 import { ContentModelFormatPluginState } from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import {
     addSegment,
     createContentModelDocument,
@@ -43,15 +45,28 @@ describe('ContentModelFormatPlugin', () => {
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
+        let formatResult: boolean | undefined;
 
-        const setContentModel = jasmine.createSpy('setContentModel');
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                        rawEvent: options.rawEvent,
+                    });
+                }
+            );
+
         const editor = ({
             focus: jasmine.createSpy('focus'),
             createContentModel: () => model,
-            setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
+            formatContentModel,
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -68,7 +83,7 @@ describe('ContentModelFormatPlugin', () => {
 
         plugin.dispose();
 
-        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(formatResult).toBeFalse();
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
@@ -111,19 +126,32 @@ describe('ContentModelFormatPlugin', () => {
             fontSize: '10px',
         });
 
-        const setContentModel = jasmine.createSpy('setContentModel');
+        let formatResult: boolean | undefined;
         const model = createContentModelDocument();
         const marker = createSelectionMarker();
 
         addSegment(model, marker);
 
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                        rawEvent: options.rawEvent,
+                    });
+                }
+            );
+
         const editor = ({
             focus: jasmine.createSpy('focus'),
             createContentModel: () => model,
-            setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
+            formatContentModel,
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -136,7 +164,7 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(formatResult).toBeFalse();
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
@@ -148,17 +176,30 @@ describe('ContentModelFormatPlugin', () => {
             fontSize: '10px',
         });
 
-        const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
         const text = createText('a');
         const marker = createSelectionMarker();
+        let formatResult: boolean | undefined;
 
         addSegment(model, text);
         addSegment(model, marker);
 
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                        rawEvent: options.rawEvent,
+                    });
+                }
+            );
+
         const editor = ({
             createContentModel: () => model,
-            setContentModel,
+            formatContentModel,
             isInIME: () => false,
             focus: () => {},
             addUndoSnapshot: (callback: () => void) => {
@@ -181,33 +222,29 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        isImplicit: false,
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                format: { fontSize: '10px' },
-                                text: 'a',
-                            },
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: { fontSize: '10px' },
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            },
-            undefined,
-            undefined
-        );
+        expect(formatResult).toBeTrue();
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: false,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: { fontSize: '10px' },
+                            text: 'a',
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: { fontSize: '10px' },
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
@@ -218,19 +255,30 @@ describe('ContentModelFormatPlugin', () => {
             fontSize: '10px',
         });
 
-        const setContentModel = jasmine.createSpy('setContentModel');
+        let formatResult: boolean | undefined;
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         const model = createContentModelDocument();
         const text = createText('test a test', { fontFamily: 'Arial' });
         const marker = createSelectionMarker();
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
 
         addSegment(model, text);
         addSegment(model, marker);
 
         const editor = ({
             createContentModel: () => model,
-            setContentModel,
+            formatContentModel,
             focus: () => {},
             addUndoSnapshot: (callback: () => void) => {
                 callback();
@@ -252,47 +300,34 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
-            contentModel: model,
-            selection: undefined,
-            data: undefined,
-            source: ChangeSource.Format,
-            additionalData: {
-                formatApiName: 'applyPendingFormat',
-            },
+        expect(formatResult).toBeTrue();
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: false,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: { fontFamily: 'Arial' },
+                            text: 'test a ',
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: { fontSize: '10px', fontFamily: 'Arial' },
+                            text: 'test',
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: { fontSize: '10px' },
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
         });
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        isImplicit: false,
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                format: { fontFamily: 'Arial' },
-                                text: 'test a ',
-                            },
-                            {
-                                segmentType: 'Text',
-                                format: { fontSize: '10px', fontFamily: 'Arial' },
-                                text: 'test',
-                            },
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: { fontSize: '10px' },
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            },
-            undefined,
-            undefined
-        );
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
@@ -437,6 +472,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     let setPendingFormatSpy: jasmine.Spy;
     let cacheContentModelSpy: jasmine.Spy;
     let addUndoSnapshotSpy: jasmine.Spy;
+    let formatContentModelSpy: jasmine.Spy;
 
     beforeEach(() => {
         setPendingFormatSpy = spyOn(pendingFormat, 'setPendingFormat');
@@ -444,6 +480,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         getDOMSelection = jasmine.createSpy('getDOMSelection');
         cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
         addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+        formatContentModelSpy = jasmine.createSpy('formatContentModelSpy');
 
         contentDiv = document.createElement('div');
 
@@ -452,6 +489,7 @@ describe('ContentModelFormatPlugin for default format', () => {
             getDOMSelection,
             cacheContentModel: cacheContentModelSpy,
             addUndoSnapshot: addUndoSnapshotSpy,
+            formatContentModel: formatContentModelSpy,
         } as any) as IContentModelEditor;
     });
 
@@ -471,27 +509,25 @@ describe('ContentModelFormatPlugin for default format', () => {
             },
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_1: any, _2: any, callback: Function) => {
-                callback({
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                    ],
-                });
-            }
-        );
+        formatContentModelSpy.and.callFake((callback: Function) => {
+            callback({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            });
+        });
 
         plugin.initialize(editor);
 
@@ -524,28 +560,26 @@ describe('ContentModelFormatPlugin for default format', () => {
             },
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_1: any, _2: any, callback: Function) => {
-                callback({
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    format: {},
-                                    text: 'test',
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                    ],
-                });
-            }
-        );
+        formatContentModelSpy.and.callFake((callback: Function) => {
+            callback({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'test',
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            });
+        });
 
         plugin.initialize(editor);
 
@@ -574,27 +608,25 @@ describe('ContentModelFormatPlugin for default format', () => {
             },
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_1: any, _2: any, callback: Function) => {
-                callback({
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                    ],
-                });
-            }
-        );
+        formatContentModelSpy.and.callFake((callback: Function) => {
+            callback({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            });
+        });
 
         plugin.initialize(editor);
 
@@ -627,27 +659,25 @@ describe('ContentModelFormatPlugin for default format', () => {
             },
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_1: any, _2: any, callback: Function) => {
-                callback({
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                    ],
-                });
-            }
-        );
+        formatContentModelSpy.and.callFake((callback: Function) => {
+            callback({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            });
+        });
 
         plugin.initialize(editor);
 
@@ -678,26 +708,24 @@ describe('ContentModelFormatPlugin for default format', () => {
             },
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_1: any, _2: any, callback: Function) => {
-                callback({
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                    ],
-                });
-            }
-        );
+        formatContentModelSpy.and.callFake((callback: Function) => {
+            callback({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            });
+        });
 
         plugin.initialize(editor);
 
@@ -725,27 +753,25 @@ describe('ContentModelFormatPlugin for default format', () => {
             },
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_1: any, _2: any, callback: Function) => {
-                callback({
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                    ],
-                });
-            }
-        );
+        formatContentModelSpy.and.callFake((callback: Function) => {
+            callback({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            });
+        });
 
         getPendingFormatSpy.and.returnValue({
             fontSize: '10pt',

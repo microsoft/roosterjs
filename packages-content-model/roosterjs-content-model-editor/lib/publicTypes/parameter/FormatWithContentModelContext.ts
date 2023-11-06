@@ -104,9 +104,9 @@ export interface FormatWithContentModelContext {
  */
 export interface FormatWithContentModelOptions {
     /**
-     * When set to true, if there is pending format, it will be preserved after this format operation is done
+     * Name of the format API
      */
-    preservePendingFormat?: boolean;
+    apiName?: string;
 
     /**
      * Raw event object that triggers this call

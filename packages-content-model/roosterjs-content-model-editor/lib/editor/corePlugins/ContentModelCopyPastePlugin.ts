@@ -6,7 +6,6 @@ import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
-import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
     contentModelToDom,
@@ -152,15 +151,15 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     addRangeToSelection(doc, newRange);
                 }
 
-                this.editor.runAsync(editor => {
+                this.editor.runAsync(e => {
+                    const editor = e as IContentModelEditor;
+
                     cleanUpAndRestoreSelection(tempDiv);
                     editor.focus();
-                    (editor as IContentModelEditor).setDOMSelection(selection);
+                    editor.setDOMSelection(selection);
 
                     if (isCut) {
-                        formatWithContentModel(
-                            editor as IContentModelEditor,
-                            'cut',
+                        editor.formatContentModel(
                             (model, context) => {
                                 if (
                                     deleteSelection(model, [], context).deleteResult ==
@@ -172,6 +171,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                                 return true;
                             },
                             {
+                                apiName: 'cut',
                                 changeSource: ChangeSource.Cut,
                             }
                         );

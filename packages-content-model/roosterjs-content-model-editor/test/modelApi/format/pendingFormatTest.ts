@@ -1,7 +1,9 @@
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     canApplyPendingFormat,
     clearPendingFormat,
+    formatAndKeepPendingFormat,
     getPendingFormat,
     setPendingFormat,
 } from '../../../lib/modelApi/format/pendingFormat';
@@ -169,5 +171,82 @@ describe('pendingFormat.canApplyPendingFormat', () => {
         const result = canApplyPendingFormat(editor);
 
         expect(result).toBeFalse();
+    });
+
+    it('Preserve pending format, no pending format', () => {
+        const formatContentModel = jasmine.createSpy('formatContentModel').and.callFake(() => {
+            clearPendingFormat(editor);
+        });
+        const getFocusedPosition = jasmine.createSpy('getFocusedPosition');
+        const customData: any = {};
+
+        const editor = ({
+            getCustomData: (key: string, getter?: () => any) => {
+                return (customData[key] = customData[key] || {
+                    value: getter ? getter() : undefined,
+                }).value;
+            },
+            formatContentModel,
+            getFocusedPosition,
+        } as any) as IContentModelEditor;
+        const formatter = jasmine.createSpy('formatter');
+        const options = 'OPTIONS' as any;
+
+        formatAndKeepPendingFormat(editor, formatter, options);
+
+        expect(customData).toEqual({
+            __ContentModelPendingFormat: Object({
+                value: { format: null, posContainer: null, posOffset: null },
+            }),
+        });
+        expect(formatContentModel).toHaveBeenCalledWith(formatter, options);
+    });
+
+    it('Preserve pending format, have pending format', () => {
+        const mockedFormat = 'Format' as any;
+        const mockedContainer = 'Container' as any;
+        const mockedOffset = 'Offset' as any;
+
+        const customData: any = {
+            __ContentModelPendingFormat: {
+                value: {
+                    format: mockedFormat,
+                    posContainer: mockedContainer,
+                    posOffset: mockedOffset,
+                },
+            },
+        };
+
+        const formatContentModel = jasmine.createSpy('formatContentModel').and.callFake(() => {
+            clearPendingFormat(editor);
+
+            expect(customData).toEqual({
+                __ContentModelPendingFormat: {
+                    value: { format: null, posContainer: null, posOffset: null },
+                },
+            });
+        });
+        const getFocusedPosition = jasmine.createSpy('getFocusedPosition');
+
+        const editor = ({
+            getCustomData: (key: string, getter?: () => any) => {
+                return (customData[key] = customData[key] || {
+                    value: getter ? getter() : undefined,
+                }).value;
+            },
+            formatContentModel,
+            getFocusedPosition,
+        } as any) as IContentModelEditor;
+        const formatter = jasmine.createSpy('formatter');
+        const options = 'OPTIONS' as any;
+
+        formatAndKeepPendingFormat(editor, formatter, options);
+
+        expect(customData).toEqual({
+            __ContentModelPendingFormat: {
+                value: { format: null, posContainer: null, posOffset: null },
+            },
+        });
+        expect(formatContentModel).toHaveBeenCalledWith(formatter, options);
     });
 });

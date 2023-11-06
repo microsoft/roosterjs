@@ -1,6 +1,5 @@
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { isBlockElement, isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
@@ -34,41 +33,51 @@ export default function applyDefaultFormat(
         node = node.parentNode;
     }
 
-    formatWithContentModel(editor, 'input', (model, context) => {
-        const result = deleteSelection(model, [], context);
+    editor.formatContentModel(
+        (model, context) => {
+            const result = deleteSelection(model, [], context);
 
-        if (result.deleteResult == DeleteResult.Range) {
-            normalizeContentModel(model);
-            editor.addUndoSnapshot();
+            if (result.deleteResult == DeleteResult.Range) {
+                normalizeContentModel(model);
+                editor.addUndoSnapshot();
 
-            return true;
-        } else if (
-            result.deleteResult == DeleteResult.NotDeleted &&
-            result.insertPoint &&
-            posContainer &&
-            posOffset !== null
-        ) {
-            const { paragraph, path, marker } = result.insertPoint;
-            const blocks = path[0].blocks;
-            const blockCount = blocks.length;
-            const blockIndex = blocks.indexOf(paragraph);
-
-            if (
-                paragraph.isImplicit &&
-                paragraph.segments.length == 1 &&
-                paragraph.segments[0] == marker &&
-                blockCount > 0 &&
-                blockIndex == blockCount - 1
+                return true;
+            } else if (
+                result.deleteResult == DeleteResult.NotDeleted &&
+                result.insertPoint &&
+                posContainer &&
+                posOffset !== null
             ) {
-                // Focus is in the last paragraph which is implicit and there is not other segments.
-                // This can happen when focus is moved after all other content under current block group.
-                // We need to check if browser will merge focus into previous paragraph by checking if
-                // previous block is block. If previous block is paragraph, browser will most likely merge
-                // the input into previous paragraph, then nothing need to do here. Otherwise we need to
-                // apply pending format since this input event will start a new real paragraph.
-                const previousBlock = blocks[blockIndex - 1];
+                const { paragraph, path, marker } = result.insertPoint;
+                const blocks = path[0].blocks;
+                const blockCount = blocks.length;
+                const blockIndex = blocks.indexOf(paragraph);
 
-                if (previousBlock?.blockType != 'Paragraph') {
+                if (
+                    paragraph.isImplicit &&
+                    paragraph.segments.length == 1 &&
+                    paragraph.segments[0] == marker &&
+                    blockCount > 0 &&
+                    blockIndex == blockCount - 1
+                ) {
+                    // Focus is in the last paragraph which is implicit and there is not other segments.
+                    // This can happen when focus is moved after all other content under current block group.
+                    // We need to check if browser will merge focus into previous paragraph by checking if
+                    // previous block is block. If previous block is paragraph, browser will most likely merge
+                    // the input into previous paragraph, then nothing need to do here. Otherwise we need to
+                    // apply pending format since this input event will start a new real paragraph.
+                    const previousBlock = blocks[blockIndex - 1];
+
+                    if (previousBlock?.blockType != 'Paragraph') {
+                        internalApplyDefaultFormat(
+                            editor,
+                            defaultFormat,
+                            marker.format,
+                            posContainer,
+                            posOffset
+                        );
+                    }
+                } else if (paragraph.segments.every(x => x.segmentType != 'Text')) {
                     internalApplyDefaultFormat(
                         editor,
                         defaultFormat,
@@ -77,22 +86,17 @@ export default function applyDefaultFormat(
                         posOffset
                     );
                 }
-            } else if (paragraph.segments.every(x => x.segmentType != 'Text')) {
-                internalApplyDefaultFormat(
-                    editor,
-                    defaultFormat,
-                    marker.format,
-                    posContainer,
-                    posOffset
-                );
-            }
 
-            // We didn't do any change but just apply default format to pending format, so no need to write back
-            return false;
-        } else {
-            return false;
+                // We didn't do any change but just apply default format to pending format, so no need to write back
+                return false;
+            } else {
+                return false;
+            }
+        },
+        {
+            apiName: 'input',
         }
-    });
+    );
 }
 
 function internalApplyDefaultFormat(

@@ -1,6 +1,5 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import { formatWithContentModel } from './formatWithContentModel';
 import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { setPendingFormat } from '../../modelApi/format/pendingFormat';
@@ -72,9 +71,7 @@ export default function paste(
     editor.focus();
     let originalFormat: ContentModelSegmentFormat | undefined;
 
-    formatWithContentModel(
-        editor,
-        'Paste',
+    editor.formatContentModel(
         (model, context) => {
             const eventData = createBeforePasteEventData(editor, clipboardData, pasteType);
             const currentSegment = getSelectedSegments(model, true /*includingFormatHolder*/)[0];
@@ -115,6 +112,7 @@ export default function paste(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
+            apiName: 'paste',
         }
     );
 

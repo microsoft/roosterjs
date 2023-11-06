@@ -1,5 +1,9 @@
 import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
 import type {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from './parameter/FormatWithContentModelContext';
+import type {
     ContentModelDocument,
     DOMSelection,
     DomToModelOption,
@@ -68,6 +72,19 @@ export interface IContentModelEditor extends IEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection): void;
+
+    /**
+     * The general API to do format change with Content Model
+     * It will grab a Content Model for current editor content, and invoke a callback function
+     * to do format change. Then according to the return value, write back the modified content model into editor.
+     * If there is cached model, it will be used and updated.
+     * @param formatter Formatter function, see ContentModelFormatter
+     * @param options More options, see FormatWithContentModelOptions
+     */
+    formatContentModel(
+        formatter: ContentModelFormatter,
+        options?: FormatWithContentModelOptions
+    ): void;
 }
 
 /**

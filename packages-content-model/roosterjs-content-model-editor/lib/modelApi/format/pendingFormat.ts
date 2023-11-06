@@ -1,5 +1,9 @@
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
  * @internal
@@ -62,6 +66,30 @@ export function canApplyPendingFormat(editor: IContentModelEditor): boolean {
 
     return result;
 }
+
+/**
+ * @internal
+ * Execute a callback function and keep pending format state still available
+ * @param editor The editor to keep pending format
+ * @param formatter Formatter function, see ContentModelFormatter
+ * @param options More options, see FormatWithContentModelOptions
+ */
+export function formatAndKeepPendingFormat(
+    editor: IContentModelEditor,
+    formatter: ContentModelFormatter,
+    options?: FormatWithContentModelOptions
+) {
+    const pendingFormat = getPendingFormat(editor);
+
+    editor.formatContentModel(formatter, options);
+
+    const pos = editor.getFocusedPosition();
+
+    if (pendingFormat && pos) {
+        setPendingFormat(editor, pendingFormat, pos.node, pos.offset);
+    }
+}
+
 interface PendingFormatHolder {
     format: ContentModelSegmentFormat | null;
     posContainer: Node | null;
