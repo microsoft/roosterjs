@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.02% </span>
+                <span class="strong">92.86% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>40/43</span>
+                <span class='fraction'>39/42</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">92.11% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>36/39</span>
+                <span class='fraction'>35/38</span>
             </div>
         
             
@@ -170,8 +170,11 @@
 <a name='L111'></a><a href='#L111'>111</a>
 <a name='L112'></a><a href='#L112'>112</a>
 <a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -207,6 +210,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
@@ -263,6 +267,10 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -285,7 +293,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { isBlockElement, isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
@@ -319,41 +326,51 @@ export default function applyDefaultFormat(
 <span class="cstat-no" title="statement not covered" >        node = node.parentNode;</span>
     }
 &nbsp;
-    formatWithContentModel(editor, 'input', (model, context) =&gt; {
-        const result = deleteSelection(model, [], context);
+    editor.formatContentModel(
+        (model, context) =&gt; {
+            const result = deleteSelection(model, [], context);
 &nbsp;
-        if (result.deleteResult == DeleteResult.Range) {
-            normalizeContentModel(model);
-            editor.addUndoSnapshot();
+            if (result.deleteResult == DeleteResult.Range) {
+                normalizeContentModel(model);
+                editor.addUndoSnapshot();
 &nbsp;
-            return true;
-        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (
-            result.deleteResult == DeleteResult.NotDeleted &amp;&amp;
-            result.insertPoint &amp;&amp;
-            posContainer &amp;&amp;
-            posOffset !== null
-        ) {
-            const { paragraph, path, marker } = result.insertPoint;
-            const blocks = path[0].blocks;
-            const blockCount = blocks.length;
-            const blockIndex = blocks.indexOf(paragraph);
-&nbsp;
-            if (
-                paragraph.isImplicit &amp;&amp;
-                paragraph.segments.length == 1 &amp;&amp;
-                paragraph.segments[0] == marker &amp;&amp;
-                blockCount &gt; 0 &amp;&amp;
-                blockIndex == blockCount - 1
+                return true;
+            } else <span class="missing-if-branch" title="else path not taken" >E</span>if (
+                result.deleteResult == DeleteResult.NotDeleted &amp;&amp;
+                result.insertPoint &amp;&amp;
+                posContainer &amp;&amp;
+                posOffset !== null
             ) {
-                // Focus is in the last paragraph which is implicit and there is not other segments.
-                // This can happen when focus is moved after all other content under current block group.
-                // We need to check if browser will merge focus into previous paragraph by checking if
-                // previous block is block. If previous block is paragraph, browser will most likely merge
-                // the input into previous paragraph, then nothing need to do here. Otherwise we need to
-                // apply pending format since this input event will start a new real paragraph.
-                const previousBlock = blocks[blockIndex - 1];
+                const { paragraph, path, marker } = result.insertPoint;
+                const blocks = path[0].blocks;
+                const blockCount = blocks.length;
+                const blockIndex = blocks.indexOf(paragraph);
 &nbsp;
-                <span class="missing-if-branch" title="else path not taken" >E</span>if (<span class="branch-1 cbranch-no" title="branch not covered" >previousBlock?.blockType </span>!= 'Paragraph') {
+                if (
+                    paragraph.isImplicit &amp;&amp;
+                    paragraph.segments.length == 1 &amp;&amp;
+                    paragraph.segments[0] == marker &amp;&amp;
+                    blockCount &gt; 0 &amp;&amp;
+                    blockIndex == blockCount - 1
+                ) {
+                    // Focus is in the last paragraph which is implicit and there is not other segments.
+                    // This can happen when focus is moved after all other content under current block group.
+                    // We need to check if browser will merge focus into previous paragraph by checking if
+                    // previous block is block. If previous block is paragraph, browser will most likely merge
+                    // the input into previous paragraph, then nothing need to do here. Otherwise we need to
+                    // apply pending format since this input event will start a new real paragraph.
+                    const previousBlock = blocks[blockIndex - 1];
+&nbsp;
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (<span class="branch-1 cbranch-no" title="branch not covered" >previousBlock?.blockType </span>!= 'Paragraph') {
+                        internalApplyDefaultFormat(
+                            editor,
+                            defaultFormat,
+                            marker.format,
+                            posContainer,
+                            posOffset
+                        );
+                    }
+                } else <span class="missing-if-branch" title="else path not taken" >E</span>if (paragraph.segments.every(x =&gt; x.segmentType != 'Text')) {
                     internalApplyDefaultFormat(
                         editor,
                         defaultFormat,
@@ -362,22 +379,17 @@ export default function applyDefaultFormat(
                         posOffset
                     );
                 }
-            } else <span class="missing-if-branch" title="else path not taken" >E</span>if (paragraph.segments.every(x =&gt; x.segmentType != 'Text')) {
-                internalApplyDefaultFormat(
-                    editor,
-                    defaultFormat,
-                    marker.format,
-                    posContainer,
-                    posOffset
-                );
-            }
 &nbsp;
-            // We didn't do any change but just apply default format to pending format, so no need to write back
-            return false;
-        } else {
-<span class="cstat-no" title="statement not covered" >            return false;</span>
+                // We didn't do any change but just apply default format to pending format, so no need to write back
+                return false;
+            } else {
+<span class="cstat-no" title="statement not covered" >                return false;</span>
+            }
+        },
+        {
+            apiName: 'input',
         }
-    });
+    );
 }
 &nbsp;
 function internalApplyDefaultFormat(
@@ -403,7 +415,7 @@ function internalApplyDefaultFormat(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 06 2023 17:49:04 GMT+0000 (Coordinated Universal Time)
+                at Mon Nov 06 2023 18:21:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

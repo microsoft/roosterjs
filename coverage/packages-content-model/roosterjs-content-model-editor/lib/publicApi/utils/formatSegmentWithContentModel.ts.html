@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.37% </span>
+                <span class="strong">97.3% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>37/38</span>
+                <span class='fraction'>36/37</span>
             </div>
         
             
@@ -144,8 +144,19 @@
 <a name='L85'></a><a href='#L85'>85</a>
 <a name='L86'></a><a href='#L86'>86</a>
 <a name='L87'></a><a href='#L87'>87</a>
-<a name='L88'></a><a href='#L88'>88</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,7 +187,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">170x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">170x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">170x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">170x</span>
@@ -188,7 +203,7 @@
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -223,6 +238,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">170x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
@@ -231,8 +251,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { formatWithContentModel } from './formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegmentsAndParagraphs } from '../../modelApi/selection/collectSelections';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -262,61 +285,74 @@ export function formatSegmentWithContentModel(
     includingFormatHolder?: boolean,
     afterFormatCallback?: (model: ContentModelDocument) =&gt; void
 ) {
-    formatWithContentModel(editor, apiName, model =&gt; {
-        let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(model, !!includingFormatHolder);
-        const pendingFormat = getPendingFormat(editor);
-        let isCollapsedSelection =
-            segmentAndParagraphs.length == 1 &amp;&amp;
-            segmentAndParagraphs[0][0].segmentType == 'SelectionMarker';
+    editor.formatContentModel(
+        model =&gt; {
+            let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
+                model,
+                !!includingFormatHolder
+            );
+            const pendingFormat = getPendingFormat(editor);
+            let isCollapsedSelection =
+                segmentAndParagraphs.length == 1 &amp;&amp;
+                segmentAndParagraphs[0][0].segmentType == 'SelectionMarker';
 &nbsp;
-        if (isCollapsedSelection) {
-            const para = segmentAndParagraphs[0][1];
+            if (isCollapsedSelection) {
+                const para = segmentAndParagraphs[0][1];
 &nbsp;
-            segmentAndParagraphs = adjustWordSelection(model, segmentAndParagraphs[0][0]).map(x =&gt; [
-                x,
-                para,
-            ]);
+                segmentAndParagraphs = adjustWordSelection(
+                    model,
+                    segmentAndParagraphs[0][0]
+                ).map(x =&gt; [x, para]);
 &nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (segmentAndParagraphs.length &gt; 1) {
-<span class="cstat-no" title="statement not covered" >                isCollapsedSelection = false;</span>
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (segmentAndParagraphs.length &gt; 1) {
+<span class="cstat-no" title="statement not covered" >                    isCollapsedSelection = false;</span>
+                }
             }
-        }
 &nbsp;
-        const formatsAndSegments: [
-            ContentModelSegmentFormat,
-            ContentModelSegment | null,
-            ContentModelParagraph | null
-        ][] = pendingFormat
-            ? [[pendingFormat, null, null]]
-            : segmentAndParagraphs.map(item =&gt; [item[0].format, item[0], item[1]]);
+            const formatsAndSegments: [
+                ContentModelSegmentFormat,
+                ContentModelSegment | null,
+                ContentModelParagraph | null
+            ][] = pendingFormat
+                ? [[pendingFormat, null, null]]
+                : segmentAndParagraphs.map(item =&gt; [item[0].format, item[0], item[1]]);
 &nbsp;
-        const isTurningOff = segmentHasStyleCallback
-            ? formatsAndSegments.every(([format, segment, paragraph]) =&gt;
-                  segmentHasStyleCallback(format, segment, paragraph)
-              )
-            : false;
+            const isTurningOff = segmentHasStyleCallback
+                ? formatsAndSegments.every(([format, segment, paragraph]) =&gt;
+                      segmentHasStyleCallback(format, segment, paragraph)
+                  )
+                : false;
 &nbsp;
-        formatsAndSegments.forEach(([format, segment, paragraph]) =&gt;
-            toggleStyleCallback(format, !isTurningOff, segment, paragraph)
-        );
+            formatsAndSegments.forEach(([format, segment, paragraph]) =&gt;
+                toggleStyleCallback(format, !isTurningOff, segment, paragraph)
+            );
 &nbsp;
-        afterFormatCallback?.(model);
+            afterFormatCallback?.(model);
 &nbsp;
-        if (!pendingFormat &amp;&amp; isCollapsedSelection) {
-            const pos = editor.getFocusedPosition();
+            if (!pendingFormat &amp;&amp; isCollapsedSelection) {
+                const pos = editor.getFocusedPosition();
 &nbsp;
-            if (pos) {
-                setPendingFormat(editor, segmentAndParagraphs[0][0].format, pos.node, pos.offset);
+                if (pos) {
+                    setPendingFormat(
+                        editor,
+                        segmentAndParagraphs[0][0].format,
+                        pos.node,
+                        pos.offset
+                    );
+                }
             }
-        }
 &nbsp;
-        if (isCollapsedSelection) {
-            editor.focus();
-            return false;
-        } else {
-            return formatsAndSegments.length &gt; 0;
+            if (isCollapsedSelection) {
+                editor.focus();
+                return false;
+            } else {
+                return formatsAndSegments.length &gt; 0;
+            }
+        },
+        {
+            apiName,
         }
-    });
+    );
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -325,7 +361,7 @@ export function formatSegmentWithContentModel(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 06 2023 17:49:04 GMT+0000 (Coordinated Universal Time)
+                at Mon Nov 06 2023 18:21:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
