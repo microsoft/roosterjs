@@ -309,7 +309,6 @@ export default class VList {
      * @param end End position to operate to
      * @param alignment Align items left, center or right
      */
-
     setAlignment(
         start: NodePosition,
         end: NodePosition,
@@ -326,6 +325,16 @@ export default class VList {
             }
             item.getNode().style.alignSelf = align;
         });
+    }
+
+    /**
+     * Remove margins of a new list
+     */
+    removeMargins() {
+        if (!this.rootList.style.marginTop && !this.rootList.style.marginBottom) {
+            this.rootList.style.marginBlockStart = '0px';
+            this.rootList.style.marginBlockEnd = '0px';
+        }
     }
 
     /**
