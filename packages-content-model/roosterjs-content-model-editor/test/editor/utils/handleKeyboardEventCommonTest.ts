@@ -64,6 +64,7 @@ describe('handleKeyboardEventResult', () => {
             rawEvent: mockedEvent,
         });
         expect(context.skipUndoSnapshot).toBeTrue();
+        expect(context.clearModelCache).toBeFalsy();
     });
 
     it('DeleteResult.NotDeleted', () => {
@@ -88,6 +89,7 @@ describe('handleKeyboardEventResult', () => {
         expect(cacheContentModel).not.toHaveBeenCalledWith(null);
         expect(triggerPluginEvent).not.toHaveBeenCalled();
         expect(context.skipUndoSnapshot).toBeTrue();
+        expect(context.clearModelCache).toBeTruthy();
     });
 
     it('DeleteResult.Range', () => {
@@ -114,6 +116,7 @@ describe('handleKeyboardEventResult', () => {
             rawEvent: mockedEvent,
         });
         expect(context.skipUndoSnapshot).toBeFalse();
+        expect(context.clearModelCache).toBeFalsy();
     });
 
     it('DeleteResult.NothingToDelete', () => {
@@ -138,6 +141,7 @@ describe('handleKeyboardEventResult', () => {
         expect(cacheContentModel).not.toHaveBeenCalled();
         expect(triggerPluginEvent).not.toHaveBeenCalled();
         expect(context.skipUndoSnapshot).toBeTrue();
+        expect(context.clearModelCache).toBeFalsy();
     });
 });
 

@@ -1,6 +1,6 @@
+import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type {
     ContentModelEditorCore,
     FormatContentModel,
@@ -62,8 +62,8 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
 
         const eventData: ContentModelContentChangedEvent = {
             eventType: PluginEventType.ContentChanged,
-            contentModel: model,
-            selection: selection,
+            contentModel: context.clearModelCache ? undefined : model,
+            selection: context.clearModelCache ? undefined : selection,
             source: changeSource || ChangeSource.Format,
             data: getChangeData?.(),
             additionalData: {
@@ -71,6 +71,9 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             },
         };
         core.api.triggerEvent(core, eventData, true /*broadcast*/);
+    } else if (context.clearModelCache) {
+        core.cache.cachedModel = undefined;
+        core.cache.cachedSelection = undefined;
     }
 };
 
