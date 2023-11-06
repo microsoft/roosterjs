@@ -60,6 +60,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                 direction: block.format.direction,
                                 textAlign: block.format.textAlign,
                                 marginTop: hasIgnoredParagraphBefore ? '0' : undefined,
+                                marginBlockEnd: '0px',
+                                marginBlockStart: '0px',
                             }),
                         ],
                         // For list bullet, we only want to carry over these formats from segments:
