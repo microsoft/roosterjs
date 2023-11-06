@@ -1,6 +1,7 @@
 import blockFormat from '../utils/blockFormat';
 import { createVListFromRegion, getBlockElementAtNode } from 'roosterjs-editor-dom';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
+import type { VList } from 'roosterjs-editor-dom';
 import type { BulletListType, IEditor, ListType, NumberingListType } from 'roosterjs-editor-types';
 import type {
     CompatibleBulletListType,
@@ -49,6 +50,7 @@ export default function toggleListType(
             if (!block) {
                 return;
             }
+
             const vList =
                 chain && end && start?.equalTo(end)
                     ? chain.createVListAtBlock(block, startNumber)
@@ -60,6 +62,9 @@ export default function toggleListType(
             if (vList && start && end) {
                 vList.changeListType(start, end, listType);
                 vList.setListStyleType(orderedStyle, unorderedStyle);
+                if (isNewList(vList)) {
+                    vList.removeMargins();
+                }
                 vList.writeBack(
                     editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements),
                     editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain)
@@ -69,4 +74,12 @@ export default function toggleListType(
         undefined /* beforeRunCallback */,
         apiNameOverride || 'toggleListType'
     );
+}
+
+function isNewList(vList: VList | null) {
+    const list = vList?.rootList;
+    if (list) {
+        return list.childElementCount === 0;
+    }
+    return false;
 }
