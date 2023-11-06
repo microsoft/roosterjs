@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.49% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/41</span>
+                <span class='fraction'>32/40</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.49% </span>
+                <span class="strong">78.95% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/39</span>
+                <span class='fraction'>30/38</span>
             </div>
         
             
@@ -176,10 +176,7 @@
 <a name='L117'></a><a href='#L117'>117</a>
 <a name='L118'></a><a href='#L118'>118</a>
 <a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a>
-<a name='L123'></a><a href='#L123'>123</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L120'></a><a href='#L120'>120</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -239,15 +236,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -267,8 +262,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -360,37 +354,34 @@ export function reducedModelChildProcessor(
     parent: ParentNode,
     context: FormatStateContext
 ) {
-    const selectionRootNode = getSelectionRootNode(context.selection);
+    if (!context.nodeStack) {
+        const selectionRootNode = getSelectionRootNode(context.selection);
+        context.nodeStack = selectionRootNode ? createNodeStack(parent, selectionRootNode) : [];
+    }
 &nbsp;
-    if (selectionRootNode) {
-        if (!context.nodeStack) {
-            context.nodeStack = createNodeStack(parent, selectionRootNode);
+    const stackChild = context.nodeStack.pop();
+&nbsp;
+    if (stackChild) {
+        const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
+&nbsp;
+        // If selection is not on this node, skip getting node index to save some time since we don't need it here
+        const index =
+            nodeStartOffset &gt;= 0 || nodeEndOffset &gt;= 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >getChildIndex(parent, stackChild) </span>: -1;
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (index &gt;= 0) {
+<span class="cstat-no" title="statement not covered" >            handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);</span>
         }
 &nbsp;
-        const stackChild = context.nodeStack.pop();
+        processChildNode(group, stackChild, context);
 &nbsp;
-        if (stackChild) {
-            const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
-&nbsp;
-            // If selection is not on this node, skip getting node index to save some time since we don't need it here
-            const index =
-                nodeStartOffset &gt;= 0 || nodeEndOffset &gt;= 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >getChildIndex(parent, stackChild) </span>: -1;
-&nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (index &gt;= 0) {
-<span class="cstat-no" title="statement not covered" >                handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);</span>
-            }
-&nbsp;
-            processChildNode(group, stackChild, context);
-&nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (index &gt;= 0) {
-<span class="cstat-no" title="statement not covered" >                handleRegularSelection(index + 1, context, group, nodeStartOffset, nodeEndOffset);</span>
-            }
-        } else {
-            // No child node from node stack, that means we have reached the deepest node of selection.
-            // Now we can use default child processor to perform full sub tree scanning for content model,
-            // So that all selected node will be included.
-            context.defaultElementProcessors.child(group, parent, context);
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (index &gt;= 0) {
+<span class="cstat-no" title="statement not covered" >            handleRegularSelection(index + 1, context, group, nodeStartOffset, nodeEndOffset);</span>
         }
+    } else {
+        // No child node from node stack, that means we have reached the deepest node of selection.
+        // Now we can use default child processor to perform full sub tree scanning for content model,
+        // So that all selected node will be included.
+        context.defaultElementProcessors.child(group, parent, context);
     }
 }
 &nbsp;
@@ -430,7 +421,7 @@ function <span class="fstat-no" title="function not covered" >getChildIndex(</sp
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 06 2023 20:22:42 GMT+0000 (Coordinated Universal Time)
+                at Mon Nov 06 2023 20:35:03 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
