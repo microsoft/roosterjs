@@ -10,6 +10,7 @@ export {
     SetContentModel,
     GetDOMSelection,
     SetDOMSelection,
+    FormatContentModel,
 } from './publicTypes/ContentModelEditorCore';
 export {
     default as ContentModelBeforePasteEvent,
@@ -106,7 +107,6 @@ export { default as setParagraphMargin } from './publicApi/block/setParagraphMar
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
-export { formatWithContentModel } from './publicApi/utils/formatWithContentModel';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';

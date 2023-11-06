@@ -1,6 +1,9 @@
-import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import setListStartNumber from '../../../lib/publicApi/list/setListStartNumber';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 
 describe('setListStartNumber', () => {
     function runTest(
@@ -8,27 +11,30 @@ describe('setListStartNumber', () => {
         expectedModel: ContentModelDocument,
         expectedResult: boolean
     ) {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (editor, apiName, callback) => {
-                expect(apiName).toBe('setListStartNumber');
-                const result = callback(input, {
-                    newEntities: [],
-                    deletedEntities: [],
-                    newImages: [],
-                });
+        let formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    expect(options.apiName).toBe('setListStartNumber');
+                    const result = callback(input, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
 
-                expect(result).toBe(expectedResult);
-            }
-        );
+                    expect(result).toBe(expectedResult);
+                }
+            );
 
         setListStartNumber(
             {
+                formatContentModel: formatContentModelSpy,
                 focus: () => {},
             } as any,
             2
         );
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(input).toEqual(expectedModel);
     }
 

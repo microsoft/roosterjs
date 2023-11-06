@@ -72,7 +72,7 @@ export interface ContentModelContentChangedEventData extends ContentChangedEvent
     /**
      * The content model that is applied which causes this content changed event
      */
-    contentModel: ContentModelDocument;
+    contentModel?: ContentModelDocument;
 
     /**
      * Selection range applied to the document

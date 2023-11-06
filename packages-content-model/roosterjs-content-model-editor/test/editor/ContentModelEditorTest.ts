@@ -202,6 +202,19 @@ describe('ContentModelEditor', () => {
         expect(domToContentModel.domToContentModel).not.toHaveBeenCalled();
     });
 
+    it('formatContentModel', () => {
+        const div = document.createElement('div');
+        const editor = new ContentModelEditor(div);
+        const core = (editor as any).core;
+        const formatContentModelSpy = spyOn(core.api, 'formatContentModel');
+        const callback = jasmine.createSpy('callback');
+        const options = 'Options' as any;
+
+        editor.formatContentModel(callback, options);
+
+        expect(formatContentModelSpy).toHaveBeenCalledWith(core, callback, options);
+    });
+
     it('default format', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {

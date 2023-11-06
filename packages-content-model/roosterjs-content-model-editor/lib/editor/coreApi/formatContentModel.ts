@@ -1,43 +1,32 @@
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import type { Entity } from 'roosterjs-editor-types';
-import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
+import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type {
-    ContentModelFormatter,
+    ContentModelEditorCore,
+    FormatContentModel,
+} from '../../publicTypes/ContentModelEditorCore';
+import type { Entity } from 'roosterjs-editor-types';
+import type {
     EntityRemovalOperation,
     FormatWithContentModelContext,
-    FormatWithContentModelOptions,
 } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * The general API to do format change with Content Model
  * It will grab a Content Model for current editor content, and invoke a callback function
  * to do format change. Then according to the return value, write back the modified content model into editor.
  * If there is cached model, it will be used and updated.
- * @param editor Content Model editor
- * @param apiName Name of the format API
+ * @param core The ContentModelEditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
  * @param options More options, see FormatWithContentModelOptions
  */
-export function formatWithContentModel(
-    editor: IContentModelEditor,
-    apiName: string,
-    formatter: ContentModelFormatter,
-    options?: FormatWithContentModelOptions
-) {
-    const {
-        onNodeCreated,
-        preservePendingFormat,
-        getChangeData,
-        changeSource,
-        rawEvent,
-        selectionOverride,
-    } = options || {};
+export const formatContentModel: FormatContentModel = (core, formatter, options) => {
+    const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
+        options || {};
 
-    const model = editor.createContentModel(undefined /*option*/, selectionOverride);
+    const model = core.api.createContentModel(core, undefined /*option*/, selectionOverride);
     const context: FormatWithContentModelContext = {
         newEntities: [],
         deletedEntities: [],
@@ -48,29 +37,22 @@ export function formatWithContentModel(
 
     if (formatter(model, context)) {
         const writeBack = () => {
-            handleNewEntities(editor, context);
-            handleDeletedEntities(editor, context);
-            handleImages(editor, context);
+            handleNewEntities(core, context);
+            handleDeletedEntities(core, context);
+            handleImages(core, context);
 
             selection =
-                editor.setContentModel(model, undefined /*options*/, onNodeCreated) || undefined;
-
-            if (preservePendingFormat) {
-                const pendingFormat = getPendingFormat(editor);
-                const pos = editor.getFocusedPosition();
-
-                if (pendingFormat && pos) {
-                    setPendingFormat(editor, pendingFormat, pos.node, pos.offset);
-                }
-            }
+                core.api.setContentModel(core, model, undefined /*options*/, onNodeCreated) ||
+                undefined;
         };
 
         if (context.skipUndoSnapshot) {
             writeBack();
         } else {
-            editor.addUndoSnapshot(
+            core.api.addUndoSnapshot(
+                core,
                 writeBack,
-                undefined /*changeSource, passing undefined here to avoid triggering ContentChangedEvent. We will trigger it using it with Content Model below */,
+                null /*changeSource, passing undefined here to avoid triggering ContentChangedEvent. We will trigger it using it with Content Model below */,
                 false /*canUndoByBackspace*/,
                 {
                     formatApiName: apiName,
@@ -78,27 +60,37 @@ export function formatWithContentModel(
             );
         }
 
-        const eventData: ContentModelContentChangedEventData = {
-            contentModel: model,
-            selection: selection,
+        const eventData: ContentModelContentChangedEvent = {
+            eventType: PluginEventType.ContentChanged,
+            contentModel: context.clearModelCache ? undefined : model,
+            selection: context.clearModelCache ? undefined : selection,
             source: changeSource || ChangeSource.Format,
             data: getChangeData?.(),
             additionalData: {
                 formatApiName: apiName,
             },
         };
-        editor.triggerPluginEvent(PluginEventType.ContentChanged, eventData);
+        core.api.triggerEvent(core, eventData, true /*broadcast*/);
+    } else if (context.clearModelCache) {
+        core.cache.cachedModel = undefined;
+        core.cache.cachedSelection = undefined;
     }
-}
+};
 
-function handleNewEntities(editor: IContentModelEditor, context: FormatWithContentModelContext) {
+function handleNewEntities(core: ContentModelEditorCore, context: FormatWithContentModelContext) {
     // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
     // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
     // from EntityPlugin to here
 
-    if (editor.isDarkMode()) {
+    if (core.lifecycle.isDarkMode) {
         context.newEntities.forEach(entity => {
-            editor.transformToDarkColor(entity.wrapper);
+            core.api.transformColor(
+                core,
+                entity.wrapper,
+                true /*includeSelf*/,
+                null /*callback*/,
+                ColorTransformDirection.LightToDark
+            );
         });
     }
 }
@@ -112,7 +104,7 @@ const EntityOperationMap: Record<EntityRemovalOperation, EntityOperation> = {
 };
 
 function handleDeletedEntities(
-    editor: IContentModelEditor,
+    core: ContentModelEditorCore,
     context: FormatWithContentModelContext
 ) {
     context.deletedEntities.forEach(
@@ -131,19 +123,25 @@ function handleDeletedEntities(
                     isReadonly: !!isReadonly,
                     wrapper,
                 };
-                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                    entity,
-                    operation: EntityOperationMap[operation],
-                    rawEvent: context.rawEvent,
-                });
+                core.api.triggerEvent(
+                    core,
+                    {
+                        eventType: PluginEventType.EntityOperation,
+                        entity,
+                        operation: EntityOperationMap[operation],
+                        rawEvent: context.rawEvent,
+                    },
+                    false /*broadcast*/
+                );
             }
         }
     );
 }
 
-function handleImages(editor: IContentModelEditor, context: FormatWithContentModelContext) {
+function handleImages(core: ContentModelEditorCore, context: FormatWithContentModelContext) {
     if (context.newImages.length > 0) {
-        const viewport = editor.getVisibleViewport();
+        const viewport = core.getVisibleViewport();
+
         if (viewport) {
             const { left, right } = viewport;
             const minMaxImageSize = 10;

@@ -17,10 +17,14 @@ export function handleKeyboardEventResult(
     context: FormatWithContentModelContext
 ): boolean {
     context.skipUndoSnapshot = true;
+    context.clearModelCache = false;
 
     switch (result) {
         case DeleteResult.NotDeleted:
-            // We have not delete anything, we will let browser handle this event
+            // We have not delete anything, we will let browser handle this event, so that current cached model may be invalid
+            context.clearModelCache = true;
+
+            // Return false here since we didn't do any change to Content Model, so no need to rewrite with Content Model
             return false;
 
         case DeleteResult.NothingToDelete:

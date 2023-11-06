@@ -5,7 +5,6 @@ import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
 import { ensureFocusableParagraphForTable } from '../../modelApi/table/ensureFocusableParagraphForTable';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';
@@ -36,93 +35,98 @@ import {
 export default function editTable(editor: IContentModelEditor, operation: TableOperation) {
     editor.focus();
 
-    formatWithContentModel(editor, 'editTable', model => {
-        const [tableModel, path] = getFirstSelectedTable(model);
+    editor.formatContentModel(
+        model => {
+            const [tableModel, path] = getFirstSelectedTable(model);
 
-        if (tableModel) {
-            switch (operation) {
-                case 'alignCellLeft':
-                case 'alignCellCenter':
-                case 'alignCellRight':
-                    alignTableCellHorizontally(tableModel, operation);
-                    break;
-                case 'alignCellTop':
-                case 'alignCellMiddle':
-                case 'alignCellBottom':
-                    alignTableCellVertically(tableModel, operation);
-                    break;
-                case 'alignCenter':
-                case 'alignLeft':
-                case 'alignRight':
-                    alignTable(tableModel, operation);
-                    break;
+            if (tableModel) {
+                switch (operation) {
+                    case 'alignCellLeft':
+                    case 'alignCellCenter':
+                    case 'alignCellRight':
+                        alignTableCellHorizontally(tableModel, operation);
+                        break;
+                    case 'alignCellTop':
+                    case 'alignCellMiddle':
+                    case 'alignCellBottom':
+                        alignTableCellVertically(tableModel, operation);
+                        break;
+                    case 'alignCenter':
+                    case 'alignLeft':
+                    case 'alignRight':
+                        alignTable(tableModel, operation);
+                        break;
 
-                case 'deleteColumn':
-                    deleteTableColumn(tableModel);
-                    break;
+                    case 'deleteColumn':
+                        deleteTableColumn(tableModel);
+                        break;
 
-                case 'deleteRow':
-                    deleteTableRow(tableModel);
-                    break;
+                    case 'deleteRow':
+                        deleteTableRow(tableModel);
+                        break;
 
-                case 'deleteTable':
-                    deleteTable(tableModel);
-                    break;
+                    case 'deleteTable':
+                        deleteTable(tableModel);
+                        break;
 
-                case 'insertAbove':
-                case 'insertBelow':
-                    insertTableRow(tableModel, operation);
-                    break;
+                    case 'insertAbove':
+                    case 'insertBelow':
+                        insertTableRow(tableModel, operation);
+                        break;
 
-                case 'insertLeft':
-                case 'insertRight':
-                    insertTableColumn(tableModel, operation);
-                    break;
+                    case 'insertLeft':
+                    case 'insertRight':
+                        insertTableColumn(tableModel, operation);
+                        break;
 
-                case 'mergeAbove':
-                case 'mergeBelow':
-                    mergeTableRow(tableModel, operation);
-                    break;
+                    case 'mergeAbove':
+                    case 'mergeBelow':
+                        mergeTableRow(tableModel, operation);
+                        break;
 
-                case 'mergeCells':
-                    mergeTableCells(tableModel);
-                    break;
+                    case 'mergeCells':
+                        mergeTableCells(tableModel);
+                        break;
 
-                case 'mergeLeft':
-                case 'mergeRight':
-                    mergeTableColumn(tableModel, operation);
-                    break;
+                    case 'mergeLeft':
+                    case 'mergeRight':
+                        mergeTableColumn(tableModel, operation);
+                        break;
 
-                case 'splitHorizontally':
-                    splitTableCellHorizontally(tableModel);
-                    break;
+                    case 'splitHorizontally':
+                        splitTableCellHorizontally(tableModel);
+                        break;
 
-                case 'splitVertically':
-                    splitTableCellVertically(tableModel);
-                    break;
-            }
-
-            if (!hasSelectionInBlock(tableModel)) {
-                const paragraph = ensureFocusableParagraphForTable(model, path, tableModel);
-
-                if (paragraph) {
-                    const marker = createSelectionMarker(model.format);
-
-                    paragraph.segments.unshift(marker);
-                    setParagraphNotImplicit(paragraph);
-                    setSelection(model, marker);
+                    case 'splitVertically':
+                        splitTableCellVertically(tableModel);
+                        break;
                 }
+
+                if (!hasSelectionInBlock(tableModel)) {
+                    const paragraph = ensureFocusableParagraphForTable(model, path, tableModel);
+
+                    if (paragraph) {
+                        const marker = createSelectionMarker(model.format);
+
+                        paragraph.segments.unshift(marker);
+                        setParagraphNotImplicit(paragraph);
+                        setSelection(model, marker);
+                    }
+                }
+
+                normalizeTable(tableModel, model.format);
+
+                if (hasMetadata(tableModel)) {
+                    applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+                }
+
+                return true;
+            } else {
+                return false;
             }
-
-            normalizeTable(tableModel, model.format);
-
-            if (hasMetadata(tableModel)) {
-                applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
-            }
-
-            return true;
-        } else {
-            return false;
+        },
+        {
+            apiName: 'editTable',
         }
-    });
+    );
 }

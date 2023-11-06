@@ -4,6 +4,10 @@ import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { paragraphTestCommon } from './paragraphTestCommon';
 import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+import {
     ContentModelDocument,
     ContentModelListItem,
     ContentModelTable,
@@ -414,13 +418,11 @@ describe('setAlignment', () => {
 
 describe('setAlignment in table', () => {
     let editor: IContentModelEditor;
-    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
     let triggerPluginEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
@@ -430,7 +432,6 @@ describe('setAlignment in table', () => {
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
             createContentModel,
             isDarkMode: () => false,
             triggerPluginEvent,
@@ -448,18 +449,25 @@ describe('setAlignment in table', () => {
 
         createContentModel.and.returnValue(model);
 
+        editor.formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
+
         setAlignment(editor, alignment);
 
         if (expectedTable) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(
-                {
-                    blockGroupType: 'Document',
-                    blocks: [expectedTable],
-                },
-                undefined,
-                undefined
-            );
+            expect(model).toEqual({
+                blockGroupType: 'Document',
+                blocks: [expectedTable],
+            });
         }
     }
 
@@ -846,19 +854,31 @@ describe('setAlignment in list', () => {
         model.blocks.push(list);
 
         createContentModel.and.returnValue(model);
+        let result: boolean | undefined;
+
+        editor.formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    result = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                        rawEvent: options.rawEvent,
+                    });
+                }
+            );
 
         setAlignment(editor, alignment);
 
         if (expectedList) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(
-                {
-                    blockGroupType: 'Document',
-                    blocks: [expectedList],
-                },
-                undefined,
-                undefined
-            );
+            expect(model).toEqual({
+                blockGroupType: 'Document',
+                blocks: [expectedList],
+            });
+            expect(result).toBeTrue();
+        } else {
+            expect(result).toBeFalse();
         }
     }
 

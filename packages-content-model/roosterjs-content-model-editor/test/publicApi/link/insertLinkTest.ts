@@ -5,6 +5,10 @@ import { ContentModelDocument, ContentModelLink } from 'roosterjs-content-model-
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+import {
     addSegment,
     createContentModelDocument,
     createImage,
@@ -14,27 +18,11 @@ import {
 
 describe('insertLink', () => {
     let editor: IContentModelEditor;
-    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
-    let triggerPluginEvent: jasmine.Spy;
-    let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-
         editor = ({
             focus: () => {},
-            addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
             getCustomData: () => ({}),
-            getFocusedPosition: () => ({}),
-            isDarkMode: () => false,
-            triggerPluginEvent,
-            getVisibleViewport,
         } as any) as IContentModelEditor;
     });
 
@@ -46,21 +34,40 @@ describe('insertLink', () => {
         displayText?: string,
         target?: string
     ) {
-        createContentModel.and.returnValue(model);
+        let formatResult: boolean | undefined;
+
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
+
+        editor.formatContentModel = formatContentModel;
 
         insertLink(editor, url, title, displayText, target);
 
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBe(!!expectedModel);
+
         if (expectedModel) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel.calls.argsFor(0)[0]).toEqual(expectedModel);
-            expect(typeof setContentModel.calls.argsFor(0)[2]).toEqual('function');
-        } else {
-            expect(setContentModel).not.toHaveBeenCalled();
+            expect(model).toEqual(expectedModel);
         }
     }
 
     it('Empty link string', () => {
-        runTest(createContentModelDocument(), '', null);
+        const formatContentModel = jasmine.createSpy('formatContentModel');
+
+        editor.formatContentModel = formatContentModel;
+
+        insertLink(editor, '');
+
+        expect(formatContentModel).not.toHaveBeenCalled();
     });
 
     it('Valid url', () => {
