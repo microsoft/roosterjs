@@ -1,3 +1,4 @@
+import * as getSelectionRootNode from '../../../lib/modelApi/selection/getSelectionRootNode';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
 import { ContentModelFormatState } from '../../../lib/publicTypes/format/formatState/ContentModelFormatState';
 import { DomToModelContext } from 'roosterjs-content-model-types';
@@ -178,8 +179,10 @@ describe('getFormatState', () => {
         );
     });
 });
+
 describe('reducedModelChildProcessor', () => {
     let context: DomToModelContext;
+    let getSelectionRootNodeSpy: jasmine.Spy;
 
     beforeEach(() => {
         context = createDomToModelContext(undefined, {
@@ -187,6 +190,11 @@ describe('reducedModelChildProcessor', () => {
                 child: reducedModelChildProcessor,
             },
         });
+
+        getSelectionRootNodeSpy = spyOn(
+            getSelectionRootNode,
+            'getSelectionRootNode'
+        ).and.callThrough();
     });
 
     it('Empty DOM', () => {
@@ -199,6 +207,7 @@ describe('reducedModelChildProcessor', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
+        expect(getSelectionRootNodeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('Single child node, with selected Node in context', () => {
@@ -234,6 +243,7 @@ describe('reducedModelChildProcessor', () => {
                 },
             ],
         });
+        expect(getSelectionRootNodeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('Multiple child nodes, with selected Node in context', () => {
@@ -275,6 +285,7 @@ describe('reducedModelChildProcessor', () => {
                 },
             ],
         });
+        expect(getSelectionRootNodeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('Multiple child nodes, with selected Node in context, with more child nodes under selected node', () => {
@@ -338,6 +349,7 @@ describe('reducedModelChildProcessor', () => {
                 },
             ],
         });
+        expect(getSelectionRootNodeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('Multiple layer with multiple child nodes, with selected Node in context, with more child nodes under selected node', () => {
@@ -397,6 +409,7 @@ describe('reducedModelChildProcessor', () => {
                 { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
+        expect(getSelectionRootNodeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('With table, need to do format for all table cells', () => {
@@ -476,5 +489,6 @@ describe('reducedModelChildProcessor', () => {
                 },
             ],
         });
+        expect(getSelectionRootNodeSpy).toHaveBeenCalledTimes(1);
     });
 });
