@@ -1,30 +1,35 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as setModelIndentation from '../../../lib/modelApi/block/setModelIndentation';
 import setIndentation from '../../../lib/publicApi/block/setIndentation';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelContext,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 
 describe('setIndentation', () => {
     const fakeModel: any = { a: 'b' };
     let editor: IContentModelEditor;
     let formatContentModelSpy: jasmine.Spy;
+    let context: FormatWithContentModelContext;
 
     beforeEach(() => {
+        context = undefined!;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake((callback: Function) => {
-                callback(fakeModel);
+            .and.callFake((callback: ContentModelFormatter) => {
+                context = {
+                    newEntities: [],
+                    newImages: [],
+                    deletedEntities: [],
+                };
+                callback(fakeModel, context);
             });
 
         editor = ({
             formatContentModel: formatContentModelSpy,
             focus: jasmine.createSpy('focus'),
+            getPendingFormat: () => null as any,
         } as any) as IContentModelEditor;
-
-        spyOn(pendingFormat, 'formatAndKeepPendingFormat').and.callFake(
-            (editor, formatter, options) => {
-                editor.formatContentModel(formatter, options);
-            }
-        );
     });
 
     it('indent', () => {
@@ -39,6 +44,12 @@ describe('setIndentation', () => {
             'indent',
             undefined
         );
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: 'preserve',
+        });
     });
 
     it('outdent', () => {
@@ -53,5 +64,11 @@ describe('setIndentation', () => {
             'outdent',
             undefined
         );
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: 'preserve',
+        });
     });
 });

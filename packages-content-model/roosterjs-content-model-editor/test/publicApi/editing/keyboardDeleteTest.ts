@@ -49,7 +49,7 @@ describe('keyboardDelete', () => {
         let editor: any;
 
         editingTestCommon(
-            'handleBackspaceKey',
+            key == 'Delete' ? 'handleDeleteKey' : 'handleBackspaceKey',
             newEditor => {
                 editor = newEditor;
 

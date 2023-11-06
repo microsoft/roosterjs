@@ -4,7 +4,6 @@ import * as ExcelF from '../../../lib/editor/plugins/PastePlugin/Excel/processPa
 import * as getPasteSourceF from '../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/getPasteSource';
 import * as getSelectedSegmentsF from '../../../lib/publicApi/selection/getSelectedSegments';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
-import * as pendingFormatF from '../../../lib/modelApi/format/pendingFormat';
 import * as PPT from '../../../lib/editor/plugins/PastePlugin/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from '../../../lib/editor/plugins/PastePlugin/utils/setProcessor';
 import * as WacComponents from '../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
@@ -17,6 +16,7 @@ import { expectEqual, initEditor } from '../../editor/plugins/paste/e2e/testUtil
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     ContentModelFormatter,
+    FormatWithContentModelContext,
     FormatWithContentModelOptions,
 } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import paste, * as pasteF from '../../../lib/publicApi/utils/paste';
@@ -46,8 +46,8 @@ describe('Paste ', () => {
     let triggerPluginEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
     let mergeModelSpy: jasmine.Spy;
-    let setPendingFormatSpy: jasmine.Spy;
     let formatResult: boolean | undefined;
+    let context: FormatWithContentModelContext | undefined;
 
     const mockedPos = 'POS' as any;
 
@@ -73,7 +73,6 @@ describe('Paste ', () => {
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
         getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
-        setPendingFormatSpy = spyOn(pendingFormatF, 'setPendingFormat');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.returnValue({
             clipboardData,
             fragment: document.createDocumentFragment(),
@@ -117,15 +116,17 @@ describe('Paste ', () => {
             .createSpy('formatContentModel')
             .and.callFake(
                 (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(mockedModel, {
+                    context = {
                         newEntities: [],
                         deletedEntities: [],
                         newImages: [],
-                    });
+                    };
+                    formatResult = callback(mockedModel, context);
                 }
             );
 
         formatResult = undefined;
+        context = undefined;
 
         editor = ({
             focus,
@@ -196,9 +197,11 @@ describe('Paste ', () => {
             },
         });
 
-        expect(setPendingFormatSpy).toHaveBeenCalledWith(
-            editor,
-            {
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: {
                 backgroundColor: '',
                 fontFamily: 'Arial',
                 fontSize: '',
@@ -211,9 +214,7 @@ describe('Paste ', () => {
                 textColor: '',
                 underline: false,
             },
-            mockedNode,
-            mockedOffset
-        );
+        });
     });
 });
 

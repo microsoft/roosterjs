@@ -9,6 +9,7 @@ import type {
 } from 'roosterjs-content-model-editor';
 import type {
     ContentModelDocument,
+    ContentModelSegmentFormat,
     DOMSelection,
     DomToModelOption,
     ModelToDomOption,
@@ -216,6 +217,13 @@ export class AdapterEditor implements IEditor, IContentModelEditor {
         const core = this.getCore();
 
         core.api.formatContentModel(core, formatter, options);
+    }
+
+    /**
+     * Get pending format of editor if any, or return null
+     */
+    getPendingFormat(): ContentModelSegmentFormat | null {
+        return this.getCore().format.pendingFormat?.format ?? null;
     }
 
     //#endregion
