@@ -3,7 +3,7 @@ import { addRangeToSelection } from '../../domUtils/addRangeToSelection';
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { cloneModel } from '../../publicApi/model/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
-import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import { deleteSelection } from '../../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {

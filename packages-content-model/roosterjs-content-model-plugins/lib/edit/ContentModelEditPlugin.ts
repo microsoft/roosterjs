@@ -1,6 +1,6 @@
-import keyboardDelete from '../../publicApi/editing/keyboardDelete';
+import { keyboardDelete } from './keyboardDelete';
 import { PluginEventType } from 'roosterjs-editor-types';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type {
     EditorPlugin,
     IEditor,
@@ -9,12 +9,12 @@ import type {
 } from 'roosterjs-editor-types';
 
 /**
- * ContentModel plugins helps editor to do editing operation on top of content model.
+ * ContentModel edit plugins helps editor to do editing operation on top of content model.
  * This includes:
  * 1. Delete Key
  * 2. Backspace Key
  */
-export default class ContentModelEditPlugin implements EditorPlugin {
+export class ContentModelEditPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
 
     /**
@@ -75,13 +75,4 @@ export default class ContentModelEditPlugin implements EditorPlugin {
             }
         }
     }
-}
-
-/**
- * @internal
- * Create a new instance of ContentModelEditPlugin class.
- * This is mostly for unit test
- */
-export function createContentModelEditPlugin() {
-    return new ContentModelEditPlugin();
 }

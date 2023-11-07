@@ -1,4 +1,4 @@
-import { deleteSelection } from '../edit/deleteSelection';
+import { deleteSelection } from '../../publicApi/selection/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
 import { setSelection } from '../selection/setSelection';
 import {
@@ -7,7 +7,7 @@ import {
     createSelectionMarker,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type { DeleteSelectionResult } from '../edit/utils/DeleteSelectionStep';
+import type { DeleteSelectionResult } from '../../publicTypes/parameter/DeleteSelectionStep';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type { InsertEntityPosition } from '../../publicTypes/parameter/InsertEntityOptions';
 import type {

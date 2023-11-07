@@ -1,14 +1,19 @@
-import { deleteSingleChar } from './deleteSingleChar';
+import { deleteSingleChar } from '../../modelApi/edit/utils/deleteSingleChar';
 import { isWhiteSpacePreserved, normalizeSingleSegment } from 'roosterjs-content-model-dom';
-import { normalizeText } from '../../../domUtils/stringUtil';
+import { normalizeText } from '../../domUtils/stringUtil';
 import type { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
 import type {
     EntityRemovalOperation,
     FormatWithContentModelContext,
-} from '../../../publicTypes/parameter/FormatWithContentModelContext';
+} from '../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
- * @internal
+ * Delete a content model segment from current selection
+ * @param paragraph Parent paragraph of the segment to delete
+ * @param segmentToDelete The segment to delete
+ * @param context @optional Context object provided by formatContentModel API
+ * @param direction @optional Whether this is deleting forward or backward. This is only used for deleting entity.
+ * If not specified, only selected entity will be deleted
  */
 export function deleteSegment(
     paragraph: ContentModelParagraph,

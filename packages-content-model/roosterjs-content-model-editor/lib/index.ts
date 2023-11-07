@@ -58,6 +58,13 @@ export {
     TableCellVerticalAlignOperation,
 } from './publicTypes/parameter/TableOperation';
 export { PasteType } from './publicTypes/parameter/PasteType';
+export {
+    DeleteResult,
+    DeleteSelectionContext,
+    DeleteSelectionResult,
+    DeleteSelectionStep,
+    ValidDeleteSelectionContext,
+} from './publicTypes/parameter/DeleteSelectionStep';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -79,6 +86,7 @@ export { default as setTextColor } from './publicApi/segment/setTextColor';
 export { default as changeFontSize } from './publicApi/segment/changeFontSize';
 export { default as applySegmentFormat } from './publicApi/segment/applySegmentFormat';
 export { default as changeCapitalization } from './publicApi/segment/changeCapitalization';
+export { deleteSegment } from './publicApi/segment/deleteSegment';
 export { default as insertImage } from './publicApi/image/insertImage';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
@@ -91,6 +99,7 @@ export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';
 export { default as setHeadingLevel } from './publicApi/block/setHeadingLevel';
 export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
+export { deleteBlock } from './publicApi/block/deleteBlock';
 export { default as setSpacing } from './publicApi/block/setSpacing';
 export { default as setImageBorder } from './publicApi/image/setImageBorder';
 export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
@@ -107,12 +116,12 @@ export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
 export { CachedElementHandler, CloneModelOptions, cloneModel } from './publicApi/model/cloneModel';
+export { deleteSelection } from './publicApi/selection/deleteSelection';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';
 
 export { default as ContentModelFormatPlugin } from './editor/corePlugins/ContentModelFormatPlugin';
-export { default as ContentModelEditPlugin } from './editor/corePlugins/ContentModelEditPlugin';
 export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugins/ContentModelTypeInContainerPlugin';
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
 export { default as ContentModelCachePlugin } from './editor/corePlugins/ContentModelCachePlugin';
@@ -126,6 +135,8 @@ export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
 export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
+export { isCharacterValue, isModifierKey } from './domUtils/eventUtils';
+export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 
 export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';

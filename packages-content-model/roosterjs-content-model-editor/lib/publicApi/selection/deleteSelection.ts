@@ -1,4 +1,4 @@
-import { deleteExpandedSelection } from './utils/deleteExpandedSelection';
+import { deleteExpandedSelection } from '../../modelApi/edit/utils/deleteExpandedSelection';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type {
@@ -6,10 +6,14 @@ import type {
     DeleteSelectionResult,
     DeleteSelectionStep,
     ValidDeleteSelectionContext,
-} from './utils/DeleteSelectionStep';
+} from '../../publicTypes/parameter/DeleteSelectionStep';
 
 /**
- * @internal
+ * Delete selected content from Content Model
+ * @param model The model to delete selected content from
+ * @param additionalSteps @optional Addition delete steps
+ * @param formatContext @optional A context object provided by formatContentModel API
+ * @returns A DeleteSelectionResult object to specify the deletion result
  */
 export function deleteSelection(
     model: ContentModelDocument,

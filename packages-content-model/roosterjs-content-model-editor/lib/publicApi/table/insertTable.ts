@@ -1,7 +1,7 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
-import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import { deleteSelection } from '../selection/deleteSelection';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setSelection } from '../../modelApi/selection/setSelection';

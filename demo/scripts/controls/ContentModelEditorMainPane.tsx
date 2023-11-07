@@ -15,10 +15,11 @@ import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
+import { ContentModelEditPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
+import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
-import { RibbonPlugin, createPasteOptionPlugin, createEmojiPlugin } from 'roosterjs-react';
 
 const styles = require('./ContentModelEditorMainPane.scss');
 
@@ -81,7 +82,8 @@ class ContentModelEditorMainPane extends MainPaneBase {
     private editorOptionPlugin: ContentModelEditorOptionsPlugin;
     private eventViewPlugin: ContentModelEventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
-    private ContentModelPanePlugin: ContentModelPanePlugin;
+    private contentModelPanePlugin: ContentModelPanePlugin;
+    private contentModelEditPlugin: ContentModelEditPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
@@ -97,7 +99,8 @@ class ContentModelEditorMainPane extends MainPaneBase {
         this.eventViewPlugin = new ContentModelEventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
-        this.ContentModelPanePlugin = new ContentModelPanePlugin();
+        this.contentModelPanePlugin = new ContentModelPanePlugin();
+        this.contentModelEditPlugin = new ContentModelEditPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
@@ -159,7 +162,8 @@ class ContentModelEditorMainPane extends MainPaneBase {
         const plugins = [
             ...this.toggleablePlugins,
             this.contentModelRibbonPlugin,
-            this.ContentModelPanePlugin.getInnerRibbonPlugin(),
+            this.contentModelPanePlugin.getInnerRibbonPlugin(),
+            this.contentModelEditPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.formatPainterPlugin,
@@ -197,7 +201,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
             this.eventViewPlugin,
             this.apiPlaygroundPlugin,
             this.snapshotPlugin,
-            this.ContentModelPanePlugin,
+            this.contentModelPanePlugin,
         ];
     }
 }

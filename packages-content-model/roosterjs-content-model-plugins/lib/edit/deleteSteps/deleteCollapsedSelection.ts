@@ -1,11 +1,9 @@
-import { createInsertPoint } from '../utils/createInsertPoint';
-import { deleteBlock } from '../utils/deleteBlock';
-import { deleteSegment } from '../utils/deleteSegment';
-import { getLeafSiblingBlock } from '../../block/getLeafSiblingBlock';
+import { deleteBlock, deleteSegment } from 'roosterjs-content-model-editor';
+import { getLeafSiblingBlock } from '../utils/getLeafSiblingBlock';
 import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
-import type { BlockAndPath } from '../../block/getLeafSiblingBlock';
+import type { BlockAndPath } from '../utils/getLeafSiblingBlock';
 import type { ContentModelSegment } from 'roosterjs-content-model-types';
-import type { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
+import type { DeleteSelectionStep } from 'roosterjs-content-model-editor';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return context => {
@@ -44,7 +42,12 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                             block.segments.pop();
                         }
 
-                        context.insertPoint = createInsertPoint(marker, block, path, tableContext);
+                        context.insertPoint = {
+                            marker,
+                            paragraph: block,
+                            path,
+                            tableContext,
+                        };
                         context.lastParagraph = paragraph;
                         delete block.cachedElement;
                     }
