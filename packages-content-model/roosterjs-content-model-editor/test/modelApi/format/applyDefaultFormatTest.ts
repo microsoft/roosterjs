@@ -2,7 +2,6 @@ import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyDefaultFormat } from '../../../lib/modelApi/format/applyDefaultFormat';
 import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { InsertPoint } from '../../../lib/publicTypes/selection/InsertPoint';
 import {
     createContentModelDocument,
@@ -109,7 +108,7 @@ describe('applyDefaultFormat', () => {
         });
 
         deleteSelectionSpy.and.returnValue({
-            deleteResult: DeleteResult.Range,
+            deleteResult: 'range',
             insertPoint: null!,
         });
 
@@ -138,7 +137,7 @@ describe('applyDefaultFormat', () => {
         });
 
         deleteSelectionSpy.and.returnValue({
-            deleteResult: DeleteResult.NothingToDelete,
+            deleteResult: 'nothingToDelete',
             insertPoint: null!,
         });
 
@@ -167,7 +166,7 @@ describe('applyDefaultFormat', () => {
         });
 
         deleteSelectionSpy.and.returnValue({
-            deleteResult: DeleteResult.SingleChar,
+            deleteResult: 'singleChar',
             insertPoint: null!,
         });
 
@@ -208,7 +207,7 @@ describe('applyDefaultFormat', () => {
         });
 
         deleteSelectionSpy.and.returnValue({
-            deleteResult: DeleteResult.NotDeleted,
+            deleteResult: 'notDeleted',
             insertPoint,
         });
 
@@ -249,7 +248,7 @@ describe('applyDefaultFormat', () => {
         });
 
         deleteSelectionSpy.and.returnValue({
-            deleteResult: DeleteResult.NotDeleted,
+            deleteResult: 'notDeleted',
             insertPoint,
         });
 
@@ -291,7 +290,7 @@ describe('applyDefaultFormat', () => {
         });
 
         deleteSelectionSpy.and.returnValue({
-            deleteResult: DeleteResult.NotDeleted,
+            deleteResult: 'notDeleted',
             insertPoint,
         });
 
@@ -332,7 +331,7 @@ describe('applyDefaultFormat', () => {
         });
 
         deleteSelectionSpy.and.returnValue({
-            deleteResult: DeleteResult.NotDeleted,
+            deleteResult: 'notDeleted',
             insertPoint,
         });
 
@@ -377,7 +376,7 @@ describe('applyDefaultFormat', () => {
         });
 
         deleteSelectionSpy.and.returnValue({
-            deleteResult: DeleteResult.NotDeleted,
+            deleteResult: 'notDeleted',
             insertPoint,
         });
 

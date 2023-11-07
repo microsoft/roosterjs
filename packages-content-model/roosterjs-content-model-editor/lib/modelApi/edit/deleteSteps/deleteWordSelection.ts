@@ -1,4 +1,3 @@
-import { DeleteResult } from '../utils/DeleteSelectionStep';
 import { isPunctuation, isSpace, normalizeText } from '../../../domUtils/stringUtil';
 import { isWhiteSpacePreserved } from 'roosterjs-content-model-dom';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
@@ -124,7 +123,7 @@ function* iterateSegments(
                             newText = normalizeText(newText, forward);
                         }
 
-                        context.deleteResult = DeleteResult.Range;
+                        context.deleteResult = 'range';
 
                         if (newText) {
                             segment.text = newText;
@@ -155,7 +154,7 @@ function* iterateSegments(
                         i -= step;
                     }
 
-                    context.deleteResult = DeleteResult.Range;
+                    context.deleteResult = 'range';
                 }
                 break;
 

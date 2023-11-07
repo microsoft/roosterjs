@@ -1,4 +1,3 @@
-import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { isBlockElement, isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
@@ -40,13 +39,13 @@ export function applyDefaultFormat(
     editor.formatContentModel((model, context) => {
         const result = deleteSelection(model, [], context);
 
-        if (result.deleteResult == DeleteResult.Range) {
+        if (result.deleteResult == 'range') {
             normalizeContentModel(model);
             editor.addUndoSnapshot();
 
             return true;
         } else if (
-            result.deleteResult == DeleteResult.NotDeleted &&
+            result.deleteResult == 'notDeleted' &&
             result.insertPoint &&
             posContainer &&
             posOffset !== null

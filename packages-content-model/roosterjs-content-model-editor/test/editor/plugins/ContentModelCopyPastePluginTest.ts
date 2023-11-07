@@ -9,7 +9,6 @@ import * as PasteFile from '../../../lib/publicApi/utils/paste';
 import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
-import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
@@ -449,7 +448,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection').and.returnValue({
-                deleteResult: DeleteResult.Range,
+                deleteResult: 'range',
                 insertPoint: null!,
             });
             spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
@@ -501,7 +500,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection').and.returnValue({
-                deleteResult: DeleteResult.Range,
+                deleteResult: 'range',
                 insertPoint: null!,
             });
             spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
