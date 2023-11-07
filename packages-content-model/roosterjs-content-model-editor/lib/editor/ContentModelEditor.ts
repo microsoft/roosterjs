@@ -12,6 +12,7 @@ import type {
 } from '../publicTypes/IContentModelEditor';
 import type {
     ContentModelDocument,
+    ContentModelSegmentFormat,
     DOMSelection,
     DomToModelOption,
     ModelToDomOption,
@@ -112,5 +113,12 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         core.api.formatContentModel(core, formatter, options);
+    }
+
+    /**
+     * Get pending format of editor if any, or return null
+     */
+    getPendingFormat(): ContentModelSegmentFormat | null {
+        return this.getCore().format.pendingFormat?.format ?? null;
     }
 }

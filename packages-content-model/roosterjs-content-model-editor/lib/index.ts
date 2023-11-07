@@ -96,7 +96,6 @@ export { default as setImageBorder } from './publicApi/image/setImageBorder';
 export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
 export { default as changeImage } from './publicApi/image/changeImage';
 export { default as getFormatState } from './publicApi/format/getFormatState';
-export { default as applyPendingFormat } from './publicApi/format/applyPendingFormat';
 export { default as clearFormat } from './publicApi/format/clearFormat';
 export { default as insertLink } from './publicApi/link/insertLink';
 export { default as removeLink } from './publicApi/link/removeLink';
@@ -130,4 +129,7 @@ export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 
 export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';
-export { ContentModelFormatPluginState } from './publicTypes/pluginState/ContentModelFormatPluginState';
+export {
+    ContentModelFormatPluginState,
+    PendingFormat,
+} from './publicTypes/pluginState/ContentModelFormatPluginState';

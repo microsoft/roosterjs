@@ -1,25 +1,30 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as toggleModelBlockQuote from '../../../lib/modelApi/block/toggleModelBlockQuote';
 import toggleBlockQuote from '../../../lib/publicApi/block/toggleBlockQuote';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelContext,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 
 describe('toggleBlockQuote', () => {
     const fakeModel: any = { a: 'b' };
     let editor: IContentModelEditor;
     let formatContentModelSpy: jasmine.Spy;
+    let context: FormatWithContentModelContext;
 
     beforeEach(() => {
+        context = undefined!;
+
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake((callback: Function) => {
-                callback(fakeModel);
+            .and.callFake((callback: ContentModelFormatter) => {
+                context = {
+                    newEntities: [],
+                    newImages: [],
+                    deletedEntities: [],
+                };
+                callback(fakeModel, context);
             });
-
-        spyOn(pendingFormat, 'formatAndKeepPendingFormat').and.callFake(
-            (editor, formatter, options) => {
-                editor.formatContentModel(formatter, options);
-            }
-        );
 
         editor = ({
             focus: jasmine.createSpy('focus'),
@@ -43,6 +48,12 @@ describe('toggleBlockQuote', () => {
             a: 'b',
             c: 'd',
         } as any);
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: 'preserve',
+        });
     });
 
     it('toggleBlockQuote with real format', () => {
@@ -61,5 +72,11 @@ describe('toggleBlockQuote', () => {
             lineHeight: '2',
             textColor: 'red',
         } as any);
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: 'preserve',
+        });
     });
 });

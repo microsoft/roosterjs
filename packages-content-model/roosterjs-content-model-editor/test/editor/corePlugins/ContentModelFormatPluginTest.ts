@@ -1,30 +1,34 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
+import * as applyPendingFormat from '../../../lib/modelApi/format/applyPendingFormat';
 import ContentModelFormatPlugin from '../../../lib/editor/corePlugins/ContentModelFormatPlugin';
-import { ContentModelFormatPluginState } from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {
-    ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+    ContentModelFormatPluginState,
+    PendingFormat,
+} from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
 import {
     addSegment,
     createContentModelDocument,
     createSelectionMarker,
-    createText,
 } from 'roosterjs-content-model-dom';
 
 describe('ContentModelFormatPlugin', () => {
-    it('no pending format, trigger key down event', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
+    const mockedFormat = {
+        fontSize: '10px',
+    };
 
+    beforeEach(() => {
+        spyOn(applyPendingFormat, 'applyPendingFormat');
+    });
+
+    it('no pending format, trigger key down event', () => {
         const editor = ({
             cacheContentModel: () => {},
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
+            pendingFormat: ({} as any) as PendingFormat,
         };
         const plugin = new ContentModelFormatPlugin(state);
         plugin.initialize(editor);
@@ -36,40 +40,23 @@ describe('ContentModelFormatPlugin', () => {
 
         plugin.dispose();
 
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
+        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(state.pendingFormat).toBeNull();
     });
 
     it('no selection, trigger input event', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-        let formatResult: boolean | undefined;
-
-        const formatContentModel = jasmine
-            .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                        rawEvent: options.rawEvent,
-                    });
-                }
-            );
-
         const editor = ({
             focus: jasmine.createSpy('focus'),
             createContentModel: () => model,
             isInIME: () => false,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
-            formatContentModel,
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
+            pendingFormat: {
+                format: mockedFormat,
+            } as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
         const model = createContentModelDocument();
@@ -83,17 +70,16 @@ describe('ContentModelFormatPlugin', () => {
 
         plugin.dispose();
 
-        expect(formatResult).toBeFalse();
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
+        expect(applyPendingFormat.applyPendingFormat).toHaveBeenCalledTimes(1);
+        expect(applyPendingFormat.applyPendingFormat).toHaveBeenCalledWith(
+            editor,
+            'a',
+            mockedFormat
+        );
+        expect(state.pendingFormat).toBeNull();
     });
 
-    it('with pending format and selection, has correct text before, trigger input event with isComposing = true', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-        const setContentModel = jasmine.createSpy('setContentModel');
+    it('with pending format and selection, trigger input event with isComposing = true', () => {
         const model = createContentModelDocument();
         const marker = createSelectionMarker();
 
@@ -101,12 +87,14 @@ describe('ContentModelFormatPlugin', () => {
 
         const editor = ({
             createContentModel: () => model,
-            setContentModel,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
+            pendingFormat: {
+                format: mockedFormat,
+            } as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
         plugin.initialize(editor);
@@ -116,169 +104,17 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(0);
+        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(state.pendingFormat).toEqual({
+            format: mockedFormat,
+        });
     });
 
-    it('with pending format and selection, no correct text before, trigger input event', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
-        let formatResult: boolean | undefined;
-        const model = createContentModelDocument();
-        const marker = createSelectionMarker();
-
-        addSegment(model, marker);
-
-        const formatContentModel = jasmine
-            .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                        rawEvent: options.rawEvent,
-                    });
-                }
-            );
-
-        const editor = ({
-            focus: jasmine.createSpy('focus'),
-            createContentModel: () => model,
-            isInIME: () => false,
-            cacheContentModel: () => {},
-            getEnvironment: () => ({}),
-            formatContentModel,
-        } as any) as IContentModelEditor;
-        const state = {
-            defaultFormat: {},
-        };
-        const plugin = new ContentModelFormatPlugin(state);
-        plugin.initialize(editor);
-        plugin.onPluginEvent({
-            eventType: PluginEventType.Input,
-            rawEvent: ({ data: 'a' } as any) as InputEvent,
-        });
-        plugin.dispose();
-
-        expect(formatResult).toBeFalse();
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
-    });
-
-    it('with pending format and selection, has correct text before, trigger input event', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'setPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
-        const model = createContentModelDocument();
-        const text = createText('a');
-        const marker = createSelectionMarker();
-        let formatResult: boolean | undefined;
-
-        addSegment(model, text);
-        addSegment(model, marker);
-
-        const formatContentModel = jasmine
-            .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                        rawEvent: options.rawEvent,
-                    });
-                }
-            );
-
-        const editor = ({
-            createContentModel: () => model,
-            formatContentModel,
-            isInIME: () => false,
-            focus: () => {},
-            addUndoSnapshot: (callback: () => void) => {
-                callback();
-            },
-            cacheContentModel: () => {},
-            isDarkMode: () => false,
-            triggerPluginEvent: jasmine.createSpy('triggerPluginEvent'),
-            getVisibleViewport: jasmine.createSpy('getVisibleViewport'),
-            getEnvironment: () => ({}),
-        } as any) as IContentModelEditor;
-        const state = {
-            defaultFormat: {},
-        };
-        const plugin = new ContentModelFormatPlugin(state);
-        plugin.initialize(editor);
-        plugin.onPluginEvent({
-            eventType: PluginEventType.Input,
-            rawEvent: ({ data: 'a' } as any) as InputEvent,
-        });
-        plugin.dispose();
-
-        expect(formatResult).toBeTrue();
-        expect(model).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    isImplicit: false,
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: { fontSize: '10px' },
-                            text: 'a',
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: { fontSize: '10px' },
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
-    });
-
-    it('with pending format and selection, has correct text before, trigger CompositionEnd event', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
-        let formatResult: boolean | undefined;
+    it('with pending format and selection, trigger CompositionEnd event', () => {
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-        const model = createContentModelDocument();
-        const text = createText('test a test', { fontFamily: 'Arial' });
-        const marker = createSelectionMarker();
-        const formatContentModel = jasmine
-            .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
-
-        addSegment(model, text);
-        addSegment(model, marker);
 
         const editor = ({
-            createContentModel: () => model,
-            formatContentModel,
             focus: () => {},
             addUndoSnapshot: (callback: () => void) => {
                 callback();
@@ -290,6 +126,9 @@ describe('ContentModelFormatPlugin', () => {
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
+            pendingFormat: {
+                format: mockedFormat,
+            } as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
 
@@ -300,54 +139,26 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(formatResult).toBeTrue();
-        expect(model).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    isImplicit: false,
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: { fontFamily: 'Arial' },
-                            text: 'test a ',
-                        },
-                        {
-                            segmentType: 'Text',
-                            format: { fontSize: '10px', fontFamily: 'Arial' },
-                            text: 'test',
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: { fontSize: '10px' },
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
+        expect(applyPendingFormat.applyPendingFormat).toHaveBeenCalledWith(
+            editor,
+            'test',
+            mockedFormat
+        );
+        expect(state.pendingFormat).toBeNull();
     });
 
     it('Non-input and cursor moving key down should not trigger pending format change', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
-        const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
 
         const editor = ({
             createContentModel: () => model,
-            setContentModel,
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
+            pendingFormat: {
+                format: mockedFormat,
+            } as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
         plugin.initialize(editor);
@@ -357,24 +168,17 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(0);
+        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(state.pendingFormat).toEqual({
+            format: mockedFormat,
+        });
     });
 
     it('Content changed event', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(false);
-        spyOn(pendingFormat, 'setPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
-        const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
 
         const editor = ({
             createContentModel: () => model,
-            setContentModel,
             addUndoSnapshot: (callback: () => void) => {
                 callback();
             },
@@ -382,8 +186,14 @@ describe('ContentModelFormatPlugin', () => {
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
+            pendingFormat: {
+                format: mockedFormat,
+            } as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
+
+        spyOn(plugin as any, 'canApplyPendingFormat').and.returnValue(false);
+
         plugin.initialize(editor);
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,
@@ -391,31 +201,27 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
-        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
+        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(state.pendingFormat).toBeNull();
+        expect((plugin as any).canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
 
     it('Mouse up event', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(false);
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
-        const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
 
         const editor = ({
             createContentModel: () => model,
-            setContentModel,
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
+            pendingFormat: {
+                format: mockedFormat,
+            } as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
+
+        spyOn(plugin as any, 'canApplyPendingFormat').and.returnValue(false);
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -424,32 +230,28 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
-        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
+        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(state.pendingFormat).toBeNull();
+        expect((plugin as any).canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
 
     it('Mouse up event and pending format can still be applied', () => {
-        spyOn(pendingFormat, 'clearPendingFormat');
-        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(true);
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
-        const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
 
         const editor = ({
             createContentModel: () => model,
-            setContentModel,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
+            pendingFormat: {
+                format: mockedFormat,
+            } as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
+
+        spyOn(plugin as any, 'canApplyPendingFormat').and.returnValue(true);
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -458,9 +260,11 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.clearPendingFormat).not.toHaveBeenCalled();
-        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
+        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(state.pendingFormat).toEqual({
+            format: mockedFormat,
+        });
+        expect((plugin as any).canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -469,14 +273,12 @@ describe('ContentModelFormatPlugin for default format', () => {
     let contentDiv: HTMLDivElement;
     let getDOMSelection: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
-    let setPendingFormatSpy: jasmine.Spy;
     let cacheContentModelSpy: jasmine.Spy;
     let addUndoSnapshotSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
 
     beforeEach(() => {
-        setPendingFormatSpy = spyOn(pendingFormat, 'setPendingFormat');
-        getPendingFormatSpy = spyOn(pendingFormat, 'getPendingFormat');
+        getPendingFormatSpy = jasmine.createSpy('getPendingFormat');
         getDOMSelection = jasmine.createSpy('getDOMSelection');
         cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
         addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
@@ -487,6 +289,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         editor = ({
             contains: (e: Node) => contentDiv != e && contentDiv.contains(e),
             getDOMSelection,
+            getPendingFormat: getPendingFormatSpy,
             cacheContentModel: cacheContentModelSpy,
             addUndoSnapshot: addUndoSnapshotSpy,
             formatContentModel: formatContentModelSpy,
@@ -496,6 +299,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     it('Collapsed range, text input, under editor directly', () => {
         const state: ContentModelFormatPluginState = {
             defaultFormat: { fontFamily: 'Arial' },
+            pendingFormat: null,
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
@@ -509,24 +313,29 @@ describe('ContentModelFormatPlugin for default format', () => {
             },
         });
 
+        let context = {} as any;
+
         formatContentModelSpy.and.callFake((callback: Function) => {
-            callback({
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        isImplicit: true,
-                        segments: [
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {},
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            });
+            callback(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                context
+            );
         });
 
         plugin.initialize(editor);
@@ -536,20 +345,19 @@ describe('ContentModelFormatPlugin for default format', () => {
             rawEvent,
         });
 
-        expect(setPendingFormatSpy).toHaveBeenCalledWith(
-            editor,
-            { fontFamily: 'Arial' },
-            contentDiv,
-            0
-        );
+        expect(context).toEqual({
+            newPendingFormat: { fontFamily: 'Arial' },
+        });
     });
 
     it('Expanded range, text input, under editor directly', () => {
         const state = {
             defaultFormat: { fontFamily: 'Arial' },
+            pendingFormat: null as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
+        const context = {} as any;
 
         getDOMSelection.and.returnValue({
             type: 'range',
@@ -561,24 +369,27 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         formatContentModelSpy.and.callFake((callback: Function) => {
-            callback({
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        isImplicit: true,
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                format: {},
-                                text: 'test',
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            });
+            callback(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'test',
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                context
+            );
         });
 
         plugin.initialize(editor);
@@ -588,16 +399,18 @@ describe('ContentModelFormatPlugin for default format', () => {
             rawEvent,
         });
 
-        expect(setPendingFormatSpy).not.toHaveBeenCalled();
+        expect(context).toEqual({});
         expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
     });
 
     it('Collapsed range, IME input, under editor directly', () => {
         const state = {
             defaultFormat: { fontFamily: 'Arial' },
+            pendingFormat: null as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'Process' } as any;
+        const context = {} as any;
 
         getDOMSelection.and.returnValue({
             type: 'range',
@@ -609,23 +422,26 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         formatContentModelSpy.and.callFake((callback: Function) => {
-            callback({
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        isImplicit: true,
-                        segments: [
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {},
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            });
+            callback(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                context
+            );
         });
 
         plugin.initialize(editor);
@@ -635,20 +451,19 @@ describe('ContentModelFormatPlugin for default format', () => {
             rawEvent,
         });
 
-        expect(setPendingFormatSpy).toHaveBeenCalledWith(
-            editor,
-            { fontFamily: 'Arial' },
-            contentDiv,
-            0
-        );
+        expect(context).toEqual({
+            newPendingFormat: { fontFamily: 'Arial' },
+        });
     });
 
     it('Collapsed range, other input, under editor directly', () => {
-        const state = {
+        const state: ContentModelFormatPluginState = {
             defaultFormat: { fontFamily: 'Arial' },
+            pendingFormat: null as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'Up' } as any;
+        const context = {} as any;
 
         getDOMSelection.and.returnValue({
             type: 'range',
@@ -660,23 +475,26 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         formatContentModelSpy.and.callFake((callback: Function) => {
-            callback({
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        isImplicit: true,
-                        segments: [
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {},
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            });
+            callback(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                context
+            );
         });
 
         plugin.initialize(editor);
@@ -686,16 +504,18 @@ describe('ContentModelFormatPlugin for default format', () => {
             rawEvent,
         });
 
-        expect(setPendingFormatSpy).not.toHaveBeenCalled();
+        expect(context).toEqual({});
     });
 
     it('Collapsed range, normal input, not under editor directly, no style', () => {
         const state = {
             defaultFormat: { fontFamily: 'Arial' },
+            pendingFormat: null as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
         const div = document.createElement('div');
+        const context = {} as any;
 
         contentDiv.appendChild(div);
 
@@ -709,22 +529,25 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         formatContentModelSpy.and.callFake((callback: Function) => {
-            callback({
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {},
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            });
+            callback(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                context
+            );
         });
 
         plugin.initialize(editor);
@@ -734,15 +557,21 @@ describe('ContentModelFormatPlugin for default format', () => {
             rawEvent,
         });
 
-        expect(setPendingFormatSpy).toHaveBeenCalledWith(editor, { fontFamily: 'Arial' }, div, 0);
+        expect(context).toEqual({
+            newPendingFormat: { fontFamily: 'Arial' },
+        });
     });
 
     it('Collapsed range, text input, under editor directly, has pending format', () => {
         const state = {
             defaultFormat: { fontFamily: 'Arial' },
+            pendingFormat: null as any,
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
+        const context = {} as any;
+
+        getPendingFormatSpy.and.returnValue(null);
 
         getDOMSelection.and.returnValue({
             type: 'range',
@@ -754,23 +583,26 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         formatContentModelSpy.and.callFake((callback: Function) => {
-            callback({
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        isImplicit: true,
-                        segments: [
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {},
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            });
+            callback(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                context
+            );
         });
 
         getPendingFormatSpy.and.returnValue({
@@ -784,11 +616,8 @@ describe('ContentModelFormatPlugin for default format', () => {
             rawEvent,
         });
 
-        expect(setPendingFormatSpy).toHaveBeenCalledWith(
-            editor,
-            { fontFamily: 'Arial', fontSize: '10pt' },
-            contentDiv,
-            0
-        );
+        expect(context).toEqual({
+            newPendingFormat: { fontFamily: 'Arial', fontSize: '10pt' },
+        });
     });
 });

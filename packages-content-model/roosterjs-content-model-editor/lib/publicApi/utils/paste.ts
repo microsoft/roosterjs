@@ -2,7 +2,6 @@ import getSelectedSegments from '../selection/getSelectedSegments';
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { mergeModel } from '../../modelApi/common/mergeModel';
-import { setPendingFormat } from '../../modelApi/format/pendingFormat';
 import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import type {
     ContentModelDocument,
@@ -106,6 +105,10 @@ export default function paste(
                 originalFormat = insertPoint.marker.format;
             }
 
+            if (originalFormat) {
+                context.newPendingFormat = { ...EmptySegmentFormat, ...originalFormat }; // Use empty format as initial value to clear any other format inherits from pasted content
+            }
+
             return true;
         },
 
@@ -115,17 +118,6 @@ export default function paste(
             apiName: 'paste',
         }
     );
-
-    const pos = editor.getFocusedPosition();
-
-    if (originalFormat && pos) {
-        setPendingFormat(
-            editor,
-            { ...EmptySegmentFormat, ...originalFormat }, // Use empty format as initial value to clear any other format inherits from pasted content
-            pos.node,
-            pos.offset
-        );
-    }
 }
 
 /**

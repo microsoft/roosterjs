@@ -1,4 +1,3 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { NodePosition } from 'roosterjs-editor-types';
@@ -14,9 +13,6 @@ export function segmentTestCommon(
     result: ContentModelDocument,
     calledTimes: number
 ) {
-    spyOn(pendingFormat, 'setPendingFormat');
-    spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
-
     let formatResult: boolean | undefined;
     const formatContentModel = jasmine
         .createSpy('formatContentModel')
@@ -31,6 +27,7 @@ export function segmentTestCommon(
     const editor = ({
         focus: jasmine.createSpy(),
         getFocusedPosition: () => null as NodePosition,
+        getPendingFormat: () => null as any,
         formatContentModel,
     } as any) as IContentModelEditor;
 

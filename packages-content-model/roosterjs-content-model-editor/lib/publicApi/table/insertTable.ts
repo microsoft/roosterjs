@@ -2,7 +2,6 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setSelection } from '../../modelApi/selection/setSelection';
@@ -34,7 +33,7 @@ export default function insertTable(
                 const doc = createContentModelDocument();
                 const table = createTableStructure(doc, columns, rows);
 
-                normalizeTable(table, getPendingFormat(editor) || insertPosition.marker.format);
+                normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
                 // Assign default vertical align
                 format = format || { verticalAlign: 'top' };
                 applyTableFormat(table, format);

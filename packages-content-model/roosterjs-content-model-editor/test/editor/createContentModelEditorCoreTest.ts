@@ -140,6 +140,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: undefined,
                     backgroundColor: undefined,
                 },
+                pendingFormat: null,
             },
             contentDiv: {
                 style: {},
@@ -220,6 +221,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: undefined,
                     backgroundColor: undefined,
                 },
+                pendingFormat: null,
             },
             contentDiv: {
                 style: {},
@@ -313,6 +315,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: 'red',
                     backgroundColor: 'blue',
                 },
+                pendingFormat: null,
             },
             contentDiv: {
                 style: {},
@@ -384,6 +387,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: undefined,
                     backgroundColor: undefined,
                 },
+                pendingFormat: null,
             },
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
@@ -462,6 +466,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: undefined,
                     backgroundColor: undefined,
                 },
+                pendingFormat: null,
             },
             contentDiv: {
                 style: {},
