@@ -22,7 +22,7 @@ describe('insertLink', () => {
     beforeEach(() => {
         editor = ({
             focus: () => {},
-            getCustomData: () => ({}),
+            getPendingFormat: () => null as any,
         } as any) as IContentModelEditor;
     });
 

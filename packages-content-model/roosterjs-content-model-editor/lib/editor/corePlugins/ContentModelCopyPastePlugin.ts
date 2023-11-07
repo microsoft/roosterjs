@@ -3,7 +3,6 @@ import { addRangeToSelection } from '../../domUtils/addRangeToSelection';
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { cloneModel } from '../../publicApi/model/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
-import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
@@ -161,10 +160,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     if (isCut) {
                         editor.formatContentModel(
                             (model, context) => {
-                                if (
-                                    deleteSelection(model, [], context).deleteResult ==
-                                    DeleteResult.Range
-                                ) {
+                                if (deleteSelection(model, [], context).deleteResult == 'range') {
                                     normalizeContentModel(model);
                                 }
 

@@ -1,7 +1,6 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { createImage } from 'roosterjs-content-model-dom';
 import { formatContentModel } from '../../../lib/editor/coreApi/formatContentModel';
@@ -15,7 +14,7 @@ describe('formatContentModel', () => {
     let cacheContentModel: jasmine.Spy;
     let getFocusedPosition: jasmine.Spy;
     let triggerEvent: jasmine.Spy;
-    let getVisibleViewport: jasmine.Spy;
+    let getDOMSelection: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedContainer = 'C' as any;
@@ -35,7 +34,7 @@ describe('formatContentModel', () => {
             .createSpy('getFocusedPosition')
             .and.returnValue({ node: mockedContainer, offset: mockedOffset });
         triggerEvent = jasmine.createSpy('triggerPluginEvent');
-        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
+        getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue(null);
 
         core = ({
             api: {
@@ -45,10 +44,10 @@ describe('formatContentModel', () => {
                 cacheContentModel,
                 getFocusedPosition,
                 triggerEvent,
+                getDOMSelection,
             },
             lifecycle: {},
             cache: {},
-            getVisibleViewport,
         } as any) as ContentModelEditorCore;
     });
 
@@ -111,10 +110,6 @@ describe('formatContentModel', () => {
             context.skipUndoSnapshot = true;
             return true;
         });
-        const mockedFormat = 'FORMAT' as any;
-
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(mockedFormat);
-        spyOn(pendingFormat, 'setPendingFormat');
 
         formatContentModel(core, callback, { apiName });
 
@@ -514,6 +509,184 @@ describe('formatContentModel', () => {
         expect(core.cache).toEqual({
             cachedModel: undefined,
             cachedSelection: undefined,
+        });
+    });
+
+    describe('Pending foramt', () => {
+        const mockedStartContainer1 = 'CONTAINER1' as any;
+        const mockedStartOffset1 = 'OFFSET1' as any;
+        const mockedFormat1: ContentModelSegmentFormat = { fontSize: '10pt' };
+
+        const mockedStartContainer2 = 'CONTAINER2' as any;
+        const mockedStartOffset2 = 'OFFSET2' as any;
+        const mockedFormat2: ContentModelSegmentFormat = { fontFamily: 'Arial' };
+
+        beforeEach(() => {
+            core.format = {
+                defaultFormat: {},
+                pendingFormat: null,
+            };
+
+            const mockedRange = {
+                type: 'range',
+                range: {
+                    collapsed: true,
+                    startContainer: mockedStartContainer2,
+                    startOffset: mockedStartOffset2,
+                },
+            } as any;
+
+            core.api.setContentModel = () => mockedRange;
+            core.api.getDOMSelection = () => mockedRange;
+        });
+
+        it('No pending format, callback returns true, preserve pending format', () => {
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = 'preserve';
+                return true;
+            });
+
+            expect(core.format.pendingFormat).toBeNull();
+        });
+
+        it('No pending format, callback returns false, preserve pending format', () => {
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = 'preserve';
+                return false;
+            });
+
+            expect(core.format.pendingFormat).toBeNull();
+        });
+
+        it('Has pending format, callback returns true, preserve pending format', () => {
+            core.format.pendingFormat = {
+                format: mockedFormat1,
+                posContainer: mockedStartContainer1,
+                posOffset: mockedStartOffset1,
+            };
+
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = 'preserve';
+                return true;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: mockedFormat1,
+                posContainer: mockedStartContainer2,
+                posOffset: mockedStartOffset2,
+            } as any);
+        });
+
+        it('Has pending format, callback returns false, preserve pending format', () => {
+            core.format.pendingFormat = {
+                format: mockedFormat1,
+                posContainer: mockedStartContainer1,
+                posOffset: mockedStartOffset1,
+            };
+
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = 'preserve';
+                return false;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: mockedFormat1,
+                posContainer: mockedStartContainer2,
+                posOffset: mockedStartOffset2,
+            } as any);
+        });
+
+        it('No pending format, callback returns true, new format', () => {
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = mockedFormat2;
+                return true;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: mockedFormat2,
+                posContainer: mockedStartContainer2,
+                posOffset: mockedStartOffset2,
+            });
+        });
+
+        it('No pending format, callback returns false, new format', () => {
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = mockedFormat2;
+                return false;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: mockedFormat2,
+                posContainer: mockedStartContainer2,
+                posOffset: mockedStartOffset2,
+            });
+        });
+
+        it('Has pending format, callback returns true, new format', () => {
+            core.format.pendingFormat = {
+                format: mockedFormat1,
+                posContainer: mockedStartContainer1,
+                posOffset: mockedStartOffset1,
+            };
+
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = mockedFormat2;
+                return true;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: mockedFormat2,
+                posContainer: mockedStartContainer2,
+                posOffset: mockedStartOffset2,
+            });
+        });
+
+        it('Has pending format, callback returns false, new format', () => {
+            core.format.pendingFormat = {
+                format: mockedFormat1,
+                posContainer: mockedStartContainer1,
+                posOffset: mockedStartOffset1,
+            };
+
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = mockedFormat2;
+                return false;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: mockedFormat2,
+                posContainer: mockedStartContainer2,
+                posOffset: mockedStartOffset2,
+            });
+        });
+
+        it('Has pending format, callback returns false, preserve format, selection is not collapsed', () => {
+            core.format.pendingFormat = {
+                format: mockedFormat1,
+                posContainer: mockedStartContainer1,
+                posOffset: mockedStartOffset1,
+            };
+
+            core.api.getDOMSelection = () =>
+                ({
+                    type: 'range',
+                    range: {
+                        collapsed: false,
+                        startContainer: mockedStartContainer2,
+                        startOffset: mockedStartOffset2,
+                    },
+                } as any);
+
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = 'preserve';
+                return false;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: mockedFormat1,
+                posContainer: mockedStartContainer1,
+                posOffset: mockedStartOffset1,
+            });
         });
     });
 });

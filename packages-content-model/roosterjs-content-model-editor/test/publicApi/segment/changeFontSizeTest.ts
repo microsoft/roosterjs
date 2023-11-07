@@ -1,6 +1,5 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
@@ -332,8 +331,6 @@ describe('changeFontSize', () => {
     });
 
     it('Test format parser', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
         const div = document.createElement('div');
         const sub = document.createElement('sub');
 
@@ -363,6 +360,7 @@ describe('changeFontSize', () => {
         const editor = ({
             formatContentModel,
             focus: jasmine.createSpy(),
+            getPendingFormat: () => null as ContentModelSegmentFormat,
         } as any) as IContentModelEditor;
 
         changeFontSize(editor, 'increase');

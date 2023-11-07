@@ -1,6 +1,5 @@
 import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../utils/deleteBlock';
-import { DeleteResult } from '../utils/DeleteSelectionStep';
 import { deleteSegment } from '../utils/deleteSegment';
 import { getLeafSiblingBlock } from '../../block/getLeafSiblingBlock';
 import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
@@ -22,7 +21,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
 
         if (segmentToDelete) {
             if (deleteSegment(paragraph, segmentToDelete, context.formatContext, direction)) {
-                context.deleteResult = DeleteResult.SingleChar;
+                context.deleteResult = 'singleChar';
 
                 // It is possible that we have deleted everything from this paragraph, so we need to mark it as not implicit
                 // to avoid losing its format. See https://github.com/microsoft/roosterjs/issues/1953
@@ -35,7 +34,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                 if (siblingSegment) {
                     // When selection is under general segment, need to check if it has a sibling sibling, and delete from it
                     if (deleteSegment(block, siblingSegment, context.formatContext, direction)) {
-                        context.deleteResult = DeleteResult.Range;
+                        context.deleteResult = 'range';
                     }
                 } else {
                     if (isForward) {
@@ -50,7 +49,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                         delete block.cachedElement;
                     }
 
-                    context.deleteResult = DeleteResult.Range;
+                    context.deleteResult = 'range';
                 }
 
                 // When go across table, getLeafSiblingBlock will return null, when we are here, we must be in the same table context
@@ -65,14 +64,14 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                         direction
                     )
                 ) {
-                    context.deleteResult = DeleteResult.Range;
+                    context.deleteResult = 'range';
                 }
             }
         } else {
             // We have nothing to delete, in this case we don't want browser handle it as well.
             // Because when Backspace on an empty document, it will also delete the only DIV and SPAN element, causes
             // editor is really empty. We don't want that happen. So the handling should stop here.
-            context.deleteResult = DeleteResult.NothingToDelete;
+            context.deleteResult = 'nothingToDelete';
         }
     };
 }

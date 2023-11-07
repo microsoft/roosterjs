@@ -1,4 +1,3 @@
-import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
 import type { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
@@ -16,7 +15,7 @@ import {
  * @param editor The editor to get format from
  */
 export default function getFormatState(editor: IContentModelEditor): ContentModelFormatState {
-    const pendingFormat = getPendingFormat(editor);
+    const pendingFormat = editor.getPendingFormat();
     const model = editor.createContentModel({
         processorOverride: {
             child: reducedModelChildProcessor,

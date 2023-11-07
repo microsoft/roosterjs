@@ -5,6 +5,7 @@ import type {
 } from './parameter/FormatWithContentModelContext';
 import type {
     ContentModelDocument,
+    ContentModelSegmentFormat,
     DOMSelection,
     DomToModelOption,
     ModelToDomOption,
@@ -85,6 +86,11 @@ export interface IContentModelEditor extends IEditor {
         formatter: ContentModelFormatter,
         options?: FormatWithContentModelOptions
     ): void;
+
+    /**
+     * Get pending format of editor if any, or return null
+     */
+    getPendingFormat(): ContentModelSegmentFormat | null;
 }
 
 /**

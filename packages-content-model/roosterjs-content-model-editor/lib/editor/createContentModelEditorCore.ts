@@ -147,6 +147,7 @@ function getPluginState(options: ContentModelEditorOptions): ContentModelPluginS
                 backgroundColor:
                     format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
             },
+            pendingFormat: null,
         },
     };
 }

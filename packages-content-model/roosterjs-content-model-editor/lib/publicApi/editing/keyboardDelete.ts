@@ -1,6 +1,5 @@
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
-import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { isModifierKey } from '../../domUtils/eventUtils';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
@@ -44,7 +43,7 @@ export default function keyboardDelete(
                     context
                 ).deleteResult;
 
-                isDeleted = result != DeleteResult.NotDeleted;
+                isDeleted = result != 'notDeleted';
 
                 return handleKeyboardEventResult(editor, model, rawEvent, result, context);
             },

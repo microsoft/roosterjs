@@ -1,9 +1,9 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ContentModelDocument, ContentModelParagraph } from 'roosterjs-content-model-types';
 import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     ContentModelFormatter,
+    FormatWithContentModelContext,
     FormatWithContentModelOptions,
 } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import {
@@ -15,6 +15,7 @@ import {
 describe('formatParagraphWithContentModel', () => {
     let editor: IContentModelEditor;
     let model: ContentModelDocument;
+    let context: FormatWithContentModelContext;
 
     const mockedContainer = 'C' as any;
     const mockedOffset = 'O' as any;
@@ -22,16 +23,20 @@ describe('formatParagraphWithContentModel', () => {
     const apiName = 'mockedApi';
 
     beforeEach(() => {
+        context = undefined!;
+
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
                 (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    callback(model, {
+                    context = {
                         newEntities: [],
-                        deletedEntities: [],
                         newImages: [],
+                        deletedEntities: [],
                         rawEvent: options.rawEvent,
-                    });
+                    };
+
+                    callback(model, context);
                 }
             );
 
@@ -101,14 +106,18 @@ describe('formatParagraphWithContentModel', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        spyOn(pendingFormat, 'formatAndKeepPendingFormat').and.callThrough();
-
         const callback = (paragraph: ContentModelParagraph) => {
             paragraph.format.backgroundColor = 'red';
         };
 
         formatParagraphWithContentModel(editor, apiName, callback);
 
-        expect(pendingFormat.formatAndKeepPendingFormat).toHaveBeenCalled();
+        expect(context).toEqual({
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+            rawEvent: undefined,
+            newPendingFormat: 'preserve',
+        });
     });
 });
