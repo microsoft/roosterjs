@@ -1,0 +1,29 @@
+import { getFirstSelectedListItem } from 'roosterjs-content-model-editor';
+import type { IContentModelEditor } from 'roosterjs-content-model-editor';
+
+/**
+ * Set start number of a list item
+ * @param editor The editor to operate on
+ * @param value The number to set to, must be equal or greater than 1
+ */
+export function setListStartNumber(editor: IContentModelEditor, value: number) {
+    editor.focus();
+
+    editor.formatContentModel(
+        model => {
+            const listItem = getFirstSelectedListItem(model);
+            const level = listItem?.levels[listItem?.levels.length - 1];
+
+            if (level) {
+                level.format.startNumberOverride = value;
+
+                return true;
+            } else {
+                return false;
+            }
+        },
+        {
+            apiName: 'setListStartNumber',
+        }
+    );
+}

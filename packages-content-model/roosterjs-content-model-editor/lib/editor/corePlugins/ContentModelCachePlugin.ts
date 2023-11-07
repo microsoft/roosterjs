@@ -1,4 +1,4 @@
-import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
+import { areSameRangeEx } from './utils/areSameRangeEx';
 import { isCharacterValue } from '../../domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';

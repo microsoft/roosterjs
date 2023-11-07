@@ -1,5 +1,5 @@
 import { getSelectionPath } from 'roosterjs-editor-dom';
-import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 import type { SwitchShadowEdit } from 'roosterjs-editor-types';

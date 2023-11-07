@@ -1,7 +1,7 @@
-import getSelectedSegments from '../selection/getSelectedSegments';
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
-import { mergeModel } from '../../modelApi/common/mergeModel';
+import { getSelectedSegments } from '../selection/collectSelections';
+import { mergeModel } from '../model/mergeModel';
 import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import type {
     ContentModelDocument,

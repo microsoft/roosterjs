@@ -1,9 +1,8 @@
 import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
-import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
+import { contentModelDomIndexer } from './corePlugins/utils/contentModelDomIndexer';
 import { createContentModel } from './coreApi/createContentModel';
 import { createContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
-import { createContentModelEditPlugin } from './corePlugins/ContentModelEditPlugin';
 import { createContentModelFormatPlugin } from './corePlugins/ContentModelFormatPlugin';
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';

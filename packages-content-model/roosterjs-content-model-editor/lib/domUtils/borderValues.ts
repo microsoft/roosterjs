@@ -1,4 +1,4 @@
-import type { Border } from '../publicTypes/interface/Border';
+import type { Border } from 'roosterjs-content-model-editor';
 
 const BorderStyles = [
     'none',

@@ -1,4 +1,4 @@
-import { cloneModel } from '../../modelApi/common/cloneModel';
+import { cloneModel } from '../../publicApi/model/cloneModel';
 import type { DOMSelection, DomToModelOption } from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,

@@ -1,6 +1,5 @@
 import { ContentModelEntity, ContentModelSelectionMarker } from 'roosterjs-content-model-types';
 import { DeletedEntity } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
-import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../../lib/modelApi/edit/deleteSelection';
 import {
     createBr,
@@ -47,7 +46,7 @@ describe('deleteSelection - selectionOnly', () => {
             ],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.NotDeleted);
+        expect(result.deleteResult).toBe('notDeleted');
         expect(result.insertPoint).toBeNull();
     });
 
@@ -61,7 +60,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         const result = deleteSelection(model);
 
-        expect(result.deleteResult).toBe(DeleteResult.NotDeleted);
+        expect(result.deleteResult).toBe('notDeleted');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -101,7 +100,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         const result = deleteSelection(model);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -150,7 +149,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         const result = deleteSelection(model);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -198,7 +197,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         const result = deleteSelection(model);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -252,7 +251,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         const result = deleteSelection(model);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -322,7 +321,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         const result = deleteSelection(model);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -423,7 +422,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         const result = deleteSelection(model);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -475,7 +474,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         const result = deleteSelection(model);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -532,7 +531,7 @@ describe('deleteSelection - selectionOnly', () => {
             newImages: [],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -591,7 +590,7 @@ describe('deleteSelection - selectionOnly', () => {
             newImages: [],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -651,7 +650,7 @@ describe('deleteSelection - selectionOnly', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -694,7 +693,7 @@ describe('deleteSelection - selectionOnly', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -736,7 +735,7 @@ describe('deleteSelection - selectionOnly', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -784,7 +783,7 @@ describe('deleteSelection - selectionOnly', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -826,7 +825,7 @@ describe('deleteSelection - selectionOnly', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -867,7 +866,7 @@ describe('deleteSelection - selectionOnly', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -907,7 +906,7 @@ describe('deleteSelection - selectionOnly', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -947,7 +946,7 @@ describe('deleteSelection - selectionOnly', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -997,7 +996,7 @@ describe('deleteSelection - forward', () => {
             ],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.NotDeleted);
+        expect(result.deleteResult).toBe('notDeleted');
         expect(result.insertPoint).toBeNull();
     });
 
@@ -1011,7 +1010,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.NothingToDelete);
+        expect(result.deleteResult).toBe('nothingToDelete');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1051,7 +1050,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1099,7 +1098,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1157,7 +1156,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1211,7 +1210,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1270,7 +1269,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1325,7 +1324,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1367,7 +1366,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1408,7 +1407,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1450,7 +1449,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1497,7 +1496,7 @@ describe('deleteSelection - forward', () => {
             newImages: [],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1545,7 +1544,7 @@ describe('deleteSelection - forward', () => {
             newImages: [],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1591,7 +1590,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1659,7 +1658,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1722,7 +1721,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1787,7 +1786,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1859,7 +1858,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1913,7 +1912,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1961,7 +1960,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2015,7 +2014,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2085,7 +2084,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2186,7 +2185,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2244,7 +2243,7 @@ describe('deleteSelection - forward', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -2287,7 +2286,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.NothingToDelete);
+        expect(result.deleteResult).toBe('nothingToDelete');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2338,7 +2337,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2390,7 +2389,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2434,7 +2433,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2480,7 +2479,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2529,7 +2528,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2574,7 +2573,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2617,7 +2616,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2660,7 +2659,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2703,7 +2702,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, [forwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2756,7 +2755,7 @@ describe('deleteSelection - backward', () => {
             ],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.NotDeleted);
+        expect(result.deleteResult).toBe('notDeleted');
         expect(result.insertPoint).toBeNull();
     });
 
@@ -2770,7 +2769,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.NothingToDelete);
+        expect(result.deleteResult).toBe('nothingToDelete');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2810,7 +2809,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2858,7 +2857,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2916,7 +2915,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2970,7 +2969,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3028,7 +3027,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3083,7 +3082,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3125,7 +3124,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3166,7 +3165,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3208,7 +3207,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3255,7 +3254,7 @@ describe('deleteSelection - backward', () => {
             newImages: [],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3304,7 +3303,7 @@ describe('deleteSelection - backward', () => {
             newImages: [],
         });
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3350,7 +3349,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3418,7 +3417,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3481,7 +3480,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3546,7 +3545,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3618,7 +3617,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3672,7 +3671,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3720,7 +3719,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3774,7 +3773,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3844,7 +3843,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3945,7 +3944,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -4003,7 +4002,7 @@ describe('deleteSelection - backward', () => {
             isSelected: true,
         };
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
         expect(result.insertPoint).toEqual({
             marker,
             paragraph: {
@@ -4046,7 +4045,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.NothingToDelete);
+        expect(result.deleteResult).toBe('nothingToDelete');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4097,7 +4096,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4149,7 +4148,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4193,7 +4192,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4239,7 +4238,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4288,7 +4287,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4333,7 +4332,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4381,7 +4380,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4424,7 +4423,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4467,7 +4466,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4512,7 +4511,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteWordSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.deleteResult).toBe('range');
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -4556,7 +4555,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 
-        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+        expect(result.deleteResult).toBe('singleChar');
 
         expect(result.insertPoint).toEqual({
             marker: marker,

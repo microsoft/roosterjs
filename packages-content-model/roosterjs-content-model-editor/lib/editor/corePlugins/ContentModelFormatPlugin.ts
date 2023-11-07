@@ -1,5 +1,5 @@
-import { applyDefaultFormat } from '../../modelApi/format/applyDefaultFormat';
-import { applyPendingFormat } from '../../modelApi/format/applyPendingFormat';
+import { applyDefaultFormat } from './utils/applyDefaultFormat';
+import { applyPendingFormat } from './utils/applyPendingFormat';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue } from '../../domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
