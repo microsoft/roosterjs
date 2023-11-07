@@ -2,6 +2,7 @@ import type {
     ContentModelDocument,
     ContentModelEntity,
     ContentModelImage,
+    ContentModelSegmentFormat,
     DOMSelection,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
@@ -97,6 +98,21 @@ export interface FormatWithContentModelContext {
      * Need to be set by the formatter function
      */
     skipUndoSnapshot?: boolean;
+
+    /**
+     * @optional
+     * When set to true, formatWithContentModel API will not keep cached Content Model. Next time when we need a Content Model, a new one will be created
+     */
+    clearModelCache?: boolean;
+
+    /**
+     * @optional
+     * Specify new pending format.
+     * To keep current format event selection position is changed, set this value to "preserved", editor will update pending format position to the new position
+     * To set a new pending format, set this property to the format object
+     * Otherwise, leave it there and editor will automatically decide if the original pending format is still available
+     */
+    newPendingFormat?: ContentModelSegmentFormat | 'preserve';
 }
 
 /**
@@ -104,9 +120,9 @@ export interface FormatWithContentModelContext {
  */
 export interface FormatWithContentModelOptions {
     /**
-     * When set to true, if there is pending format, it will be preserved after this format operation is done
+     * Name of the format API
      */
-    preservePendingFormat?: boolean;
+    apiName?: string;
 
     /**
      * Raw event object that triggers this call

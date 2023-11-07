@@ -1,5 +1,4 @@
 import { clearModelFormat } from '../../modelApi/common/clearModelFormat';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
@@ -16,15 +15,22 @@ import type {
 export default function clearFormat(editor: IContentModelEditor) {
     editor.focus();
 
-    formatWithContentModel(editor, 'clearFormat', model => {
-        const blocksToClear: [ContentModelBlockGroup[], ContentModelBlock][] = [];
-        const segmentsToClear: ContentModelSegment[] = [];
-        const tablesToClear: [ContentModelTable, boolean][] = [];
+    editor.formatContentModel(
+        model => {
+            const blocksToClear: [ContentModelBlockGroup[], ContentModelBlock][] = [];
+            const segmentsToClear: ContentModelSegment[] = [];
+            const tablesToClear: [ContentModelTable, boolean][] = [];
 
-        clearModelFormat(model, blocksToClear, segmentsToClear, tablesToClear);
+            clearModelFormat(model, blocksToClear, segmentsToClear, tablesToClear);
 
-        normalizeContentModel(model);
+            normalizeContentModel(model);
 
-        return blocksToClear.length > 0 || segmentsToClear.length > 0 || tablesToClear.length > 0;
-    });
+            return (
+                blocksToClear.length > 0 || segmentsToClear.length > 0 || tablesToClear.length > 0
+            );
+        },
+        {
+            apiName: 'clearFormat',
+        }
+    );
 }

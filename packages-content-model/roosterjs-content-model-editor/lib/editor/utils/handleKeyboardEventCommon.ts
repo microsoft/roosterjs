@@ -1,6 +1,6 @@
-import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
+import type { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -17,24 +17,28 @@ export function handleKeyboardEventResult(
     context: FormatWithContentModelContext
 ): boolean {
     context.skipUndoSnapshot = true;
+    context.clearModelCache = false;
 
     switch (result) {
-        case DeleteResult.NotDeleted:
-            // We have not delete anything, we will let browser handle this event
+        case 'notDeleted':
+            // We have not delete anything, we will let browser handle this event, so that current cached model may be invalid
+            context.clearModelCache = true;
+
+            // Return false here since we didn't do any change to Content Model, so no need to rewrite with Content Model
             return false;
 
-        case DeleteResult.NothingToDelete:
+        case 'nothingToDelete':
             // We known there is nothing to delete, no need to let browser keep handling the event
             rawEvent.preventDefault();
             return false;
 
-        case DeleteResult.Range:
-        case DeleteResult.SingleChar:
+        case 'range':
+        case 'singleChar':
             // We have deleted what we need from content model, no need to let browser keep handling the event
             rawEvent.preventDefault();
             normalizeContentModel(model);
 
-            if (result == DeleteResult.Range) {
+            if (result == 'range') {
                 // A range is about to be deleted, so add an undo snapshot immediately
                 context.skipUndoSnapshot = false;
             }

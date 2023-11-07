@@ -1,4 +1,3 @@
-import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
 import type { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
@@ -16,7 +15,7 @@ import {
  * @param editor The editor to get format from
  */
 export default function getFormatState(editor: IContentModelEditor): ContentModelFormatState {
-    const pendingFormat = getPendingFormat(editor);
+    const pendingFormat = editor.getPendingFormat();
     const model = editor.createContentModel({
         processorOverride: {
             child: reducedModelChildProcessor,
@@ -57,37 +56,34 @@ export function reducedModelChildProcessor(
     parent: ParentNode,
     context: FormatStateContext
 ) {
-    const selectionRootNode = getSelectionRootNode(context.selection);
+    if (!context.nodeStack) {
+        const selectionRootNode = getSelectionRootNode(context.selection);
+        context.nodeStack = selectionRootNode ? createNodeStack(parent, selectionRootNode) : [];
+    }
 
-    if (selectionRootNode) {
-        if (!context.nodeStack) {
-            context.nodeStack = createNodeStack(parent, selectionRootNode);
+    const stackChild = context.nodeStack.pop();
+
+    if (stackChild) {
+        const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
+
+        // If selection is not on this node, skip getting node index to save some time since we don't need it here
+        const index =
+            nodeStartOffset >= 0 || nodeEndOffset >= 0 ? getChildIndex(parent, stackChild) : -1;
+
+        if (index >= 0) {
+            handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
         }
 
-        const stackChild = context.nodeStack.pop();
+        processChildNode(group, stackChild, context);
 
-        if (stackChild) {
-            const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
-
-            // If selection is not on this node, skip getting node index to save some time since we don't need it here
-            const index =
-                nodeStartOffset >= 0 || nodeEndOffset >= 0 ? getChildIndex(parent, stackChild) : -1;
-
-            if (index >= 0) {
-                handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
-            }
-
-            processChildNode(group, stackChild, context);
-
-            if (index >= 0) {
-                handleRegularSelection(index + 1, context, group, nodeStartOffset, nodeEndOffset);
-            }
-        } else {
-            // No child node from node stack, that means we have reached the deepest node of selection.
-            // Now we can use default child processor to perform full sub tree scanning for content model,
-            // So that all selected node will be included.
-            context.defaultElementProcessors.child(group, parent, context);
+        if (index >= 0) {
+            handleRegularSelection(index + 1, context, group, nodeStartOffset, nodeEndOffset);
         }
+    } else {
+        // No child node from node stack, that means we have reached the deepest node of selection.
+        // Now we can use default child processor to perform full sub tree scanning for content model,
+        // So that all selected node will be included.
+        context.defaultElementProcessors.child(group, parent, context);
     }
 }
 

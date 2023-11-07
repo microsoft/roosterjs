@@ -1,4 +1,3 @@
-import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedParagraphs } from '../../modelApi/selection/collectSelections';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -11,18 +10,17 @@ export function formatParagraphWithContentModel(
     apiName: string,
     setStyleCallback: (paragraph: ContentModelParagraph) => void
 ) {
-    formatWithContentModel(
-        editor,
-        apiName,
-        model => {
+    editor.formatContentModel(
+        (model, context) => {
             const paragraphs = getSelectedParagraphs(model);
 
             paragraphs.forEach(setStyleCallback);
+            context.newPendingFormat = 'preserve';
 
             return paragraphs.length > 0;
         },
         {
-            preservePendingFormat: true,
+            apiName,
         }
     );
 }

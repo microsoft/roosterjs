@@ -1,7 +1,5 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import type { ContentModelLink } from 'roosterjs-content-model-types';
@@ -49,9 +47,7 @@ export default function insertLink(
         const links: ContentModelLink[] = [];
         let anchorNode: Node | undefined;
 
-        formatWithContentModel(
-            editor,
-            'insertLink',
+        editor.formatContentModel(
             (model, context) => {
                 const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
                 const originalText = segments
@@ -80,8 +76,8 @@ export default function insertLink(
                     (!!text && text != originalText)
                 ) {
                     const segment = createText(text || (linkData ? linkData.originalUrl : url), {
-                        ...(segments[0]?.format || {}),
-                        ...(getPendingFormat(editor) || {}),
+                        ...segments[0]?.format,
+                        ...editor.getPendingFormat(),
                     });
                     const doc = createContentModelDocument();
                     const link = createLink(linkUrl, anchorTitle, target);
@@ -108,6 +104,7 @@ export default function insertLink(
                     }
                 },
                 getChangeData: () => anchorNode,
+                apiName: 'insertLink',
             }
         );
     }

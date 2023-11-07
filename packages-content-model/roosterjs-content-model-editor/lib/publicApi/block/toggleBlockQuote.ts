@@ -1,4 +1,3 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
 import type { ContentModelFormatContainerFormat } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -33,12 +32,14 @@ export default function toggleBlockQuote(
 
     editor.focus();
 
-    formatWithContentModel(
-        editor,
-        'toggleBlockQuote',
-        model => toggleModelBlockQuote(model, fullQuoteFormat),
+    editor.formatContentModel(
+        (model, context) => {
+            context.newPendingFormat = 'preserve';
+
+            return toggleModelBlockQuote(model, fullQuoteFormat);
+        },
         {
-            preservePendingFormat: true,
+            apiName: 'toggleBlockQuote',
         }
     );
 }

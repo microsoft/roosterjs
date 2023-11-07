@@ -1,5 +1,4 @@
 import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model-dom';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { readFile } from '../../domUtils/readFile';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -24,15 +23,20 @@ export default function insertImage(editor: IContentModelEditor, imageFileOrSrc:
 }
 
 function insertImageWithSrc(editor: IContentModelEditor, src: string) {
-    formatWithContentModel(editor, 'insertImage', (model, context) => {
-        const image = createImage(src, { backgroundColor: '' });
-        const doc = createContentModelDocument();
+    editor.formatContentModel(
+        (model, context) => {
+            const image = createImage(src, { backgroundColor: '' });
+            const doc = createContentModelDocument();
 
-        addSegment(doc, image);
-        mergeModel(model, doc, context, {
-            mergeFormat: 'mergeAll',
-        });
+            addSegment(doc, image);
+            mergeModel(model, doc, context, {
+                mergeFormat: 'mergeAll',
+            });
 
-        return true;
-    });
+            return true;
+        },
+        {
+            apiName: 'insertImage',
+        }
+    );
 }

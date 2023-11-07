@@ -1,5 +1,4 @@
 import { deleteExpandedSelection } from './utils/deleteExpandedSelection';
-import { DeleteResult } from './utils/DeleteSelectionStep';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type {
@@ -23,7 +22,7 @@ export function deleteSelection(
         if (
             step &&
             isValidDeleteSelectionContext(context) &&
-            context.deleteResult == DeleteResult.NotDeleted
+            context.deleteResult == 'notDeleted'
         ) {
             step(context);
         }
@@ -46,8 +45,8 @@ function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
 
     if (
         insertPoint &&
-        deleteResult != DeleteResult.NotDeleted &&
-        deleteResult != DeleteResult.NothingToDelete &&
+        deleteResult != 'notDeleted' &&
+        deleteResult != 'nothingToDelete' &&
         lastParagraph &&
         lastParagraph != insertPoint.paragraph &&
         lastTableContext == insertPoint.tableContext

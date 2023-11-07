@@ -6,13 +6,13 @@ import { ContentModelTable, ContentModelTableCell } from 'roosterjs-content-mode
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 
 describe('applyTableBorderFormat', () => {
     let editor: IContentModelEditor;
-    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
-    let triggerPluginEvent: jasmine.Spy;
-    let getVisibleViewport: jasmine.Spy;
     const width = '3px';
     const style = 'double';
     const color = '#AABBCC';
@@ -40,22 +40,9 @@ describe('applyTableBorderFormat', () => {
     }
 
     beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-
         spyOn(normalizeTable, 'normalizeTable');
 
-        editor = ({
-            focus: () => {},
-            addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
-            isDarkMode: () => false,
-            triggerPluginEvent,
-            getVisibleViewport,
-        } as any) as IContentModelEditor;
+        editor = ({} as any) as IContentModelEditor;
     });
 
     function runTest(
@@ -67,23 +54,30 @@ describe('applyTableBorderFormat', () => {
         const model = createContentModelDocument();
         model.blocks.push(table);
 
-        createContentModel.and.returnValue(model);
+        let formatResult: boolean | undefined;
+
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
+
+        editor.formatContentModel = formatContentModel;
 
         applyTableBorderFormat(editor, border, operation);
 
-        if (expectedTable) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(
-                {
-                    blockGroupType: 'Document',
-                    blocks: [expectedTable],
-                },
-                undefined,
-                undefined
-            );
-        } else {
-            expect(setContentModel).not.toHaveBeenCalled();
-        }
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [expectedTable],
+        });
     }
     it('All Borders', () => {
         runTest(
