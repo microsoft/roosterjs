@@ -1,5 +1,5 @@
 import * as addRangeToSelection from '../../../lib/domUtils/addRangeToSelection';
-import * as cloneModelFile from '../../../lib/modelApi/common/cloneModel';
+import * as cloneModelFile from '../../../lib/publicApi/model/cloneModel';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
