@@ -58,6 +58,13 @@ export {
     TableCellVerticalAlignOperation,
 } from './publicTypes/parameter/TableOperation';
 export { PasteType } from './publicTypes/parameter/PasteType';
+export {
+    DeleteResult,
+    DeleteSelectionContext,
+    DeleteSelectionResult,
+    DeleteSelectionStep,
+    ValidDeleteSelectionContext,
+} from './publicTypes/parameter/DeleteSelectionStep';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -112,7 +119,6 @@ export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';
 
 export { default as ContentModelFormatPlugin } from './editor/corePlugins/ContentModelFormatPlugin';
-export { default as ContentModelEditPlugin } from './editor/corePlugins/ContentModelEditPlugin';
 export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugins/ContentModelTypeInContainerPlugin';
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
 export { default as ContentModelCachePlugin } from './editor/corePlugins/ContentModelCachePlugin';

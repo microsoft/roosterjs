@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from 'roosterjs-content-model-editor';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { isModifierKey } from '../../domUtils/eventUtils';
@@ -26,10 +26,7 @@ import {
  * @param rawEvent DOM keyboard event
  * @returns True if the event is handled with this function, otherwise false
  */
-export default function keyboardDelete(
-    editor: IContentModelEditor,
-    rawEvent: KeyboardEvent
-): boolean {
+export function keyboardDelete(editor: IContentModelEditor, rawEvent: KeyboardEvent): boolean {
     const selection = editor.getDOMSelection();
     const range = selection?.type == 'range' ? selection.range : null;
     let isDeleted = false;
