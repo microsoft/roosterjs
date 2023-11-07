@@ -1,7 +1,7 @@
 import paste from '../../publicApi/utils/paste';
 import { addRangeToSelection } from '../../domUtils/addRangeToSelection';
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import { cloneModel } from '../../modelApi/common/cloneModel';
+import { cloneModel } from '../../publicApi/model/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';

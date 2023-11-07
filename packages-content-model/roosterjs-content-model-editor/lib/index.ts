@@ -106,10 +106,10 @@ export { default as setParagraphMargin } from './publicApi/block/setParagraphMar
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
+export { CachedElementHandler, CloneModelOptions, cloneModel } from './publicApi/model/cloneModel';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';
-export { default as ContentModelPastePlugin } from './editor/plugins/PastePlugin/ContentModelPastePlugin';
 
 export { default as ContentModelFormatPlugin } from './editor/corePlugins/ContentModelFormatPlugin';
 export { default as ContentModelEditPlugin } from './editor/corePlugins/ContentModelEditPlugin';
