@@ -70,19 +70,15 @@ export default class ImageSelection implements EditorPlugin {
                         !rawEvent.metaKey &&
                         keyDownSelection.type === SelectionRangeTypes.ImageSelection
                     ) {
-                        if (key === Escape) {
+                        const position = new Position(keyDownSelection.image, PositionType.Before);
+                        if (key === Escape && position) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange()?.collapse();
                             event.rawEvent.stopPropagation();
                         } else if (key === Delete) {
                             this.editor.deleteNode(keyDownSelection.image);
                             event.rawEvent.preventDefault();
-                        } else {
-                            const position = new Position(
-                                keyDownSelection.image,
-                                PositionType.Before
-                            );
-
+                        } else if (position) {
                             this.editor.select(position);
                         }
                     }
