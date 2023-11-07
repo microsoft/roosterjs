@@ -1,4 +1,3 @@
-import { DeleteResult } from '../utils/DeleteSelectionStep';
 import { deleteSegment } from '../utils/deleteSegment';
 import type { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
@@ -15,7 +14,7 @@ export const deleteAllSegmentBefore: DeleteSelectionStep = context => {
         segment.isSelected = true;
 
         if (deleteSegment(paragraph, segment, context.formatContext)) {
-            context.deleteResult = DeleteResult.Range;
+            context.deleteResult = 'range';
         }
     }
 };

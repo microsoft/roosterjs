@@ -1,6 +1,5 @@
 import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../utils/deleteBlock';
-import { DeleteResult } from '../utils/DeleteSelectionStep';
 import { deleteSegment } from '../utils/deleteSegment';
 import { iterateSelections } from '../../selection/iterateSelections';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
@@ -30,7 +29,7 @@ export function deleteExpandedSelection(
     formatContext?: FormatWithContentModelContext
 ): DeleteSelectionContext {
     const context: DeleteSelectionContext = {
-        deleteResult: DeleteResult.NotDeleted,
+        deleteResult: 'notDeleted',
         insertPoint: null,
         formatContext,
     };
@@ -75,14 +74,14 @@ export function deleteExpandedSelection(
                                 tableContext
                             );
                         } else if (deleteSegment(block, segment, context.formatContext)) {
-                            context.deleteResult = DeleteResult.Range;
+                            context.deleteResult = 'range';
                         }
                     });
 
                     // Since we are operating on this paragraph and it possible we delete everything from this paragraph,
                     // Need to make it "not implicit" so that it will always have a container element, so that when we do normalization
                     // of this paragraph, a BR can be added if need
-                    if (context.deleteResult == DeleteResult.Range) {
+                    if (context.deleteResult == 'range') {
                         setParagraphNotImplicit(block);
                     }
                 }
@@ -91,7 +90,7 @@ export function deleteExpandedSelection(
                 const blocks = path[0].blocks;
 
                 if (deleteBlock(blocks, block, paragraph, context.formatContext)) {
-                    context.deleteResult = DeleteResult.Range;
+                    context.deleteResult = 'range';
                 }
             } else if (tableContext) {
                 // Delete a whole table cell
@@ -105,7 +104,7 @@ export function deleteExpandedSelection(
 
                 delete cell.cachedElement;
                 delete row.cachedElement;
-                context.deleteResult = DeleteResult.Range;
+                context.deleteResult = 'range';
             }
 
             if (!context.insertPoint) {

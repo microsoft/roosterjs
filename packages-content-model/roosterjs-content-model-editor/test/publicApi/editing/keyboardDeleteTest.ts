@@ -90,7 +90,7 @@ describe('keyboardDelete', () => {
                 blocks: [],
             },
             [null!, null!, forwardDeleteCollapsedSelection],
-            DeleteResult.NotDeleted,
+            'notDeleted',
             true,
             0
         );
@@ -108,7 +108,7 @@ describe('keyboardDelete', () => {
                 blocks: [],
             },
             [null!, null!, backwardDeleteCollapsedSelection],
-            DeleteResult.NotDeleted,
+            'notDeleted',
             true,
             0
         );
@@ -128,7 +128,7 @@ describe('keyboardDelete', () => {
                 blocks: [],
             },
             [null!, forwardDeleteWordSelection, forwardDeleteCollapsedSelection],
-            DeleteResult.NotDeleted,
+            'notDeleted',
             true,
             0
         );
@@ -148,7 +148,7 @@ describe('keyboardDelete', () => {
                 blocks: [],
             },
             [null!, backwardDeleteWordSelection, backwardDeleteCollapsedSelection],
-            DeleteResult.NotDeleted,
+            'notDeleted',
             true,
             0
         );
@@ -168,7 +168,7 @@ describe('keyboardDelete', () => {
                 blocks: [],
             },
             [null!, null!, forwardDeleteCollapsedSelection],
-            DeleteResult.NotDeleted,
+            'notDeleted',
             true,
             0
         );
@@ -188,7 +188,7 @@ describe('keyboardDelete', () => {
                 blocks: [],
             },
             [deleteAllSegmentBefore, null!, backwardDeleteCollapsedSelection],
-            DeleteResult.NotDeleted,
+            'notDeleted',
             true,
             0
         );
@@ -230,7 +230,7 @@ describe('keyboardDelete', () => {
                 ],
             },
             [null!, null!, forwardDeleteCollapsedSelection],
-            DeleteResult.NotDeleted,
+            'notDeleted',
             true,
             0
         );
@@ -272,7 +272,7 @@ describe('keyboardDelete', () => {
                 ],
             },
             [null!, null!, backwardDeleteCollapsedSelection],
-            DeleteResult.NotDeleted,
+            'notDeleted',
             true,
             0
         );
@@ -324,7 +324,7 @@ describe('keyboardDelete', () => {
                 ],
             },
             [null!, null!, forwardDeleteCollapsedSelection],
-            DeleteResult.SingleChar,
+            'singleChar',
             false,
             1
         );
@@ -376,7 +376,7 @@ describe('keyboardDelete', () => {
                 ],
             },
             [null!, null!, backwardDeleteCollapsedSelection],
-            DeleteResult.SingleChar,
+            'singleChar',
             false,
             1
         );

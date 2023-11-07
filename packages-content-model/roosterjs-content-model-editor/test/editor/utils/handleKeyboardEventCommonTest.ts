@@ -1,5 +1,4 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
@@ -38,7 +37,7 @@ describe('handleKeyboardEventResult', () => {
         spyOn(normalizeContentModel, 'normalizeContentModel');
     });
 
-    it('DeleteResult.SingleChar', () => {
+    it('singleChar', () => {
         const mockedModel = 'MODEL' as any;
         const which = 'WHICH' as any;
         (<any>mockedEvent).which = which;
@@ -51,7 +50,7 @@ describe('handleKeyboardEventResult', () => {
             mockedEditor,
             mockedModel,
             mockedEvent,
-            DeleteResult.SingleChar,
+            'singleChar',
             context
         );
 
@@ -67,7 +66,7 @@ describe('handleKeyboardEventResult', () => {
         expect(context.clearModelCache).toBeFalsy();
     });
 
-    it('DeleteResult.NotDeleted', () => {
+    it('notDeleted', () => {
         const mockedModel = 'MODEL' as any;
         const context: FormatWithContentModelContext = {
             newEntities: [],
@@ -78,7 +77,7 @@ describe('handleKeyboardEventResult', () => {
             mockedEditor,
             mockedModel,
             mockedEvent,
-            DeleteResult.NotDeleted,
+            'notDeleted',
             context
         );
 
@@ -92,7 +91,7 @@ describe('handleKeyboardEventResult', () => {
         expect(context.clearModelCache).toBeTruthy();
     });
 
-    it('DeleteResult.Range', () => {
+    it('range', () => {
         const mockedModel = 'MODEL' as any;
         const context: FormatWithContentModelContext = {
             newEntities: [],
@@ -103,7 +102,7 @@ describe('handleKeyboardEventResult', () => {
             mockedEditor,
             mockedModel,
             mockedEvent,
-            DeleteResult.Range,
+            'range',
             context
         );
 
@@ -119,7 +118,7 @@ describe('handleKeyboardEventResult', () => {
         expect(context.clearModelCache).toBeFalsy();
     });
 
-    it('DeleteResult.NothingToDelete', () => {
+    it('nothingToDelete', () => {
         const mockedModel = 'MODEL' as any;
         const context: FormatWithContentModelContext = {
             newEntities: [],
@@ -130,7 +129,7 @@ describe('handleKeyboardEventResult', () => {
             mockedEditor,
             mockedModel,
             mockedEvent,
-            DeleteResult.NothingToDelete,
+            'nothingToDelete',
             context
         );
 

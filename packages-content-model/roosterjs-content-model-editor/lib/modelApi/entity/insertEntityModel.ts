@@ -1,4 +1,3 @@
-import { DeleteResult } from '../edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
 import { setSelection } from '../selection/setSelection';
@@ -40,7 +39,7 @@ export function insertEntityModel(
     } else if ((deleteResult = deleteSelection(model, [], context)).insertPoint) {
         const { marker, paragraph, path } = deleteResult.insertPoint;
 
-        if (deleteResult.deleteResult == DeleteResult.Range) {
+        if (deleteResult.deleteResult == 'range') {
             normalizeContentModel(model);
         }
 
