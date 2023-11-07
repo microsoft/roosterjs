@@ -44,6 +44,8 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             selection =
                 core.api.setContentModel(core, model, undefined /*options*/, onNodeCreated) ||
                 undefined;
+
+            handlePendingFormat(core, context, selection);
         };
 
         if (context.skipUndoSnapshot) {
@@ -71,9 +73,13 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             },
         };
         core.api.triggerEvent(core, eventData, true /*broadcast*/);
-    } else if (context.clearModelCache) {
-        core.cache.cachedModel = undefined;
-        core.cache.cachedSelection = undefined;
+    } else {
+        if (context.clearModelCache) {
+            core.cache.cachedModel = undefined;
+            core.cache.cachedSelection = undefined;
+        }
+
+        handlePendingFormat(core, context, core.api.getDOMSelection(core));
     }
 };
 
@@ -150,5 +156,24 @@ function handleImages(core: ContentModelEditorCore, context: FormatWithContentMo
                 image.format.maxWidth = `${maxWidth}px`;
             });
         }
+    }
+}
+
+function handlePendingFormat(
+    core: ContentModelEditorCore,
+    context: FormatWithContentModelContext,
+    selection?: DOMSelection | null
+) {
+    const pendingFormat =
+        context.newPendingFormat == 'preserve'
+            ? core.format.pendingFormat?.format
+            : context.newPendingFormat;
+
+    if (pendingFormat && selection?.type == 'range' && selection.range.collapsed) {
+        core.format.pendingFormat = {
+            format: { ...pendingFormat },
+            posContainer: selection.range.startContainer,
+            posOffset: selection.range.startOffset,
+        };
     }
 }

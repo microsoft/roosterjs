@@ -1,6 +1,5 @@
-import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
-import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
-import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
+import { applyDefaultFormat } from '../../modelApi/format/applyDefaultFormat';
+import { applyPendingFormat } from '../../modelApi/format/applyPendingFormat';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue } from '../../domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
@@ -107,7 +106,7 @@ export default class ContentModelFormatPlugin
 
             case PluginEventType.KeyDown:
                 if (CursorMovingKeys.has(event.rawEvent.key)) {
-                    clearPendingFormat(this.editor);
+                    this.clearPendingFormat();
                 } else if (
                     this.hasDefaultFormat &&
                     (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey)
@@ -119,18 +118,44 @@ export default class ContentModelFormatPlugin
 
             case PluginEventType.MouseUp:
             case PluginEventType.ContentChanged:
-                if (!canApplyPendingFormat(this.editor)) {
-                    clearPendingFormat(this.editor);
+                if (!this.canApplyPendingFormat()) {
+                    this.clearPendingFormat();
                 }
                 break;
         }
     }
 
     private checkAndApplyPendingFormat(data: string | null) {
-        if (this.editor && data) {
-            applyPendingFormat(this.editor, data);
-            clearPendingFormat(this.editor);
+        if (this.editor && data && this.state.pendingFormat) {
+            applyPendingFormat(this.editor, data, this.state.pendingFormat.format);
+            this.clearPendingFormat();
         }
+    }
+
+    private clearPendingFormat() {
+        this.state.pendingFormat = null;
+    }
+
+    /**
+     * @internal
+     * Check if this editor can apply pending format
+     * @param editor The editor to get format from
+     */
+    private canApplyPendingFormat(): boolean {
+        let result = false;
+
+        if (this.state.pendingFormat && this.editor) {
+            const selection = this.editor.getDOMSelection();
+            const range =
+                selection?.type == 'range' && selection.range.collapsed ? selection.range : null;
+            const { posContainer, posOffset } = this.state.pendingFormat;
+
+            if (range && range.startContainer == posContainer && range.startOffset == posOffset) {
+                result = true;
+            }
+        }
+
+        return result;
     }
 }
 

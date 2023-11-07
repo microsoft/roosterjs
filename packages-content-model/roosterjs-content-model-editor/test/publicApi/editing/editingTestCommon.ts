@@ -1,4 +1,3 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
@@ -13,9 +12,6 @@ export function editingTestCommon(
     result: ContentModelDocument,
     calledTimes: number
 ) {
-    spyOn(pendingFormat, 'setPendingFormat');
-    spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
-
     const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
     let formatResult: boolean | undefined;
@@ -23,6 +19,7 @@ export function editingTestCommon(
     const formatContentModel = jasmine
         .createSpy('formatContentModel')
         .and.callFake((callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+            expect(options.apiName).toBe(apiName);
             formatResult = callback(model, {
                 newEntities: [],
                 deletedEntities: [],

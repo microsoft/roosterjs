@@ -1,4 +1,3 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as readFile from '../../../lib/domUtils/readFile';
 import changeImage from '../../../lib/publicApi/image/changeImage';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
@@ -27,9 +26,6 @@ describe('changeImage', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        spyOn(pendingFormat, 'setPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
-
         const getDOMSelection = jasmine
             .createSpy()
             .and.returnValues({ type: 'image', image: imageNode });
@@ -52,6 +48,7 @@ describe('changeImage', () => {
         const editor = ({
             focus: jasmine.createSpy(),
             isDisposed: () => false,
+            getPendingFormat: () => null as any,
             getDOMSelection,
             triggerPluginEvent,
             formatContentModel,

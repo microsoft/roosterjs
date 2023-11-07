@@ -4,6 +4,7 @@ import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelT
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
+import { ContentModelEditorCore } from '../../lib/publicTypes/ContentModelEditorCore';
 import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
 
 const editorContext: EditorContext = {
@@ -246,6 +247,21 @@ describe('ContentModelEditor', () => {
             textColor: 'black',
             backgroundColor: 'white',
         });
+    });
+
+    it('getPendingFormat', () => {
+        const div = document.createElement('div');
+        const editor = new ContentModelEditor(div);
+        const core: ContentModelEditorCore = (editor as any).core;
+        const mockedFormat = 'FORMAT' as any;
+
+        expect(editor.getPendingFormat()).toBeNull();
+
+        core.format.pendingFormat = {
+            format: mockedFormat,
+        } as any;
+
+        expect(editor.getPendingFormat()).toEqual(mockedFormat);
     });
 
     it('dispose', () => {

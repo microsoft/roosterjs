@@ -1,4 +1,3 @@
-import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as getSelectionRootNode from '../../../lib/modelApi/selection/getSelectionRootNode';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
 import { ContentModelFormatState } from '../../../lib/publicTypes/format/formatState/ContentModelFormatState';
@@ -38,6 +37,7 @@ describe('getFormatState', () => {
             }),
             isDarkMode: () => false,
             getZoomScale: () => 1,
+            getPendingFormat: () => pendingFormat,
             createContentModel: (options: DomToModelOption) => {
                 const model = createContentModelDocument();
                 const editorDiv = document.createElement('div');
@@ -65,8 +65,6 @@ describe('getFormatState', () => {
                 return model;
             },
         } as any) as IContentModelEditor;
-
-        spyOn(getPendingFormat, 'getPendingFormat').and.returnValue(pendingFormat);
 
         const result = getFormatState(editor);
 

@@ -1,7 +1,6 @@
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
-import applyPendingFormat from '../../../lib/publicApi/format/applyPendingFormat';
+import { applyPendingFormat } from '../../../lib/modelApi/format/applyPendingFormat';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     ContentModelFormatter,
@@ -42,10 +41,6 @@ describe('applyPendingFormat', () => {
             blocks: [paragraph],
         };
 
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -68,7 +63,9 @@ describe('applyPendingFormat', () => {
             return false;
         });
 
-        applyPendingFormat(editor, 'c');
+        applyPendingFormat(editor, 'c', {
+            fontSize: '10px',
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(model).toEqual({
@@ -122,10 +119,6 @@ describe('applyPendingFormat', () => {
             blocks: [paragraph],
         };
 
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -144,7 +137,9 @@ describe('applyPendingFormat', () => {
             return false;
         });
 
-        applyPendingFormat(editor, 'd');
+        applyPendingFormat(editor, 'd', {
+            fontSize: '10px',
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(model).toEqual({
@@ -191,8 +186,6 @@ describe('applyPendingFormat', () => {
             blocks: [paragraph],
         };
 
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
-
         const formatContentModelSpy = jasmine.createSpy('formatContentModel');
         const editor = ({
             formatContentModel: formatContentModelSpy,
@@ -203,9 +196,8 @@ describe('applyPendingFormat', () => {
             return false;
         });
 
-        applyPendingFormat(editor, 'd');
+        applyPendingFormat(editor, 'd', {});
 
-        expect(formatContentModelSpy).not.toHaveBeenCalled();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -246,10 +238,6 @@ describe('applyPendingFormat', () => {
             blocks: [paragraph],
         };
 
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
-
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -268,7 +256,9 @@ describe('applyPendingFormat', () => {
             return false;
         });
 
-        applyPendingFormat(editor, 'd');
+        applyPendingFormat(editor, 'd', {
+            fontSize: '10px',
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(model).toEqual({
@@ -299,9 +289,6 @@ describe('applyPendingFormat', () => {
         paragraph.segments.push(text, marker);
         model.blocks.push(paragraph);
 
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
-            fontSize: '10px',
-        });
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -321,7 +308,9 @@ describe('applyPendingFormat', () => {
         });
         spyOn(normalizeContentModel, 'normalizeContentModel').and.callThrough();
 
-        applyPendingFormat(editor, 't');
+        applyPendingFormat(editor, 't', {
+            fontSize: '10px',
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(model).toEqual({
