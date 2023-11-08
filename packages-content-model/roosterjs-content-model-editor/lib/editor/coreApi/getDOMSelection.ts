@@ -1,4 +1,5 @@
-import { EditorCore, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { EditorCore } from 'roosterjs-editor-types';
 import type { DOMSelection, GetDOMSelection } from 'roosterjs-content-model-types';
 
 /**
