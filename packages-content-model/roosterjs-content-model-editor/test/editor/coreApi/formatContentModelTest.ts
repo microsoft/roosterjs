@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../../lib/publicTypes/parameter/ChangeSource';
+import { ChangeSource } from '../../../lib/publicTypes/ChangeSource';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';

@@ -2,58 +2,58 @@
  * Possible change sources. Here are the predefined sources.
  * It can also be other string if the change source can't fall into these sources.
  */
-export enum ChangeSource {
+export const ChangeSource = {
     /**
      * Content changed by auto link
      */
-    AutoLink = 'AutoLink',
+    AutoLink: 'AutoLink',
     /**
      * Content changed by create link
      */
-    CreateLink = 'CreateLink',
+    CreateLink: 'CreateLink',
     /**
      * Content changed by format
      */
-    Format = 'Format',
+    Format: 'Format',
     /**
      * Content changed by image resize
      */
-    ImageResize = 'ImageResize',
+    ImageResize: 'ImageResize',
     /**
      * Content changed by paste
      */
-    Paste = 'Paste',
+    Paste: 'Paste',
     /**
      * Content changed by setContent API
      */
-    SetContent = 'SetContent',
+    SetContent: 'SetContent',
     /**
      * Content changed by cut operation
      */
-    Cut = 'Cut',
+    Cut: 'Cut',
     /**
      * Content changed by drag & drop operation
      */
-    Drop = 'Drop',
+    Drop: 'Drop',
     /**
      * Insert a new entity into editor
      */
-    InsertEntity = 'InsertEntity',
+    InsertEntity: 'InsertEntity',
     /**
      * Editor is switched to dark mode, content color is changed
      */
-    SwitchToDarkMode = 'SwitchToDarkMode',
+    SwitchToDarkMode: 'SwitchToDarkMode',
     /**
      * Editor is switched to light mode, content color is changed
      */
-    SwitchToLightMode = 'SwitchToLightMode',
+    SwitchToLightMode: 'SwitchToLightMode',
     /**
      * List chain reorganized numbers of lists
      */
-    ListChain = 'ListChain',
+    ListChain: 'ListChain',
     /**
      * Keyboard event, used by Content Model.
      * Data of this event will be the key code number
      */
-    Keyboard = 'Keyboard',
-}
+    Keyboard: 'Keyboard',
+};

@@ -3,7 +3,7 @@ export {
     ContentModelEditorCore,
 } from './publicTypes/ContentModelEditorCore';
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
-export { ChangeSource } from './publicTypes/parameter/ChangeSource';
+export { ChangeSource } from './publicTypes/ChangeSource';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';

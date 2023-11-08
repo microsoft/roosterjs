@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../publicTypes/parameter/ChangeSource';
+import { ChangeSource } from '../../publicTypes/ChangeSource';
 import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
 import type {

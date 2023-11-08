@@ -1,5 +1,5 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { ChangeSource } from '../../publicTypes/parameter/ChangeSource';
+import { ChangeSource } from '../../publicTypes/ChangeSource';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import type { ContentModelLink } from 'roosterjs-content-model-types';
