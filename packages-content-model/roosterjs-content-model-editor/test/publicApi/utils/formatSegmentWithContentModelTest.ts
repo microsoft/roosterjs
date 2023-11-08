@@ -1,8 +1,11 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { formatSegmentWithContentModel } from '../../../lib/publicApi/utils/formatSegmentWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { NodePosition } from 'roosterjs-editor-types';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelContext,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import {
     createContentModelDocument,
     createParagraph,
@@ -12,36 +15,39 @@ import {
 
 describe('formatSegmentWithContentModel', () => {
     let editor: IContentModelEditor;
-    let addUndoSnapshot: jasmine.Spy;
-    let setContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
     let getPendingFormat: jasmine.Spy;
-    let setPendingFormat: jasmine.Spy;
-    let triggerPluginEvent: jasmine.Spy;
-    let getVisibleViewport: jasmine.Spy;
+    let formatContentModel: jasmine.Spy;
+    let formatResult: boolean | undefined;
+    let context: FormatWithContentModelContext | undefined;
 
     const apiName = 'mockedApi';
 
     beforeEach(() => {
-        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
-        setContentModel = jasmine.createSpy('setContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
+        context = undefined;
+        formatResult = undefined;
         focus = jasmine.createSpy('focus');
 
-        setPendingFormat = spyOn(pendingFormat, 'setPendingFormat');
-        getPendingFormat = spyOn(pendingFormat, 'getPendingFormat');
+        formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    context = {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    };
+                    formatResult = callback(model, context);
+                }
+            );
+
+        getPendingFormat = jasmine.createSpy('getPendingFormat');
 
         editor = ({
             focus,
-            addUndoSnapshot,
-            createContentModel: () => model,
-            setContentModel,
-            getFocusedPosition: () => null as NodePosition,
-            isDarkMode: () => false,
-            triggerPluginEvent,
-            getVisibleViewport,
+            formatContentModel,
+            getPendingFormat,
         } as any) as IContentModelEditor;
     });
 
@@ -54,9 +60,9 @@ describe('formatSegmentWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
-        expect(addUndoSnapshot).not.toHaveBeenCalled();
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeFalse();
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledTimes(0);
     });
 
     it('doc with selection', () => {
@@ -89,9 +95,14 @@ describe('formatSegmentWithContentModel', () => {
                 },
             ],
         });
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledTimes(0);
+        expect(context).toEqual({
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
     });
 
     it('doc with selection, all segments are already in expected state', () => {
@@ -135,13 +146,18 @@ describe('formatSegmentWithContentModel', () => {
                 },
             ],
         });
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text.format, text, para);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(1);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text.format, false, text, para);
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledTimes(0);
+        expect(context).toEqual({
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
     });
 
     it('doc with selection, some segments are in expected state', () => {
@@ -205,7 +221,8 @@ describe('formatSegmentWithContentModel', () => {
                 },
             ],
         });
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(2);
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text1.format, text1, para);
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text3.format, text3, para);
@@ -213,7 +230,11 @@ describe('formatSegmentWithContentModel', () => {
         expect(toggleStyleCallback).toHaveBeenCalledWith(text1.format, true, text1, para);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text3.format, true, text3, para);
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledTimes(0);
+        expect(context).toEqual({
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
     });
 
     it('Collapsed selection', () => {
@@ -252,18 +273,18 @@ describe('formatSegmentWithContentModel', () => {
                 },
             ],
         });
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeFalse();
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(
-            editor,
-            {
+        expect(context).toEqual({
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+            newPendingFormat: {
                 fontSize: '10px',
                 fontFamily: 'test',
             },
-            mockedContainer,
-            mockedOffset
-        );
+        });
     });
 
     it('With pending format', () => {
@@ -297,12 +318,17 @@ describe('formatSegmentWithContentModel', () => {
                 },
             ],
         });
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
         expect(pendingFormat).toEqual({
             fontSize: '10px',
             fontFamily: 'test',
         });
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledTimes(0);
+        expect(context).toEqual({
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
     });
 });

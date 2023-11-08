@@ -1,8 +1,10 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import formatImageWithContentModel from '../../../lib/publicApi/utils/formatImageWithContentModel';
 import { ContentModelDocument, ContentModelImage } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { NodePosition } from 'roosterjs-editor-types';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import {
     addSegment,
     createContentModelDocument,
@@ -198,35 +200,25 @@ function segmentTestForPluginEvent(
     result: ContentModelDocument,
     calledTimes: number
 ) {
-    spyOn(pendingFormat, 'setPendingFormat');
-    spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
-
-    const addUndoSnapshot = jasmine
-        .createSpy()
-        .and.callFake((callback: () => void, source: string, canUndoByBackspace, param: any) => {
-            expect(source).toBe(undefined!);
-            expect(param.formatApiName).toBe(apiName);
-            callback();
+    let formatResult: boolean | undefined;
+    const formatContentModel = jasmine
+        .createSpy('formatContentModel')
+        .and.callFake((callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+            expect(options.apiName).toBe(apiName);
+            formatResult = callback(model, {
+                newEntities: [],
+                deletedEntities: [],
+                newImages: [],
+            });
         });
-    const triggerPluginEvent = jasmine.createSpy().and.callFake(() => {});
-    const getVisibleViewport = jasmine.createSpy().and.callFake(() => {});
-    const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-        expect(model).toEqual(result);
-    });
     const editor = ({
-        createContentModel: () => model,
-        addUndoSnapshot,
-        focus: jasmine.createSpy(),
-        setContentModel,
-        isDisposed: () => false,
-        getFocusedPosition: () => null as NodePosition,
-        triggerPluginEvent,
-        isDarkMode: () => false,
-        getVisibleViewport,
+        formatContentModel,
+        getPendingFormat: () => null as any,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);
-    expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-    expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
+
+    expect(formatContentModel).toHaveBeenCalledTimes(1);
+    expect(formatResult).toBe(calledTimes > 0);
     expect(model).toEqual(result);
 }

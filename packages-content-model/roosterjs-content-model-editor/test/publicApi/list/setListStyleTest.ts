@@ -1,4 +1,3 @@
-import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import setListStyle from '../../../lib/publicApi/list/setListStyle';
 import { ContentModelDocument, ListMetadataFormat } from 'roosterjs-content-model-types';
 
@@ -9,9 +8,10 @@ describe('setListStyle', () => {
         expectedModel: ContentModelDocument,
         expectedResult: boolean
     ) {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (editor, apiName, callback) => {
-                expect(apiName).toBe('setListStyle');
+        const formatWithContentModelSpy = jasmine
+            .createSpy('formatWithContentModel')
+            .and.callFake((callback, options) => {
+                expect(options.apiName).toBe('setListStyle');
                 const result = callback(input, {
                     newEntities: [],
                     deletedEntities: [],
@@ -19,17 +19,17 @@ describe('setListStyle', () => {
                 });
 
                 expect(result).toBe(expectedResult);
-            }
-        );
+            });
 
         setListStyle(
             {
                 focus: () => {},
+                formatContentModel: formatWithContentModelSpy,
             } as any,
             style
         );
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
         expect(input).toEqual(expectedModel);
     }
 

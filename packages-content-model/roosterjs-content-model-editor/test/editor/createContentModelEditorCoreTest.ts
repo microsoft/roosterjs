@@ -10,6 +10,7 @@ import { ContentModelEditorOptions } from '../../lib/publicTypes/IContentModelEd
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
+import { formatContentModel } from '../../lib/editor/coreApi/formatContentModel';
 import { getDOMSelection } from '../../lib/editor/coreApi/getDOMSelection';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { setDOMSelection } from '../../lib/editor/coreApi/setDOMSelection';
@@ -103,6 +104,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             originalApi: {
                 a: 'b',
@@ -111,6 +113,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -137,6 +140,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: undefined,
                     backgroundColor: undefined,
                 },
+                pendingFormat: null,
             },
             contentDiv: {
                 style: {},
@@ -181,6 +185,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             originalApi: {
                 a: 'b',
@@ -189,6 +194,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -215,6 +221,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: undefined,
                     backgroundColor: undefined,
                 },
+                pendingFormat: null,
             },
             contentDiv: {
                 style: {},
@@ -272,6 +279,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             originalApi: {
                 a: 'b',
@@ -280,6 +288,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -306,6 +315,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: 'red',
                     backgroundColor: 'blue',
                 },
+                pendingFormat: null,
             },
             contentDiv: {
                 style: {},
@@ -343,6 +353,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             originalApi: {
                 a: 'b',
@@ -351,6 +362,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -375,6 +387,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: undefined,
                     backgroundColor: undefined,
                 },
+                pendingFormat: null,
             },
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
@@ -417,6 +430,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             originalApi: {
                 a: 'b',
@@ -425,6 +439,7 @@ describe('createContentModelEditorCore', () => {
                 setContentModel,
                 getDOMSelection,
                 setDOMSelection,
+                formatContentModel,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -451,6 +466,7 @@ describe('createContentModelEditorCore', () => {
                     textColor: undefined,
                     backgroundColor: undefined,
                 },
+                pendingFormat: null,
             },
             contentDiv: {
                 style: {},

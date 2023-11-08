@@ -1,4 +1,3 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { setListType } from '../../modelApi/list/setListType';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
@@ -11,7 +10,14 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
 export default function toggleBullet(editor: IContentModelEditor) {
     editor.focus();
 
-    formatWithContentModel(editor, 'toggleBullet', model => setListType(model, 'UL'), {
-        preservePendingFormat: true,
-    });
+    editor.formatContentModel(
+        (model, context) => {
+            context.newPendingFormat = 'preserve';
+
+            return setListType(model, 'UL');
+        },
+        {
+            apiName: 'toggleBullet',
+        }
+    );
 }

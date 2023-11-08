@@ -1,7 +1,11 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, ContentModelParagraph } from 'roosterjs-content-model-types';
 import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelContext,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import {
     createContentModelDocument,
     createParagraph,
@@ -10,12 +14,8 @@ import {
 
 describe('formatParagraphWithContentModel', () => {
     let editor: IContentModelEditor;
-    let addUndoSnapshot: jasmine.Spy;
-    let setContentModel: jasmine.Spy;
-    let triggerPluginEvent: jasmine.Spy;
-    let focus: jasmine.Spy;
-    let getVisibleViewport: jasmine.Spy;
     let model: ContentModelDocument;
+    let context: FormatWithContentModelContext;
 
     const mockedContainer = 'C' as any;
     const mockedOffset = 'O' as any;
@@ -23,22 +23,27 @@ describe('formatParagraphWithContentModel', () => {
     const apiName = 'mockedApi';
 
     beforeEach(() => {
-        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
-        setContentModel = jasmine.createSpy('setContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-        focus = jasmine.createSpy('focus');
+        context = undefined!;
+
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    context = {
+                        newEntities: [],
+                        newImages: [],
+                        deletedEntities: [],
+                        rawEvent: options.rawEvent,
+                    };
+
+                    callback(model, context);
+                }
+            );
 
         editor = ({
-            focus,
-            addUndoSnapshot,
-            createContentModel: () => model,
-            setContentModel,
-            isDarkMode: () => false,
             getCustomData: () => ({}),
             getFocusedPosition: () => ({ node: mockedContainer, offset: mockedOffset }),
-            triggerPluginEvent,
-            getVisibleViewport,
+            formatContentModel,
         } as any) as IContentModelEditor;
     });
 
@@ -55,7 +60,6 @@ describe('formatParagraphWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
-        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 
     it('doc with selection', () => {
@@ -90,7 +94,6 @@ describe('formatParagraphWithContentModel', () => {
                 },
             ],
         });
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
     });
 
     it('Preserve pending format', () => {
@@ -103,30 +106,18 @@ describe('formatParagraphWithContentModel', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        let cachedPendingFormat: any = 'PendingFormat';
-        let cachedPendingContainer: any = 'PendingContainer';
-        let cachedPendingOffset: any = 'PendingOffset';
+        const callback = (paragraph: ContentModelParagraph) => {
+            paragraph.format.backgroundColor = 'red';
+        };
 
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(cachedPendingFormat);
-        spyOn(pendingFormat, 'setPendingFormat').and.callFake((_, format, container, offset) => {
-            cachedPendingFormat = format;
-            cachedPendingContainer = container;
-            cachedPendingOffset = offset;
+        formatParagraphWithContentModel(editor, apiName, callback);
+
+        expect(context).toEqual({
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+            rawEvent: undefined,
+            newPendingFormat: 'preserve',
         });
-        spyOn(pendingFormat, 'clearPendingFormat').and.callFake(() => {
-            cachedPendingFormat = null;
-            cachedPendingContainer = null;
-            cachedPendingOffset = null;
-        });
-
-        formatParagraphWithContentModel(
-            editor,
-            apiName,
-            paragraph => (paragraph.format.backgroundColor = 'red')
-        );
-
-        expect(cachedPendingFormat).toEqual('PendingFormat');
-        expect(cachedPendingContainer).toEqual(mockedContainer);
-        expect(cachedPendingOffset).toEqual(mockedOffset);
     });
 });

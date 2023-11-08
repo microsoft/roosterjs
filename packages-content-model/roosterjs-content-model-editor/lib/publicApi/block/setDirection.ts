@@ -1,4 +1,3 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { setModelDirection } from '../../modelApi/block/setModelDirection';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
@@ -10,5 +9,7 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
 export default function setDirection(editor: IContentModelEditor, direction: 'ltr' | 'rtl') {
     editor.focus();
 
-    formatWithContentModel(editor, 'setDirection', model => setModelDirection(model, direction));
+    editor.formatContentModel(model => setModelDirection(model, direction), {
+        apiName: 'setDirection',
+    });
 }

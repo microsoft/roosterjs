@@ -1,5 +1,4 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -18,25 +17,30 @@ export default function formatTable(
 ) {
     editor.focus();
 
-    formatWithContentModel(editor, 'formatTable', model => {
-        const [tableModel] = getFirstSelectedTable(model);
+    editor.formatContentModel(
+        model => {
+            const [tableModel] = getFirstSelectedTable(model);
 
-        if (tableModel) {
-            // Wipe border metadata
-            tableModel.rows.forEach(row => {
-                row.cells.forEach(cell => {
-                    updateTableCellMetadata(cell, metadata => {
-                        if (metadata) {
-                            delete metadata.borderOverride;
-                        }
-                        return metadata;
+            if (tableModel) {
+                // Wipe border metadata
+                tableModel.rows.forEach(row => {
+                    row.cells.forEach(cell => {
+                        updateTableCellMetadata(cell, metadata => {
+                            if (metadata) {
+                                delete metadata.borderOverride;
+                            }
+                            return metadata;
+                        });
                     });
                 });
-            });
-            applyTableFormat(tableModel, format, keepCellShade);
-            return true;
-        } else {
-            return false;
+                applyTableFormat(tableModel, format, keepCellShade);
+                return true;
+            } else {
+                return false;
+            }
+        },
+        {
+            apiName: 'formatTable',
         }
-    });
+    );
 }

@@ -1,4 +1,3 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
@@ -10,16 +9,21 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
 export default function setListStartNumber(editor: IContentModelEditor, value: number) {
     editor.focus();
 
-    formatWithContentModel(editor, 'setListStartNumber', model => {
-        const listItem = getFirstSelectedListItem(model);
-        const level = listItem?.levels[listItem?.levels.length - 1];
+    editor.formatContentModel(
+        model => {
+            const listItem = getFirstSelectedListItem(model);
+            const level = listItem?.levels[listItem?.levels.length - 1];
 
-        if (level) {
-            level.format.startNumberOverride = value;
+            if (level) {
+                level.format.startNumberOverride = value;
 
-            return true;
-        } else {
-            return false;
+                return true;
+            } else {
+                return false;
+            }
+        },
+        {
+            apiName: 'setListStartNumber',
         }
-    });
+    );
 }

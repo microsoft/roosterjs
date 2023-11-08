@@ -2,6 +2,10 @@ import type { EditorEnvironment } from './IContentModelEditor';
 import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
 import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import type {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from './parameter/FormatWithContentModelContext';
+import type {
     ContentModelDocument,
     DOMSelection,
     DomToModelOption,
@@ -52,10 +56,24 @@ export type SetContentModel = (
 
 /**
  * Set current DOM selection from editor. This is the replacement of core API select
- * @param core The ContentModelEditorCore object
  * @param selection The selection to set
  */
 export type SetDOMSelection = (core: ContentModelEditorCore, selection: DOMSelection) => void;
+
+/**
+ * The general API to do format change with Content Model
+ * It will grab a Content Model for current editor content, and invoke a callback function
+ * to do format change. Then according to the return value, write back the modified content model into editor.
+ * If there is cached model, it will be used and updated.
+ * @param core The ContentModelEditorCore object
+ * @param formatter Formatter function, see ContentModelFormatter
+ * @param options More options, see FormatWithContentModelOptions
+ */
+export type FormatContentModel = (
+    core: ContentModelEditorCore,
+    formatter: ContentModelFormatter,
+    options?: FormatWithContentModelOptions
+) => void;
 
 /**
  * The interface for the map of core API for Content Model editor.
@@ -95,6 +113,17 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
      * @param selection The selection to set
      */
     setDOMSelection: SetDOMSelection;
+
+    /**
+     * The general API to do format change with Content Model
+     * It will grab a Content Model for current editor content, and invoke a callback function
+     * to do format change. Then according to the return value, write back the modified content model into editor.
+     * If there is cached model, it will be used and updated.
+     * @param core The ContentModelEditorCore object
+     * @param formatter Formatter function, see ContentModelFormatter
+     * @param options More options, see FormatWithContentModelOptions
+     */
+    formatContentModel: FormatContentModel;
 }
 
 /**

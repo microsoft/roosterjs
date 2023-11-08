@@ -7,7 +7,7 @@ const github = require('./iconmonstr-github-1.svg');
 
 export interface TitleBarProps {
     className?: string;
-    mode: 'classical' | 'contentModel' | 'adapter';
+    mode: 'classical' | 'contentModel';
 }
 
 export default class TitleBar extends React.Component<TitleBarProps, {}> {

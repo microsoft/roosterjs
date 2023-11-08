@@ -1,21 +1,27 @@
-import * as addParserF from '../../../lib/editor/plugins/PastePlugin/utils/addParser';
+import * as addParserF from '../../../../roosterjs-content-model-plugins/lib/paste/utils/addParser';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import * as ExcelF from '../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
-import * as getPasteSourceF from '../../../lib/editor/plugins/PastePlugin/pasteSourceValidations/getPasteSource';
+import * as ExcelF from '../../../../roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
+import * as getPasteSourceF from '../../../../roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
 import * as getSelectedSegmentsF from '../../../lib/publicApi/selection/getSelectedSegments';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
-import * as pendingFormatF from '../../../lib/modelApi/format/pendingFormat';
-import * as PPT from '../../../lib/editor/plugins/PastePlugin/PowerPoint/processPastedContentFromPowerPoint';
-import * as setProcessorF from '../../../lib/editor/plugins/PastePlugin/utils/setProcessor';
-import * as WacComponents from '../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
-import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
+import * as PPT from '../../../../roosterjs-content-model-plugins/lib/paste/PowerPoint/processPastedContentFromPowerPoint';
+import * as setProcessorF from '../../../../roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
+import * as WacComponents from '../../../../roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
+import * as WordDesktopFile from '../../../../roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
-import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
 import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
+import { ContentModelPastePlugin } from '../../../../roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
-import { expectEqual, initEditor } from '../../editor/plugins/paste/e2e/testUtils';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    expectEqual,
+    initEditor,
+} from '../../../../roosterjs-content-model-plugins/test/paste/e2e/testUtils';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelContext,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import paste, * as pasteF from '../../../lib/publicApi/utils/paste';
 import {
     BeforePasteEvent,
@@ -31,9 +37,7 @@ const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Paste ', () => {
     let editor: IContentModelEditor;
-    let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
-    let setContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let mockedMergeModel: ContentModelDocument;
@@ -45,7 +49,8 @@ describe('Paste ', () => {
     let triggerPluginEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
     let mergeModelSpy: jasmine.Spy;
-    let setPendingFormatSpy: jasmine.Spy;
+    let formatResult: boolean | undefined;
+    let context: FormatWithContentModelContext | undefined;
 
     const mockedPos = 'POS' as any;
 
@@ -66,14 +71,11 @@ describe('Paste ', () => {
         mockedModel = ({} as any) as ContentModelDocument;
         mockedMergeModel = ({} as any) as ContentModelDocument;
 
-        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
-        setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
         getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
-        setPendingFormatSpy = spyOn(pendingFormatF, 'setPendingFormat');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.returnValue({
             clipboardData,
             fragment: document.createDocumentFragment(),
@@ -113,12 +115,25 @@ describe('Paste ', () => {
                 },
             } as any,
         ]);
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    context = {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    };
+                    formatResult = callback(mockedModel, context);
+                }
+            );
+
+        formatResult = undefined;
+        context = undefined;
 
         editor = ({
             focus,
-            addUndoSnapshot,
             createContentModel,
-            setContentModel,
             getFocusedPosition,
             getContent,
             getSelectionRange,
@@ -127,6 +142,7 @@ describe('Paste ', () => {
             triggerPluginEvent,
             getVisibleViewport,
             isDarkMode: () => false,
+            formatContentModel,
         } as any) as IContentModelEditor;
     });
 
@@ -138,9 +154,8 @@ describe('Paste ', () => {
     it('Execute', () => {
         pasteF.default(editor, clipboardData);
 
-        expect(setContentModel).toHaveBeenCalled();
+        expect(formatResult).toBeTrue();
         expect(focus).toHaveBeenCalled();
-        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
         expect(triggerPluginEvent).toHaveBeenCalled();
         expect(getDocument).toHaveBeenCalled();
@@ -151,20 +166,9 @@ describe('Paste ', () => {
     it('Execute | As plain text', () => {
         pasteF.default(editor, clipboardData, 'asPlainText');
 
-        expect(setContentModel).toHaveBeenCalled();
+        expect(formatResult).toBeTrue();
         expect(focus).toHaveBeenCalled();
-        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
-            contentModel: mockedModel,
-            selection: undefined,
-            data: clipboardData,
-            source: ChangeSource.Paste,
-            additionalData: {
-                formatApiName: 'Paste',
-            },
-        });
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);
@@ -196,9 +200,11 @@ describe('Paste ', () => {
             },
         });
 
-        expect(setPendingFormatSpy).toHaveBeenCalledWith(
-            editor,
-            {
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: {
                 backgroundColor: '',
                 fontFamily: 'Arial',
                 fontSize: '',
@@ -211,9 +217,7 @@ describe('Paste ', () => {
                 textColor: '',
                 underline: false,
             },
-            mockedNode,
-            mockedOffset
-        );
+        });
     });
 });
 

@@ -1,10 +1,12 @@
-import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as insertEntityModel from '../../../lib/modelApi/entity/insertEntityModel';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import insertEntity from '../../../lib/publicApi/entity/insertEntity';
 import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
-import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    FormatWithContentModelContext,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 
 describe('insertEntity', () => {
     let editor: IContentModelEditor;
@@ -46,13 +48,12 @@ describe('insertEntity', () => {
             appendChild: appendChildSpy,
         } as any;
 
-        formatWithContentModelSpy = spyOn(
-            formatWithContentModel,
-            'formatWithContentModel'
-        ).and.callFake((editor, apiName, formatter, options) => {
-            formatter(model, context);
-            options?.getChangeData?.();
-        });
+        formatWithContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((formatter: Function, options: FormatWithContentModelOptions) => {
+                formatter(model, context);
+            });
+
         triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEventSpy');
         createElementSpy = jasmine.createSpy('createElementSpy').and.returnValue(wrapper);
         getDocumentSpy = jasmine.createSpy('getDocumentSpy').and.returnValue({
@@ -65,6 +66,7 @@ describe('insertEntity', () => {
             getDocument: getDocumentSpy,
             isDarkMode: isDarkModeSpy,
             transformToDarkColor: transformToDarkColorSpy,
+            formatContentModel: formatWithContentModelSpy,
         } as any;
     });
 
@@ -74,9 +76,8 @@ describe('insertEntity', () => {
         expect(createElementSpy).toHaveBeenCalledWith('span');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
         expect(appendChildSpy).not.toHaveBeenCalled();
-        expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
             ChangeSource.InsertEntity
         );
         expect(insertEntityModelSpy).toHaveBeenCalledWith(
@@ -120,9 +121,8 @@ describe('insertEntity', () => {
         expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(setPropertySpy).toHaveBeenCalledWith('display', null);
         expect(appendChildSpy).not.toHaveBeenCalled();
-        expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
             ChangeSource.InsertEntity
         );
         expect(insertEntityModelSpy).toHaveBeenCalledWith(
@@ -173,9 +173,8 @@ describe('insertEntity', () => {
         expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'none');
         expect(appendChildSpy).toHaveBeenCalledWith(contentNode);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
             ChangeSource.InsertEntity
         );
 
@@ -222,9 +221,8 @@ describe('insertEntity', () => {
         expect(createElementSpy).toHaveBeenCalledWith('span');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
         expect(appendChildSpy).not.toHaveBeenCalled();
-        expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toBe(
             ChangeSource.InsertEntity
         );
         expect(insertEntityModelSpy).toHaveBeenCalledWith(

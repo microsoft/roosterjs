@@ -1,8 +1,6 @@
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
-import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { isModifierKey } from '../../domUtils/eventUtils';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
@@ -37,9 +35,7 @@ export default function keyboardDelete(
     let isDeleted = false;
 
     if (shouldDeleteWithContentModel(range, rawEvent)) {
-        formatWithContentModel(
-            editor,
-            rawEvent.key == 'Delete' ? 'handleDeleteKey' : 'handleBackspaceKey',
+        editor.formatContentModel(
             (model, context) => {
                 const result = deleteSelection(
                     model,
@@ -47,7 +43,7 @@ export default function keyboardDelete(
                     context
                 ).deleteResult;
 
-                isDeleted = result != DeleteResult.NotDeleted;
+                isDeleted = result != 'notDeleted';
 
                 return handleKeyboardEventResult(editor, model, rawEvent, result, context);
             },
@@ -55,6 +51,7 @@ export default function keyboardDelete(
                 rawEvent,
                 changeSource: ChangeSource.Keyboard,
                 getChangeData: () => rawEvent.which,
+                apiName: rawEvent.key == 'Delete' ? 'handleDeleteKey' : 'handleBackspaceKey',
             }
         );
 

@@ -1,4 +1,3 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { setModelAlignment } from '../../modelApi/block/setModelAlignment';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
@@ -13,5 +12,7 @@ export default function setAlignment(
 ) {
     editor.focus();
 
-    formatWithContentModel(editor, 'setAlignment', model => setModelAlignment(model, alignment));
+    editor.formatContentModel(model => setModelAlignment(model, alignment), {
+        apiName: 'setAlignment',
+    });
 }

@@ -1,6 +1,5 @@
 import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
 import type { ContentModelEntity, DOMSelection } from 'roosterjs-content-model-types';
 import type { Entity } from 'roosterjs-editor-types';
@@ -70,9 +69,7 @@ export default function insertEntity(
 
     const entityModel = createEntity(wrapper, true /*isReadonly*/, undefined /*format*/, type);
 
-    formatWithContentModel(
-        editor,
-        'insertEntity',
+    editor.formatContentModel(
         (model, context) => {
             insertEntityModel(
                 model,
@@ -104,6 +101,7 @@ export default function insertEntity(
 
                 return entity;
             },
+            apiName: 'insertEntity',
         }
     );
 

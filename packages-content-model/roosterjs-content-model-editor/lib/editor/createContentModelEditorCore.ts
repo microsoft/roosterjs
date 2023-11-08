@@ -8,6 +8,7 @@ import { createContentModelFormatPlugin } from './corePlugins/ContentModelFormat
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore } from 'roosterjs-editor-core';
+import { formatContentModel } from './coreApi/formatContentModel';
 import { getDOMSelection } from './coreApi/getDOMSelection';
 import { setContentModel } from './coreApi/setContentModel';
 import { setDOMSelection } from './coreApi/setDOMSelection';
@@ -111,11 +112,13 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.switchShadowEdit = switchShadowEdit;
     cmCore.api.getDOMSelection = getDOMSelection;
     cmCore.api.setDOMSelection = setDOMSelection;
+    cmCore.api.formatContentModel = formatContentModel;
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;
     cmCore.originalApi.getDOMSelection = getDOMSelection;
     cmCore.originalApi.setDOMSelection = setDOMSelection;
+    cmCore.originalApi.formatContentModel = formatContentModel;
 }
 
 function promoteEnvironment(cmCore: ContentModelEditorCore) {
@@ -144,6 +147,7 @@ function getPluginState(options: ContentModelEditorOptions): ContentModelPluginS
                 backgroundColor:
                     format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
             },
+            pendingFormat: null,
         },
     };
 }

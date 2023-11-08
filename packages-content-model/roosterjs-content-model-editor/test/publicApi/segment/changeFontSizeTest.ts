@@ -1,10 +1,13 @@
-import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 
 describe('changeFontSize', () => {
     function runTest(
@@ -328,15 +331,6 @@ describe('changeFontSize', () => {
     });
 
     it('Test format parser', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
-        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-
-        const addUndoSnapshot = jasmine.createSpy().and.callFake((callback: () => void) => {
-            callback();
-        });
-        const setContentModel = jasmine.createSpy();
         const div = document.createElement('div');
         const sub = document.createElement('sub');
 
@@ -344,44 +338,53 @@ describe('changeFontSize', () => {
         div.appendChild(sub);
         div.style.fontSize = '20pt';
 
+        const model = domToContentModel(div, createDomToModelContext(undefined), {
+            type: 'range',
+            range: createRange(sub),
+        });
+
+        let formatResult: boolean | undefined;
+
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
+
         const editor = ({
-            createContentModel: (option: any) =>
-                domToContentModel(div, createDomToModelContext(undefined), {
-                    type: 'range',
-                    range: createRange(sub),
-                }),
-            addUndoSnapshot,
+            formatContentModel,
             focus: jasmine.createSpy(),
-            setContentModel,
-            isDarkMode: () => false,
-            triggerPluginEvent,
-            getVisibleViewport,
+            getPendingFormat: () => null as ContentModelSegmentFormat,
         } as any) as IContentModelEditor;
 
         changeFontSize(editor, 'increase');
 
-        expect(setContentModel).toHaveBeenCalledWith(
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
-                                format: { superOrSubScriptSequence: 'sub' },
-                                isSelected: true,
-                            },
-                        ],
-                        isImplicit: true,
-                    },
-                ],
-            },
-            undefined,
-            undefined
-        );
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: { superOrSubScriptSequence: 'sub' },
+                            isSelected: true,
+                        },
+                    ],
+                    isImplicit: true,
+                },
+            ],
+        });
     });
 
     it('Paragraph has font size', () => {

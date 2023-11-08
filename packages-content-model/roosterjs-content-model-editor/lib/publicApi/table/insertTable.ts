@@ -2,8 +2,6 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setSelection } from '../../modelApi/selection/setSelection';
@@ -27,33 +25,38 @@ export default function insertTable(
 ) {
     editor.focus();
 
-    formatWithContentModel(editor, 'insertTable', (model, context) => {
-        const insertPosition = deleteSelection(model, [], context).insertPoint;
+    editor.formatContentModel(
+        (model, context) => {
+            const insertPosition = deleteSelection(model, [], context).insertPoint;
 
-        if (insertPosition) {
-            const doc = createContentModelDocument();
-            const table = createTableStructure(doc, columns, rows);
+            if (insertPosition) {
+                const doc = createContentModelDocument();
+                const table = createTableStructure(doc, columns, rows);
 
-            normalizeTable(table, getPendingFormat(editor) || insertPosition.marker.format);
-            // Assign default vertical align
-            format = format || { verticalAlign: 'top' };
-            applyTableFormat(table, format);
-            mergeModel(model, doc, context, {
-                insertPosition,
-                mergeFormat: 'mergeAll',
-            });
+                normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
+                // Assign default vertical align
+                format = format || { verticalAlign: 'top' };
+                applyTableFormat(table, format);
+                mergeModel(model, doc, context, {
+                    insertPosition,
+                    mergeFormat: 'mergeAll',
+                });
 
-            const firstBlock = table.rows[0]?.cells[0]?.blocks[0];
+                const firstBlock = table.rows[0]?.cells[0]?.blocks[0];
 
-            if (firstBlock?.blockType == 'Paragraph') {
-                const marker = createSelectionMarker(firstBlock.segments[0]?.format);
-                firstBlock.segments.unshift(marker);
-                setSelection(model, marker);
+                if (firstBlock?.blockType == 'Paragraph') {
+                    const marker = createSelectionMarker(firstBlock.segments[0]?.format);
+                    firstBlock.segments.unshift(marker);
+                    setSelection(model, marker);
+                }
+
+                return true;
+            } else {
+                return false;
             }
-
-            return true;
-        } else {
-            return false;
+        },
+        {
+            apiName: 'insertTable',
         }
-    });
+    );
 }

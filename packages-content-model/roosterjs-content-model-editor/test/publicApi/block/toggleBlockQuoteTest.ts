@@ -1,26 +1,43 @@
-import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as toggleModelBlockQuote from '../../../lib/modelApi/block/toggleModelBlockQuote';
 import toggleBlockQuote from '../../../lib/publicApi/block/toggleBlockQuote';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelContext,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 
 describe('toggleBlockQuote', () => {
     const fakeModel: any = { a: 'b' };
     let editor: IContentModelEditor;
+    let formatContentModelSpy: jasmine.Spy;
+    let context: FormatWithContentModelContext;
 
     beforeEach(() => {
+        context = undefined!;
+
+        formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: ContentModelFormatter) => {
+                context = {
+                    newEntities: [],
+                    newImages: [],
+                    deletedEntities: [],
+                };
+                callback(fakeModel, context);
+            });
+
         editor = ({
             focus: jasmine.createSpy('focus'),
-            createContentModel: () => fakeModel,
+            formatContentModel: formatContentModelSpy,
         } as any) as IContentModelEditor;
     });
 
     it('toggleBlockQuote', () => {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
         spyOn(toggleModelBlockQuote, 'toggleModelBlockQuote');
 
         toggleBlockQuote(editor, { a: 'b', c: 'd' } as any);
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(fakeModel, {
             marginTop: '1em',
@@ -31,15 +48,20 @@ describe('toggleBlockQuote', () => {
             a: 'b',
             c: 'd',
         } as any);
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: 'preserve',
+        });
     });
 
     it('toggleBlockQuote with real format', () => {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
         spyOn(toggleModelBlockQuote, 'toggleModelBlockQuote');
 
         toggleBlockQuote(editor, { lineHeight: '2', textColor: 'red' });
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(fakeModel, {
             marginTop: '1em',
@@ -50,5 +72,11 @@ describe('toggleBlockQuote', () => {
             lineHeight: '2',
             textColor: 'red',
         } as any);
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: 'preserve',
+        });
     });
 });

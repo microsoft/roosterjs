@@ -2,6 +2,10 @@ import removeLink from '../../../lib/publicApi/link/removeLink';
 import { ContentModelDocument, ContentModelLink } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+import {
     addLink,
     addSegment,
     createContentModelDocument,
@@ -11,38 +15,38 @@ import {
 
 describe('removeLink', () => {
     let editor: IContentModelEditor;
-    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
-    let triggerPluginEvent: jasmine.Spy;
-    let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-
         editor = ({
             focus: () => {},
-            addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
-            isDarkMode: () => false,
-            triggerPluginEvent,
-            getVisibleViewport,
         } as any) as IContentModelEditor;
     });
 
     function runTest(model: ContentModelDocument, expectedModel: ContentModelDocument | null) {
-        createContentModel.and.returnValue(model);
+        let formatResult: boolean | undefined;
+
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(model, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                        rawEvent: options.rawEvent,
+                    });
+                }
+            );
+
+        editor.formatContentModel = formatContentModel;
 
         removeLink(editor);
 
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBe(!!expectedModel);
+
         if (expectedModel) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(expectedModel, undefined, undefined);
-        } else {
-            expect(setContentModel).not.toHaveBeenCalled();
+            expect(model).toEqual(expectedModel);
         }
     }
 
