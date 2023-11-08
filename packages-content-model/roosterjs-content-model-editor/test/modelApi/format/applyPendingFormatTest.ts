@@ -3,14 +3,12 @@ import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi
 import { applyPendingFormat } from '../../../lib/modelApi/format/applyPendingFormat';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
-    ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
-import {
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelSelectionMarker,
     ContentModelText,
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,

@@ -1,9 +1,7 @@
+import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import type { ContentModelParagraph } from '../block/ContentModelParagraph';
+import type { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
 import type { TableSelectionContext } from './TableSelectionContext';
-import type {
-    ContentModelBlockGroup,
-    ContentModelParagraph,
-    ContentModelSelectionMarker,
-} from 'roosterjs-content-model-types';
 
 /**
  * Represent all related information of an insert point

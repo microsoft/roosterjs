@@ -9,19 +9,20 @@ import * as setProcessorF from '../../../../roosterjs-content-model-plugins/lib/
 import * as WacComponents from '../../../../roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from '../../../../roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
-import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
 import { ContentModelPastePlugin } from '../../../../roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
-    expectEqual,
-    initEditor,
-} from '../../../../roosterjs-content-model-plugins/test/paste/e2e/testUtils';
-import {
+    ContentModelDocument,
+    DomToModelOption,
     ContentModelFormatter,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
+import {
+    expectEqual,
+    initEditor,
+} from '../../../../roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 import paste, * as pasteF from '../../../lib/publicApi/utils/paste';
 import {
     BeforePasteEvent,

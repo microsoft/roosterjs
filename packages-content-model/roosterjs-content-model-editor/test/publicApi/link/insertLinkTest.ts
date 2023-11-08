@@ -1,13 +1,14 @@
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import insertLink from '../../../lib/publicApi/link/insertLink';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
-import { ContentModelDocument, ContentModelLink } from 'roosterjs-content-model-types';
+import { ChangeSource } from '../../../lib/publicTypes/parameter/ChangeSource';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {
+    ContentModelDocument,
+    ContentModelLink,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 import {
     addSegment,
     createContentModelDocument,

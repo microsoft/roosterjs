@@ -1,6 +1,6 @@
 import paste from '../../publicApi/utils/paste';
 import { addRangeToSelection } from '../../domUtils/addRangeToSelection';
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from '../../publicTypes/parameter/ChangeSource';
 import { cloneModel } from '../../publicApi/model/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { deleteSelection } from '../../publicApi/selection/deleteSelection';

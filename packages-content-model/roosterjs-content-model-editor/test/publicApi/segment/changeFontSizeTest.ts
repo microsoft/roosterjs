@@ -1,13 +1,14 @@
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
 import {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 describe('changeFontSize', () => {
     function runTest(

@@ -1,5 +1,4 @@
-import { ContentModelSelectionMarker } from 'roosterjs-content-model-types';
-import { DeletedEntity } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+import { ContentModelSelectionMarker, DeletedEntity } from 'roosterjs-content-model-types';
 import { deleteSelection } from '../../../lib/publicApi/selection/deleteSelection';
 import {
     createContentModelDocument,

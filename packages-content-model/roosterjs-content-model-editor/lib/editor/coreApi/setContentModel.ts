@@ -1,9 +1,10 @@
-import type { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     contentModelToDom,
     createModelToDomContext,
     createModelToDomContextWithConfig,
 } from 'roosterjs-content-model-dom';
+import type { SetContentModel } from 'roosterjs-content-model-types';
+import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
@@ -12,7 +13,13 @@ import {
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
  */
-export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
+export const setContentModel: SetContentModel = (
+    standaloneEditorCore,
+    model,
+    option,
+    onNodeCreated
+) => {
+    const core = standaloneEditorCore as ContentModelEditorCore;
     const editorContext = core.api.createEditorContext(core);
     const modelToDomContext = option
         ? createModelToDomContext(editorContext, ...(core.defaultModelToDomOptions || []), option)

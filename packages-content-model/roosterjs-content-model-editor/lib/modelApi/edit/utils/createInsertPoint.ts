@@ -1,9 +1,9 @@
-import type { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
-import type { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
 import type {
     ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelSelectionMarker,
+    InsertPoint,
+    TableSelectionContext,
 } from 'roosterjs-content-model-types';
 
 /**

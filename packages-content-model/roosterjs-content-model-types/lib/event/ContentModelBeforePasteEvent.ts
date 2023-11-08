@@ -1,5 +1,6 @@
+import type { DomToModelOption } from '../context/DomToModelOption';
+import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
-import type { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
 import type {
     BeforePasteEvent,
     BeforePasteEventData,
@@ -26,7 +27,7 @@ export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
 /**
  * Provides a chance for plugin to change the content before it is pasted into editor.
  */
-export default interface ContentModelBeforePasteEvent
+export interface ContentModelBeforePasteEvent
     extends ContentModelBeforePasteEventData,
         BeforePasteEvent {}
 

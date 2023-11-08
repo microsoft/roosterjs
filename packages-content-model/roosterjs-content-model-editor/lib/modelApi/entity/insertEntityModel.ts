@@ -7,15 +7,15 @@ import {
     createSelectionMarker,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type { DeleteSelectionResult } from '../../publicTypes/parameter/DeleteSelectionStep';
-import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import type { InsertEntityPosition } from '../../publicTypes/parameter/InsertEntityOptions';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelEntity,
     ContentModelParagraph,
+    DeleteSelectionResult,
+    FormatWithContentModelContext,
+    InsertEntityPosition,
 } from 'roosterjs-content-model-types';
 
 /**

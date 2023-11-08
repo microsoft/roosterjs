@@ -1,12 +1,11 @@
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelBeforePasteEvent } from 'roosterjs-content-model-editor';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelBeforePasteEvent, ContentModelDocument } from 'roosterjs-content-model-types';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
+import { processPastedContentFromWordDesktop } from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
 } from 'roosterjs-content-model-editor/lib/domUtils/metadata/updateListMetadata';
-import { processPastedContentFromWordDesktop } from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import {
     contentModelToDom,
     createDomToModelContext,

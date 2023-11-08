@@ -1,13 +1,13 @@
-import { ContentModelTableCellFormat } from 'roosterjs-content-model-types';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
+import {
+    ContentModelTableCellFormat,
+    TableCellHorizontalAlignOperation,
+    TableCellVerticalAlignOperation,
+} from 'roosterjs-content-model-types';
 import {
     alignTableCellHorizontally,
     alignTableCellVertically,
 } from '../../../lib/modelApi/table/alignTableCell';
-import {
-    TableCellHorizontalAlignOperation,
-    TableCellVerticalAlignOperation,
-} from '../../../lib/publicTypes/parameter/TableOperation';
 
 describe('alignTableCellHorizontally', () => {
     function runTest(

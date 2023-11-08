@@ -1,12 +1,12 @@
 import { deleteExpandedSelection } from '../../modelApi/edit/utils/deleteExpandedSelection';
-import type { ContentModelDocument } from 'roosterjs-content-model-types';
-import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type {
+    ContentModelDocument,
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,
+    FormatWithContentModelContext,
     ValidDeleteSelectionContext,
-} from '../../publicTypes/parameter/DeleteSelectionStep';
+} from 'roosterjs-content-model-types';
 
 /**
  * Delete selected content from Content Model

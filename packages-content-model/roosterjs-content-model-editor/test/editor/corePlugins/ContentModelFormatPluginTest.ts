@@ -2,10 +2,7 @@ import * as applyPendingFormat from '../../../lib/modelApi/format/applyPendingFo
 import ContentModelFormatPlugin from '../../../lib/editor/corePlugins/ContentModelFormatPlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
-import {
-    ContentModelFormatPluginState,
-    PendingFormat,
-} from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
+import { ContentModelFormatPluginState, PendingFormat } from 'roosterjs-content-model-types';
 import {
     addSegment,
     createContentModelDocument,

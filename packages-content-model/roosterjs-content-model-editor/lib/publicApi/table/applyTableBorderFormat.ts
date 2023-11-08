@@ -3,10 +3,13 @@ import { getFirstSelectedTable } from '../../modelApi/selection/collectSelection
 import { getSelectedCells } from '../../modelApi/table/getSelectedCells';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
-import type { BorderOperations } from '../../publicTypes/enum/BorderOperations';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { Border } from '../../publicTypes/interface/Border';
-import type { ContentModelTable, ContentModelTableCell } from 'roosterjs-content-model-types';
+import type {
+    Border,
+    ContentModelTable,
+    ContentModelTableCell,
+    BorderOperations,
+} from 'roosterjs-content-model-types';
 import type { TableSelectionCoordinates } from '../../modelApi/table/getSelectedCells';
 
 /**

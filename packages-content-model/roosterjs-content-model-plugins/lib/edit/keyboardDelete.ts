@@ -14,7 +14,8 @@ import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
 } from './deleteSteps/deleteCollapsedSelection';
-import type { DeleteSelectionStep, IContentModelEditor } from 'roosterjs-content-model-editor';
+import type { IContentModelEditor } from 'roosterjs-content-model-editor';
+import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -4,13 +4,11 @@ import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { paragraphTestCommon } from './paragraphTestCommon';
 import {
-    ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
-import {
     ContentModelDocument,
     ContentModelListItem,
     ContentModelTable,
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('setAlignment', () => {

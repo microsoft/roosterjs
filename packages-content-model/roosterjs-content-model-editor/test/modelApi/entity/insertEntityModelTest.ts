@@ -1,6 +1,5 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, InsertEntityPosition } from 'roosterjs-content-model-types';
 import { insertEntityModel } from '../../../lib/modelApi/entity/insertEntityModel';
-import { InsertEntityPosition } from '../../../lib/publicTypes/parameter/InsertEntityOptions';
 import {
     createBr,
     createContentModelDocument,

@@ -2,8 +2,7 @@ import { deleteBlock, deleteSegment } from 'roosterjs-content-model-editor';
 import { getLeafSiblingBlock } from '../utils/getLeafSiblingBlock';
 import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 import type { BlockAndPath } from '../utils/getLeafSiblingBlock';
-import type { ContentModelSegment } from 'roosterjs-content-model-types';
-import type { DeleteSelectionStep } from 'roosterjs-content-model-editor';
+import type { ContentModelSegment, DeleteSelectionStep } from 'roosterjs-content-model-types';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return context => {

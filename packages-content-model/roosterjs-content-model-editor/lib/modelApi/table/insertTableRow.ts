@@ -1,7 +1,9 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
 import { getSelectedCells } from './getSelectedCells';
-import type { TableVerticalInsertOperation } from '../../publicTypes/parameter/TableOperation';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import type {
+    ContentModelTable,
+    TableVerticalInsertOperation,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

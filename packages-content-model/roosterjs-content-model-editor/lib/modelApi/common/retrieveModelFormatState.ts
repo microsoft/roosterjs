@@ -3,9 +3,8 @@ import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGrou
 import { isBold } from '../../publicApi/segment/toggleBold';
 import { iterateSelections } from '../selection/iterateSelections';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
-import type { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
-import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import type {
+    ContentModelFormatState,
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDocument,
@@ -14,6 +13,7 @@ import type {
     ContentModelListItem,
     ContentModelParagraph,
     ContentModelSegmentFormat,
+    TableSelectionContext,
 } from 'roosterjs-content-model-types';
 
 /**

@@ -1,11 +1,11 @@
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
-import type { ContentModelDocument } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type {
+    ContentModelDocument,
     DeleteResult,
     FormatWithContentModelContext,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -1,16 +1,14 @@
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from '../../publicTypes/parameter/ChangeSource';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
-import type {
-    ContentModelEditorCore,
-    FormatContentModel,
-} from '../../publicTypes/ContentModelEditorCore';
+import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 import type { Entity } from 'roosterjs-editor-types';
 import type {
+    ContentModelContentChangedEvent,
+    DOMSelection,
     EntityRemovalOperation,
+    FormatContentModel,
     FormatWithContentModelContext,
-} from '../../publicTypes/parameter/FormatWithContentModelContext';
-import type { DOMSelection } from 'roosterjs-content-model-types';
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -22,7 +20,12 @@ import type { DOMSelection } from 'roosterjs-content-model-types';
  * @param formatter Formatter function, see ContentModelFormatter
  * @param options More options, see FormatWithContentModelOptions
  */
-export const formatContentModel: FormatContentModel = (core, formatter, options) => {
+export const formatContentModel: FormatContentModel = (
+    standaloneEditorCore,
+    formatter,
+    options
+) => {
+    const core = standaloneEditorCore as ContentModelEditorCore;
     const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
         options || {};
 

@@ -1,8 +1,10 @@
 import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
 import { isCharacterValue } from '../../domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
-import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
-import type { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
+import type {
+    ContentModelCachePluginState,
+    ContentModelContentChangedEvent,
+} from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     IEditor,

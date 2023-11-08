@@ -1,5 +1,4 @@
-import type { TableAlignOperation } from '../../publicTypes/parameter/TableOperation';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import type { ContentModelTable, TableAlignOperation } from 'roosterjs-content-model-types';
 
 /**
  * @internal

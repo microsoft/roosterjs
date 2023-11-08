@@ -67,6 +67,28 @@ export { TableCellMetadataFormat } from './format/metadata/TableCellMetadataForm
 export { ContentModelBlockGroupType } from './enum/BlockGroupType';
 export { ContentModelBlockType } from './enum/BlockType';
 export { ContentModelSegmentType } from './enum/SegmentType';
+export {
+    EntityLifecycleOperation,
+    EntityOperation,
+    EntityRemovalOperation,
+} from './enum/EntityOperation';
+export {
+    TableOperation,
+    TableVerticalInsertOperation,
+    TableHorizontalInsertOperation,
+    TableDeleteOperation,
+    TableVerticalMergeOperation,
+    TableHorizontalMergeOperation,
+    TableCellMergeOperation,
+    TableSplitOperation,
+    TableAlignOperation,
+    TableCellHorizontalAlignOperation,
+    TableCellVerticalAlignOperation,
+} from './enum/TableOperation';
+export { PasteType } from './enum/PasteType';
+export { BorderOperations } from './enum/BorderOperations';
+export { DeleteResult } from './enum/DeleteResult';
+export { InsertEntityPosition } from './enum/InsertEntityPosition';
 
 export { ContentModelBlock } from './block/ContentModelBlock';
 export { ContentModelParagraph } from './block/ContentModelParagraph';
@@ -109,6 +131,8 @@ export {
     RangeSelection,
     TableSelection,
 } from './selection/DOMSelection';
+export { InsertPoint } from './selection/InsertPoint';
+export { TableSelectionContext } from './selection/TableSelectionContext';
 
 export {
     ContentModelHandlerMap,
@@ -172,3 +196,54 @@ export {
     Definition,
 } from './metadata/Definition';
 export { ColorManager, Colors } from './context/ColorManager';
+
+export { IStandaloneEditor } from './editor/IStandaloneEditor';
+export { StandaloneEditorOptions } from './editor/StandaloneEditorOptions';
+export {
+    CreateContentModel,
+    CreateEditorContext,
+    GetDOMSelection,
+    SetContentModel,
+    SetDOMSelection,
+    FormatContentModel,
+    StandaloneCoreApiMap,
+    StandaloneEditorCore,
+} from './editor/StandaloneEditorCore';
+
+export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
+export { ContentModelPluginState } from './pluginState/ContentModelPluginState';
+export {
+    ContentModelFormatPluginState,
+    PendingFormat,
+} from './pluginState/ContentModelFormatPluginState';
+
+export { EditorEnvironment } from './parameter/EditorEnvironment';
+export {
+    DeletedEntity,
+    FormatWithContentModelContext,
+} from './parameter/FormatWithContentModelContext';
+export {
+    FormatWithContentModelOptions,
+    ContentModelFormatter,
+} from './parameter/FormatWithContentModelOptions';
+export { ContentModelFormatState } from './parameter/ContentModelFormatState';
+export { ImageFormatState } from './parameter/ImageFormatState';
+export { Border } from './parameter/Border';
+export { InsertEntityOptions } from './parameter/InsertEntityOptions';
+export {
+    DeleteSelectionContext,
+    DeleteSelectionResult,
+    DeleteSelectionStep,
+    ValidDeleteSelectionContext,
+} from './parameter/DeleteSelectionStep';
+
+export {
+    ContentModelBeforePasteEvent,
+    ContentModelBeforePasteEventData,
+    CompatibleContentModelBeforePasteEvent,
+} from './event/ContentModelBeforePasteEvent';
+export {
+    ContentModelContentChangedEvent,
+    CompatibleContentModelContentChangedEvent,
+    ContentModelContentChangedEventData,
+} from './event/ContentModelContentChangedEvent';

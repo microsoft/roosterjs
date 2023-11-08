@@ -1,8 +1,11 @@
 import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
-import type { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
-import type { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
+    ContentModelBlockGroup,
+    ContentModelFormatState,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 import {
     getRegularSelectionOffsets,
     handleRegularSelection,

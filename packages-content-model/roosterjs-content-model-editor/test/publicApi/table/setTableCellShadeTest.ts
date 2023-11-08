@@ -1,12 +1,12 @@
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
 import setTableCellShade from '../../../lib/publicApi/table/setTableCellShade';
-import { ContentModelTable } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelTable,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 describe('setTableCellShade', () => {
     let editor: IContentModelEditor;

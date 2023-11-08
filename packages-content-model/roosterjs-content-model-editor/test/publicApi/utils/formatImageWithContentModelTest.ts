@@ -1,10 +1,11 @@
 import formatImageWithContentModel from '../../../lib/publicApi/utils/formatImageWithContentModel';
-import { ContentModelDocument, ContentModelImage } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelDocument,
+    ContentModelImage,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 import {
     addSegment,
     createContentModelDocument,

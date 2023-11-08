@@ -1,12 +1,12 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleBullet from '../../../lib/publicApi/list/toggleBullet';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelDocument,
     ContentModelFormatter,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 describe('toggleBullet', () => {
     let editor = ({} as any) as IContentModelEditor;

@@ -1,8 +1,14 @@
 import * as deleteSelection from '../../../lib/publicApi/selection/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyDefaultFormat } from '../../../lib/modelApi/format/applyDefaultFormat';
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { InsertPoint } from '../../../lib/publicTypes/selection/InsertPoint';
+import {
+    ContentModelDocument,
+    ContentModelFormatter,
+    ContentModelSegmentFormat,
+    FormatWithContentModelContext,
+    FormatWithContentModelOptions,
+    InsertPoint,
+} from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
     createDivider,
@@ -11,11 +17,6 @@ import {
     createSelectionMarker,
     createText,
 } from 'roosterjs-content-model-dom';
-import {
-    ContentModelFormatter,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import type { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('applyDefaultFormat', () => {

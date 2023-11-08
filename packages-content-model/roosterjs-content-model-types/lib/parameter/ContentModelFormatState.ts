@@ -1,4 +1,4 @@
-import type { TableMetadataFormat } from 'roosterjs-content-model-types';
+import type { TableMetadataFormat } from '../format/metadata/TableMetadataFormat';
 import type { ImageFormatState } from './ImageFormatState';
 
 /**

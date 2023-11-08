@@ -1,7 +1,6 @@
 import * as getSelectionRootNode from '../../../lib/modelApi/selection/getSelectionRootNode';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
-import { ContentModelFormatState } from '../../../lib/publicTypes/format/formatState/ContentModelFormatState';
-import { DomToModelContext } from 'roosterjs-content-model-types';
+import { ContentModelFormatState, DomToModelContext } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import getFormatState, {
     reducedModelChildProcessor,

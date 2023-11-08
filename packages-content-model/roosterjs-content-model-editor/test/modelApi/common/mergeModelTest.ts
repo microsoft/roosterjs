@@ -1,7 +1,5 @@
 import * as applyTableFormat from '../../../lib/modelApi/table/applyTableFormat';
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
-import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
-import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
 import {
     ContentModelDocument,
     ContentModelImage,
@@ -10,7 +8,9 @@ import {
     ContentModelSelectionMarker,
     ContentModelTable,
     ContentModelTableCell,
+    FormatWithContentModelContext,
 } from 'roosterjs-content-model-types';
+import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
 import {
     createBr,
     createContentModelDocument,

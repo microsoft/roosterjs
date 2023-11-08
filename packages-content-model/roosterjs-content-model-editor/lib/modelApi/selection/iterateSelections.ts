@@ -1,9 +1,9 @@
-import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelBlockWithCache,
     ContentModelSegment,
+    TableSelectionContext,
 } from 'roosterjs-content-model-types';
 
 /**
