@@ -1,15 +1,14 @@
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
-import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
+import { EditorCore, SelectionRangeTypes } from 'roosterjs-editor-types';
 import type { DOMSelection, GetDOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const getDOMSelection: GetDOMSelection = core => {
-    return core.cache.cachedSelection ?? getNewSelection(core as ContentModelEditorCore);
+    return core.cache.cachedSelection ?? getNewSelection(core);
 };
 
-function getNewSelection(core: ContentModelEditorCore): DOMSelection | null {
+function getNewSelection(core: EditorCore): DOMSelection | null {
     // TODO: Get rid of getSelectionRangeEx when we have standalone editor
     const rangeEx = core.api.getSelectionRangeEx(core);
 

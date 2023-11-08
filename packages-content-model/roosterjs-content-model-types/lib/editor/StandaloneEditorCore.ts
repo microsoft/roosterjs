@@ -35,7 +35,7 @@ export type CreateContentModel = (
  * Get current DOM selection from editor
  * @param core The StandaloneEditorCore object
  */
-export type GetDOMSelection = (core: StandaloneEditorCore) => DOMSelection | null;
+export type GetDOMSelection = (core: StandaloneEditorCore & EditorCore) => DOMSelection | null;
 
 /**
  * Set content with content model. This is the replacement of core API getSelectionRangeEx
