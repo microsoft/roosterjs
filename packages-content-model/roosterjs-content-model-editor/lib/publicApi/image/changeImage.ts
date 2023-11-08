@@ -1,7 +1,7 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { readFile } from '../../domUtils/readFile';
-import { updateImageMetadata } from '../../domUtils/metadata/updateImageMetadata';
+import { updateImageMetadata } from 'roosterjs-content-model-core';
 import type { ContentModelImage } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 

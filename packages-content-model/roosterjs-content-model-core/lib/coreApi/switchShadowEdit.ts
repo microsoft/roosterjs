@@ -1,8 +1,7 @@
-import { getSelectionPath } from 'roosterjs-editor-dom';
-import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { PluginEventType } from 'roosterjs-editor-types';
-import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
-import type { SwitchShadowEdit } from 'roosterjs-editor-types';
+import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { EditorCore, SelectionPath, SwitchShadowEdit } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -12,17 +11,19 @@ import type { SwitchShadowEdit } from 'roosterjs-editor-types';
  */
 export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
     // TODO: Use strong-typed editor core object
-    const core = editorCore as ContentModelEditorCore;
+    const core = editorCore as StandaloneEditorCore & EditorCore;
 
     if (isOn != !!core.lifecycle.shadowEditFragment) {
         if (isOn) {
             const model = !core.cache.cachedModel ? core.api.createContentModel(core) : null;
-            const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
 
             // Fake object, not used in Content Model Editor, just to satisfy original editor code
             // TODO: we can remove them once we have standalone Content Model Editor
             const fragment = core.contentDiv.ownerDocument.createDocumentFragment();
-            const selectionPath = range && getSelectionPath(core.contentDiv, range);
+            const selectionPath: SelectionPath = {
+                start: [],
+                end: [],
+            };
 
             core.api.triggerEvent(
                 core,

@@ -3,7 +3,6 @@ export {
     ContentModelEditorCore,
 } from './publicTypes/ContentModelEditorCore';
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
-export { ChangeSource } from './publicTypes/ChangeSource';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -54,7 +53,6 @@ export { default as setParagraphMargin } from './publicApi/block/setParagraphMar
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
-export { CachedElementHandler, CloneModelOptions, cloneModel } from './publicApi/model/cloneModel';
 export { deleteSelection } from './publicApi/selection/deleteSelection';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
@@ -65,14 +63,7 @@ export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugi
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
 export { default as ContentModelCachePlugin } from './editor/corePlugins/ContentModelCachePlugin';
 
-export {
-    createContentModelEditorCore,
-    promoteToContentModelEditorCore,
-} from './editor/createContentModelEditorCore';
+export { createContentModelEditorCore } from './editor/createContentModelEditorCore';
 export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
-export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
-export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
-export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
-export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 export { isCharacterValue, isModifierKey } from './domUtils/eventUtils';
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';

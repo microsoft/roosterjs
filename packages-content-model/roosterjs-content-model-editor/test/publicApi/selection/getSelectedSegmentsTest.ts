@@ -1,4 +1,4 @@
-import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
+import * as iterateSelections from 'roosterjs-content-model-core/lib/publicApi/selection/iterateSelections';
 import getSelectedSegments from '../../../lib/publicApi/selection/getSelectedSegments';
 import {
     ContentModelBlock,

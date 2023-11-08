@@ -6,7 +6,7 @@ import { processPastedContentWacComponents } from '../../lib/paste/WacComponents
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
-} from 'roosterjs-content-model-editor/lib/domUtils/metadata/updateListMetadata';
+} from 'roosterjs-content-model-core/lib/metadata/updateListMetadata';
 
 import {
     contentModelToDom,

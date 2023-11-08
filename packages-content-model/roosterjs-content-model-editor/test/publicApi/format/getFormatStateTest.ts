@@ -1,4 +1,4 @@
-import * as getSelectionRootNode from '../../../lib/modelApi/selection/getSelectionRootNode';
+import * as getSelectionRootNode from 'roosterjs-content-model-core/lib/publicApi/selection/getSelectionRootNode';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
 import { ContentModelFormatState, DomToModelContext } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';

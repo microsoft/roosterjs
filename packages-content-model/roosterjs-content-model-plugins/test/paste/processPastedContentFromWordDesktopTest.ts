@@ -5,7 +5,7 @@ import { processPastedContentFromWordDesktop } from '../../lib/paste/WordDesktop
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
-} from 'roosterjs-content-model-editor/lib/domUtils/metadata/updateListMetadata';
+} from 'roosterjs-content-model-core/lib/metadata/updateListMetadata';
 import {
     contentModelToDom,
     createDomToModelContext,

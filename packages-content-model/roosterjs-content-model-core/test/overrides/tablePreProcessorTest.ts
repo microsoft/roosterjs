@@ -1,6 +1,6 @@
 import * as tableProcessor from 'roosterjs-content-model-dom/lib/domToModel/processors/tableProcessor';
 import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model-dom';
-import { tablePreProcessor } from '../../../lib/editor/overrides/tablePreProcessor';
+import { tablePreProcessor } from '../../lib/override/tablePreProcessor';
 
 describe('tablePreProcessor', () => {
     it('Table without metadata, use Entity', () => {

@@ -1,11 +1,9 @@
 import paste from '../../publicApi/utils/paste';
 import { addRangeToSelection } from '../../domUtils/addRangeToSelection';
-import { ChangeSource } from '../../publicTypes/ChangeSource';
-import { cloneModel } from '../../publicApi/model/cloneModel';
+import { ChangeSource, cloneModel, iterateSelections } from 'roosterjs-content-model-core';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { deleteSelection } from '../../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
-import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -286,3 +284,12 @@ export const onNodeCreated: OnNodeCreated = (_, node): void => {
         node.removeAttribute('contenteditable');
     }
 };
+
+/**
+ * @internal
+ * Create a new instance of ContentModelCopyPastePlugin
+ * @param state The plugin state object
+ */
+export function createContentModelCopyPastePlugin(state: CopyPastePluginState) {
+    return new ContentModelCopyPastePlugin(state);
+}

@@ -1,4 +1,4 @@
-import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { iterateSelections } from 'roosterjs-content-model-core';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {

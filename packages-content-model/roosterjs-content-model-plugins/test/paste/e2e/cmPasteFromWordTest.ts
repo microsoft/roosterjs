@@ -1,8 +1,9 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { ClipboardData } from 'roosterjs-editor-types';
-import { cloneModel, IContentModelEditor, paste } from 'roosterjs-content-model-editor';
+import { cloneModel } from 'roosterjs-content-model-core';
 import { DomToModelOption } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
+import { IContentModelEditor, paste } from 'roosterjs-content-model-editor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 

@@ -1,8 +1,8 @@
 import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../../../publicApi/block/deleteBlock';
 import { deleteSegment } from '../../../publicApi/segment/deleteSegment';
-import { iterateSelections } from '../../selection/iterateSelections';
-import type { IterateSelectionsOption } from '../../selection/iterateSelections';
+import { iterateSelections } from 'roosterjs-content-model-core';
+import type { IterateSelectionsOption } from 'roosterjs-content-model-core';
 import type {
     ContentModelDocument,
     DeleteSelectionContext,

@@ -1,4 +1,4 @@
-import { cloneModel } from '../../publicApi/model/cloneModel';
+import { cloneModel } from '../publicApi/model/cloneModel';
 import {
     createDomToModelContext,
     createDomToModelContextWithConfig,

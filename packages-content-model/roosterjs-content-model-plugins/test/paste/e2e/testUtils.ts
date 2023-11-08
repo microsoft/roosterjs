@@ -1,10 +1,10 @@
+import { cloneModel } from 'roosterjs-content-model-core';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { ContentModelPastePlugin } from '../../../lib/paste/ContentModelPastePlugin';
 import {
     ContentModelEditorOptions,
     ContentModelEditor,
     IContentModelEditor,
-    cloneModel,
 } from 'roosterjs-content-model-editor';
 
 export function initEditor(id: string): IContentModelEditor {

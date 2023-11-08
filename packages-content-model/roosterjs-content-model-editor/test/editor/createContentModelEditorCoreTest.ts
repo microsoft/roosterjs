@@ -1,41 +1,24 @@
 import * as ContentModelCachePlugin from '../../lib/editor/corePlugins/ContentModelCachePlugin';
+import * as ContentModelCopyPastePlugin from '../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import * as ContentModelFormatPlugin from '../../lib/editor/corePlugins/ContentModelFormatPlugin';
-import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
-import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
+import * as promoteToContentModelEditorCore from 'roosterjs-content-model-core/lib/editor/promoteToContentModelEditorCore';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { contentModelDomIndexer } from '../../lib/editor/utils/contentModelDomIndexer';
 import { ContentModelEditorOptions } from '../../lib/publicTypes/IContentModelEditor';
-import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
-import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
-import { formatContentModel } from '../../lib/editor/coreApi/formatContentModel';
-import { getDOMSelection } from '../../lib/editor/coreApi/getDOMSelection';
-import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
-import { setDOMSelection } from '../../lib/editor/coreApi/setDOMSelection';
-import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
-import { tablePreProcessor } from '../../lib/editor/overrides/tablePreProcessor';
-import {
-    listItemMetadataApplier,
-    listLevelMetadataApplier,
-} from '../../lib/domUtils/metadata/updateListMetadata';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
-const mockedDomToModelConfig = {
-    config: 'mockedDomToModelConfig',
-} as any;
-const mockedModelToDomConfig = {
-    config: 'mockedModelToDomConfig',
-} as any;
 const mockedFormatPlugin = 'FORMATPLUGIN' as any;
 const mockedCachePlugin = 'CACHPLUGIN' as any;
+const mockedCopyPastePlugin = 'COPYPASTE' as any;
+const mockedCopyPastePlugin2 = 'COPYPASTE2' as any;
 
 describe('createContentModelEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
+    let promoteToContentModelEditorCoreSpy: jasmine.Spy;
     let mockedCore: any;
     let contentDiv: any;
-
-    let copyPastePlugin = 'copyPastePlugin' as any;
 
     beforeEach(() => {
         contentDiv = {
@@ -58,73 +41,34 @@ describe('createContentModelEditorCore', () => {
         createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.returnValue(
             mockedCore
         );
+        promoteToContentModelEditorCoreSpy = spyOn(
+            promoteToContentModelEditorCore,
+            'promoteToContentModelEditorCore'
+        );
         spyOn(ContentModelFormatPlugin, 'createContentModelFormatPlugin').and.returnValue(
             mockedFormatPlugin
         );
         spyOn(ContentModelCachePlugin, 'createContentModelCachePlugin').and.returnValue(
             mockedCachePlugin
         );
-
-        spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(
-            mockedDomToModelConfig
-        );
-        spyOn(createModelToDomContext, 'createModelToDomConfig').and.returnValue(
-            mockedModelToDomConfig
+        spyOn(ContentModelCopyPastePlugin, 'createContentModelCopyPastePlugin').and.returnValue(
+            mockedCopyPastePlugin
         );
     });
 
     it('No additional option', () => {
-        const options = {
-            corePluginOverride: {
-                copyPaste: copyPastePlugin,
-            },
-        };
-        const core = createContentModelEditorCore(contentDiv, options);
+        const core = createContentModelEditorCore(contentDiv, {});
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+        const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
-                copyPaste: copyPastePlugin,
+                copyPaste: mockedCopyPastePlugin,
             },
-        });
-        expect(core).toEqual({
-            lifecycle: {
-                experimentalFeatures: [],
-            },
-            api: {
-                switchShadowEdit,
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            originalApi: {
-                a: 'b',
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            defaultDomToModelOptions: [
-                { processorOverride: { table: tablePreProcessor } },
-                undefined,
-            ],
-            defaultModelToDomOptions: [
-                {
-                    metadataAppliers: {
-                        listItem: listItemMetadataApplier,
-                        listLevel: listLevelMetadataApplier,
-                    },
-                },
-                undefined,
-            ],
-            defaultDomToModelConfig: mockedDomToModelConfig,
-            defaultModelToDomConfig: mockedModelToDomConfig,
+        };
+        const expectedPluginState: any = {
+            cache: { domIndexer: undefined },
+            copyPaste: { allowedCustomPasteType: [] },
             format: {
                 defaultFormat: {
                     fontWeight: undefined,
@@ -137,13 +81,14 @@ describe('createContentModelEditorCore', () => {
                 },
                 pendingFormat: null,
             },
-            contentDiv: {
-                style: {},
-            },
-            cache: { domIndexer: undefined },
-            copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false, isAndroid: false },
-        } as any);
+        };
+
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, expectedOptions);
+        expect(promoteToContentModelEditorCoreSpy).toHaveBeenCalledWith(
+            core,
+            expectedOptions,
+            expectedPluginState
+        );
     });
 
     it('With additional option', () => {
@@ -154,58 +99,23 @@ describe('createContentModelEditorCore', () => {
             defaultDomToModelOptions,
             defaultModelToDomOptions,
             corePluginOverride: {
-                copyPaste: copyPastePlugin,
+                copyPaste: mockedCopyPastePlugin2,
             },
         };
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+        const expectedOptions = {
             defaultDomToModelOptions,
             defaultModelToDomOptions,
             plugins: [mockedCachePlugin, mockedFormatPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
-                copyPaste: copyPastePlugin,
+                copyPaste: mockedCopyPastePlugin2,
             },
-        });
-
-        expect(core).toEqual({
-            lifecycle: {
-                experimentalFeatures: [],
-            },
-            api: {
-                switchShadowEdit,
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            originalApi: {
-                a: 'b',
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            defaultDomToModelOptions: [
-                { processorOverride: { table: tablePreProcessor } },
-                defaultDomToModelOptions,
-            ],
-            defaultModelToDomOptions: [
-                {
-                    metadataAppliers: {
-                        listItem: listItemMetadataApplier,
-                        listLevel: listLevelMetadataApplier,
-                    },
-                },
-                defaultModelToDomOptions,
-            ],
-            defaultDomToModelConfig: mockedDomToModelConfig,
-            defaultModelToDomConfig: mockedModelToDomConfig,
+        };
+        const expectedPluginState: any = {
+            cache: { domIndexer: undefined },
+            copyPaste: { allowedCustomPasteType: [] },
             format: {
                 defaultFormat: {
                     fontWeight: undefined,
@@ -218,22 +128,18 @@ describe('createContentModelEditorCore', () => {
                 },
                 pendingFormat: null,
             },
-            contentDiv: {
-                style: {},
-            },
-            cache: {
-                domIndexer: undefined,
-            },
-            copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false, isAndroid: false },
-        } as any);
+        };
+
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, expectedOptions);
+        expect(promoteToContentModelEditorCoreSpy).toHaveBeenCalledWith(
+            core,
+            expectedOptions,
+            expectedPluginState
+        );
     });
 
     it('With default format', () => {
         const options = {
-            corePluginOverride: {
-                copyPaste: copyPastePlugin,
-            },
             defaultFormat: {
                 bold: true,
                 italic: true,
@@ -247,11 +153,11 @@ describe('createContentModelEditorCore', () => {
 
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+        const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
-                copyPaste: copyPastePlugin,
+                copyPaste: mockedCopyPastePlugin,
             },
             defaultFormat: {
                 bold: true,
@@ -262,44 +168,10 @@ describe('createContentModelEditorCore', () => {
                 textColor: 'red',
                 backgroundColor: 'blue',
             },
-        });
-        expect(core).toEqual({
-            lifecycle: {
-                experimentalFeatures: [],
-            },
-            api: {
-                switchShadowEdit,
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            originalApi: {
-                a: 'b',
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            defaultDomToModelOptions: [
-                { processorOverride: { table: tablePreProcessor } },
-                undefined,
-            ],
-            defaultModelToDomOptions: [
-                {
-                    metadataAppliers: {
-                        listItem: listItemMetadataApplier,
-                        listLevel: listLevelMetadataApplier,
-                    },
-                },
-                undefined,
-            ],
-            defaultDomToModelConfig: mockedDomToModelConfig,
-            defaultModelToDomConfig: mockedModelToDomConfig,
+        };
+        const expectedPluginState: any = {
+            cache: { domIndexer: undefined },
+            copyPaste: { allowedCustomPasteType: [] },
             format: {
                 defaultFormat: {
                     fontWeight: 'bold',
@@ -312,145 +184,34 @@ describe('createContentModelEditorCore', () => {
                 },
                 pendingFormat: null,
             },
-            contentDiv: {
-                style: {},
-            },
-            cache: { domIndexer: undefined },
-            copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false, isAndroid: false },
-        } as any);
-    });
-
-    it('Reuse model', () => {
-        const options = {
-            corePluginOverride: {
-                copyPaste: copyPastePlugin,
-            },
         };
 
-        const core = createContentModelEditorCore(contentDiv, options);
-
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [mockedCachePlugin, mockedFormatPlugin],
-            corePluginOverride: {
-                typeInContainer: new ContentModelTypeInContainerPlugin(),
-                copyPaste: copyPastePlugin,
-            },
-        });
-        expect(core).toEqual({
-            lifecycle: {
-                experimentalFeatures: [],
-            },
-            api: {
-                switchShadowEdit: switchShadowEdit,
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            originalApi: {
-                a: 'b',
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            defaultDomToModelOptions: [
-                { processorOverride: { table: tablePreProcessor } },
-                undefined,
-            ],
-            defaultModelToDomOptions: [
-                {
-                    metadataAppliers: {
-                        listItem: listItemMetadataApplier,
-                        listLevel: listLevelMetadataApplier,
-                    },
-                },
-                undefined,
-            ],
-            format: {
-                defaultFormat: {
-                    fontWeight: undefined,
-                    italic: undefined,
-                    underline: undefined,
-                    fontFamily: undefined,
-                    fontSize: undefined,
-                    textColor: undefined,
-                    backgroundColor: undefined,
-                },
-                pendingFormat: null,
-            },
-            defaultDomToModelConfig: mockedDomToModelConfig,
-            defaultModelToDomConfig: mockedModelToDomConfig,
-
-            contentDiv: {
-                style: {},
-            },
-            cache: { domIndexer: undefined },
-            copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false, isAndroid: false },
-        } as any);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, expectedOptions);
+        expect(promoteToContentModelEditorCoreSpy).toHaveBeenCalledWith(
+            core,
+            expectedOptions,
+            expectedPluginState
+        );
     });
 
     it('Allow dom indexer', () => {
         const options: ContentModelEditorOptions = {
-            corePluginOverride: {
-                copyPaste: copyPastePlugin,
-            },
             cacheModel: true,
         };
 
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+        const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
-                copyPaste: copyPastePlugin,
+                copyPaste: mockedCopyPastePlugin,
             },
             cacheModel: true,
-        });
-        expect(core).toEqual({
-            lifecycle: {
-                experimentalFeatures: [],
-            },
-            api: {
-                switchShadowEdit,
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            originalApi: {
-                a: 'b',
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-                formatContentModel,
-            },
-            defaultDomToModelOptions: [
-                { processorOverride: { table: tablePreProcessor } },
-                undefined,
-            ],
-            defaultModelToDomOptions: [
-                {
-                    metadataAppliers: {
-                        listItem: listItemMetadataApplier,
-                        listLevel: listLevelMetadataApplier,
-                    },
-                },
-                undefined,
-            ],
-            defaultDomToModelConfig: mockedDomToModelConfig,
-            defaultModelToDomConfig: mockedModelToDomConfig,
+        };
+        const expectedPluginState: any = {
+            cache: { domIndexer: contentModelDomIndexer },
+            copyPaste: { allowedCustomPasteType: [] },
             format: {
                 defaultFormat: {
                     fontWeight: undefined,
@@ -463,12 +224,13 @@ describe('createContentModelEditorCore', () => {
                 },
                 pendingFormat: null,
             },
-            contentDiv: {
-                style: {},
-            },
-            cache: { domIndexer: contentModelDomIndexer },
-            copyPaste: { allowedCustomPasteType: [] },
-            environment: { isMac: false, isAndroid: false },
-        } as any);
+        };
+
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, expectedOptions);
+        expect(promoteToContentModelEditorCoreSpy).toHaveBeenCalledWith(
+            core,
+            expectedOptions,
+            expectedPluginState
+        );
     });
 });

@@ -7,7 +7,6 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
  * Options for iterateSelections API
  */
 export interface IterateSelectionsOption {
@@ -42,7 +41,6 @@ export interface IterateSelectionsOption {
 }
 
 /**
- * @internal
  * The callback function type for iterateSelections
  * @param path The block group path of current selection
  * @param tableContext Table context of current selection
@@ -58,7 +56,6 @@ export type IterateSelectionsCallback = (
 ) => void | boolean;
 
 /**
- * @internal
  * Iterate all selected elements in a given model
  * @param group The given Content Model to iterate selection from
  * @param callback The callback function to access the selected element
