@@ -1,4 +1,4 @@
-import { getSelectionRootNode } from '../../lib/publicApi/selection/getSelectionRootNode';
+import { getSelectionRootNode } from '../../../lib/publicApi/selection/getSelectionRootNode';
 
 describe('getSelectionRootNode', () => {
     it('undefined input', () => {
