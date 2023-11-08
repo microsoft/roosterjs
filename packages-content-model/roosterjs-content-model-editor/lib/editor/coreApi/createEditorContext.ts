@@ -1,12 +1,10 @@
-import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 import type { EditorContext, CreateEditorContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Create a EditorContext object used by ContentModel API
  */
-export const createEditorContext: CreateEditorContext = standaloneEditorCore => {
-    const core = standaloneEditorCore as ContentModelEditorCore;
+export const createEditorContext: CreateEditorContext = core => {
     const { lifecycle, format, darkColorHandler, contentDiv, cache } = core;
 
     const context: EditorContext = {

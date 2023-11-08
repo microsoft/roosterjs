@@ -1,3 +1,4 @@
+import type { EditorCore } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelPluginState } from '../pluginState/ContentModelPluginState';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -16,7 +17,7 @@ import type {
  * Create a EditorContext object used by ContentModel API
  * @param core The StandaloneEditorCore object
  */
-export type CreateEditorContext = (core: StandaloneEditorCore) => EditorContext;
+export type CreateEditorContext = (core: StandaloneEditorCore & EditorCore) => EditorContext;
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -25,7 +26,7 @@ export type CreateEditorContext = (core: StandaloneEditorCore) => EditorContext;
  * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export type CreateContentModel = (
-    core: StandaloneEditorCore,
+    core: StandaloneEditorCore & EditorCore,
     option?: DomToModelOption,
     selectionOverride?: DOMSelection
 ) => ContentModelDocument;
@@ -44,7 +45,7 @@ export type GetDOMSelection = (core: StandaloneEditorCore) => DOMSelection | nul
  * @param onNodeCreated An optional callback that will be called when a DOM node is created
  */
 export type SetContentModel = (
-    core: StandaloneEditorCore,
+    core: StandaloneEditorCore & EditorCore,
     model: ContentModelDocument,
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated
@@ -52,9 +53,13 @@ export type SetContentModel = (
 
 /**
  * Set current DOM selection from editor. This is the replacement of core API select
+ * @param core The StandaloneEditorCore object
  * @param selection The selection to set
  */
-export type SetDOMSelection = (core: StandaloneEditorCore, selection: DOMSelection) => void;
+export type SetDOMSelection = (
+    core: StandaloneEditorCore & EditorCore,
+    selection: DOMSelection
+) => void;
 
 /**
  * The general API to do format change with Content Model
@@ -66,7 +71,7 @@ export type SetDOMSelection = (core: StandaloneEditorCore, selection: DOMSelecti
  * @param options More options, see FormatWithContentModelOptions
  */
 export type FormatContentModel = (
-    core: StandaloneEditorCore,
+    core: StandaloneEditorCore & EditorCore,
     formatter: ContentModelFormatter,
     options?: FormatWithContentModelOptions
 ) => void;
@@ -126,6 +131,11 @@ export interface StandaloneCoreApiMap {
  * Represents the core data structure of a Content Model editor
  */
 export interface StandaloneEditorCore extends ContentModelPluginState {
+    /**
+     * The content DIV element of this editor
+     */
+    readonly contentDiv: HTMLDivElement;
+
     /**
      * Core API map of this editor
      */

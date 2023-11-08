@@ -1,15 +1,16 @@
 import { cloneModel } from '../../publicApi/model/cloneModel';
-import type {
-    DOMSelection,
-    DomToModelOption,
-    CreateContentModel,
-} from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,
     createDomToModelContextWithConfig,
     domToContentModel,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
+import type { EditorCore } from 'roosterjs-editor-types';
+import type {
+    DOMSelection,
+    DomToModelOption,
+    CreateContentModel,
+    StandaloneEditorCore,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -18,12 +19,7 @@ import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEdito
  * @param option The option to customize the behavior of DOM to Content Model conversion
  * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
-export const createContentModel: CreateContentModel = (
-    standaloneEditorCore,
-    option,
-    selectionOverride
-) => {
-    const core = standaloneEditorCore as ContentModelEditorCore;
+export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
     let cachedModel = selectionOverride ? null : core.cache.cachedModel;
 
     if (cachedModel && core.lifecycle.shadowEditFragment) {
@@ -47,7 +43,7 @@ export const createContentModel: CreateContentModel = (
 };
 
 function internalCreateContentModel(
-    core: ContentModelEditorCore,
+    core: StandaloneEditorCore & EditorCore,
     selection?: DOMSelection,
     option?: DomToModelOption
 ) {

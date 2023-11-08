@@ -1,13 +1,11 @@
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type { SelectionRangeEx } from 'roosterjs-editor-types';
 import type { SetDOMSelection } from 'roosterjs-content-model-types';
-import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
  */
-export const setDOMSelection: SetDOMSelection = (standaloneEditorCore, selection) => {
-    const core = standaloneEditorCore as ContentModelEditorCore;
+export const setDOMSelection: SetDOMSelection = (core, selection) => {
     // TODO: Get rid of SelectionRangeEx in standalone editor
     const rangeEx: SelectionRangeEx =
         selection.type == 'range'

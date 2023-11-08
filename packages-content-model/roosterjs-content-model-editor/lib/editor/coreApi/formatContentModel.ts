@@ -1,13 +1,13 @@
 import { ChangeSource } from '../../publicTypes/parameter/ChangeSource';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
-import type { Entity } from 'roosterjs-editor-types';
+import type { EditorCore, Entity } from 'roosterjs-editor-types';
 import type {
     ContentModelContentChangedEvent,
     DOMSelection,
     EntityRemovalOperation,
     FormatContentModel,
     FormatWithContentModelContext,
+    StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,16 +16,11 @@ import type {
  * It will grab a Content Model for current editor content, and invoke a callback function
  * to do format change. Then according to the return value, write back the modified content model into editor.
  * If there is cached model, it will be used and updated.
- * @param core The ContentModelEditorCore object
+ * @param core The StandaloneEditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
  * @param options More options, see FormatWithContentModelOptions
  */
-export const formatContentModel: FormatContentModel = (
-    standaloneEditorCore,
-    formatter,
-    options
-) => {
-    const core = standaloneEditorCore as ContentModelEditorCore;
+export const formatContentModel: FormatContentModel = (core, formatter, options) => {
     const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
         options || {};
 
@@ -86,7 +81,7 @@ export const formatContentModel: FormatContentModel = (
     }
 };
 
-function handleNewEntities(core: ContentModelEditorCore, context: FormatWithContentModelContext) {
+function handleNewEntities(core: EditorCore, context: FormatWithContentModelContext) {
     // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
     // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
     // from EntityPlugin to here
@@ -112,10 +107,7 @@ const EntityOperationMap: Record<EntityRemovalOperation, EntityOperation> = {
     removeFromStart: EntityOperation.RemoveFromStart,
 };
 
-function handleDeletedEntities(
-    core: ContentModelEditorCore,
-    context: FormatWithContentModelContext
-) {
+function handleDeletedEntities(core: EditorCore, context: FormatWithContentModelContext) {
     context.deletedEntities.forEach(
         ({
             entity: {
@@ -147,7 +139,7 @@ function handleDeletedEntities(
     );
 }
 
-function handleImages(core: ContentModelEditorCore, context: FormatWithContentModelContext) {
+function handleImages(core: EditorCore, context: FormatWithContentModelContext) {
     if (context.newImages.length > 0) {
         const viewport = core.getVisibleViewport();
 
@@ -163,7 +155,7 @@ function handleImages(core: ContentModelEditorCore, context: FormatWithContentMo
 }
 
 function handlePendingFormat(
-    core: ContentModelEditorCore,
+    core: StandaloneEditorCore,
     context: FormatWithContentModelContext,
     selection?: DOMSelection | null
 ) {
