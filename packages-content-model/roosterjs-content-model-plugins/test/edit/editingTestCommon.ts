@@ -1,9 +1,9 @@
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import {
     ContentModelDocument,
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from 'roosterjs-content-model-types';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 
 export function editingTestCommon(
     apiName: string,
