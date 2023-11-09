@@ -46,6 +46,7 @@ function normalize() {
 
         packageJson.typings = './lib/index.d.ts';
         packageJson.main = './lib/index.js';
+        packageJson.module = './lib-mjs/index.js';
         packageJson.license = 'MIT';
         packageJson.repository = {
             type: 'git',
