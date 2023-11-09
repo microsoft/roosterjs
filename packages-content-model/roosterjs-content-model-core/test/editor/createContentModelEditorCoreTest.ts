@@ -1,12 +1,13 @@
-import * as ContentModelCachePlugin from '../../lib/editor/corePlugins/ContentModelCachePlugin';
-import * as ContentModelCopyPastePlugin from '../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
-import * as ContentModelFormatPlugin from '../../lib/editor/corePlugins/ContentModelFormatPlugin';
+import * as ContentModelCachePlugin from '../../lib/corePlugin/ContentModelCachePlugin';
+import * as ContentModelCopyPastePlugin from '../../lib/corePlugin/ContentModelCopyPastePlugin';
+import * as ContentModelFormatPlugin from '../../lib/corePlugin/ContentModelFormatPlugin';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
-import * as promoteToContentModelEditorCore from 'roosterjs-content-model-core/lib/editor/promoteToContentModelEditorCore';
-import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
-import { contentModelDomIndexer } from '../../lib/editor/utils/contentModelDomIndexer';
-import { ContentModelEditorOptions } from '../../lib/publicTypes/IContentModelEditor';
+import * as promoteToContentModelEditorCore from '../../lib/editor/promoteToContentModelEditorCore';
+import { contentModelDomIndexer } from '../../lib/corePlugin/utils/contentModelDomIndexer';
+import { ContentModelTypeInContainerPlugin } from '../../lib/corePlugin/ContentModelTypeInContainerPlugin';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
+import { EditorOptions } from 'roosterjs-editor-types';
+import { StandaloneEditorOptions } from 'roosterjs-content-model-types';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
 const mockedFormatPlugin = 'FORMATPLUGIN' as any;
@@ -195,7 +196,7 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('Allow dom indexer', () => {
-        const options: ContentModelEditorOptions = {
+        const options: StandaloneEditorOptions & EditorOptions = {
             cacheModel: true,
         };
 
