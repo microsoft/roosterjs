@@ -1,7 +1,10 @@
-import { extractBorderValues } from '../../domUtils/borderValues';
-import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
-import { iterateSelections, updateTableMetadata } from 'roosterjs-content-model-core';
+import {
+    extractBorderValues,
+    getClosestAncestorBlockGroupIndex,
+    iterateSelections,
+    updateTableMetadata,
+} from 'roosterjs-content-model-core';
 import type {
     ContentModelFormatState,
     ContentModelBlock,

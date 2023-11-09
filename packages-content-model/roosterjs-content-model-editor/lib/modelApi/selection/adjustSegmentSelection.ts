@@ -1,5 +1,4 @@
-import { getSelectedParagraphs } from './collectSelections';
-import { setSelection } from './setSelection';
+import { getSelectedParagraphs, setSelection } from 'roosterjs-content-model-core';
 import type { ContentModelDocument, ContentModelSegment } from 'roosterjs-content-model-types';
 
 /**

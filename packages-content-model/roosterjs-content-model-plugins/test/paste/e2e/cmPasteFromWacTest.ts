@@ -2,7 +2,8 @@ import * as processPastedContentWacComponents from '../../../lib/paste/WacCompon
 import { ClipboardData } from 'roosterjs-editor-types';
 import { DomToModelOption } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
-import { IContentModelEditor, paste } from 'roosterjs-content-model-editor';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
+import { paste } from 'roosterjs-content-model-core';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_From_WORD_Online_E2E';

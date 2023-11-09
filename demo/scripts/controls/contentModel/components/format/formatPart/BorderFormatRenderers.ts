@@ -1,8 +1,8 @@
+import { BorderFormat } from 'roosterjs-content-model-types';
+import { combineBorderValue, extractBorderValues } from 'roosterjs-content-model-core';
 import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
 import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { BorderFormat } from 'roosterjs-content-model-types';
-import { combineBorderValue, extractBorderValues } from 'roosterjs-content-model-editor';
 
 type BorderStyle =
     | 'dashed'

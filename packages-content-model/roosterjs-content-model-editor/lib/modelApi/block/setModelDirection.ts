@@ -1,6 +1,5 @@
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
-import { getOperationalBlocks } from '../selection/collectSelections';
-import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
+import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-core';
 import type {
     ContentModelBlockFormat,
     ContentModelDocument,

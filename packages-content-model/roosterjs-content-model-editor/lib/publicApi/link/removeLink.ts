@@ -1,5 +1,5 @@
-import getSelectedSegments from '../selection/getSelectedSegments';
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
+import { getSelectedSegments } from 'roosterjs-content-model-core';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**

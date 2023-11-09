@@ -1,4 +1,4 @@
-import { deleteSelection } from 'roosterjs-content-model-editor';
+import { deleteSelection } from 'roosterjs-content-model-core';
 import {
     createContentModelDocument,
     createParagraph,

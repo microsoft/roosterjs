@@ -1,7 +1,9 @@
 import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
-import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
+import {
+    getFirstSelectedTable,
+    normalizeTable,
+    setTableCellBackgroundColor,
+} from 'roosterjs-content-model-core';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**

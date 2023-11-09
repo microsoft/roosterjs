@@ -1,9 +1,9 @@
+import { deleteSelection } from 'roosterjs-content-model-core';
 import {
     ContentModelEntity,
     ContentModelSelectionMarker,
     DeletedEntity,
 } from 'roosterjs-content-model-types';
-import { deleteSelection } from 'roosterjs-content-model-editor';
 import {
     createBr,
     createContentModelDocument,

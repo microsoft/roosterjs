@@ -1,5 +1,5 @@
 import * as iterateSelections from 'roosterjs-content-model-core/lib/publicApi/selection/iterateSelections';
-import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
+import { applyTableFormat } from 'roosterjs-content-model-core';
 import { ContentModelFormatState, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { retrieveModelFormatState } from '../../../lib/modelApi/common/retrieveModelFormatState';
 import {

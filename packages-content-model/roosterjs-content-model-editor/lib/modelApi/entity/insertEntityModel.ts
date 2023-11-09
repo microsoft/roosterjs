@@ -1,6 +1,8 @@
-import { deleteSelection } from '../../publicApi/selection/deleteSelection';
-import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
-import { setSelection } from '../selection/setSelection';
+import {
+    deleteSelection,
+    getClosestAncestorBlockGroupIndex,
+    setSelection,
+} from 'roosterjs-content-model-core';
 import {
     createBr,
     createParagraph,
