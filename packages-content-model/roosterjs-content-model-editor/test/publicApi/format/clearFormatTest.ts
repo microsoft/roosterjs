@@ -1,12 +1,12 @@
 import * as clearModelFormat from '../../../lib/modelApi/common/clearModelFormat';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import clearFormat from '../../../lib/publicApi/format/clearFormat';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelDocument,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 describe('clearFormat', () => {
     it('Clear format', () => {

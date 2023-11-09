@@ -4,7 +4,7 @@ import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEdito
 import {
     ContentModelFormatter,
     FormatWithContentModelContext,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 describe('setIndentation', () => {
     const fakeModel: any = { a: 'b' };

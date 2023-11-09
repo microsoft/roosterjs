@@ -5,7 +5,7 @@ import { isCharacterValue } from '../../domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
-import type { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
+import type { ContentModelFormatPluginState } from 'roosterjs-content-model-types';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';

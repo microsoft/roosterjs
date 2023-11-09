@@ -2,7 +2,6 @@ import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorB
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 import { iterateSelections } from './iterateSelections';
 import type { IterateSelectionsOption } from './iterateSelections';
-import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -12,6 +11,7 @@ import type {
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelTable,
+    TableSelectionContext,
 } from 'roosterjs-content-model-types';
 import type { TypeOfBlockGroup } from '../common/getClosestAncestorBlockGroupIndex';
 

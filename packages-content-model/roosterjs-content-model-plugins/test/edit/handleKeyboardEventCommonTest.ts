@@ -1,5 +1,6 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import { FormatWithContentModelContext, IContentModelEditor } from 'roosterjs-content-model-editor';
+import { FormatWithContentModelContext } from 'roosterjs-content-model-types';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {
     handleKeyboardEventResult,

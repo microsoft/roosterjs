@@ -1,8 +1,10 @@
-import { ContentModelCachePluginState } from '../../../lib/publicTypes/pluginState/ContentModelCachePluginState';
-import { ContentModelDomIndexer } from 'roosterjs-content-model-types';
 import { default as ContentModelCachePlugin } from '../../../lib/editor/corePlugins/ContentModelCachePlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
+import {
+    ContentModelCachePluginState,
+    ContentModelDomIndexer,
+} from 'roosterjs-content-model-types';
 
 describe('ContentModelCachePlugin', () => {
     let plugin: ContentModelCachePlugin;

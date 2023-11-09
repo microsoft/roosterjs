@@ -1,5 +1,13 @@
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
-import { TableSelectionContext } from '../../../lib/publicTypes/selection/TableSelectionContext';
+import {
+    ContentModelBlock,
+    ContentModelBlockGroup,
+    ContentModelBlockGroupType,
+    ContentModelParagraph,
+    ContentModelSegment,
+    ContentModelTable,
+    TableSelectionContext,
+} from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
     createDivider,
@@ -13,14 +21,6 @@ import {
     createTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
-import {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelBlockGroupType,
-    ContentModelParagraph,
-    ContentModelSegment,
-    ContentModelTable,
-} from 'roosterjs-content-model-types';
 import {
     getSelectedParagraphs,
     getFirstSelectedListItem,

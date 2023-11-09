@@ -1,4 +1,5 @@
-import { editTable, isContentModelEditor, TableOperation } from 'roosterjs-content-model-editor';
+import { editTable, isContentModelEditor } from 'roosterjs-content-model-editor';
+import { TableOperation } from 'roosterjs-content-model-types';
 import {
     RibbonButton,
     TableEditAlignMenuItemStringKey,

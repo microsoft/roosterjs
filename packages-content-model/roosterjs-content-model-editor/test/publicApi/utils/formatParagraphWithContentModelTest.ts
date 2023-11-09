@@ -1,11 +1,12 @@
-import { ContentModelDocument, ContentModelParagraph } from 'roosterjs-content-model-types';
 import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelDocument,
+    ContentModelParagraph,
     ContentModelFormatter,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
     createParagraph,

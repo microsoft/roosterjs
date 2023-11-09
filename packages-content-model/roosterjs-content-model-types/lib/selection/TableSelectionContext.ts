@@ -1,4 +1,4 @@
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import type { ContentModelTable } from '../block/ContentModelTable';
 
 /**
  * Context object for table in a selection

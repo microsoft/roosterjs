@@ -1,8 +1,6 @@
-import type {
-    ContentModelDocument,
-    ContentModelDomIndexer,
-    DOMSelection,
-} from 'roosterjs-content-model-types';
+import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { ContentModelDomIndexer } from '../context/ContentModelDomIndexer';
+import type { DOMSelection } from '../selection/DOMSelection';
 
 /**
  * Plugin state for ContentModelEditPlugin

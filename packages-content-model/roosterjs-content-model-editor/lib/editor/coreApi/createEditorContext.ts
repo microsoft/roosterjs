@@ -1,5 +1,4 @@
-import type { CreateEditorContext } from '../../publicTypes/ContentModelEditorCore';
-import type { EditorContext } from 'roosterjs-content-model-types';
+import type { EditorContext, CreateEditorContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal

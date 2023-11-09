@@ -1,13 +1,14 @@
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource } from '../../publicTypes/ChangeSource';
 import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
-import type { ContentModelEntity, DOMSelection } from 'roosterjs-content-model-types';
+import type {
+    ContentModelEntity,
+    DOMSelection,
+    InsertEntityPosition,
+    InsertEntityOptions,
+} from 'roosterjs-content-model-types';
 import type { Entity } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type {
-    InsertEntityOptions,
-    InsertEntityPosition,
-} from '../../publicTypes/parameter/InsertEntityOptions';
 
 const BlockEntityTag = 'div';
 const InlineEntityTag = 'span';

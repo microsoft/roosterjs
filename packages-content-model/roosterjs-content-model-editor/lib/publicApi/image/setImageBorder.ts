@@ -1,7 +1,6 @@
 import applyImageBorderFormat from '../../modelApi/image/applyImageBorderFormat';
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import type { Border } from '../../publicTypes/interface/Border';
-import type { ContentModelImage } from 'roosterjs-content-model-types';
+import type { Border, ContentModelImage } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**

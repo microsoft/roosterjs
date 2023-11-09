@@ -1,7 +1,10 @@
 import { alignTable } from '../table/alignTable';
 import { getOperationalBlocks } from '../selection/collectSelections';
-import type { TableAlignOperation } from '../../publicTypes/parameter/TableOperation';
-import type { ContentModelDocument, ContentModelListItem } from 'roosterjs-content-model-types';
+import type {
+    ContentModelDocument,
+    ContentModelListItem,
+    TableAlignOperation,
+} from 'roosterjs-content-model-types';
 
 const ResultMap: Record<
     'left' | 'center' | 'right',

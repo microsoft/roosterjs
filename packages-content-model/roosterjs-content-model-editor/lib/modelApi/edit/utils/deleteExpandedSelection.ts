@@ -2,10 +2,12 @@ import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../../../publicApi/block/deleteBlock';
 import { deleteSegment } from '../../../publicApi/segment/deleteSegment';
 import { iterateSelections } from '../../selection/iterateSelections';
-import type { DeleteSelectionContext } from '../../../publicTypes/parameter/DeleteSelectionStep';
-import type { ContentModelDocument } from 'roosterjs-content-model-types';
-import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 import type { IterateSelectionsOption } from '../../selection/iterateSelections';
+import type {
+    ContentModelDocument,
+    DeleteSelectionContext,
+    FormatWithContentModelContext,
+} from 'roosterjs-content-model-types';
 import {
     createBr,
     createParagraph,

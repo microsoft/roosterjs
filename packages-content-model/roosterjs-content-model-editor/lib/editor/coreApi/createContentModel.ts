@@ -1,14 +1,16 @@
 import { cloneModel } from '../../publicApi/model/cloneModel';
-import type { DOMSelection, DomToModelOption } from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,
     createDomToModelContextWithConfig,
     domToContentModel,
 } from 'roosterjs-content-model-dom';
+import type { EditorCore } from 'roosterjs-editor-types';
 import type {
-    ContentModelEditorCore,
+    DOMSelection,
+    DomToModelOption,
     CreateContentModel,
-} from '../../publicTypes/ContentModelEditorCore';
+    StandaloneEditorCore,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -41,7 +43,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 };
 
 function internalCreateContentModel(
-    core: ContentModelEditorCore,
+    core: StandaloneEditorCore & EditorCore,
     selection?: DOMSelection,
     option?: DomToModelOption
 ) {

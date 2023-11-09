@@ -2,12 +2,7 @@ import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type {
-    ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../publicTypes/parameter/FormatWithContentModelContext';
-import type {
     ContentModelEditorOptions,
-    EditorEnvironment,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
 import type {
@@ -17,6 +12,9 @@ import type {
     DomToModelOption,
     ModelToDomOption,
     OnNodeCreated,
+    ContentModelFormatter,
+    FormatWithContentModelOptions,
+    EditorEnvironment,
 } from 'roosterjs-content-model-types';
 
 /**

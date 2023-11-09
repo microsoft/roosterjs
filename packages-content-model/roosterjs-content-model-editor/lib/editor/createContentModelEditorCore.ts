@@ -19,8 +19,8 @@ import {
 } from '../domUtils/metadata/updateListMetadata';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
-import type { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
 import type { CoreCreator, EditorCore } from 'roosterjs-editor-types';
+import type { ContentModelPluginState } from 'roosterjs-content-model-types';
 
 /**
  * Editor Core creator for Content Model editor

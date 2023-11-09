@@ -1,10 +1,11 @@
 import { getSelectedCells } from './getSelectedCells';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import type {
+    ContentModelTable,
+    ContentModelTableCell,
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,
-} from '../../publicTypes/parameter/TableOperation';
-import type { ContentModelTable, ContentModelTableCell } from 'roosterjs-content-model-types';
+} from 'roosterjs-content-model-types';
 
 const TextAlignValueMap: Partial<Record<
     TableCellHorizontalAlignOperation,

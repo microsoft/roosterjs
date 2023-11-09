@@ -1,8 +1,8 @@
 import type {
+    ContentModelBlock,
     EntityRemovalOperation,
     FormatWithContentModelContext,
-} from '../../publicTypes/parameter/FormatWithContentModelContext';
-import type { ContentModelBlock } from 'roosterjs-content-model-types';
+} from 'roosterjs-content-model-types';
 
 /**
  * Delete a content model block from current selection

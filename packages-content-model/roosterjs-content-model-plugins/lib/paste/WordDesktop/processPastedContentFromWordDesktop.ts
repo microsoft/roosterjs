@@ -5,8 +5,8 @@ import { moveChildNodes } from 'roosterjs-content-model-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
-import type { ContentModelBeforePasteEvent } from 'roosterjs-content-model-editor';
 import type {
+    ContentModelBeforePasteEvent,
     ContentModelBlockFormat,
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,

@@ -1,70 +1,9 @@
-export { ContentModelFormatState } from './publicTypes/format/formatState/ContentModelFormatState';
-export { ImageFormatState } from './publicTypes/format/formatState/ImageFormatState';
-export { Border } from './publicTypes/interface/Border';
-export { BorderOperations } from './publicTypes/enum/BorderOperations';
 export {
-    CreateEditorContext,
     ContentModelCoreApiMap,
     ContentModelEditorCore,
-    CreateContentModel,
-    SetContentModel,
-    GetDOMSelection,
-    SetDOMSelection,
-    FormatContentModel,
 } from './publicTypes/ContentModelEditorCore';
-export {
-    default as ContentModelBeforePasteEvent,
-    ContentModelBeforePasteEventData,
-    CompatibleContentModelBeforePasteEvent,
-} from './publicTypes/event/ContentModelBeforePasteEvent';
-export {
-    default as ContentModelContentChangedEvent,
-    CompatibleContentModelContentChangedEvent,
-    ContentModelContentChangedEventData,
-    ChangeSource,
-} from './publicTypes/event/ContentModelContentChangedEvent';
-
-export {
-    IContentModelEditor,
-    ContentModelEditorOptions,
-    EditorEnvironment,
-} from './publicTypes/IContentModelEditor';
-export { InsertPoint } from './publicTypes/selection/InsertPoint';
-export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
-export {
-    DeletedEntity,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
-    ContentModelFormatter,
-    EntityLifecycleOperation,
-    EntityOperation,
-    EntityRemovalOperation,
-} from './publicTypes/parameter/FormatWithContentModelContext';
-export {
-    InsertEntityOptions,
-    InsertEntityPosition,
-} from './publicTypes/parameter/InsertEntityOptions';
-export {
-    TableOperation,
-    TableVerticalInsertOperation,
-    TableHorizontalInsertOperation,
-    TableDeleteOperation,
-    TableVerticalMergeOperation,
-    TableHorizontalMergeOperation,
-    TableCellMergeOperation,
-    TableSplitOperation,
-    TableAlignOperation,
-    TableCellHorizontalAlignOperation,
-    TableCellVerticalAlignOperation,
-} from './publicTypes/parameter/TableOperation';
-export { PasteType } from './publicTypes/parameter/PasteType';
-export {
-    DeleteResult,
-    DeleteSelectionContext,
-    DeleteSelectionResult,
-    DeleteSelectionStep,
-    ValidDeleteSelectionContext,
-} from './publicTypes/parameter/DeleteSelectionStep';
+export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
+export { ChangeSource } from './publicTypes/ChangeSource';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -137,10 +76,3 @@ export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
 export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 export { isCharacterValue, isModifierKey } from './domUtils/eventUtils';
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
-
-export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
-export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';
-export {
-    ContentModelFormatPluginState,
-    PendingFormat,
-} from './publicTypes/pluginState/ContentModelFormatPluginState';

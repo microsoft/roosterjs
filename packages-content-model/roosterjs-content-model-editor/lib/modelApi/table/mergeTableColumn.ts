@@ -1,7 +1,9 @@
 import { canMergeCells } from './canMergeCells';
 import { getSelectedCells } from './getSelectedCells';
-import type { TableHorizontalMergeOperation } from '../../publicTypes/parameter/TableOperation';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import type {
+    ContentModelTable,
+    TableHorizontalMergeOperation,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

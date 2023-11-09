@@ -5,7 +5,6 @@ import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGrou
 import { iterateSelections } from '../selection/iterateSelections';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
-import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -16,6 +15,7 @@ import type {
     ContentModelSegmentFormat,
     ContentModelTable,
     Selectable,
+    TableSelectionContext,
 } from 'roosterjs-content-model-types';
 
 /**

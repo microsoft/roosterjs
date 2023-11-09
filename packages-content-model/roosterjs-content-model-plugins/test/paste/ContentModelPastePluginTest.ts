@@ -6,8 +6,9 @@ import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContent
 import * as setProcessor from '../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ContentModelBeforePasteEvent, IContentModelEditor } from 'roosterjs-content-model-editor';
+import { ContentModelBeforePasteEvent } from 'roosterjs-content-model-types';
 import { ContentModelPastePlugin } from '../../lib/paste/ContentModelPastePlugin';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
 import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 

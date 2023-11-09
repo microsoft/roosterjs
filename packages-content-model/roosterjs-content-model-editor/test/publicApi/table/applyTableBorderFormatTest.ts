@@ -1,15 +1,16 @@
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
 import applyTableBorderFormat from '../../../lib/publicApi/table/applyTableBorderFormat';
-import { Border } from '../../../lib/publicTypes/interface/Border';
-import { BorderOperations } from '../../../lib/publicTypes/enum/BorderOperations';
-import { ContentModelTable, ContentModelTableCell } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    Border,
+    BorderOperations,
+    ContentModelTable,
+    ContentModelTableCell,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 describe('applyTableBorderFormat', () => {
     let editor: IContentModelEditor;

@@ -1,11 +1,12 @@
 import { deleteSingleChar } from '../../modelApi/edit/utils/deleteSingleChar';
 import { isWhiteSpacePreserved, normalizeSingleSegment } from 'roosterjs-content-model-dom';
 import { normalizeText } from '../../domUtils/stringUtil';
-import type { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
 import type {
+    ContentModelParagraph,
+    ContentModelSegment,
     EntityRemovalOperation,
     FormatWithContentModelContext,
-} from '../../publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 /**
  * Delete a content model segment from current selection

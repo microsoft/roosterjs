@@ -1,12 +1,12 @@
 import * as readFile from '../../../lib/domUtils/readFile';
 import changeImage from '../../../lib/publicApi/image/changeImage';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {
+    ContentModelDocument,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 import {
     addSegment,
     createContentModelDocument,

@@ -1,12 +1,12 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleNumbering from '../../../lib/publicApi/list/toggleNumbering';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelDocument,
     ContentModelFormatter,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 describe('toggleNumbering', () => {
     let editor = ({} as any) as IContentModelEditor;

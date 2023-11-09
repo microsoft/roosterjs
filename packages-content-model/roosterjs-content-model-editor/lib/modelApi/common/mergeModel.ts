@@ -11,8 +11,6 @@ import {
     getObjectKeys,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import type {
     ContentModelBlock,
     ContentModelBlockFormat,
@@ -22,6 +20,8 @@ import type {
     ContentModelParagraph,
     ContentModelSegmentFormat,
     ContentModelTable,
+    FormatWithContentModelContext,
+    InsertPoint,
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];

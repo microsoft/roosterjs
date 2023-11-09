@@ -1,9 +1,9 @@
 import setListStartNumber from '../../../lib/publicApi/list/setListStartNumber';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import {
+    ContentModelDocument,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 
 describe('setListStartNumber', () => {
     function runTest(

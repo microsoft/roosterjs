@@ -1,6 +1,6 @@
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type { SelectionRangeEx } from 'roosterjs-editor-types';
-import type { SetDOMSelection } from '../../publicTypes/ContentModelEditorCore';
+import type { SetDOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal

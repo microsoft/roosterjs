@@ -1,10 +1,11 @@
 import removeLink from '../../../lib/publicApi/link/removeLink';
-import { ContentModelDocument, ContentModelLink } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    ContentModelDocument,
+    ContentModelLink,
     ContentModelFormatter,
     FormatWithContentModelOptions,
-} from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
+} from 'roosterjs-content-model-types';
 import {
     addLink,
     addSegment,

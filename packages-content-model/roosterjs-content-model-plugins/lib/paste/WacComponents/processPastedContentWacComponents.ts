@@ -1,7 +1,7 @@
 import addParser from '../utils/addParser';
 import { setProcessor } from '../utils/setProcessor';
-import type { ContentModelBeforePasteEvent } from 'roosterjs-content-model-editor';
 import type {
+    ContentModelBeforePasteEvent,
     ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,
