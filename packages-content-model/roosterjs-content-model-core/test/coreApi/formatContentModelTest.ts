@@ -520,7 +520,7 @@ describe('formatContentModel', () => {
         });
     });
 
-    describe('Pending foramt', () => {
+    describe('Pending format', () => {
         const mockedStartContainer1 = 'CONTAINER1' as any;
         const mockedStartOffset1 = 'OFFSET1' as any;
         const mockedFormat1: ContentModelSegmentFormat = { fontSize: '10pt' };
