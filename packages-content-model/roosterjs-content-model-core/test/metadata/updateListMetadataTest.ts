@@ -11,7 +11,7 @@ import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
     updateListMetadata,
-} from '../../../lib/domUtils/metadata/updateListMetadata';
+} from '../../lib/metadata/updateListMetadata';
 
 describe('updateListMetadata', () => {
     it('No value', () => {

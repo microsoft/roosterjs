@@ -17,7 +17,7 @@ import {
 import {
     iterateSelections,
     IterateSelectionsCallback,
-} from '../../../lib/modelApi/selection/iterateSelections';
+} from '../../../lib/publicApi/selection/iterateSelections';
 
 describe('iterateSelections', () => {
     let callback: jasmine.Spy<IterateSelectionsCallback>;

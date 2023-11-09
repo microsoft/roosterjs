@@ -1,6 +1,6 @@
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import insertLink from '../../../lib/publicApi/link/insertLink';
-import { ChangeSource } from '../../../lib/publicTypes/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-core';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {

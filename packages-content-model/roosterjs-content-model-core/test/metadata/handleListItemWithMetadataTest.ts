@@ -18,7 +18,7 @@ import {
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
-} from '../../../lib/domUtils/metadata/updateListMetadata';
+} from '../../lib/metadata/updateListMetadata';
 
 describe('handleListItem with metadata', () => {
     let context: ModelToDomContext;

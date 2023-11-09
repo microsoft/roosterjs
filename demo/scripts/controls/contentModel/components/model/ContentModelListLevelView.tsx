@@ -10,7 +10,7 @@ import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer'
 import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
-import { updateListMetadata } from 'roosterjs-content-model-editor';
+import { updateListMetadata } from 'roosterjs-content-model-core';
 import { useProperty } from '../../hooks/useProperty';
 import {
     ContentModelListItemLevelFormat,

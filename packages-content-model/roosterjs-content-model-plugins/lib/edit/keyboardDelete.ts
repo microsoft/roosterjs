@@ -1,5 +1,6 @@
-import { ChangeSource, deleteSelection, isModifierKey } from 'roosterjs-content-model-editor';
+import { ChangeSource } from 'roosterjs-content-model-core';
 import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
+import { deleteSelection, isModifierKey } from 'roosterjs-content-model-editor';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import {
     handleKeyboardEventResult,

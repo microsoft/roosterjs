@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../publicTypes/ChangeSource';
+import { ChangeSource } from '../constants/ChangeSource';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import type { EditorCore, Entity } from 'roosterjs-editor-types';
 import type {

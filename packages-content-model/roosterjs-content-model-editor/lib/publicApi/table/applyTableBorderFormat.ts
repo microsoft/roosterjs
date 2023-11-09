@@ -2,7 +2,7 @@ import { extractBorderValues } from '../../domUtils/borderValues';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { getSelectedCells } from '../../modelApi/table/getSelectedCells';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
-import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import { updateTableCellMetadata } from 'roosterjs-content-model-core';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     Border,

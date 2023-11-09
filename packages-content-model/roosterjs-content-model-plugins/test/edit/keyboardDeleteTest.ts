@@ -1,10 +1,11 @@
 import * as deleteSelection from 'roosterjs-content-model-editor/lib/publicApi/selection/deleteSelection';
 import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCommon';
-import { ChangeSource, IContentModelEditor } from 'roosterjs-content-model-editor';
+import { ChangeSource } from 'roosterjs-content-model-core';
 import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
 import { DeleteResult, DeleteSelectionStep } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { keyboardDelete } from '../../lib/edit/keyboardDelete';
 import { Keys } from 'roosterjs-editor-types';
 import {

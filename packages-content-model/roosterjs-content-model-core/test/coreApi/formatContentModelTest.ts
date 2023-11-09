@@ -1,12 +1,20 @@
-import { ChangeSource } from '../../../lib/publicTypes/ChangeSource';
-import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
+import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createImage } from 'roosterjs-content-model-dom';
-import { formatContentModel } from '../../../lib/editor/coreApi/formatContentModel';
+import { formatContentModel } from '../../lib/coreApi/formatContentModel';
+import {
+    ColorTransformDirection,
+    EditorCore,
+    EntityOperation,
+    PluginEventType,
+} from 'roosterjs-editor-types';
+import {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
+    StandaloneEditorCore,
+} from 'roosterjs-content-model-types';
 
 describe('formatContentModel', () => {
-    let core: ContentModelEditorCore;
+    let core: StandaloneEditorCore & EditorCore;
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
@@ -48,7 +56,7 @@ describe('formatContentModel', () => {
             },
             lifecycle: {},
             cache: {},
-        } as any) as ContentModelEditorCore;
+        } as any) as StandaloneEditorCore & EditorCore;
     });
 
     it('Callback return false', () => {
@@ -512,7 +520,7 @@ describe('formatContentModel', () => {
         });
     });
 
-    describe('Pending foramt', () => {
+    describe('Pending format', () => {
         const mockedStartContainer1 = 'CONTAINER1' as any;
         const mockedStartOffset1 = 'OFFSET1' as any;
         const mockedFormat1: ContentModelSegmentFormat = { fontSize: '10pt' };

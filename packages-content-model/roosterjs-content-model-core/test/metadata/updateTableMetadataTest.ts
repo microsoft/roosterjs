@@ -1,4 +1,4 @@
-import { updateTableMetadata } from '../../../lib/domUtils/metadata/updateTableMetadata';
+import { updateTableMetadata } from '../../lib/metadata/updateTableMetadata';
 import {
     ContentModelTable,
     TableBorderFormat,

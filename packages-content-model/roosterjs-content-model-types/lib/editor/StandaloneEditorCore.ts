@@ -1,4 +1,4 @@
-import type { EditorCore } from 'roosterjs-editor-types';
+import type { EditorCore, SwitchShadowEdit } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelPluginState } from '../pluginState/ContentModelPluginState';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -125,6 +125,9 @@ export interface StandaloneCoreApiMap {
      * @param options More options, see FormatWithContentModelOptions
      */
     formatContentModel: FormatContentModel;
+
+    // TODO: This is copied from legacy editor core, will be ported to use new types later
+    switchShadowEdit: SwitchShadowEdit;
 }
 
 /**

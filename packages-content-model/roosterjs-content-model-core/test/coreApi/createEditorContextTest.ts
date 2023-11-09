@@ -1,5 +1,6 @@
-import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
-import { createEditorContext } from '../../../lib/editor/coreApi/createEditorContext';
+import { createEditorContext } from '../../lib/coreApi/createEditorContext';
+import { EditorCore } from 'roosterjs-editor-types';
+import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('createEditorContext', () => {
     it('create a normal context', () => {
@@ -28,7 +29,7 @@ describe('createEditorContext', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as ContentModelEditorCore;
+        } as any) as StandaloneEditorCore & EditorCore;
 
         const context = createEditorContext(core);
 
@@ -71,7 +72,7 @@ describe('createEditorContext', () => {
             cache: {
                 domIndexer,
             },
-        } as any) as ContentModelEditorCore;
+        } as any) as StandaloneEditorCore & EditorCore;
 
         const context = createEditorContext(core);
 
@@ -87,7 +88,7 @@ describe('createEditorContext', () => {
 });
 
 describe('createEditorContext - checkZoomScale', () => {
-    let core: ContentModelEditorCore;
+    let core: StandaloneEditorCore & EditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
     let getBoundingClientRectSpy: jasmine.Spy;
@@ -117,7 +118,7 @@ describe('createEditorContext - checkZoomScale', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as ContentModelEditorCore;
+        } as any) as StandaloneEditorCore & EditorCore;
     });
 
     it('Zoom scale = 1', () => {
@@ -179,7 +180,7 @@ describe('createEditorContext - checkZoomScale', () => {
 });
 
 describe('createEditorContext - checkRootDir', () => {
-    let core: ContentModelEditorCore;
+    let core: StandaloneEditorCore & EditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
     let getBoundingClientRectSpy: jasmine.Spy;
@@ -209,7 +210,7 @@ describe('createEditorContext - checkRootDir', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as ContentModelEditorCore;
+        } as any) as StandaloneEditorCore & EditorCore;
     });
 
     it('LTR CSS', () => {

@@ -1,13 +1,13 @@
-import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
-import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
-import { PluginEventType } from 'roosterjs-editor-types';
-import { switchShadowEdit } from '../../../lib/editor/coreApi/switchShadowEdit';
+import * as iterateSelections from '../../lib/publicApi/selection/iterateSelections';
+import { EditorCore, PluginEventType } from 'roosterjs-editor-types';
+import { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { switchShadowEdit } from '../../lib/coreApi/switchShadowEdit';
 
 const mockedModel = 'MODEL' as any;
 const mockedCachedModel = 'CACHEMODEL' as any;
 
 describe('switchShadowEdit', () => {
-    let core: ContentModelEditorCore;
+    let core: StandaloneEditorCore & EditorCore;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
     let getSelectionRange: jasmine.Spy;
@@ -29,7 +29,7 @@ describe('switchShadowEdit', () => {
             lifecycle: {},
             contentDiv: document.createElement('div'),
             cache: {},
-        } as any) as ContentModelEditorCore;
+        } as any) as StandaloneEditorCore & EditorCore;
     });
 
     describe('was off', () => {
@@ -46,7 +46,7 @@ describe('switchShadowEdit', () => {
                 {
                     eventType: PluginEventType.EnteredShadowEdit,
                     fragment: document.createDocumentFragment(),
-                    selectionPath: undefined,
+                    selectionPath: { start: [], end: [] },
                 },
                 false
             );
@@ -67,7 +67,7 @@ describe('switchShadowEdit', () => {
                 {
                     eventType: PluginEventType.EnteredShadowEdit,
                     fragment: document.createDocumentFragment(),
-                    selectionPath: undefined,
+                    selectionPath: { start: [], end: [] },
                 },
                 false
             );
