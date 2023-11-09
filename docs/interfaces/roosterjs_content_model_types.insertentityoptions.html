@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DeletedEntity | RoosterJs API Reference</title>
+	<title>InsertEntityOptions | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -53,13 +53,13 @@
 					<a href="../modules.html">RoosterJs API Reference</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_content_model_editor.html">roosterjs-content-model-editor</a>
+					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_editor.deletedentity.html">DeletedEntity</a>
+					<a href="roosterjs_content_model_types.insertentityoptions.html">InsertEntityOptions</a>
 				</li>
 			</ul>
-			<h1>Interface DeletedEntity</h1>
+			<h1>Interface InsertEntityOptions</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents an entity that is deleted by a specified entity operation</p>
+						<p>Options for insertEntity API</p>
 					</div>
 				</div>
 			</section>
@@ -77,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DeletedEntity</span>
+						<span class="target">InsertEntityOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -88,8 +88,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_editor.deletedentity.html#entity" class="tsd-kind-icon">entity</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_editor.deletedentity.html#operation" class="tsd-kind-icon">operation</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.insertentityoptions.html#contentnode" class="tsd-kind-icon">content<wbr>Node</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.insertentityoptions.html#focusafterentity" class="tsd-kind-icon">focus<wbr>After<wbr>Entity</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.insertentityoptions.html#skipundosnapshot" class="tsd-kind-icon">skip<wbr>Undo<wbr>Snapshot</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.insertentityoptions.html#wrapperdisplay" class="tsd-kind-icon">wrapper<wbr>Display</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,24 +100,64 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="entity" class="tsd-anchor"></a>
-					<h3>entity</h3>
-					<div class="tsd-signature tsd-kind-icon">entity<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.contentmodelentity.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEntity</a></div>
+					<a name="contentnode" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> content<wbr>Node</h3>
+					<div class="tsd-signature tsd-kind-icon">content<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Node</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3872b42/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/FormatWithContentModelContext.ts#L67">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/FormatWithContentModelContext.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/54f901d/packages-content-model/roosterjs-content-model-types/lib/parameter/InsertEntityOptions.ts#L8">packages-content-model/roosterjs-content-model-types/lib/parameter/InsertEntityOptions.ts:8</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Content node of the entity. If not passed, an empty entity will be created</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="operation" class="tsd-anchor"></a>
-					<h3>operation</h3>
-					<div class="tsd-signature tsd-kind-icon">operation<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_editor.html#entityremovaloperation" class="tsd-signature-type" data-tsd-kind="Type alias">EntityRemovalOperation</a></div>
+					<a name="focusafterentity" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> focus<wbr>After<wbr>Entity</h3>
+					<div class="tsd-signature tsd-kind-icon">focus<wbr>After<wbr>Entity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3872b42/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/FormatWithContentModelContext.ts#L68">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/FormatWithContentModelContext.ts:68</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/54f901d/packages-content-model/roosterjs-content-model-types/lib/parameter/InsertEntityOptions.ts#L13">packages-content-model/roosterjs-content-model-types/lib/parameter/InsertEntityOptions.ts:13</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether move focus after entity after insert</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="skipundosnapshot" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> skip<wbr>Undo<wbr>Snapshot</h3>
+					<div class="tsd-signature tsd-kind-icon">skip<wbr>Undo<wbr>Snapshot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/54f901d/packages-content-model/roosterjs-content-model-types/lib/parameter/InsertEntityOptions.ts#L23">packages-content-model/roosterjs-content-model-types/lib/parameter/InsertEntityOptions.ts:23</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether skip adding an undo snapshot around</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="wrapperdisplay" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> wrapper<wbr>Display</h3>
+					<div class="tsd-signature tsd-kind-icon">wrapper<wbr>Display<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;block&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;inline&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;none&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;inline-block&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/54f901d/packages-content-model/roosterjs-content-model-types/lib/parameter/InsertEntityOptions.ts#L18">packages-content-model/roosterjs-content-model-types/lib/parameter/InsertEntityOptions.ts:18</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>&quot;Display&quot; value of the entity wrapper. By default, block entity will have no display, inline entity will have display: inline-block</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -137,10 +179,10 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_dom.html">roosterjs-<wbr>content-<wbr>model-<wbr>dom</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_editor.html">roosterjs-<wbr>content-<wbr>model-<wbr>editor</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_types.html">roosterjs-<wbr>content-<wbr>model-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -171,13 +213,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_editor.deletedentity.html" class="tsd-kind-icon">Deleted<wbr>Entity</a>
+						<a href="roosterjs_content_model_types.insertentityoptions.html" class="tsd-kind-icon">Insert<wbr>Entity<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_editor.deletedentity.html#entity" class="tsd-kind-icon">entity</a>
+								<a href="roosterjs_content_model_types.insertentityoptions.html#contentnode" class="tsd-kind-icon">content<wbr>Node</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_editor.deletedentity.html#operation" class="tsd-kind-icon">operation</a>
+								<a href="roosterjs_content_model_types.insertentityoptions.html#focusafterentity" class="tsd-kind-icon">focus<wbr>After<wbr>Entity</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.insertentityoptions.html#skipundosnapshot" class="tsd-kind-icon">skip<wbr>Undo<wbr>Snapshot</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.insertentityoptions.html#wrapperdisplay" class="tsd-kind-icon">wrapper<wbr>Display</a>
 							</li>
 						</ul>
 					</li>

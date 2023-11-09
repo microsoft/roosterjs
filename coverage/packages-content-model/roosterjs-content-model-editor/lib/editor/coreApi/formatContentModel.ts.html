@@ -231,14 +231,7 @@
 <a name='L172'></a><a href='#L172'>172</a>
 <a name='L173'></a><a href='#L173'>173</a>
 <a name='L174'></a><a href='#L174'>174</a>
-<a name='L175'></a><a href='#L175'>175</a>
-<a name='L176'></a><a href='#L176'>176</a>
-<a name='L177'></a><a href='#L177'>177</a>
-<a name='L178'></a><a href='#L178'>178</a>
-<a name='L179'></a><a href='#L179'>179</a>
-<a name='L180'></a><a href='#L180'>180</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L175'></a><a href='#L175'>175</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -348,9 +341,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -415,19 +405,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource } from '../../publicTypes/ChangeSource';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
+import type { EditorCore, Entity } from 'roosterjs-editor-types';
 import type {
-    ContentModelEditorCore,
-    FormatContentModel,
-} from '../../publicTypes/ContentModelEditorCore';
-import type { Entity } from 'roosterjs-editor-types';
-import type {
+    ContentModelContentChangedEvent,
+    DOMSelection,
     EntityRemovalOperation,
+    FormatContentModel,
     FormatWithContentModelContext,
-} from '../../publicTypes/parameter/FormatWithContentModelContext';
-import type { DOMSelection } from 'roosterjs-content-model-types';
+    StandaloneEditorCore,
+} from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
@@ -435,7 +423,7 @@ import type { DOMSelection } from 'roosterjs-content-model-types';
  * It will grab a Content Model for current editor content, and invoke a callback function
  * to do format change. Then according to the return value, write back the modified content model into editor.
  * If there is cached model, it will be used and updated.
- * @param core The ContentModelEditorCore object
+ * @param core The StandaloneEditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
  * @param options More options, see FormatWithContentModelOptions
  */
@@ -500,7 +488,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
     }
 };
 &nbsp;
-function handleNewEntities(core: ContentModelEditorCore, context: FormatWithContentModelContext) {
+function handleNewEntities(core: EditorCore, context: FormatWithContentModelContext) {
     // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
     // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
     // from EntityPlugin to here
@@ -526,10 +514,7 @@ const EntityOperationMap: Record&lt;EntityRemovalOperation, EntityOperation&gt; 
     removeFromStart: EntityOperation.RemoveFromStart,
 };
 &nbsp;
-function handleDeletedEntities(
-    core: ContentModelEditorCore,
-    context: FormatWithContentModelContext
-) {
+function handleDeletedEntities(core: EditorCore, context: FormatWithContentModelContext) {
     context.deletedEntities.forEach(
         ({
             entity: {
@@ -561,7 +546,7 @@ function handleDeletedEntities(
     );
 }
 &nbsp;
-function handleImages(core: ContentModelEditorCore, context: FormatWithContentModelContext) {
+function handleImages(core: EditorCore, context: FormatWithContentModelContext) {
     if (context.newImages.length &gt; 0) {
         const viewport = core.getVisibleViewport();
 &nbsp;
@@ -577,7 +562,7 @@ function handleImages(core: ContentModelEditorCore, context: FormatWithContentMo
 }
 &nbsp;
 function handlePendingFormat(
-    core: ContentModelEditorCore,
+    core: StandaloneEditorCore,
     context: FormatWithContentModelContext,
     selection?: DOMSelection | null
 ) {
@@ -601,7 +586,7 @@ function handlePendingFormat(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Nov 09 2023 17:06:20 GMT+0000 (Coordinated Universal Time)
+                at Thu Nov 09 2023 19:13:06 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
