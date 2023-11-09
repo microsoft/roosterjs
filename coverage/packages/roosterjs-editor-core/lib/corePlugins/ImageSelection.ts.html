@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>44/44</span>
+                <span class='fraction'>45/45</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.5% </span>
+                <span class="strong">89.58% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>37/40</span>
+                <span class='fraction'>43/48</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>44/44</span>
+                <span class='fraction'>45/45</span>
             </div>
         
             
@@ -156,11 +156,7 @@
 <a name='L97'></a><a href='#L97'>97</a>
 <a name='L98'></a><a href='#L98'>98</a>
 <a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a>
-<a name='L101'></a><a href='#L101'>101</a>
-<a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L100'></a><a href='#L100'>100</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,7 +168,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5298x</span>
+<span class="cline-any cline-yes">5480x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,20 +182,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5114x</span>
+<span class="cline-any cline-yes">5288x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5075x</span>
-<span class="cline-any cline-yes">5075x</span>
+<span class="cline-any cline-yes">5241x</span>
+<span class="cline-any cline-yes">5241x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">11898x</span>
-<span class="cline-any cline-yes">11898x</span>
+<span class="cline-any cline-yes">12650x</span>
+<span class="cline-any cline-yes">12650x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
@@ -233,18 +229,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -264,7 +256,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { PluginEventType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { Position, safeInstanceOf } from 'roosterjs-editor-dom';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 &nbsp;
 const Escape = 'Escape';
@@ -335,20 +327,16 @@ export default class ImageSelection implements EditorPlugin {
                         !rawEvent.metaKey &amp;&amp;
                         keyDownSelection.type === SelectionRangeTypes.ImageSelection
                     ) {
-                        if (key === Escape) {
+                        const imageParent = keyDownSelection.image<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>arentNode;
+                        if (key === Escape &amp;&amp; imageParent) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange()<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ollapse();
                             event.rawEvent.stopPropagation();
                         } else if (key === Delete) {
                             this.editor.deleteNode(keyDownSelection.image);
                             event.rawEvent.preventDefault();
-                        } else {
-                            const position = new Position(
-                                keyDownSelection.image,
-                                PositionType.Before
-                            );
-&nbsp;
-                            this.editor.select(position);
+                        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (imageParent) {
+                            this.editor.select(keyDownSelection.image, PositionType.Before);
                         }
                     }
                     break;
@@ -373,7 +361,7 @@ export default class ImageSelection implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Nov 08 2023 23:35:14 GMT+0000 (Coordinated Universal Time)
+                at Thu Nov 09 2023 12:21:00 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
