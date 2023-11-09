@@ -1,6 +1,7 @@
-import { isContentModelEditor, setListStyle } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { NumberingListType } from 'roosterjs-content-model-types';
 import { RibbonButton } from 'roosterjs-react';
+import { setListStyle } from 'roosterjs-content-model-api';
 
 const dropDownMenuItems = {
     [NumberingListType.Decimal]: 'Decimal',

@@ -1,10 +1,7 @@
+import { adjustLinkSelection, insertLink } from 'roosterjs-content-model-api';
 import { InsertLinkButtonStringKey, RibbonButton } from 'roosterjs-react';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { showInputDialog } from 'roosterjs-react/lib/inputDialog';
-import {
-    adjustLinkSelection,
-    insertLink,
-    isContentModelEditor,
-} from 'roosterjs-content-model-editor';
 
 /**
  * @internal

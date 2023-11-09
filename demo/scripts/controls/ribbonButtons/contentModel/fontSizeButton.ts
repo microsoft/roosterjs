@@ -1,5 +1,6 @@
 import { FontSizeButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor, setFontSize } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import { setFontSize } from 'roosterjs-content-model-api';
 
 const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
 

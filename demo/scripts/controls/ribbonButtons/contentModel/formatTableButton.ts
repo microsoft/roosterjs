@@ -1,4 +1,5 @@
-import { formatTable, isContentModelEditor } from 'roosterjs-content-model-editor';
+import { formatTable } from 'roosterjs-content-model-api';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 import { TableBorderFormat, TableMetadataFormat } from 'roosterjs-content-model-types';
 

@@ -1,6 +1,7 @@
 import { getButtons, getTextColorValue, KnownRibbonButtonKey } from 'roosterjs-react';
-import { isContentModelEditor, setImageBorder } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
+import { setImageBorder } from 'roosterjs-content-model-api';
 
 const originalButton = getButtons([KnownRibbonButtonKey.TextColor])[0] as RibbonButton<
     'buttonNameImageBorderColor'

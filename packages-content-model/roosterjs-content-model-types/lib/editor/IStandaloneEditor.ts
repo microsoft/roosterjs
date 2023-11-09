@@ -1,3 +1,4 @@
+import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -9,6 +10,12 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
+import type {
+    EditorUndoState,
+    PluginEventData,
+    PluginEventFromType,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 /**
  * An interface of standalone Content Model editor.
@@ -74,4 +81,59 @@ export interface IStandaloneEditor {
      * Get pending format of editor if any, or return null
      */
     getPendingFormat(): ContentModelSegmentFormat | null;
+
+    //#region Editor API copied from legacy editor, will be ported to use Content Model instead
+
+    /**
+     * Get whether this editor is disposed
+     * @returns True if editor is disposed, otherwise false
+     */
+    isDisposed(): boolean;
+
+    /**
+     * Get document which contains this editor
+     * @returns The HTML document which contains this editor
+     */
+    getDocument(): Document;
+
+    /**
+     * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
+     */
+    focus(): void;
+
+    /**
+     * Trigger an event to be dispatched to all plugins
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
+     * @param broadcast indicates if the event needs to be dispatched to all plugins
+     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast?: boolean
+    ): PluginEventFromType<T>;
+
+    /**
+     * Whether there is an available undo/redo snapshot
+     */
+    getUndoState(): EditorUndoState;
+
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    isDarkMode(): boolean;
+
+    /**
+     * Get current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @returns current zoom scale number
+     */
+    getZoomScale(): number;
+
+    //#endregion
 }
