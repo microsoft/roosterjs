@@ -33,6 +33,7 @@ export { setTableCellBackgroundColor } from './publicApi/table/setTableCellBackg
 
 export { isCharacterValue, isModifierKey } from './publicApi/domUtils/eventUtils';
 export { combineBorderValue, extractBorderValues } from './publicApi/domUtils/borderValues';
+export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stringUtil';
 
 export { updateImageMetadata } from './metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';
@@ -42,3 +43,8 @@ export { updateListMetadata } from './metadata/updateListMetadata';
 export { promoteToContentModelEditorCore } from './editor/promoteToContentModelEditorCore';
 export { createContentModelEditorCore } from './editor/createContentModelEditorCore';
 export { ChangeSource } from './constants/ChangeSource';
+
+export { ContentModelCachePlugin } from './corePlugin/ContentModelCachePlugin';
+export { ContentModelCopyPastePlugin } from './corePlugin/ContentModelCopyPastePlugin';
+export { ContentModelFormatPlugin } from './corePlugin/ContentModelFormatPlugin';
+export { ContentModelTypeInContainerPlugin } from './corePlugin/ContentModelTypeInContainerPlugin';

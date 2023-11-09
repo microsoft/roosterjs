@@ -1,4 +1,4 @@
-import { ChangeSource } from 'roosterjs-content-model-core';
+import { ChangeSource } from '../../constants/ChangeSource';
 import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { getSelectedSegments } from '../selection/collectSelections';
 import { mergeModel } from './mergeModel';

@@ -2,7 +2,8 @@ import { BorderKeys } from 'roosterjs-content-model-dom';
 import { combineBorderValue, extractBorderValues } from '../domUtils/borderValues';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from 'roosterjs-content-model-types';
-import { updateTableCellMetadata, updateTableMetadata } from 'roosterjs-content-model-core';
+import { updateTableCellMetadata } from '../../metadata/updateTableCellMetadata';
+import { updateTableMetadata } from '../../metadata/updateTableMetadata';
 import type {
     BorderFormat,
     ContentModelTable,

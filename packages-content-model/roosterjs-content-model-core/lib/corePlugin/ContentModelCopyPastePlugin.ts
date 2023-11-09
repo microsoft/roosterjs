@@ -1,8 +1,10 @@
 import { addRangeToSelection } from './utils/addRangeToSelection';
-import { ChangeSource, cloneModel, iterateSelections } from 'roosterjs-content-model-core';
+import { ChangeSource } from '../constants/ChangeSource';
+import { cloneModel } from '../publicApi/model/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
+import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { paste } from '../publicApi/model/paste';
 import {
     contentModelToDom,

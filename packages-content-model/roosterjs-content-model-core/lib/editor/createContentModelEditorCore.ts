@@ -4,7 +4,7 @@ import { createContentModelCachePlugin } from '../corePlugin/ContentModelCachePl
 import { createContentModelCopyPastePlugin } from '../corePlugin/ContentModelCopyPastePlugin';
 import { createContentModelFormatPlugin } from '../corePlugin/ContentModelFormatPlugin';
 import { createEditorCore } from 'roosterjs-editor-core';
-import { promoteToContentModelEditorCore } from 'roosterjs-content-model-core';
+import { promoteToContentModelEditorCore } from './promoteToContentModelEditorCore';
 import type { CoreCreator, EditorCore, EditorOptions } from 'roosterjs-editor-types';
 import type {
     ContentModelPluginState,

@@ -9,7 +9,15 @@ import type {
 const MIN_HEIGHT = 22;
 
 /**
- * @internal
+ * Normalize a Content Model table, make sure:
+ * 1. Fist cells are not spanned
+ * 2. Inner cells are not header
+ * 3. All cells have content and width
+ * 4. Table and table row have correct width/height
+ * 5. Spanned cell has no child blocks
+ * 6. default format is correctly applied
+ * @param table The table to normalize
+ * @param defaultSegmentFormat @optional Default segment format to apply to cell
  */
 export function normalizeTable(
     table: ContentModelTable,

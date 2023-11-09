@@ -1,7 +1,7 @@
 import { getClosestAncestorBlockGroupIndex } from '../model/getClosestAncestorBlockGroupIndex';
 import { isBlockGroupOfType } from '../model/isBlockGroupOfType';
-import { iterateSelections } from 'roosterjs-content-model-core';
-import type { IterateSelectionsOption } from 'roosterjs-content-model-core';
+import { iterateSelections } from './iterateSelections';
+import type { IterateSelectionsOption } from './iterateSelections';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,

@@ -1,7 +1,7 @@
 import { deleteBlock } from '../../publicApi/selection/deleteBlock';
 import { deleteSegment } from '../../publicApi/selection/deleteSegment';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
-import type { IterateSelectionsOption } from 'roosterjs-content-model-core';
+import type { IterateSelectionsOption } from '../../publicApi/selection/iterateSelections';
 import type {
     ContentModelBlockGroup,
     ContentModelDocument,

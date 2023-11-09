@@ -52,5 +52,3 @@ export { default as insertEntity } from './publicApi/entity/insertEntity';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';
-
-export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
