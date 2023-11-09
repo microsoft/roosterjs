@@ -1,12 +1,11 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { FormatWithContentModelContext, IContentModelEditor } from 'roosterjs-content-model-editor';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
     shouldDeleteWord,
-} from '../../../lib/editor/utils/handleKeyboardEventCommon';
+} from '../../lib/edit/handleKeyboardEventCommon';
 
 describe('handleKeyboardEventResult', () => {
     let mockedEditor: IContentModelEditor;

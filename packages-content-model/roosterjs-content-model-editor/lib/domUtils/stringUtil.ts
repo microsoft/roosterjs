@@ -2,7 +2,6 @@ const SPACES_REGEX = /[\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r
 const PUNCTUATIONS = '.,?!:"()[]\\/';
 
 /**
- * @internal
  * Check if the given character is punctuation
  * @param char The character to check
  */
@@ -11,7 +10,6 @@ export function isPunctuation(char: string) {
 }
 
 /**
- * @internal
  * Check if the give character is a space. A space can be normal ASCII pace (32) or non-break space (160) or other kinds of spaces
  * such as ZeroWidthSpace, ...
  * @param char The character to check
@@ -22,7 +20,6 @@ export function isSpace(char: string) {
 }
 
 /**
- * @internal
  * Normalize spaces of the given string. After normalization, all leading (for forward) or trailing (for backward) spaces
  * will be replaces with non-break space (160)
  * @param txt The string to normalize

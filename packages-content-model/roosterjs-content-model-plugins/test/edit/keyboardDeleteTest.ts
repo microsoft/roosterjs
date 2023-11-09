@@ -1,24 +1,24 @@
-import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
-import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
-import keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
-import { ChangeSource } from '../../../lib/publicTypes/event/ContentModelContentChangedEvent';
+import * as deleteSelection from 'roosterjs-content-model-editor/lib/publicApi/selection/deleteSelection';
+import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCommon';
 import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
-import { deleteAllSegmentBefore } from '../../../lib/modelApi/edit/deleteSteps/deleteAllSegmentBefore';
+import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
 import { editingTestCommon } from './editingTestCommon';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { keyboardDelete } from '../../lib/edit/keyboardDelete';
 import { Keys } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    DeleteResult,
+    DeleteSelectionStep,
+    IContentModelEditor,
+} from 'roosterjs-content-model-editor';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
-} from '../../../lib/modelApi/edit/deleteSteps/deleteWordSelection';
-import {
-    DeleteResult,
-    DeleteSelectionStep,
-} from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
+} from '../../lib/edit/deleteSteps/deleteWordSelection';
 import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
-} from '../../../lib/modelApi/edit/deleteSteps/deleteCollapsedSelection';
+} from '../../lib/edit/deleteSteps/deleteCollapsedSelection';
 
 describe('keyboardDelete', () => {
     let deleteSelectionSpy: jasmine.Spy;

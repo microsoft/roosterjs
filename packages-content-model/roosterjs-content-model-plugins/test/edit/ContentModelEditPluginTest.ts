@@ -1,7 +1,7 @@
-import * as keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
-import ContentModelEditPlugin from '../../../lib/editor/corePlugins/ContentModelEditPlugin';
+import * as keyboardDelete from '../../lib/edit/keyboardDelete';
+import { ContentModelEditPlugin } from '../../lib/edit/ContentModelEditPlugin';
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 
 describe('ContentModelEditPlugin', () => {
     let editor: IContentModelEditor;
@@ -19,7 +19,7 @@ describe('ContentModelEditPlugin', () => {
         let keyboardDeleteSpy: jasmine.Spy;
 
         beforeEach(() => {
-            keyboardDeleteSpy = spyOn(keyboardDelete, 'default').and.returnValue(true);
+            keyboardDeleteSpy = spyOn(keyboardDelete, 'keyboardDelete').and.returnValue(true);
         });
 
         it('Backspace', () => {

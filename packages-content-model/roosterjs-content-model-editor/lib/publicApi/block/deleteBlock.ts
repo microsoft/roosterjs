@@ -1,11 +1,17 @@
-import type { ContentModelBlock } from 'roosterjs-content-model-types';
 import type {
     EntityRemovalOperation,
     FormatWithContentModelContext,
-} from '../../../publicTypes/parameter/FormatWithContentModelContext';
+} from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { ContentModelBlock } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Delete a content model block from current selection
+ * @param blocks Array of the block to delete
+ * @param blockToDelete The block to delete
+ * @param replacement @optional If specified, use this block to replace the deleted block
+ * @param context @optional Context object provided by formatContentModel API
+ * @param direction @optional Whether this is deleting forward or backward. This is only used for deleting entity.
+ * If not specified, only selected entity will be deleted
  */
 export function deleteBlock(
     blocks: ContentModelBlock[],

@@ -1,23 +1,20 @@
-import { ChangeSource } from '../../publicTypes/event/ContentModelContentChangedEvent';
-import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
-import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { isModifierKey } from '../../domUtils/eventUtils';
+import { ChangeSource, deleteSelection, isModifierKey } from 'roosterjs-content-model-editor';
+import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
-import type { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
     shouldDeleteWord,
-} from '../../editor/utils/handleKeyboardEventCommon';
+} from './handleKeyboardEventCommon';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
-} from '../../modelApi/edit/deleteSteps/deleteWordSelection';
+} from './deleteSteps/deleteWordSelection';
 import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
-} from '../../modelApi/edit/deleteSteps/deleteCollapsedSelection';
+} from './deleteSteps/deleteCollapsedSelection';
+import type { DeleteSelectionStep, IContentModelEditor } from 'roosterjs-content-model-editor';
 
 /**
  * @internal
@@ -26,10 +23,7 @@ import {
  * @param rawEvent DOM keyboard event
  * @returns True if the event is handled with this function, otherwise false
  */
-export default function keyboardDelete(
-    editor: IContentModelEditor,
-    rawEvent: KeyboardEvent
-): boolean {
+export function keyboardDelete(editor: IContentModelEditor, rawEvent: KeyboardEvent): boolean {
     const selection = editor.getDOMSelection();
     const range = selection?.type == 'range' ? selection.range : null;
     let isDeleted = false;

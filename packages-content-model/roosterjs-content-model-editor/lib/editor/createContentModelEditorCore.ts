@@ -3,7 +3,6 @@ import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInC
 import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
 import { createContentModel } from './coreApi/createContentModel';
 import { createContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
-import { createContentModelEditPlugin } from './corePlugins/ContentModelEditPlugin';
 import { createContentModelFormatPlugin } from './corePlugins/ContentModelFormatPlugin';
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
@@ -35,9 +34,8 @@ export const createContentModelEditorCore: CoreCreator<
         ...options,
         plugins: [
             createContentModelCachePlugin(pluginState.cache),
-            ...(options.plugins || []),
             createContentModelFormatPlugin(pluginState.format),
-            createContentModelEditPlugin(),
+            ...(options.plugins || []),
         ],
         corePluginOverride: {
             typeInContainer: new ContentModelTypeInContainerPlugin(),

@@ -1,4 +1,4 @@
-import { getLeafSiblingBlock } from '../../../lib/modelApi/block/getLeafSiblingBlock';
+import { getLeafSiblingBlock } from '../../../lib/edit/utils/getLeafSiblingBlock';
 import {
     createContentModelDocument,
     createFormatContainer,

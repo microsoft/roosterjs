@@ -1,4 +1,4 @@
-import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import { deleteSelection } from '../../publicApi/selection/deleteSelection';
 import { isBlockElement, isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';

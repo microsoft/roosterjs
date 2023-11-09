@@ -1,5 +1,5 @@
 import { applyTableFormat } from '../table/applyTableFormat';
-import { deleteSelection } from '../edit/deleteSelection';
+import { deleteSelection } from '../../publicApi/selection/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { normalizeTable } from '../table/normalizeTable';
 import {

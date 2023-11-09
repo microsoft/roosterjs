@@ -1,10 +1,9 @@
+import type { FormatWithContentModelContext } from './FormatWithContentModelContext';
+import type { InsertPoint } from '../selection/InsertPoint';
+import type { TableSelectionContext } from '../selection/TableSelectionContext';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
-import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
-import type { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
-import type { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
 
 /**
- * @internal
  * Delete selection result
  */
 export type DeleteResult =
@@ -29,7 +28,6 @@ export type DeleteResult =
     | 'nothingToDelete';
 
 /**
- * @internal
  * Result of deleteSelection API
  */
 export interface DeleteSelectionResult {
@@ -45,7 +43,6 @@ export interface DeleteSelectionResult {
 }
 
 /**
- * @internal
  * A context object used by DeleteSelectionStep
  */
 export interface DeleteSelectionContext extends DeleteSelectionResult {
@@ -66,7 +63,6 @@ export interface DeleteSelectionContext extends DeleteSelectionResult {
 }
 
 /**
- * @internal
  * DeleteSelectionContext with a valid insert point that can be handled by next step
  */
 export interface ValidDeleteSelectionContext extends DeleteSelectionContext {
@@ -77,7 +73,6 @@ export interface ValidDeleteSelectionContext extends DeleteSelectionContext {
 }
 
 /**
- * @internal
  * Represents a step function for deleteSelection API
  * @param context The valid delete selection context object returned from previous step
  */
