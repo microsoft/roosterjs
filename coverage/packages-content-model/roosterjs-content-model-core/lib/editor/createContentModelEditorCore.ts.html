@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -124,27 +124,33 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -196,7 +202,6 @@ import { ContentModelTypeInContainerPlugin } from '../corePlugin/ContentModelTyp
 import { createContentModelCachePlugin } from '../corePlugin/ContentModelCachePlugin';
 import { createContentModelCopyPastePlugin } from '../corePlugin/ContentModelCopyPastePlugin';
 import { createContentModelFormatPlugin } from '../corePlugin/ContentModelFormatPlugin';
-import { createEditorCore } from 'roosterjs-editor-core';
 import { promoteToContentModelEditorCore } from './promoteToContentModelEditorCore';
 import type { CoreCreator, EditorCore, EditorOptions } from 'roosterjs-editor-types';
 import type {
@@ -207,11 +212,15 @@ import type {
 &nbsp;
 /**
  * Editor Core creator for Content Model editor
+ * @param contentDiv Container DIV of editor
+ * @param options Options for creating editor
+ * @param baseCreator Base core creator used for creating base EditorCore
  */
-export const createContentModelEditorCore: CoreCreator&lt;
-    EditorCore &amp; StandaloneEditorCore,
-    EditorOptions &amp; StandaloneEditorOptions
-&gt; = (contentDiv, options) =&gt; {
+export function createContentModelEditorCore(
+    contentDiv: HTMLDivElement,
+    options: EditorOptions &amp; StandaloneEditorOptions,
+    baseCreator: CoreCreator&lt;EditorCore, EditorOptions&gt;
+): EditorCore &amp; StandaloneEditorCore {
     const pluginState = getPluginState(options);
     const modifiedOptions: EditorOptions &amp; StandaloneEditorOptions = {
         ...options,
@@ -227,12 +236,12 @@ export const createContentModelEditorCore: CoreCreator&lt;
         },
     };
 &nbsp;
-    const core = createEditorCore(contentDiv, modifiedOptions) as EditorCore &amp; StandaloneEditorCore;
+    const core = baseCreator(contentDiv, modifiedOptions) as EditorCore &amp; StandaloneEditorCore;
 &nbsp;
     promoteToContentModelEditorCore(core, modifiedOptions, pluginState);
 &nbsp;
     return core;
-};
+}
 &nbsp;
 function getPluginState(options: EditorOptions &amp; StandaloneEditorOptions): ContentModelPluginState {
     const format = options.defaultFormat || {};
@@ -265,7 +274,7 @@ function getPluginState(options: EditorOptions &amp; StandaloneEditorOptions): C
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Nov 10 2023 18:05:43 GMT+0000 (Coordinated Universal Time)
+                at Fri Nov 10 2023 20:28:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
