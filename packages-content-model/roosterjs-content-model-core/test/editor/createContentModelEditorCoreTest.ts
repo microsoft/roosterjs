@@ -58,7 +58,7 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('No additional option', () => {
-        const core = createContentModelEditorCore(contentDiv, {});
+        const core = createContentModelEditorCore(contentDiv, {}, createEditorCoreSpy);
 
         const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],
@@ -103,7 +103,7 @@ describe('createContentModelEditorCore', () => {
                 copyPaste: mockedCopyPastePlugin2,
             },
         };
-        const core = createContentModelEditorCore(contentDiv, options);
+        const core = createContentModelEditorCore(contentDiv, options, createEditorCoreSpy);
 
         const expectedOptions = {
             defaultDomToModelOptions,
@@ -152,7 +152,7 @@ describe('createContentModelEditorCore', () => {
             },
         };
 
-        const core = createContentModelEditorCore(contentDiv, options);
+        const core = createContentModelEditorCore(contentDiv, options, createEditorCoreSpy);
 
         const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],
@@ -200,7 +200,7 @@ describe('createContentModelEditorCore', () => {
             cacheModel: true,
         };
 
-        const core = createContentModelEditorCore(contentDiv, options);
+        const core = createContentModelEditorCore(contentDiv, options, createEditorCoreSpy);
 
         const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],
