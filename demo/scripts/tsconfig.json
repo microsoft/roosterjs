@@ -37,11 +37,29 @@
             "roosterjs-content-model-dom/lib/*": [
                 "packages-content-model/roosterjs-content-model-dom/lib/*"
             ],
+            "roosterjs-content-model-core": [
+                "packages-content-model/roosterjs-content-model-core/lib/index"
+            ],
+            "roosterjs-content-model-core/lib/*": [
+                "packages-content-model/roosterjs-content-model-core/lib/*"
+            ],
+            "roosterjs-content-model-api": [
+                "packages-content-model/roosterjs-content-model-api/lib/index"
+            ],
+            "roosterjs-content-model-api/lib/*": [
+                "packages-content-model/roosterjs-content-model-api/lib/*"
+            ],
             "roosterjs-content-model-editor": [
                 "packages-content-model/roosterjs-content-model-editor/lib/index"
             ],
             "roosterjs-content-model-editor/lib/*": [
                 "packages-content-model/roosterjs-content-model-editor/lib/*"
+            ],
+            "roosterjs-content-model-plugins": [
+                "packages-content-model/roosterjs-content-model-plugins/lib/index"
+            ],
+            "roosterjs-content-model-plugins/lib/*": [
+                "packages-content-model/roosterjs-content-model-plugins/lib/*"
             ],
             "roosterjs-react": ["packages-ui/roosterjs-react/lib/index"],
             "roosterjs-react/lib/*": ["packages-ui/roosterjs-react/lib/*"]

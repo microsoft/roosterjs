@@ -1,4 +1,5 @@
-import { formatTable, isContentModelEditor } from 'roosterjs-content-model-editor';
+import { formatTable } from 'roosterjs-content-model-api';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 import { TableBorderFormat, TableMetadataFormat } from 'roosterjs-content-model-types';
 
@@ -67,12 +68,12 @@ const PREDEFINED_STYLES: Record<
             color /**topBorder */,
             color /**bottomBorder */,
             color /** verticalColors*/,
-            false /** bandedRows */,
+            true /** bandedRows */,
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
             TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL /** tableBorderFormat */,
-            null /** bgColorEven */,
+            '#B0B0B0' /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
         ),

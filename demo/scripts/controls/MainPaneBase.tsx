@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
-import { Border } from 'roosterjs-content-model-editor';
+import { Border } from 'roosterjs-content-model-types';
 import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';

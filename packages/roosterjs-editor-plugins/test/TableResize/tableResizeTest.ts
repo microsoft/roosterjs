@@ -1,4 +1,6 @@
+import * as Contains from 'roosterjs-editor-dom/lib/utils/contains';
 import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
+import { createElement } from 'roosterjs-editor-dom';
 import { DEFAULT_TABLE, DEFAULT_TABLE_MERGED, EXCEL_TABLE, WORD_TABLE } from './tableData';
 import { TableResize } from '../../lib/TableResize';
 import {
@@ -713,5 +715,267 @@ xdescribe('Table Resizer/Inserter tests', () => {
         const expectedName = 'TableResize';
         const pluginName = plugin.getName();
         expect(pluginName).toBe(expectedName);
+    });
+});
+
+describe('TableResize', () => {
+    let editor: IEditor;
+    let plugin: TableResize;
+    const TEST_ID = 'inserterTest';
+
+    let mouseOutListener: undefined | ((this: HTMLElement, ev: MouseEvent) => any);
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID);
+        plugin = new TableResize();
+
+        spyOn(editor, 'getScrollContainer').and.returnValue(<HTMLElement>(<any>{
+            addEventListener: <K extends keyof HTMLElementEventMap>(
+                type: K,
+                listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+                options?: boolean | AddEventListenerOptions
+            ) => {
+                if (type == 'mouseout') {
+                    mouseOutListener = listener as (this: HTMLElement, ev: MouseEvent) => any;
+                }
+            },
+            removeEventListener: <K extends keyof HTMLElementEventMap>(
+                type: K,
+                listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+                options?: boolean | EventListenerOptions
+            ) => {
+                if (type == 'mouseout') {
+                    mouseOutListener = undefined;
+                }
+            },
+        }));
+        plugin.initialize(editor);
+    });
+
+    afterEach(() => {
+        plugin.dispose();
+        editor.dispose();
+        TestHelper.removeElement(TEST_ID);
+        document.body = document.createElement('body');
+    });
+
+    it('Dismiss table editor on mouse out', () => {
+        const ele = createElement(
+            {
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            editor.getDocument()
+        );
+        const table = createElement(
+            {
+                tag: 'table',
+                children: [
+                    {
+                        tag: 'tr',
+                        children: [
+                            {
+                                tag: 'td',
+                                children: ['Test'],
+                            },
+                        ],
+                    },
+                ],
+            },
+            editor.getDocument()
+        ) as HTMLTableElement;
+        editor.insertNode(table);
+
+        spyOn(plugin, 'setTableEditor').and.callThrough();
+
+        plugin.setTableEditor(table);
+
+        if (mouseOutListener) {
+            const boundedListener = mouseOutListener.bind(ele);
+            spyOn(Contains, 'default').and.returnValue(false);
+            boundedListener(<MouseEvent>(<any>{
+                currentTarget: ele,
+                relatedTarget: ele,
+            }));
+
+            expect(plugin.setTableEditor).toHaveBeenCalledWith(null);
+        }
+    });
+
+    it('Do not dismiss table editor on mouse out, related target is contained in scroll container', () => {
+        const ele = createElement(
+            {
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            editor.getDocument()
+        );
+        const table = createElement(
+            {
+                tag: 'table',
+                children: [
+                    {
+                        tag: 'tr',
+                        children: [
+                            {
+                                tag: 'td',
+                                children: ['Test'],
+                            },
+                        ],
+                    },
+                ],
+            },
+            editor.getDocument()
+        ) as HTMLTableElement;
+        editor.insertNode(table);
+
+        spyOn(plugin, 'setTableEditor').and.callThrough();
+
+        plugin.setTableEditor(table);
+
+        if (mouseOutListener) {
+            const boundedListener = mouseOutListener.bind(ele);
+            spyOn(Contains, 'default').and.returnValue(true);
+            boundedListener(<MouseEvent>(<any>{
+                currentTarget: ele,
+                relatedTarget: ele,
+            }));
+
+            expect(plugin.setTableEditor).not.toHaveBeenCalledWith(null);
+        }
+    });
+
+    it('Do not dismiss table editor on mouse out, table editor not', () => {
+        const ele = createElement(
+            {
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            editor.getDocument()
+        );
+
+        spyOn(plugin, 'setTableEditor').and.callThrough();
+
+        if (mouseOutListener) {
+            const boundedListener = mouseOutListener.bind(ele);
+            spyOn(Contains, 'default').and.returnValue(false);
+            boundedListener(<MouseEvent>(<any>{
+                currentTarget: ele,
+                relatedTarget: ele,
+            }));
+
+            expect(plugin.setTableEditor).not.toHaveBeenCalledWith(null);
+        }
+    });
+
+    it('Do not dismiss table editor on mouse out, related target null', () => {
+        const ele = createElement(
+            {
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            editor.getDocument()
+        );
+        const table = createElement(
+            {
+                tag: 'table',
+                children: [
+                    {
+                        tag: 'tr',
+                        children: [
+                            {
+                                tag: 'td',
+                                children: ['Test'],
+                            },
+                        ],
+                    },
+                ],
+            },
+            editor.getDocument()
+        ) as HTMLTableElement;
+        editor.insertNode(table);
+
+        spyOn(plugin, 'setTableEditor').and.callThrough();
+
+        plugin.setTableEditor(table);
+
+        if (mouseOutListener) {
+            const boundedListener = mouseOutListener.bind(ele);
+            spyOn(Contains, 'default').and.returnValue(false);
+            boundedListener(<MouseEvent>(<any>{
+                currentTarget: ele,
+                relatedTarget: null,
+            }));
+
+            expect(plugin.setTableEditor).not.toHaveBeenCalledWith(null);
+        }
+    });
+
+    it('Do not dismiss table editor on mouse out, currentTarget null', () => {
+        const ele = createElement(
+            {
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            editor.getDocument()
+        );
+        const table = createElement(
+            {
+                tag: 'table',
+                children: [
+                    {
+                        tag: 'tr',
+                        children: [
+                            {
+                                tag: 'td',
+                                children: ['Test'],
+                            },
+                        ],
+                    },
+                ],
+            },
+            editor.getDocument()
+        ) as HTMLTableElement;
+        editor.insertNode(table);
+
+        spyOn(plugin, 'setTableEditor').and.callThrough();
+
+        plugin.setTableEditor(table);
+
+        if (mouseOutListener) {
+            const boundedListener = mouseOutListener.bind(ele);
+            spyOn(Contains, 'default').and.returnValue(false);
+            boundedListener(<MouseEvent>(<any>{
+                currentTarget: null,
+                relatedTarget: ele,
+            }));
+
+            expect(plugin.setTableEditor).not.toHaveBeenCalledWith(null);
+        }
     });
 });

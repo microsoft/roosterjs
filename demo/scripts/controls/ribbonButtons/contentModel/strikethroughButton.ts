@@ -1,5 +1,6 @@
-import { isContentModelEditor, toggleStrikethrough } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton, StrikethroughButtonStringKey } from 'roosterjs-react';
+import { toggleStrikethrough } from 'roosterjs-content-model-api';
 
 /**
  * @internal

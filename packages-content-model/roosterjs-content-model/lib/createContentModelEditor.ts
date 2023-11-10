@@ -1,4 +1,5 @@
-import { ContentModelEditor, ContentModelPastePlugin } from 'roosterjs-content-model-editor';
+import { ContentModelEditor } from 'roosterjs-content-model-editor';
+import { ContentModelEditPlugin, ContentModelPastePlugin } from 'roosterjs-content-model-plugins';
 import { getDarkColor } from 'roosterjs-color-utils';
 import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
@@ -19,11 +20,8 @@ export function createContentModelEditor(
     additionalPlugins?: EditorPlugin[],
     initialContent?: string
 ): IContentModelEditor {
-    let plugins: EditorPlugin[] = [new ContentModelPastePlugin()];
-
-    if (additionalPlugins) {
-        plugins = plugins.concat(additionalPlugins);
-    }
+    const plugins = additionalPlugins ? [...additionalPlugins] : [];
+    plugins.push(new ContentModelPastePlugin(), new ContentModelEditPlugin());
 
     const options: ContentModelEditorOptions = {
         plugins: plugins,

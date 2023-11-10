@@ -1,5 +1,6 @@
-import { isContentModelEditor, setDirection } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton, RtlButtonStringKey } from 'roosterjs-react';
+import { setDirection } from 'roosterjs-content-model-api';
 
 /**
  * @internal
