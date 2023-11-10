@@ -4,10 +4,10 @@
     "dependencies": {
         "tslib": "^2.3.1",
         "roosterjs-editor-types": "",
-        "roosterjs-editor-dom": "",
-        "roosterjs-editor-core": "",
         "roosterjs-content-model-types": "",
         "roosterjs-content-model-dom": "",
+        "roosterjs-content-model-core": "",
+        "roosterjs-content-model-api": "",
         "roosterjs-content-model-editor": "",
         "roosterjs-content-model-plugins": "",
         "roosterjs-color-utils": ""

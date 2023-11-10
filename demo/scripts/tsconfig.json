@@ -43,6 +43,12 @@
             "roosterjs-content-model-core/lib/*": [
                 "packages-content-model/roosterjs-content-model-core/lib/*"
             ],
+            "roosterjs-content-model-api": [
+                "packages-content-model/roosterjs-content-model-api/lib/index"
+            ],
+            "roosterjs-content-model-api/lib/*": [
+                "packages-content-model/roosterjs-content-model-api/lib/*"
+            ],
             "roosterjs-content-model-editor": [
                 "packages-content-model/roosterjs-content-model-editor/lib/index"
             ],

@@ -8,7 +8,7 @@ import { ContentModelView } from '../ContentModelView';
 import { DirectionFormatRenderer } from '../format/formatPart/DirectionFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
-import { hasSelectionInBlockGroup } from 'roosterjs-content-model-editor';
+import { hasSelectionInBlockGroup } from 'roosterjs-content-model-api';
 import { HtmlAlignFormatRenderer } from '../format/formatPart/HtmlAlignFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';

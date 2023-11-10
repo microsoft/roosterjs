@@ -2,7 +2,8 @@ import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import { Entity } from 'roosterjs-editor-types';
 import { getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
-import { IContentModelEditor, insertEntity } from 'roosterjs-content-model-editor';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
+import { insertEntity } from 'roosterjs-content-model-api';
 import { InsertEntityOptions } from 'roosterjs-content-model-types';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
 

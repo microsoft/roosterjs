@@ -1,6 +1,7 @@
 import MainPaneBase from '../../MainPaneBase';
-import { applyTableBorderFormat, isContentModelEditor } from 'roosterjs-content-model-editor';
+import { applyTableBorderFormat } from 'roosterjs-content-model-api';
 import { BorderOperations } from 'roosterjs-content-model-types';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 
 const TABLE_OPERATIONS: Record<string, BorderOperations> = {

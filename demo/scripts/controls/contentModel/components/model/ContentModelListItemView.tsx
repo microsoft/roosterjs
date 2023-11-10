@@ -7,7 +7,7 @@ import { FontFamilyFormatRenderer } from '../format/formatPart/FontFamilyFormatR
 import { FontSizeFormatRenderer } from '../format/formatPart/FontSizeFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
-import { hasSelectionInBlockGroup } from 'roosterjs-content-model-editor';
+import { hasSelectionInBlockGroup } from 'roosterjs-content-model-api';
 import { LineHeightFormatRenderer } from '../format/formatPart/LineHeightFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';

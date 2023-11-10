@@ -1,5 +1,6 @@
-import { isContentModelEditor, toggleUnderline } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton, UnderlineButtonStringKey } from 'roosterjs-react';
+import { toggleUnderline } from 'roosterjs-content-model-api';
 
 /**
  * @internal

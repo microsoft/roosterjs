@@ -1,4 +1,5 @@
-import { isContentModelEditor, removeLink } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import { removeLink } from 'roosterjs-content-model-api';
 import { RemoveLinkButtonStringKey, RibbonButton } from 'roosterjs-react';
 
 /**
