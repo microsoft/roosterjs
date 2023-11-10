@@ -1,5 +1,6 @@
-import { isContentModelEditor, setImageBorder } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
+import { setImageBorder } from 'roosterjs-content-model-api';
 
 const STYLES: Record<string, string> = {
     dashed: 'dashed',

@@ -1,10 +1,7 @@
+import { applySegmentFormat, getFormatState } from 'roosterjs-content-model-api';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import {
-    applySegmentFormat,
-    getFormatState,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 
 const FORMATPAINTERCURSOR_SVG = require('./formatpaintercursor.svg');
 const FORMATPAINTERCURSOR_STYLE = `;cursor: url("${FORMATPAINTERCURSOR_SVG}") 8.5 16, auto`;

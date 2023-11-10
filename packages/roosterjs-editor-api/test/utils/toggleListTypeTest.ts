@@ -98,4 +98,24 @@ describe('toggleListTypeTest()', () => {
             '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul data-editing-info="{&quot;orderedStyleType&quot;:1,&quot;unorderedStyleType&quot;:1}"><li style="list-style-type: disc;">test</li></ul><div><br></div><ul data-editing-info="{&quot;orderedStyleType&quot;:1,&quot;unorderedStyleType&quot;:1}"><li style="list-style-type: disc;">test</li></ul></div>'
         );
     });
+
+    it('Do not set margin-block when in the middle', () => {
+        // Arrange
+        const originalContent =
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div>' +
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div>' +
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">' +
+            '<ul id="list"><li>test</li><li id="focusNode"><br></li><li>test</li></ul>' +
+            '</div>';
+        editor.setContent(originalContent);
+        editor.focus();
+        editor.select(document.getElementById('focusNode'), PositionType.Begin);
+
+        // Act
+        toggleListType(editor, ListType.Unordered);
+
+        // Assert
+        const ul = editor.getDocument().getElementById('list');
+        expect(ul?.style.marginBlock).toBe('');
+    });
 });

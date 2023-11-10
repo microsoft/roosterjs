@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContentModelContentChangedEvent } from 'roosterjs-content-model-editor';
+import { ContentModelContentChangedEvent } from 'roosterjs-content-model-types';
 import { EntityOperation, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 import {

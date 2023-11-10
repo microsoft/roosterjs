@@ -45,6 +45,19 @@ describe('setIndentation()', () => {
         );
     });
 
+    it('Indent the first list item in a list with margin-block', () => {
+        runTest(
+            '<div><ol style="margin-block:0px;"><li><span id="test">Text</span></li></ol></div>',
+            () => {
+                const range = new Range();
+                range.setStart(editor.getDocument().getElementById('test'), 0);
+                editor.select(range);
+            },
+            Indentation.Increase,
+            '<div><blockquote style="margin-top:0;margin-bottom:0"><ol style="margin-block:0px;"><li><span id="test">Text</span></li></ol></blockquote></div>'
+        );
+    });
+
     it('Outdent the first list item in a list', () => {
         runTest(
             '<div><blockquote style="margin-top:0;margin-bottom:0"><ol style="list-style-position: inside;"><li><span id="test">Text</span></li></ol></blockquote></div>',
@@ -55,6 +68,19 @@ describe('setIndentation()', () => {
             },
             Indentation.Decrease,
             '<div><ol style="list-style-position: inside;"><li><span id="test">Text</span></li></ol></div>'
+        );
+    });
+
+    it('Outdent the first list item in a list with margin-block', () => {
+        runTest(
+            '<div><blockquote style="margin-top:0;margin-bottom:0"><ol style="list-style-position: inside;margin-block:0px;"><li><span id="test">Text</span></li></ol></blockquote></div>',
+            () => {
+                const range = new Range();
+                range.setStart(editor.getDocument().getElementById('test'), 0);
+                editor.select(range);
+            },
+            Indentation.Decrease,
+            '<div><ol style="list-style-position: inside;margin-block:0px;"><li><span id="test">Text</span></li></ol></div>'
         );
     });
 

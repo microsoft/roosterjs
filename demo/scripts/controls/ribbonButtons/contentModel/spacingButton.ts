@@ -1,4 +1,5 @@
-import { isContentModelEditor, setSpacing } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import { setSpacing } from 'roosterjs-content-model-api';
 import type { RibbonButton } from 'roosterjs-react';
 
 const SPACING_OPTIONS = ['1.0', '1.15', '1.5', '2.0'];

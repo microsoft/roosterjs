@@ -473,6 +473,14 @@ function createListElement(
         result = doc.createElement(listType == ListType.Ordered ? 'ol' : 'ul');
     }
 
+    if (
+        originalRoot?.style.marginBlockStart == '0px' &&
+        originalRoot?.style.marginBlockEnd == '0px'
+    ) {
+        result.style.marginBlockStart = '0px';
+        result.style.marginBlockEnd = '0px';
+    }
+
     // Always maintain the metadata saved in the list
     if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
         const style = getMetadata<ListStyleMetadata>(originalRoot, ListStyleDefinitionMetadata);

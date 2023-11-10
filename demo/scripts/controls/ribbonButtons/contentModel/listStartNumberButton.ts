@@ -1,6 +1,7 @@
 import showInputDialog from 'roosterjs-react/lib/inputDialog/utils/showInputDialog';
 import { CancelButtonStringKey, OkButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor, setListStartNumber } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import { setListStartNumber } from 'roosterjs-content-model-api';
 
 /**
  * @internal

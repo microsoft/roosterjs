@@ -1,4 +1,5 @@
-import { isContentModelEditor, setBackgroundColor } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import { setBackgroundColor } from 'roosterjs-content-model-api';
 import {
     BackgroundColorButtonStringKey,
     getBackgroundColorValue,
