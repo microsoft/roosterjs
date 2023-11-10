@@ -1,4 +1,3 @@
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { handleSegmentCommon } from '../../../lib/modelToDom/utils/handleSegmentCommon';
@@ -17,10 +16,6 @@ describe('handleSegmentCommon', () => {
         const context = createModelToDomContext();
 
         context.onNodeCreated = onNodeCreated;
-        context.darkColorHandler = new DarkColorHandlerImpl(
-            document.createElement('div'),
-            s => 'darkMock: ' + s
-        );
 
         segment.link = {
             dataset: {},

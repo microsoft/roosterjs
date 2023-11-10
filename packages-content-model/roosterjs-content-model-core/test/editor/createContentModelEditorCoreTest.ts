@@ -1,7 +1,7 @@
 import * as ContentModelCachePlugin from '../../lib/corePlugin/ContentModelCachePlugin';
 import * as ContentModelCopyPastePlugin from '../../lib/corePlugin/ContentModelCopyPastePlugin';
 import * as ContentModelFormatPlugin from '../../lib/corePlugin/ContentModelFormatPlugin';
-import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
+import * as createEditorCore from 'roosterjs-content-model-editor/lib/editor/createEditorCore';
 import * as promoteToContentModelEditorCore from '../../lib/editor/promoteToContentModelEditorCore';
 import { contentModelDomIndexer } from '../../lib/corePlugin/utils/contentModelDomIndexer';
 import { ContentModelTypeInContainerPlugin } from '../../lib/corePlugin/ContentModelTypeInContainerPlugin';

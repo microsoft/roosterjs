@@ -1,6 +1,6 @@
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DarkColorHandlerImpl } from 'roosterjs-content-model-editor/lib/editor/DarkColorHandlerImpl';
 import { defaultHTMLStyleMap } from '../../../lib/config/defaultHTMLStyleMap';
 import { DeprecatedColors } from '../../../lib';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
@@ -19,7 +19,6 @@ describe('textColorFormatHandler.parse', () => {
     beforeEach(() => {
         div = document.createElement('div');
         context = createDomToModelContext();
-        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock: ' + s);
         format = {};
     });
 

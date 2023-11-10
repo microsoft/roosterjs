@@ -1,7 +1,7 @@
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DarkColorHandlerImpl } from 'roosterjs-content-model-editor/lib/editor/DarkColorHandlerImpl';
 import { DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import {
@@ -95,7 +95,6 @@ describe('backgroundColorFormatHandler.apply', () => {
 
     it('Simple color', () => {
         format.backgroundColor = 'red';
-        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock:' + s);
 
         backgroundColorFormatHandler.apply(format, div, context);
 

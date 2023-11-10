@@ -1,4 +1,3 @@
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { ContentModelBr, ModelToDomContext } from 'roosterjs-content-model-types';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBr } from '../../../lib/modelToDom/handlers/handleBr';
@@ -10,7 +9,6 @@ describe('handleSegment', () => {
     beforeEach(() => {
         parent = document.createElement('div');
         context = createModelToDomContext();
-        context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
     });
 
     it('Br segment', () => {
