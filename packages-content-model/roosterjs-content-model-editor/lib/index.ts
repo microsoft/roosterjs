@@ -4,5 +4,6 @@ export {
 } from './publicTypes/ContentModelEditorCore';
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
 
-export { default as ContentModelEditor } from './editor/ContentModelEditor';
-export { default as isContentModelEditor } from './editor/isContentModelEditor';
+export { ContentModelEditor } from './editor/ContentModelEditor';
+export { isContentModelEditor } from './editor/isContentModelEditor';
+export { createEditorCore } from './editor/createEditorCore';

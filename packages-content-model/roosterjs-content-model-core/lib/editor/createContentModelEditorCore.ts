@@ -3,7 +3,6 @@ import { ContentModelTypeInContainerPlugin } from '../corePlugin/ContentModelTyp
 import { createContentModelCachePlugin } from '../corePlugin/ContentModelCachePlugin';
 import { createContentModelCopyPastePlugin } from '../corePlugin/ContentModelCopyPastePlugin';
 import { createContentModelFormatPlugin } from '../corePlugin/ContentModelFormatPlugin';
-import { createEditorCore } from 'roosterjs-editor-core';
 import { promoteToContentModelEditorCore } from './promoteToContentModelEditorCore';
 import type { CoreCreator, EditorCore, EditorOptions } from 'roosterjs-editor-types';
 import type {
@@ -14,11 +13,15 @@ import type {
 
 /**
  * Editor Core creator for Content Model editor
+ * @param contentDiv Container DIV of editor
+ * @param options Options for creating editor
+ * @param baseCreator Base core creator used for creating base EditorCore
  */
-export const createContentModelEditorCore: CoreCreator<
-    EditorCore & StandaloneEditorCore,
-    EditorOptions & StandaloneEditorOptions
-> = (contentDiv, options) => {
+export function createContentModelEditorCore(
+    contentDiv: HTMLDivElement,
+    options: EditorOptions & StandaloneEditorOptions,
+    baseCreator: CoreCreator<EditorCore, EditorOptions>
+): EditorCore & StandaloneEditorCore {
     const pluginState = getPluginState(options);
     const modifiedOptions: EditorOptions & StandaloneEditorOptions = {
         ...options,
@@ -34,12 +37,12 @@ export const createContentModelEditorCore: CoreCreator<
         },
     };
 
-    const core = createEditorCore(contentDiv, modifiedOptions) as EditorCore & StandaloneEditorCore;
+    const core = baseCreator(contentDiv, modifiedOptions) as EditorCore & StandaloneEditorCore;
 
     promoteToContentModelEditorCore(core, modifiedOptions, pluginState);
 
     return core;
-};
+}
 
 function getPluginState(options: EditorOptions & StandaloneEditorOptions): ContentModelPluginState {
     const format = options.defaultFormat || {};

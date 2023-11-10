@@ -1,6 +1,7 @@
 import insertLink from '../../../lib/publicApi/link/insertLink';
 import { ChangeSource } from 'roosterjs-content-model-core';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
+import { createContentModelEditorCore } from 'roosterjs-content-model-core';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import { PluginEventType } from 'roosterjs-editor-types';
 import {
@@ -330,7 +331,9 @@ describe('insertLink', () => {
             getName: () => 'mock',
             onPluginEvent: onPluginEvent,
         };
-        const editor = new ContentModelEditor(div, { plugins: [mockedPlugin] });
+        const editor = new ContentModelEditor(div, createContentModelEditorCore, {
+            plugins: [mockedPlugin],
+        });
 
         editor.focus();
 
