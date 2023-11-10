@@ -1,4 +1,4 @@
-import { deleteSegment } from 'roosterjs-content-model-editor';
+import { deleteSegment } from 'roosterjs-content-model-core';
 import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
 
 /**

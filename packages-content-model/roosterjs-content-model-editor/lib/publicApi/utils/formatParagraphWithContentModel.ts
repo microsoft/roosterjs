@@ -1,4 +1,4 @@
-import { getSelectedParagraphs } from '../../modelApi/selection/collectSelections';
+import { getSelectedParagraphs } from 'roosterjs-content-model-core';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 

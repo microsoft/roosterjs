@@ -1,9 +1,9 @@
 import { adjustWordSelection } from '../selection/adjustWordSelection';
-import { applyTableFormat } from '../table/applyTableFormat';
 import { createFormatContainer } from 'roosterjs-content-model-dom';
-import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import {
     iterateSelections,
+    applyTableFormat,
+    getClosestAncestorBlockGroupIndex,
     updateTableCellMetadata,
     updateTableMetadata,
 } from 'roosterjs-content-model-core';

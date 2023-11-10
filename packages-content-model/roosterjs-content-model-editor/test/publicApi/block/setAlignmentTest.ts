@@ -1,4 +1,4 @@
-import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
+import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
 import setAlignment from '../../../lib/publicApi/block/setAlignment';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';

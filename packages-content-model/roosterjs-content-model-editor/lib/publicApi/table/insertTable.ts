@@ -1,10 +1,12 @@
-import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
-import { deleteSelection } from '../selection/deleteSelection';
-import { mergeModel } from '../../modelApi/common/mergeModel';
-import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { setSelection } from '../../modelApi/selection/setSelection';
+import {
+    applyTableFormat,
+    deleteSelection,
+    mergeModel,
+    normalizeTable,
+    setSelection,
+} from 'roosterjs-content-model-core';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { TableMetadataFormat } from 'roosterjs-content-model-types';
 

@@ -1,4 +1,4 @@
-import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
+import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
 import applyTableBorderFormat from '../../../lib/publicApi/table/applyTableBorderFormat';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';

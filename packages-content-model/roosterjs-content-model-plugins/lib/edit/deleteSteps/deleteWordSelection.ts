@@ -1,4 +1,4 @@
-import { isPunctuation, isSpace, normalizeText } from 'roosterjs-content-model-editor';
+import { isPunctuation, isSpace, normalizeText } from 'roosterjs-content-model-core';
 import { isWhiteSpacePreserved } from 'roosterjs-content-model-dom';
 import type {
     ContentModelParagraph,

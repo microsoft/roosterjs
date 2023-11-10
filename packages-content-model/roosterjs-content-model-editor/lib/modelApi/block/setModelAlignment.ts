@@ -1,5 +1,5 @@
 import { alignTable } from '../table/alignTable';
-import { getOperationalBlocks } from '../selection/collectSelections';
+import { getOperationalBlocks } from 'roosterjs-content-model-core';
 import type {
     ContentModelDocument,
     ContentModelListItem,

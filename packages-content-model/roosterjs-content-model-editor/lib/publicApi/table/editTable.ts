@@ -1,20 +1,22 @@
 import hasSelectionInBlock from '../selection/hasSelectionInBlock';
 import { alignTable } from '../../modelApi/table/alignTable';
-import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
 import { ensureFocusableParagraphForTable } from '../../modelApi/table/ensureFocusableParagraphForTable';
-import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';
 import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
 import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
-import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { setSelection } from '../../modelApi/selection/setSelection';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
+import {
+    applyTableFormat,
+    getFirstSelectedTable,
+    normalizeTable,
+    setSelection,
+} from 'roosterjs-content-model-core';
 import type { TableOperation } from 'roosterjs-content-model-types';
 import {
     alignTableCellHorizontally,

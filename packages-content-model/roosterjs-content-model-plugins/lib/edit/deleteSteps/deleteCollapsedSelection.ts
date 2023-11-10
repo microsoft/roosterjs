@@ -1,4 +1,4 @@
-import { deleteBlock, deleteSegment } from 'roosterjs-content-model-editor';
+import { deleteBlock, deleteSegment } from 'roosterjs-content-model-core';
 import { getLeafSiblingBlock } from '../utils/getLeafSiblingBlock';
 import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 import type { BlockAndPath } from '../utils/getLeafSiblingBlock';

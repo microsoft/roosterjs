@@ -1,4 +1,4 @@
-import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
+import { getFirstSelectedListItem } from 'roosterjs-content-model-core';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
