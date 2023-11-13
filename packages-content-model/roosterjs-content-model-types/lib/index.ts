@@ -50,12 +50,8 @@ export { FloatFormat } from './format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './format/formatParts/EntityInfoFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
-export { TableMetadataFormat, TableBorderFormat } from './format/metadata/TableMetadataFormat';
-export {
-    ListMetadataFormat,
-    NumberingListType,
-    BulletListType,
-} from './format/metadata/ListMetadataFormat';
+export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';
+export { ListMetadataFormat } from './format/metadata/ListMetadataFormat';
 export {
     ImageResizeMetadataFormat,
     ImageCropMetadataFormat,

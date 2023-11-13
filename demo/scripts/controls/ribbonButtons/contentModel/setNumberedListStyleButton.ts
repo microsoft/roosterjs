@@ -1,5 +1,5 @@
 import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { NumberingListType } from 'roosterjs-content-model-types';
+import { NumberingListType } from 'roosterjs-content-model-core';
 import { RibbonButton } from 'roosterjs-react';
 import { setListStyle } from 'roosterjs-content-model-api';
 
@@ -33,7 +33,7 @@ export const setNumberedListStyleButton: RibbonButton<'ribbonButtonNumberedListS
     iconName: 'NumberedList',
     isDisabled: formatState => !formatState.isNumbering,
     onClick: (editor, key) => {
-        const value = parseInt(key) as NumberingListType;
+        const value = parseInt(key);
 
         if (isContentModelEditor(editor)) {
             setListStyle(editor, {

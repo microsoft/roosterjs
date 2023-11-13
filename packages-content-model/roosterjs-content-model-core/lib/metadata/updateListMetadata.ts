@@ -1,6 +1,7 @@
-import { BulletListType, NumberingListType } from 'roosterjs-content-model-types';
+import { BulletListType } from '../constants/BulletListType';
 import { createNumberDefinition, createObjectDefinition } from './definitionCreators';
 import { getObjectKeys, updateMetadata } from 'roosterjs-content-model-dom';
+import { NumberingListType } from '../constants/NumberingListType';
 import type {
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
@@ -28,7 +29,7 @@ const RomanValues: Record<string, number> = {
     IV: 4,
     I: 1,
 };
-const OrderedMap: Record<NumberingListType, string> = {
+const OrderedMap: Record<number, string> = {
     [NumberingListType.Decimal]: 'decimal',
     [NumberingListType.DecimalDash]: '"${Number}- "',
     [NumberingListType.DecimalParenthesis]: '"${Number}) "',
@@ -50,7 +51,7 @@ const OrderedMap: Record<NumberingListType, string> = {
     [NumberingListType.UpperRomanParenthesis]: '"${UpperRoman}) "',
     [NumberingListType.UpperRomanDoubleParenthesis]: '"(${UpperRoman}) "',
 };
-const UnorderedMap: Record<BulletListType, string> = {
+const UnorderedMap: Record<number, string> = {
     [BulletListType.Disc]: 'disc',
     [BulletListType.Square]: '"∎ "',
     [BulletListType.Circle]: 'circle',

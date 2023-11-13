@@ -1,4 +1,4 @@
-import { BulletListType } from 'roosterjs-content-model-types';
+import { BulletListType } from 'roosterjs-content-model-core';
 import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 import { setListStyle } from 'roosterjs-content-model-api';
@@ -21,7 +21,7 @@ export const setBulletedListStyleButton: RibbonButton<'ribbonButtonBulletedListS
     iconName: 'BulletedList',
     isDisabled: formatState => !formatState.isBullet,
     onClick: (editor, key) => {
-        const value = parseInt(key) as BulletListType;
+        const value = parseInt(key);
 
         if (isContentModelEditor(editor)) {
             setListStyle(editor, {

@@ -1,4 +1,4 @@
-import { TableBorderFormat } from 'roosterjs-content-model-types';
+import { TableBorderFormat } from '../constants/TableBorderFormat';
 import { updateMetadata } from 'roosterjs-content-model-dom';
 import {
     createBooleanDefinition,
@@ -31,8 +31,8 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
         tableBorderFormat: createNumberDefinition(
             false /** isOptional */,
             undefined /* value */,
-            TableBorderFormat.DEFAULT /* first table border format, TODO: Use Min/Max to specify valid values */,
-            TableBorderFormat.CLEAR /* last table border format, , TODO: Use Min/Max to specify valid values */
+            TableBorderFormat.Min /* first table border format */,
+            TableBorderFormat.Max /* last table border format */
         ),
         verticalAlign: NullStringDefinition,
     },
