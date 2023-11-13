@@ -1,11 +1,11 @@
+import { BulletListType } from '../../lib/constants/BulletListType';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
+import { NumberingListType } from '../../lib/constants/NumberingListType';
 import {
-    BulletListType,
     ContentModelListItemFormat,
     ContentModelWithDataset,
     ListMetadataFormat,
     ModelToDomContext,
-    NumberingListType,
 } from 'roosterjs-content-model-types';
 import {
     listItemMetadataApplier,
@@ -392,7 +392,7 @@ describe('listItemMetadataApplier', () => {
     });
 
     describe('OrderedListStyleValue', () => {
-        function runTest(formatNum: NumberingListType, itemNum: number, result: string) {
+        function runTest(formatNum: number, itemNum: number, result: string) {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,
@@ -489,7 +489,7 @@ describe('listItemMetadataApplier', () => {
     });
 
     describe('UnorderedListStyleValue', () => {
-        function runTest(formatNum: BulletListType, result: string) {
+        function runTest(formatNum: number, result: string) {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,
@@ -740,7 +740,7 @@ describe('listLevelMetadataApplier', () => {
     });
 
     describe('OrderedListStyleValue', () => {
-        function runTest(formatNum: NumberingListType, itemNum: number, result: string) {
+        function runTest(formatNum: number, itemNum: number, result: string) {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,
@@ -802,7 +802,7 @@ describe('listLevelMetadataApplier', () => {
     });
 
     describe('UnorderedListStyleValue', () => {
-        function runTest(formatNum: BulletListType, result: string) {
+        function runTest(formatNum: number, result: string) {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,

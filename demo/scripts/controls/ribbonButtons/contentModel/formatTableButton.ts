@@ -1,7 +1,8 @@
 import { formatTable } from 'roosterjs-content-model-api';
 import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
-import { TableBorderFormat, TableMetadataFormat } from 'roosterjs-content-model-types';
+import { TableBorderFormat } from 'roosterjs-content-model-core';
+import { TableMetadataFormat } from 'roosterjs-content-model-types';
 
 const PREDEFINED_STYLES: Record<
     string,
@@ -16,7 +17,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.DEFAULT /** tableBorderFormat */,
+            TableBorderFormat.Default /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -30,7 +31,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.DEFAULT /** tableBorderFormat */,
+            TableBorderFormat.Default /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -44,7 +45,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.NO_SIDE_BORDERS /** tableBorderFormat */,
+            TableBorderFormat.NoSideBorders /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -58,7 +59,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.DEFAULT /** tableBorderFormat */,
+            TableBorderFormat.Default /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -72,7 +73,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL /** tableBorderFormat */,
+            TableBorderFormat.FirstColumnHeaderExternal /** tableBorderFormat */,
             '#B0B0B0' /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -86,7 +87,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.LIST_WITH_SIDE_BORDERS /** tableBorderFormat */,
+            TableBorderFormat.ListWithSideBorders /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -100,7 +101,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.NO_HEADER_BORDERS /** tableBorderFormat */,
+            TableBorderFormat.NoHeaderBorders /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -114,7 +115,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.ESPECIAL_TYPE_1 /** tableBorderFormat */,
+            TableBorderFormat.EspecialType1 /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -128,7 +129,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.ESPECIAL_TYPE_2 /** tableBorderFormat */,
+            TableBorderFormat.EspecialType2 /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -142,7 +143,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.ESPECIAL_TYPE_3 /** tableBorderFormat */,
+            TableBorderFormat.EspecialType3 /** tableBorderFormat */,
             lightColor /** bgColorEven */,
             null /** bgColorOdd */,
             color /** headerRowColor */
@@ -156,7 +157,7 @@ const PREDEFINED_STYLES: Record<
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.CLEAR /** tableBorderFormat */,
+            TableBorderFormat.Clear /** tableBorderFormat */,
             lightColor /** bgColorEven */,
             null /** bgColorOdd */,
             color /** headerRowColor */
@@ -171,7 +172,7 @@ export function createTableFormat(
     bandedColumns?: boolean,
     headerRow?: boolean,
     firstColumn?: boolean,
-    borderFormat?: TableBorderFormat,
+    borderFormat?: number,
     bgColorEven?: string,
     bgColorOdd?: string,
     headerRowColor?: string
