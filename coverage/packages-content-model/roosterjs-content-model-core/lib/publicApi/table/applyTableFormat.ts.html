@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.01% </span>
+                <span class="strong">77.32% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>67/87</span>
+                <span class='fraction'>75/97</span>
             </div>
         
             
@@ -361,7 +361,8 @@
 <a name='L302'></a><a href='#L302'>302</a>
 <a name='L303'></a><a href='#L303'>303</a>
 <a name='L304'></a><a href='#L304'>304</a>
-<a name='L305'></a><a href='#L305'>305</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -545,9 +546,10 @@
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">105x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">104x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -668,7 +670,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { BorderKeys } from 'roosterjs-content-model-dom';
 import { combineBorderValue, extractBorderValues } from '../domUtils/borderValues';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
-import { TableBorderFormat } from 'roosterjs-content-model-types';
+import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateTableCellMetadata } from '../../metadata/updateTableCellMetadata';
 import { updateTableMetadata } from '../../metadata/updateTableMetadata';
 import type {
@@ -689,7 +691,7 @@ const DEFAULT_FORMAT: Required&lt;TableMetadataFormat&gt; = {
     bgColorEven: null,
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
-    tableBorderFormat: TableBorderFormat.DEFAULT,
+    tableBorderFormat: TableBorderFormat.Default,
     verticalAlign: null,
 };
 &nbsp;
@@ -783,15 +785,15 @@ type ShouldUseTransparentBorder = (indexProp: {
     lastColumn: boolean;
 }) =&gt; [boolean, boolean, boolean, boolean];
 &nbsp;
-const BorderFormatters: Record&lt;TableBorderFormat, ShouldUseTransparentBorder&gt; = {
-    [TableBorderFormat.DEFAULT]: _ =&gt; [false, false, false, false],
-    [TableBorderFormat.LIST_WITH_SIDE_BORDERS]: <span class="fstat-no" title="function not covered" >({</span> lastColumn<span class="cstat-no" title="statement not covered" >, f</span>irstColumn<span class="cstat-no" title="statement not covered" > })</span> =&gt; <span class="cstat-no" title="statement not covered" >[</span>
+const BorderFormatters: Record&lt;number, ShouldUseTransparentBorder | undefined&gt; = {
+    [TableBorderFormat.Default]: _ =&gt; [false, false, false, false],
+    [TableBorderFormat.ListWithSideBorders]: <span class="fstat-no" title="function not covered" >({</span> lastColumn<span class="cstat-no" title="statement not covered" >, f</span>irstColumn<span class="cstat-no" title="statement not covered" > })</span> =&gt; <span class="cstat-no" title="statement not covered" >[</span>
         false,
         !lastColumn,
         false,
         !firstColumn,
     ],
-    [TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL]: ({
+    [TableBorderFormat.FirstColumnHeaderExternal]: ({
         firstColumn,
         firstRow,
         lastColumn,
@@ -802,37 +804,37 @@ const BorderFormatters: Record&lt;TableBorderFormat, ShouldUseTransparentBorder&
         !lastRow &amp;&amp; !firstRow,
         !firstColumn,
     ],
-    [TableBorderFormat.NO_HEADER_BORDERS]: ({ firstRow, firstColumn, lastColumn }) =&gt; [
+    [TableBorderFormat.NoHeaderBorders]: ({ firstRow, firstColumn, lastColumn }) =&gt; [
         firstRow,
         firstRow || lastColumn,
         false,
         firstRow || firstColumn,
     ],
-    [TableBorderFormat.NO_SIDE_BORDERS]: ({ firstColumn, lastColumn }) =&gt; [
+    [TableBorderFormat.NoSideBorders]: ({ firstColumn, lastColumn }) =&gt; [
         false,
         lastColumn,
         false,
         firstColumn,
     ],
-    [TableBorderFormat.ESPECIAL_TYPE_1]: ({ firstRow, firstColumn }) =&gt; [
+    [TableBorderFormat.EspecialType1]: ({ firstRow, firstColumn }) =&gt; [
         firstColumn &amp;&amp; !firstRow,
         firstRow,
         firstColumn &amp;&amp; !firstRow,
         firstRow &amp;&amp; !firstColumn,
     ],
-    [TableBorderFormat.ESPECIAL_TYPE_2]: ({ firstRow, firstColumn }) =&gt; [
+    [TableBorderFormat.EspecialType2]: ({ firstRow, firstColumn }) =&gt; [
         !firstRow,
         firstRow || !firstColumn,
         !firstRow,
         !firstColumn,
     ],
-    [TableBorderFormat.ESPECIAL_TYPE_3]: ({ firstColumn, firstRow }) =&gt; [
+    [TableBorderFormat.EspecialType3]: ({ firstColumn, firstRow }) =&gt; [
         true,
         firstRow || !firstColumn,
         !firstRow,
         true,
     ],
-    [TableBorderFormat.CLEAR]: () =&gt; [true, true, true, true],
+    [TableBorderFormat.Clear]: () =&gt; [true, true, true, true],
 };
 &nbsp;
 /*
@@ -848,10 +850,11 @@ function formatCells(
     rows.forEach((row, rowIndex) =&gt; {
         row.cells.forEach((cell, colIndex) =&gt; {
             // Format Borders
-            if (!metaOverrides.borderOverrides[rowIndex][colIndex]) {
-                const transparentBorderMatrix = BorderFormatters[
-                    format.tableBorderFormat as TableBorderFormat
-                ]({
+            if (
+                !metaOverrides.borderOverrides[rowIndex][colIndex] &amp;&amp;
+                typeof format.tableBorderFormat == 'number'
+            ) {
+                const transparentBorderMatrix = BorderFormatters[format.tableBorderFormat]<span class="branch-0 cbranch-no" title="branch not covered" >?.({</span>
                     firstRow: rowIndex === 0,
                     lastRow: rowIndex === rows.length - 1,
                     firstColumn: colIndex === 0,
@@ -865,7 +868,7 @@ function formatCells(
                     format.verticalBorderColor,
                 ];
 &nbsp;
-                transparentBorderMatrix.forEach((alwaysUseTransparent, i) =&gt; {
+                transparentBorderMatrix<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>orEach((alwaysUseTransparent, i) =&gt; {
                     const borderColor = (!alwaysUseTransparent &amp;&amp; formatColor[i]) || '';
 &nbsp;
                     cell.format[BorderKeys[i]] = combineBorderValue({
@@ -976,7 +979,7 @@ function getBorderStyleFromColor(color?: string): string {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Nov 10 2023 20:28:09 GMT+0000 (Coordinated Universal Time)
+                at Mon Nov 13 2023 23:22:55 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
