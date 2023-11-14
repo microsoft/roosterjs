@@ -9,9 +9,6 @@ import {
 
 export function initEditor(id: string): IContentModelEditor {
     let node = document.createElement('div');
-    const div = document.createElement('div');
-    div.appendChild(document.createElement('br'));
-    node.appendChild(div);
     node.id = id;
     document.body.insertBefore(node, document.body.childNodes[0]);
 

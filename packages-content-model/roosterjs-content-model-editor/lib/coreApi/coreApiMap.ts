@@ -1,5 +1,6 @@
 import { addUndoSnapshot } from './addUndoSnapshot';
 import { attachDomEvent } from './attachDomEvent';
+import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { focus } from './focus';
 import { getContent } from './getContent';
 import { getPendableFormatState } from './getPendableFormatState';
@@ -42,4 +43,5 @@ export const coreApiMap: StandaloneCoreApiMap = {
     triggerEvent,
     selectTable,
     selectImage,
+    ensureTypeInContainer,
 };

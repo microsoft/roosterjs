@@ -318,6 +318,20 @@ export type GetStyleBasedFormatState = (
 export type RestoreUndoSnapshot = (core: StandaloneEditorCore, step: number) => void;
 
 /**
+ * Ensure user will type into a container element rather than into the editor content DIV directly
+ * @param core The StandaloneEditorCore object.
+ * @param position The position that user is about to type to
+ * @param keyboardEvent Optional keyboard event object
+ * @param deprecated Deprecated parameter, not used
+ */
+export type EnsureTypeInContainer = (
+    core: StandaloneEditorCore,
+    position: NodePosition,
+    keyboardEvent?: KeyboardEvent,
+    deprecated?: boolean
+) => void;
+
+/**
  * Temp interface
  * TODO: Port other core API
  */
@@ -535,6 +549,15 @@ export interface UnportedCoreApiMap {
      * @param step Steps to move, can be 0, positive or negative
      */
     restoreUndoSnapshot: RestoreUndoSnapshot;
+
+    /**
+     * Ensure user will type into a container element rather than into the editor content DIV directly
+     * @param core The EditorCore object.
+     * @param position The position that user is about to type to
+     * @param keyboardEvent Optional keyboard event object
+     * @param deprecated Deprecated parameter, not used
+     */
+    ensureTypeInContainer: EnsureTypeInContainer;
 }
 
 /**

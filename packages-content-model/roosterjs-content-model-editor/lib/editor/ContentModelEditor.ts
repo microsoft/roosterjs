@@ -914,7 +914,8 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param keyboardEvent Optional keyboard event object
      */
     ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
-        // NO OP
+        const core = this.getCore();
+        core.api.ensureTypeInContainer(core, position, keyboardEvent);
     }
 
     //#endregion
