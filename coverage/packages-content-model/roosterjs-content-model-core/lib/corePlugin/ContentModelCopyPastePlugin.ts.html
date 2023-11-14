@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.68% </span>
+                <span class="strong">81.54% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>107/131</span>
+                <span class='fraction'>106/130</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65.82% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>52/79</span>
+                <span class='fraction'>54/81</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.6% </span>
+                <span class="strong">81.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>102/125</span>
+                <span class='fraction'>103/126</span>
             </div>
         
             
@@ -353,7 +353,15 @@
 <a name='L294'></a><a href='#L294'>294</a>
 <a name='L295'></a><a href='#L295'>295</a>
 <a name='L296'></a><a href='#L296'>296</a>
-<a name='L297'></a><a href='#L297'>297</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -362,6 +370,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -390,7 +399,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -647,7 +661,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addRangeToSelection } from './utils/addRangeToSelection';
 import { ChangeSource } from '../constants/ChangeSource';
@@ -673,20 +689,26 @@ import type {
     IEditor,
     PluginWithState,
     ClipboardData,
+    EditorOptions,
 } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * Copy and paste plugin for handling onCopy and onPaste event
  */
-export class ContentModelCopyPastePlugin implements PluginWithState&lt;CopyPastePluginState&gt; {
+class ContentModelCopyPastePlugin implements PluginWithState&lt;CopyPastePluginState&gt; {
     private editor: (IStandaloneEditor &amp; IEditor) | null = null;
     private disposer: (() =&gt; void) | null = null;
+    private state: CopyPastePluginState;
 &nbsp;
     /**
      * Construct a new instance of CopyPastePlugin
-     * @param options The editor options
+     * @param option The editor option
      */
-    constructor(private state: CopyPastePluginState) {}
+    constructor(option: EditorOptions) {
+        this.state = {
+            allowedCustomPasteType: option.allowedCustomPasteType || [],
+        };
+    }
 &nbsp;
     /**
      * Get a friendly name of  this plugin
@@ -940,10 +962,12 @@ export const onNodeCreated: OnNodeCreated = (_, node): void =&gt; {
 /**
  * @internal
  * Create a new instance of ContentModelCopyPastePlugin
- * @param state The plugin state object
+ * @param option The editor option
  */
-export function createContentModelCopyPastePlugin(state: CopyPastePluginState) {
-    return new ContentModelCopyPastePlugin(state);
+export function createContentModelCopyPastePlugin(
+    option: EditorOptions
+): PluginWithState&lt;CopyPastePluginState&gt; {
+    return new ContentModelCopyPastePlugin(option);
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -952,7 +976,7 @@ export function createContentModelCopyPastePlugin(state: CopyPastePluginState) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 13 2023 23:22:55 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 14 2023 17:44:28 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

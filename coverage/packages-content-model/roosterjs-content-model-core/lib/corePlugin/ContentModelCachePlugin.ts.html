@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.3% </span>
+                <span class="strong">92.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>63/69</span>
+                <span class='fraction'>64/69</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.93% </span>
+                <span class="strong">86.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>51/58</span>
+                <span class='fraction'>52/60</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">91.67% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>10/12</span>
+                <span class='fraction'>11/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.77% </span>
+                <span class="strong">92.54% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>59/65</span>
+                <span class='fraction'>62/67</span>
             </div>
         
             
@@ -253,8 +253,16 @@
 <a name='L194'></a><a href='#L194'>194</a>
 <a name='L195'></a><a href='#L195'>195</a>
 <a name='L196'></a><a href='#L196'>196</a>
-<a name='L197'></a><a href='#L197'>197</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -278,7 +286,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">52x</span>
+<span class="cline-any cline-yes">52x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -319,7 +330,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -329,11 +340,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">124x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">124x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -367,7 +378,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">52x</span>
-<span class="cline-any cline-yes">24177x</span>
+<span class="cline-any cline-yes">30909x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -445,17 +456,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">52x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { areSameSelection } from './utils/areSameSelection';
+import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
 import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     ContentModelCachePluginState,
     ContentModelContentChangedEvent,
     IStandaloneEditor,
+    StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 import type {
     IEditor,
@@ -467,15 +481,18 @@ import type {
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
-export class ContentModelCachePlugin implements PluginWithState&lt;ContentModelCachePluginState&gt; {
+class ContentModelCachePlugin implements PluginWithState&lt;ContentModelCachePluginState&gt; {
     private editor: (IEditor &amp; IStandaloneEditor) | null = null;
+    private state: ContentModelCachePluginState;
 &nbsp;
     /**
      * Construct a new instance of ContentModelEditPlugin class
-     * @param state State of this plugin
+     * @param option The editor option
      */
-    constructor(private state: ContentModelCachePluginState) {
-        // TODO: Remove tempState parameter once we have standalone Content Model editor
+    constructor(option: StandaloneEditorOptions) {
+        this.state = {
+            domIndexer: option.cacheModel ? <span class="branch-0 cbranch-no" title="branch not covered" >contentModelDomIndexer </span>: undefined,
+        };
     }
 &nbsp;
     /**
@@ -514,8 +531,8 @@ export class ContentModelCachePlugin implements PluginWithState&lt;ContentModelC
     /**
      * Get plugin state object
      */
-<span class="fstat-no" title="function not covered" >    getState(</span>): ContentModelCachePluginState {
-<span class="cstat-no" title="statement not covered" >        return this.state;</span>
+    getState(): ContentModelCachePluginState {
+        return this.state;
     }
 &nbsp;
     /**
@@ -639,11 +656,12 @@ export class ContentModelCachePlugin implements PluginWithState&lt;ContentModelC
 /**
  * @internal
  * Create a new instance of ContentModelCachePlugin class.
- * This is mostly for unit test
- * @param state State of this plugin
+ * @param option The editor option
  */
-export function createContentModelCachePlugin(state: ContentModelCachePluginState) {
-    return new ContentModelCachePlugin(state);
+export function createContentModelCachePlugin(
+    option: StandaloneEditorOptions
+): PluginWithState&lt;ContentModelCachePluginState&gt; {
+    return new ContentModelCachePlugin(option);
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -652,7 +670,7 @@ export function createContentModelCachePlugin(state: ContentModelCachePluginStat
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 13 2023 23:22:55 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 14 2023 17:44:28 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
