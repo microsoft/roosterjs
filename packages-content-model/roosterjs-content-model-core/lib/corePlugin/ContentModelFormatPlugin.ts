@@ -23,6 +23,7 @@ const CursorMovingKeys = new Set<string>([
 ]);
 
 /**
+ * @internal
  * ContentModelFormat plugins helps editor to do formatting on top of content model.
  * This includes:
  * 1. Handle pending format changes when selection is collapsed
@@ -161,10 +162,11 @@ export class ContentModelFormatPlugin implements PluginWithState<ContentModelFor
 }
 
 /**
- * @internal
  * Create a new instance of ContentModelFormatPlugin.
  * This is mostly for unit test
  */
-export function createContentModelFormatPlugin(state: ContentModelFormatPluginState) {
+export function createContentModelFormatPlugin(
+    state: ContentModelFormatPluginState
+): PluginWithState<ContentModelFormatPluginState> {
     return new ContentModelFormatPlugin(state);
 }

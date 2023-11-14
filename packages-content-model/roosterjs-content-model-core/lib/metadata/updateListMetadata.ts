@@ -146,7 +146,7 @@ function getRawListStyleType(listType: 'OL' | 'UL', metadata: ListMetadataFormat
 }
 
 /**
- * @internal
+ * Apply list metadata format to list item
  */
 export const listItemMetadataApplier: MetadataApplier<
     ListMetadataFormat,
@@ -176,7 +176,7 @@ export const listItemMetadataApplier: MetadataApplier<
 };
 
 /**
- * @internal
+ * Apply list metadata format to list level
  */
 export const listLevelMetadataApplier: MetadataApplier<
     ListMetadataFormat,

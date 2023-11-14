@@ -1,4 +1,3 @@
-import * as createContentModelEditorCore from 'roosterjs-content-model-core/lib/editor/createContentModelEditorCore';
 import { ContentModelEditor } from '../../lib/editor/ContentModelEditor';
 import { ContentModelEditorCore } from '../../lib/publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../../lib/publicTypes/IContentModelEditor';
@@ -12,7 +11,7 @@ describe('isContentModelEditor', () => {
             initialContent: 'test',
         };
         const mockedCreateContentModelEditorCore = jasmine
-            .createSpy('createContentModelEditorCore')
+            .createSpy('createEditorCore')
             .and.callFake(
                 (contentDiv, options, baseCreator) =>
                     baseCreator(contentDiv, options) as ContentModelEditorCore
@@ -34,14 +33,10 @@ describe('isContentModelEditor', () => {
             initialContent: 'test',
         };
         const createContentModelEditorCoreSpy = spyOn(
-            createContentModelEditorCore,
-            'createContentModelEditorCore'
+            createEditorCore,
+            'createEditorCore'
         ).and.callThrough();
-        const editor = new ContentModelEditor(
-            div,
-            createContentModelEditorCore.createContentModelEditorCore,
-            option
-        );
+        const editor = new ContentModelEditor(div, createEditorCore.createEditorCore, option);
 
         expect(createContentModelEditorCoreSpy).toHaveBeenCalledWith(div, option, createEditorCore);
 

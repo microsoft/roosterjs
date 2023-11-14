@@ -14,6 +14,7 @@ import type {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
 export class ContentModelCachePlugin implements PluginWithState<ContentModelCachePluginState> {
@@ -186,11 +187,12 @@ export class ContentModelCachePlugin implements PluginWithState<ContentModelCach
 }
 
 /**
- * @internal
  * Create a new instance of ContentModelCachePlugin class.
  * This is mostly for unit test
  * @param state State of this plugin
  */
-export function createContentModelCachePlugin(state: ContentModelCachePluginState) {
+export function createContentModelCachePlugin(
+    state: ContentModelCachePluginState
+): PluginWithState<ContentModelCachePluginState> {
     return new ContentModelCachePlugin(state);
 }

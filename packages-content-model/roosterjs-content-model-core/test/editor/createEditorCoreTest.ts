@@ -1,11 +1,9 @@
 import * as ContentModelCachePlugin from '../../lib/corePlugin/ContentModelCachePlugin';
 import * as ContentModelCopyPastePlugin from '../../lib/corePlugin/ContentModelCopyPastePlugin';
 import * as ContentModelFormatPlugin from '../../lib/corePlugin/ContentModelFormatPlugin';
-import * as createEditorCore from 'roosterjs-content-model-editor/lib/editor/createEditorCore';
-import * as promoteToContentModelEditorCore from '../../lib/editor/promoteToContentModelEditorCore';
 import { contentModelDomIndexer } from '../../lib/corePlugin/utils/contentModelDomIndexer';
 import { ContentModelTypeInContainerPlugin } from '../../lib/corePlugin/ContentModelTypeInContainerPlugin';
-import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
+import { createEditorCore } from '../../lib/editor/createEditorCore';
 import { EditorOptions } from 'roosterjs-editor-types';
 import { StandaloneEditorOptions } from 'roosterjs-content-model-types';
 
@@ -15,7 +13,7 @@ const mockedCachePlugin = 'CACHPLUGIN' as any;
 const mockedCopyPastePlugin = 'COPYPASTE' as any;
 const mockedCopyPastePlugin2 = 'COPYPASTE2' as any;
 
-describe('createContentModelEditorCore', () => {
+describe('createEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
     let promoteToContentModelEditorCoreSpy: jasmine.Spy;
     let mockedCore: any;
@@ -58,7 +56,7 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('No additional option', () => {
-        const core = createContentModelEditorCore(contentDiv, {}, createEditorCoreSpy);
+        const core = createEditorCore(contentDiv, {}, createEditorCoreSpy);
 
         const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],
@@ -103,7 +101,7 @@ describe('createContentModelEditorCore', () => {
                 copyPaste: mockedCopyPastePlugin2,
             },
         };
-        const core = createContentModelEditorCore(contentDiv, options, createEditorCoreSpy);
+        const core = createEditorCore(contentDiv, options, createEditorCoreSpy);
 
         const expectedOptions = {
             defaultDomToModelOptions,
@@ -152,7 +150,7 @@ describe('createContentModelEditorCore', () => {
             },
         };
 
-        const core = createContentModelEditorCore(contentDiv, options, createEditorCoreSpy);
+        const core = createEditorCore(contentDiv, options, createEditorCoreSpy);
 
         const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],
@@ -200,7 +198,7 @@ describe('createContentModelEditorCore', () => {
             cacheModel: true,
         };
 
-        const core = createContentModelEditorCore(contentDiv, options, createEditorCoreSpy);
+        const core = createEditorCore(contentDiv, options, createEditorCoreSpy);
 
         const expectedOptions = {
             plugins: [mockedCachePlugin, mockedFormatPlugin],

@@ -13,12 +13,10 @@ import type {
     BlockElement,
     ClipboardData,
     ContentChangedData,
-    CoreCreator,
     DOMEventHandler,
     DarkColorHandler,
     DefaultFormat,
     EditorCore,
-    EditorOptions,
     EditorUndoState,
     ExperimentalFeatures,
     GenericContentEditFeature,
@@ -96,34 +94,19 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(
-        contentDiv: HTMLDivElement,
-        createContentModelEditorCore: (
-            contentDiv: HTMLDivElement,
-            options: ContentModelEditorOptions,
-            baseCreator: CoreCreator<EditorCore, EditorOptions>
-        ) => ContentModelEditorCore,
-        options: ContentModelEditorOptions = {}
-    ) {
-        this.core = createContentModelEditorCore(contentDiv, options, createEditorCore);
+    constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
+        this.core = createEditorCore(contentDiv, options);
         this.core.plugins.forEach(plugin => plugin.initialize(this));
         this.ensureTypeInContainer(
             new Position(this.core.contentDiv, PositionType.Begin).normalize()
         );
 
-        if (options.cacheModel && this.isContentModelEditor()) {
+        if (options.cacheModel) {
             // Create an initial content model to cache
             // TODO: Once we have standalone editor and get rid of `ensureTypeInContainer` function, we can set init content
             // using content model and cache the model directly
             this.createContentModel();
         }
-    }
-
-    /**
-     * Check if current editor can be used as ContentModelEditor
-     */
-    isContentModelEditor(): boolean {
-        return !!this.core && this.isContentModelEditorCore(this.core);
     }
 
     /**
