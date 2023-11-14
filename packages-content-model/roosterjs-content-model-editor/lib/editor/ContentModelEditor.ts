@@ -1,4 +1,5 @@
 import { createEditorCore } from './createEditorCore';
+import { getPendableFormatState } from './utils/getPendableFormatState';
 import { paste } from 'roosterjs-content-model-core';
 import {
     ChangeSource,
@@ -905,7 +906,7 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     getPendableFormatState(forceGetStateFromDOM: boolean = false): PendableFormatState {
         const core = this.getCore();
-        return core.api.getPendableFormatState(core, forceGetStateFromDOM);
+        return getPendableFormatState(core);
     }
 
     /**

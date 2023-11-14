@@ -4,7 +4,6 @@ import type {
     EditPluginState,
     EntityPluginState,
     LifecyclePluginState,
-    PendingFormatStatePluginState,
     UndoPluginState,
 } from 'roosterjs-editor-types';
 import type { ContentModelCachePluginState } from './ContentModelCachePluginState';
@@ -34,7 +33,6 @@ export interface ContentModelPluginState {
     lifecycle: LifecyclePluginState;
     domEvent: DOMEventPluginState;
     entity: EntityPluginState;
-    pendingFormatState: PendingFormatStatePluginState;
     undo: UndoPluginState;
     edit: EditPluginState;
 }
