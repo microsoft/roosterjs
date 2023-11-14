@@ -5,12 +5,7 @@ import type { StandaloneEditorOptions, IStandaloneEditor } from 'roosterjs-conte
  * An interface of editor with Content Model support.
  * (This interface is still under development, and may still be changed in the future with some breaking changes)
  */
-export interface IContentModelEditor extends IEditor, IStandaloneEditor {
-    /**
-     * Check if current editor can be used as ContentModelEditor
-     */
-    isContentModelEditor(): boolean;
-}
+export interface IContentModelEditor extends IEditor, IStandaloneEditor {}
 
 /**
  * Options for Content Model editor

@@ -13,12 +13,9 @@ import type {
     BlockElement,
     ClipboardData,
     ContentChangedData,
-    CoreCreator,
     DOMEventHandler,
     DarkColorHandler,
     DefaultFormat,
-    EditorCore,
-    EditorOptions,
     EditorUndoState,
     ExperimentalFeatures,
     GenericContentEditFeature,
@@ -96,34 +93,19 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(
-        contentDiv: HTMLDivElement,
-        createContentModelEditorCore: (
-            contentDiv: HTMLDivElement,
-            options: ContentModelEditorOptions,
-            baseCreator: CoreCreator<EditorCore, EditorOptions>
-        ) => ContentModelEditorCore,
-        options: ContentModelEditorOptions = {}
-    ) {
-        this.core = createContentModelEditorCore(contentDiv, options, createEditorCore);
+    constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
+        this.core = createEditorCore(contentDiv, options);
         this.core.plugins.forEach(plugin => plugin.initialize(this));
         this.ensureTypeInContainer(
             new Position(this.core.contentDiv, PositionType.Begin).normalize()
         );
 
-        if (options.cacheModel && this.isContentModelEditor()) {
+        if (options.cacheModel) {
             // Create an initial content model to cache
             // TODO: Once we have standalone editor and get rid of `ensureTypeInContainer` function, we can set init content
             // using content model and cache the model directly
             this.createContentModel();
         }
-    }
-
-    /**
-     * Check if current editor can be used as ContentModelEditor
-     */
-    isContentModelEditor(): boolean {
-        return !!this.core && this.isContentModelEditorCore(this.core);
     }
 
     /**
@@ -134,7 +116,7 @@ export class ContentModelEditor implements IContentModelEditor {
         option?: DomToModelOption,
         selectionOverride?: DOMSelection
     ): ContentModelDocument {
-        const core = this.getContentModelEditorCore();
+        const core = this.getCore();
 
         return core.api.createContentModel(core, option, selectionOverride);
     }
@@ -150,7 +132,7 @@ export class ContentModelEditor implements IContentModelEditor {
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
     ): DOMSelection | null {
-        const core = this.getContentModelEditorCore();
+        const core = this.getCore();
 
         return core.api.setContentModel(core, model, option, onNodeCreated);
     }
@@ -159,14 +141,14 @@ export class ContentModelEditor implements IContentModelEditor {
      * Get current running environment, such as if editor is running on Mac
      */
     getEnvironment(): EditorEnvironment {
-        return this.getContentModelEditorCore().environment;
+        return this.getCore().environment;
     }
 
     /**
      * Get current DOM selection
      */
     getDOMSelection(): DOMSelection | null {
-        const core = this.getContentModelEditorCore();
+        const core = this.getCore();
 
         return core.api.getDOMSelection(core);
     }
@@ -177,7 +159,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection) {
-        const core = this.getContentModelEditorCore();
+        const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
     }
@@ -194,7 +176,7 @@ export class ContentModelEditor implements IContentModelEditor {
         formatter: ContentModelFormatter,
         options?: FormatWithContentModelOptions
     ): void {
-        const core = this.getContentModelEditorCore();
+        const core = this.getCore();
 
         core.api.formatContentModel(core, formatter, options);
     }
@@ -203,7 +185,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * Get pending format of editor if any, or return null
      */
     getPendingFormat(): ContentModelSegmentFormat | null {
-        return this.getContentModelEditorCore().format.pendingFormat?.format ?? null;
+        return this.getCore().format.pendingFormat?.format ?? null;
     }
 
     /**
@@ -1116,24 +1098,10 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    private getCore(): EditorCore {
+    private getCore(): ContentModelEditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }
         return this.core;
-    }
-
-    private getContentModelEditorCore(): ContentModelEditorCore {
-        const core = this.getCore();
-
-        if (!this.isContentModelEditorCore(core)) {
-            throw new Error('Current editor is not promoted to Content Model editor');
-        }
-
-        return core;
-    }
-
-    private isContentModelEditorCore(core: EditorCore): core is ContentModelEditorCore {
-        return !!(core as ContentModelEditorCore).api.formatContentModel;
     }
 }

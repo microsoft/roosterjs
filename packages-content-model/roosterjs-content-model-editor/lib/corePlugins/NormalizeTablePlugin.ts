@@ -9,7 +9,6 @@ import {
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * TODO: Rename this plugin since it is not only for table now
  *
  * NormalizeTable plugin makes sure each table in editor has TBODY/THEAD/TFOOT tag around TR tags
@@ -19,7 +18,7 @@ import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types'
  * deeply coupled with DOM structure. So we need to always make sure there is already TBODY tag whenever
  * new table is inserted, to make sure the selection path we created is correct.
  */
-export default class NormalizeTablePlugin implements EditorPlugin {
+class NormalizeTablePlugin implements EditorPlugin {
     private editor: IEditor | null = null;
 
     /**
@@ -177,4 +176,12 @@ function normalizeListsForExport(root: ParentNode) {
             prevElement.appendChild(changeElementTag(li, 'div'));
         }
     });
+}
+
+/**
+ * @internal
+ * Create a new instance of NormalizeTablePlugin.
+ */
+export function createNormalizeTablePlugin(): EditorPlugin {
+    return new NormalizeTablePlugin();
 }

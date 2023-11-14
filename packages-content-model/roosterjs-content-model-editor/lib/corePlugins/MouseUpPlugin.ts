@@ -2,11 +2,10 @@ import { PluginEventType } from 'roosterjs-editor-types';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * MouseUpPlugin help trigger MouseUp event even when mouse up happens outside editor
  * as long as the mouse was pressed within Editor before
  */
-export default class MouseUpPlugin implements EditorPlugin {
+class MouseUpPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private mouseUpEventListerAdded: boolean = false;
     private mouseDownX: number | null = null;
@@ -69,4 +68,12 @@ export default class MouseUpPlugin implements EditorPlugin {
             });
         }
     };
+}
+
+/**
+ * @internal
+ * Create a new instance of MouseUpPlugin.
+ */
+export function createMouseUpPlugin(): EditorPlugin {
+    return new MouseUpPlugin();
 }

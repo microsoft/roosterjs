@@ -11,11 +11,9 @@ import type {
 const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
- * @internal
  * PendingFormatStatePlugin handles pending format state management
  */
-export default class PendingFormatStatePlugin
-    implements PluginWithState<PendingFormatStatePluginState> {
+class PendingFormatStatePlugin implements PluginWithState<PendingFormatStatePluginState> {
     private editor: IEditor | null = null;
     private state: PendingFormatStatePluginState;
 
@@ -181,4 +179,12 @@ export default class PendingFormatStatePlugin
 
         return span;
     }
+}
+
+/**
+ * @internal
+ * Create a new instance of PendingFormatStatePlugin.
+ */
+export function createPendingFormatStatePlugin(): PluginWithState<PendingFormatStatePluginState> {
+    return new PendingFormatStatePlugin();
 }
