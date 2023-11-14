@@ -9,10 +9,9 @@ import type {
 } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * Edit Component helps handle Content edit features
  */
-export default class EditPlugin implements PluginWithState<EditPluginState> {
+class EditPlugin implements PluginWithState<EditPluginState> {
     private editor: IEditor | null = null;
     private state: EditPluginState;
 
@@ -93,4 +92,12 @@ export default class EditPlugin implements PluginWithState<EditPluginState> {
             }
         }
     }
+}
+
+/**
+ * @internal
+ * Create a new instance of EditPlugin.
+ */
+export function createEditPlugin(): PluginWithState<EditPluginState> {
+    return new EditPlugin();
 }

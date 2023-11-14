@@ -5,9 +5,6 @@ import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-conten
 import { DarkColorHandlerImpl } from './DarkColorHandlerImpl';
 import type { DomToModelOption, ModelToDomOption } from 'roosterjs-content-model-types';
 import {
-    createContentModelCachePlugin,
-    createContentModelFormatPlugin,
-    getStandaloneEditorPluginState,
     listItemMetadataApplier,
     listLevelMetadataApplier,
     tablePreProcessor,
@@ -27,11 +24,7 @@ export function createEditorCore(
     options: ContentModelEditorOptions
 ): ContentModelEditorCore {
     const corePlugins = createCorePlugins(contentDiv, options);
-    const standaloneEditorPluginState = getStandaloneEditorPluginState(options);
-    const plugins: EditorPlugin[] = [
-        createContentModelCachePlugin(standaloneEditorPluginState.cache),
-        createContentModelFormatPlugin(standaloneEditorPluginState.format),
-    ];
+    const plugins: EditorPlugin[] = [];
 
     getObjectKeys(corePlugins).forEach(name => {
         if (name == '_placeholder') {
@@ -84,7 +77,6 @@ export function createEditorCore(
         originalApi: { ...coreApiMap },
         plugins: plugins.filter(x => !!x),
         ...pluginState,
-        ...standaloneEditorPluginState,
         trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
         zoomScale: zoomScale,
         sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),

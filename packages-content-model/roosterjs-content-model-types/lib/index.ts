@@ -205,6 +205,7 @@ export {
     StandaloneCoreApiMap,
     StandaloneEditorCore,
 } from './editor/StandaloneEditorCore';
+export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './pluginState/ContentModelPluginState';

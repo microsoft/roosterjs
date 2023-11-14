@@ -26,10 +26,9 @@ import type {
 } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * Copy and paste plugin for handling onCopy and onPaste event
  */
-export class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginState> {
+class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: (IStandaloneEditor & IEditor) | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
@@ -294,6 +293,7 @@ export const onNodeCreated: OnNodeCreated = (_, node): void => {
 };
 
 /**
+ * @internal
  * Create a new instance of ContentModelCopyPastePlugin
  * @param option The editor option
  */

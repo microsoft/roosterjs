@@ -44,7 +44,6 @@ export {
     listLevelMetadataApplier,
 } from './metadata/updateListMetadata';
 
-export { getStandaloneEditorPluginState } from './editor/getStandaloneEditorPluginState';
 export { standaloneCoreApiMap } from './editor/standaloneCoreApiMap';
 
 export { ChangeSource } from './constants/ChangeSource';
@@ -52,9 +51,6 @@ export { BulletListType } from './constants/BulletListType';
 export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
-export { createContentModelCachePlugin } from './corePlugin/ContentModelCachePlugin';
-export { createContentModelCopyPastePlugin } from './corePlugin/ContentModelCopyPastePlugin';
-export { createContentModelFormatPlugin } from './corePlugin/ContentModelFormatPlugin';
-export { ContentModelTypeInContainerPlugin } from './corePlugin/ContentModelTypeInContainerPlugin';
+export { createStandaloneEditorCorePlugins } from './corePlugin/createStandaloneEditorCorePlugins';
 
 export { tablePreProcessor } from './override/tablePreProcessor';
