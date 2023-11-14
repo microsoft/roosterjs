@@ -24,10 +24,9 @@ import {
 const MAX_SIZE_LIMIT = 1e7;
 
 /**
- * @internal
  * Provides snapshot based undo service for Editor
  */
-export default class UndoPlugin implements PluginWithState<UndoPluginState> {
+class UndoPlugin implements PluginWithState<UndoPluginState> {
     private editor: IEditor | null = null;
     private lastKeyPress: number | null = null;
     private state: UndoPluginState;
@@ -276,4 +275,13 @@ function createUndoSnapshotServiceBridge(
               canUndoAutoComplete: () => service.canUndoAutoComplete(),
           }
         : undefined;
+}
+
+/**
+ * @internal
+ * Create a new instance of UndoPlugin.
+ * @param option The editor option
+ */
+export function createUndoPlugin(option: EditorOptions): PluginWithState<UndoPluginState> {
+    return new UndoPlugin(option);
 }

@@ -1,6 +1,5 @@
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelEditPlugin, ContentModelPastePlugin } from 'roosterjs-content-model-plugins';
-import { createContentModelEditorCore } from 'roosterjs-content-model-core';
 import { getDarkColor } from 'roosterjs-color-utils';
 import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
@@ -34,5 +33,5 @@ export function createContentModelEditor(
             textColor: '#000000',
         },
     };
-    return new ContentModelEditor(contentDiv, createContentModelEditorCore, options);
+    return new ContentModelEditor(contentDiv, options);
 }

@@ -133,7 +133,9 @@ export interface StandaloneCoreApiMap {
 /**
  * Represents the core data structure of a Content Model editor
  */
-export interface StandaloneEditorCore extends ContentModelPluginState {
+export interface StandaloneEditorCore
+    extends ContentModelPluginState,
+        StandaloneEditorDefaultSettings {
     /**
      * The content DIV element of this editor
      */
@@ -149,6 +151,16 @@ export interface StandaloneEditorCore extends ContentModelPluginState {
      */
     readonly originalApi: StandaloneCoreApiMap;
 
+    /**
+     * Editor running environment
+     */
+    environment: EditorEnvironment;
+}
+
+/**
+ * Default DOM and Content Model conversion settings for an editor
+ */
+export interface StandaloneEditorDefaultSettings {
     /**
      * Default DOM to Content Model options
      */
@@ -170,9 +182,4 @@ export interface StandaloneEditorCore extends ContentModelPluginState {
      * will be used for setting content model if there is no other customized options
      */
     defaultModelToDomConfig: ModelToDomSettings;
-
-    /**
-     * Editor running environment
-     */
-    environment: EditorEnvironment;
 }

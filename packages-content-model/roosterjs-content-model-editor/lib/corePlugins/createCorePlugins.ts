@@ -1,22 +1,27 @@
-import CopyPastePlugin from './CopyPastePlugin';
-import DOMEventPlugin from './DOMEventPlugin';
-import EditPlugin from './EditPlugin';
-import EntityPlugin from './EntityPlugin';
-import ImageSelection from './ImageSelection';
-import LifecyclePlugin from './LifecyclePlugin';
-import MouseUpPlugin from './MouseUpPlugin';
-import NormalizeTablePlugin from './NormalizeTablePlugin';
-import PendingFormatStatePlugin from './PendingFormatStatePlugin';
-import TypeInContainerPlugin from './TypeInContainerPlugin';
-import UndoPlugin from './UndoPlugin';
-import type { CorePlugins, EditorOptions, PluginState } from 'roosterjs-editor-types';
+import { createDOMEventPlugin } from './DOMEventPlugin';
+import { createEditPlugin } from './EditPlugin';
+import { createEntityPlugin } from './EntityPlugin';
+import { createImageSelection } from './ImageSelection';
+import { createLifecyclePlugin } from './LifecyclePlugin';
+import { createMouseUpPlugin } from './MouseUpPlugin';
+import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
+import { createPendingFormatStatePlugin } from './PendingFormatStatePlugin';
+import { createStandaloneEditorCorePlugins } from 'roosterjs-content-model-core';
+import { createUndoPlugin } from './UndoPlugin';
+import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+import type { CorePlugins, PluginState } from 'roosterjs-editor-types';
+import type {
+    ContentModelPluginState,
+    StandaloneEditorCorePlugins,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export interface CreateCorePluginResponse extends CorePlugins {
-    _placeholder: null;
-}
+export type CreateCorePluginResponse = CorePlugins &
+    StandaloneEditorCorePlugins & {
+        _placeholder: null;
+    };
 
 /**
  * @internal
@@ -26,25 +31,25 @@ export interface CreateCorePluginResponse extends CorePlugins {
  */
 export function createCorePlugins(
     contentDiv: HTMLDivElement,
-    options: EditorOptions
+    options: ContentModelEditorOptions
 ): CreateCorePluginResponse {
     const map = options.corePluginOverride || {};
+
     // The order matters, some plugin needs to be put before/after others to make sure event
     // can be handled in right order
     return {
-        typeInContainer: map.typeInContainer || new TypeInContainerPlugin(),
-        edit: map.edit || new EditPlugin(),
-        pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
+        ...createStandaloneEditorCorePlugins(options),
+        edit: map.edit || createEditPlugin(),
+        pendingFormatState: map.pendingFormatState || createPendingFormatStatePlugin(),
         _placeholder: null,
         typeAfterLink: null!, //deprecated after firefox update
-        undo: map.undo || new UndoPlugin(options),
-        domEvent: map.domEvent || new DOMEventPlugin(options, contentDiv),
-        mouseUp: map.mouseUp || new MouseUpPlugin(),
-        copyPaste: map.copyPaste || new CopyPastePlugin(options),
-        entity: map.entity || new EntityPlugin(),
-        imageSelection: map.imageSelection || new ImageSelection(),
-        normalizeTable: map.normalizeTable || new NormalizeTablePlugin(),
-        lifecycle: map.lifecycle || new LifecyclePlugin(options, contentDiv),
+        undo: map.undo || createUndoPlugin(options),
+        domEvent: map.domEvent || createDOMEventPlugin(options, contentDiv),
+        mouseUp: map.mouseUp || createMouseUpPlugin(),
+        entity: map.entity || createEntityPlugin(),
+        imageSelection: map.imageSelection || createImageSelection(),
+        normalizeTable: map.normalizeTable || createNormalizeTablePlugin(),
+        lifecycle: map.lifecycle || createLifecyclePlugin(options, contentDiv),
     };
 }
 
@@ -53,7 +58,9 @@ export function createCorePlugins(
  * Get plugin state of core plugins
  * @param corePlugins CorePlugins object
  */
-export function getPluginState(corePlugins: CorePlugins): PluginState {
+export function getPluginState(
+    corePlugins: CorePlugins & StandaloneEditorCorePlugins
+): PluginState & ContentModelPluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),
         pendingFormatState: corePlugins.pendingFormatState.getState(),
@@ -62,5 +69,7 @@ export function getPluginState(corePlugins: CorePlugins): PluginState {
         undo: corePlugins.undo.getState(),
         entity: corePlugins.entity.getState(),
         copyPaste: corePlugins.copyPaste.getState(),
+        cache: corePlugins.cache.getState(),
+        format: corePlugins.format.getState(),
     };
 }

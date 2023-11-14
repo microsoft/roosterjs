@@ -12,7 +12,6 @@ import * as WordDesktopFile from '../../../../roosterjs-content-model-plugins/li
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from '../../../../roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
-import { createContentModelEditorCore } from 'roosterjs-content-model-core';
 import {
     ContentModelDocument,
     DomToModelOption,
@@ -231,7 +230,7 @@ describe('paste with content model & paste plugin', () => {
     beforeEach(() => {
         div = document.createElement('div');
         document.body.appendChild(div);
-        editor = new ContentModelEditor(div, createContentModelEditorCore, {
+        editor = new ContentModelEditor(div, {
             plugins: [new ContentModelPastePlugin()],
         });
         spyOn(addParserF, 'default').and.callThrough();
@@ -378,7 +377,7 @@ describe('paste with content model & paste plugin', () => {
         };
 
         let eventChecker: BeforePasteEvent = <any>{};
-        editor = new ContentModelEditor(div!, createContentModelEditorCore, {
+        editor = new ContentModelEditor(div!, {
             plugins: [
                 {
                     initialize: () => {},

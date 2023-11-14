@@ -7,10 +7,9 @@ const Delete = 'Delete';
 const mouseMiddleButton = 1;
 
 /**
- * @internal
  * Detect image selection and help highlight the image
  */
-export default class ImageSelection implements EditorPlugin {
+class ImageSelection implements EditorPlugin {
     private editor: IEditor | null = null;
 
     /**
@@ -97,4 +96,12 @@ export default class ImageSelection implements EditorPlugin {
             }
         }
     }
+}
+
+/**
+ * @internal
+ * Create a new instance of ImageSelection.
+ */
+export function createImageSelection(): EditorPlugin {
+    return new ImageSelection();
 }

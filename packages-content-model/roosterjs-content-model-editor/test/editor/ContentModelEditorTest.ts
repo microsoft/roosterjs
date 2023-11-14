@@ -5,7 +5,6 @@ import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/d
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
 import { ContentModelEditor } from '../../lib/editor/ContentModelEditor';
 import { ContentModelEditorCore } from '../../lib/publicTypes/ContentModelEditorCore';
-import { createContentModelEditorCore } from 'roosterjs-content-model-core';
 import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
 
 const editorContext: EditorContext = {
@@ -26,7 +25,7 @@ describe('ContentModelEditor', () => {
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(mockedConfig);
 
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, createContentModelEditorCore);
+        const editor = new ContentModelEditor(div);
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
 
@@ -57,7 +56,7 @@ describe('ContentModelEditor', () => {
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(mockedConfig);
 
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, createContentModelEditorCore);
+        const editor = new ContentModelEditor(div);
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
 
@@ -92,7 +91,7 @@ describe('ContentModelEditor', () => {
         spyOn(createModelToDomContext, 'createModelToDomConfig').and.returnValue(mockedConfig);
 
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, createContentModelEditorCore);
+        const editor = new ContentModelEditor(div);
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
 
@@ -129,7 +128,7 @@ describe('ContentModelEditor', () => {
         spyOn(createModelToDomContext, 'createModelToDomConfig').and.returnValue(mockedConfig);
 
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, createContentModelEditorCore);
+        const editor = new ContentModelEditor(div);
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
 
@@ -169,7 +168,7 @@ describe('ContentModelEditor', () => {
                 }
             },
         };
-        const editor = new ContentModelEditor(div, createContentModelEditorCore, {
+        const editor = new ContentModelEditor(div, {
             plugins: [plugin],
         });
         editor.dispose();
@@ -191,7 +190,7 @@ describe('ContentModelEditor', () => {
 
     it('get model with cache', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, createContentModelEditorCore);
+        const editor = new ContentModelEditor(div);
         const cachedModel = 'MODEL' as any;
 
         (editor as any).core.cache.cachedModel = cachedModel;
@@ -206,7 +205,7 @@ describe('ContentModelEditor', () => {
 
     it('formatContentModel', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, createContentModelEditorCore);
+        const editor = new ContentModelEditor(div);
         const core = (editor as any).core;
         const formatContentModelSpy = spyOn(core.api, 'formatContentModel');
         const callback = jasmine.createSpy('callback');
@@ -219,7 +218,7 @@ describe('ContentModelEditor', () => {
 
     it('default format', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, createContentModelEditorCore, {
+        const editor = new ContentModelEditor(div, {
             defaultFormat: {
                 bold: true,
                 italic: true,
@@ -252,7 +251,7 @@ describe('ContentModelEditor', () => {
 
     it('getPendingFormat', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, createContentModelEditorCore);
+        const editor = new ContentModelEditor(div);
         const core: ContentModelEditorCore = (editor as any).core;
         const mockedFormat = 'FORMAT' as any;
 
@@ -269,7 +268,7 @@ describe('ContentModelEditor', () => {
         const div = document.createElement('div');
         div.style.fontFamily = 'Arial';
 
-        const editor = new ContentModelEditor(div, createContentModelEditorCore);
+        const editor = new ContentModelEditor(div);
 
         expect(div.style.fontFamily).toBe('Arial');
 

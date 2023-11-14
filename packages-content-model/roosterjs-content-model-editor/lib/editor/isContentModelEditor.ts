@@ -9,5 +9,5 @@ import type { IEditor } from 'roosterjs-editor-types';
 export function isContentModelEditor(editor: IEditor): editor is IContentModelEditor {
     const contentModelEditor = editor as IContentModelEditor;
 
-    return !!contentModelEditor.isContentModelEditor?.();
+    return !!contentModelEditor.createContentModel;
 }

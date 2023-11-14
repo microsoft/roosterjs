@@ -1,10 +1,12 @@
 import { areSameSelection } from './utils/areSameSelection';
+import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
 import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     ContentModelCachePluginState,
     ContentModelContentChangedEvent,
     IStandaloneEditor,
+    StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 import type {
     IEditor,
@@ -16,15 +18,18 @@ import type {
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
-export class ContentModelCachePlugin implements PluginWithState<ContentModelCachePluginState> {
+class ContentModelCachePlugin implements PluginWithState<ContentModelCachePluginState> {
     private editor: (IEditor & IStandaloneEditor) | null = null;
+    private state: ContentModelCachePluginState;
 
     /**
      * Construct a new instance of ContentModelEditPlugin class
-     * @param state State of this plugin
+     * @param option The editor option
      */
-    constructor(private state: ContentModelCachePluginState) {
-        // TODO: Remove tempState parameter once we have standalone Content Model editor
+    constructor(option: StandaloneEditorOptions) {
+        this.state = {
+            domIndexer: option.cacheModel ? contentModelDomIndexer : undefined,
+        };
     }
 
     /**
@@ -188,9 +193,10 @@ export class ContentModelCachePlugin implements PluginWithState<ContentModelCach
 /**
  * @internal
  * Create a new instance of ContentModelCachePlugin class.
- * This is mostly for unit test
- * @param state State of this plugin
+ * @param option The editor option
  */
-export function createContentModelCachePlugin(state: ContentModelCachePluginState) {
-    return new ContentModelCachePlugin(state);
+export function createContentModelCachePlugin(
+    option: StandaloneEditorOptions
+): PluginWithState<ContentModelCachePluginState> {
+    return new ContentModelCachePlugin(option);
 }
