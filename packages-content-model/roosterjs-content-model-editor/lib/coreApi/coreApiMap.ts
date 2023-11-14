@@ -27,6 +27,7 @@ export const coreApiMap: StandaloneCoreApiMap = {
     ...standaloneCoreApiMap,
     attachDomEvent,
     addUndoSnapshot,
+    ensureTypeInContainer,
     focus,
     getContent,
     getSelectionRange,
@@ -43,5 +44,4 @@ export const coreApiMap: StandaloneCoreApiMap = {
     triggerEvent,
     selectTable,
     selectImage,
-    ensureTypeInContainer,
 };
