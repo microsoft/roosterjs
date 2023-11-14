@@ -204,7 +204,9 @@ export {
     FormatContentModel,
     StandaloneCoreApiMap,
     StandaloneEditorCore,
+    StandaloneEditorDefaultSettings,
 } from './editor/StandaloneEditorCore';
+export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './pluginState/ContentModelPluginState';

@@ -11,7 +11,6 @@ import type {
 } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * DOMEventPlugin handles customized DOM events, including:
  * 1. Keyboard event
  * 2. Mouse event
@@ -22,7 +21,7 @@ import type {
  * 7. Scroll event
  * It contains special handling for Safari since Safari cannot get correct selection when onBlur event is triggered in editor.
  */
-export default class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
+class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: DOMEventPluginState;
@@ -256,4 +255,17 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
 function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvider<any> {
     return !!(<ContextMenuProvider<any>>source)?.getContextMenuItems;
+}
+
+/**
+ * @internal
+ * Create a new instance of DOMEventPlugin.
+ * @param option The editor option
+ * @param contentDiv The editor content DIV element
+ */
+export function createDOMEventPlugin(
+    option: EditorOptions,
+    contentDiv: HTMLDivElement
+): PluginWithState<DOMEventPluginState> {
+    return new DOMEventPlugin(option, contentDiv);
 }

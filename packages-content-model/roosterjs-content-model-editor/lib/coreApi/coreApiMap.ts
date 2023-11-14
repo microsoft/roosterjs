@@ -16,15 +16,16 @@ import { selectImage } from './selectImage';
 import { selectRange } from './selectRange';
 import { selectTable } from './selectTable';
 import { setContent } from './setContent';
-import { switchShadowEdit } from './switchShadowEdit';
+import { standaloneCoreApiMap } from 'roosterjs-content-model-core';
 import { transformColor } from './transformColor';
 import { triggerEvent } from './triggerEvent';
-import type { CoreApiMap } from 'roosterjs-editor-types';
+import type { ContentModelCoreApiMap } from '../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
  */
-export const coreApiMap: CoreApiMap = {
+export const coreApiMap: ContentModelCoreApiMap = {
+    ...standaloneCoreApiMap,
     attachDomEvent,
     addUndoSnapshot,
     createPasteFragment,
@@ -41,7 +42,6 @@ export const coreApiMap: CoreApiMap = {
     select,
     selectRange,
     setContent,
-    switchShadowEdit,
     transformColor,
     triggerEvent,
     selectTable,

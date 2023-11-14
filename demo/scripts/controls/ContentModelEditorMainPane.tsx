@@ -17,7 +17,6 @@ import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelEditPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { createContentModelEditorCore } from 'roosterjs-content-model-core';
 import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
@@ -184,7 +183,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
         this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new ContentModelEditor(div, createContentModelEditorCore, {
+                new ContentModelEditor(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
                 }),

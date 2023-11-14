@@ -1,3 +1,4 @@
+import type { DefaultFormat } from 'roosterjs-editor-types';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 
@@ -19,4 +20,11 @@ export interface StandaloneEditorOptions {
      * Reuse existing DOM structure if possible, and update the model when content or selection is changed
      */
     cacheModel?: boolean;
+
+    /**
+     * Default format of editor content. This will be applied to empty content.
+     * If there is already content inside editor, format of existing content will not be changed.
+     * Default value is the computed style of editor content DIV
+     */
+    defaultFormat?: DefaultFormat;
 }
