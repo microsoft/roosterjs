@@ -463,8 +463,8 @@ function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean):
 }
 
 function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor: IEditor) {
-    let entity: Element | null = null;
-    let delimiterPair: Element | null = null;
+    let entity: HTMLElement | null = null;
+    let delimiterPair: HTMLElement | null = null;
     const traverser = getBlockTraverser(editor, delimiter);
     if (!traverser) {
         return { delimiterPair, entity };
@@ -492,6 +492,10 @@ function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor
             delimiterPair = null;
             break;
         }
+        if (entity && delimiterPair && !delimiterPair.isContentEditable) {
+            delimiterPair = null;
+        }
+
         current = traverseFn(traverser);
     }
 
