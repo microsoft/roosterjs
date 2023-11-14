@@ -6,4 +6,3 @@ export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IC
 
 export { ContentModelEditor } from './editor/ContentModelEditor';
 export { isContentModelEditor } from './editor/isContentModelEditor';
-export { createEditorCore } from './editor/createEditorCore';

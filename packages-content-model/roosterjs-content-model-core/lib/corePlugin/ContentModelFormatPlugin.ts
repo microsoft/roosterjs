@@ -7,6 +7,7 @@ import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-typ
 import type {
     ContentModelFormatPluginState,
     IStandaloneEditor,
+    StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 
 // During IME input, KeyDown event will have "Process" as key
@@ -27,16 +28,30 @@ const CursorMovingKeys = new Set<string>([
  * This includes:
  * 1. Handle pending format changes when selection is collapsed
  */
-export class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPluginState> {
+class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPluginState> {
     private editor: (IStandaloneEditor & IEditor) | null = null;
     private hasDefaultFormat = false;
+    private state: ContentModelFormatPluginState;
 
     /**
      * Construct a new instance of ContentModelEditPlugin class
-     * @param state State of this plugin
+     * @param option The editor option
      */
-    constructor(private state: ContentModelFormatPluginState) {
-        // TODO: Remove tempState parameter once we have standalone Content Model editor
+    constructor(option: StandaloneEditorOptions) {
+        const format = option.defaultFormat || {};
+        this.state = {
+            defaultFormat: {
+                fontWeight: format.bold ? 'bold' : undefined,
+                italic: format.italic || undefined,
+                underline: format.underline || undefined,
+                fontFamily: format.fontFamily || undefined,
+                fontSize: format.fontSize || undefined,
+                textColor: format.textColors?.lightModeColor || format.textColor || undefined,
+                backgroundColor:
+                    format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
+            },
+            pendingFormat: null,
+        };
     }
 
     /**
@@ -163,8 +178,10 @@ export class ContentModelFormatPlugin implements PluginWithState<ContentModelFor
 /**
  * @internal
  * Create a new instance of ContentModelFormatPlugin.
- * This is mostly for unit test
+ * @param option The editor option
  */
-export function createContentModelFormatPlugin(state: ContentModelFormatPluginState) {
-    return new ContentModelFormatPlugin(state);
+export function createContentModelFormatPlugin(
+    option: StandaloneEditorOptions
+): PluginWithState<ContentModelFormatPluginState> {
+    return new ContentModelFormatPlugin(option);
 }

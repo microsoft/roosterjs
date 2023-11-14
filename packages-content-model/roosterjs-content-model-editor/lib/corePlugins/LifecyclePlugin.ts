@@ -22,10 +22,9 @@ const DARK_MODE_DEFAULT_FORMAT = {
 };
 
 /**
- * @internal
  * Lifecycle plugin handles editor initialization and disposing
  */
-export default class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
+class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     private editor: IEditor | null = null;
     private state: LifecyclePluginState;
     private initialContent: string;
@@ -185,4 +184,17 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             this.adjustColor();
         }
     }
+}
+
+/**
+ * @internal
+ * Create a new instance of LifecyclePlugin.
+ * @param option The editor option
+ * @param contentDiv The editor content DIV element
+ */
+export function createLifecyclePlugin(
+    option: EditorOptions,
+    contentDiv: HTMLDivElement
+): PluginWithState<LifecyclePluginState> {
+    return new LifecyclePlugin(option, contentDiv);
 }

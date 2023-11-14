@@ -1,4 +1,4 @@
-import { cloneModel, createContentModelEditorCore } from 'roosterjs-content-model-core';
+import { cloneModel } from 'roosterjs-content-model-core';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { ContentModelPastePlugin } from '../../../lib/paste/ContentModelPastePlugin';
 import {
@@ -24,11 +24,7 @@ export function initEditor(id: string): IContentModelEditor {
         },
     };
 
-    let editor = new ContentModelEditor(
-        node as HTMLDivElement,
-        createContentModelEditorCore,
-        options
-    );
+    let editor = new ContentModelEditor(node as HTMLDivElement, options);
 
     return editor;
 }

@@ -59,10 +59,9 @@ const REMOVE_ENTITY_OPERATIONS: (EntityOperation | CompatibleEntityOperation)[] 
 ];
 
 /**
- * @internal
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
  */
-export default class EntityPlugin implements PluginWithState<EntityPluginState> {
+class EntityPlugin implements PluginWithState<EntityPluginState> {
     private editor: IEditor | null = null;
     private state: EntityPluginState;
 
@@ -388,3 +387,11 @@ const workaroundSelectionIssueForIE = Browser.isIE
           });
       }
     : () => {};
+
+/**
+ * @internal
+ * Create a new instance of EntityPlugin.
+ */
+export function createEntityPlugin(): PluginWithState<EntityPluginState> {
+    return new EntityPlugin();
+}
