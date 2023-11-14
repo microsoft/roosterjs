@@ -1,23 +1,36 @@
-import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
+import type { EditorPlugin, SizeTransformer } from 'roosterjs-editor-types';
 import type { StandaloneCoreApiMap, StandaloneEditorCore } from 'roosterjs-content-model-types';
-
-/**
- * The interface for the map of core API for Content Model editor.
- * Editor can call call API from this map under ContentModelEditorCore object
- */
-export interface ContentModelCoreApiMap extends CoreApiMap, StandaloneCoreApiMap {}
 
 /**
  * Represents the core data structure of a Content Model editor
  */
-export interface ContentModelEditorCore extends EditorCore, StandaloneEditorCore {
+export interface ContentModelEditorCore extends StandaloneEditorCore {
     /**
      * Core API map of this editor
      */
-    readonly api: ContentModelCoreApiMap;
+    readonly api: StandaloneCoreApiMap;
 
     /**
      * Original API map of this editor. Overridden core API can use API from this map to call the original version of core API.
      */
-    readonly originalApi: ContentModelCoreApiMap;
+    readonly originalApi: StandaloneCoreApiMap;
+
+    /*
+     * Current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    zoomScale: number;
+
+    /**
+     * @deprecated Use zoomScale instead
+     */
+    sizeTransformer: SizeTransformer;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 }

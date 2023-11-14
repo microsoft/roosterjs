@@ -1,11 +1,10 @@
 import { ColorTransformDirection } from 'roosterjs-editor-types';
-import type { EditorCore, TransformColor } from 'roosterjs-editor-types';
-import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
+import type { TransformColor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Edit and transform color of elements between light mode and dark mode
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @param rootNode The root HTML elements to transform
  * @param includeSelf True to transform the root node as well, otherwise false
  * @param callback The callback function to invoke before do color transformation
@@ -14,13 +13,13 @@ import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/l
  * Pass true to this value to force do color transformation even editor core is in light mode
  */
 export const transformColor: TransformColor = (
-    core: EditorCore,
-    rootNode: Node | null,
-    includeSelf: boolean,
-    callback: (() => void) | null,
-    direction: ColorTransformDirection | CompatibleColorTransformDirection,
-    forceTransform?: boolean,
-    fromDarkMode: boolean = false
+    core,
+    rootNode,
+    includeSelf,
+    callback,
+    direction,
+    forceTransform,
+    fromDarkMode = false
 ) => {
     const {
         darkColorHandler,

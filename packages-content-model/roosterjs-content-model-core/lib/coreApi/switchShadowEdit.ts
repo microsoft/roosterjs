@@ -1,17 +1,17 @@
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { PluginEventType } from 'roosterjs-editor-types';
-import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
-import type { EditorCore, SelectionPath, SwitchShadowEdit } from 'roosterjs-editor-types';
+import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
+import type { SelectionPath } from 'roosterjs-editor-types';
 
 /**
  * @internal
  * Switch the Shadow Edit mode of editor On/Off
- * @param editorCore The EditorCore object
+ * @param editorCore The StandaloneEditorCore object
  * @param isOn True to switch On, False to switch Off
  */
 export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
     // TODO: Use strong-typed editor core object
-    const core = editorCore as StandaloneEditorCore & EditorCore;
+    const core = editorCore;
 
     if (isOn != !!core.lifecycle.shadowEditFragment) {
         if (isOn) {

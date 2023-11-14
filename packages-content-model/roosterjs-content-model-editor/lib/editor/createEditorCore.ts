@@ -55,7 +55,7 @@ export function createEditorCore(
         ...pluginState,
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         zoomScale: zoomScale,
-        sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
+        sizeTransformer: (size: number) => size / zoomScale,
         getVisibleViewport,
         imageSelectionBorderColor: options.imageSelectionBorderColor,
         darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),

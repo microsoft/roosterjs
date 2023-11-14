@@ -1,10 +1,10 @@
 import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
 import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
+import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import type {
     ContextMenuProvider,
     DOMEventHandler,
     DOMEventPluginState,
-    EditorOptions,
     EditorPlugin,
     IEditor,
     PluginWithState,
@@ -31,7 +31,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * @param options The editor options
      * @param contentDiv The editor content DIV
      */
-    constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
+    constructor(options: ContentModelEditorOptions, contentDiv: HTMLDivElement) {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
@@ -264,7 +264,7 @@ function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvi
  * @param contentDiv The editor content DIV element
  */
 export function createDOMEventPlugin(
-    option: EditorOptions,
+    option: ContentModelEditorOptions,
     contentDiv: HTMLDivElement
 ): PluginWithState<DOMEventPluginState> {
     return new DOMEventPlugin(option, contentDiv);

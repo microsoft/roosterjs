@@ -1,6 +1,6 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import type { EditorCore, Entity } from 'roosterjs-editor-types';
+import type { Entity } from 'roosterjs-editor-types';
 import type {
     ContentModelContentChangedEvent,
     DOMSelection,
@@ -81,7 +81,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
     }
 };
 
-function handleNewEntities(core: EditorCore, context: FormatWithContentModelContext) {
+function handleNewEntities(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
     // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
     // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
     // from EntityPlugin to here
@@ -107,7 +107,7 @@ const EntityOperationMap: Record<EntityRemovalOperation, EntityOperation> = {
     removeFromStart: EntityOperation.RemoveFromStart,
 };
 
-function handleDeletedEntities(core: EditorCore, context: FormatWithContentModelContext) {
+function handleDeletedEntities(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
     context.deletedEntities.forEach(
         ({
             entity: {
@@ -139,7 +139,7 @@ function handleDeletedEntities(core: EditorCore, context: FormatWithContentModel
     );
 }
 
-function handleImages(core: EditorCore, context: FormatWithContentModelContext) {
+function handleImages(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
     if (context.newImages.length > 0) {
         const viewport = core.getVisibleViewport();
 

@@ -17,6 +17,5 @@ export function createStandaloneEditorCorePlugins(
         cache: createContentModelCachePlugin(options),
         format: createContentModelFormatPlugin(options),
         copyPaste: createContentModelCopyPastePlugin(options),
-        typeInContainer: null!, // TODO: remove this plugin since we don't need it any more
     };
 }

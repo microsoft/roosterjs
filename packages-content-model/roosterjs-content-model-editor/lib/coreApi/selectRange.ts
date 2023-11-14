@@ -1,5 +1,3 @@
-import { hasFocus } from './hasFocus';
-import type { EditorCore, SelectRange } from 'roosterjs-editor-types';
 import {
     contains,
     getPendableFormatState,
@@ -8,25 +6,22 @@ import {
     addRangeToSelection,
     getObjectKeys,
 } from 'roosterjs-editor-dom';
+import type { SelectRange, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Change the editor selection to the given range
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @param range The range to select
  * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
  * in editor, otherwise it will always remove current selection range and set to the given one.
  * This parameter is always treat as true in Edge to avoid some weird runtime exception.
  */
-export const selectRange: SelectRange = (
-    core: EditorCore,
-    range: Range,
-    skipSameRange?: boolean
-) => {
+export const selectRange: SelectRange = (core, range, skipSameRange) => {
     if (!core.lifecycle.shadowEditSelectionPath && contains(core.contentDiv, range)) {
         addRangeToSelection(range, skipSameRange);
 
-        if (!hasFocus(core)) {
+        if (!core.api.hasFocus(core)) {
             core.domEvent.selectionRange = range;
         }
 
@@ -45,7 +40,7 @@ export const selectRange: SelectRange = (
 /**
  * Restore cached pending format state (if exist) to current selection
  */
-function restorePendingFormatState(core: EditorCore) {
+function restorePendingFormatState(core: StandaloneEditorCore) {
     const {
         contentDiv,
         pendingFormatState,

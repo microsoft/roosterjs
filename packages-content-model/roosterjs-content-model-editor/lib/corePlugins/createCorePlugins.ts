@@ -8,20 +8,17 @@ import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { createPendingFormatStatePlugin } from './PendingFormatStatePlugin';
 import { createStandaloneEditorCorePlugins } from 'roosterjs-content-model-core';
 import { createUndoPlugin } from './UndoPlugin';
+import type { ContentModelCorePlugins } from '../publicTypes/ContentModelCorePlugins';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
-import type { CorePlugins, PluginState } from 'roosterjs-editor-types';
-import type {
-    ContentModelPluginState,
-    StandaloneEditorCorePlugins,
-} from 'roosterjs-content-model-types';
+import type { PluginState } from 'roosterjs-editor-types';
+import type { ContentModelPluginState } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export type CreateCorePluginResponse = CorePlugins &
-    StandaloneEditorCorePlugins & {
-        _placeholder: null;
-    };
+export interface CreateCorePluginResponse extends ContentModelCorePlugins {
+    _placeholder: null;
+}
 
 /**
  * @internal
@@ -42,7 +39,6 @@ export function createCorePlugins(
         edit: map.edit || createEditPlugin(),
         pendingFormatState: map.pendingFormatState || createPendingFormatStatePlugin(),
         _placeholder: null,
-        typeAfterLink: null!, //deprecated after firefox update
         undo: map.undo || createUndoPlugin(options),
         domEvent: map.domEvent || createDOMEventPlugin(options, contentDiv),
         mouseUp: map.mouseUp || createMouseUpPlugin(),
@@ -56,10 +52,10 @@ export function createCorePlugins(
 /**
  * @internal
  * Get plugin state of core plugins
- * @param corePlugins CorePlugins object
+ * @param corePlugins ContentModelCorePlugins object
  */
 export function getPluginState(
-    corePlugins: CorePlugins & StandaloneEditorCorePlugins
+    corePlugins: ContentModelCorePlugins
 ): PluginState & ContentModelPluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),

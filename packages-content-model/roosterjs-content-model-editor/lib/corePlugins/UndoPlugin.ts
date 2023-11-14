@@ -1,7 +1,6 @@
 import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
 import type {
     ContentChangedEvent,
-    EditorOptions,
     IEditor,
     PluginEvent,
     PluginWithState,
@@ -18,6 +17,7 @@ import {
     moveCurrentSnapshot,
     canUndoAutoComplete,
 } from 'roosterjs-editor-dom';
+import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
@@ -35,12 +35,9 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
      * Construct a new instance of UndoPlugin
      * @param options The wrapper of the state object
      */
-    constructor(options: EditorOptions) {
+    constructor(options: ContentModelEditorOptions) {
         this.state = {
-            snapshotsService:
-                options.undoMetadataSnapshotService ||
-                createUndoSnapshotServiceBridge(options.undoSnapshotService) ||
-                createUndoSnapshots(),
+            snapshotsService: options.undoMetadataSnapshotService || createUndoSnapshots(),
             isRestoring: false,
             hasNewContent: false,
             isNested: false,
@@ -256,32 +253,13 @@ function createUndoSnapshots(): UndoSnapshotsService<Snapshot> {
     };
 }
 
-function createUndoSnapshotServiceBridge(
-    service: UndoSnapshotsService<string> | undefined
-): UndoSnapshotsService<Snapshot> | undefined {
-    let html: string | null;
-    return service
-        ? {
-              canMove: (delta: number) => service.canMove(delta),
-              move: (delta: number): Snapshot | null =>
-                  (html = service.move(delta)) ? { html, metadata: null, knownColors: [] } : null,
-              addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =>
-                  service.addSnapshot(
-                      snapshot.html +
-                          (snapshot.metadata ? `<!--${JSON.stringify(snapshot.metadata)}-->` : ''),
-                      isAutoCompleteSnapshot
-                  ),
-              clearRedo: () => service.clearRedo(),
-              canUndoAutoComplete: () => service.canUndoAutoComplete(),
-          }
-        : undefined;
-}
-
 /**
  * @internal
  * Create a new instance of UndoPlugin.
  * @param option The editor option
  */
-export function createUndoPlugin(option: EditorOptions): PluginWithState<UndoPluginState> {
+export function createUndoPlugin(
+    option: ContentModelEditorOptions
+): PluginWithState<UndoPluginState> {
     return new UndoPlugin(option);
 }
