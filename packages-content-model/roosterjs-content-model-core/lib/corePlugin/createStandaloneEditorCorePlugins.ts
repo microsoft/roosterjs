@@ -2,6 +2,7 @@ import { createContentModelCachePlugin } from './ContentModelCachePlugin';
 import { createContentModelCopyPastePlugin } from './ContentModelCopyPastePlugin';
 import { createContentModelFormatPlugin } from './ContentModelFormatPlugin';
 import { createDOMEventPlugin } from './DOMEventPlugin';
+import { createLifecyclePlugin } from './LifecyclePlugin';
 import type {
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
@@ -20,5 +21,6 @@ export function createStandaloneEditorCorePlugins(
         format: createContentModelFormatPlugin(options),
         copyPaste: createContentModelCopyPastePlugin(options),
         domEvent: createDOMEventPlugin(options, contentDiv),
+        lifecycle: createLifecyclePlugin(options, contentDiv),
     };
 }

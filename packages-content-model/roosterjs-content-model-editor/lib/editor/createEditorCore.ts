@@ -1,9 +1,12 @@
-import { arrayPush, getIntersectedRect, getObjectKeys } from 'roosterjs-editor-dom';
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { createCorePlugins, getPluginState } from '../corePlugins/createCorePlugins';
 import { createStandaloneEditorDefaultSettings } from 'roosterjs-content-model-core';
 import { DarkColorHandlerImpl } from './DarkColorHandlerImpl';
-import type { EditorPlugin } from 'roosterjs-editor-types';
+import { getIntersectedRect } from 'roosterjs-editor-dom';
+import {
+    createCorePlugins,
+    createPluginArray,
+    getPluginState,
+} from '../corePlugins/createCorePlugins';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 
@@ -18,18 +21,7 @@ export function createEditorCore(
     options: ContentModelEditorOptions
 ): ContentModelEditorCore {
     const corePlugins = createCorePlugins(contentDiv, options);
-    const plugins: EditorPlugin[] = [];
-
-    getObjectKeys(corePlugins).forEach(name => {
-        if (name == '_placeholder') {
-            if (options.plugins) {
-                arrayPush(plugins, options.plugins);
-            }
-        } else {
-            plugins.push(corePlugins[name]);
-        }
-    });
-
+    const plugins = createPluginArray(corePlugins, options.plugins);
     const pluginState = getPluginState(corePlugins);
     const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
     const getVisibleViewport =
@@ -63,6 +55,7 @@ export function createEditorCore(
         imageSelectionBorderColor: options.imageSelectionBorderColor,
         darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),
         disposeErrorHandler: options.disposeErrorHandler,
+        customData: {},
 
         ...createStandaloneEditorDefaultSettings(options),
 

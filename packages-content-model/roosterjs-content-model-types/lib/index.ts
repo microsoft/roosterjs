@@ -236,6 +236,7 @@ export {
     PendingFormat,
 } from './pluginState/ContentModelFormatPluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
+export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {

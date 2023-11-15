@@ -1,4 +1,4 @@
-import type { DefaultFormat, EditorPlugin } from 'roosterjs-editor-types';
+import type { DefaultFormat, EditorPlugin, ExperimentalFeatures } from 'roosterjs-editor-types';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 
@@ -47,4 +47,31 @@ export interface StandaloneEditorOptions {
      * By default, the scroll container will be the same with editor content DIV
      */
     scrollContainer?: HTMLElement;
+
+    /**
+     * Initial HTML content
+     * Default value is whatever already inside the editor content DIV
+     */
+    initialContent?: string;
+
+    /**
+     * Whether to skip the adjust editor process when for light/dark mode
+     */
+    doNotAdjustEditorColor?: boolean;
+
+    /**
+     * A util function to transform light mode color to dark mode color
+     * Default value is to return the original light color
+     */
+    getDarkColor?: (lightColor: string) => string;
+
+    /**
+     * If the editor is currently in dark mode
+     */
+    inDarkMode?: boolean;
+
+    /**
+     * Specify the enabled experimental features
+     */
+    experimentalFeatures?: ExperimentalFeatures[];
 }

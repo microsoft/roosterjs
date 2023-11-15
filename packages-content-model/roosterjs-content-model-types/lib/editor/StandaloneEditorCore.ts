@@ -1,3 +1,4 @@
+import type { ContentModelPluginState } from '../pluginState/ContentModelPluginState';
 import type {
     CompatibleColorTransformDirection,
     CompatibleGetContentMode,
@@ -8,7 +9,9 @@ import type {
     ContentMetadata,
     DOMEventHandler,
     DarkColorHandler,
+    EditPluginState,
     EditorPlugin,
+    EntityPluginState,
     GetContentMode,
     ImageSelectionRange,
     InsertOption,
@@ -22,9 +25,9 @@ import type {
     TableSelection,
     TableSelectionRange,
     TrustedHTMLHandler,
+    UndoPluginState,
 } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
-import type { ContentModelPluginState } from '../pluginState/ContentModelPluginState';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { DomToModelSettings } from '../context/DomToModelSettings';
@@ -599,6 +602,12 @@ export interface StandaloneEditorCore
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
+
+    // Plugins copied from legacy editor
+    // TODO: Port these plugins into Standalone Editor
+    entity: EntityPluginState;
+    undo: UndoPluginState;
+    edit: EditPluginState;
 }
 
 /**

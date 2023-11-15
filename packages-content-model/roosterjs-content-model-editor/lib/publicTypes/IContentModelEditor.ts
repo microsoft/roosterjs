@@ -2,7 +2,6 @@ import type { ContentModelCorePlugins } from './ContentModelCorePlugins';
 import type {
     DefaultFormat,
     EditorPlugin,
-    ExperimentalFeatures,
     IEditor,
     Rect,
     Snapshot,
@@ -39,12 +38,6 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     undoMetadataSnapshotService?: UndoSnapshotsService<Snapshot>;
 
     /**
-     * Initial HTML content
-     * Default value is whatever already inside the editor content DIV
-     */
-    initialContent?: string;
-
-    /**
      * A function map to override default core API implementation
      * Default value is null
      */
@@ -55,27 +48,6 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
      * Default value is null
      */
     corePluginOverride?: Partial<ContentModelCorePlugins>;
-
-    /**
-     * If the editor is currently in dark mode
-     */
-    inDarkMode?: boolean;
-
-    /**
-     * A util function to transform light mode color to dark mode color
-     * Default value is to return the original light color
-     */
-    getDarkColor?: (lightColor: string) => string;
-
-    /**
-     * Whether to skip the adjust editor process when for light/dark mode
-     */
-    doNotAdjustEditorColor?: boolean;
-
-    /**
-     * Specify the enabled experimental features
-     */
-    experimentalFeatures?: ExperimentalFeatures[];
 
     /**
      * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree

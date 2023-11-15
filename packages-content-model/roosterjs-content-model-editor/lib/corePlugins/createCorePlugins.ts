@@ -1,20 +1,13 @@
 import { createEditPlugin } from './EditPlugin';
 import { createEntityPlugin } from './EntityPlugin';
 import { createImageSelection } from './ImageSelection';
-import { createLifecyclePlugin } from './LifecyclePlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { createStandaloneEditorCorePlugins } from 'roosterjs-content-model-core';
 import { createUndoPlugin } from './UndoPlugin';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 import type { ContentModelCorePlugins } from '../publicTypes/ContentModelCorePlugins';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import type { ContentModelPluginState } from 'roosterjs-content-model-types';
-
-/**
- * @internal
- */
-export interface CreateCorePluginResponse extends ContentModelCorePlugins {
-    _placeholder: null;
-}
 
 /**
  * @internal
@@ -25,7 +18,7 @@ export interface CreateCorePluginResponse extends ContentModelCorePlugins {
 export function createCorePlugins(
     contentDiv: HTMLDivElement,
     options: ContentModelEditorOptions
-): CreateCorePluginResponse {
+): ContentModelCorePlugins {
     const map = options.corePluginOverride || {};
 
     // The order matters, some plugin needs to be put before/after others to make sure event
@@ -33,13 +26,33 @@ export function createCorePlugins(
     return {
         ...createStandaloneEditorCorePlugins(options, contentDiv),
         edit: map.edit || createEditPlugin(),
-        _placeholder: null,
         undo: map.undo || createUndoPlugin(options),
         entity: map.entity || createEntityPlugin(),
         imageSelection: map.imageSelection || createImageSelection(),
         normalizeTable: map.normalizeTable || createNormalizeTablePlugin(),
-        lifecycle: map.lifecycle || createLifecyclePlugin(options, contentDiv),
     };
+}
+
+/**
+ * @internal
+ */
+export function createPluginArray(
+    corePlugins: ContentModelCorePlugins,
+    additionalPlugins?: EditorPlugin[]
+): EditorPlugin[] {
+    return [
+        corePlugins.cache,
+        corePlugins.format,
+        corePlugins.copyPaste,
+        corePlugins.domEvent,
+        corePlugins.edit,
+        ...(additionalPlugins ?? []),
+        corePlugins.undo,
+        corePlugins.entity,
+        corePlugins.imageSelection,
+        corePlugins.normalizeTable,
+        corePlugins.lifecycle,
+    ];
 }
 
 /**

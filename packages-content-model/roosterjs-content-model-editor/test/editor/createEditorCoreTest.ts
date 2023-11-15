@@ -6,7 +6,7 @@ import * as DOMEventPlugin from 'roosterjs-content-model-core/lib/corePlugin/DOM
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as EntityPlugin from '../../lib/corePlugins/EntityPlugin';
 import * as ImageSelection from '../../lib/corePlugins/ImageSelection';
-import * as LifecyclePlugin from '../../lib/corePlugins/LifecyclePlugin';
+import * as LifecyclePlugin from 'roosterjs-content-model-core/lib/corePlugin/LifecyclePlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
 import * as UndoPlugin from '../../lib/corePlugins/UndoPlugin';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
@@ -122,6 +122,7 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: false,
             },
+            customData: {},
         });
     });
 
@@ -176,6 +177,7 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: false,
             },
+            customData: {},
         });
     });
 });

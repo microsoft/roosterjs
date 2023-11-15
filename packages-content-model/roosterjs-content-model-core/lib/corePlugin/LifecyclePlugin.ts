@@ -1,12 +1,11 @@
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
-import { getObjectKeys, setColor } from 'roosterjs-editor-dom';
+import { setColor } from 'roosterjs-editor-dom';
+import type { IEditor, PluginWithState, PluginEvent } from 'roosterjs-editor-types';
 import type {
-    IEditor,
+    IStandaloneEditor,
     LifecyclePluginState,
-    PluginWithState,
-    PluginEvent,
-} from 'roosterjs-editor-types';
-import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
 
 const CONTENT_EDITABLE_ATTRIBUTE_NAME = 'contenteditable';
 
@@ -25,7 +24,7 @@ const DARK_MODE_DEFAULT_FORMAT = {
  * Lifecycle plugin handles editor initialization and disposing
  */
 class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
-    private editor: IEditor | null = null;
+    private editor: (IStandaloneEditor & IEditor) | null = null;
     private state: LifecyclePluginState;
     private initialContent: string;
     private initializer: (() => void) | null = null;
@@ -37,7 +36,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * @param options The editor options
      * @param contentDiv The editor content DIV
      */
-    constructor(options: ContentModelEditorOptions, contentDiv: HTMLDivElement) {
+    constructor(options: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
         this.initialContent = options.initialContent || contentDiv.innerHTML || '';
 
         // Make the container editable and set its selection styles
@@ -97,17 +96,12 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         }
 
         this.state = {
-            customData: {},
             defaultFormat,
             isDarkMode: !!options.inDarkMode,
             getDarkColor,
             onExternalContentTransform: null,
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,
-            shadowEditEntities: null,
-            shadowEditSelectionPath: null,
-            shadowEditTableSelectionPath: null,
-            shadowEditImageSelectionPath: null,
         };
     }
 
@@ -123,7 +117,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * @param editor Editor instance
      */
     initialize(editor: IEditor) {
-        this.editor = editor;
+        this.editor = editor as IEditor & IStandaloneEditor;
 
         // Ensure initial content and its format
         this.editor.setContent(this.initialContent, false /*triggerContentChangedEvent*/);
@@ -143,16 +137,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      */
     dispose() {
         this.editor?.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
-
-        getObjectKeys(this.state.customData).forEach(key => {
-            const data = this.state.customData[key];
-
-            if (data && data.disposer) {
-                data.disposer(data.value);
-            }
-
-            delete this.state.customData[key];
-        });
 
         if (this.disposer) {
             this.disposer();
@@ -193,7 +177,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
  * @param contentDiv The editor content DIV element
  */
 export function createLifecyclePlugin(
-    option: ContentModelEditorOptions,
+    option: StandaloneEditorOptions,
     contentDiv: HTMLDivElement
 ): PluginWithState<LifecyclePluginState> {
     return new LifecyclePlugin(option, contentDiv);

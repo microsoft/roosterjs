@@ -1,4 +1,5 @@
 import { createEditorCore } from './createEditorCore';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
 import { paste } from 'roosterjs-content-model-core';
 import {
@@ -206,6 +207,16 @@ export class ContentModelEditor implements IContentModelEditor {
                 core.disposeErrorHandler?.(plugin, e as Error);
             }
         }
+
+        getObjectKeys(core.customData).forEach(key => {
+            const data = core.customData[key];
+
+            if (data && data.disposer) {
+                data.disposer(data.value);
+            }
+
+            delete core.customData[key];
+        });
 
         core.darkColorHandler.reset();
 
@@ -715,7 +726,7 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
         const core = this.getCore();
-        return (core.lifecycle.customData[key] = core.lifecycle.customData[key] || {
+        return (core.customData[key] = core.customData[key] || {
             value: getter ? getter() : undefined,
             disposer,
         }).value as T;
@@ -1015,7 +1026,11 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param feature The feature to check
      */
     isFeatureEnabled(feature: ExperimentalFeatures | CompatibleExperimentalFeatures): boolean {
-        return this.getCore().lifecycle.experimentalFeatures.indexOf(feature) >= 0;
+        return (
+            this.getCore().lifecycle.experimentalFeatures.indexOf(
+                feature as ExperimentalFeatures
+            ) >= 0
+        );
     }
 
     /**
