@@ -1,12 +1,12 @@
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { getObjectKeys, setColor } from 'roosterjs-editor-dom';
 import type {
-    EditorOptions,
     IEditor,
     LifecyclePluginState,
     PluginWithState,
     PluginEvent,
 } from 'roosterjs-editor-types';
+import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 
 const CONTENT_EDITABLE_ATTRIBUTE_NAME = 'contenteditable';
 
@@ -37,7 +37,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * @param options The editor options
      * @param contentDiv The editor content DIV
      */
-    constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
+    constructor(options: ContentModelEditorOptions, contentDiv: HTMLDivElement) {
         this.initialContent = options.initialContent || contentDiv.innerHTML || '';
 
         // Make the container editable and set its selection styles
@@ -101,7 +101,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
             defaultFormat,
             isDarkMode: !!options.inDarkMode,
             getDarkColor,
-            onExternalContentTransform: options.onExternalContentTransform ?? null,
+            onExternalContentTransform: null,
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,
             shadowEditEntities: null,
@@ -193,7 +193,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
  * @param contentDiv The editor content DIV element
  */
 export function createLifecyclePlugin(
-    option: EditorOptions,
+    option: ContentModelEditorOptions,
     contentDiv: HTMLDivElement
 ): PluginWithState<LifecyclePluginState> {
     return new LifecyclePlugin(option, contentDiv);

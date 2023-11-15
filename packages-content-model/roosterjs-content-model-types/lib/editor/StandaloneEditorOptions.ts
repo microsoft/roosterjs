@@ -27,4 +27,10 @@ export interface StandaloneEditorOptions {
      * Default value is the computed style of editor content DIV
      */
     defaultFormat?: DefaultFormat;
+
+    /**
+     * Allowed custom content type when paste besides text/plain, text/html and images
+     * Only text types are supported, and do not add "text/" prefix to the type values
+     */
+    allowedCustomPasteType?: string[];
 }

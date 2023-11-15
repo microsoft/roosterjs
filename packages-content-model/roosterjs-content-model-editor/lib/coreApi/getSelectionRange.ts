@@ -1,17 +1,14 @@
 import { contains, createRange } from 'roosterjs-editor-dom';
-import type { EditorCore, GetSelectionRange } from 'roosterjs-editor-types';
+import type { GetSelectionRange } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Get current or cached selection range
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
  * @returns A Range object of the selection range
  */
-export const getSelectionRange: GetSelectionRange = (
-    core: EditorCore,
-    tryGetFromCache: boolean
-) => {
+export const getSelectionRange: GetSelectionRange = (core, tryGetFromCache: boolean) => {
     let result: Range | null = null;
 
     if (core.lifecycle.shadowEditFragment) {

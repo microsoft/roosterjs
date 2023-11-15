@@ -1,10 +1,9 @@
 import { contains, createRange, safeInstanceOf } from 'roosterjs-editor-dom';
 import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { Select, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
-    EditorCore,
     NodePosition,
     PositionType,
-    Select,
     SelectionPath,
     SelectionRangeEx,
     TableSelection,
@@ -44,7 +43,7 @@ export const select: Select = (core, arg1, arg2, arg3, arg4) => {
 };
 
 function buildRangeEx(
-    core: EditorCore,
+    core: StandaloneEditorCore,
     arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
     arg2?: NodePosition | number | PositionType | TableSelection | null,
     arg3?: Node,
@@ -97,7 +96,7 @@ function buildRangeEx(
     return rangeEx;
 }
 
-function applyRangeEx(core: EditorCore, rangeEx: SelectionRangeEx | null) {
+function applyRangeEx(core: StandaloneEditorCore, rangeEx: SelectionRangeEx | null) {
     switch (rangeEx?.type) {
         case SelectionRangeTypes.TableSelection:
             if (contains(core.contentDiv, rangeEx.table)) {

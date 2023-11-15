@@ -1,5 +1,4 @@
 import { ColorTransformDirection, GetContentMode, PluginEventType } from 'roosterjs-editor-types';
-import type { EditorCore, GetContent } from 'roosterjs-editor-types';
 import {
     createRange,
     getHtmlWithSelectionPath,
@@ -7,19 +6,16 @@ import {
     getTextContent,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compatibleTypes';
+import type { GetContent } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Get current editor content as HTML string
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @param mode specify what kind of HTML content to retrieve
  * @returns HTML string representing current editor content
  */
-export const getContent: GetContent = (
-    core: EditorCore,
-    mode: GetContentMode | CompatibleGetContentMode
-): string => {
+export const getContent: GetContent = (core, mode): string => {
     let content: string | null = '';
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;

@@ -1,4 +1,5 @@
 import { createEditorCore } from './createEditorCore';
+import { paste } from 'roosterjs-content-model-core';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -419,36 +420,17 @@ export class ContentModelEditor implements IContentModelEditor {
         applyCurrentFormat: boolean = false,
         pasteAsImage: boolean = false
     ) {
-        const core = this.getCore();
-        if (!clipboardData) {
-            return;
-        }
-
-        if (clipboardData.snapshotBeforePaste) {
-            // Restore original content before paste a new one
-            this.setContent(clipboardData.snapshotBeforePaste);
-        } else {
-            clipboardData.snapshotBeforePaste = this.getContent(
-                GetContentMode.RawHTMLWithSelection
-            );
-        }
-
-        const range = this.getSelectionRange();
-        const pos = range && Position.getStart(range);
-        const fragment = core.api.createPasteFragment(
-            core,
+        paste(
+            this,
             clipboardData,
-            pos,
-            pasteAsText,
-            applyCurrentFormat,
-            pasteAsImage
+            pasteAsText
+                ? 'asPlainText'
+                : applyCurrentFormat
+                ? 'mergeFormat'
+                : pasteAsImage
+                ? 'asImage'
+                : 'normal'
         );
-        if (fragment) {
-            this.addUndoSnapshot(() => {
-                this.insertNode(fragment);
-                return clipboardData;
-            }, ChangeSource.Paste);
-        }
     }
 
     //#endregion
@@ -1095,7 +1077,7 @@ export class ContentModelEditor implements IContentModelEditor {
     }
 
     /**
-     * @returns the current EditorCore object
+     * @returns the current ContentModelEditorCore object
      * @throws a standard Error if there's no core object
      */
     private getCore(): ContentModelEditorCore {

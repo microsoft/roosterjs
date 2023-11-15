@@ -1,4 +1,12 @@
-import type { CopyPastePluginState } from 'roosterjs-editor-types';
+import type {
+    CopyPastePluginState,
+    DOMEventPluginState,
+    EditPluginState,
+    EntityPluginState,
+    LifecyclePluginState,
+    PendingFormatStatePluginState,
+    UndoPluginState,
+} from 'roosterjs-editor-types';
 import type { ContentModelCachePluginState } from './ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from './ContentModelFormatPluginState';
 
@@ -21,4 +29,12 @@ export interface ContentModelPluginState {
      * Plugin state for ContentModelFormatPlugin
      */
     format: ContentModelFormatPluginState;
+
+    // Plugins copied from legacy editor
+    lifecycle: LifecyclePluginState;
+    domEvent: DOMEventPluginState;
+    entity: EntityPluginState;
+    pendingFormatState: PendingFormatStatePluginState;
+    undo: UndoPluginState;
+    edit: EditPluginState;
 }

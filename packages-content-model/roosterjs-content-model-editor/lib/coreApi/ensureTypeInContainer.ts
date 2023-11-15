@@ -1,5 +1,4 @@
 import { ContentPosition, KnownCreateElementDataIndex, PositionType } from 'roosterjs-editor-types';
-import type { EditorCore, EnsureTypeInContainer, NodePosition } from 'roosterjs-editor-types';
 import {
     applyFormat,
     createElement,
@@ -10,17 +9,14 @@ import {
     Position,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
+import type { EnsureTypeInContainer } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * When typing goes directly under content div, many things can go wrong
  * We fix it by wrapping it with a div and reposition cursor within the div
  */
-export const ensureTypeInContainer: EnsureTypeInContainer = (
-    core: EditorCore,
-    position: NodePosition,
-    keyboardEvent?: KeyboardEvent
-) => {
+export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, keyboardEvent) => {
     const table = findClosestElementAncestor(position.node, core.contentDiv, 'table');
     let td: HTMLElement | null;
 

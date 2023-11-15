@@ -1,5 +1,6 @@
 import { PluginEventType } from 'roosterjs-editor-types';
-import type { EditorCore, EditorPlugin, PluginEvent, TriggerEvent } from 'roosterjs-editor-types';
+import type { TriggerEvent } from 'roosterjs-content-model-types';
+import type { EditorPlugin, PluginEvent } from 'roosterjs-editor-types';
 import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const allowedEventsInShadowEdit: (PluginEventType | CompatiblePluginEventType)[] = [
@@ -12,15 +13,11 @@ const allowedEventsInShadowEdit: (PluginEventType | CompatiblePluginEventType)[]
 /**
  * @internal
  * Trigger a plugin event
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @param pluginEvent The event object to trigger
  * @param broadcast Set to true to skip the shouldHandleEventExclusively check
  */
-export const triggerEvent: TriggerEvent = (
-    core: EditorCore,
-    pluginEvent: PluginEvent,
-    broadcast: boolean
-) => {
+export const triggerEvent: TriggerEvent = (core, pluginEvent, broadcast) => {
     if (
         (!core.lifecycle.shadowEditFragment ||
             allowedEventsInShadowEdit.indexOf(pluginEvent.eventType) >= 0) &&

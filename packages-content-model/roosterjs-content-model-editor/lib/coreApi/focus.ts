@@ -1,13 +1,13 @@
 import { createRange, getFirstLeafNode } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
-import type { EditorCore, Focus } from 'roosterjs-editor-types';
+import type { Focus } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Focus to editor. If there is a cached selection range, use it as current selection
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  */
-export const focus: Focus = (core: EditorCore) => {
+export const focus: Focus = core => {
     if (!core.lifecycle.shadowEditFragment) {
         if (
             !core.api.hasFocus(core) ||

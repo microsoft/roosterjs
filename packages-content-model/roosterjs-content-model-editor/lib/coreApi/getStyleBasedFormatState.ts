@@ -1,17 +1,14 @@
 import { contains, getComputedStyles } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
-import type { EditorCore, GetStyleBasedFormatState } from 'roosterjs-editor-types';
+import type { GetStyleBasedFormatState } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Get style based format state from current selection, including font name/size and colors
- * @param core The EditorCore objects
+ * @param core The StandaloneEditorCore objects
  * @param node The node to get style from
  */
-export const getStyleBasedFormatState: GetStyleBasedFormatState = (
-    core: EditorCore,
-    node: Node | null
-) => {
+export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, node) => {
     if (!node) {
         return {};
     }

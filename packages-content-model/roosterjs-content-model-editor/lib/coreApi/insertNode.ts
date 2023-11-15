@@ -1,10 +1,4 @@
-import type {
-    BlockElement,
-    EditorCore,
-    InsertNode,
-    InsertOption,
-    NodePosition,
-} from 'roosterjs-editor-types';
+import type { BlockElement, InsertOption, NodePosition } from 'roosterjs-editor-types';
 import {
     ContentPosition,
     ColorTransformDirection,
@@ -27,9 +21,10 @@ import {
     splitTextNode,
     splitParentNode,
 } from 'roosterjs-editor-dom';
+import type { InsertNode, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 function getInitialRange(
-    core: EditorCore,
+    core: StandaloneEditorCore,
     option: InsertOption
 ): { range: Range | null; rangeToRestore: Range | null } {
     // Selection start replaces based on the current selection.
@@ -51,11 +46,11 @@ function getInitialRange(
 /**
  * @internal
  * Insert a DOM node into editor content
- * @param core The EditorCore object. No op if null.
+ * @param core The StandaloneEditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
 export const insertNode: InsertNode = (
-    core: EditorCore,
+    core: StandaloneEditorCore,
     node: Node,
     option: InsertOption | null
 ) => {
@@ -199,7 +194,11 @@ export const insertNode: InsertNode = (
     return true;
 };
 
-function adjustInsertPositionRegionRoot(core: EditorCore, range: Range, position: NodePosition) {
+function adjustInsertPositionRegionRoot(
+    core: StandaloneEditorCore,
+    range: Range,
+    position: NodePosition
+) {
     const region = getRegionsFromRange(core.contentDiv, range, RegionType.Table)[0];
     let node: Node | null = position.node;
 
@@ -223,7 +222,11 @@ function adjustInsertPositionRegionRoot(core: EditorCore, range: Range, position
     return position;
 }
 
-function adjustInsertPositionNewLine(blockElement: BlockElement, core: EditorCore, pos: Position) {
+function adjustInsertPositionNewLine(
+    blockElement: BlockElement,
+    core: StandaloneEditorCore,
+    pos: Position
+) {
     let tempPos = new Position(blockElement.getEndNode(), PositionType.After);
     if (safeInstanceOf(tempPos.node, 'HTMLTableRowElement')) {
         const div = core.contentDiv.ownerDocument.createElement('div');

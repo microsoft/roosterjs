@@ -1,6 +1,5 @@
 import { addUndoSnapshot } from './addUndoSnapshot';
 import { attachDomEvent } from './attachDomEvent';
-import { createPasteFragment } from './createPasteFragment';
 import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { focus } from './focus';
 import { getContent } from './getContent';
@@ -19,16 +18,15 @@ import { setContent } from './setContent';
 import { standaloneCoreApiMap } from 'roosterjs-content-model-core';
 import { transformColor } from './transformColor';
 import { triggerEvent } from './triggerEvent';
-import type { ContentModelCoreApiMap } from '../publicTypes/ContentModelEditorCore';
+import type { StandaloneCoreApiMap } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const coreApiMap: ContentModelCoreApiMap = {
+export const coreApiMap: StandaloneCoreApiMap = {
     ...standaloneCoreApiMap,
     attachDomEvent,
     addUndoSnapshot,
-    createPasteFragment,
     ensureTypeInContainer,
     focus,
     getContent,

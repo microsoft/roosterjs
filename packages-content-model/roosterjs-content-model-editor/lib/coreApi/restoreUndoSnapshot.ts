@@ -1,6 +1,6 @@
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { getEntityFromElement, getEntitySelector, queryElements } from 'roosterjs-editor-dom';
-import type { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
+import type { RestoreUndoSnapshot } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -8,7 +8,7 @@ import type { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
  * @param core The editor core object
  * @param step Steps to move, can be 0, positive or negative
  */
-export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step: number) => {
+export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, step) => {
     if (core.undo.hasNewContent && step < 0) {
         core.api.addUndoSnapshot(
             core,

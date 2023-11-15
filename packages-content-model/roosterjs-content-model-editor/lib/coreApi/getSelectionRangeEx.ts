@@ -1,14 +1,15 @@
 import { contains, createRange, findClosestElementAncestor } from 'roosterjs-editor-dom';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
-import type { EditorCore, GetSelectionRangeEx, SelectionRangeEx } from 'roosterjs-editor-types';
+import type { GetSelectionRangeEx } from 'roosterjs-content-model-types';
+import type { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * @internal
  * Get current or cached selection range
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @returns A Range object of the selection range
  */
-export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
+export const getSelectionRangeEx: GetSelectionRangeEx = core => {
     const result: SelectionRangeEx | null = null;
     if (core.lifecycle.shadowEditFragment) {
         const {

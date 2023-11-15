@@ -1,6 +1,6 @@
 import type { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from '../pluginState/ContentModelFormatPluginState';
-import type { CopyPastePluginState, EditorPlugin, PluginWithState } from 'roosterjs-editor-types';
+import type { CopyPastePluginState, PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * Core plugins for standalone editor
@@ -15,11 +15,6 @@ export interface StandaloneEditorCorePlugins {
      * ContentModelFormat plugins helps editor to do formatting on top of content model.
      */
     readonly format: PluginWithState<ContentModelFormatPluginState>;
-
-    /**
-     * TypeInContainer plugin makes sure user is always type under a container element under editor DIV
-     */
-    readonly typeInContainer: EditorPlugin;
 
     /**
      * Copy and paste plugin for handling onCopy and onPaste event

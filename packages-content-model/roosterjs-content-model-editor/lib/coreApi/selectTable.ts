@@ -11,7 +11,8 @@ import {
     toArray,
     VTable,
 } from 'roosterjs-editor-dom';
-import type { EditorCore, TableSelection, SelectTable, Coordinates } from 'roosterjs-editor-types';
+import type { TableSelection, Coordinates } from 'roosterjs-editor-types';
+import type { SelectTable, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 const TABLE_ID = 'tableSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
@@ -23,17 +24,13 @@ const MAX_RULE_SELECTOR_LENGTH = 9000;
 /**
  * @internal
  * Select a table and save data of the selected range
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @param table table to select
  * @param coordinates first and last cell of the selection, if this parameter is null, instead of
  * selecting, will unselect the table.
  * @returns true if successful
  */
-export const selectTable: SelectTable = (
-    core: EditorCore,
-    table: HTMLTableElement | null,
-    coordinates?: TableSelection
-) => {
+export const selectTable: SelectTable = (core, table, coordinates) => {
     unselect(core);
 
     if (areValidCoordinates(coordinates) && table) {
@@ -194,7 +191,7 @@ function handleTableSelected(
 }
 
 function select(
-    core: EditorCore,
+    core: StandaloneEditorCore,
     table: HTMLTableElement,
     coordinates: TableSelection
 ): { ranges: Range[]; isWholeTableSelected: boolean } {
@@ -211,7 +208,7 @@ function select(
     return { ranges, isWholeTableSelected };
 }
 
-const unselect = (core: EditorCore) => {
+const unselect = (core: StandaloneEditorCore) => {
     const doc = core.contentDiv.ownerDocument;
     removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
 };

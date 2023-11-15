@@ -16,13 +16,17 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-content-model-dom';
-import type { DOMSelection, IStandaloneEditor, OnNodeCreated } from 'roosterjs-content-model-types';
+import type {
+    DOMSelection,
+    IStandaloneEditor,
+    OnNodeCreated,
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
 import type {
     CopyPastePluginState,
     IEditor,
     PluginWithState,
     ClipboardData,
-    EditorOptions,
 } from 'roosterjs-editor-types';
 
 /**
@@ -37,7 +41,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
      * Construct a new instance of CopyPastePlugin
      * @param option The editor option
      */
-    constructor(option: EditorOptions) {
+    constructor(option: StandaloneEditorOptions) {
         this.state = {
             allowedCustomPasteType: option.allowedCustomPasteType || [],
         };
@@ -298,7 +302,7 @@ export const onNodeCreated: OnNodeCreated = (_, node): void => {
  * @param option The editor option
  */
 export function createContentModelCopyPastePlugin(
-    option: EditorOptions
+    option: StandaloneEditorOptions
 ): PluginWithState<CopyPastePluginState> {
     return new ContentModelCopyPastePlugin(option);
 }
