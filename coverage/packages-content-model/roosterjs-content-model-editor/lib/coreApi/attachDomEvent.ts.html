@@ -117,12 +117,7 @@
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -139,17 +134,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">64x</span>
+<span class="cline-any cline-yes">480x</span>
+<span class="cline-any cline-yes">480x</span>
+<span class="cline-any cline-yes">480x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">74x</span>
-<span class="cline-any cline-yes">555x</span>
-<span class="cline-any cline-yes">555x</span>
-<span class="cline-any cline-yes">555x</span>
-<span class="cline-any cline-yes">51x</span>
-<span class="cline-any cline-yes">51x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,51 +153,47 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">555x</span>
+<span class="cline-any cline-yes">480x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">555x</span>
-<span class="cline-any cline-yes">270x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">270x</span>
+<span class="cline-any cline-yes">480x</span>
+<span class="cline-any cline-yes">255x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">555x</span>
+<span class="cline-any cline-yes">255x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">480x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">555x</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-yes">518x</span>
-<span class="cline-any cline-yes">370x</span>
-<span class="cline-any cline-yes">148x</span>
-<span class="cline-any cline-yes">148x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">555x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">480x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">448x</span>
+<span class="cline-any cline-yes">320x</span>
+<span class="cline-any cline-yes">128x</span>
+<span class="cline-any cline-yes">128x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">480x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getObjectKeys } from 'roosterjs-editor-dom';
+import type { AttachDomEvent } from 'roosterjs-content-model-types';
 import type {
-    AttachDomEvent,
     DOMEventHandler,
     DOMEventHandlerObject,
-    EditorCore,
     PluginDomEvent,
 } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * @internal
  * Attach a DOM event to the editor content DIV
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @param eventName The DOM event name
  * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
  * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
  */
-export const attachDomEvent: AttachDomEvent = (
-    core: EditorCore,
-    eventMap: Record&lt;string, DOMEventHandler&gt;
-) =&gt; {
+export const attachDomEvent: AttachDomEvent = (core, eventMap) =&gt; {
     const disposers = getObjectKeys(eventMap || <span class="branch-1 cbranch-no" title="branch not covered" >{})</span>.map(key =&gt; {
         const { pluginEventType, beforeDispatch } = extractHandler(eventMap[key]);
         const eventName = key as keyof HTMLElementEventMap;
@@ -256,7 +244,7 @@ function extractHandler(handlerObj: DOMEventHandler): DOMEventHandlerObject {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Nov 15 2023 14:21:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Nov 15 2023 17:08:59 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

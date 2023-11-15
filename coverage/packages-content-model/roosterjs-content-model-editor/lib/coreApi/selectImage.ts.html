@@ -122,7 +122,8 @@
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -133,10 +134,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -145,11 +147,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -167,25 +169,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import addUniqueId from './utils/addUniqueId';
 import { PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
@@ -196,7 +198,8 @@ import {
     removeImportantStyleRule,
     setGlobalCssStyles,
 } from 'roosterjs-editor-dom';
-import type { EditorCore, ImageSelectionRange, SelectImage } from 'roosterjs-editor-types';
+import type { ImageSelectionRange } from 'roosterjs-editor-types';
+import type { SelectImage, StandaloneEditorCore } from 'roosterjs-content-model-types';
 &nbsp;
 const IMAGE_ID = 'imageSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
@@ -209,7 +212,7 @@ const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
  * @param image Image to select
  * @returns Selected image information
  */
-export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageElement | null) =&gt; {
+export const selectImage: SelectImage = (core, image: HTMLImageElement | null) =&gt; {
     unselect(core);
 &nbsp;
     let selection: ImageSelectionRange | null = null;
@@ -235,20 +238,20 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
     return selection;
 };
 &nbsp;
-const select = <span class="fstat-no" title="function not covered" >(c</span>ore: EditorCore, image: HTMLImageElement) =&gt; {
+const select = <span class="fstat-no" title="function not covered" >(c</span>ore: StandaloneEditorCore, image: HTMLImageElement) =&gt; {
 <span class="cstat-no" title="statement not covered" >    removeImportantStyleRule(image, ['border', 'margin']);</span>
     const borderCSS = <span class="cstat-no" title="statement not covered" >buildBorderCSS(core, image.id);</span>
 <span class="cstat-no" title="statement not covered" >    setGlobalCssStyles(core.contentDiv.ownerDocument, borderCSS, STYLE_ID + core.contentDiv.id);</span>
 };
 &nbsp;
-const buildBorderCSS = <span class="fstat-no" title="function not covered" >(c</span>ore: EditorCore, imageId: string): string =&gt; {
+const buildBorderCSS = <span class="fstat-no" title="function not covered" >(c</span>ore: StandaloneEditorCore, imageId: string): string =&gt; {
     const divId = <span class="cstat-no" title="statement not covered" >core.contentDiv.id;</span>
     const color = <span class="cstat-no" title="statement not covered" >core.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return `#${divId} #${imageId} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;</span>
 };
 &nbsp;
-const unselect = (core: EditorCore) =&gt; {
+const unselect = (core: StandaloneEditorCore) =&gt; {
     const doc = core.contentDiv.ownerDocument;
     removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
 };
@@ -259,7 +262,7 @@ const unselect = (core: EditorCore) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Nov 15 2023 14:21:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Nov 15 2023 17:08:59 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

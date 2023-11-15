@@ -322,12 +322,10 @@
 <a name='L263'></a><a href='#L263'>263</a>
 <a name='L264'></a><a href='#L264'>264</a>
 <a name='L265'></a><a href='#L265'>265</a>
-<a name='L266'></a><a href='#L266'>266</a>
-<a name='L267'></a><a href='#L267'>267</a>
-<a name='L268'></a><a href='#L268'>268</a>
-<a name='L269'></a><a href='#L269'>269</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L266'></a><a href='#L266'>266</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -357,13 +355,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -391,7 +385,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -539,8 +533,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -573,7 +567,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -582,7 +576,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -606,7 +600,8 @@ import {
     toArray,
     VTable,
 } from 'roosterjs-editor-dom';
-import type { EditorCore, TableSelection, SelectTable, Coordinates } from 'roosterjs-editor-types';
+import type { TableSelection, Coordinates } from 'roosterjs-editor-types';
+import type { SelectTable, StandaloneEditorCore } from 'roosterjs-content-model-types';
 &nbsp;
 const TABLE_ID = 'tableSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
@@ -618,17 +613,13 @@ const MAX_RULE_SELECTOR_LENGTH = 9000;
 /**
  * @internal
  * Select a table and save data of the selected range
- * @param core The EditorCore object
+ * @param core The StandaloneEditorCore object
  * @param table table to select
  * @param coordinates first and last cell of the selection, if this parameter is null, instead of
  * selecting, will unselect the table.
  * @returns true if successful
  */
-export const selectTable: SelectTable = (
-    core: EditorCore,
-    table: HTMLTableElement | null,
-    coordinates?: TableSelection
-) =&gt; {
+export const selectTable: SelectTable = (core, table, coordinates) =&gt; {
     unselect(core);
 &nbsp;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (areValidCoordinates(coordinates) &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >table)</span> {
@@ -789,7 +780,7 @@ function <span class="fstat-no" title="function not covered" >handleTableSelecte
 }
 &nbsp;
 function <span class="fstat-no" title="function not covered" >select(</span>
-    core: EditorCore,
+    core: StandaloneEditorCore,
     table: HTMLTableElement,
     coordinates: TableSelection
 ): { ranges: Range[]; isWholeTableSelected: boolean } {
@@ -806,7 +797,7 @@ function <span class="fstat-no" title="function not covered" >select(</span>
 <span class="cstat-no" title="statement not covered" >    return { ranges, isWholeTableSelected };</span>
 }
 &nbsp;
-const unselect = (core: EditorCore) =&gt; {
+const unselect = (core: StandaloneEditorCore) =&gt; {
     const doc = core.contentDiv.ownerDocument;
     removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
 };
@@ -868,7 +859,7 @@ function <span class="fstat-no" title="function not covered" >isMergedCell(</spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Nov 15 2023 14:21:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Nov 15 2023 17:08:59 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
