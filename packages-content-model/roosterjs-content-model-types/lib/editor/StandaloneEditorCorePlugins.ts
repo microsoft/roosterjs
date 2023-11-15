@@ -1,3 +1,4 @@
+import type { DOMEventPluginState } from '../pluginState/DOMEventPluginState';
 import type { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from '../pluginState/ContentModelFormatPluginState';
 import type { CopyPastePluginState, PluginWithState } from 'roosterjs-editor-types';
@@ -20,4 +21,9 @@ export interface StandaloneEditorCorePlugins {
      * Copy and paste plugin for handling onCopy and onPaste event
      */
     readonly copyPaste: PluginWithState<CopyPastePluginState>;
+
+    /**
+     * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
+     */
+    readonly domEvent: PluginWithState<DOMEventPluginState>;
 }

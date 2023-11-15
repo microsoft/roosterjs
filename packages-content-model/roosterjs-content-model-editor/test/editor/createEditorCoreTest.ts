@@ -2,12 +2,11 @@ import * as ContentModelCachePlugin from 'roosterjs-content-model-core/lib/coreP
 import * as ContentModelCopyPastePlugin from 'roosterjs-content-model-core/lib/corePlugin/ContentModelCopyPastePlugin';
 import * as ContentModelFormatPlugin from 'roosterjs-content-model-core/lib/corePlugin/ContentModelFormatPlugin';
 import * as createStandaloneEditorDefaultSettings from 'roosterjs-content-model-core/lib/editor/createStandaloneEditorDefaultSettings';
-import * as DOMEventPlugin from '../../lib/corePlugins/DOMEventPlugin';
+import * as DOMEventPlugin from 'roosterjs-content-model-core/lib/corePlugin/DOMEventPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as EntityPlugin from '../../lib/corePlugins/EntityPlugin';
 import * as ImageSelection from '../../lib/corePlugins/ImageSelection';
 import * as LifecyclePlugin from '../../lib/corePlugins/LifecyclePlugin';
-import * as MouseUpPlugin from '../../lib/corePlugins/MouseUpPlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
 import * as UndoPlugin from '../../lib/corePlugins/UndoPlugin';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
@@ -40,7 +39,6 @@ const mockedUndoPlugin = {
 const mockedDOMEventPlugin = {
     getState: () => mockedDomEventState,
 } as any;
-const mockedMouseUpPlugin = 'MouseUpPlugin' as any;
 const mockedEntityPlugin = {
     getState: () => mockedEntityState,
 } as any;
@@ -73,7 +71,6 @@ describe('createEditorCore', () => {
         spyOn(EditPlugin, 'createEditPlugin').and.returnValue(mockedEditPlugin);
         spyOn(UndoPlugin, 'createUndoPlugin').and.returnValue(mockedUndoPlugin);
         spyOn(DOMEventPlugin, 'createDOMEventPlugin').and.returnValue(mockedDOMEventPlugin);
-        spyOn(MouseUpPlugin, 'createMouseUpPlugin').and.returnValue(mockedMouseUpPlugin);
         spyOn(EntityPlugin, 'createEntityPlugin').and.returnValue(mockedEntityPlugin);
         spyOn(ImageSelection, 'createImageSelection').and.returnValue(mockedImageSelection);
         spyOn(NormalizeTablePlugin, 'createNormalizeTablePlugin').and.returnValue(
@@ -96,10 +93,9 @@ describe('createEditorCore', () => {
                 mockedCachePlugin,
                 mockedFormatPlugin,
                 mockedCopyPastePlugin,
+                mockedDOMEventPlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
-                mockedDOMEventPlugin,
-                mockedMouseUpPlugin,
                 mockedEntityPlugin,
                 mockedImageSelection,
                 mockedNormalizeTablePlugin,
@@ -124,6 +120,7 @@ describe('createEditorCore', () => {
             environment: {
                 isMac: false,
                 isAndroid: false,
+                isSafari: false,
             },
         });
     });
@@ -150,10 +147,9 @@ describe('createEditorCore', () => {
                 mockedCachePlugin,
                 mockedFormatPlugin,
                 mockedCopyPastePlugin,
+                mockedDOMEventPlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
-                mockedDOMEventPlugin,
-                mockedMouseUpPlugin,
                 mockedEntityPlugin,
                 mockedImageSelection,
                 mockedNormalizeTablePlugin,
@@ -178,6 +174,7 @@ describe('createEditorCore', () => {
             environment: {
                 isMac: false,
                 isAndroid: false,
+                isSafari: false,
             },
         });
     });
