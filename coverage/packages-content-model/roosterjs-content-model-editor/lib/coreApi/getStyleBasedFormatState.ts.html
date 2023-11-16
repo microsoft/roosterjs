@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.04% </span>
+                <span class="strong">15.79% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/23</span>
+                <span class='fraction'>3/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/37</span>
+                <span class='fraction'>0/27</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.09% </span>
+                <span class="strong">11.11% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/22</span>
+                <span class='fraction'>2/18</span>
             </div>
         
             
@@ -138,19 +138,7 @@
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a>
-<a name='L84'></a><a href='#L84'>84</a>
-<a name='L85'></a><a href='#L85'>85</a>
-<a name='L86'></a><a href='#L86'>86</a>
-<a name='L87'></a><a href='#L87'>87</a>
-<a name='L88'></a><a href='#L88'>88</a>
-<a name='L89'></a><a href='#L89'>89</a>
-<a name='L90'></a><a href='#L90'>90</a>
-<a name='L91'></a><a href='#L91'>91</a>
-<a name='L92'></a><a href='#L92'>92</a>
-<a name='L93'></a><a href='#L93'>93</a>
-<a name='L94'></a><a href='#L94'>94</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -163,18 +151,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -258,18 +234,6 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = <span class="f
 <span class="cstat-no" title="statement not covered" >        return {};</span>
     }
 &nbsp;
-    let override: string[] = <span class="cstat-no" title="statement not covered" >[];</span>
-    const pendableFormatSpan = <span class="cstat-no" title="statement not covered" >core.pendingFormatState.pendableFormatSpan;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    if (pendableFormatSpan) {</span>
-<span class="cstat-no" title="statement not covered" >        override = [</span>
-            pendableFormatSpan.style.fontFamily,
-            pendableFormatSpan.style.fontSize,
-            pendableFormatSpan.style.color,
-            pendableFormatSpan.style.backgroundColor,
-        ];
-    }
-&nbsp;
     const styles = <span class="cstat-no" title="statement not covered" >node</span>
         ? getComputedStyles(node, [
               'font-family',
@@ -308,12 +272,12 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = <span class="f
 <span class="cstat-no" title="statement not covered" >        styleBackColor = styleBackColor || styles[3];</span>
     }
 &nbsp;
-    const textColor = <span class="cstat-no" title="statement not covered" >darkColorHandler.parseColorValue(override[2] || styleTextColor);</span>
-    const backColor = <span class="cstat-no" title="statement not covered" >darkColorHandler.parseColorValue(override[3] || styleBackColor);</span>
+    const textColor = <span class="cstat-no" title="statement not covered" >darkColorHandler.parseColorValue(styleTextColor);</span>
+    const backColor = <span class="cstat-no" title="statement not covered" >darkColorHandler.parseColorValue(styleBackColor);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return {</span>
-        fontName: override[0] || styles[0],
-        fontSize: override[1] || styles[1],
+        fontName: styles[0],
+        fontSize: styles[1],
         textColor: textColor.lightModeColor,
         backgroundColor: backColor.lightModeColor,
         textColors: textColor.darkModeColor
@@ -343,7 +307,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = <span class="f
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Nov 15 2023 17:08:59 GMT+0000 (Coordinated Universal Time)
+                at Thu Nov 16 2023 05:14:29 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
