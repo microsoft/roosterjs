@@ -9,7 +9,10 @@ import type {
 const IndentStepInPixel = 40;
 
 /**
- * @internal
+ * Sent indentation of a Content Model
+ * @param model The content model to set
+ * @param indentation Whether indent or outdent
+ * @param length Margin for indentation in pixel @default 40
  */
 export function setModelIndentation(
     model: ContentModelDocument,

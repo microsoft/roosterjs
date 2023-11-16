@@ -22,12 +22,10 @@ import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
  * Do keyboard event handling for DELETE/BACKSPACE key
  * @param editor The Content Model Editor
  * @param rawEvent DOM keyboard event
- * @returns True if the event is handled with this function, otherwise false
  */
-export function keyboardDelete(editor: IContentModelEditor, rawEvent: KeyboardEvent): boolean {
+export function keyboardDelete(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
     const range = selection?.type == 'range' ? selection.range : null;
-    let isDeleted = false;
 
     if (shouldDeleteWithContentModel(range, rawEvent)) {
         editor.formatContentModel(
@@ -37,8 +35,6 @@ export function keyboardDelete(editor: IContentModelEditor, rawEvent: KeyboardEv
                     getDeleteSteps(rawEvent, !!editor.getEnvironment().isMac),
                     context
                 ).deleteResult;
-
-                isDeleted = result != 'notDeleted';
 
                 return handleKeyboardEventResult(editor, model, rawEvent, result, context);
             },
@@ -52,8 +48,6 @@ export function keyboardDelete(editor: IContentModelEditor, rawEvent: KeyboardEv
 
         return true;
     }
-
-    return isDeleted;
 }
 
 function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelectionStep | null)[] {
