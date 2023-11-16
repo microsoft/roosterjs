@@ -9,13 +9,11 @@ import * as ImageSelection from '../../lib/corePlugins/ImageSelection';
 import * as LifecyclePlugin from '../../lib/corePlugins/LifecyclePlugin';
 import * as MouseUpPlugin from '../../lib/corePlugins/MouseUpPlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
-import * as PendingFormatStatePlugin from '../../lib/corePlugins/PendingFormatStatePlugin';
 import * as UndoPlugin from '../../lib/corePlugins/UndoPlugin';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { createEditorCore, defaultTrustHtmlHandler } from '../../lib/editor/createEditorCore';
 
 const mockedDomEventState = 'DOMEVENTSTATE' as any;
-const mockedPendingFormatState = 'PENDINGFORMATSTATE' as any;
 const mockedEditState = 'EDITSTATE' as any;
 const mockedLifecycleState = 'LIFECYCLESTATE' as any;
 const mockedUndoState = 'UNDOSTATE' as any;
@@ -36,9 +34,6 @@ const mockedCopyPastePlugin = {
 const mockedEditPlugin = {
     getState: () => mockedEditState,
 } as any;
-const mockedPendingFormatStatePlugin = {
-    getState: () => mockedPendingFormatState,
-} as any;
 const mockedUndoPlugin = {
     getState: () => mockedUndoState,
 } as any;
@@ -58,8 +53,6 @@ const mockedDefaultSettings = {
     settings: 'SETTINGS',
 } as any;
 
-// const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
-
 describe('createEditorCore', () => {
     let contentDiv: any;
 
@@ -78,9 +71,6 @@ describe('createEditorCore', () => {
             mockedCopyPastePlugin
         );
         spyOn(EditPlugin, 'createEditPlugin').and.returnValue(mockedEditPlugin);
-        spyOn(PendingFormatStatePlugin, 'createPendingFormatStatePlugin').and.returnValue(
-            mockedPendingFormatStatePlugin
-        );
         spyOn(UndoPlugin, 'createUndoPlugin').and.returnValue(mockedUndoPlugin);
         spyOn(DOMEventPlugin, 'createDOMEventPlugin').and.returnValue(mockedDOMEventPlugin);
         spyOn(MouseUpPlugin, 'createMouseUpPlugin').and.returnValue(mockedMouseUpPlugin);
@@ -107,7 +97,6 @@ describe('createEditorCore', () => {
                 mockedFormatPlugin,
                 mockedCopyPastePlugin,
                 mockedEditPlugin,
-                mockedPendingFormatStatePlugin,
                 mockedUndoPlugin,
                 mockedDOMEventPlugin,
                 mockedMouseUpPlugin,
@@ -117,7 +106,6 @@ describe('createEditorCore', () => {
                 mockedLifecyclePlugin,
             ],
             domEvent: mockedDomEventState,
-            pendingFormatState: mockedPendingFormatState,
             edit: mockedEditState,
             lifecycle: mockedLifecycleState,
             undo: mockedUndoState,
@@ -163,7 +151,6 @@ describe('createEditorCore', () => {
                 mockedFormatPlugin,
                 mockedCopyPastePlugin,
                 mockedEditPlugin,
-                mockedPendingFormatStatePlugin,
                 mockedUndoPlugin,
                 mockedDOMEventPlugin,
                 mockedMouseUpPlugin,
@@ -173,7 +160,6 @@ describe('createEditorCore', () => {
                 mockedLifecyclePlugin,
             ],
             domEvent: mockedDomEventState,
-            pendingFormatState: mockedPendingFormatState,
             edit: mockedEditState,
             lifecycle: mockedLifecycleState,
             undo: mockedUndoState,

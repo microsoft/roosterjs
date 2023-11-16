@@ -13,7 +13,6 @@ import type {
     ImageSelectionRange,
     InsertOption,
     NodePosition,
-    PendableFormatState,
     PluginEvent,
     PositionType,
     Rect,
@@ -269,17 +268,6 @@ export type InsertNode = (
 ) => boolean;
 
 /**
- * Get the pendable format such as underline and bold
- * @param core The StandaloneEditorCore object
- * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
- * @return The pending format state of editor.
- */
-export type GetPendableFormatState = (
-    core: StandaloneEditorCore,
-    forceGetStateFromDOM: boolean
-) => PendableFormatState;
-
-/**
  * Attach a DOM event to the editor content DIV
  * @param core The StandaloneEditorCore object
  * @param eventMap A map from event name to its handler
@@ -510,14 +498,6 @@ export interface UnportedCoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
-
-    /**
-     * Get the pendable format such as underline and bold
-     * @param core The StandaloneEditorCore object
-     *@param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
-     * @return The pending format state of editor.
-     */
-    getPendableFormatState: GetPendableFormatState;
 
     /**
      * Attach a DOM event to the editor content DIV

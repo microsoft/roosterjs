@@ -13,18 +13,6 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, node) =
         return {};
     }
 
-    let override: string[] = [];
-    const pendableFormatSpan = core.pendingFormatState.pendableFormatSpan;
-
-    if (pendableFormatSpan) {
-        override = [
-            pendableFormatSpan.style.fontFamily,
-            pendableFormatSpan.style.fontSize,
-            pendableFormatSpan.style.color,
-            pendableFormatSpan.style.backgroundColor,
-        ];
-    }
-
     const styles = node
         ? getComputedStyles(node, [
               'font-family',
@@ -63,12 +51,12 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, node) =
         styleBackColor = styleBackColor || styles[3];
     }
 
-    const textColor = darkColorHandler.parseColorValue(override[2] || styleTextColor);
-    const backColor = darkColorHandler.parseColorValue(override[3] || styleBackColor);
+    const textColor = darkColorHandler.parseColorValue(styleTextColor);
+    const backColor = darkColorHandler.parseColorValue(styleBackColor);
 
     return {
-        fontName: override[0] || styles[0],
-        fontSize: override[1] || styles[1],
+        fontName: styles[0],
+        fontSize: styles[1],
         textColor: textColor.lightModeColor,
         backgroundColor: backColor.lightModeColor,
         textColors: textColor.darkModeColor
