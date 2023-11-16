@@ -17,6 +17,7 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import {
     ContentModelCode,
     ContentModelLink,
+    ContentModelListItemFormat,
     ContentModelListLevel,
     ContentModelSegmentFormat,
     ContentModelTableCellFormat,
@@ -395,8 +396,9 @@ describe('Creators', () => {
 
     it('createListItem with format and levels', () => {
         const format: ContentModelSegmentFormat = { fontSize: 'a' };
+        const listFormat: ContentModelListItemFormat = { direction: 'rtl' };
         const levels: ContentModelListLevel[] = [{ listType: 'OL', dataset: {}, format: {} }];
-        const listItem = createListItem(levels, format);
+        const listItem = createListItem(levels, format, listFormat);
 
         expect(listItem).toEqual({
             blockType: 'BlockGroup',
@@ -408,7 +410,9 @@ describe('Creators', () => {
                 isSelected: true,
                 format: { fontSize: 'a' },
             },
-            format: {},
+            format: {
+                direction: 'rtl',
+            },
         });
 
         format.fontSize = 'b';
@@ -426,7 +430,9 @@ describe('Creators', () => {
                 isSelected: true,
                 format: { fontSize: 'a' },
             },
-            format: {},
+            format: {
+                direction: 'rtl',
+            },
         });
     });
 

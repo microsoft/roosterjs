@@ -3,7 +3,7 @@ import type {
     ContentModelDocument,
     DeleteSelectionContext,
     DeleteSelectionResult,
-    DeleteSelectionStep,
+    EditingStep,
     FormatWithContentModelContext,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
@@ -17,24 +17,28 @@ import type {
  */
 export function deleteSelection(
     model: ContentModelDocument,
-    additionalSteps: (DeleteSelectionStep | null)[] = [],
+    additionalSteps: (EditingStep | null)[] = [],
     formatContext?: FormatWithContentModelContext
 ): DeleteSelectionResult {
     const context = deleteExpandedSelection(model, formatContext);
 
     additionalSteps.forEach(step => {
-        if (
-            step &&
-            isValidDeleteSelectionContext(context) &&
-            context.deleteResult == 'notDeleted'
-        ) {
-            step(context);
+        if (step && isValidDeleteSelectionContext(context) && shouldRun(step, context)) {
+            const stepFunc = typeof step == 'function' ? step : step.callback;
+
+            stepFunc(context);
         }
     });
 
     mergeParagraphAfterDelete(context);
 
     return context;
+}
+
+function shouldRun(step: EditingStep, context: ValidDeleteSelectionContext) {
+    return typeof step == 'function'
+        ? context.deleteResult == 'notDeleted'
+        : step.shouldRun(context);
 }
 
 function isValidDeleteSelectionContext(

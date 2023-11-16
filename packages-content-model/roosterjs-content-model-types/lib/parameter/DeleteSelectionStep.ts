@@ -20,7 +20,7 @@ export interface DeleteSelectionResult {
 }
 
 /**
- * A context object used by DeleteSelectionStep
+ * A context object used by EditingStep
  */
 export interface DeleteSelectionContext extends DeleteSelectionResult {
     /**
@@ -50,7 +50,18 @@ export interface ValidDeleteSelectionContext extends DeleteSelectionContext {
 }
 
 /**
- * Represents a step function for deleteSelection API
+ * Represents an editing step function for deleteSelection API
  * @param context The valid delete selection context object returned from previous step
  */
-export type DeleteSelectionStep = (context: ValidDeleteSelectionContext) => void;
+export type EditingStepFunc = (context: ValidDeleteSelectionContext) => void;
+
+/**
+ * Represents an editing step for deleteSelection API.
+ * It can be a simple callback function or a combination of callback and a checker function too see if we should run this step
+ */
+export type EditingStep =
+    | EditingStepFunc
+    | {
+          shouldRun: (context: ValidDeleteSelectionContext) => boolean;
+          callback: EditingStepFunc;
+      };

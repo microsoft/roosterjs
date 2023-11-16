@@ -1,4 +1,5 @@
 import { keyboardDelete } from './keyboardDelete';
+import { keyboardEnter } from './keyboardEnter';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type {
@@ -71,6 +72,10 @@ export class ContentModelEditPlugin implements EditorPlugin {
                     // Use our API to handle BACKSPACE/DELETE key.
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     keyboardDelete(editor, rawEvent);
+                    break;
+
+                case 'Enter':
+                    keyboardEnter(editor, rawEvent);
                     break;
             }
         }

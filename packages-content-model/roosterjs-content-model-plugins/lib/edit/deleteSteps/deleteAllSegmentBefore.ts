@@ -1,10 +1,10 @@
 import { deleteSegment } from 'roosterjs-content-model-core';
-import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
+import type { EditingStep } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const deleteAllSegmentBefore: DeleteSelectionStep = context => {
+export const deleteAllSegmentBefore: EditingStep = context => {
     const { paragraph, marker } = context.insertPoint;
     const index = paragraph.segments.indexOf(marker);
 

@@ -2,9 +2,9 @@ import { deleteBlock, deleteSegment } from 'roosterjs-content-model-core';
 import { getLeafSiblingBlock } from '../utils/getLeafSiblingBlock';
 import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 import type { BlockAndPath } from '../utils/getLeafSiblingBlock';
-import type { ContentModelSegment, DeleteSelectionStep } from 'roosterjs-content-model-types';
+import type { ContentModelSegment, EditingStep } from 'roosterjs-content-model-types';
 
-function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
+function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): EditingStep {
     return context => {
         const isForward = direction == 'forward';
         const { paragraph, marker, path, tableContext } = context.insertPoint;

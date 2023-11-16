@@ -3,7 +3,7 @@ import { isWhiteSpacePreserved } from 'roosterjs-content-model-dom';
 import type {
     ContentModelParagraph,
     DeleteSelectionContext,
-    DeleteSelectionStep,
+    EditingStep,
 } from 'roosterjs-content-model-types';
 
 const enum DeleteWordState {
@@ -21,7 +21,7 @@ interface CharInfo {
     punctuation: boolean;
 }
 
-function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
+function getDeleteWordSelection(direction: 'forward' | 'backward'): EditingStep {
     return context => {
         const { marker, paragraph } = context.insertPoint;
         const startIndex = paragraph.segments.indexOf(marker);

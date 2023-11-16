@@ -252,7 +252,8 @@ export { InsertEntityOptions } from './parameter/InsertEntityOptions';
 export {
     DeleteSelectionContext,
     DeleteSelectionResult,
-    DeleteSelectionStep,
+    EditingStep,
+    EditingStepFunc,
     ValidDeleteSelectionContext,
 } from './parameter/DeleteSelectionStep';
 

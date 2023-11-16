@@ -3,7 +3,7 @@ import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCo
 import { ChangeSource } from 'roosterjs-content-model-core';
 import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
-import { DeleteResult, DeleteSelectionStep } from 'roosterjs-content-model-types';
+import { DeleteResult, EditingStep } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { keyboardDelete } from '../../lib/edit/keyboardDelete';
@@ -28,7 +28,7 @@ describe('keyboardDelete', () => {
         input: ContentModelDocument,
         key: string,
         expectedResult: ContentModelDocument,
-        expectedSteps: DeleteSelectionStep[],
+        expectedSteps: EditingStep[],
         expectedDelete: DeleteResult,
         expectedClearModelCache: boolean,
         calledTimes: number
@@ -442,9 +442,8 @@ describe('keyboardDelete', () => {
             getDOMSelection: () => range,
         } as any;
 
-        const result = keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent);
 
-        expect(result).toBeFalse();
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
 
@@ -464,9 +463,8 @@ describe('keyboardDelete', () => {
             getDOMSelection: () => range,
         } as any;
 
-        const result = keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent);
 
-        expect(result).toBeFalse();
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
 

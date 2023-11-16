@@ -4,8 +4,9 @@ import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from './isWhiteSpacePreserved';
 import { normalizeAllSegments } from './normalizeSegment';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
+
 /**
- * @internal
+ * Normalize a paragraph. If it is empty, add a BR segment to make sure it can insert content
  */
 export function normalizeParagraph(paragraph: ContentModelParagraph) {
     const segments = paragraph.segments;
