@@ -1,9 +1,7 @@
-import { createDOMEventPlugin } from './DOMEventPlugin';
 import { createEditPlugin } from './EditPlugin';
 import { createEntityPlugin } from './EntityPlugin';
 import { createImageSelection } from './ImageSelection';
 import { createLifecyclePlugin } from './LifecyclePlugin';
-import { createMouseUpPlugin } from './MouseUpPlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { createStandaloneEditorCorePlugins } from 'roosterjs-content-model-core';
 import { createUndoPlugin } from './UndoPlugin';
@@ -33,12 +31,10 @@ export function createCorePlugins(
     // The order matters, some plugin needs to be put before/after others to make sure event
     // can be handled in right order
     return {
-        ...createStandaloneEditorCorePlugins(options),
+        ...createStandaloneEditorCorePlugins(options, contentDiv),
         edit: map.edit || createEditPlugin(),
         _placeholder: null,
         undo: map.undo || createUndoPlugin(options),
-        domEvent: map.domEvent || createDOMEventPlugin(options, contentDiv),
-        mouseUp: map.mouseUp || createMouseUpPlugin(),
         entity: map.entity || createEntityPlugin(),
         imageSelection: map.imageSelection || createImageSelection(),
         normalizeTable: map.normalizeTable || createNormalizeTablePlugin(),

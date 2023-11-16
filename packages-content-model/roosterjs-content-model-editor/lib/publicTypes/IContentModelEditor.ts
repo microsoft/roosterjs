@@ -26,14 +26,6 @@ export interface IContentModelEditor extends IEditor, IStandaloneEditor {}
  */
 export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     /**
-     * List of plugins.
-     * The order of plugins here determines in what order each event will be dispatched.
-     * Plugins not appear in this list will not be added to editor, including built-in plugins.
-     * Default value is empty array.
-     */
-    plugins?: EditorPlugin[];
-
-    /**
      * Default format of editor content. This will be applied to empty content.
      * If there is already content inside editor, format of existing content will not be changed.
      * Default value is the computed style of editor content DIV
@@ -81,23 +73,9 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     doNotAdjustEditorColor?: boolean;
 
     /**
-     * The scroll container to get scroll event from.
-     * By default, the scroll container will be the same with editor content DIV
-     */
-    scrollContainer?: HTMLElement;
-
-    /**
      * Specify the enabled experimental features
      */
     experimentalFeatures?: ExperimentalFeatures[];
-
-    /**
-     * By default, we will stop propagation of a printable keyboard event
-     * (a keyboard event which is caused by printable char input).
-     * Set this option to true to override this behavior in case you still need the event
-     * to be handled by ancestor nodes of editor.
-     */
-    allowKeyboardEventPropagation?: boolean;
 
     /**
      * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree

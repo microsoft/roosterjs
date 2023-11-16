@@ -1,7 +1,6 @@
 import type { StandaloneEditorCorePlugins } from 'roosterjs-content-model-types';
 import type {
     CopyPastePluginState,
-    DOMEventPluginState,
     EditPluginState,
     EditorPlugin,
     EntityPluginState,
@@ -23,17 +22,6 @@ export interface ContentModelCorePlugins extends StandaloneEditorCorePlugins {
      * Undo plugin provides the ability to undo/redo
      */
     readonly undo: PluginWithState<UndoPluginState>;
-
-    /**
-     * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
-     */
-    readonly domEvent: PluginWithState<DOMEventPluginState>;
-
-    /**
-     * MouseUpPlugin help trigger MouseUp event even when mouse up happens outside editor
-     * as long as the mouse was pressed within Editor before
-     */
-    readonly mouseUp: EditorPlugin;
 
     /**
      * Copy and paste plugin for handling onCopy and onPaste event

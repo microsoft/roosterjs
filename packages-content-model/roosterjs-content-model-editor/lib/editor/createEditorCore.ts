@@ -44,6 +44,9 @@ export function createEditorCore(
             );
         });
 
+    // It is ok to use global window here since the environment should always be the same for all windows in one session
+    const userAgent = window.navigator.userAgent;
+
     const core: ContentModelEditorCore = {
         contentDiv,
         api: {
@@ -64,9 +67,12 @@ export function createEditorCore(
         ...createStandaloneEditorDefaultSettings(options),
 
         environment: {
-            // It is ok to use global window here since the environment should always be the same for all windows in one session
             isMac: window.navigator.appVersion.indexOf('Mac') != -1,
-            isAndroid: /android/i.test(window.navigator.userAgent),
+            isAndroid: /android/i.test(userAgent),
+            isSafari:
+                userAgent.indexOf('Safari') >= 0 &&
+                userAgent.indexOf('Chrome') < 0 &&
+                userAgent.indexOf('Android') < 0,
         },
     };
 
