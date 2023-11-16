@@ -98,6 +98,8 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditoroptions.html#defaultdomtomodeloptions" class="tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Options</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditoroptions.html#defaultformat" class="tsd-kind-icon">default<wbr>Format</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditoroptions.html#defaultmodeltodomoptions" class="tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Options</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditoroptions.html#plugins" class="tsd-kind-icon">plugins</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditoroptions.html#scrollcontainer" class="tsd-kind-icon">scroll<wbr>Container</a></li>
 							</ul>
 						</section>
 					</div>
@@ -111,7 +113,7 @@
 					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Custom<wbr>Paste<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c567d3/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L35">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L43">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -127,7 +129,7 @@
 					<div class="tsd-signature tsd-kind-icon">cache<wbr>Model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c567d3/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L22">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L22">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:22</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -142,7 +144,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Options<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c567d3/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L12">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L12">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -157,7 +159,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Format<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.defaultformat.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultFormat</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c567d3/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L29">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L37">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -174,12 +176,46 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Options<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.modeltodomoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomOption</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8c567d3/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L17">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L17">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Default options used for Content Model to DOM conversion</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="plugins" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> plugins</h3>
+					<div class="tsd-signature tsd-kind-icon">plugins<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.editorplugin.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorPlugin</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L30">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:30</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>List of plugins.
+								The order of plugins here determines in what order each event will be dispatched.
+								Plugins not appear in this list will not be added to editor, including built-in plugins.
+							Default value is empty array.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="scrollcontainer" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> scroll<wbr>Container</h3>
+					<div class="tsd-signature tsd-kind-icon">scroll<wbr>Container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts#L49">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorOptions.ts:49</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The scroll container to get scroll event from.
+							By default, the scroll container will be the same with editor content DIV</p>
 						</div>
 					</div>
 				</section>
@@ -253,6 +289,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.standaloneeditoroptions.html#defaultmodeltodomoptions" class="tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Options</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.standaloneeditoroptions.html#plugins" class="tsd-kind-icon">plugins</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.standaloneeditoroptions.html#scrollcontainer" class="tsd-kind-icon">scroll<wbr>Container</a>
 							</li>
 						</ul>
 					</li>

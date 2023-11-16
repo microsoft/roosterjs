@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages-content-model/roosterjs-content-model-editor/lib/corePlugins/DOMEventPlugin.ts</title>
+    <title>Code coverage report for packages-content-model/roosterjs-content-model-core/lib/corePlugin/DOMEventPlugin.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-editor/lib/corePlugins</a> DOMEventPlugin.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-core/lib/corePlugin</a> DOMEventPlugin.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.44% </span>
+                <span class="strong">89.74% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>57/101</span>
+                <span class='fraction'>105/117</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.12% </span>
+                <span class="strong">67.72% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>51/154</span>
+                <span class='fraction'>107/158</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">36% </span>
+                <span class="strong">82.14% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/25</span>
+                <span class='fraction'>23/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.64% </span>
+                <span class="strong">89.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>53/97</span>
+                <span class='fraction'>101/113</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -328,7 +328,51 @@
 <a name='L269'></a><a href='#L269'>269</a>
 <a name='L270'></a><a href='#L270'>270</a>
 <a name='L271'></a><a href='#L271'>271</a>
-<a name='L272'></a><a href='#L272'>272</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a>
+<a name='L309'></a><a href='#L309'>309</a>
+<a name='L310'></a><a href='#L310'>310</a>
+<a name='L311'></a><a href='#L311'>311</a>
+<a name='L312'></a><a href='#L312'>312</a>
+<a name='L313'></a><a href='#L313'>313</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -352,8 +396,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -361,8 +405,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -385,206 +431,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">128x</span>
-<span class="cline-any cline-yes">128x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">128x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -595,17 +451,246 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
-import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
-import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">216x</span>
+<span class="cline-any cline-yes">216x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">216x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
+import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
+import type {
+    DOMEventPluginState,
+    IStandaloneEditor,
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
 import type {
     ContextMenuProvider,
     DOMEventHandler,
-    DOMEventPluginState,
     EditorPlugin,
     IEditor,
     PluginWithState,
@@ -623,7 +708,7 @@ import type {
  * It contains special handling for Safari since Safari cannot get correct selection when onBlur event is triggered in editor.
  */
 class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
-    private editor: IEditor | null = null;
+    private editor: (IStandaloneEditor &amp; IEditor) | null = null;
     private disposer: (() =&gt; void) | null = null;
     private state: DOMEventPluginState;
 &nbsp;
@@ -632,16 +717,18 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
      * @param options The editor options
      * @param contentDiv The editor content DIV
      */
-    constructor(options: ContentModelEditorOptions, contentDiv: HTMLDivElement) {
+    constructor(options: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
             selectionRange: null,
-            stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
             contextMenuProviders:
                 options.plugins?.filter&lt;ContextMenuProvider&lt;any&gt;&gt;(isContextMenuProvider) || [],
             tableSelectionRange: null,
             imageSelectionRange: null,
+            mouseDownX: null,
+            mouseDownY: null,
+            mouseUpEventListerAdded: false,
         };
     }
 &nbsp;
@@ -657,7 +744,7 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
      * @param editor Editor instance
      */
     initialize(editor: IEditor) {
-        this.editor = editor;
+        this.editor = editor as IStandaloneEditor &amp; IEditor;
 &nbsp;
         const document = this.editor.getDocument();
         //Record&lt;string, DOMEventHandler&gt;
@@ -670,14 +757,14 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
             keyup: this.getEventHandler(PluginEventType.KeyUp),
 &nbsp;
             // 2. Mouse event
-            mousedown: PluginEventType.MouseDown,
+            mousedown: this.onMouseDown,
             contextmenu: this.onContextMenuEvent,
 &nbsp;
             // 3. IME state management
-            compositionstart: <span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >(</span>this.state.isInIME = true),</span>
-            compositionend: <span class="fstat-no" title="function not covered" >(r</span>awEvent: CompositionEvent) =&gt; {
-<span class="cstat-no" title="statement not covered" >                this.state.isInIME = false;</span>
-<span class="cstat-no" title="statement not covered" >                editor.triggerPluginEvent(PluginEventType.CompositionEnd, {</span>
+            compositionstart: () =&gt; (this.state.isInIME = true),
+            compositionend: (rawEvent: CompositionEvent) =&gt; {
+                this.state.isInIME = false;
+                editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
                     rawEvent,
                 });
             },
@@ -690,19 +777,16 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
             focus: this.onFocus,
 &nbsp;
             // 6. Input event
-            [Browser.isIE ? <span class="branch-0 cbranch-no" title="branch not covered" >'textinput' </span>: 'input']: this.getEventHandler(PluginEventType.Input),
+            input: this.getEventHandler(PluginEventType.Input),
         };
 &nbsp;
+        const env = this.editor.getEnvironment();
+&nbsp;
         // 7. onBlur handlers
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (Browser.isSafari) {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (env.isSafari) {
 <span class="cstat-no" title="statement not covered" >            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);</span>
 <span class="cstat-no" title="statement not covered" >            document.addEventListener('keydown', this.onKeyDownDocument);</span>
 <span class="cstat-no" title="statement not covered" >            document.defaultView?.addEventListener('blur', this.cacheSelection);</span>
-        } else <span class="missing-if-branch" title="if path not taken" >I</span>if (Browser.isIEOrEdge) {
-            type EventHandlersIE = {
-                beforedeactivate: DOMEventHandler&lt;HTMLElementEventMap['blur']&gt;;
-            };
-            (<span class="cstat-no" title="statement not covered" >eventHandlers as EventHandlersIE).beforedeactivate = this.cacheSelection;</span>
         } else {
             eventHandlers.blur = this.cacheSelection;
         }
@@ -711,27 +795,29 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
 &nbsp;
         // 8. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
-        document.defaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>ddEventListener('scroll', this.onScroll);
-        document.defaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>ddEventListener('resize', this.onScroll);
+        document.defaultView?.addEventListener('scroll', this.onScroll);
+        document.defaultView?.addEventListener('resize', this.onScroll);
     }
 &nbsp;
     /**
      * Dispose this plugin
      */
     dispose() {
+        this.removeMouseUpEventListener();
+&nbsp;
         const document = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etDocument();
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (document &amp;&amp; Browser.isSafari) {
-<span class="cstat-no" title="statement not covered" >            document.removeEventListener(</span>
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (document) {
+            document.removeEventListener(
                 'mousedown',
                 this.onMouseDownDocument,
                 true /*useCapture*/
             );
-<span class="cstat-no" title="statement not covered" >            document.removeEventListener('keydown', this.onKeyDownDocument);</span>
-<span class="cstat-no" title="statement not covered" >            document.defaultView?.removeEventListener('blur', this.cacheSelection);</span>
+            document.removeEventListener('keydown', this.onKeyDownDocument);
+            document.defaultView?.removeEventListener('blur', this.cacheSelection);
         }
 &nbsp;
-        document<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>efaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>emoveEventListener('resize', this.onScroll);
-        document<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>efaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>emoveEventListener('scroll', this.onScroll);
+        document<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>efaultView?.removeEventListener('resize', this.onScroll);
+        document<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>efaultView?.removeEventListener('scroll', this.onScroll);
         this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
         this.disposer<span class="branch-0 cbranch-no" title="branch not covered" >?.();</span>
         this.disposer = null;
@@ -745,22 +831,22 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
         return this.state;
     }
 &nbsp;
-    private onDragStart = <span class="fstat-no" title="function not covered" >(e</span>: Event) =&gt; {
-        const dragEvent = <span class="cstat-no" title="statement not covered" >e as DragEvent;</span>
-        const element = <span class="cstat-no" title="statement not covered" >this.editor?.getElementAtCursor('*', dragEvent.target as Node);</span>
+    private onDragStart = (e: Event) =&gt; {
+        const dragEvent = e as DragEvent;
+        const element = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etElementAtCursor('*', dragEvent.target as Node);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (element &amp;&amp; !element.isContentEditable) {</span>
-<span class="cstat-no" title="statement not covered" >            dragEvent.preventDefault();</span>
+        if (element &amp;&amp; !element.isContentEditable) {
+            dragEvent.preventDefault();
         }
     };
-    private onDrop = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        this.editor?.runAsync(<span class="fstat-no" title="function not covered" >editor </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            editor.addUndoSnapshot(<span class="fstat-no" title="function not covered" >() =&gt; {}</span>, ChangeSource.Drop);</span>
+    private onDrop = () =&gt; {
+        this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>unAsync(editor =&gt; {
+            editor.addUndoSnapshot(<span class="fstat-no" title="function not covered" >() =&gt; {}</span>, ChangeSource.Drop);
         });
     };
 &nbsp;
     private onFocus = () =&gt; {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.state.skipReselectOnFocus) {
+        if (!this.state.skipReselectOnFocus) {
             const { table, coordinates } = this.state.tableSelectionRange || {};
             const { image } = this.state.imageSelectionRange || {};
 &nbsp;
@@ -768,8 +854,8 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
 <span class="cstat-no" title="statement not covered" >                this.editor?.select(table, coordinates);</span>
             } else <span class="missing-if-branch" title="if path not taken" >I</span>if (image) {
 <span class="cstat-no" title="statement not covered" >                this.editor?.select(image);</span>
-            } else <span class="missing-if-branch" title="if path not taken" >I</span>if (this.state.selectionRange) {
-<span class="cstat-no" title="statement not covered" >                this.editor?.select(this.state.selectionRange);</span>
+            } else if (this.state.selectionRange) {
+                this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>elect(this.state.selectionRange);
             }
         }
 &nbsp;
@@ -791,9 +877,9 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
         }
     };
 &nbsp;
-    private cacheSelection = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        if (!this.state.selectionRange &amp;&amp; this.editor) {</span>
-<span class="cstat-no" title="statement not covered" >            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);</span>
+    private cacheSelection = () =&gt; {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.state.selectionRange &amp;&amp; this.editor) {
+            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
         }
     };
     private onScroll = <span class="fstat-no" title="function not covered" >(e</span>: Event) =&gt; {
@@ -804,54 +890,91 @@ class DOMEventPlugin implements PluginWithState&lt;DOMEventPluginState&gt; {
     };
 &nbsp;
     private getEventHandler(eventType: PluginEventType): DOMEventHandler {
-        const beforeDispatch = <span class="fstat-no" title="function not covered" >(e</span>vent: Event) =&gt;
-<span class="cstat-no" title="statement not covered" >            eventType == PluginEventType.Input</span>
+        const beforeDispatch = (event: Event) =&gt;
+            eventType == PluginEventType.Input
                 ? this.onInputEvent(&lt;InputEvent&gt;event)
                 : this.onKeyboardEvent(&lt;KeyboardEvent&gt;event);
 &nbsp;
-        return this.state.stopPrintableKeyboardEventPropagation
-            ? {
-                  pluginEventType: eventType,
-                  beforeDispatch,
-              }
-            : <span class="branch-1 cbranch-no" title="branch not covered" >eventType;</span>
+        return {
+            pluginEventType: eventType,
+            beforeDispatch,
+        };
     }
 &nbsp;
-    private onKeyboardEvent = <span class="fstat-no" title="function not covered" >(e</span>vent: KeyboardEvent) =&gt; {
-<span class="cstat-no" title="statement not covered" >        if (isCharacterValue(event) || (event.which &gt;= Keys.PAGEUP &amp;&amp; event.which &lt;= Keys.DOWN)) {</span>
+    private onKeyboardEvent = (event: KeyboardEvent) =&gt; {
+        if (isCharacterValue(event) || (event.which &gt;= Keys.PAGEUP &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >event.which &lt;= Keys.DOWN)</span>) {
             // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
             // since editor already handles these keys and no need to propagate to parents
-<span class="cstat-no" title="statement not covered" >            event.stopPropagation();</span>
+            event.stopPropagation();
         }
     };
 &nbsp;
-    private onInputEvent = <span class="fstat-no" title="function not covered" >(e</span>vent: InputEvent) =&gt; {
-<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+    private onInputEvent = (event: InputEvent) =&gt; {
+        event.stopPropagation();
     };
 &nbsp;
-    private onContextMenuEvent = <span class="fstat-no" title="function not covered" >(e</span>vent: MouseEvent) =&gt; {
-        const allItems: any[] = <span class="cstat-no" title="statement not covered" >[];</span>
-        const searcher = <span class="cstat-no" title="statement not covered" >this.editor?.getContentSearcherOfCursor();</span>
-        const elementBeforeCursor = <span class="cstat-no" title="statement not covered" >searcher?.getInlineElementBefore();</span>
+    private onMouseDown = (event: MouseEvent) =&gt; {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (this.editor) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.state.mouseUpEventListerAdded) {
+                this.editor
+                    .getDocument()
+                    .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+                this.state.mouseUpEventListerAdded = true;
+                this.state.mouseDownX = event.pageX;
+                this.state.mouseDownY = event.pageY;
+            }
 &nbsp;
-        let eventTargetNode = <span class="cstat-no" title="statement not covered" >event.target as Node;</span>
-<span class="cstat-no" title="statement not covered" >        if (event.button != 2 &amp;&amp; elementBeforeCursor) {</span>
+            this.editor.triggerPluginEvent(PluginEventType.MouseDown, {
+                rawEvent: event,
+            });
+        }
+    };
+&nbsp;
+    private onMouseUp = (rawEvent: MouseEvent) =&gt; {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (this.editor) {
+            this.removeMouseUpEventListener();
+            this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
+                rawEvent,
+                isClicking:
+                    this.state.mouseDownX == rawEvent.pageX &amp;&amp;
+                    this.state.mouseDownY == rawEvent.pageY,
+            });
+        }
+    };
+&nbsp;
+    private onContextMenuEvent = (event: MouseEvent) =&gt; {
+        const allItems: any[] = [];
+&nbsp;
+        // TODO: Remove dependency to ContentSearcher
+        const searcher = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etContentSearcherOfCursor();
+        const elementBeforeCursor = <span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >searcher?.g</span>etInlineElementBefore();</span>
+&nbsp;
+        let eventTargetNode = event.target as Node;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (event.button != 2 &amp;&amp; elementBeforeCursor) {
 <span class="cstat-no" title="statement not covered" >            eventTargetNode = elementBeforeCursor.getContainerNode();</span>
         }
-<span class="cstat-no" title="statement not covered" >        this.state.contextMenuProviders.forEach(<span class="fstat-no" title="function not covered" >provider </span>=&gt; {</span>
-            const items = <span class="cstat-no" title="statement not covered" >provider.getContextMenuItems(eventTargetNode) ?? [];</span>
-<span class="cstat-no" title="statement not covered" >            if (items?.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >                if (allItems.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >                    allItems.push(null);</span>
+        this.state.contextMenuProviders.forEach(provider =&gt; {
+            const items = provider.getContextMenuItems(eventTargetNode) ?? <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (items<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength &gt; 0) {
+                if (allItems.length &gt; 0) {
+                    allItems.push(null);
                 }
-<span class="cstat-no" title="statement not covered" >                arrayPush(allItems, items);</span>
+&nbsp;
+                allItems.push(...items);
             }
         });
-<span class="cstat-no" title="statement not covered" >        this.editor?.triggerPluginEvent(PluginEventType.ContextMenu, {</span>
+        this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>riggerPluginEvent(PluginEventType.ContextMenu, {
             rawEvent: event,
             items: allItems,
         });
     };
+&nbsp;
+    private removeMouseUpEventListener() {
+        if (this.editor &amp;&amp; this.state.mouseUpEventListerAdded) {
+            this.state.mouseUpEventListerAdded = false;
+            this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
+        }
+    }
 }
 &nbsp;
 function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvider&lt;any&gt; {
@@ -865,7 +988,7 @@ function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvi
  * @param contentDiv The editor content DIV element
  */
 export function createDOMEventPlugin(
-    option: ContentModelEditorOptions,
+    option: StandaloneEditorOptions,
     contentDiv: HTMLDivElement
 ): PluginWithState&lt;DOMEventPluginState&gt; {
     return new DOMEventPlugin(option, contentDiv);
@@ -877,7 +1000,7 @@ export function createDOMEventPlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Nov 16 2023 05:14:29 GMT+0000 (Coordinated Universal Time)
+                at Thu Nov 16 2023 19:40:19 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
