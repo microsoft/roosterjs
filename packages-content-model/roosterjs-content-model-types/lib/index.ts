@@ -221,7 +221,6 @@ export {
     HasFocus,
     Focus,
     InsertNode,
-    GetPendableFormatState,
     AttachDomEvent,
     GetContent,
     GetStyleBasedFormatState,

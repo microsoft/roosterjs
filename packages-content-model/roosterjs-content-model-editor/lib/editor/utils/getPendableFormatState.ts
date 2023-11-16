@@ -2,7 +2,7 @@ import { contains, getObjectKeys, getTagOfNode, Position } from 'roosterjs-edito
 import { NodeType } from 'roosterjs-editor-types';
 import type { PendableFormatNames } from 'roosterjs-editor-dom';
 import type { NodePosition, PendableFormatState } from 'roosterjs-editor-types';
-import type { GetPendableFormatState, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -10,26 +10,12 @@ import type { GetPendableFormatState, StandaloneEditorCore } from 'roosterjs-con
  * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
  * @returns The cached format state if it exists. If the cached position do not exist, search for pendable elements in the DOM tree and return the pendable format state.
  */
-export const getPendableFormatState: GetPendableFormatState = (
-    core,
-    forceGetStateFromDOM
-): PendableFormatState => {
+export function getPendableFormatState(core: StandaloneEditorCore): PendableFormatState {
     const range = core.api.getSelectionRange(core, true /* tryGetFromCache*/);
-    const cachedPendableFormatState = core.pendingFormatState.pendableFormatState;
-    const cachedPosition = core.pendingFormatState.pendableFormatPosition?.normalize();
     const currentPosition = range && Position.getStart(range).normalize();
-    const isSamePosition =
-        currentPosition &&
-        cachedPosition &&
-        range.collapsed &&
-        currentPosition.equalTo(cachedPosition);
 
-    if (range && cachedPendableFormatState && isSamePosition && !forceGetStateFromDOM) {
-        return cachedPendableFormatState;
-    } else {
-        return currentPosition ? queryCommandStateFromDOM(core, currentPosition) : {};
-    }
-};
+    return currentPosition ? queryCommandStateFromDOM(core, currentPosition) : {};
+}
 
 const PendableStyleCheckers: Record<
     PendableFormatNames,

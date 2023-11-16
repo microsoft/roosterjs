@@ -5,12 +5,10 @@ import { createImageSelection } from './ImageSelection';
 import { createLifecyclePlugin } from './LifecyclePlugin';
 import { createMouseUpPlugin } from './MouseUpPlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
-import { createPendingFormatStatePlugin } from './PendingFormatStatePlugin';
 import { createStandaloneEditorCorePlugins } from 'roosterjs-content-model-core';
 import { createUndoPlugin } from './UndoPlugin';
 import type { ContentModelCorePlugins } from '../publicTypes/ContentModelCorePlugins';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
-import type { PluginState } from 'roosterjs-editor-types';
 import type { ContentModelPluginState } from 'roosterjs-content-model-types';
 
 /**
@@ -37,7 +35,6 @@ export function createCorePlugins(
     return {
         ...createStandaloneEditorCorePlugins(options),
         edit: map.edit || createEditPlugin(),
-        pendingFormatState: map.pendingFormatState || createPendingFormatStatePlugin(),
         _placeholder: null,
         undo: map.undo || createUndoPlugin(options),
         domEvent: map.domEvent || createDOMEventPlugin(options, contentDiv),
@@ -54,12 +51,9 @@ export function createCorePlugins(
  * Get plugin state of core plugins
  * @param corePlugins ContentModelCorePlugins object
  */
-export function getPluginState(
-    corePlugins: ContentModelCorePlugins
-): PluginState & ContentModelPluginState {
+export function getPluginState(corePlugins: ContentModelCorePlugins): ContentModelPluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),
-        pendingFormatState: corePlugins.pendingFormatState.getState(),
         edit: corePlugins.edit.getState(),
         lifecycle: corePlugins.lifecycle.getState(),
         undo: corePlugins.undo.getState(),

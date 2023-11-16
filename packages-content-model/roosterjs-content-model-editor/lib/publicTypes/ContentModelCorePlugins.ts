@@ -6,7 +6,6 @@ import type {
     EditorPlugin,
     EntityPluginState,
     LifecyclePluginState,
-    PendingFormatStatePluginState,
     PluginWithState,
     UndoPluginState,
 } from 'roosterjs-editor-types';
@@ -29,11 +28,6 @@ export interface ContentModelCorePlugins extends StandaloneEditorCorePlugins {
      * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
      */
     readonly domEvent: PluginWithState<DOMEventPluginState>;
-
-    /**
-     * PendingFormatStatePlugin handles pending format state management
-     */
-    readonly pendingFormatState: PluginWithState<PendingFormatStatePluginState>;
 
     /**
      * MouseUpPlugin help trigger MouseUp event even when mouse up happens outside editor

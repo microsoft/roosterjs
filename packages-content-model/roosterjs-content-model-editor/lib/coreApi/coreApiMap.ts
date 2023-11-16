@@ -3,7 +3,6 @@ import { attachDomEvent } from './attachDomEvent';
 import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { focus } from './focus';
 import { getContent } from './getContent';
-import { getPendableFormatState } from './getPendableFormatState';
 import { getSelectionRange } from './getSelectionRange';
 import { getSelectionRangeEx } from './getSelectionRangeEx';
 import { getStyleBasedFormatState } from './getStyleBasedFormatState';
@@ -33,7 +32,6 @@ export const coreApiMap: StandaloneCoreApiMap = {
     getSelectionRange,
     getSelectionRangeEx,
     getStyleBasedFormatState,
-    getPendableFormatState,
     hasFocus,
     insertNode,
     restoreUndoSnapshot,
