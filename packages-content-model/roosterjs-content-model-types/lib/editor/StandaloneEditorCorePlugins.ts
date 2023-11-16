@@ -1,3 +1,4 @@
+import type { EntityPluginState } from '../pluginState/EntityPluginState';
 import type { DOMEventPluginState } from '../pluginState/DOMEventPluginState';
 import type { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from '../pluginState/ContentModelFormatPluginState';
@@ -32,4 +33,9 @@ export interface StandaloneEditorCorePlugins {
      * Lifecycle plugin handles editor initialization and disposing
      */
     readonly lifecycle: PluginWithState<LifecyclePluginState>;
+
+    /**
+     * Entity Plugin handles all operations related to an entity and generate entity specified events
+     */
+    readonly entity: PluginWithState<EntityPluginState>;
 }

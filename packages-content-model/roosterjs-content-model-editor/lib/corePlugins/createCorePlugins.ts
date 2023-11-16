@@ -1,5 +1,4 @@
 import { createEditPlugin } from './EditPlugin';
-import { createEntityPlugin } from './EntityPlugin';
 import { createImageSelection } from './ImageSelection';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { createStandaloneEditorCorePlugins } from 'roosterjs-content-model-core';
@@ -27,7 +26,6 @@ export function createCorePlugins(
         ...createStandaloneEditorCorePlugins(options, contentDiv),
         edit: map.edit || createEditPlugin(),
         undo: map.undo || createUndoPlugin(options),
-        entity: map.entity || createEntityPlugin(),
         imageSelection: map.imageSelection || createImageSelection(),
         normalizeTable: map.normalizeTable || createNormalizeTablePlugin(),
     };

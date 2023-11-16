@@ -135,5 +135,19 @@ export interface IStandaloneEditor {
      */
     getZoomScale(): number;
 
+    /**
+     * Check if the node falls in the editor content
+     * @param node The node to check
+     * @returns True if the given node is in editor content, otherwise false
+     */
+    contains(node: Node | null): boolean;
+
+    /**
+     * Check if the range falls in the editor content
+     * @param range The range to check
+     * @returns True if the given range is in editor content, otherwise false
+     */
+    contains(range: Range): boolean;
+
     //#endregion
 }

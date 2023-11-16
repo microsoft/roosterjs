@@ -47,12 +47,17 @@ export function deleteSegment(
                 : isBackward
                 ? 'removeFromEnd'
                 : undefined;
+            const {
+                entityFormat: { id, entityType },
+                wrapper,
+            } = segmentToDelete;
+
             if (operation !== undefined) {
                 segments.splice(index, 1);
-                context?.deletedEntities.push({
-                    entity: segmentToDelete,
-                    operation,
-                });
+
+                if (id && entityType && context) {
+                    context.deletedEntities.push({ wrapper, entityType, id, operation });
+                }
             }
 
             return true;

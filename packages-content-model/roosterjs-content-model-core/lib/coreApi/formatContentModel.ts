@@ -1,6 +1,6 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import type { Entity } from 'roosterjs-editor-types';
+import type { Entity, EntityOperationEvent } from 'roosterjs-editor-types';
 import type {
     ContentModelContentChangedEvent,
     DOMSelection,
@@ -82,12 +82,13 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
 };
 
 function handleNewEntities(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
-    // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
-    // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
-    // from EntityPlugin to here
+    context.newEntities.forEach(entity => {
+        const {
+            wrapper,
+            entityFormat: { id, entityType, isReadonly },
+        } = entity;
 
-    if (core.lifecycle.isDarkMode) {
-        context.newEntities.forEach(entity => {
+        if (core.lifecycle.isDarkMode) {
             core.api.transformColor(
                 core,
                 entity.wrapper,
@@ -95,8 +96,32 @@ function handleNewEntities(core: StandaloneEditorCore, context: FormatWithConten
                 null /*callback*/,
                 ColorTransformDirection.LightToDark
             );
-        });
-    }
+        }
+
+        if (id && entityType) {
+            const event: EntityOperationEvent = {
+                eventType: PluginEventType.EntityOperation,
+                operation: EntityOperation.NewEntity,
+                entity: {
+                    id,
+                    type: entityType,
+                    isReadonly: !!isReadonly,
+                    wrapper,
+                },
+                rawEvent: context.rawEvent,
+            };
+
+            core.api.triggerEvent(core, event, false /*broadcast*/);
+
+            if (event.shouldPersist) {
+                const entry = core.entity.entityMap[id];
+
+                if (entry) {
+                    entry.canPersist = true;
+                }
+            }
+        }
+    });
 }
 
 // This is only used for compatibility with old editor
@@ -108,35 +133,33 @@ const EntityOperationMap: Record<EntityRemovalOperation, EntityOperation> = {
 };
 
 function handleDeletedEntities(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
-    context.deletedEntities.forEach(
-        ({
-            entity: {
-                wrapper,
-                entityFormat: { id, entityType, isReadonly },
-            },
-            operation,
-        }) => {
-            if (id && entityType) {
-                // TODO: Revisit this entity parameter for standalone editor, we may just directly pass ContentModelEntity object instead
-                const entity: Entity = {
-                    id,
-                    type: entityType,
-                    isReadonly: !!isReadonly,
-                    wrapper,
-                };
-                core.api.triggerEvent(
-                    core,
-                    {
-                        eventType: PluginEventType.EntityOperation,
-                        entity,
-                        operation: EntityOperationMap[operation],
-                        rawEvent: context.rawEvent,
-                    },
-                    false /*broadcast*/
-                );
+    context.deletedEntities.forEach(({ wrapper, id, entityType, isReadonly, operation }) => {
+        if (id && entityType) {
+            const entry = core.entity.entityMap[id];
+
+            if (entry) {
+                entry.isDeleted = true;
             }
+
+            // TODO: Revisit this entity parameter for standalone editor, we may just directly pass ContentModelEntity object instead
+            const entity: Entity = {
+                id,
+                type: entityType,
+                isReadonly: !!isReadonly,
+                wrapper,
+            };
+            core.api.triggerEvent(
+                core,
+                {
+                    eventType: PluginEventType.EntityOperation,
+                    entity,
+                    operation: EntityOperationMap[operation],
+                    rawEvent: context.rawEvent,
+                },
+                false /*broadcast*/
+            );
         }
-    );
+    });
 }
 
 function handleImages(core: StandaloneEditorCore, context: FormatWithContentModelContext) {

@@ -11,7 +11,6 @@ import type {
     DarkColorHandler,
     EditPluginState,
     EditorPlugin,
-    EntityPluginState,
     GetContentMode,
     ImageSelectionRange,
     InsertOption,
@@ -605,7 +604,6 @@ export interface StandaloneEditorCore
 
     // Plugins copied from legacy editor
     // TODO: Port these plugins into Standalone Editor
-    entity: EntityPluginState;
     undo: UndoPluginState;
     edit: EditPluginState;
 }

@@ -2,15 +2,16 @@ import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type { ContentModelImage } from '../segment/ContentModelImage';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
+import type { ContentModelEntityFormat } from '../format/ContentModelEntityFormat';
 
 /**
  * Represents an entity that is deleted by a specified entity operation
  */
-export interface DeletedEntity {
+export interface DeletedEntity extends ContentModelEntityFormat {
     /**
-     * The deleted entity
+     * Wrapper element of entity
      */
-    entity: ContentModelEntity;
+    wrapper: HTMLElement;
 
     /**
      * The operation that causes this entity to be deleted

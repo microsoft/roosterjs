@@ -84,7 +84,6 @@ export default function insertEntity(
             normalizeContentModel(model);
 
             context.skipUndoSnapshot = skipUndoSnapshot;
-            context.newEntities.push(entityModel);
 
             return true;
         },

@@ -36,13 +36,17 @@ export function deleteBlock(
                 : direction == 'backward'
                 ? 'removeFromEnd'
                 : undefined;
+            const {
+                entityFormat: { id, entityType },
+                wrapper,
+            } = blockToDelete;
 
             if (operation !== undefined) {
                 replacement ? blocks.splice(index, 1, replacement) : blocks.splice(index, 1);
-                context?.deletedEntities.push({
-                    entity: blockToDelete,
-                    operation,
-                });
+
+                if (id && entityType && context) {
+                    context.deletedEntities.push({ id, entityType, wrapper, operation });
+                }
             }
 
             return true;

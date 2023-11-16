@@ -3,7 +3,6 @@ import type {
     CopyPastePluginState,
     EditPluginState,
     EditorPlugin,
-    EntityPluginState,
     PluginWithState,
     UndoPluginState,
 } from 'roosterjs-editor-types';
@@ -26,11 +25,6 @@ export interface ContentModelCorePlugins extends StandaloneEditorCorePlugins {
      * Copy and paste plugin for handling onCopy and onPaste event
      */
     readonly copyPaste: PluginWithState<CopyPastePluginState>;
-    /**
-     * Entity Plugin handles all operations related to an entity and generate entity specified events
-     */
-
-    readonly entity: PluginWithState<EntityPluginState>;
 
     /**
      * Image selection Plugin detects image selection and help highlight the image

@@ -1,5 +1,6 @@
 import { isElementOfType } from './isElementOfType';
 import { isNodeOfType } from './isNodeOfType';
+import type { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
 
 const ENTITY_INFO_NAME = '_Entity';
@@ -11,7 +12,7 @@ const DELIMITER_BEFORE = 'entityDelimiterBefore';
 const DELIMITER_AFTER = 'entityDelimiterAfter';
 
 /**
- * @internal
+ * Check if the given DOM Node is an entity wrapper element
  */
 export function isEntityElement(node: Node): boolean {
     return isNodeOfType(node, 'ELEMENT_NODE') && node.classList.contains(ENTITY_INFO_NAME);
@@ -70,6 +71,17 @@ export function addDelimiters(doc: Document, element: HTMLElement): HTMLElement[
     ];
 }
 
+/**
+ * Get a selector string for specified entity type and id
+ * @param type (Optional) Type of entity
+ * @param id (Optional) Id of entity
+ */
+export function getEntitySelector(type?: string, id?: string): string {
+    const typeSelector = type ? `.${ENTITY_TYPE_PREFIX}${type}` : '';
+    const idSelector = id ? `.${ENTITY_ID_PREFIX}${id}` : '';
+    return '.' + ENTITY_INFO_NAME + typeSelector + idSelector;
+}
+
 function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
     const span = doc.createElement('span');
 
@@ -78,4 +90,22 @@ function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
     element.parentNode?.insertBefore(span, isAfter ? element.nextSibling : element);
 
     return span;
+}
+
+/**
+ * Add allow CSS classes to HTML Sanitizer options so they can be preserved during sanitization
+ * TODO: Revisit the HTML sanitization approach when paste
+ * @param options HTML Sanitizer options
+ */
+export function addEntityClassesForForHtmlSanitizer(options: HtmlSanitizerOptions) {
+    if (!options.additionalAllowedCssClasses) {
+        options.additionalAllowedCssClasses = [];
+    }
+
+    options.additionalAllowedCssClasses.push(
+        '^' + ENTITY_INFO_NAME + '$',
+        '^' + ENTITY_ID_PREFIX,
+        '^' + ENTITY_TYPE_PREFIX,
+        '^' + ENTITY_READONLY_PREFIX
+    );
 }
