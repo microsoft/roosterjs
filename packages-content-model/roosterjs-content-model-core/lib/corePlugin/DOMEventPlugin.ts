@@ -1,10 +1,13 @@
-import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
 import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
-import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
+import type {
+    DOMEventPluginState,
+    IStandaloneEditor,
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
 import type {
     ContextMenuProvider,
     DOMEventHandler,
-    DOMEventPluginState,
     EditorPlugin,
     IEditor,
     PluginWithState,
@@ -22,7 +25,7 @@ import type {
  * It contains special handling for Safari since Safari cannot get correct selection when onBlur event is triggered in editor.
  */
 class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
-    private editor: IEditor | null = null;
+    private editor: (IStandaloneEditor & IEditor) | null = null;
     private disposer: (() => void) | null = null;
     private state: DOMEventPluginState;
 
@@ -31,16 +34,18 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * @param options The editor options
      * @param contentDiv The editor content DIV
      */
-    constructor(options: ContentModelEditorOptions, contentDiv: HTMLDivElement) {
+    constructor(options: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
             selectionRange: null,
-            stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
             contextMenuProviders:
                 options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
             tableSelectionRange: null,
             imageSelectionRange: null,
+            mouseDownX: null,
+            mouseDownY: null,
+            mouseUpEventListerAdded: false,
         };
     }
 
@@ -56,7 +61,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * @param editor Editor instance
      */
     initialize(editor: IEditor) {
-        this.editor = editor;
+        this.editor = editor as IStandaloneEditor & IEditor;
 
         const document = this.editor.getDocument();
         //Record<string, DOMEventHandler>
@@ -69,7 +74,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             keyup: this.getEventHandler(PluginEventType.KeyUp),
 
             // 2. Mouse event
-            mousedown: PluginEventType.MouseDown,
+            mousedown: this.onMouseDown,
             contextmenu: this.onContextMenuEvent,
 
             // 3. IME state management
@@ -89,19 +94,16 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             focus: this.onFocus,
 
             // 6. Input event
-            [Browser.isIE ? 'textinput' : 'input']: this.getEventHandler(PluginEventType.Input),
+            input: this.getEventHandler(PluginEventType.Input),
         };
 
+        const env = this.editor.getEnvironment();
+
         // 7. onBlur handlers
-        if (Browser.isSafari) {
+        if (env.isSafari) {
             document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
             document.addEventListener('keydown', this.onKeyDownDocument);
             document.defaultView?.addEventListener('blur', this.cacheSelection);
-        } else if (Browser.isIEOrEdge) {
-            type EventHandlersIE = {
-                beforedeactivate: DOMEventHandler<HTMLElementEventMap['blur']>;
-            };
-            (eventHandlers as EventHandlersIE).beforedeactivate = this.cacheSelection;
         } else {
             eventHandlers.blur = this.cacheSelection;
         }
@@ -118,8 +120,10 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * Dispose this plugin
      */
     dispose() {
+        this.removeMouseUpEventListener();
+
         const document = this.editor?.getDocument();
-        if (document && Browser.isSafari) {
+        if (document) {
             document.removeEventListener(
                 'mousedown',
                 this.onMouseDownDocument,
@@ -208,12 +212,10 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 ? this.onInputEvent(<InputEvent>event)
                 : this.onKeyboardEvent(<KeyboardEvent>event);
 
-        return this.state.stopPrintableKeyboardEventPropagation
-            ? {
-                  pluginEventType: eventType,
-                  beforeDispatch,
-              }
-            : eventType;
+        return {
+            pluginEventType: eventType,
+            beforeDispatch,
+        };
     }
 
     private onKeyboardEvent = (event: KeyboardEvent) => {
@@ -228,8 +230,39 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         event.stopPropagation();
     };
 
+    private onMouseDown = (event: MouseEvent) => {
+        if (this.editor) {
+            if (!this.state.mouseUpEventListerAdded) {
+                this.editor
+                    .getDocument()
+                    .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+                this.state.mouseUpEventListerAdded = true;
+                this.state.mouseDownX = event.pageX;
+                this.state.mouseDownY = event.pageY;
+            }
+
+            this.editor.triggerPluginEvent(PluginEventType.MouseDown, {
+                rawEvent: event,
+            });
+        }
+    };
+
+    private onMouseUp = (rawEvent: MouseEvent) => {
+        if (this.editor) {
+            this.removeMouseUpEventListener();
+            this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
+                rawEvent,
+                isClicking:
+                    this.state.mouseDownX == rawEvent.pageX &&
+                    this.state.mouseDownY == rawEvent.pageY,
+            });
+        }
+    };
+
     private onContextMenuEvent = (event: MouseEvent) => {
         const allItems: any[] = [];
+
+        // TODO: Remove dependency to ContentSearcher
         const searcher = this.editor?.getContentSearcherOfCursor();
         const elementBeforeCursor = searcher?.getInlineElementBefore();
 
@@ -243,7 +276,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 if (allItems.length > 0) {
                     allItems.push(null);
                 }
-                arrayPush(allItems, items);
+
+                allItems.push(...items);
             }
         });
         this.editor?.triggerPluginEvent(PluginEventType.ContextMenu, {
@@ -251,6 +285,13 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             items: allItems,
         });
     };
+
+    private removeMouseUpEventListener() {
+        if (this.editor && this.state.mouseUpEventListerAdded) {
+            this.state.mouseUpEventListerAdded = false;
+            this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
+        }
+    }
 }
 
 function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvider<any> {
@@ -264,7 +305,7 @@ function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvi
  * @param contentDiv The editor content DIV element
  */
 export function createDOMEventPlugin(
-    option: ContentModelEditorOptions,
+    option: StandaloneEditorOptions,
     contentDiv: HTMLDivElement
 ): PluginWithState<DOMEventPluginState> {
     return new DOMEventPlugin(option, contentDiv);
