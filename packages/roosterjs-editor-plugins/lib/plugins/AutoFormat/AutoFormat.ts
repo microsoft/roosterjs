@@ -1,4 +1,4 @@
-import { ChangeSource, PluginEventType, PositionType } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
@@ -9,7 +9,9 @@ const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
 export default class AutoFormat implements EditorPlugin {
     private editor: IEditor | null = null;
     private lastKeyTyped: string | null = null;
-
+    private textRange: Range | null | undefined = null;
+    private isHyphen: boolean | undefined = undefined;
+    private removeSpace: boolean | undefined = undefined;
     /**
      * Get a friendly name of this plugin
      */
@@ -31,6 +33,8 @@ export default class AutoFormat implements EditorPlugin {
     dispose() {
         this.editor = null;
         this.lastKeyTyped = null;
+        this.textRange = null;
+        this.isHyphen = undefined;
     }
 
     /**
@@ -56,47 +60,75 @@ export default class AutoFormat implements EditorPlugin {
                 this.lastKeyTyped = '';
             }
 
+            const searcher = this.editor.getContentSearcherOfCursor(event);
+            const textBeforeCursor = searcher?.getSubStringBefore(3);
+
             if (
+                this.isHyphen &&
+                (textBeforeCursor === '-- ' || textBeforeCursor === '-- ') &&
+                this.textRange
+            ) {
+                this.removeSpace = true;
+            }
+
+            if (
+                searcher &&
+                textBeforeCursor &&
                 this.lastKeyTyped === '-' &&
                 !specialCharacters.test(keyTyped) &&
-                keyTyped !== ' ' &&
                 keyTyped !== '-'
             ) {
-                const searcher = this.editor.getContentSearcherOfCursor(event);
-                const textBeforeCursor = searcher?.getSubStringBefore(3);
-                const dashes = searcher?.getSubStringBefore(2);
+                const dashes = searcher.getSubStringBefore(2);
                 const isPrecededByADash = textBeforeCursor?.[0] === '-';
-                const isPrecededByASpace = textBeforeCursor?.[0] === ' ';
+
                 if (
                     isPrecededByADash ||
-                    isPrecededByASpace ||
                     (typeof textBeforeCursor === 'string' &&
                         specialCharacters.test(textBeforeCursor[0])) ||
                     dashes !== '--'
                 ) {
                     return;
                 }
+                this.isHyphen = textBeforeCursor !== ' --';
 
-                const textRange = searcher?.getRangeFromText(dashes, true /* exactMatch */);
-                const nodeHyphen = document.createTextNode('—');
-                this.editor.addUndoSnapshot(
-                    () => {
-                        if (textRange) {
-                            textRange.deleteContents();
-                            textRange.insertNode(nodeHyphen);
-                            this.editor!.select(nodeHyphen, PositionType.End);
-                        }
-                    },
-                    ChangeSource.Format /*changeSource*/,
-                    true /*canUndoByBackspace*/,
-                    { formatApiName: 'autoHyphen' }
-                );
-
-                //After the substitution the last key typed needs to be cleaned
+                this.textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
                 this.lastKeyTyped = null;
+            } else if (
+                this.textRange &&
+                keyTyped === ' ' &&
+                textBeforeCursor !== '--' &&
+                textBeforeCursor !== ' '
+            ) {
+                convertToHyphen(this.editor, this.textRange, this.isHyphen, this.removeSpace);
+                this.textRange = null;
+                this.isHyphen = undefined;
+                this.removeSpace = undefined;
+                console.log(this.editor.getContent());
             } else {
                 this.lastKeyTyped = keyTyped;
             }
         }
     }
 }
+
+const convertToHyphen = (
+    editor: IEditor,
+    textRange: Range,
+    isHyphen?: boolean,
+    removeSpace?: boolean
+) => {
+    const doc = editor.getDocument();
+    const nodeHyphen = isHyphen ? doc.createTextNode('—') : doc.createTextNode('–');
+    if (removeSpace) {
+        textRange.setEnd(textRange.endContainer, textRange.endOffset + 1);
+    }
+    editor.addUndoSnapshot(
+        () => {
+            textRange.deleteContents();
+            textRange.insertNode(nodeHyphen);
+        },
+        ChangeSource.Format /*changeSource*/,
+        false /*canUndoByBackspace*/,
+        { formatApiName: 'autoHyphen' }
+    );
+};
