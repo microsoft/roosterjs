@@ -4,16 +4,10 @@ import type {
     EditorPlugin,
     ExperimentalFeatures,
     IEditor,
-    Rect,
     Snapshot,
-    TrustedHTMLHandler,
     UndoSnapshotsService,
 } from 'roosterjs-editor-types';
-import type {
-    StandaloneEditorOptions,
-    IStandaloneEditor,
-    StandaloneCoreApiMap,
-} from 'roosterjs-content-model-types';
+import type { StandaloneEditorOptions, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
  * An interface of editor with Content Model support.
@@ -45,12 +39,6 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     initialContent?: string;
 
     /**
-     * A function map to override default core API implementation
-     * Default value is null
-     */
-    coreApiOverride?: Partial<StandaloneCoreApiMap>;
-
-    /**
      * A plugin map to override default core Plugin implementation
      * Default value is null
      */
@@ -78,28 +66,11 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     experimentalFeatures?: ExperimentalFeatures[];
 
     /**
-     * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree
-     * This is required when trusted-type Content-Security-Policy (CSP) is enabled.
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
-     */
-    trustedHTMLHandler?: TrustedHTMLHandler;
-
-    /**
      * Current zoom scale, @default value is 1
      * When editor is put under a zoomed container, need to pass the zoom scale number using this property
      * to let editor behave correctly especially for those mouse drag/drop behaviors
      */
     zoomScale?: number;
-
-    /**
-     * Retrieves the visible viewport of the Editor. The default viewport is the Rect of the scrollContainer.
-     */
-    getVisibleViewport?: () => Rect | null;
-
-    /**
-     * Color of the border of a selectedImage. Default color: '#DB626C'
-     */
-    imageSelectionBorderColor?: string;
 
     /**
      * A callback to be invoked when any exception is thrown during disposing editor

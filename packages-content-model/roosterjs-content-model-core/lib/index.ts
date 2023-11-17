@@ -40,12 +40,9 @@ export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './metadata/updateTableMetadata';
 export { updateListMetadata } from './metadata/updateListMetadata';
 
-export { standaloneCoreApiMap } from './editor/standaloneCoreApiMap';
-export { createStandaloneEditorDefaultSettings } from './editor/createStandaloneEditorDefaultSettings';
-
 export { ChangeSource } from './constants/ChangeSource';
 export { BulletListType } from './constants/BulletListType';
 export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
-export { createStandaloneEditorCorePlugins } from './corePlugin/createStandaloneEditorCorePlugins';
+export { createStandaloneEditorCore } from './editor/createStandaloneEditorCore';

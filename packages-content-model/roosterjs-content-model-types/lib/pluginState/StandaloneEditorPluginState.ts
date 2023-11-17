@@ -10,10 +10,10 @@ import type { ContentModelFormatPluginState } from './ContentModelFormatPluginSt
 import type { DOMEventPluginState } from './DOMEventPluginState';
 
 /**
- * Temporary core plugin state for Content Model editor
+ * Temporary core plugin state for Content Model editor (ported part)
  * TODO: Create Content Model plugin state from all core plugins once we have standalone Content Model Editor
  */
-export interface ContentModelPluginState {
+export interface StandaloneEditorCorePluginState {
     /**
      * Plugin state for ContentModelCachePlugin
      */
@@ -33,8 +33,13 @@ export interface ContentModelPluginState {
      * Plugin state for DOMEventPlugin
      */
     domEvent: DOMEventPluginState;
+}
 
-    // Plugins copied from legacy editor
+/**
+ * Temporary core plugin state for Content Model editor (unported part)
+ * TODO: Port these plugins
+ */
+export interface UnportedCorePluginState {
     lifecycle: LifecyclePluginState;
     entity: EntityPluginState;
     undo: UndoPluginState;

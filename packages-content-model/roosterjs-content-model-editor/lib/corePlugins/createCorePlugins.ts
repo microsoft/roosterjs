@@ -3,16 +3,15 @@ import { createEntityPlugin } from './EntityPlugin';
 import { createImageSelection } from './ImageSelection';
 import { createLifecyclePlugin } from './LifecyclePlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
-import { createStandaloneEditorCorePlugins } from 'roosterjs-content-model-core';
 import { createUndoPlugin } from './UndoPlugin';
-import type { ContentModelCorePlugins } from '../publicTypes/ContentModelCorePlugins';
+import type { UnportedCorePlugins } from '../publicTypes/ContentModelCorePlugins';
+import type { UnportedCorePluginState } from 'roosterjs-content-model-types';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
-import type { ContentModelPluginState } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export interface CreateCorePluginResponse extends ContentModelCorePlugins {
+export interface CreateCorePluginResponse extends UnportedCorePlugins {
     _placeholder: null;
 }
 
@@ -31,7 +30,6 @@ export function createCorePlugins(
     // The order matters, some plugin needs to be put before/after others to make sure event
     // can be handled in right order
     return {
-        ...createStandaloneEditorCorePlugins(options, contentDiv),
         edit: map.edit || createEditPlugin(),
         _placeholder: null,
         undo: map.undo || createUndoPlugin(options),
@@ -47,15 +45,11 @@ export function createCorePlugins(
  * Get plugin state of core plugins
  * @param corePlugins ContentModelCorePlugins object
  */
-export function getPluginState(corePlugins: ContentModelCorePlugins): ContentModelPluginState {
+export function getPluginState(corePlugins: UnportedCorePlugins): UnportedCorePluginState {
     return {
-        domEvent: corePlugins.domEvent.getState(),
         edit: corePlugins.edit.getState(),
         lifecycle: corePlugins.lifecycle.getState(),
         undo: corePlugins.undo.getState(),
         entity: corePlugins.entity.getState(),
-        copyPaste: corePlugins.copyPaste.getState(),
-        cache: corePlugins.cache.getState(),
-        format: corePlugins.format.getState(),
     };
 }

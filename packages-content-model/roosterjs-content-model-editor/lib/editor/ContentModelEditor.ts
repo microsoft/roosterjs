@@ -1074,7 +1074,9 @@ export class ContentModelEditor implements IContentModelEditor {
      * Retrieves the rect of the visible viewport of the editor.
      */
     getVisibleViewport(): Rect | null {
-        return this.getCore().getVisibleViewport();
+        const core = this.getCore();
+
+        return core.api.getVisibleViewport(core);
     }
 
     /**

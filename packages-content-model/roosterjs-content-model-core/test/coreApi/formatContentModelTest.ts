@@ -429,7 +429,7 @@ describe('formatContentModel', () => {
         const getVisibleViewportSpy = jasmine
             .createSpy('getVisibleViewport')
             .and.returnValue({ top: 100, bottom: 200, left: 100, right: 200 });
-        core.getVisibleViewport = getVisibleViewportSpy;
+        core.api.getVisibleViewport = getVisibleViewportSpy;
 
         formatContentModel(
             core,

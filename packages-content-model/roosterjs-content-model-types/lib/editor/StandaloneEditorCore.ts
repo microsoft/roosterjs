@@ -24,7 +24,10 @@ import type {
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
-import type { ContentModelPluginState } from '../pluginState/ContentModelPluginState';
+import type {
+    StandaloneEditorCorePluginState,
+    UnportedCorePluginState,
+} from '../pluginState/StandaloneEditorPluginState';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { DomToModelSettings } from '../context/DomToModelSettings';
@@ -178,6 +181,12 @@ export type AddUndoSnapshot = (
     canUndoByBackspace: boolean,
     additionalData?: ContentChangedData
 ) => void;
+
+/**
+ * Retrieves the rect of the visible viewport of the editor.
+ * @param core The StandaloneEditorCore object
+ */
+export type GetVisibleViewport = (core: StandaloneEditorCore) => Rect | null;
 
 /**
  * Change the editor selection to the given range
@@ -375,6 +384,12 @@ export interface PortedCoreApiMap {
      * @param isOn True to switch On, False to switch Off
      */
     switchShadowEdit: SwitchShadowEdit;
+
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     * @param core The StandaloneEditorCore object
+     */
+    getVisibleViewport: GetVisibleViewport;
 }
 
 /**
@@ -550,7 +565,8 @@ export interface StandaloneCoreApiMap extends PortedCoreApiMap, UnportedCoreApiM
  * Represents the core data structure of a Content Model editor
  */
 export interface StandaloneEditorCore
-    extends ContentModelPluginState,
+    extends StandaloneEditorCorePluginState,
+        UnportedCorePluginState,
         StandaloneEditorDefaultSettings {
     /**
      * The content DIV element of this editor
@@ -581,17 +597,12 @@ export interface StandaloneEditorCore
      * Dark model handler for the editor, used for variable-based solution.
      * If keep it null, editor will still use original dataset-based dark mode solution.
      */
-    darkColorHandler: DarkColorHandler;
-
-    /**
-     * Retrieves the Visible Viewport of the editor.
-     */
-    getVisibleViewport: () => Rect | null;
+    readonly darkColorHandler: DarkColorHandler;
 
     /**
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
-    imageSelectionBorderColor?: string;
+    readonly imageSelectionBorderColor?: string;
 
     /**
      * A handler to convert HTML string to a trust HTML string.

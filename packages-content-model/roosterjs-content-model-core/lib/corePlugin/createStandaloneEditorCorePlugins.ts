@@ -8,6 +8,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * Create core plugins for standalone editor
  * @param options Options of editor
  */

@@ -14,16 +14,14 @@ import { selectImage } from './selectImage';
 import { selectRange } from './selectRange';
 import { selectTable } from './selectTable';
 import { setContent } from './setContent';
-import { standaloneCoreApiMap } from 'roosterjs-content-model-core';
 import { transformColor } from './transformColor';
 import { triggerEvent } from './triggerEvent';
-import type { StandaloneCoreApiMap } from 'roosterjs-content-model-types';
+import type { UnportedCoreApiMap } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const coreApiMap: StandaloneCoreApiMap = {
-    ...standaloneCoreApiMap,
+export const coreApiMap: UnportedCoreApiMap = {
     attachDomEvent,
     addUndoSnapshot,
     ensureTypeInContainer,
