@@ -2,29 +2,26 @@ import { createLifecyclePlugin } from '../../lib/corePlugin/LifecyclePlugin';
 import { DarkColorHandler, IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 describe('LifecyclePlugin', () => {
-    const getDarkColor = (color: string) => color;
     it('init', () => {
         const div = document.createElement('div');
-        const plugin = createLifecyclePlugin({ getDarkColor }, div);
+        const plugin = createLifecyclePlugin({}, div);
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const state = plugin.getState();
+        const setContentModelSpy = jasmine.createSpy('setContentModel');
 
         plugin.initialize(<IEditor>(<any>{
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
+            isDarkMode: () => false,
+            setContentModel: setContentModelSpy,
         }));
 
-        expect(state.defaultFormat).toBeNull();
-
         expect(state).toEqual({
-            defaultFormat: null,
             isDarkMode: false,
             onExternalContentTransform: null,
-            experimentalFeatures: [],
             shadowEditFragment: null,
-            getDarkColor,
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -32,47 +29,69 @@ describe('LifecyclePlugin', () => {
         expect(div.innerHTML).toBe('');
         expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
         expect(triggerPluginEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(setContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(setContentModelSpy).toHaveBeenCalledWith(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            { segmentType: 'Br', format: {} },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            { ignoreSelection: true },
+            undefined
+        );
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();
     });
 
     it('init with options', () => {
+        const mockedModel = 'MODEL' as any;
         const div = document.createElement('div');
         const plugin = createLifecyclePlugin(
             {
-                getDarkColor,
-                defaultFormat: {
+                defaultSegmentFormat: {
                     fontFamily: 'arial',
                 },
-                initialContent: 'test',
+                initialModel: mockedModel,
             },
             div
         );
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const state = plugin.getState();
+        const setContentModelSpy = jasmine.createSpy('setContentModel');
 
         plugin.initialize(<IEditor>(<any>{
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
+            isDarkMode: () => false,
+            setContentModel: setContentModelSpy,
         }));
 
         expect(state).toEqual({
-            defaultFormat: {
-                fontFamily: 'arial',
-            },
             isDarkMode: false,
             onExternalContentTransform: null,
-            experimentalFeatures: [],
             shadowEditFragment: null,
-            getDarkColor,
         });
+
+        expect(setContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(setContentModelSpy).toHaveBeenCalledWith(
+            mockedModel,
+            { ignoreSelection: true },
+            undefined
+        );
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
-        expect(div.innerHTML).toBe('test');
         expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
         expect(triggerPluginEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
 
@@ -85,18 +104,40 @@ describe('LifecyclePlugin', () => {
         div.contentEditable = 'true';
         const plugin = createLifecyclePlugin({}, div);
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const setContentModelSpy = jasmine.createSpy('setContentModel');
 
         plugin.initialize(<IEditor>(<any>{
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
+            isDarkMode: () => false,
+            setContentModel: setContentModelSpy,
         }));
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('');
         expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
         expect(triggerPluginEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+
+        expect(setContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(setContentModelSpy).toHaveBeenCalledWith(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            { segmentType: 'Br', format: {} },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            { ignoreSelection: true },
+            undefined
+        );
 
         plugin.dispose();
         expect(div.isContentEditable).toBeTrue();
@@ -107,14 +148,35 @@ describe('LifecyclePlugin', () => {
         div.contentEditable = 'false';
         const plugin = createLifecyclePlugin({}, div);
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const setContentModelSpy = jasmine.createSpy('setContentModel');
 
         plugin.initialize(<IEditor>(<any>{
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
+            isDarkMode: () => false,
+            setContentModel: setContentModelSpy,
         }));
 
+        expect(setContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(setContentModelSpy).toHaveBeenCalledWith(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            { segmentType: 'Br', format: {} },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            { ignoreSelection: true },
+            undefined
+        );
         expect(div.isContentEditable).toBeFalse();
         expect(div.style.userSelect).toBe('');
         expect(triggerPluginEvent).toHaveBeenCalledTimes(1);

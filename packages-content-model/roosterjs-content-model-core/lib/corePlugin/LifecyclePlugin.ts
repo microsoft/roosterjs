@@ -1,9 +1,10 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import {
+    createBr,
     createContentModelDocument,
     createParagraph,
-    normalizeContentModel,
+    createSelectionMarker,
     setColor,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -86,7 +87,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
 
         this.editor.setContentModel(
             this.initialModel,
-            undefined /*option*/,
+            { ignoreSelection: true },
             this.editor.isDarkMode() ? this.onInitialNodeCreated : undefined
         );
 
@@ -163,15 +164,15 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         const model = createContentModelDocument(format);
         const paragraph = createParagraph(false /*isImplicit*/, undefined /*blockFormat*/, format);
 
+        paragraph.segments.push(createSelectionMarker(format), createBr(format));
         model.blocks.push(paragraph);
-        normalizeContentModel(model);
 
         return model;
     }
 
     private onInitialNodeCreated: OnNodeCreated = (model, node) => {
-        if (isEntity(model)) {
-            this.editor?.transformToDarkColor(node, ColorTransformDirection.LightToDark);
+        if (isEntity(model) && this.editor) {
+            this.editor.transformToDarkColor(node, ColorTransformDirection.LightToDark);
         }
     };
 }
