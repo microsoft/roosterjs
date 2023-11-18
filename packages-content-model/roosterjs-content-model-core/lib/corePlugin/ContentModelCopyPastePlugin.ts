@@ -17,17 +17,13 @@ import {
     wrap,
 } from 'roosterjs-content-model-dom';
 import type {
+    CopyPastePluginState,
     DOMSelection,
     IStandaloneEditor,
     OnNodeCreated,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
-import type {
-    CopyPastePluginState,
-    IEditor,
-    PluginWithState,
-    ClipboardData,
-} from 'roosterjs-editor-types';
+import type { IEditor, PluginWithState, ClipboardData } from 'roosterjs-editor-types';
 
 /**
  * Copy and paste plugin for handling onCopy and onPaste event

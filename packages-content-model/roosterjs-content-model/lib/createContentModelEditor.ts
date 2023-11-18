@@ -1,6 +1,5 @@
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelEditPlugin, ContentModelPastePlugin } from 'roosterjs-content-model-plugins';
-import { getDarkColor } from 'roosterjs-color-utils';
 import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     ContentModelEditorOptions,
@@ -26,7 +25,6 @@ export function createContentModelEditor(
     const options: ContentModelEditorOptions = {
         plugins: plugins,
         initialContent: initialContent,
-        getDarkColor: getDarkColor,
         defaultFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
             fontSize: '11pt',

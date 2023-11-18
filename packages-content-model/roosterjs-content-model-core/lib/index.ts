@@ -6,6 +6,7 @@ export {
     getClosestAncestorBlockGroupIndex,
     TypeOfBlockGroup,
 } from './publicApi/model/getClosestAncestorBlockGroupIndex';
+export { isBold } from './publicApi/model/isBold';
 
 export {
     iterateSelections,

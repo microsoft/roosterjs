@@ -1,7 +1,9 @@
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
-import type { DefaultFormat, EditorPlugin, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type { EditorPlugin, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
+import type { ContentModelDocument } from '../group/ContentModelDocument';
 
 /**
  * Options for Content Model editor
@@ -35,7 +37,7 @@ export interface StandaloneEditorOptions {
      * If there is already content inside editor, format of existing content will not be changed.
      * Default value is the computed style of editor content DIV
      */
-    defaultFormat?: DefaultFormat;
+    defaultSegmentFormat?: ContentModelSegmentFormat;
 
     /**
      * Allowed custom content type when paste besides text/plain, text/html and images
@@ -72,4 +74,19 @@ export interface StandaloneEditorOptions {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
+
+    /**
+     * Initial Content Model
+     */
+    initialModel?: ContentModelDocument;
+
+    /**
+     * Whether to skip the adjust editor process when for light/dark mode
+     */
+    doNotAdjustEditorColor?: boolean;
+
+    /**
+     * If the editor is currently in dark mode
+     */
+    inDarkMode?: boolean;
 }

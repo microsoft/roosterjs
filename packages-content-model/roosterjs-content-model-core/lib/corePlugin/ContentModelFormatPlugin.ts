@@ -38,18 +38,8 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
      * @param option The editor option
      */
     constructor(option: StandaloneEditorOptions) {
-        const format = option.defaultFormat || {};
         this.state = {
-            defaultFormat: {
-                fontWeight: format.bold ? 'bold' : undefined,
-                italic: format.italic || undefined,
-                underline: format.underline || undefined,
-                fontFamily: format.fontFamily || undefined,
-                fontSize: format.fontSize || undefined,
-                textColor: format.textColors?.lightModeColor || format.textColor || undefined,
-                backgroundColor:
-                    format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
-            },
+            defaultFormat: { ...option.defaultSegmentFormat },
             pendingFormat: null,
         };
     }

@@ -1,6 +1,5 @@
 import { ContentPosition, KnownCreateElementDataIndex, PositionType } from 'roosterjs-editor-types';
 import {
-    applyFormat,
     createElement,
     createRange,
     findClosestElementAncestor,
@@ -58,15 +57,6 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, key
 
         // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
         position = new Position(formatNode, PositionType.Begin);
-    }
-
-    if (formatNode && core.lifecycle.defaultFormat) {
-        applyFormat(
-            formatNode,
-            core.lifecycle.defaultFormat,
-            core.lifecycle.isDarkMode,
-            core.darkColorHandler
-        );
     }
 
     // If this is triggered by a keyboard event, let's select the new position

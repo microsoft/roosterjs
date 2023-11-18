@@ -1,6 +1,7 @@
 import { createEditorCore } from './createEditorCore';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import { paste } from 'roosterjs-content-model-core';
+import { isBold, paste } from 'roosterjs-content-model-core';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -98,16 +99,6 @@ export class ContentModelEditor implements IContentModelEditor {
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         this.core = createEditorCore(contentDiv, options);
         this.core.plugins.forEach(plugin => plugin.initialize(this));
-        this.ensureTypeInContainer(
-            new Position(this.core.contentDiv, PositionType.Begin).normalize()
-        );
-
-        if (options.cacheModel) {
-            // Create an initial content model to cache
-            // TODO: Once we have standalone editor and get rid of `ensureTypeInContainer` function, we can set init content
-            // using content model and cache the model directly
-            this.createContentModel();
-        }
     }
 
     /**
@@ -206,6 +197,16 @@ export class ContentModelEditor implements IContentModelEditor {
                 core.disposeErrorHandler?.(plugin, e as Error);
             }
         }
+
+        getObjectKeys(core.customData).forEach(key => {
+            const data = core.customData[key];
+
+            if (data && data.disposer) {
+                data.disposer(data.value);
+            }
+
+            delete core.customData[key];
+        });
 
         core.darkColorHandler.reset();
 
@@ -715,7 +716,7 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
         const core = this.getCore();
-        return (core.lifecycle.customData[key] = core.lifecycle.customData[key] || {
+        return (core.customData[key] = core.customData[key] || {
             value: getter ? getter() : undefined,
             disposer,
         }).value as T;
@@ -734,7 +735,17 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns Default format object of this editor
      */
     getDefaultFormat(): DefaultFormat {
-        return this.getCore().lifecycle.defaultFormat ?? {};
+        const format = this.getCore().format.defaultFormat;
+
+        return {
+            bold: isBold(format.fontWeight),
+            italic: format.italic,
+            underline: format.underline,
+            fontFamily: format.fontFamily,
+            fontSize: format.fontSize,
+            textColor: format.textColor,
+            backgroundColor: format.backgroundColor,
+        };
     }
 
     /**
@@ -1015,7 +1026,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param feature The feature to check
      */
     isFeatureEnabled(feature: ExperimentalFeatures | CompatibleExperimentalFeatures): boolean {
-        return this.getCore().lifecycle.experimentalFeatures.indexOf(feature) >= 0;
+        return this.getCore().experimentalFeatures.indexOf(feature) >= 0;
     }
 
     /**

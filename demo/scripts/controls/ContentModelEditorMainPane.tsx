@@ -17,9 +17,9 @@ import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelEditPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
+import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
 import { EditorPlugin } from 'roosterjs-editor-types';
-import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import {
@@ -210,6 +210,17 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             height: `calc(${100 / this.state.scale}%)`,
             width: `calc(${100 / this.state.scale}%)`,
         };
+        const format = this.state.initState.defaultFormat;
+        const defaultFormat: ContentModelSegmentFormat = {
+            fontWeight: format.bold ? 'bold' : undefined,
+            italic: format.italic || undefined,
+            underline: format.underline || undefined,
+            fontFamily: format.fontFamily || undefined,
+            fontSize: format.fontSize || undefined,
+            textColor: format.textColors?.lightModeColor || format.textColor || undefined,
+            backgroundColor:
+                format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
+        };
 
         this.updateContentPlugin.forceUpdate();
 
@@ -220,9 +231,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                         <ContentModelRooster
                             className={styles.editor}
                             plugins={allPlugins}
-                            defaultFormat={this.state.initState.defaultFormat}
+                            defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
-                            getDarkColor={getDarkColor}
                             experimentalFeatures={this.state.initState.experimentalFeatures}
                             undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
                             trustedHTMLHandler={trustedHTMLHandler}

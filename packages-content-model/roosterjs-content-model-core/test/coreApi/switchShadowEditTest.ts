@@ -46,7 +46,7 @@ describe('switchShadowEdit', () => {
                 {
                     eventType: PluginEventType.EnteredShadowEdit,
                     fragment: document.createDocumentFragment(),
-                    selectionPath: { start: [], end: [] },
+                    selectionPath: null,
                 },
                 false
             );
@@ -67,7 +67,7 @@ describe('switchShadowEdit', () => {
                 {
                     eventType: PluginEventType.EnteredShadowEdit,
                     fragment: document.createDocumentFragment(),
-                    selectionPath: { start: [], end: [] },
+                    selectionPath: null,
                 },
                 false
             );
