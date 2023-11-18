@@ -159,7 +159,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         }
     }
 
-    private createInitModel(format: ContentModelSegmentFormat) {
+    private createInitModel(format?: ContentModelSegmentFormat) {
         const model = createContentModelDocument(format);
         const paragraph = createParagraph(false /*isImplicit*/, undefined /*blockFormat*/, format);
 

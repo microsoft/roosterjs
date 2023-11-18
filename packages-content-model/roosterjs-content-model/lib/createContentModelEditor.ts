@@ -25,7 +25,7 @@ export function createContentModelEditor(
     const options: ContentModelEditorOptions = {
         plugins: plugins,
         initialContent: initialContent,
-        defaultFormat: {
+        defaultSegmentFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
             fontSize: '11pt',
             textColor: '#000000',

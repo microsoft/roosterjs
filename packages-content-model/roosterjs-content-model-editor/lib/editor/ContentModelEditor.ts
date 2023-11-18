@@ -8,7 +8,6 @@ import {
     ContentPosition,
     GetContentMode,
     PluginEventType,
-    PositionType,
     QueryScope,
     RegionType,
 } from 'roosterjs-editor-types';
@@ -30,6 +29,7 @@ import type {
     PluginEvent,
     PluginEventData,
     PluginEventFromType,
+    PositionType,
     Rect,
     Region,
     SelectionPath,
