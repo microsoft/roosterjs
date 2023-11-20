@@ -1,4 +1,5 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
+import * as keyboardInput from '../../lib/edit/keyboardInput';
 import { ContentModelEditPlugin } from '../../lib/edit/ContentModelEditPlugin';
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
@@ -17,9 +18,11 @@ describe('ContentModelEditPlugin', () => {
 
     describe('onPluginEvent', () => {
         let keyboardDeleteSpy: jasmine.Spy;
+        let keyboardInputSpy: jasmine.Spy;
 
         beforeEach(() => {
-            keyboardDeleteSpy = spyOn(keyboardDelete, 'keyboardDelete').and.returnValue(true);
+            keyboardDeleteSpy = spyOn(keyboardDelete, 'keyboardDelete');
+            keyboardInputSpy = spyOn(keyboardInput, 'keyboardInput');
         });
 
         it('Backspace', () => {
@@ -34,6 +37,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
         });
 
         it('Delete', () => {
@@ -48,11 +52,15 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
         });
 
         it('Other key', () => {
             const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: 41 } as any;
+            const rawEvent = { which: 41, key: 'A' } as any;
+            const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+
+            editor.addUndoSnapshot = addUndoSnapshotSpy;
 
             plugin.initialize(editor);
 
@@ -62,6 +70,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).toHaveBeenCalledWith(editor, rawEvent);
         });
 
         it('Default prevented', () => {
@@ -75,6 +84,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
         });
 
         it('Trigger entity event first', () => {
@@ -110,28 +120,7 @@ describe('ContentModelEditPlugin', () => {
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
                 key: 'Delete',
             } as any);
-        });
-
-        it('SelectionChanged event should clear cached model', () => {
-            const plugin = new ContentModelEditPlugin();
-
-            plugin.initialize(editor);
-            plugin.onPluginEvent({
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: null!,
-            });
-        });
-
-        it('keyboardDelete returns false', () => {
-            const plugin = new ContentModelEditPlugin();
-
-            keyboardDeleteSpy.and.returnValue(false);
-
-            plugin.initialize(editor);
-            plugin.onPluginEvent({
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: null!,
-            });
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
         });
     });
 });
