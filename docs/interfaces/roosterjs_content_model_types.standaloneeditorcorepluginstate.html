@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentModelPluginState | RoosterJs API Reference</title>
+	<title>StandaloneEditorCorePluginState | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.contentmodelpluginstate.html">ContentModelPluginState</a>
+					<a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html">StandaloneEditorCorePluginState</a>
 				</li>
 			</ul>
-			<h1>Interface ContentModelPluginState</h1>
+			<h1>Interface StandaloneEditorCorePluginState</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Temporary core plugin state for Content Model editor
+						<p>Temporary core plugin state for Content Model editor (ported part)
 						TODO: Create Content Model plugin state from all core plugins once we have standalone Content Model Editor</p>
 					</div>
 				</div>
@@ -78,7 +78,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ContentModelPluginState</span>
+						<span class="target">StandaloneEditorCorePluginState</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<a href="roosterjs_content_model_types.standaloneeditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">StandaloneEditorCore</a>
@@ -94,14 +94,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelpluginstate.html#cache" class="tsd-kind-icon">cache</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelpluginstate.html#copypaste" class="tsd-kind-icon">copy<wbr>Paste</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelpluginstate.html#domevent" class="tsd-kind-icon">dom<wbr>Event</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelpluginstate.html#edit" class="tsd-kind-icon">edit</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelpluginstate.html#entity" class="tsd-kind-icon">entity</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelpluginstate.html#format" class="tsd-kind-icon">format</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelpluginstate.html#lifecycle" class="tsd-kind-icon">lifecycle</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelpluginstate.html#undo" class="tsd-kind-icon">undo</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html#cache" class="tsd-kind-icon">cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html#copypaste" class="tsd-kind-icon">copy<wbr>Paste</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html#domevent" class="tsd-kind-icon">dom<wbr>Event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html#format" class="tsd-kind-icon">format</a></li>
 							</ul>
 						</section>
 					</div>
@@ -115,7 +111,7 @@
 					<div class="tsd-signature tsd-kind-icon">cache<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.contentmodelcachepluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelCachePluginState</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts#L20">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/faae180/packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts#L20">packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -130,7 +126,7 @@
 					<div class="tsd-signature tsd-kind-icon">copy<wbr>Paste<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.copypastepluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">CopyPastePluginState</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts#L25">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/faae180/packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts#L25">packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -145,7 +141,7 @@
 					<div class="tsd-signature tsd-kind-icon">dom<wbr>Event<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.domeventpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">DOMEventPluginState</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts#L35">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/faae180/packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts#L35">packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -155,32 +151,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="edit" class="tsd-anchor"></a>
-					<h3>edit</h3>
-					<div class="tsd-signature tsd-kind-icon">edit<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.editpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">EditPluginState</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts#L41">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts:41</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="entity" class="tsd-anchor"></a>
-					<h3>entity</h3>
-					<div class="tsd-signature tsd-kind-icon">entity<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.entitypluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">EntityPluginState</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts#L39">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts:39</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="format" class="tsd-anchor"></a>
 					<h3>format</h3>
 					<div class="tsd-signature tsd-kind-icon">format<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.contentmodelformatpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelFormatPluginState</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts#L30">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/faae180/packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts#L30">packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -188,26 +164,6 @@
 							<p>Plugin state for ContentModelFormatPlugin</p>
 						</div>
 					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="lifecycle" class="tsd-anchor"></a>
-					<h3>lifecycle</h3>
-					<div class="tsd-signature tsd-kind-icon">lifecycle<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.lifecyclepluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">LifecyclePluginState</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts#L38">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts:38</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="undo" class="tsd-anchor"></a>
-					<h3>undo</h3>
-					<div class="tsd-signature tsd-kind-icon">undo<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.undopluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">UndoPluginState</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/700e8e8/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts#L40">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelPluginState.ts:40</a></li>
-						</ul>
-					</aside>
 				</section>
 			</section>
 		</div>
@@ -263,31 +219,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.contentmodelpluginstate.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Plugin<wbr>State</a>
+						<a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html" class="tsd-kind-icon">Standalone<wbr>Editor<wbr>Core<wbr>Plugin<wbr>State</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelpluginstate.html#cache" class="tsd-kind-icon">cache</a>
+								<a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html#cache" class="tsd-kind-icon">cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelpluginstate.html#copypaste" class="tsd-kind-icon">copy<wbr>Paste</a>
+								<a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html#copypaste" class="tsd-kind-icon">copy<wbr>Paste</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelpluginstate.html#domevent" class="tsd-kind-icon">dom<wbr>Event</a>
+								<a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html#domevent" class="tsd-kind-icon">dom<wbr>Event</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelpluginstate.html#edit" class="tsd-kind-icon">edit</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelpluginstate.html#entity" class="tsd-kind-icon">entity</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelpluginstate.html#format" class="tsd-kind-icon">format</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelpluginstate.html#lifecycle" class="tsd-kind-icon">lifecycle</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelpluginstate.html#undo" class="tsd-kind-icon">undo</a>
+								<a href="roosterjs_content_model_types.standaloneeditorcorepluginstate.html#format" class="tsd-kind-icon">format</a>
 							</li>
 						</ul>
 					</li>
