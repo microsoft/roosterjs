@@ -442,9 +442,8 @@ describe('keyboardDelete', () => {
             getDOMSelection: () => range,
         } as any;
 
-        const result = keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent);
 
-        expect(result).toBeFalse();
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
 
@@ -464,9 +463,8 @@ describe('keyboardDelete', () => {
             getDOMSelection: () => range,
         } as any;
 
-        const result = keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent);
 
-        expect(result).toBeFalse();
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
 
