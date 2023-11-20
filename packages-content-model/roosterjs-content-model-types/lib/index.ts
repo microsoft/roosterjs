@@ -240,7 +240,6 @@ export {
     PendingFormat,
 } from './pluginState/ContentModelFormatPluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
-export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';

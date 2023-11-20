@@ -1,7 +1,6 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
 import { createCorePlugins, getPluginState } from '../corePlugins/createCorePlugins';
-import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
-import { createStandaloneEditorCore } from 'roosterjs-content-model-core';
+import { createModelFromHtml, createStandaloneEditorCore } from 'roosterjs-content-model-core';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import type { EditorPlugin } from 'roosterjs-editor-types';
@@ -31,20 +30,11 @@ export function createEditorCore(
     const initContent = options.initialContent ?? contentDiv.innerHTML;
 
     if (initContent && !options.initialModel) {
-        const doc = new DOMParser().parseFromString(
-            options.trustedHTMLHandler?.(initContent) ?? initContent,
-            'text/html'
+        options.initialModel = createModelFromHtml(
+            initContent,
+            options.defaultDomToModelOptions,
+            options.trustedHTMLHandler
         );
-
-        if (doc?.body) {
-            options.initialModel = domToContentModel(
-                doc.body,
-                createDomToModelContext(
-                    undefined /*editorContext*/,
-                    options.defaultDomToModelOptions
-                )
-            );
-        }
     }
 
     const standaloneEditorCore = createStandaloneEditorCore(

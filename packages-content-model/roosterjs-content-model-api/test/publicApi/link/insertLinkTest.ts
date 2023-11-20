@@ -343,6 +343,7 @@ describe('insertLink', () => {
         const a = div.querySelector('a');
 
         expect(a!.outerHTML).toBe('<a href="http://test.com" title="title">http://test.com</a>');
+        expect(onPluginEvent).toHaveBeenCalledTimes(4);
         expect(onPluginEvent).toHaveBeenCalledWith({
             eventType: PluginEventType.ContentChanged,
             source: ChangeSource.CreateLink,

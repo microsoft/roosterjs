@@ -1,5 +1,9 @@
-import type { CopyPastePluginState } from './CopyPastePluginState';
-import type { EditPluginState, EntityPluginState, UndoPluginState } from 'roosterjs-editor-types';
+import type {
+    CopyPastePluginState,
+    EditPluginState,
+    EntityPluginState,
+    UndoPluginState,
+} from 'roosterjs-editor-types';
 import type { ContentModelCachePluginState } from './ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from './ContentModelFormatPluginState';
 import type { DOMEventPluginState } from './DOMEventPluginState';

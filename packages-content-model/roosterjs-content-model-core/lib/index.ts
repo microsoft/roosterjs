@@ -7,6 +7,7 @@ export {
     TypeOfBlockGroup,
 } from './publicApi/model/getClosestAncestorBlockGroupIndex';
 export { isBold } from './publicApi/model/isBold';
+export { createModelFromHtml } from './publicApi/model/createModelFromHtml';
 
 export {
     iterateSelections,
