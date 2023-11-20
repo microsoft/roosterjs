@@ -226,11 +226,15 @@ export {
     GetStyleBasedFormatState,
     RestoreUndoSnapshot,
     EnsureTypeInContainer,
+    GetVisibleViewport,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export { ContentModelPluginState } from './pluginState/ContentModelPluginState';
+export {
+    StandaloneEditorCorePluginState,
+    UnportedCorePluginState,
+} from './pluginState/StandaloneEditorPluginState';
 export {
     ContentModelFormatPluginState,
     PendingFormat,

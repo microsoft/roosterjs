@@ -9,6 +9,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * Create default DOM and Content Model conversion settings for a standalone editor
  * @param options The editor options
  */

@@ -10,7 +10,9 @@ import * as LifecyclePlugin from '../../lib/corePlugins/LifecyclePlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
 import * as UndoPlugin from '../../lib/corePlugins/UndoPlugin';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
-import { createEditorCore, defaultTrustHtmlHandler } from '../../lib/editor/createEditorCore';
+import { createEditorCore } from '../../lib/editor/createEditorCore';
+import { defaultTrustHtmlHandler } from 'roosterjs-content-model-core/lib/editor/createStandaloneEditorCore';
+import { standaloneCoreApiMap } from 'roosterjs-content-model-core/lib/editor/standaloneCoreApiMap';
 
 const mockedDomEventState = 'DOMEVENTSTATE' as any;
 const mockedEditState = 'EDITSTATE' as any;
@@ -87,8 +89,8 @@ describe('createEditorCore', () => {
         const core = createEditorCore(contentDiv, {});
         expect(core).toEqual({
             contentDiv,
-            api: coreApiMap,
-            originalApi: coreApiMap,
+            api: { ...coreApiMap, ...standaloneCoreApiMap },
+            originalApi: { ...coreApiMap, ...standaloneCoreApiMap },
             plugins: [
                 mockedCachePlugin,
                 mockedFormatPlugin,
@@ -112,7 +114,6 @@ describe('createEditorCore', () => {
             trustedHTMLHandler: defaultTrustHtmlHandler,
             zoomScale: 1,
             sizeTransformer: jasmine.anything(),
-            getVisibleViewport: jasmine.anything(),
             imageSelectionBorderColor: undefined,
             darkColorHandler: jasmine.anything(),
             disposeErrorHandler: undefined,
@@ -141,8 +142,8 @@ describe('createEditorCore', () => {
 
         expect(core).toEqual({
             contentDiv,
-            api: coreApiMap,
-            originalApi: coreApiMap,
+            api: { ...coreApiMap, ...standaloneCoreApiMap },
+            originalApi: { ...coreApiMap, ...standaloneCoreApiMap },
             plugins: [
                 mockedCachePlugin,
                 mockedFormatPlugin,
@@ -166,7 +167,6 @@ describe('createEditorCore', () => {
             trustedHTMLHandler: defaultTrustHtmlHandler,
             zoomScale: 1,
             sizeTransformer: jasmine.anything(),
-            getVisibleViewport: jasmine.anything(),
             imageSelectionBorderColor: undefined,
             darkColorHandler: jasmine.anything(),
             disposeErrorHandler: undefined,

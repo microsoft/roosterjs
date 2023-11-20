@@ -14,13 +14,15 @@ export function initEditor(id: string): IContentModelEditor {
 
     let options: ContentModelEditorOptions = {
         plugins: [new ContentModelPastePlugin()],
-        getVisibleViewport: () => {
-            return {
-                top: 100,
-                bottom: 200,
-                left: 100,
-                right: 200,
-            };
+        coreApiOverride: {
+            getVisibleViewport: () => {
+                return {
+                    top: 100,
+                    bottom: 200,
+                    left: 100,
+                    right: 200,
+                };
+            },
         },
     };
 
