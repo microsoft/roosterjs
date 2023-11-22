@@ -82,8 +82,6 @@ export default class AutoFormat implements EditorPlugin {
                 const dashes = searcher.getSubStringBefore(2);
                 const isPrecededByADash = textBeforeCursor?.[0] === '-';
 
-                console.log(dashes, textBeforeCursor);
-
                 if (
                     isPrecededByADash ||
                     (typeof textBeforeCursor === 'string' &&
@@ -93,7 +91,6 @@ export default class AutoFormat implements EditorPlugin {
                     return;
                 }
                 this.isHyphen = textBeforeCursor !== ' --';
-                console.log(searcher, searcher.getRangeFromText(dashes, true /* exactMatch */));
 
                 this.textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
                 this.lastKeyTyped = null;
