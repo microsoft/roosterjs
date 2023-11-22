@@ -6,6 +6,7 @@ import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     EditorEnvironment,
     StandaloneEditorCore,
+    StandaloneEditorCorePluginState,
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
     UnportedCoreApiMap,
@@ -36,6 +37,7 @@ export function createStandaloneEditorCore(
             corePlugins.copyPaste,
             corePlugins.domEvent,
             ...tempPlugins,
+            corePlugins.entity,
             corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(),
@@ -69,12 +71,13 @@ export function defaultTrustHtmlHandler(html: string) {
     return html;
 }
 
-function getPluginState(corePlugins: StandaloneEditorCorePlugins) {
+function getPluginState(corePlugins: StandaloneEditorCorePlugins): StandaloneEditorCorePluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),
         copyPaste: corePlugins.copyPaste.getState(),
         cache: corePlugins.cache.getState(),
         format: corePlugins.format.getState(),
         lifecycle: corePlugins.lifecycle.getState(),
+        entity: corePlugins.entity.getState(),
     };
 }

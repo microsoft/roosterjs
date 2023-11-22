@@ -1,10 +1,9 @@
+import { ChangedEntity } from 'roosterjs-content-model-types/lib/event/ContentModelContentChangedEvent';
 import { ChangeSource } from '../constants/ChangeSource';
-import { ColorTransformDirection, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import type { Entity } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     ContentModelContentChangedEvent,
     DOMSelection,
-    EntityRemovalOperation,
     FormatContentModel,
     FormatWithContentModelContext,
     StandaloneEditorCore,
@@ -35,8 +34,6 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
 
     if (formatter(model, context)) {
         const writeBack = () => {
-            handleNewEntities(core, context);
-            handleDeletedEntities(core, context);
             handleImages(core, context);
 
             selection =
@@ -69,6 +66,21 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             additionalData: {
                 formatApiName: apiName,
             },
+            changedEntities: context.newEntities
+                .map(
+                    (entity): ChangedEntity => ({
+                        entity,
+                        operation: 'newEntity',
+                        rawEvent,
+                    })
+                )
+                .concat(
+                    context.deletedEntities.map(entry => ({
+                        entity: entry.entity,
+                        operation: entry.operation,
+                        rawEvent,
+                    }))
+                ),
         };
         core.api.triggerEvent(core, eventData, true /*broadcast*/);
     } else {
@@ -80,64 +92,6 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         handlePendingFormat(core, context, core.api.getDOMSelection(core));
     }
 };
-
-function handleNewEntities(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
-    // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
-    // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
-    // from EntityPlugin to here
-
-    if (core.lifecycle.isDarkMode) {
-        context.newEntities.forEach(entity => {
-            core.api.transformColor(
-                core,
-                entity.wrapper,
-                true /*includeSelf*/,
-                null /*callback*/,
-                ColorTransformDirection.LightToDark
-            );
-        });
-    }
-}
-
-// This is only used for compatibility with old editor
-// TODO: Remove this map once we have standalone editor
-const EntityOperationMap: Record<EntityRemovalOperation, EntityOperation> = {
-    overwrite: EntityOperation.Overwrite,
-    removeFromEnd: EntityOperation.RemoveFromEnd,
-    removeFromStart: EntityOperation.RemoveFromStart,
-};
-
-function handleDeletedEntities(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
-    context.deletedEntities.forEach(
-        ({
-            entity: {
-                wrapper,
-                entityFormat: { id, entityType, isReadonly },
-            },
-            operation,
-        }) => {
-            if (id && entityType) {
-                // TODO: Revisit this entity parameter for standalone editor, we may just directly pass ContentModelEntity object instead
-                const entity: Entity = {
-                    id,
-                    type: entityType,
-                    isReadonly: !!isReadonly,
-                    wrapper,
-                };
-                core.api.triggerEvent(
-                    core,
-                    {
-                        eventType: PluginEventType.EntityOperation,
-                        entity,
-                        operation: EntityOperationMap[operation],
-                        rawEvent: context.rawEvent,
-                    },
-                    false /*broadcast*/
-                );
-            }
-        }
-    );
-}
 
 function handleImages(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
     if (context.newImages.length > 0) {

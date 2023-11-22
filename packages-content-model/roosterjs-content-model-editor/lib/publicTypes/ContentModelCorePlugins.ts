@@ -2,7 +2,6 @@ import type { StandaloneEditorCorePlugins } from 'roosterjs-content-model-types'
 import type {
     EditPluginState,
     EditorPlugin,
-    EntityPluginState,
     PluginWithState,
     UndoPluginState,
 } from 'roosterjs-editor-types';
@@ -21,12 +20,6 @@ export interface UnportedCorePlugins {
      * Undo plugin provides the ability to undo/redo
      */
     readonly undo: PluginWithState<UndoPluginState>;
-
-    /**
-     * Entity Plugin handles all operations related to an entity and generate entity specified events
-     */
-
-    readonly entity: PluginWithState<EntityPluginState>;
 
     /**
      * Image selection Plugin detects image selection and help highlight the image

@@ -1,5 +1,7 @@
+import toArray from './toArray';
 import { isElementOfType } from './isElementOfType';
 import { isNodeOfType } from './isNodeOfType';
+import type { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
 
 const ENTITY_INFO_NAME = '_Entity';
@@ -11,14 +13,25 @@ const DELIMITER_BEFORE = 'entityDelimiterBefore';
 const DELIMITER_AFTER = 'entityDelimiterAfter';
 
 /**
- * @internal
+ * Check if the given DOM Node is an entity wrapper element
  */
 export function isEntityElement(node: Node): boolean {
     return isNodeOfType(node, 'ELEMENT_NODE') && node.classList.contains(ENTITY_INFO_NAME);
 }
 
 /**
- * @internal
+ * Get all entity wrapper elements under the given root element
+ * @param root The root element to query from
+ * @returns An array of entity wrapper elements
+ */
+export function getAllEntityWrappers(root: HTMLElement): HTMLElement[] {
+    return toArray(root.querySelectorAll('.' + ENTITY_INFO_NAME)) as HTMLElement[];
+}
+
+/**
+ * Parse entity class names from entity wrapper element
+ * @param className Class names of entity
+ * @param format The output entity format object
  */
 export function parseEntityClassName(
     className: string,
@@ -36,7 +49,9 @@ export function parseEntityClassName(
 }
 
 /**
- * @internal
+ * Generate Entity class names for an entity wrapper
+ * @param format The source entity format object
+ * @returns A combined CSS class name string for entity wrapper
  */
 export function generateEntityClassNames(format: ContentModelEntityFormat): string {
     return format.isFakeEntity
@@ -78,4 +93,22 @@ function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
     element.parentNode?.insertBefore(span, isAfter ? element.nextSibling : element);
 
     return span;
+}
+
+/**
+ * Add allow CSS classes to HTML Sanitizer options so they can be preserved during sanitization
+ * TODO: Revisit the HTML sanitization approach when paste
+ * @param options HTML Sanitizer options
+ */
+export function addEntityClassesForForHtmlSanitizer(options: HtmlSanitizerOptions) {
+    if (!options.additionalAllowedCssClasses) {
+        options.additionalAllowedCssClasses = [];
+    }
+
+    options.additionalAllowedCssClasses.push(
+        '^' + ENTITY_INFO_NAME + '$',
+        '^' + ENTITY_ID_PREFIX,
+        '^' + ENTITY_TYPE_PREFIX,
+        '^' + ENTITY_READONLY_PREFIX
+    );
 }

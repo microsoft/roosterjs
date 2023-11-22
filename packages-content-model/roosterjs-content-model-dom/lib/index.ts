@@ -20,6 +20,13 @@ export { getObjectKeys } from './domUtils/getObjectKeys';
 export { default as toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
+export {
+    addEntityClassesForForHtmlSanitizer,
+    isEntityElement,
+    getAllEntityWrappers,
+    parseEntityClassName,
+    generateEntityClassNames,
+} from './domUtils/entityUtils';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
