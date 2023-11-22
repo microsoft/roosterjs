@@ -1,7 +1,7 @@
-import { ChangedEntity } from 'roosterjs-content-model-types/lib/event/ContentModelContentChangedEvent';
 import { ChangeSource } from '../constants/ChangeSource';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type {
+    ChangedEntity,
     ContentModelContentChangedEvent,
     DOMSelection,
     FormatContentModel,

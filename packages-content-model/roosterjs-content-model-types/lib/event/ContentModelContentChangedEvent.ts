@@ -1,5 +1,5 @@
-import { ContentModelEntity } from '../entity/ContentModelEntity';
-import { EntityRemovalOperation } from '../enum/EntityOperation';
+import type { ContentModelEntity } from '../entity/ContentModelEntity';
+import type { EntityRemovalOperation } from '../enum/EntityOperation';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type {
@@ -8,9 +8,23 @@ import type {
     ContentChangedEventData,
 } from 'roosterjs-editor-types';
 
+/**
+ * Represents an entity that has been changed during a content change process
+ */
 export interface ChangedEntity {
+    /**
+     * The changed entity
+     */
     entity: ContentModelEntity;
+
+    /**
+     * Operation that causes the change
+     */
     operation: EntityRemovalOperation | 'newEntity';
+
+    /**
+     * @optional Raw DOM event that causes the chagne
+     */
     rawEvent?: Event;
 }
 

@@ -1,20 +1,11 @@
+import { isCharacterValue } from 'roosterjs-content-model-core';
 import {
     addDelimiters,
-    arrayPush,
-    createRange,
-    getDelimiterFromElement,
-    getEntityFromElement,
-    getEntitySelector,
     isBlockElement,
-    isCharacterValue,
-    matchesSelector,
-    Position,
-    safeInstanceOf,
-    splitTextNode,
-} from 'roosterjs-editor-dom';
-import type { Entity, IEditor, PluginEvent, PluginKeyDownEvent } from 'roosterjs-editor-types';
+    isEntityElement,
+    isNodeOfType,
+} from 'roosterjs-content-model-dom';
 import {
-    ChangeSource,
     DelimiterClasses,
     Keys,
     NodeType,
@@ -22,6 +13,22 @@ import {
     PositionType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import {
+    Position,
+    createRange,
+    getDelimiterFromElement,
+    getEntityFromElement,
+    getEntitySelector,
+    matchesSelector,
+    splitTextNode,
+} from 'roosterjs-editor-dom';
+import type {
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+    PluginKeyDownEvent,
+} from 'roosterjs-editor-types';
+import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 
 const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
@@ -29,45 +36,73 @@ const ZERO_WIDTH_SPACE = '\u200B';
 const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
 
 /**
- * @internal
+ * Entity delimiter plugin helps maintain delimiter elements around an entity so that user can put focus before/after an entity
  */
-export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
-    switch (event.eventType) {
-        case PluginEventType.ContentChanged:
-            if (event.source === ChangeSource.SetContent) {
-                normalizeDelimitersInEditor(editor);
+export class EntityDelimiterPlugin implements EditorPlugin {
+    private editor: IContentModelEditor | null = null;
+
+    /**
+     * Get a friendly name of this plugin
+     */
+    getName() {
+        return 'EntityDelimiter';
+    }
+
+    /**
+     * The first method that editor will call to a plugin when editor is initializing.
+     * It will pass in the editor instance, plugin should take this chance to save the
+     * editor reference so that it can call to any editor method or format API later.
+     * @param editor The editor object
+     */
+    initialize(editor: IEditor) {
+        this.editor = editor as IContentModelEditor;
+    }
+
+    /**
+     * The last method that editor will call to a plugin before it is disposed.
+     * Plugin can take this chance to clear the reference to editor. After this method is
+     * called, plugin should not call to any editor method since it will result in error.
+     */
+    dispose() {
+        this.editor = null;
+    }
+
+    /**
+     * Core method for a plugin. Once an event happens in editor, editor will call this
+     * method of each plugin to handle the event as long as the event is not handled
+     * exclusively by another plugin.
+     * @param event The event to handle:
+     */
+    onPluginEvent(event: PluginEvent) {
+        if (this.editor) {
+            switch (event.eventType) {
+                case PluginEventType.ContentChanged:
+                case PluginEventType.EditorReady:
+                    normalizeDelimitersInEditor(this.editor);
+                    break;
+
+                case PluginEventType.BeforePaste:
+                    const { fragment } = event;
+                    addDelimitersIfNeeded(fragment.querySelectorAll(INLINE_ENTITY_SELECTOR));
+
+                    break;
+
+                case PluginEventType.ExtractContentWithDom:
+                case PluginEventType.BeforeCutCopy:
+                    event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
+                        if (getDelimiterFromElement(node)) {
+                            removeNode(node);
+                        } else {
+                            removeDelimiterAttr(node);
+                        }
+                    });
+                    break;
+
+                case PluginEventType.KeyDown:
+                    handleKeyDownEvent(this.editor, event);
+                    break;
             }
-            break;
-        case PluginEventType.EditorReady:
-            normalizeDelimitersInEditor(editor);
-            break;
-
-        case PluginEventType.BeforePaste:
-            const { fragment, sanitizingOption } = event;
-            addDelimitersIfNeeded(fragment.querySelectorAll(INLINE_ENTITY_SELECTOR));
-
-            if (sanitizingOption.additionalAllowedCssClasses) {
-                arrayPush(sanitizingOption.additionalAllowedCssClasses, [
-                    DelimiterClasses.DELIMITER_AFTER,
-                    DelimiterClasses.DELIMITER_BEFORE,
-                ]);
-            }
-            break;
-
-        case PluginEventType.ExtractContentWithDom:
-        case PluginEventType.BeforeCutCopy:
-            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
-                if (getDelimiterFromElement(node)) {
-                    removeNode(node);
-                } else {
-                    removeDelimiterAttr(node);
-                }
-            });
-            break;
-
-        case PluginEventType.KeyDown:
-            handleKeyDownEvent(editor, event);
-            break;
+        }
     }
 }
 
@@ -113,29 +148,13 @@ export function normalizeDelimitersInEditor(editor: IEditor) {
 function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
     nodes.forEach(node => {
         if (isEntityElement(node)) {
-            addDelimiters(node);
+            addDelimiters(node.ownerDocument, node as HTMLElement);
         }
     });
 }
 
-function isEntityElement(node: Node | null): node is HTMLElement {
-    return !!(
-        node &&
-        safeInstanceOf(node, 'HTMLElement') &&
-        isReadOnly(getEntityFromElement(node))
-    );
-}
-
 function removeNode(el: Node | undefined | null) {
     el?.parentElement?.removeChild(el);
-}
-
-function isReadOnly(entity: Entity | null) {
-    return (
-        entity?.isReadonly &&
-        !isBlockElement(entity.wrapper) &&
-        safeInstanceOf(entity.wrapper, 'HTMLElement')
-    );
 }
 
 function removeInvalidDelimiters(nodes: Element[] | NodeListOf<Element>) {
@@ -144,7 +163,7 @@ function removeInvalidDelimiters(nodes: Element[] | NodeListOf<Element>) {
             const sibling = node.classList.contains(DelimiterClasses.DELIMITER_BEFORE)
                 ? node.nextElementSibling
                 : node.previousElementSibling;
-            if (!(safeInstanceOf(sibling, 'HTMLElement') && getEntityFromElement(sibling))) {
+            if (!(isNodeOfType(sibling, 'ELEMENT_NODE') && getEntityFromElement(sibling))) {
                 removeNode(node);
             }
         } else {
@@ -185,15 +204,16 @@ function handleCollapsedEnter(editor: IEditor, delimiter: HTMLElement) {
             return;
         }
         const blockToCheck = isAfter ? block.nextSibling : block.previousSibling;
-        if (blockToCheck && safeInstanceOf(blockToCheck, 'HTMLElement')) {
+        if (blockToCheck && isNodeOfType(blockToCheck, 'ELEMENT_NODE')) {
             const delimiters = blockToCheck.querySelectorAll(DELIMITER_SELECTOR);
             // Check if the last or first delimiter still contain the delimiter class and remove it.
             const delimiterToCheck = delimiters.item(isAfter ? 0 : delimiters.length - 1);
             removeDelimiterAttr(delimiterToCheck);
         }
 
-        if (isEntityElement(entity)) {
-            const { nextElementSibling, previousElementSibling } = entity;
+        if (entity && isEntityElement(entity)) {
+            const entityElement = entity as HTMLElement;
+            const { nextElementSibling, previousElementSibling } = entityElement;
             [nextElementSibling, previousElementSibling].forEach(el => {
                 // Check if after Enter the ZWS got removed but we still have a element with the class
                 // Remove the attributes of the element if it is invalid now.
@@ -201,8 +221,9 @@ function handleCollapsedEnter(editor: IEditor, delimiter: HTMLElement) {
                     removeDelimiterAttr(el, false /* checkEntity */);
                 }
             });
+
             // Add delimiters to the entity if needed because on Enter we can sometimes lose the ZWS of the element.
-            addDelimiters(entity);
+            addDelimiters(entityElement.ownerDocument, entityElement);
         }
     });
 }
@@ -222,7 +243,7 @@ function getBlock(editor: IEditor, element: Node | undefined) {
 
     let block = editor.getBlockElementAtNode(element)?.getStartNode();
 
-    while (block && !isBlockElement(block)) {
+    while (block && (!isNodeOfType(block, 'ELEMENT_NODE') || !isBlockElement(block))) {
         block = editor.contains(block.parentElement) ? block.parentElement! : undefined;
     }
 

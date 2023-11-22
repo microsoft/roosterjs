@@ -1,12 +1,7 @@
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createImage } from 'roosterjs-content-model-dom';
+import { EditorCore, PluginEventType } from 'roosterjs-editor-types';
 import { formatContentModel } from '../../lib/coreApi/formatContentModel';
-import {
-    ColorTransformDirection,
-    EditorCore,
-    EntityOperation,
-    PluginEventType,
-} from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -108,6 +103,7 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [],
             },
             true
         );
@@ -144,6 +140,7 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [],
             },
             true
         );
@@ -177,6 +174,7 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [],
             },
             true
         );
@@ -218,6 +216,7 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [],
             },
             true
         );
@@ -251,6 +250,7 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [],
             },
             true
         );
@@ -291,27 +291,7 @@ describe('formatContentModel', () => {
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
 
-        expect(triggerEvent).toHaveBeenCalledTimes(3);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.EntityOperation,
-                entity: { id: 'E1', type: 'E', isReadonly: true, wrapper: entity1.wrapper },
-                operation: EntityOperation.RemoveFromStart,
-                rawEvent: rawEvent,
-            },
-            false
-        );
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.EntityOperation,
-                entity: { id: 'E2', type: 'E', isReadonly: true, wrapper: entity2.wrapper },
-                operation: EntityOperation.RemoveFromEnd,
-                rawEvent: rawEvent,
-            },
-            false
-        );
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
         expect(triggerEvent).toHaveBeenCalledWith(
             core,
             {
@@ -323,6 +303,18 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [
+                    {
+                        entity: entity1,
+                        operation: 'removeFromStart',
+                        rawEvent: 'RawEvent',
+                    },
+                    {
+                        entity: entity2,
+                        operation: 'removeFromEnd',
+                        rawEvent: 'RawEvent',
+                    },
+                ],
             },
             true
         );
@@ -374,24 +366,22 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [
+                    {
+                        entity: entity1,
+                        operation: 'newEntity',
+                        rawEvent: 'RawEvent',
+                    },
+                    {
+                        entity: entity2,
+                        operation: 'newEntity',
+                        rawEvent: 'RawEvent',
+                    },
+                ],
             },
             true
         );
-        expect(transformToDarkColorSpy).toHaveBeenCalledTimes(2);
-        expect(transformToDarkColorSpy).toHaveBeenCalledWith(
-            core,
-            wrapper1,
-            true,
-            null,
-            ColorTransformDirection.LightToDark
-        );
-        expect(transformToDarkColorSpy).toHaveBeenCalledWith(
-            core,
-            wrapper2,
-            true,
-            null,
-            ColorTransformDirection.LightToDark
-        );
+        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
     });
 
     it('With selectionOverride', () => {
@@ -418,6 +408,7 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [],
             },
             true
         );
@@ -459,6 +450,7 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [],
             },
             true
         );
@@ -491,6 +483,7 @@ describe('formatContentModel', () => {
                 additionalData: {
                     formatApiName: apiName,
                 },
+                changedEntities: [],
             },
             true
         );

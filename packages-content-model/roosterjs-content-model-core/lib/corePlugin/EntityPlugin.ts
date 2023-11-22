@@ -20,10 +20,6 @@ import type {
     EntityPluginState,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
-// import {
-//     inlineEntityOnPluginEvent,
-//     normalizeDelimitersInEditor,
-// } from './utils/inlineEntityOnPluginEvent';
 import type {
     ContentChangedEvent,
     IEditor,
@@ -113,8 +109,6 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                     this.handleExtractContentWithDomEvent(this.editor, event.clonedRoot);
                     break;
             }
-
-            //     inlineEntityOnPluginEvent(event, this.editor);
         }
     }
 

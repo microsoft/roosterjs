@@ -1,7 +1,6 @@
 import toArray from './toArray';
 import { isElementOfType } from './isElementOfType';
 import { isNodeOfType } from './isNodeOfType';
-import type { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
 
 const ENTITY_INFO_NAME = '_Entity';
@@ -74,15 +73,38 @@ export function isEntityDelimiter(element: HTMLElement): boolean {
 }
 
 /**
- * @internal
  * Adds delimiters to the element provided. If the delimiters already exists, will not be added
  * @param element the node to add the delimiters
  */
 export function addDelimiters(doc: Document, element: HTMLElement): HTMLElement[] {
-    return [
-        insertDelimiter(doc, element, true /*isAfter*/),
-        insertDelimiter(doc, element, false /*isAfter*/),
-    ];
+    let [delimiterAfter, delimiterBefore] = getDelimiters(element);
+
+    if (!delimiterAfter) {
+        delimiterAfter = insertDelimiter(doc, element, true /*isAfter*/);
+    }
+
+    if (!delimiterBefore) {
+        delimiterBefore = insertDelimiter(doc, element, false /*isAfter*/);
+    }
+
+    return [delimiterAfter, delimiterBefore];
+}
+
+function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {
+    const result: (HTMLElement | undefined)[] = [];
+    const { nextElementSibling, previousElementSibling } = entityWrapper;
+    result.push(
+        isDelimiter(nextElementSibling, DELIMITER_AFTER),
+        isDelimiter(previousElementSibling, DELIMITER_BEFORE)
+    );
+
+    return result;
+}
+
+function isDelimiter(el: Element | null, className: string): HTMLElement | undefined {
+    return el?.classList.contains(className) && el.textContent == ZERO_WIDTH_SPACE
+        ? (el as HTMLElement)
+        : undefined;
 }
 
 function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
@@ -96,19 +118,14 @@ function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
 }
 
 /**
- * Add allow CSS classes to HTML Sanitizer options so they can be preserved during sanitization
- * TODO: Revisit the HTML sanitization approach when paste
- * @param options HTML Sanitizer options
+ * Allowed CSS selector for entity, used by HtmlSanitizer.
+ * TODO: Revisit paste logic and check if we can remove HtmlSanitizer
  */
-export function addEntityClassesForForHtmlSanitizer(options: HtmlSanitizerOptions) {
-    if (!options.additionalAllowedCssClasses) {
-        options.additionalAllowedCssClasses = [];
-    }
-
-    options.additionalAllowedCssClasses.push(
-        '^' + ENTITY_INFO_NAME + '$',
-        '^' + ENTITY_ID_PREFIX,
-        '^' + ENTITY_TYPE_PREFIX,
-        '^' + ENTITY_READONLY_PREFIX
-    );
-}
+export const AllowedEntityClasses: ReadonlyArray<string> = [
+    '^' + ENTITY_INFO_NAME + '$',
+    '^' + ENTITY_ID_PREFIX,
+    '^' + ENTITY_TYPE_PREFIX,
+    '^' + ENTITY_READONLY_PREFIX,
+    '^' + DELIMITER_BEFORE + '$',
+    '^' + DELIMITER_AFTER + '$',
+];
