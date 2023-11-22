@@ -12,6 +12,7 @@ export default class AutoFormat implements EditorPlugin {
     private textRange: Range | null | undefined = null;
     private isHyphen: boolean | undefined = undefined;
     private removeSpace: boolean | undefined = undefined;
+    private hasMultipleSpaces: boolean | undefined = undefined;
     /**
      * Get a friendly name of this plugin
      */
@@ -35,6 +36,7 @@ export default class AutoFormat implements EditorPlugin {
         this.lastKeyTyped = null;
         this.textRange = null;
         this.isHyphen = undefined;
+        this.hasMultipleSpaces = undefined;
     }
 
     /**
@@ -63,6 +65,13 @@ export default class AutoFormat implements EditorPlugin {
 
             const searcher = this.editor.getContentSearcherOfCursor(event);
             const textBeforeCursor = searcher?.getSubStringBefore(3);
+
+            if (
+                searcher?.getSubStringBefore(4) === '--  ' ||
+                searcher?.getSubStringBefore(4) === '--  '
+            ) {
+                this.hasMultipleSpaces = true;
+            }
 
             if (
                 this.isHyphen &&
@@ -98,12 +107,15 @@ export default class AutoFormat implements EditorPlugin {
                 this.textRange &&
                 keyTyped === ' ' &&
                 textBeforeCursor !== '--' &&
-                textBeforeCursor !== ' '
+                textBeforeCursor !== '-- ' &&
+                textBeforeCursor !== '-- ' &&
+                !this.hasMultipleSpaces
             ) {
                 convertToHyphen(this.editor, this.textRange, this.isHyphen, this.removeSpace);
                 this.textRange = null;
                 this.isHyphen = undefined;
                 this.removeSpace = undefined;
+                this.hasMultipleSpaces = undefined;
             } else {
                 this.lastKeyTyped = keyTyped;
             }
