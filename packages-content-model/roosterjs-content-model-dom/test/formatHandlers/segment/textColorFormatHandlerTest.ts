@@ -1,6 +1,5 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { DarkColorHandlerImpl } from 'roosterjs-content-model-editor/lib/editor/DarkColorHandlerImpl';
 import { defaultHTMLStyleMap } from '../../../lib/config/defaultHTMLStyleMap';
 import { DeprecatedColors } from '../../../lib';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
@@ -108,7 +107,10 @@ describe('textColorFormatHandler.apply', () => {
     beforeEach(() => {
         div = document.createElement('div');
         context = createModelToDomContext();
-        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock: ' + s);
+        context.darkColorHandler = {
+            registerColor: (color: string, isDarkMode: boolean) =>
+                isDarkMode ? `var(--darkColor_${color}, ${color})` : color,
+        } as any;
 
         format = {};
     });
@@ -133,10 +135,7 @@ describe('textColorFormatHandler.apply', () => {
 
         textColorFormatHandler.apply(format, div, context);
 
-        const expectedResult = [
-            '<div style="--darkColor_red:darkMock: red; color: var(--darkColor_red, red);"></div>',
-            '<div style="--darkColor_red: darkMock: red; color: var(--darkColor_red, red);"></div>',
-        ];
+        const expectedResult = ['<div style="color: var(--darkColor_red, red);"></div>'];
 
         expectHtml(div.outerHTML, expectedResult);
     });

@@ -33,13 +33,12 @@ export const getContent: GetContent = (core, mode): string => {
         clonedRoot.normalize();
 
         const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-        const path = !includeSelectionMarker
-            ? null
-            : core.lifecycle.shadowEditFragment
-            ? core.lifecycle.shadowEditSelectionPath
-            : originalRange
-            ? getSelectionPath(core.contentDiv, originalRange)
-            : null;
+        const path =
+            !includeSelectionMarker || core.lifecycle.shadowEditFragment
+                ? null
+                : originalRange
+                ? getSelectionPath(core.contentDiv, originalRange)
+                : null;
         const range = path && createRange(clonedRoot, path.start, path.end);
 
         core.api.transformColor(

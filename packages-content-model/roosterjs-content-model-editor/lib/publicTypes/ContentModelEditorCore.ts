@@ -1,4 +1,10 @@
-import type { EditorPlugin, SizeTransformer } from 'roosterjs-editor-types';
+import type { CompatibleExperimentalFeatures } from 'roosterjs-editor-types/lib/compatibleTypes';
+import type {
+    CustomData,
+    EditorPlugin,
+    ExperimentalFeatures,
+    SizeTransformer,
+} from 'roosterjs-editor-types';
 import type { StandaloneCoreApiMap, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
@@ -33,4 +39,14 @@ export interface ContentModelEditorCore extends StandaloneEditorCore {
      * @param error The error object we got
      */
     disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * Custom data of this editor
+     */
+    customData: Record<string, CustomData>;
+
+    /**
+     * Enabled experimental features
+     */
+    experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
 }

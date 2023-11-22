@@ -9,8 +9,7 @@
         "roosterjs-content-model-core": "",
         "roosterjs-content-model-api": "",
         "roosterjs-content-model-editor": "",
-        "roosterjs-content-model-plugins": "",
-        "roosterjs-color-utils": ""
+        "roosterjs-content-model-plugins": ""
     },
     "version": "0.0.0",
     "main": "./lib/index.ts"
