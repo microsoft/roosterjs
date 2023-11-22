@@ -91,6 +91,10 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
             this.editor.isDarkMode() ? this.onInitialNodeCreated : undefined
         );
 
+        // Initial model is only used once. After that we can just clean it up to make sure we don't cache anything useless
+        // including the cached DOM element inside the model.
+        this.initialModel = createContentModelDocument();
+
         // Set content DIV to be editable
         this.initializer?.();
 
