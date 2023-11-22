@@ -6,11 +6,10 @@ describe('AutoHyphen |', () => {
     let editor: IEditor;
     const TEST_ID = 'autoHyphenTest';
     let plugin: EditorPlugin;
-    let editorSearchCursorSpy: any;
+
     beforeEach(() => {
         plugin = new AutoFormat();
         editor = TestHelper.initEditor(TEST_ID, [plugin]);
-        editorSearchCursorSpy = spyOn(editor, 'getContentSearcherOfCursor');
     });
 
     afterEach(() => {
