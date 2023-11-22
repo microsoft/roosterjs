@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.86% </span>
+                <span class="strong">79.31% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/29</span>
+                <span class='fraction'>23/29</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.33% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/24</span>
+                <span class='fraction'>18/24</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">78.57% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/28</span>
+                <span class='fraction'>22/28</span>
             </div>
         
             
@@ -143,8 +143,7 @@
 <a name='L84'></a><a href='#L84'>84</a>
 <a name='L85'></a><a href='#L85'>85</a>
 <a name='L86'></a><a href='#L86'>86</a>
-<a name='L87'></a><a href='#L87'>87</a>
-<a name='L88'></a><a href='#L88'>88</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L87'></a><a href='#L87'>87</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,9 +178,8 @@
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -211,9 +209,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -266,14 +264,13 @@ export const getContent: GetContent = (core, mode): string =&gt; {
         clonedRoot.normalize();
 &nbsp;
         const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-        const path = !includeSelectionMarker
-            ? <span class="branch-0 cbranch-no" title="branch not covered" >null</span>
-            : core.lifecycle.shadowEditFragment
-            ? <span class="branch-0 cbranch-no" title="branch not covered" >core.lifecycle.shadowEditSelectionPath</span>
-            : originalRange
-            ? <span class="branch-0 cbranch-no" title="branch not covered" >getSelectionPath(core.contentDiv, originalRange)</span>
-            : null;
-        const range = path &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >createRange(clonedRoot, path.start, path.end);</span>
+        const path =
+            !includeSelectionMarker || core.lifecycle.shadowEditFragment
+                ? <span class="branch-0 cbranch-no" title="branch not covered" >null</span>
+                : originalRange
+                ? getSelectionPath(core.contentDiv, originalRange)
+                : null;
+        const range = path &amp;&amp; createRange(clonedRoot, path.start, path.end);
 &nbsp;
         core.api.transformColor(
             core,
@@ -296,9 +293,9 @@ export const getContent: GetContent = (core, mode): string =&gt; {
             );
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            content = clonedRoot.innerHTML;</span>
-        } else <span class="missing-if-branch" title="if path not taken" >I</span>if (range) {
+        } else if (range) {
             // range is not null, which means we want to include a selection path in the content
-<span class="cstat-no" title="statement not covered" >            content = getHtmlWithSelectionPath(clonedRoot, range);</span>
+            content = getHtmlWithSelectionPath(clonedRoot, range);
         } else {
             content = clonedRoot.innerHTML;
         }
@@ -325,7 +322,7 @@ function cloneNode(node: HTMLElement | DocumentFragment): HTMLElement {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 20 2023 23:55:58 GMT+0000 (Coordinated Universal Time)
+                at Wed Nov 22 2023 17:31:34 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

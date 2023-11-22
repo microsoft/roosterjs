@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.74% </span>
+                <span class="strong">93.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/19</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">81.82% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/12</span>
+                <span class='fraction'>18/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.44% </span>
+                <span class="strong">93.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/18</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
@@ -106,10 +106,20 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -125,10 +135,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">222x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,24 +171,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">39x</span>
-<span class="cline-any cline-yes">273x</span>
-<span class="cline-any cline-yes">39x</span>
-<span class="cline-any cline-yes">27x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">234x</span>
-<span class="cline-any cline-yes">234x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { coreApiMap } from '../coreApi/coreApiMap';
 import { createCorePlugins, getPluginState } from '../corePlugins/createCorePlugins';
-import { createStandaloneEditorCore } from 'roosterjs-content-model-core';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { createModelFromHtml, createStandaloneEditorCore } from 'roosterjs-content-model-core';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * @internal
@@ -172,16 +192,34 @@ export function createEditorCore(
     contentDiv: HTMLDivElement,
     options: ContentModelEditorOptions
 ): ContentModelEditorCore {
-    const corePlugins = createCorePlugins(contentDiv, options);
+    const corePlugins = createCorePlugins(options);
     const pluginState = getPluginState(corePlugins);
+    const additionalPlugins: EditorPlugin[] = [
+        corePlugins.edit,
+        ...(options.plugins ?? []),
+        corePlugins.undo,
+        corePlugins.entity,
+        corePlugins.imageSelection,
+        corePlugins.normalizeTable,
+    ].filter(x =&gt; !!x);
 &nbsp;
     const zoomScale: number = (options.zoomScale<span class="branch-0 cbranch-no" title="branch not covered" > ?? -</span>1) &gt; 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >options.zoomScale! </span>: 1;
+    const initContent = options.initialContent<span class="branch-0 cbranch-no" title="branch not covered" > ?? c</span>ontentDiv.innerHTML;
+&nbsp;
+    if (initContent &amp;&amp; !options.initialModel) {
+        options.initialModel = createModelFromHtml(
+            initContent,
+            options.defaultDomToModelOptions,
+            options.trustedHTMLHandler
+        );
+    }
 &nbsp;
     const standaloneEditorCore = createStandaloneEditorCore(
         contentDiv,
         options,
         coreApiMap,
-        pluginState
+        pluginState,
+        additionalPlugins
     );
 &nbsp;
     const core: ContentModelEditorCore = {
@@ -190,17 +228,9 @@ export function createEditorCore(
         zoomScale: zoomScale,
         sizeTransformer: <span class="fstat-no" title="function not covered" >(s</span>ize: number) =&gt; <span class="cstat-no" title="statement not covered" >size / zoomScale,</span>
         disposeErrorHandler: options.disposeErrorHandler,
+        customData: {},
+        experimentalFeatures: options.experimentalFeatures<span class="branch-0 cbranch-no" title="branch not covered" > ?? [</span>],
     };
-&nbsp;
-    getObjectKeys(corePlugins).forEach(name =&gt; {
-        if (name == '_placeholder') {
-            if (options.plugins) {
-                core.plugins.push(...options.plugins.filter(x =&gt; !!x));
-            }
-        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (corePlugins[name]) {
-            core.plugins.push(corePlugins[name]);
-        }
-    });
 &nbsp;
     return core;
 }
@@ -211,7 +241,7 @@ export function createEditorCore(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 20 2023 23:55:58 GMT+0000 (Coordinated Universal Time)
+                at Wed Nov 22 2023 17:31:34 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

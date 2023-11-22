@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.54% </span>
+                <span class="strong">51.22% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>24/41</span>
+                <span class='fraction'>21/41</span>
             </div>
         
             
@@ -199,17 +199,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">45x</span>
-<span class="cline-any cline-yes">45x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
@@ -217,6 +206,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
@@ -225,9 +225,9 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -240,7 +240,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -316,7 +316,7 @@ import type { SetContent, StandaloneEditorCore } from 'roosterjs-content-model-t
  */
 export const setContent: SetContent = (core, content, triggerContentChangedEvent, metadata) =&gt; {
     let contentChanged = false;
-    if (core.contentDiv.innerHTML != content) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (core.contentDiv.innerHTML != content) {
         core.api.triggerEvent(
             core,
             {
@@ -343,7 +343,7 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 &nbsp;
     const isDarkMode = core.lifecycle.isDarkMode;
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if ((!metadata &amp;&amp; isDarkMode) || (metadata &amp;&amp; !!metadata.isDarkMode != !!isDarkMode)) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if ((!metadata &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >isDarkMode)</span> || (metadata &amp;&amp; !!metadata.isDarkMode != !!isDarkMode)) {
 <span class="cstat-no" title="statement not covered" >        core.api.transformColor(</span>
             core,
             core.contentDiv,
@@ -356,7 +356,7 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 <span class="cstat-no" title="statement not covered" >        contentChanged = true;</span>
     }
 &nbsp;
-    if (triggerContentChangedEvent &amp;&amp; contentChanged) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (triggerContentChangedEvent &amp;&amp; contentChanged) {
         core.api.triggerEvent(
             core,
             {
@@ -369,7 +369,7 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 };
 &nbsp;
 function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMetadata | undefined) {
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (!core.lifecycle.shadowEditSelectionPath &amp;&amp; metadata) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (!core.lifecycle.shadowEditFragment &amp;&amp; metadata) {
         core.domEvent.tableSelectionRange = null;
         core.domEvent.imageSelectionRange = null;
         core.domEvent.selectionRange = null;
@@ -412,7 +412,7 @@ function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMeta
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 20 2023 23:55:58 GMT+0000 (Coordinated Universal Time)
+                at Wed Nov 22 2023 17:31:34 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

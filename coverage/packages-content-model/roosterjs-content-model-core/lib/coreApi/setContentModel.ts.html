@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/15</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/18</span>
+                <span class='fraction'>16/18</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/14</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -116,12 +116,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -129,21 +129,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">65x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
     contentModelToDom,
@@ -174,13 +174,13 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     );
 &nbsp;
     if (!core.lifecycle.shadowEditFragment) {
-        core.cache.cachedSelection = selection || <span class="branch-1 cbranch-no" title="branch not covered" >undefined;</span>
+        core.cache.cachedSelection = selection || undefined;
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (selection) {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (!option?.ignoreSelection) {
+        if (selection) {
+            if (!option?.ignoreSelection) {
                 core.api.setDOMSelection(core, selection);
-            } else <span class="cstat-no" title="statement not covered" >if (selection.type == 'range') {</span>
-<span class="cstat-no" title="statement not covered" >                core.domEvent.selectionRange = selection.range;</span>
+            } else <span class="missing-if-branch" title="else path not taken" >E</span>if (selection.type == 'range') {
+                core.domEvent.selectionRange = selection.range;
             }
         }
 &nbsp;
@@ -196,7 +196,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 20 2023 23:55:58 GMT+0000 (Coordinated Universal Time)
+                at Wed Nov 22 2023 17:31:34 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
