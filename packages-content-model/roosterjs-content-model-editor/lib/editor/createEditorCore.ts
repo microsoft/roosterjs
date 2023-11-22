@@ -1,11 +1,9 @@
-import { arrayPush, getIntersectedRect, getObjectKeys } from 'roosterjs-editor-dom';
 import { coreApiMap } from '../coreApi/coreApiMap';
 import { createCorePlugins, getPluginState } from '../corePlugins/createCorePlugins';
-import { createStandaloneEditorDefaultSettings } from 'roosterjs-content-model-core';
-import { DarkColorHandlerImpl } from './DarkColorHandlerImpl';
-import type { EditorPlugin } from 'roosterjs-editor-types';
+import { createModelFromHtml, createStandaloneEditorCore } from 'roosterjs-content-model-core';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -17,71 +15,45 @@ export function createEditorCore(
     contentDiv: HTMLDivElement,
     options: ContentModelEditorOptions
 ): ContentModelEditorCore {
-    const corePlugins = createCorePlugins(contentDiv, options);
-    const plugins: EditorPlugin[] = [];
-
-    getObjectKeys(corePlugins).forEach(name => {
-        if (name == '_placeholder') {
-            if (options.plugins) {
-                arrayPush(plugins, options.plugins);
-            }
-        } else {
-            plugins.push(corePlugins[name]);
-        }
-    });
-
+    const corePlugins = createCorePlugins(options);
     const pluginState = getPluginState(corePlugins);
+    const additionalPlugins: EditorPlugin[] = [
+        corePlugins.edit,
+        ...(options.plugins ?? []),
+        corePlugins.undo,
+        corePlugins.entity,
+        corePlugins.imageSelection,
+        corePlugins.normalizeTable,
+    ].filter(x => !!x);
+
     const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
-    const getVisibleViewport =
-        options.getVisibleViewport ||
-        (() => {
-            const scrollContainer = pluginState.domEvent.scrollContainer;
+    const initContent = options.initialContent ?? contentDiv.innerHTML;
 
-            return getIntersectedRect(
-                scrollContainer == core.contentDiv
-                    ? [scrollContainer]
-                    : [scrollContainer, core.contentDiv]
-            );
-        });
+    if (initContent && !options.initialModel) {
+        options.initialModel = createModelFromHtml(
+            initContent,
+            options.defaultDomToModelOptions,
+            options.trustedHTMLHandler
+        );
+    }
 
-    // It is ok to use global window here since the environment should always be the same for all windows in one session
-    const userAgent = window.navigator.userAgent;
+    const standaloneEditorCore = createStandaloneEditorCore(
+        contentDiv,
+        options,
+        coreApiMap,
+        pluginState,
+        additionalPlugins
+    );
 
     const core: ContentModelEditorCore = {
-        contentDiv,
-        api: {
-            ...coreApiMap,
-            ...(options.coreApiOverride || {}),
-        },
-        originalApi: { ...coreApiMap },
-        plugins: plugins.filter(x => !!x),
+        ...standaloneEditorCore,
         ...pluginState,
-        trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         zoomScale: zoomScale,
         sizeTransformer: (size: number) => size / zoomScale,
-        getVisibleViewport,
-        imageSelectionBorderColor: options.imageSelectionBorderColor,
-        darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),
         disposeErrorHandler: options.disposeErrorHandler,
-
-        ...createStandaloneEditorDefaultSettings(options),
-
-        environment: {
-            isMac: window.navigator.appVersion.indexOf('Mac') != -1,
-            isAndroid: /android/i.test(userAgent),
-            isSafari:
-                userAgent.indexOf('Safari') >= 0 &&
-                userAgent.indexOf('Chrome') < 0 &&
-                userAgent.indexOf('Android') < 0,
-        },
+        customData: {},
+        experimentalFeatures: options.experimentalFeatures ?? [],
     };
 
     return core;
-}
-
-/**
- * @internal Export for test only
- */
-export function defaultTrustHtmlHandler(html: string) {
-    return html;
 }

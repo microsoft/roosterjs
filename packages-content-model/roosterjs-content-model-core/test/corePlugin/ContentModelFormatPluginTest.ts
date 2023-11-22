@@ -289,7 +289,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
     it('Collapsed range, text input, under editor directly', () => {
         const plugin = createContentModelFormatPlugin({
-            defaultFormat: {
+            defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
         });
@@ -339,19 +339,13 @@ describe('ContentModelFormatPlugin for default format', () => {
         expect(context).toEqual({
             newPendingFormat: {
                 fontFamily: 'Arial',
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
             },
         });
     });
 
     it('Expanded range, text input, under editor directly', () => {
         const plugin = createContentModelFormatPlugin({
-            defaultFormat: {
+            defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
         });
@@ -404,7 +398,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
     it('Collapsed range, IME input, under editor directly', () => {
         const plugin = createContentModelFormatPlugin({
-            defaultFormat: {
+            defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
         });
@@ -453,19 +447,13 @@ describe('ContentModelFormatPlugin for default format', () => {
         expect(context).toEqual({
             newPendingFormat: {
                 fontFamily: 'Arial',
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
             },
         });
     });
 
     it('Collapsed range, other input, under editor directly', () => {
         const plugin = createContentModelFormatPlugin({
-            defaultFormat: {
+            defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
         });
@@ -516,7 +504,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
     it('Collapsed range, normal input, not under editor directly, no style', () => {
         const plugin = createContentModelFormatPlugin({
-            defaultFormat: {
+            defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
         });
@@ -567,19 +555,13 @@ describe('ContentModelFormatPlugin for default format', () => {
         expect(context).toEqual({
             newPendingFormat: {
                 fontFamily: 'Arial',
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
             },
         });
     });
 
     it('Collapsed range, text input, under editor directly, has pending format', () => {
         const plugin = createContentModelFormatPlugin({
-            defaultFormat: {
+            defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
         });
@@ -635,11 +617,6 @@ describe('ContentModelFormatPlugin for default format', () => {
             newPendingFormat: {
                 fontFamily: 'Arial',
                 fontSize: '10pt',
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
             },
         });
     });

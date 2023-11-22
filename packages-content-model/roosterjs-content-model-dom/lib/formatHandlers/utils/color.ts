@@ -30,7 +30,11 @@ export const DeprecatedColors: string[] = [
 ];
 
 /**
- * @internal
+ * Get color from given HTML element
+ * @param element The element to get color from
+ * @param isBackground True to get background color, false to get text color
+ * @param darkColorHandler The dark color handler object to help manager dark mode color
+ * @param isDarkMode Whether element is in dark mode now
  */
 export function getColor(
     element: HTMLElement,
@@ -55,7 +59,12 @@ export function getColor(
 }
 
 /**
- * @internal
+ * Set color to given HTML element
+ * @param element The element to set color to
+ * @param lightModeColor The color to set, always pass in color in light mode
+ * @param isBackground True to set background color, false to set text color
+ * @param darkColorHandler The dark color handler object to help manager dark mode color
+ * @param isDarkMode Whether element is in dark mode now
  */
 export function setColor(
     element: HTMLElement,

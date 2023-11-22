@@ -141,7 +141,7 @@ function handleDeletedEntities(core: StandaloneEditorCore, context: FormatWithCo
 
 function handleImages(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
     if (context.newImages.length > 0) {
-        const viewport = core.getVisibleViewport();
+        const viewport = core.api.getVisibleViewport(core);
 
         if (viewport) {
             const { left, right } = viewport;

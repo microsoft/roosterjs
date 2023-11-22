@@ -1,7 +1,7 @@
-import { isBold } from '../../publicApi/segment/toggleBold';
 import {
     extractBorderValues,
     getClosestAncestorBlockGroupIndex,
+    isBold,
     iterateSelections,
     updateTableMetadata,
 } from 'roosterjs-content-model-core';

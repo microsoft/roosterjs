@@ -78,7 +78,7 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 };
 
 function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMetadata | undefined) {
-    if (!core.lifecycle.shadowEditSelectionPath && metadata) {
+    if (!core.lifecycle.shadowEditFragment && metadata) {
         core.domEvent.tableSelectionRange = null;
         core.domEvent.imageSelectionRange = null;
         core.domEvent.selectionRange = null;

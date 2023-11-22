@@ -1,6 +1,9 @@
-import type { DefaultFormat, EditorPlugin } from 'roosterjs-editor-types';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
+import type { EditorPlugin, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
+import type { ContentModelDocument } from '../group/ContentModelDocument';
 
 /**
  * Options for Content Model editor
@@ -34,7 +37,7 @@ export interface StandaloneEditorOptions {
      * If there is already content inside editor, format of existing content will not be changed.
      * Default value is the computed style of editor content DIV
      */
-    defaultFormat?: DefaultFormat;
+    defaultSegmentFormat?: ContentModelSegmentFormat;
 
     /**
      * Allowed custom content type when paste besides text/plain, text/html and images
@@ -47,4 +50,43 @@ export interface StandaloneEditorOptions {
      * By default, the scroll container will be the same with editor content DIV
      */
     scrollContainer?: HTMLElement;
+
+    /**
+     * Base dark mode color. We will use this color to calculate the dark mode color from a given light mode color
+     * @default #333333
+     */
+    baseDarkColor?: string;
+
+    /**
+     * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree
+     * This is required when trusted-type Content-Security-Policy (CSP) is enabled.
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    trustedHTMLHandler?: TrustedHTMLHandler;
+
+    /**
+     * A function map to override default core API implementation
+     * Default value is null
+     */
+    coreApiOverride?: Partial<StandaloneCoreApiMap>;
+
+    /**
+     * Color of the border of a selectedImage. Default color: '#DB626C'
+     */
+    imageSelectionBorderColor?: string;
+
+    /**
+     * Initial Content Model
+     */
+    initialModel?: ContentModelDocument;
+
+    /**
+     * Whether to skip the adjust editor process when for light/dark mode
+     */
+    doNotAdjustEditorColor?: boolean;
+
+    /**
+     * If the editor is currently in dark mode
+     */
+    inDarkMode?: boolean;
 }
