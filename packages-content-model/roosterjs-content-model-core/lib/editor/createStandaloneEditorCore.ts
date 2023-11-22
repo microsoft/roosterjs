@@ -2,6 +2,7 @@ import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandalon
 import { createStandaloneEditorDefaultSettings } from './createStandaloneEditorDefaultSettings';
 import { DarkColorHandlerImpl } from './DarkColorHandlerImpl';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     EditorEnvironment,
     StandaloneEditorCore,
@@ -20,7 +21,8 @@ export function createStandaloneEditorCore(
     contentDiv: HTMLDivElement,
     options: StandaloneEditorOptions,
     unportedCoreApiMap: UnportedCoreApiMap,
-    unportedCorePluginState: UnportedCorePluginState
+    unportedCorePluginState: UnportedCorePluginState,
+    tempPlugins: EditorPlugin[]
 ): StandaloneEditorCore {
     const corePlugins = createStandaloneEditorCorePlugins(options, contentDiv);
 
@@ -33,7 +35,8 @@ export function createStandaloneEditorCore(
             corePlugins.format,
             corePlugins.copyPaste,
             corePlugins.domEvent,
-            // TODO: Add additional plugins here
+            ...tempPlugins,
+            corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(),
         darkColorHandler: new DarkColorHandlerImpl(contentDiv, options.baseDarkColor),
@@ -72,5 +75,6 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins) {
         copyPaste: corePlugins.copyPaste.getState(),
         cache: corePlugins.cache.getState(),
         format: corePlugins.format.getState(),
+        lifecycle: corePlugins.lifecycle.getState(),
     };
 }

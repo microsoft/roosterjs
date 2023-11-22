@@ -1,4 +1,4 @@
-import { contains, createRange } from 'roosterjs-editor-dom';
+import { contains } from 'roosterjs-editor-dom';
 import type { GetSelectionRange } from 'roosterjs-content-model-types';
 
 /**
@@ -12,15 +12,7 @@ export const getSelectionRange: GetSelectionRange = (core, tryGetFromCache: bool
     let result: Range | null = null;
 
     if (core.lifecycle.shadowEditFragment) {
-        result =
-            core.lifecycle.shadowEditSelectionPath &&
-            createRange(
-                core.contentDiv,
-                core.lifecycle.shadowEditSelectionPath.start,
-                core.lifecycle.shadowEditSelectionPath.end
-            );
-
-        return result;
+        return null;
     } else {
         if (!tryGetFromCache || core.api.hasFocus(core)) {
             const selection = core.contentDiv.ownerDocument.defaultView?.getSelection();

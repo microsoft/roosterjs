@@ -2,12 +2,12 @@ import type {
     CopyPastePluginState,
     EditPluginState,
     EntityPluginState,
-    LifecyclePluginState,
     UndoPluginState,
 } from 'roosterjs-editor-types';
 import type { ContentModelCachePluginState } from './ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from './ContentModelFormatPluginState';
 import type { DOMEventPluginState } from './DOMEventPluginState';
+import type { LifecyclePluginState } from './LifecyclePluginState';
 
 /**
  * Temporary core plugin state for Content Model editor (ported part)
@@ -33,6 +33,11 @@ export interface StandaloneEditorCorePluginState {
      * Plugin state for DOMEventPlugin
      */
     domEvent: DOMEventPluginState;
+
+    /**
+     * Plugin state for LifecyclePlugin
+     */
+    lifecycle: LifecyclePluginState;
 }
 
 /**
@@ -40,7 +45,6 @@ export interface StandaloneEditorCorePluginState {
  * TODO: Port these plugins
  */
 export interface UnportedCorePluginState {
-    lifecycle: LifecyclePluginState;
     entity: EntityPluginState;
     undo: UndoPluginState;
     edit: EditPluginState;

@@ -3,7 +3,6 @@ import type {
     EditPluginState,
     EditorPlugin,
     EntityPluginState,
-    LifecyclePluginState,
     PluginWithState,
     UndoPluginState,
 } from 'roosterjs-editor-types';
@@ -39,11 +38,6 @@ export interface UnportedCorePlugins {
      * NormalizeTable plugin makes sure each table in editor has TBODY/THEAD/TFOOT tag around TR tags
      */
     readonly normalizeTable: EditorPlugin;
-
-    /**
-     * Lifecycle plugin handles editor initialization and disposing
-     */
-    readonly lifecycle: PluginWithState<LifecyclePluginState>;
 }
 
 /**

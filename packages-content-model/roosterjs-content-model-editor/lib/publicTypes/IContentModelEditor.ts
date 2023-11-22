@@ -1,6 +1,5 @@
 import type { ContentModelCorePlugins } from './ContentModelCorePlugins';
 import type {
-    DefaultFormat,
     EditorPlugin,
     ExperimentalFeatures,
     IEditor,
@@ -20,13 +19,6 @@ export interface IContentModelEditor extends IEditor, IStandaloneEditor {}
  */
 export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     /**
-     * Default format of editor content. This will be applied to empty content.
-     * If there is already content inside editor, format of existing content will not be changed.
-     * Default value is the computed style of editor content DIV
-     */
-    defaultFormat?: DefaultFormat;
-
-    /**
      * Undo snapshot service based on content metadata. Use this parameter to customize the undo snapshot service.
      * When this property is set, value of undoSnapshotService will be ignored.
      */
@@ -43,22 +35,6 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
      * Default value is null
      */
     corePluginOverride?: Partial<ContentModelCorePlugins>;
-
-    /**
-     * If the editor is currently in dark mode
-     */
-    inDarkMode?: boolean;
-
-    /**
-     * A util function to transform light mode color to dark mode color
-     * Default value is to return the original light color
-     */
-    getDarkColor?: (lightColor: string) => string;
-
-    /**
-     * Whether to skip the adjust editor process when for light/dark mode
-     */
-    doNotAdjustEditorColor?: boolean;
 
     /**
      * Specify the enabled experimental features

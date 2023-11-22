@@ -1,4 +1,4 @@
-import { contains, addRangeToSelection } from 'roosterjs-editor-dom';
+import { addRangeToSelection, contains } from 'roosterjs-editor-dom';
 import type { SelectRange } from 'roosterjs-content-model-types';
 
 /**
@@ -11,7 +11,7 @@ import type { SelectRange } from 'roosterjs-content-model-types';
  * This parameter is always treat as true in Edge to avoid some weird runtime exception.
  */
 export const selectRange: SelectRange = (core, range, skipSameRange) => {
-    if (!core.lifecycle.shadowEditSelectionPath && contains(core.contentDiv, range)) {
+    if (!core.lifecycle.shadowEditFragment && contains(core.contentDiv, range)) {
         addRangeToSelection(range, skipSameRange);
 
         if (!core.api.hasFocus(core)) {

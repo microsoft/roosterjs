@@ -1,9 +1,9 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
 import { createCorePlugins, getPluginState } from '../corePlugins/createCorePlugins';
-import { createStandaloneEditorCore } from 'roosterjs-content-model-core';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { createModelFromHtml, createStandaloneEditorCore } from 'roosterjs-content-model-core';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -15,16 +15,34 @@ export function createEditorCore(
     contentDiv: HTMLDivElement,
     options: ContentModelEditorOptions
 ): ContentModelEditorCore {
-    const corePlugins = createCorePlugins(contentDiv, options);
+    const corePlugins = createCorePlugins(options);
     const pluginState = getPluginState(corePlugins);
+    const additionalPlugins: EditorPlugin[] = [
+        corePlugins.edit,
+        ...(options.plugins ?? []),
+        corePlugins.undo,
+        corePlugins.entity,
+        corePlugins.imageSelection,
+        corePlugins.normalizeTable,
+    ].filter(x => !!x);
 
     const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
+    const initContent = options.initialContent ?? contentDiv.innerHTML;
+
+    if (initContent && !options.initialModel) {
+        options.initialModel = createModelFromHtml(
+            initContent,
+            options.defaultDomToModelOptions,
+            options.trustedHTMLHandler
+        );
+    }
 
     const standaloneEditorCore = createStandaloneEditorCore(
         contentDiv,
         options,
         coreApiMap,
-        pluginState
+        pluginState,
+        additionalPlugins
     );
 
     const core: ContentModelEditorCore = {
@@ -33,17 +51,9 @@ export function createEditorCore(
         zoomScale: zoomScale,
         sizeTransformer: (size: number) => size / zoomScale,
         disposeErrorHandler: options.disposeErrorHandler,
+        customData: {},
+        experimentalFeatures: options.experimentalFeatures ?? [],
     };
-
-    getObjectKeys(corePlugins).forEach(name => {
-        if (name == '_placeholder') {
-            if (options.plugins) {
-                core.plugins.push(...options.plugins.filter(x => !!x));
-            }
-        } else if (corePlugins[name]) {
-            core.plugins.push(corePlugins[name]);
-        }
-    });
 
     return core;
 }

@@ -1,4 +1,5 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
+import { isBold } from 'roosterjs-content-model-core';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -20,14 +21,5 @@ export default function toggleBold(editor: IStandaloneEditor) {
                     ? paragraph?.decorator?.format.fontWeight
                     : format.fontWeight
             )
-    );
-}
-
-/**
- * @internal
- */
-export function isBold(boldStyle?: string): boolean {
-    return (
-        !!boldStyle && (boldStyle == 'bold' || boldStyle == 'bolder' || parseInt(boldStyle) >= 600)
     );
 }
