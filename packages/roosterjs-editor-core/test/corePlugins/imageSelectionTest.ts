@@ -7,6 +7,8 @@ import {
     ImageSelectionRange,
     PluginEvent,
     PluginEventType,
+    PluginMouseUpEvent,
+    PluginMouseDownEvent,
 } from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
@@ -58,13 +60,26 @@ describe('ImageSelectionPlugin |', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);
-        simulateMouseEvent('mousedown', target!, 0);
-        simulateMouseEvent('mouseup', target!, 0);
+        imageSelection.onPluginEvent(mouseDown(target!, 0));
+        imageSelection.onPluginEvent(mouseup(target!, 0, true));
         editor.focus();
 
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
         expect(selection.areAllCollapsed).toBe(false);
+    });
+
+    it('should not be triggered in mouse up left click', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        imageSelection.onPluginEvent(mouseDown(target!, 0));
+        imageSelection.onPluginEvent(mouseup(target!, 0, false));
+        editor.focus();
+
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
     });
 
     it('should handle a ESCAPE KEY in a image', () => {
@@ -201,6 +216,45 @@ describe('ImageSelectionPlugin |', () => {
                 target: target,
             },
             items: [],
+        };
+    };
+
+    const mouseup = (
+        target: HTMLElement,
+        keyNumber: number,
+        isClicking: boolean
+    ): PluginMouseUpEvent => {
+        const rect = target.getBoundingClientRect();
+        return {
+            eventType: PluginEventType.MouseUp,
+            rawEvent: <any>{
+                target: target,
+                view: window,
+                bubbles: true,
+                cancelable: true,
+                clientX: rect.left,
+                clientY: rect.top,
+                shiftKey: false,
+                button: keyNumber,
+            },
+            isClicking,
+        };
+    };
+
+    const mouseDown = (target: HTMLElement, keyNumber: number): PluginMouseDownEvent => {
+        const rect = target.getBoundingClientRect();
+        return {
+            eventType: PluginEventType.MouseDown,
+            rawEvent: <any>{
+                target: target,
+                view: window,
+                bubbles: true,
+                cancelable: true,
+                clientX: rect.left,
+                clientY: rect.top,
+                shiftKey: false,
+                button: keyNumber,
+            },
         };
     };
 
