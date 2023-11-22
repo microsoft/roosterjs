@@ -6,9 +6,11 @@ describe('AutoHyphen |', () => {
     let editor: IEditor;
     const TEST_ID = 'autoHyphenTest';
     let plugin: EditorPlugin;
+    let editorSearchCursorSpy: any;
     beforeEach(() => {
         plugin = new AutoFormat();
         editor = TestHelper.initEditor(TEST_ID, [plugin]);
+        editorSearchCursorSpy = spyOn(editor, 'getContentSearcherOfCursor');
     });
 
     afterEach(() => {
@@ -24,48 +26,85 @@ describe('AutoHyphen |', () => {
         };
     };
 
-    function runTestShouldHandleAutoHyphen(
-        content: string,
-        keysTyped: string[],
-        expectedResult: string
-    ) {
-        editor.setContent(content);
-        plugin.onPluginEvent(keyDown(keysTyped[0]));
-        plugin.onPluginEvent(keyDown(keysTyped[1]));
-        plugin.onPluginEvent(keyDown(keysTyped[2]));
-        plugin.onPluginEvent(keyDown(keysTyped[3]));
+    function runTestShouldHandleAutoHyphen(keysTyped: string[], expectedResult: string) {
+        const divId = 'testDiv';
+
+        editor.setContent(
+            `<div id=${divId}>${keysTyped[0]}</div><!--{"start":[0,0,1],"end":[0,0,1]}-->`,
+            false
+        );
+
+        plugin?.onPluginEvent(keyDown(keysTyped[0]));
+
+        editor.setContent(
+            `<div id=${divId}>${
+                keysTyped[0] + keysTyped[1]
+            }</div><!--{"start":[0,0,2],"end":[0,0,2]}-->`,
+            false
+        );
+
+        plugin?.onPluginEvent(keyDown(keysTyped[1]));
+
+        editor.setContent(
+            `<div id=${divId}>${
+                keysTyped[0] + keysTyped[1] + keysTyped[2]
+            }</div><!--{"start":[0,0,3],"end":[0,0,3]}-->`,
+            false
+        );
+
+        plugin?.onPluginEvent(keyDown(keysTyped[2]));
+
+        editor.setContent(
+            `<div id=${divId}>${
+                keysTyped[0] + keysTyped[1] + keysTyped[2] + keysTyped[3]
+            }</div><!--{"start":[0,0,4],"end":[0,0,4]}-->`,
+            false
+        );
+
+        plugin?.onPluginEvent(keyDown(keysTyped[3]));
+        if (keysTyped[4]) {
+            editor.setContent(
+                `<div id=${divId}>${
+                    keysTyped[0] + keysTyped[1] + keysTyped[2] + keysTyped[3] + keysTyped[4]
+                }</div><!--{"start":[0,0,5],"end":[0,0,5]}-->`,
+                false
+            );
+
+            plugin?.onPluginEvent(keyDown(keysTyped[4]));
+        }
+
+        if (keysTyped[5]) {
+            editor.setContent(
+                `<div id=${divId}>${
+                    keysTyped[0] +
+                    keysTyped[1] +
+                    keysTyped[2] +
+                    keysTyped[3] +
+                    keysTyped[4] +
+                    keysTyped[5]
+                }</div><!--{"start":[0,0,6],"end":[0,0,6]}-->`,
+                false
+            );
+
+            plugin?.onPluginEvent(keyDown(keysTyped[5]));
+        }
+
+        if (keysTyped[6]) {
+            plugin?.onPluginEvent(keyDown(keysTyped[6]));
+        }
+
         expect(editor.getContent()).toBe(expectedResult);
     }
 
-    it('Should format ', () => {
-        runTestShouldHandleAutoHyphen(
-            '<div>t--</div><!--{"start":[0,0,4],"end":[0,0,4]}-->',
-            ['t', '-', '-', 'b'],
-            '<div>t—</div>'
-        );
-    });
-
     it('Should not format| - ', () => {
-        runTestShouldHandleAutoHyphen(
-            '<div>t—-</div><!--{"start":[0,0,3],"end":[0,0,3]}-->',
-            ['t', '-', '-', '-'],
-            '<div>t—-</div>'
-        );
+        runTestShouldHandleAutoHyphen(['t', '-', '-', '-', ' '], '<div id="testDiv">t--- </div>');
     });
 
     it('Should not format | " "', () => {
-        runTestShouldHandleAutoHyphen(
-            '<div>t—-</div><!--{"start":[0,0,3],"end":[0,0,3]}-->',
-            ['t', '-', '-', ' '],
-            '<div>t—-</div>'
-        );
+        runTestShouldHandleAutoHyphen(['t', '-', '-', ' '], '<div id="testDiv">t-- </div>');
     });
 
     it('Should not format | ! ', () => {
-        runTestShouldHandleAutoHyphen(
-            '<div>t—-</div><!--{"start":[0,0,3],"end":[0,0,3]}-->',
-            ['t', '-', '-', '!'],
-            '<div>t—-</div>'
-        );
+        runTestShouldHandleAutoHyphen(['t', '-', '-', '!', ' '], '<div id="testDiv">t--! </div>');
     });
 });
