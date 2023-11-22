@@ -257,18 +257,4 @@ describe('ImageSelectionPlugin |', () => {
             },
         };
     };
-
-    function simulateMouseEvent(mouseEvent: string, target: HTMLElement, keyNumber: number) {
-        const rect = target.getBoundingClientRect();
-        var event = new MouseEvent(mouseEvent, {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            clientX: rect.left,
-            clientY: rect.top,
-            shiftKey: false,
-            button: keyNumber,
-        });
-        target.dispatchEvent(event);
-    }
 });
