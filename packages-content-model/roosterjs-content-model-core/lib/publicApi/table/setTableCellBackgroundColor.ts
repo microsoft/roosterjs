@@ -8,6 +8,7 @@ const DARK_COLORS_LIGHTNESS = 20;
 const BRIGHT_COLORS_LIGHTNESS = 80;
 const White = '#ffffff';
 const Black = '#000000';
+const DEFAULT_COLORS = ['rgb(0,0,0', '#000000', '#ffffff', 'rgb(255, 255, 255)'];
 
 /**
  * Set shade color of table cell
@@ -15,7 +16,9 @@ const Black = '#000000';
  * @param color The color to set
  * @param isColorOverride @optional When pass true, it means this shade color is not part of table format, so it can be preserved when apply table format
  * @param applyToSegments @optional When pass true, we will also apply text color from table cell to its child blocks and segments
+ *
  */
+
 export function setTableCellBackgroundColor(
     cell: ContentModelTableCell,
     color: string | null | undefined,
@@ -43,28 +46,65 @@ export function setTableCellBackgroundColor(
             delete cell.format.textColor;
         }
 
-        if (applyToSegments && cell.format.textColor) {
-            cell.blocks.forEach(block => {
-                if (block.blockType == 'Paragraph') {
-                    block.segmentFormat = {
-                        ...block.segmentFormat,
-                        textColor: cell.format.textColor,
-                    };
-                    block.segments.forEach(segment => {
-                        segment.format = {
-                            ...segment.format,
-                            textColor: cell.format.textColor,
-                        };
-                    });
-                }
-            });
+        if (applyToSegments) {
+            setAdaptiveCellColor(cell);
         }
     } else {
         delete cell.format.backgroundColor;
         delete cell.format.textColor;
+        if (applyToSegments) {
+            removeAdaptiveCellColor(cell);
+        }
     }
 
     delete cell.cachedElement;
+}
+
+function removeAdaptiveCellColor(cell: ContentModelTableCell) {
+    cell.blocks.forEach(block => {
+        if (block.blockType == 'Paragraph') {
+            console.log(block.segmentFormat?.textColor, 'segmentFormat?.textColor');
+            if (
+                block.segmentFormat?.textColor &&
+                DEFAULT_COLORS.indexOf(block.segmentFormat?.textColor) > 0
+            ) {
+                delete block.segmentFormat.textColor;
+            }
+            block.segments.forEach(segment => {
+                console.log(segment.format.textColor, 'segment?.textColor');
+                if (
+                    segment.format.textColor &&
+                    DEFAULT_COLORS.indexOf(segment.format.textColor) > 0
+                ) {
+                    delete segment.format.textColor;
+                }
+            });
+        }
+    });
+}
+
+function setAdaptiveCellColor(cell: ContentModelTableCell) {
+    if (cell.format.textColor) {
+        cell.blocks.forEach(block => {
+            if (block.blockType == 'Paragraph') {
+                if (!block.segmentFormat?.textColor) {
+                    block.segmentFormat = {
+                        ...block.segmentFormat,
+                        textColor: cell.format.textColor,
+                    };
+                }
+
+                block.segments.forEach(segment => {
+                    if (!segment.format?.textColor) {
+                        segment.format = {
+                            ...segment.format,
+                            textColor: cell.format.textColor,
+                        };
+                    }
+                });
+            }
+        });
+    }
 }
 
 function calculateLightness(color: string) {
