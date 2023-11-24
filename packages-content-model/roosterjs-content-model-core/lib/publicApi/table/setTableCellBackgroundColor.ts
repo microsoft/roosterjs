@@ -63,7 +63,6 @@ export function setTableCellBackgroundColor(
 function removeAdaptiveCellColor(cell: ContentModelTableCell) {
     cell.blocks.forEach(block => {
         if (block.blockType == 'Paragraph') {
-            console.log(block.segmentFormat?.textColor, 'segmentFormat?.textColor');
             if (
                 block.segmentFormat?.textColor &&
                 DEFAULT_COLORS.indexOf(block.segmentFormat?.textColor) > 0
@@ -71,7 +70,6 @@ function removeAdaptiveCellColor(cell: ContentModelTableCell) {
                 delete block.segmentFormat.textColor;
             }
             block.segments.forEach(segment => {
-                console.log(segment.format.textColor, 'segment?.textColor');
                 if (
                     segment.format.textColor &&
                     DEFAULT_COLORS.indexOf(segment.format.textColor) > 0
