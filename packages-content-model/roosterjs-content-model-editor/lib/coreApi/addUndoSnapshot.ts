@@ -1,12 +1,11 @@
 import { getSelectionPath, Position } from 'roosterjs-editor-dom';
 import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { EntityState, ContentChangedEvent, ContentMetadata } from 'roosterjs-editor-types';
 import type {
-    EntityState,
-    ContentChangedEvent,
-    ContentMetadata,
-    SelectionRangeEx,
-} from 'roosterjs-editor-types';
-import type { AddUndoSnapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
+    AddUndoSnapshot,
+    DOMSelection,
+    StandaloneEditorCore,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -41,7 +40,8 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 
     try {
         if (callback) {
-            const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+            const selection = core.api.getDOMSelection(core);
+            const range = selection?.type == 'range' ? selection.range : null;
             data = callback(
                 range && Position.getStart(range).normalize(),
                 range && Position.getEnd(range).normalize()
@@ -69,11 +69,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     }
 
     if (canUndoByBackspace) {
-        const range = core.api.getSelectionRange(core, false /*tryGetFromCache*/);
+        const selection = core.api.getDOMSelection(core);
 
-        if (range) {
+        if (selection?.type == 'range') {
             core.undo.hasNewContent = false;
-            core.undo.autoCompletePosition = Position.getStart(range);
+            core.undo.autoCompletePosition = Position.getStart(selection.range);
         }
     }
 };
@@ -84,9 +84,9 @@ function addUndoSnapshotInternal(
     entityStates?: EntityState[]
 ) {
     if (!core.lifecycle.shadowEditFragment) {
-        const rangeEx = core.api.getSelectionRangeEx(core);
+        const selection = core.api.getDOMSelection(core);
         const isDarkMode = core.lifecycle.isDarkMode;
-        const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;
+        const metadata = createContentMetadata(core.contentDiv, selection, isDarkMode) || null;
 
         core.undo.snapshotsService.addSnapshot(
             {
@@ -103,30 +103,37 @@ function addUndoSnapshotInternal(
 
 function createContentMetadata(
     root: HTMLElement,
-    rangeEx: SelectionRangeEx,
+    selection: DOMSelection | null,
     isDarkMode: boolean
 ): ContentMetadata | undefined {
-    switch (rangeEx?.type) {
-        case SelectionRangeTypes.TableSelection:
+    switch (selection?.type) {
+        case 'table':
             return {
                 type: SelectionRangeTypes.TableSelection,
-                tableId: rangeEx.table.id,
+                tableId: selection.table.id,
+                firstCell: {
+                    x: selection.firstColumn,
+                    y: selection.firstRow,
+                },
+                lastCell: {
+                    x: selection.firstColumn,
+                    y: selection.lastColumn,
+                },
                 isDarkMode: !!isDarkMode,
-                ...rangeEx.coordinates!,
             };
-        case SelectionRangeTypes.ImageSelection:
+        case 'image':
             return {
                 type: SelectionRangeTypes.ImageSelection,
-                imageId: rangeEx.image.id,
+                imageId: selection.image.id,
                 isDarkMode: !!isDarkMode,
             };
-        case SelectionRangeTypes.Normal:
+        case 'range':
             return {
                 type: SelectionRangeTypes.Normal,
                 isDarkMode: !!isDarkMode,
                 start: [],
                 end: [],
-                ...(getSelectionPath(root, rangeEx.ranges[0]) || {}),
+                ...(getSelectionPath(root, selection.range) || {}),
             };
     }
 }

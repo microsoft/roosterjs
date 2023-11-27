@@ -1,4 +1,3 @@
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type {
     DOMSelection,
     GetDOMSelection,
@@ -9,33 +8,45 @@ import type {
  * @internal
  */
 export const getDOMSelection: GetDOMSelection = core => {
-    return core.cache.cachedSelection ?? getNewSelection(core);
+    return core.lifecycle.shadowEditFragment
+        ? null
+        : core.cache.cachedSelection ?? getNewSelection(core);
 };
 
 function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {
-    // TODO: Get rid of getSelectionRangeEx when we have standalone editor
-    const rangeEx = core.api.getSelectionRangeEx(core);
+    // TODO: Reorganize the selection storage when we port selection plugin
+    if (core.domEvent.tableSelectionRange?.coordinates) {
+        const { table, coordinates } = core.domEvent.tableSelectionRange;
 
-    if (rangeEx.type == SelectionRangeTypes.Normal && rangeEx.ranges[0]) {
-        return {
-            type: 'range',
-            range: rangeEx.ranges[0],
-        };
-    } else if (rangeEx.type == SelectionRangeTypes.TableSelection && rangeEx.coordinates) {
         return {
             type: 'table',
-            table: rangeEx.table,
-            firstColumn: rangeEx.coordinates.firstCell.x,
-            lastColumn: rangeEx.coordinates.lastCell.x,
-            firstRow: rangeEx.coordinates.firstCell.y,
-            lastRow: rangeEx.coordinates.lastCell.y,
+            table: table,
+            firstColumn: coordinates.firstCell.x,
+            lastColumn: coordinates.lastCell.x,
+            firstRow: coordinates.firstCell.y,
+            lastRow: coordinates.lastCell.y,
         };
-    } else if (rangeEx.type == SelectionRangeTypes.ImageSelection) {
+    } else if (core.domEvent.imageSelectionRange) {
+        const { image } = core.domEvent.imageSelectionRange;
+
         return {
             type: 'image',
-            image: rangeEx.image,
+            image: image,
         };
     } else {
-        return null;
+        let selection: Selection | null | undefined;
+        let range =
+            core.api.hasFocus(core) &&
+            (selection = core.contentDiv.ownerDocument.defaultView?.getSelection()) &&
+            selection.rangeCount > 0
+                ? selection.getRangeAt(0)
+                : null;
+
+        return range && core.contentDiv.contains(range.commonAncestorContainer)
+            ? {
+                  type: 'range',
+                  range: range,
+              }
+            : null;
     }
 }
