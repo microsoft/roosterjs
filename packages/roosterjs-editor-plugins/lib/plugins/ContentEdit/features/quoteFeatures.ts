@@ -52,6 +52,25 @@ const UnquoteWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
         ),
 };
 
+/**
+ * When press Backspace on the start of line, unquote current line
+ */
+const UnquoteWhenBackspaceOnStartOfLine: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.BACKSPACE],
+    shouldHandleEvent: (event, editor) => {
+        const range = editor.getSelectionRange();
+        const childOfQuote = cacheGetQuoteChild(event, editor);
+
+        return !!(range?.collapsed && childOfQuote && isAtStartOfLine(editor, event));
+    },
+    handleEvent: splitQuote,
+};
+
+function isAtStartOfLine(editor: IEditor, event: PluginKeyboardEvent) {
+    const searcher = editor.getContentSearcherOfCursor(event);
+    return searcher?.getSubStringBefore(1) == '';
+}
+
 function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: IEditor): Node | null {
     return cacheGetEventData(event, 'QUOTE_CHILD', () => {
         const quote = editor.getElementAtCursor(STRUCTURED_TAGS);
@@ -63,7 +82,7 @@ function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: IEditor): Node |
                     block.getStartNode() == quote
                         ? block.getStartNode()
                         : block.collapseToSingleElement();
-                return isNodeEmpty(node) ? node : null;
+                return node;
             }
         }
 
@@ -118,4 +137,5 @@ export const QuoteFeatures: Record<
 > = {
     unquoteWhenBackspaceOnEmptyFirstLine: UnquoteWhenBackOnEmpty1stLine,
     unquoteWhenEnterOnEmptyLine: UnquoteWhenEnterOnEmptyLine,
+    unquoteWhenBackspaceOnStartOfLine: UnquoteWhenBackspaceOnStartOfLine,
 };
