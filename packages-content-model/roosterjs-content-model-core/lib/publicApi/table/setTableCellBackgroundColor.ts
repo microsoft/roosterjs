@@ -8,7 +8,7 @@ const DARK_COLORS_LIGHTNESS = 20;
 const BRIGHT_COLORS_LIGHTNESS = 80;
 const White = '#ffffff';
 const Black = '#000000';
-const DEFAULT_COLORS = ['rgb(0,0,0', '#000000', '#ffffff', 'rgb(255, 255, 255)'];
+const ADAPTED_TEXT_COLORS = ['rgb(0,0,0)', '#000000', '#ffffff', 'rgb(255, 255, 255)'];
 
 /**
  * Set shade color of table cell
@@ -65,14 +65,14 @@ function removeAdaptiveCellColor(cell: ContentModelTableCell) {
         if (block.blockType == 'Paragraph') {
             if (
                 block.segmentFormat?.textColor &&
-                DEFAULT_COLORS.indexOf(block.segmentFormat?.textColor) > 0
+                ADAPTED_TEXT_COLORS.indexOf(block.segmentFormat?.textColor) >= 0
             ) {
                 delete block.segmentFormat.textColor;
             }
             block.segments.forEach(segment => {
                 if (
                     segment.format.textColor &&
-                    DEFAULT_COLORS.indexOf(segment.format.textColor) > 0
+                    ADAPTED_TEXT_COLORS.indexOf(segment.format.textColor) >= 0
                 ) {
                     delete segment.format.textColor;
                 }
