@@ -199,6 +199,12 @@ export interface QuoteFeatureSettings {
      * @default true
      */
     unquoteWhenEnterOnEmptyLine: boolean;
+
+    /**
+     * When press Backspace on the start of line, unquote current line
+     * @default true
+     */
+    unquoteWhenBackspaceOnStartOfLine: boolean;
 }
 
 /**

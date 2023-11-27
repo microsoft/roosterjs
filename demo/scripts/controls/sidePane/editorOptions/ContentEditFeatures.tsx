@@ -57,6 +57,7 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     removeCodeWhenBackspaceOnEmptyFirstLine: 'Remove code line when backspace on empty first line',
     indentWhenAltShiftRight: 'Indent list item using Alt + Shift + Right',
     outdentWhenAltShiftLeft: 'Outdent list item using Alt + Shift + Left',
+    unquoteWhenBackspaceOnStartOfLine: 'Unquote when backspance on start of line',
 };
 
 export interface ContentEditFeaturessProps {
