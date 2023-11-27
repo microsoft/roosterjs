@@ -71,6 +71,34 @@ describe('imageProcessor', () => {
         });
     });
 
+    it('Image with src and port', () => {
+        const doc = createContentModelDocument();
+        const img = document.createElement('img');
+
+        img.src = 'http://test.com:80/testSrc';
+
+        imageProcessor(doc, img, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            format: {},
+                            src: 'http://test.com:80/testSrc',
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
     it('Image with regular selection', () => {
         const doc = createContentModelDocument();
         const img = document.createElement('img');
