@@ -9,6 +9,7 @@ describe('QuoteFeatures |', () => {
 
     describe('UnquoteWhenBackOnEmpty1stLine |', () => {
         let quote: HTMLElement;
+
         beforeEach(() => {
             quote = createElement(
                 {
