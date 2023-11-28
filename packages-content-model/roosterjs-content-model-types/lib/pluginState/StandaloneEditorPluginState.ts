@@ -1,4 +1,4 @@
-import { SelectionPluginState } from './SelectionPluginState';
+import type { SelectionPluginState } from './SelectionPluginState';
 import type {
     CopyPastePluginState,
     EditPluginState,

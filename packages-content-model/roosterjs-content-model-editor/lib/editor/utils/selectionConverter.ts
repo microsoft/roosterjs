@@ -5,6 +5,9 @@ import type { ContentMetadata, SelectionRangeEx } from 'roosterjs-editor-types';
 
 // In theory, all functions below are not necessary. We keep these functions here only for compatibility with old IEditor interface
 
+/**
+ * @internal
+ */
 export function convertRangeExToDomSelection(rangeEx: SelectionRangeEx): DOMSelection | null {
     switch (rangeEx?.type) {
         case SelectionRangeTypes.ImageSelection:
@@ -38,6 +41,9 @@ export function convertRangeExToDomSelection(rangeEx: SelectionRangeEx): DOMSele
     }
 }
 
+/**
+ * @internal
+ */
 export function convertDomSelectionToRangeEx(selection: DOMSelection | null): SelectionRangeEx {
     switch (selection?.type) {
         case 'image':
@@ -76,6 +82,9 @@ export function convertDomSelectionToRangeEx(selection: DOMSelection | null): Se
     }
 }
 
+/**
+ * @internal
+ */
 export function convertDomSelectionToMetadata(
     contentDiv: HTMLElement,
     selection: DOMSelection | null
@@ -114,6 +123,9 @@ export function convertDomSelectionToMetadata(
     }
 }
 
+/**
+ * @internal
+ */
 export function convertMetadataToDOMSelection(
     contentDiv: HTMLElement,
     metadata: ContentMetadata | undefined

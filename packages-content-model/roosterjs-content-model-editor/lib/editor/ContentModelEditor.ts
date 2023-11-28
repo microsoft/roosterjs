@@ -4,10 +4,6 @@ import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
 import { isBold, paste } from 'roosterjs-content-model-core';
 import {
-    convertDomSelectionToRangeEx,
-    convertRangeExToDomSelection,
-} from './utils/selectionConverter';
-import {
     ChangeSource,
     ColorTransformDirection,
     ContentPosition,
@@ -16,19 +12,19 @@ import {
     QueryScope,
     RegionType,
 } from 'roosterjs-editor-types';
-import {
+import type {
     BlockElement,
     ClipboardData,
     ContentChangedData,
-    DOMEventHandler,
     DarkColorHandler,
     DefaultFormat,
+    DOMEventHandler,
     EditorUndoState,
     ExperimentalFeatures,
     GenericContentEditFeature,
     IContentTraverser,
-    IPositionContentSearcher,
     InsertOption,
+    IPositionContentSearcher,
     NodePosition,
     PendableFormatState,
     PluginEvent,
@@ -44,6 +40,10 @@ import {
     TableSelection,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
+import {
+    convertDomSelectionToRangeEx,
+    convertRangeExToDomSelection,
+} from './utils/selectionConverter';
 import type {
     CompatibleChangeSource,
     CompatibleColorTransformDirection,
