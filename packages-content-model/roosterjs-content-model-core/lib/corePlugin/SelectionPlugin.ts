@@ -1,15 +1,20 @@
 import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
-import type { IStandaloneEditor, SelectionPluginState } from 'roosterjs-content-model-types';
+import type {
+    IStandaloneEditor,
+    SelectionPluginState,
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: (IStandaloneEditor & IEditor) | null = null;
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
 
-    constructor() {
+    constructor(options: StandaloneEditorOptions) {
         this.state = {
             selection: null,
             selectionStyleNode: null,
+            imageSelectionBorderColor: options.imageSelectionBorderColor, // TODO: Move to Selection core plugin
         };
     }
 
@@ -106,8 +111,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
  * @internal
  * Create a new instance of SelectionPlugin.
  * @param option The editor option
- * @param contentDiv The editor content DIV element
  */
-export function createSelectionPlugin(): PluginWithState<SelectionPluginState> {
-    return new SelectionPlugin();
+export function createSelectionPlugin(
+    options: StandaloneEditorOptions
+): PluginWithState<SelectionPluginState> {
+    return new SelectionPlugin(options);
 }

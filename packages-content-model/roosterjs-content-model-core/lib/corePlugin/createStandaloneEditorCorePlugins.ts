@@ -26,6 +26,6 @@ export function createStandaloneEditorCorePlugins(
         domEvent: createDOMEventPlugin(options, contentDiv),
         lifecycle: createLifecyclePlugin(options, contentDiv),
         entity: createEntityPlugin(),
-        selection: createSelectionPlugin(),
+        selection: createSelectionPlugin(options),
     };
 }

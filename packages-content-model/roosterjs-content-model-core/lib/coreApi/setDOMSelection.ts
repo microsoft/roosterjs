@@ -24,7 +24,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     core.selection.skipReselectOnFocus = true;
 
     try {
-        let selectionRules: string[] = [];
+        let selectionRules: string[] | undefined;
 
         const divId = addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
@@ -32,42 +32,27 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
             switch (selection.type) {
                 case 'image':
                     const image = selection.image;
+                    const imageId = addUniqueId(image, IMAGE_ID);
 
-                    addUniqueId(image, IMAGE_ID);
-
-                    const range = doc.createRange();
-
-                    range.selectNode(image);
-                    range.collapse();
-
-                    addRangeToSelection(doc, range);
-                    selectionRules.push(
-                        buildImageBorderCSS(divId, image.id, core.imageSelectionBorderColor)
+                    selectionRules = buildImageCSS(
+                        divId,
+                        imageId,
+                        core.selection.imageSelectionBorderColor
                     );
-
                     core.selection.selection = selection;
+
+                    setRangeSelection(doc, image);
 
                     break;
                 case 'table':
                     const { table, firstColumn, firstRow } = selection;
+                    const tableId = addUniqueId(table, TABLE_ID);
+                    const firstCell = table.rows[firstRow]?.cells[firstColumn];
 
-                    addUniqueId(table, TABLE_ID);
-
-                    selectionRules = buildTableCss(divId, selection);
-
-                    if (!isMergedCell(selection)) {
-                        const cellToSelect = table.rows.item(firstRow)?.cells.item(firstColumn);
-
-                        if (cellToSelect) {
-                            const range = doc.createRange();
-
-                            range.selectNode(cellToSelect);
-                            range.collapse();
-                            addRangeToSelection(doc, range);
-                        }
-                    }
-
+                    selectionRules = buildTableCss(divId, tableId, selection);
                     core.selection.selection = selection;
+
+                    setRangeSelection(doc, firstCell);
 
                     break;
                 case 'range':
@@ -87,8 +72,10 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 sheet.deleteRule(i);
             }
 
-            for (let i = 0; i < selectionRules.length; i++) {
-                sheet.insertRule(selectionRules[i]);
+            if (selectionRules) {
+                for (let i = 0; i < selectionRules.length; i++) {
+                    sheet.insertRule(selectionRules[i]);
+                }
             }
         }
     } finally {
@@ -107,10 +94,23 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 };
 
-function buildImageBorderCSS(divId: string, imageId: string, borderColor?: string): string {
+function setRangeSelection(doc: Document, element: HTMLElement | undefined) {
+    if (element) {
+        const range = doc.createRange();
+
+        range.selectNode(element);
+        range.collapse();
+
+        addRangeToSelection(doc, range);
+    }
+}
+
+function buildImageCSS(divId: string, imageId: string, borderColor?: string): string[] {
     const color = borderColor || DEFAULT_SELECTION_BORDER_COLOR;
 
-    return `#${divId} #${imageId} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;
+    return [
+        `#${divId} #${imageId} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`,
+    ];
 }
 
 function addUniqueId(el: HTMLElement, idPrefix: string): string {
@@ -144,7 +144,7 @@ function applyId(el: HTMLElement, idPrefix: string, doc: Document) {
     return newId;
 }
 
-function buildTableCss(divId: string, selection: TableSelection): string[] {
+function buildTableCss(divId: string, tableId: string, selection: TableSelection): string[] {
     const selectors: string[] = [];
     const { firstColumn, firstRow, lastColumn, lastRow } = selection;
     const vTable = new VTable(selection.table);
@@ -155,9 +155,9 @@ function buildTableCss(divId: string, selection: TableSelection): string[] {
         lastColumn == vTable.cells?.[lastRow]?.length;
 
     if (isAllTableSelected) {
-        handleAllTableSelected('#' + divId, vTable, selectors);
+        handleAllTableSelected('#' + divId, tableId, vTable, selectors);
     } else {
-        handleTableSelected(selection, vTable, '#' + divId, selectors);
+        handleTableSelected(selection, tableId, vTable, '#' + divId, selectors);
     }
 
     const cssRules: string[] = [];
@@ -177,9 +177,14 @@ function buildTableCss(divId: string, selection: TableSelection): string[] {
     return cssRules;
 }
 
-function handleAllTableSelected(contentDivSelector: string, vTable: VTable, selectors: string[]) {
+function handleAllTableSelected(
+    contentDivSelector: string,
+    tableId: string,
+    vTable: VTable,
+    selectors: string[]
+) {
     const table = vTable.table;
-    const tableSelector = contentDivSelector + ' #' + table.id;
+    const tableSelector = contentDivSelector + ' #' + tableId;
     selectors.push(tableSelector, `${tableSelector} *`);
 
     const tableRange = new Range();
@@ -188,6 +193,7 @@ function handleAllTableSelected(contentDivSelector: string, vTable: VTable, sele
 
 function handleTableSelected(
     selection: TableSelection,
+    tableId: string,
     vTable: VTable,
     contentDivSelector: string,
     selectors: string[]
@@ -243,7 +249,7 @@ function handleTableSelected(
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
                     const selector = generateCssFromCell(
                         contentDivSelector,
-                        table.id,
+                        tableId,
                         middleElSelector,
                         currentRow,
                         cell.tagName,
@@ -287,9 +293,4 @@ function generateCssFromCell(
         index +
         ')'
     );
-}
-
-function isMergedCell(selection: TableSelection): boolean {
-    const { table, firstRow, firstColumn } = selection;
-    return !(table.rows.item(firstRow) && table.rows.item(firstRow)?.cells.item(firstColumn));
 }

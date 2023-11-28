@@ -43,7 +43,6 @@ export function createStandaloneEditorCore(
         ],
         environment: createEditorEnvironment(),
         darkColorHandler: new DarkColorHandlerImpl(contentDiv, options.baseDarkColor),
-        imageSelectionBorderColor: options.imageSelectionBorderColor, // TODO: Move to Selection core plugin
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         ...createStandaloneEditorDefaultSettings(options),
         ...getPluginState(corePlugins),

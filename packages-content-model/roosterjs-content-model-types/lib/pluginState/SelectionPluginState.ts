@@ -18,4 +18,9 @@ export interface SelectionPluginState {
      * When set to true, onFocus event will not trigger reselect cached range
      */
     skipReselectOnFocus?: boolean;
+
+    /**
+     * Color of the border of a selectedImage. Default color: '#DB626C'
+     */
+    imageSelectionBorderColor?: string;
 }
