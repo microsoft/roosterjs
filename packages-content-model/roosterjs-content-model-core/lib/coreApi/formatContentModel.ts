@@ -86,7 +86,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
     } else {
         if (context.clearModelCache) {
             core.cache.cachedModel = undefined;
-            core.cache.cachedSelection = undefined;
+            core.cache.previousSelection = undefined;
         }
 
         handlePendingFormat(core, context, core.api.getDOMSelection(core));

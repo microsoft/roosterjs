@@ -1,11 +1,8 @@
-import { getSelectionPath, Position } from 'roosterjs-editor-dom';
-import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
-import type { EntityState, ContentChangedEvent, ContentMetadata } from 'roosterjs-editor-types';
-import type {
-    AddUndoSnapshot,
-    DOMSelection,
-    StandaloneEditorCore,
-} from 'roosterjs-content-model-types';
+import { convertDomSelectionToMetadata } from '../editor/utils/selectionConverter';
+import { PluginEventType } from 'roosterjs-editor-types';
+import { Position } from 'roosterjs-editor-dom';
+import type { EntityState, ContentChangedEvent } from 'roosterjs-editor-types';
+import type { AddUndoSnapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -85,8 +82,11 @@ function addUndoSnapshotInternal(
 ) {
     if (!core.lifecycle.shadowEditFragment) {
         const selection = core.api.getDOMSelection(core);
-        const isDarkMode = core.lifecycle.isDarkMode;
-        const metadata = createContentMetadata(core.contentDiv, selection, isDarkMode) || null;
+        const metadata = convertDomSelectionToMetadata(core.contentDiv, selection);
+
+        if (metadata) {
+            metadata.isDarkMode = !!core.lifecycle.isDarkMode;
+        }
 
         core.undo.snapshotsService.addSnapshot(
             {
@@ -98,42 +98,5 @@ function addUndoSnapshotInternal(
             canUndoByBackspace
         );
         core.undo.hasNewContent = false;
-    }
-}
-
-function createContentMetadata(
-    root: HTMLElement,
-    selection: DOMSelection | null,
-    isDarkMode: boolean
-): ContentMetadata | undefined {
-    switch (selection?.type) {
-        case 'table':
-            return {
-                type: SelectionRangeTypes.TableSelection,
-                tableId: selection.table.id,
-                firstCell: {
-                    x: selection.firstColumn,
-                    y: selection.firstRow,
-                },
-                lastCell: {
-                    x: selection.firstColumn,
-                    y: selection.lastColumn,
-                },
-                isDarkMode: !!isDarkMode,
-            };
-        case 'image':
-            return {
-                type: SelectionRangeTypes.ImageSelection,
-                imageId: selection.image.id,
-                isDarkMode: !!isDarkMode,
-            };
-        case 'range':
-            return {
-                type: SelectionRangeTypes.Normal,
-                isDarkMode: !!isDarkMode,
-                start: [],
-                end: [],
-                ...(getSelectionPath(root, selection.range) || {}),
-            };
     }
 }

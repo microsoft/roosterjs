@@ -34,7 +34,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 
         if (!option && !selectionOverride) {
             core.cache.cachedModel = model;
-            core.cache.cachedSelection = selection;
+            core.cache.previousSelection = selection;
         }
 
         return model;

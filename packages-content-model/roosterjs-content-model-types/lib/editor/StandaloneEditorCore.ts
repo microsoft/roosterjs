@@ -77,7 +77,7 @@ export type SetContentModel = (
  * @param core The StandaloneEditorCore object
  * @param selection The selection to set
  */
-export type SetDOMSelection = (core: StandaloneEditorCore, selection: DOMSelection) => void;
+export type SetDOMSelection = (core: StandaloneEditorCore, selection: DOMSelection | null) => void;
 
 /**
  * The general API to do format change with Content Model

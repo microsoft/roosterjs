@@ -38,11 +38,9 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
-            selectionRange: null,
+            selection: null,
             contextMenuProviders:
                 options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -163,20 +161,14 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     };
 
     private onFocus = () => {
-        if (!this.state.skipReselectOnFocus) {
-            const { table, coordinates } = this.state.tableSelectionRange || {};
-            const { image } = this.state.imageSelectionRange || {};
-
-            if (table && coordinates) {
-                this.editor?.select(table, coordinates);
-            } else if (image) {
-                this.editor?.select(image);
-            } else if (this.state.selectionRange) {
-                this.editor?.select(this.state.selectionRange);
-            }
+        if (!this.state.skipReselectOnFocus && this.state.selection) {
+            this.editor?.setDOMSelection(this.state.selection);
         }
 
-        this.state.selectionRange = null;
+        if (this.state.selection?.type == 'range') {
+            // Editor is focused, now we can get live selection. So no need to keep a selection if the selection type is range.
+            this.state.selection = null;
+        }
     };
     private onKeyDownDocument = (event: KeyboardEvent) => {
         if (event.which == Keys.TAB && !event.defaultPrevented) {
@@ -185,18 +177,14 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     };
 
     private onMouseDownDocument = (event: MouseEvent) => {
-        if (
-            this.editor &&
-            !this.state.selectionRange &&
-            !this.editor.contains(event.target as Node)
-        ) {
+        if (this.editor && !this.editor.contains(event.target as Node)) {
             this.cacheSelection();
         }
     };
 
     private cacheSelection = () => {
-        if (!this.state.selectionRange && this.editor) {
-            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
+        if (!this.state.selection && this.editor) {
+            this.state.selection = this.editor.getDOMSelection();
         }
     };
     private onScroll = (e: Event) => {

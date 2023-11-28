@@ -1,7 +1,12 @@
+import { buildRangeEx } from './utils/buildRangeEx';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
 import { isBold, paste } from 'roosterjs-content-model-core';
+import {
+    convertDomSelectionToRangeEx,
+    convertRangeExToDomSelection,
+} from './utils/selectionConverter';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -10,9 +15,8 @@ import {
     PluginEventType,
     QueryScope,
     RegionType,
-    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-import type {
+import {
     BlockElement,
     ClipboardData,
     ContentChangedData,
@@ -152,7 +156,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * This is the replacement of IEditor.select.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection) {
+    setDOMSelection(selection: DOMSelection | null) {
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
@@ -448,9 +452,9 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     getSelectionRange(tryGetFromCache: boolean = true): Range | null {
-        return null;
-        // const core = this.getCore();
-        // return core.api.getSelectionRange(core, tryGetFromCache);
+        const selection = this.getDOMSelection();
+
+        return selection?.type == 'range' ? selection.range : null;
     }
 
     /**
@@ -461,13 +465,9 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     getSelectionRangeEx(): SelectionRangeEx {
-        return {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [],
-        };
-        // const core = this.getCore();
-        // return core.api.getSelectionRangeEx(core);
+        const selection = this.getDOMSelection();
+
+        return convertDomSelectionToRangeEx(selection);
     }
 
     /**
@@ -503,10 +503,11 @@ export class ContentModelEditor implements IContentModelEditor {
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
-        // const core = this.getCore();
-        // const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+        const core = this.getCore();
+        const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+        const selection = convertRangeExToDomSelection(rangeEx);
+        this.setDOMSelection(selection);
 
-        // return core.api.select(core, arg1, arg2, arg3, arg4);
         return true;
     }
 
@@ -930,11 +931,14 @@ export class ContentModelEditor implements IContentModelEditor {
     }
 
     /**
+     * @deprecated We don't need this API any more
      * Ensure user will type into a container element rather than into the editor content DIV directly
      * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
      */
-    ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {}
+    ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
+        // NO OP
+    }
 
     //#endregion
 
@@ -1107,96 +1111,3 @@ export class ContentModelEditor implements IContentModelEditor {
         return this.core;
     }
 }
-
-// function buildRangeEx(
-//     core: StandaloneEditorCore,
-//     arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
-//     arg2?: NodePosition | number | PositionType | TableSelection | null,
-//     arg3?: Node,
-//     arg4?: number | PositionType
-// ) {
-//     let rangeEx: SelectionRangeEx | null = null;
-
-//     if (isSelectionRangeEx(arg1)) {
-//         rangeEx = arg1;
-//     } else if (safeInstanceOf(arg1, 'HTMLTableElement') && isTableSelectionOrNull(arg2)) {
-//         rangeEx = {
-//             type: SelectionRangeTypes.TableSelection,
-//             ranges: [],
-//             areAllCollapsed: false,
-//             table: arg1,
-//             coordinates: arg2 ?? undefined,
-//         };
-//     } else if (safeInstanceOf(arg1, 'HTMLImageElement') && typeof arg2 == 'undefined') {
-//         rangeEx = {
-//             type: SelectionRangeTypes.ImageSelection,
-//             ranges: [],
-//             areAllCollapsed: false,
-//             image: arg1,
-//         };
-//     } else {
-//         const range = !arg1
-//             ? null
-//             : safeInstanceOf(arg1, 'Range')
-//             ? arg1
-//             : isSelectionPath(arg1)
-//             ? createRange(core.contentDiv, arg1.start, arg1.end)
-//             : isNodePosition(arg1) || safeInstanceOf(arg1, 'Node')
-//             ? createRange(
-//                   <Node>arg1,
-//                   <number | PositionType>arg2,
-//                   <Node>arg3,
-//                   <number | PositionType>arg4
-//               )
-//             : null;
-
-//         rangeEx = range
-//             ? {
-//                   type: SelectionRangeTypes.Normal,
-//                   ranges: [range],
-//                   areAllCollapsed: range.collapsed,
-//               }
-//             : null;
-//     }
-
-//     return rangeEx;
-// }
-
-// function isSelectionRangeEx(obj: any): obj is SelectionRangeEx {
-//     const rangeEx = obj as SelectionRangeEx;
-//     return (
-//         rangeEx &&
-//         typeof rangeEx == 'object' &&
-//         typeof rangeEx.type == 'number' &&
-//         Array.isArray(rangeEx.ranges)
-//     );
-// }
-
-// function isTableSelectionOrNull(obj: any): obj is TableSelection | null {
-//     const selection = obj as TableSelection | null;
-
-//     return (
-//         selection === null ||
-//         (selection &&
-//             typeof selection == 'object' &&
-//             typeof selection.firstCell == 'object' &&
-//             typeof selection.lastCell == 'object')
-//     );
-// }
-
-// function isSelectionPath(obj: any): obj is SelectionPath {
-//     const path = obj as SelectionPath;
-
-//     return path && typeof path == 'object' && Array.isArray(path.start) && Array.isArray(path.end);
-// }
-
-// function isNodePosition(obj: any): obj is NodePosition {
-//     const pos = obj as NodePosition;
-
-//     return (
-//         pos &&
-//         typeof pos == 'object' &&
-//         typeof pos.node == 'object' &&
-//         typeof pos.offset == 'number'
-//     );
-// }

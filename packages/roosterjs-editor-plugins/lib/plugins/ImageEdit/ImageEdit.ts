@@ -200,13 +200,13 @@ export default class ImageEdit implements EditorPlugin {
     onPluginEvent(e: PluginEvent) {
         switch (e.eventType) {
             case PluginEventType.SelectionChanged:
+                const rangeEx = this.editor?.getSelectionRangeEx();
                 if (
-                    e.selectionRangeEx &&
-                    e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection &&
+                    rangeEx?.type === SelectionRangeTypes.ImageSelection &&
                     this.options &&
                     this.options.onSelectState !== undefined
                 ) {
-                    this.setEditingImage(e.selectionRangeEx.image, this.options.onSelectState);
+                    this.setEditingImage(rangeEx.image, this.options.onSelectState);
                 }
 
                 break;

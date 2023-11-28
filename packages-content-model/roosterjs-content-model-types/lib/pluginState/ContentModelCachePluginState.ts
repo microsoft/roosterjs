@@ -9,7 +9,7 @@ export interface ContentModelCachePluginState {
     /**
      * Cached selection
      */
-    cachedSelection?: DOMSelection | undefined;
+    previousSelection?: DOMSelection;
 
     /**
      * When reuse Content Model is allowed, we cache the Content Model object here after created

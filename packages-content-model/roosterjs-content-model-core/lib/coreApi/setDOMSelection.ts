@@ -1,16 +1,12 @@
 import { addRangeToSelection } from '../corePlugin/utils/addRangeToSelection';
-import { PluginEventType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-content-model-dom';
 import {
-    Position,
     VTable,
-    createRange,
     getTagOfNode,
     removeGlobalCssStyle,
-    removeImportantStyleRule,
     setGlobalCssStyles,
 } from 'roosterjs-editor-dom';
-import type { SelectionRangeEx } from 'roosterjs-editor-types';
 import type {
     SetDOMSelection,
     StandaloneEditorCore,
@@ -34,86 +30,64 @@ export const setDOMSelection: SetDOMSelection = (core, selection) => {
     // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
     // Set skipReselectOnFocus to skip this behavior
     const skipReselectOnFocus = core.domEvent.skipReselectOnFocus;
+    const doc = core.contentDiv.ownerDocument;
+
     core.domEvent.skipReselectOnFocus = true;
-    core.domEvent.tableSelectionRange = null;
-    core.domEvent.imageSelectionRange = null;
-    core.domEvent.selectionRange = null;
 
-    core.cache.cachedSelection = selection;
-
-    // TODO: Remove rangeEx from the event
-    let rangeEx: SelectionRangeEx | null = null;
+    unselectImage(core);
+    unselectTable(core);
 
     try {
-        switch (selection.type) {
-            case 'image':
-                const image = selection.image;
+        if (selection) {
+            switch (selection.type) {
+                case 'image':
+                    const image = selection.image;
 
-                rangeEx = {
-                    type: SelectionRangeTypes.ImageSelection,
-                    ranges: [],
-                    areAllCollapsed: false,
-                    image: image,
-                };
+                    addUniqueId(image, IMAGE_ID);
+                    addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
-                core.domEvent.imageSelectionRange = rangeEx;
+                    const range = doc.createRange();
 
-                unselectImage(core);
+                    range.selectNode(image);
+                    range.collapse();
 
-                addUniqueId(image, IMAGE_ID);
-                addUniqueId(core.contentDiv, CONTENT_DIV_ID);
+                    addRangeToSelection(doc, range);
+                    selectImage(core, image);
 
-                addRangeToSelection(
-                    core.contentDiv.ownerDocument,
-                    createRange(new Position(image, PositionType.After))
-                );
+                    core.domEvent.selection = selection;
 
-                selectImage(core, image);
+                    break;
+                case 'table':
+                    const { table, firstColumn, firstRow } = selection;
 
-                break;
-            case 'table':
-                const { table, firstColumn, firstRow, lastColumn, lastRow } = selection;
+                    addUniqueId(table, TABLE_ID);
+                    addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
-                rangeEx = {
-                    type: SelectionRangeTypes.TableSelection,
-                    ranges: [],
-                    areAllCollapsed: false,
-                    table: table,
-                    coordinates: {
-                        firstCell: { x: firstColumn, y: firstRow },
-                        lastCell: { x: lastColumn, y: lastRow },
-                    },
-                };
+                    selectTable(core, selection);
 
-                core.domEvent.tableSelectionRange = rangeEx;
+                    if (!isMergedCell(selection)) {
+                        const cellToSelect = table.rows.item(firstRow)?.cells.item(firstColumn);
 
-                unselectTable(core);
+                        if (cellToSelect) {
+                            const range = doc.createRange();
 
-                addUniqueId(table, TABLE_ID);
-                addUniqueId(core.contentDiv, CONTENT_DIV_ID);
-
-                selectTable(core, selection);
-
-                if (!isMergedCell(selection)) {
-                    const cellToSelect = table.rows.item(firstRow)?.cells.item(firstColumn);
-
-                    if (cellToSelect) {
-                        addRangeToSelection(
-                            core.contentDiv.ownerDocument,
-                            createRange(new Position(cellToSelect, PositionType.Begin))
-                        );
+                            range.selectNode(cellToSelect);
+                            range.collapse();
+                            addRangeToSelection(doc, range);
+                        }
                     }
-                }
 
-                break;
-            case 'range':
-                rangeEx = {
-                    type: SelectionRangeTypes.Normal,
-                    ranges: [selection.range],
-                    areAllCollapsed: selection.range.collapsed,
-                };
-                core.domEvent.selectionRange = selection.range;
-                break;
+                    core.domEvent.selection = selection;
+
+                    break;
+                case 'range':
+                    addRangeToSelection(doc, selection.range);
+
+                    core.domEvent.selection = core.api.hasFocus(core) ? null : selection;
+                    break;
+            }
+        } else {
+            core.domEvent.selection = null;
         }
     } finally {
         core.domEvent.skipReselectOnFocus = skipReselectOnFocus;
@@ -123,7 +97,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection) => {
         core,
         {
             eventType: PluginEventType.SelectionChanged,
-            selectionRangeEx: rangeEx,
+            selectionRangeEx: null,
         },
         true /*broadcast*/
     );
@@ -135,7 +109,6 @@ function unselectImage(core: StandaloneEditorCore) {
 }
 
 function selectImage(core: StandaloneEditorCore, image: HTMLImageElement) {
-    removeImportantStyleRule(image, ['border', 'margin']);
     const borderCSS = buildImageBorderCSS(core, image.id);
     setGlobalCssStyles(
         core.contentDiv.ownerDocument,
@@ -285,8 +258,6 @@ function handleTableSelected(
             if (cell) {
                 tdCount++;
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
-                    removeImportant(cell);
-
                     const selector = generateCssFromCell(
                         contentDivSelector,
                         table.id,
@@ -310,12 +281,6 @@ function handleTableSelected(
             rowRange.setEndAfter(lastSelected);
         }
     });
-}
-
-function removeImportant(cell: HTMLTableCellElement) {
-    if (cell) {
-        removeImportantStyleRule(cell, ['background-color', 'background']);
-    }
 }
 
 function generateCssFromCell(

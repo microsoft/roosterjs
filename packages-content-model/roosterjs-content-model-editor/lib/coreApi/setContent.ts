@@ -1,17 +1,8 @@
-import {
-    ChangeSource,
-    ColorTransformDirection,
-    PluginEventType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
-import {
-    createRange,
-    extractContentMetadata,
-    queryElements,
-    restoreContentWithEntityPlaceholder,
-} from 'roosterjs-editor-dom';
+import { ChangeSource, ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
+import { convertMetadataToDOMSelection } from '../editor/utils/selectionConverter';
+import { extractContentMetadata, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
 import type { ContentMetadata } from 'roosterjs-editor-types';
-import type { DOMSelection, SetContent, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { SetContent, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -79,54 +70,10 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 
 function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMetadata | undefined) {
     if (!core.lifecycle.shadowEditFragment && metadata) {
-        const selection = convertMetadataToDOMSelection(core, metadata);
+        const selection = convertMetadataToDOMSelection(core.contentDiv, metadata);
 
         if (selection) {
             core.api.setDOMSelection(core, selection);
         }
-    }
-}
-
-function convertMetadataToDOMSelection(
-    core: StandaloneEditorCore,
-    metadata: ContentMetadata | undefined
-): DOMSelection | null {
-    switch (metadata?.type) {
-        case SelectionRangeTypes.Normal:
-            return {
-                type: 'range',
-                range: createRange(core.contentDiv, metadata.start, metadata.end),
-            };
-        case SelectionRangeTypes.TableSelection:
-            const table = queryElements(
-                core.contentDiv,
-                '#' + metadata.tableId
-            )[0] as HTMLTableElement;
-
-            return table
-                ? {
-                      type: 'table',
-                      table: table,
-                      firstColumn: metadata.firstCell.x,
-                      firstRow: metadata.firstCell.y,
-                      lastColumn: metadata.lastCell.x,
-                      lastRow: metadata.lastCell.y,
-                  }
-                : null;
-        case SelectionRangeTypes.ImageSelection:
-            const image = queryElements(
-                core.contentDiv,
-                '#' + metadata.imageId
-            )[0] as HTMLImageElement;
-
-            return image
-                ? {
-                      type: 'image',
-                      image: image,
-                  }
-                : null;
-
-        default:
-            return null;
     }
 }
