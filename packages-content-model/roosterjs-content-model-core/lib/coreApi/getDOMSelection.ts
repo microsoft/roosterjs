@@ -10,7 +10,7 @@ import type {
 export const getDOMSelection: GetDOMSelection = core => {
     return core.lifecycle.shadowEditFragment
         ? null
-        : core.domEvent.selection ?? getNewSelection(core);
+        : core.selection.selection ?? getNewSelection(core);
 };
 
 function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {

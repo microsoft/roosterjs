@@ -4,6 +4,7 @@ import { createContentModelFormatPlugin } from './ContentModelFormatPlugin';
 import { createDOMEventPlugin } from './DOMEventPlugin';
 import { createEntityPlugin } from './EntityPlugin';
 import { createLifecyclePlugin } from './LifecyclePlugin';
+import { createSelectionPlugin } from './SelectionPlugin';
 import type {
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
@@ -25,5 +26,6 @@ export function createStandaloneEditorCorePlugins(
         domEvent: createDOMEventPlugin(options, contentDiv),
         lifecycle: createLifecyclePlugin(options, contentDiv),
         entity: createEntityPlugin(),
+        selection: createSelectionPlugin(),
     };
 }

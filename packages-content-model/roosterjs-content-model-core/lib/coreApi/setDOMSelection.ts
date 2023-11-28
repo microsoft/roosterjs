@@ -29,10 +29,10 @@ const MAX_RULE_SELECTOR_LENGTH = 9000;
 export const setDOMSelection: SetDOMSelection = (core, selection) => {
     // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
     // Set skipReselectOnFocus to skip this behavior
-    const skipReselectOnFocus = core.domEvent.skipReselectOnFocus;
+    const skipReselectOnFocus = core.selection.skipReselectOnFocus;
     const doc = core.contentDiv.ownerDocument;
 
-    core.domEvent.skipReselectOnFocus = true;
+    core.selection.skipReselectOnFocus = true;
 
     unselectImage(core);
     unselectTable(core);
@@ -54,7 +54,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection) => {
                     addRangeToSelection(doc, range);
                     selectImage(core, image);
 
-                    core.domEvent.selection = selection;
+                    core.selection.selection = selection;
 
                     break;
                 case 'table':
@@ -77,20 +77,20 @@ export const setDOMSelection: SetDOMSelection = (core, selection) => {
                         }
                     }
 
-                    core.domEvent.selection = selection;
+                    core.selection.selection = selection;
 
                     break;
                 case 'range':
                     addRangeToSelection(doc, selection.range);
 
-                    core.domEvent.selection = core.api.hasFocus(core) ? null : selection;
+                    core.selection.selection = core.api.hasFocus(core) ? null : selection;
                     break;
             }
         } else {
-            core.domEvent.selection = null;
+            core.selection.selection = null;
         }
     } finally {
-        core.domEvent.skipReselectOnFocus = skipReselectOnFocus;
+        core.selection.skipReselectOnFocus = skipReselectOnFocus;
     }
 
     core.api.triggerEvent(

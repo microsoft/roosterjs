@@ -36,6 +36,7 @@ export function createStandaloneEditorCore(
             corePlugins.format,
             corePlugins.copyPaste,
             corePlugins.domEvent,
+            corePlugins.selection,
             corePlugins.entity,
             ...tempPlugins,
             corePlugins.lifecycle,
@@ -79,5 +80,6 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins): StandaloneEdi
         format: corePlugins.format.getState(),
         lifecycle: corePlugins.lifecycle.getState(),
         entity: corePlugins.entity.getState(),
+        selection: corePlugins.selection.getState(),
     };
 }

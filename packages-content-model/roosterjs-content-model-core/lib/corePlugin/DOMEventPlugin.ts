@@ -38,7 +38,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
-            selection: null,
             contextMenuProviders:
                 options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
             mouseDownX: null,
@@ -88,27 +87,13 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             dragstart: this.onDragStart,
             drop: this.onDrop,
 
-            // 5. Focus management
-            focus: this.onFocus,
-
-            // 6. Input event
+            // 5. Input event
             input: this.getEventHandler(PluginEventType.Input),
         };
 
-        const env = this.editor.getEnvironment();
-
-        // 7. onBlur handlers
-        if (env.isSafari) {
-            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
-            document.addEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.addEventListener('blur', this.cacheSelection);
-        } else {
-            eventHandlers.blur = this.cacheSelection;
-        }
-
         this.disposer = editor.addDomEventHandler(<Record<string, DOMEventHandler>>eventHandlers);
 
-        // 8. Scroll event
+        // 7. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
         document.defaultView?.addEventListener('scroll', this.onScroll);
         document.defaultView?.addEventListener('resize', this.onScroll);
@@ -121,15 +106,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.removeMouseUpEventListener();
 
         const document = this.editor?.getDocument();
-        if (document) {
-            document.removeEventListener(
-                'mousedown',
-                this.onMouseDownDocument,
-                true /*useCapture*/
-            );
-            document.removeEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.removeEventListener('blur', this.cacheSelection);
-        }
 
         document?.defaultView?.removeEventListener('resize', this.onScroll);
         document?.defaultView?.removeEventListener('scroll', this.onScroll);
@@ -160,33 +136,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         });
     };
 
-    private onFocus = () => {
-        if (!this.state.skipReselectOnFocus && this.state.selection) {
-            this.editor?.setDOMSelection(this.state.selection);
-        }
-
-        if (this.state.selection?.type == 'range') {
-            // Editor is focused, now we can get live selection. So no need to keep a selection if the selection type is range.
-            this.state.selection = null;
-        }
-    };
-    private onKeyDownDocument = (event: KeyboardEvent) => {
-        if (event.which == Keys.TAB && !event.defaultPrevented) {
-            this.cacheSelection();
-        }
-    };
-
-    private onMouseDownDocument = (event: MouseEvent) => {
-        if (this.editor && !this.editor.contains(event.target as Node)) {
-            this.cacheSelection();
-        }
-    };
-
-    private cacheSelection = () => {
-        if (!this.state.selection && this.editor) {
-            this.state.selection = this.editor.getDOMSelection();
-        }
-    };
     private onScroll = (e: Event) => {
         this.editor?.triggerPluginEvent(PluginEventType.Scroll, {
             rawEvent: e,

@@ -8,7 +8,7 @@ import type { Focus } from 'roosterjs-content-model-types';
 export const focus: Focus = core => {
     if (!core.lifecycle.shadowEditFragment) {
         if (!core.api.hasFocus(core)) {
-            core.api.setDOMSelection(core, core.domEvent.selection);
+            core.api.setDOMSelection(core, core.selection.selection);
         }
 
         // fallback, in case editor still have no focus

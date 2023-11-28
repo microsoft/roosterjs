@@ -27,8 +27,10 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     );
 
     if (!core.lifecycle.shadowEditFragment) {
-        core.api.setDOMSelection(core, option?.ignoreSelection ? null : selection);
+        core.cache.previousSelection = selection;
         core.cache.cachedModel = model;
+
+        core.api.setDOMSelection(core, option?.ignoreSelection ? null : selection);
     }
 
     return selection;
