@@ -28,6 +28,7 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
     constructor(option: StandaloneEditorOptions) {
         this.state = {
             domIndexer: option.cacheModel ? contentModelDomIndexer : undefined,
+            previousSelection: null,
         };
     }
 
