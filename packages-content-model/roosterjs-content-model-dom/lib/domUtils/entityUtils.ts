@@ -1,3 +1,4 @@
+import toArray from './toArray';
 import { isElementOfType } from './isElementOfType';
 import { isNodeOfType } from './isNodeOfType';
 import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
@@ -11,14 +12,25 @@ const DELIMITER_BEFORE = 'entityDelimiterBefore';
 const DELIMITER_AFTER = 'entityDelimiterAfter';
 
 /**
- * @internal
+ * Check if the given DOM Node is an entity wrapper element
  */
 export function isEntityElement(node: Node): boolean {
     return isNodeOfType(node, 'ELEMENT_NODE') && node.classList.contains(ENTITY_INFO_NAME);
 }
 
 /**
- * @internal
+ * Get all entity wrapper elements under the given root element
+ * @param root The root element to query from
+ * @returns An array of entity wrapper elements
+ */
+export function getAllEntityWrappers(root: HTMLElement): HTMLElement[] {
+    return toArray(root.querySelectorAll('.' + ENTITY_INFO_NAME)) as HTMLElement[];
+}
+
+/**
+ * Parse entity class names from entity wrapper element
+ * @param className Class names of entity
+ * @param format The output entity format object
  */
 export function parseEntityClassName(
     className: string,
@@ -36,7 +48,9 @@ export function parseEntityClassName(
 }
 
 /**
- * @internal
+ * Generate Entity class names for an entity wrapper
+ * @param format The source entity format object
+ * @returns A combined CSS class name string for entity wrapper
  */
 export function generateEntityClassNames(format: ContentModelEntityFormat): string {
     return format.isFakeEntity
@@ -59,15 +73,38 @@ export function isEntityDelimiter(element: HTMLElement): boolean {
 }
 
 /**
- * @internal
  * Adds delimiters to the element provided. If the delimiters already exists, will not be added
  * @param element the node to add the delimiters
  */
 export function addDelimiters(doc: Document, element: HTMLElement): HTMLElement[] {
-    return [
-        insertDelimiter(doc, element, true /*isAfter*/),
-        insertDelimiter(doc, element, false /*isAfter*/),
-    ];
+    let [delimiterAfter, delimiterBefore] = getDelimiters(element);
+
+    if (!delimiterAfter) {
+        delimiterAfter = insertDelimiter(doc, element, true /*isAfter*/);
+    }
+
+    if (!delimiterBefore) {
+        delimiterBefore = insertDelimiter(doc, element, false /*isAfter*/);
+    }
+
+    return [delimiterAfter, delimiterBefore];
+}
+
+function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {
+    const result: (HTMLElement | undefined)[] = [];
+    const { nextElementSibling, previousElementSibling } = entityWrapper;
+    result.push(
+        isDelimiter(nextElementSibling, DELIMITER_AFTER),
+        isDelimiter(previousElementSibling, DELIMITER_BEFORE)
+    );
+
+    return result;
+}
+
+function isDelimiter(el: Element | null, className: string): HTMLElement | undefined {
+    return el?.classList.contains(className) && el.textContent == ZERO_WIDTH_SPACE
+        ? (el as HTMLElement)
+        : undefined;
 }
 
 function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
@@ -79,3 +116,16 @@ function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
 
     return span;
 }
+
+/**
+ * Allowed CSS selector for entity, used by HtmlSanitizer.
+ * TODO: Revisit paste logic and check if we can remove HtmlSanitizer
+ */
+export const AllowedEntityClasses: ReadonlyArray<string> = [
+    '^' + ENTITY_INFO_NAME + '$',
+    '^' + ENTITY_ID_PREFIX,
+    '^' + ENTITY_TYPE_PREFIX,
+    '^' + ENTITY_READONLY_PREFIX,
+    '^' + DELIMITER_BEFORE + '$',
+    '^' + DELIMITER_AFTER + '$',
+];
