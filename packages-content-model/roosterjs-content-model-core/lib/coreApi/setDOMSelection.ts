@@ -1,15 +1,13 @@
 import { addRangeToSelection } from '../corePlugin/utils/addRangeToSelection';
 import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
-import { VTable } from 'roosterjs-editor-dom';
 import type { SetDOMSelection, TableSelection } from 'roosterjs-content-model-types';
 
-const IMAGE_ID = 'imageSelected';
-const CONTENT_DIV_ID = 'contentDiv_';
+const IMAGE_ID = 'image';
+const TABLE_ID = 'table';
+const CONTENT_DIV_ID = 'contentDiv';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
-const TABLE_ID = 'tableSelected';
-const SELECTED_CSS_RULE =
-    '{background-color: rgb(198,198,198) !important; caret-color: transparent}';
+const TABLE_CSS_RULE = '{background-color: rgb(198,198,198) !important; caret-color: transparent}';
 const MAX_RULE_SELECTOR_LENGTH = 9000;
 
 /**
@@ -19,41 +17,39 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
     // Set skipReselectOnFocus to skip this behavior
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
+
     const doc = core.contentDiv.ownerDocument;
+    const sheet = core.selection.selectionStyleNode?.sheet;
 
     core.selection.skipReselectOnFocus = true;
 
     try {
         let selectionRules: string[] | undefined;
-
-        const divId = addUniqueId(core.contentDiv, CONTENT_DIV_ID);
+        const rootSelector = '#' + addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
         if (selection) {
             switch (selection.type) {
                 case 'image':
                     const image = selection.image;
-                    const imageId = addUniqueId(image, IMAGE_ID);
 
                     selectionRules = buildImageCSS(
-                        divId,
-                        imageId,
+                        rootSelector + ' #' + addUniqueId(image, IMAGE_ID),
                         core.selection.imageSelectionBorderColor
                     );
                     core.selection.selection = selection;
 
                     setRangeSelection(doc, image);
-
                     break;
                 case 'table':
                     const { table, firstColumn, firstRow } = selection;
-                    const tableId = addUniqueId(table, TABLE_ID);
-                    const firstCell = table.rows[firstRow]?.cells[firstColumn];
 
-                    selectionRules = buildTableCss(divId, tableId, selection);
+                    selectionRules = buildTableCss(
+                        rootSelector + ' #' + addUniqueId(table, TABLE_ID),
+                        selection
+                    );
                     core.selection.selection = selection;
 
-                    setRangeSelection(doc, firstCell);
-
+                    setRangeSelection(doc, table.rows[firstRow]?.cells[firstColumn]);
                     break;
                 case 'range':
                     addRangeToSelection(doc, selection.range);
@@ -64,8 +60,6 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
         } else {
             core.selection.selection = null;
         }
-
-        const sheet = core.selection.selectionStyleNode?.sheet;
 
         if (sheet) {
             for (let i = sheet.cssRules.length - 1; i >= 0; i--) {
@@ -94,6 +88,107 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 };
 
+function buildImageCSS(rootSelector: string, borderColor?: string): string[] {
+    const color = borderColor || DEFAULT_SELECTION_BORDER_COLOR;
+
+    return [
+        `${rootSelector} {outline-style:auto!important;outline-color:${color}!important;caret-color:transparent;}`,
+    ];
+}
+
+function buildTableCss(rootSelector: string, selection: TableSelection): string[] {
+    const { firstColumn, firstRow, lastColumn, lastRow } = selection;
+    const cells = createVirtualCells(selection.table);
+    const isAllTableSelected =
+        firstRow == 0 &&
+        firstColumn == 0 &&
+        lastRow == cells.length &&
+        lastColumn == cells[lastRow]?.length;
+    const selectors = isAllTableSelected
+        ? handleAllTableSelected(rootSelector)
+        : handleTableSelected(rootSelector, selection, cells);
+
+    const cssRules: string[] = [];
+    let currentRules: string = '';
+
+    for (let i = 0; i < selectors.length; i++) {
+        currentRules += (currentRules.length > 0 ? ',' : '') + selectors[i] || '';
+
+        if (
+            currentRules.length + (selectors[0]?.length || 0) > MAX_RULE_SELECTOR_LENGTH ||
+            i == selectors.length - 1
+        ) {
+            cssRules.push(currentRules + ' ' + TABLE_CSS_RULE);
+            currentRules = '';
+        }
+    }
+
+    return cssRules;
+}
+
+function handleAllTableSelected(rootSelector: string) {
+    return [rootSelector, `${rootSelector} *`];
+}
+
+function handleTableSelected(rootSelector: string, selection: TableSelection, cells: VirtualCells) {
+    const { firstRow, firstColumn, lastRow, lastColumn, table } = selection;
+    const selectors: string[] = [];
+
+    // Get whether table has thead, tbody or tfoot, then Set the start and end of each of the table children,
+    // so we can build the selector according the element between the table and the row.
+    let cont = 0;
+    const indexes = toArray(table.childNodes)
+        .filter(
+            (node): node is HTMLTableSectionElement =>
+                ['THEAD', 'TBODY', 'TFOOT'].indexOf(
+                    isNodeOfType(node, 'ELEMENT_NODE') ? node.tagName : ''
+                ) > -1
+        )
+        .map(node => {
+            const result = {
+                el: node.tagName,
+                start: cont,
+                end: node.childNodes.length + cont,
+            };
+
+            cont = result.end;
+            return result;
+        });
+
+    cells.forEach((row, rowIndex) => {
+        let tdCount = 0;
+
+        //Get current TBODY/THEAD/TFOOT
+        const midElement = indexes.filter(ind => ind.start <= rowIndex && ind.end > rowIndex)[0];
+        const middleElSelector = midElement ? '>' + midElement.el + '>' : '>';
+        const currentRow =
+            midElement && rowIndex + 1 >= midElement.start
+                ? rowIndex + 1 - midElement.start
+                : rowIndex + 1;
+
+        for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
+            const cell = row[cellIndex];
+
+            if (cell) {
+                tdCount++;
+
+                if (
+                    rowIndex >= firstRow &&
+                    rowIndex <= lastRow &&
+                    cellIndex >= firstColumn &&
+                    cellIndex <= lastColumn
+                ) {
+                    const selector = `${rootSelector}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
+
+                    selectors.push(selector, selector + ' *');
+                }
+            }
+        }
+    });
+
+    return selectors;
+}
+
 function setRangeSelection(doc: Document, element: HTMLElement | undefined) {
     if (element) {
         const range = doc.createRange();
@@ -105,192 +200,46 @@ function setRangeSelection(doc: Document, element: HTMLElement | undefined) {
     }
 }
 
-function buildImageCSS(divId: string, imageId: string, borderColor?: string): string[] {
-    const color = borderColor || DEFAULT_SELECTION_BORDER_COLOR;
+function addUniqueId(element: HTMLElement, idPrefix: string): string {
+    idPrefix = element.id || idPrefix;
 
-    return [
-        `#${divId} #${imageId} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`,
-    ];
-}
+    const doc = element.ownerDocument;
+    let i = 0;
 
-function addUniqueId(el: HTMLElement, idPrefix: string): string {
-    const doc = el.ownerDocument;
-    if (!el.id) {
-        return applyId(el, idPrefix, doc);
-    } else {
-        const elements = doc.querySelectorAll(`#${el.id}`);
-        if (elements.length > 1) {
-            el.removeAttribute('id');
-            return applyId(el, idPrefix, doc);
-        } else {
-            return el.id;
-        }
-    }
-}
-
-function applyId(el: HTMLElement, idPrefix: string, doc: Document) {
-    let cont = 0;
-    const getElement = () => doc.getElementById(idPrefix + cont);
-    //Ensure that there are no elements with the same ID
-    let element = getElement();
-    while (element) {
-        cont++;
-        element = getElement();
+    while (!element.id || doc.querySelectorAll('#' + element.id).length > 1) {
+        element.id = idPrefix + '_' + i++;
     }
 
-    const newId = idPrefix + cont;
-    el.id = newId;
-
-    return newId;
+    return element.id;
 }
 
-function buildTableCss(divId: string, tableId: string, selection: TableSelection): string[] {
-    const selectors: string[] = [];
-    const { firstColumn, firstRow, lastColumn, lastRow } = selection;
-    const vTable = new VTable(selection.table);
-    const isAllTableSelected =
-        firstRow == 0 &&
-        firstColumn == 0 &&
-        lastRow == vTable.cells?.length &&
-        lastColumn == vTable.cells?.[lastRow]?.length;
+type VirtualCells = (HTMLTableCellElement | null)[][];
 
-    if (isAllTableSelected) {
-        handleAllTableSelected('#' + divId, tableId, vTable, selectors);
-    } else {
-        handleTableSelected(selection, tableId, vTable, '#' + divId, selectors);
-    }
+function createVirtualCells(table: HTMLTableElement): VirtualCells {
+    const trs = toArray(table.rows);
+    const cells: VirtualCells = trs.map(row => []);
 
-    const cssRules: string[] = [];
-    let currentRules: string = '';
+    trs.forEach((tr, rowIndex) => {
+        for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
+            // Skip the cells which already initialized
+            for (; cells[rowIndex][targetCol] !== undefined; targetCol++) {}
 
-    while (selectors.length > 0) {
-        currentRules += (currentRules.length > 0 ? ',' : '') + selectors.shift() || '';
-        if (
-            currentRules.length + (selectors[0]?.length || 0) > MAX_RULE_SELECTOR_LENGTH ||
-            selectors.length == 0
-        ) {
-            cssRules.push(currentRules + ' ' + SELECTED_CSS_RULE);
-            currentRules = '';
-        }
-    }
+            const td = tr.cells[sourceCol];
 
-    return cssRules;
-}
-
-function handleAllTableSelected(
-    contentDivSelector: string,
-    tableId: string,
-    vTable: VTable,
-    selectors: string[]
-) {
-    const table = vTable.table;
-    const tableSelector = contentDivSelector + ' #' + tableId;
-    selectors.push(tableSelector, `${tableSelector} *`);
-
-    const tableRange = new Range();
-    tableRange.selectNode(table);
-}
-
-function handleTableSelected(
-    selection: TableSelection,
-    tableId: string,
-    vTable: VTable,
-    contentDivSelector: string,
-    selectors: string[]
-) {
-    const tr1 = selection.firstRow;
-    const td1 = selection.firstColumn;
-    const tr2 = selection.lastRow;
-    const td2 = selection.lastColumn;
-    const table = vTable.table;
-
-    let firstSelected: HTMLTableCellElement | null = null;
-    let lastSelected: HTMLTableCellElement | null = null;
-
-    // Get whether table has thead, tbody or tfoot.
-    const tableChildren = toArray(table.childNodes).filter(
-        (node): node is HTMLTableSectionElement =>
-            ['THEAD', 'TBODY', 'TFOOT'].indexOf(
-                isNodeOfType(node, 'ELEMENT_NODE') ? node.tagName : ''
-            ) > -1
-    );
-
-    // Set the start and end of each of the table children, so we can build the selector according the element between the table and the row.
-    let cont = 0;
-    const indexes = tableChildren.map(node => {
-        const result = {
-            el: node.tagName,
-            start: cont,
-            end: node.childNodes.length + cont,
-        };
-
-        cont = result.end;
-        return result;
-    });
-
-    vTable.cells?.forEach((row, rowIndex) => {
-        let tdCount = 0;
-        firstSelected = null;
-        lastSelected = null;
-
-        //Get current TBODY/THEAD/TFOOT
-        const midElement = indexes.filter(ind => ind.start <= rowIndex && ind.end > rowIndex)[0];
-
-        const middleElSelector = midElement ? '>' + midElement.el + '>' : '>';
-        const currentRow =
-            midElement && rowIndex + 1 >= midElement.start
-                ? rowIndex + 1 - midElement.start
-                : rowIndex + 1;
-
-        for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
-            const cell = row[cellIndex].td;
-            if (cell) {
-                tdCount++;
-                if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
-                    const selector = generateCssFromCell(
-                        contentDivSelector,
-                        tableId,
-                        middleElSelector,
-                        currentRow,
-                        cell.tagName,
-                        tdCount
-                    );
-                    const elementsSelector = selector + ' *';
-
-                    selectors.push(selector, elementsSelector);
-                    firstSelected = firstSelected || table.querySelector(selector);
-                    lastSelected = table.querySelector(selector);
+            for (let colSpan = 0; colSpan < td.colSpan; colSpan++, targetCol++) {
+                for (let rowSpan = 0; rowSpan < td.rowSpan; rowSpan++) {
+                    if (cells[rowIndex + rowSpan]) {
+                        cells[rowIndex + rowSpan][targetCol] =
+                            colSpan == 0 && rowSpan == 0 ? td : null;
+                    }
                 }
             }
         }
 
-        if (firstSelected && lastSelected) {
-            const rowRange = new Range();
-            rowRange.setStartBefore(firstSelected);
-            rowRange.setEndAfter(lastSelected);
+        for (let col = 0; col < cells[rowIndex].length; col++) {
+            cells[rowIndex][col] = cells[rowIndex][col] || null;
         }
     });
-}
 
-function generateCssFromCell(
-    contentDivSelector: string,
-    tableId: string,
-    middleElSelector: string,
-    rowIndex: number,
-    cellTag: string,
-    index: number
-): string {
-    return (
-        contentDivSelector +
-        ' #' +
-        tableId +
-        middleElSelector +
-        ' tr:nth-child(' +
-        rowIndex +
-        ')>' +
-        cellTag +
-        ':nth-child(' +
-        index +
-        ')'
-    );
+    return cells;
 }
