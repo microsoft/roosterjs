@@ -20,6 +20,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     initialize(editor: IEditor) {
         this.editor = editor as IEditor & IStandaloneEditor;
 
+        const doc = this.editor.getDocument();
+        const styleNode = doc.createElement('style');
+
+        doc.head.appendChild(styleNode);
+        this.state.selectionStyleNode = styleNode;
+
         const env = this.editor.getEnvironment();
         const document = this.editor.getDocument();
 
@@ -37,6 +43,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     dispose() {
+        if (this.state.selectionStyleNode) {
+            this.state.selectionStyleNode.parentNode?.removeChild(this.state.selectionStyleNode);
+            this.state.selectionStyleNode = null;
+        }
+
         if (this.disposer) {
             this.disposer();
             this.disposer = null;

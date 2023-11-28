@@ -1,24 +1,13 @@
 import { addRangeToSelection } from '../corePlugin/utils/addRangeToSelection';
+import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
-import { toArray } from 'roosterjs-content-model-dom';
-import {
-    VTable,
-    getTagOfNode,
-    removeGlobalCssStyle,
-    setGlobalCssStyles,
-} from 'roosterjs-editor-dom';
-import type {
-    SetDOMSelection,
-    StandaloneEditorCore,
-    TableSelection,
-} from 'roosterjs-content-model-types';
+import { VTable } from 'roosterjs-editor-dom';
+import type { SetDOMSelection, TableSelection } from 'roosterjs-content-model-types';
 
 const IMAGE_ID = 'imageSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
-const IMAGE_STYLE_ID = 'imageStyle';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
 const TABLE_ID = 'tableSelected';
-const TABLE_STYLE_ID = 'tableStyle';
 const SELECTED_CSS_RULE =
     '{background-color: rgb(198,198,198) !important; caret-color: transparent}';
 const MAX_RULE_SELECTOR_LENGTH = 9000;
@@ -26,7 +15,7 @@ const MAX_RULE_SELECTOR_LENGTH = 9000;
 /**
  * @internal
  */
-export const setDOMSelection: SetDOMSelection = (core, selection) => {
+export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionChangedEvent) => {
     // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
     // Set skipReselectOnFocus to skip this behavior
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
@@ -34,17 +23,17 @@ export const setDOMSelection: SetDOMSelection = (core, selection) => {
 
     core.selection.skipReselectOnFocus = true;
 
-    unselectImage(core);
-    unselectTable(core);
-
     try {
+        let selectionRules: string[] = [];
+
+        const divId = addUniqueId(core.contentDiv, CONTENT_DIV_ID);
+
         if (selection) {
             switch (selection.type) {
                 case 'image':
                     const image = selection.image;
 
                     addUniqueId(image, IMAGE_ID);
-                    addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
                     const range = doc.createRange();
 
@@ -52,7 +41,9 @@ export const setDOMSelection: SetDOMSelection = (core, selection) => {
                     range.collapse();
 
                     addRangeToSelection(doc, range);
-                    selectImage(core, image);
+                    selectionRules.push(
+                        buildImageBorderCSS(divId, image.id, core.imageSelectionBorderColor)
+                    );
 
                     core.selection.selection = selection;
 
@@ -61,9 +52,8 @@ export const setDOMSelection: SetDOMSelection = (core, selection) => {
                     const { table, firstColumn, firstRow } = selection;
 
                     addUniqueId(table, TABLE_ID);
-                    addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
-                    selectTable(core, selection);
+                    selectionRules = buildTableCss(divId, selection);
 
                     if (!isMergedCell(selection)) {
                         const cellToSelect = table.rows.item(firstRow)?.cells.item(firstColumn);
@@ -89,50 +79,51 @@ export const setDOMSelection: SetDOMSelection = (core, selection) => {
         } else {
             core.selection.selection = null;
         }
+
+        const sheet = core.selection.selectionStyleNode?.sheet;
+
+        if (sheet) {
+            for (let i = sheet.cssRules.length - 1; i >= 0; i--) {
+                sheet.deleteRule(i);
+            }
+
+            for (let i = 0; i < selectionRules.length; i++) {
+                sheet.insertRule(selectionRules[i]);
+            }
+        }
     } finally {
         core.selection.skipReselectOnFocus = skipReselectOnFocus;
     }
 
-    core.api.triggerEvent(
-        core,
-        {
-            eventType: PluginEventType.SelectionChanged,
-            selectionRangeEx: null,
-        },
-        true /*broadcast*/
-    );
+    if (!skipSelectionChangedEvent) {
+        core.api.triggerEvent(
+            core,
+            {
+                eventType: PluginEventType.SelectionChanged,
+                selectionRangeEx: null,
+            },
+            true /*broadcast*/
+        );
+    }
 };
 
-function unselectImage(core: StandaloneEditorCore) {
-    const doc = core.contentDiv.ownerDocument;
-    removeGlobalCssStyle(doc, IMAGE_STYLE_ID + core.contentDiv.id);
-}
-
-function selectImage(core: StandaloneEditorCore, image: HTMLImageElement) {
-    const borderCSS = buildImageBorderCSS(core, image.id);
-    setGlobalCssStyles(
-        core.contentDiv.ownerDocument,
-        borderCSS,
-        IMAGE_STYLE_ID + core.contentDiv.id
-    );
-}
-
-function buildImageBorderCSS(core: StandaloneEditorCore, imageId: string): string {
-    const divId = core.contentDiv.id;
-    const color = core.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR;
+function buildImageBorderCSS(divId: string, imageId: string, borderColor?: string): string {
+    const color = borderColor || DEFAULT_SELECTION_BORDER_COLOR;
 
     return `#${divId} #${imageId} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;
 }
 
-function addUniqueId(el: HTMLElement, idPrefix: string) {
+function addUniqueId(el: HTMLElement, idPrefix: string): string {
     const doc = el.ownerDocument;
     if (!el.id) {
-        applyId(el, idPrefix, doc);
+        return applyId(el, idPrefix, doc);
     } else {
         const elements = doc.querySelectorAll(`#${el.id}`);
         if (elements.length > 1) {
             el.removeAttribute('id');
-            applyId(el, idPrefix, doc);
+            return applyId(el, idPrefix, doc);
+        } else {
+            return el.id;
         }
     }
 }
@@ -147,24 +138,13 @@ function applyId(el: HTMLElement, idPrefix: string, doc: Document) {
         element = getElement();
     }
 
-    el.id = idPrefix + cont;
+    const newId = idPrefix + cont;
+    el.id = newId;
+
+    return newId;
 }
 
-function unselectTable(core: StandaloneEditorCore) {
-    const doc = core.contentDiv.ownerDocument;
-    removeGlobalCssStyle(doc, TABLE_STYLE_ID + core.contentDiv.id);
-}
-
-function selectTable(core: StandaloneEditorCore, selection: TableSelection) {
-    const contentDivSelector = '#' + core.contentDiv.id;
-    const cssRules = buildTableCss(selection, contentDivSelector);
-
-    cssRules.forEach(css =>
-        setGlobalCssStyles(core.contentDiv.ownerDocument, css, TABLE_STYLE_ID + core.contentDiv.id)
-    );
-}
-
-function buildTableCss(selection: TableSelection, contentDivSelector: string): string[] {
+function buildTableCss(divId: string, selection: TableSelection): string[] {
     const selectors: string[] = [];
     const { firstColumn, firstRow, lastColumn, lastRow } = selection;
     const vTable = new VTable(selection.table);
@@ -175,9 +155,9 @@ function buildTableCss(selection: TableSelection, contentDivSelector: string): s
         lastColumn == vTable.cells?.[lastRow]?.length;
 
     if (isAllTableSelected) {
-        handleAllTableSelected(contentDivSelector, vTable, selectors);
+        handleAllTableSelected('#' + divId, vTable, selectors);
     } else {
-        handleTableSelected(selection, vTable, contentDivSelector, selectors);
+        handleTableSelected(selection, vTable, '#' + divId, selectors);
     }
 
     const cssRules: string[] = [];
@@ -223,14 +203,17 @@ function handleTableSelected(
 
     // Get whether table has thead, tbody or tfoot.
     const tableChildren = toArray(table.childNodes).filter(
-        node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
+        (node): node is HTMLTableSectionElement =>
+            ['THEAD', 'TBODY', 'TFOOT'].indexOf(
+                isNodeOfType(node, 'ELEMENT_NODE') ? node.tagName : ''
+            ) > -1
     );
 
     // Set the start and end of each of the table children, so we can build the selector according the element between the table and the row.
     let cont = 0;
     const indexes = tableChildren.map(node => {
         const result = {
-            el: getTagOfNode(node),
+            el: node.tagName,
             start: cont,
             end: node.childNodes.length + cont,
         };
@@ -263,7 +246,7 @@ function handleTableSelected(
                         table.id,
                         middleElSelector,
                         currentRow,
-                        getTagOfNode(cell),
+                        cell.tagName,
                         tdCount
                     );
                     const elementsSelector = selector + ' *';

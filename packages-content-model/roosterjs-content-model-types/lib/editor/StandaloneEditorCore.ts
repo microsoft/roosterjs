@@ -76,8 +76,13 @@ export type SetContentModel = (
  * Set current DOM selection from editor. This is the replacement of core API select
  * @param core The StandaloneEditorCore object
  * @param selection The selection to set
+ * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
  */
-export type SetDOMSelection = (core: StandaloneEditorCore, selection: DOMSelection | null) => void;
+export type SetDOMSelection = (
+    core: StandaloneEditorCore,
+    selection: DOMSelection | null,
+    skipSelectionChangedEvent?: boolean
+) => void;
 
 /**
  * The general API to do format change with Content Model
@@ -269,6 +274,7 @@ export interface PortedCoreApiMap {
      * Set current DOM selection from editor. This is the replacement of core API select
      * @param core The StandaloneEditorCore object
      * @param selection The selection to set
+     * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
      */
     setDOMSelection: SetDOMSelection;
 
