@@ -8,7 +8,6 @@ const DARK_COLORS_LIGHTNESS = 20;
 const BRIGHT_COLORS_LIGHTNESS = 80;
 const White = '#ffffff';
 const Black = '#000000';
-const ADAPTED_TEXT_COLORS = ['rgb(0,0,0)', '#000000', '#ffffff', 'rgb(255, 255, 255)'];
 
 /**
  * Set shade color of table cell
@@ -65,14 +64,14 @@ function removeAdaptiveCellColor(cell: ContentModelTableCell) {
         if (block.blockType == 'Paragraph') {
             if (
                 block.segmentFormat?.textColor &&
-                ADAPTED_TEXT_COLORS.indexOf(block.segmentFormat?.textColor) >= 0
+                shouldRemoveColor(block.segmentFormat?.textColor, cell.format.backgroundColor || '')
             ) {
                 delete block.segmentFormat.textColor;
             }
             block.segments.forEach(segment => {
                 if (
                     segment.format.textColor &&
-                    ADAPTED_TEXT_COLORS.indexOf(segment.format.textColor) >= 0
+                    shouldRemoveColor(segment.format.textColor, cell.format.backgroundColor || '')
                 ) {
                     delete segment.format.textColor;
                 }
@@ -91,7 +90,6 @@ function setAdaptiveCellColor(cell: ContentModelTableCell) {
                         textColor: cell.format.textColor,
                     };
                 }
-
                 block.segments.forEach(segment => {
                     if (!segment.format?.textColor) {
                         segment.format = {
@@ -103,6 +101,24 @@ function setAdaptiveCellColor(cell: ContentModelTableCell) {
             }
         });
     }
+}
+
+/**
+ * If the cell background color is white or black, and the text color is white or black, we should remove the text color
+ * @param textColor the segment or block text color
+ * @param cellBackgroundColor the cell background color
+ * @returns
+ */
+function shouldRemoveColor(textColor: string, cellBackgroundColor: string) {
+    if (
+        ([White, 'rgb(255,255,255)'].indexOf(textColor) > -1 &&
+            [White, 'rgb(255,255,255)', ''].indexOf(cellBackgroundColor) > -1) ||
+        ([Black, 'rgb(0,0,0)'].indexOf(textColor) > -1 &&
+            [Black, 'rgb(0,0,0)', ''].indexOf(cellBackgroundColor) > -1)
+    ) {
+        return true;
+    }
+    return false;
 }
 
 function calculateLightness(color: string) {
