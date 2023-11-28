@@ -14,7 +14,7 @@ export interface ContentModelCachePluginState {
     /**
      * When reuse Content Model is allowed, we cache the Content Model object here after created
      */
-    cachedModel?: ContentModelDocument;
+    cachedModel: ContentModelDocument | null;
 
     /**
      * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model

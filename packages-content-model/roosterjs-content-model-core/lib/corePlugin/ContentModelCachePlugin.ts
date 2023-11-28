@@ -29,6 +29,7 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
         this.state = {
             domIndexer: option.cacheModel ? contentModelDomIndexer : undefined,
             previousSelection: null,
+            cachedModel: null,
         };
     }
 
@@ -106,7 +107,7 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
 
                     if (contentModel && this.state.domIndexer) {
                         this.state.cachedModel = contentModel;
-                        this.state.previousSelection = selection;
+                        this.state.previousSelection = selection ?? null;
                     } else {
                         this.invalidateCache();
                     }
@@ -124,8 +125,8 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
 
     private invalidateCache() {
         if (!this.editor?.isInShadowEdit()) {
-            this.state.cachedModel = undefined;
-            this.state.previousSelection = undefined;
+            this.state.cachedModel = null;
+            this.state.previousSelection = null;
         }
     }
 
@@ -143,7 +144,11 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
             if (
                 !model ||
                 !newRangeEx ||
-                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
+                !this.state.domIndexer?.reconcileSelection(
+                    model,
+                    newRangeEx,
+                    cachedSelection ?? undefined
+                )
             ) {
                 this.invalidateCache();
             } else {
