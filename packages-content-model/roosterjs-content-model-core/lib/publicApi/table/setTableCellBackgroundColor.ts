@@ -15,9 +15,7 @@ const Black = '#000000';
  * @param color The color to set
  * @param isColorOverride @optional When pass true, it means this shade color is not part of table format, so it can be preserved when apply table format
  * @param applyToSegments @optional When pass true, we will also apply text color from table cell to its child blocks and segments
- *
  */
-
 export function setTableCellBackgroundColor(
     cell: ContentModelTableCell,
     color: string | null | undefined,
