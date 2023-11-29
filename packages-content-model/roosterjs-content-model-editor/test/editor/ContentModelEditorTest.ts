@@ -2,6 +2,7 @@ import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/c
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
+import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/utils/findAllEntities';
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
 import { ContentModelEditor } from '../../lib/editor/ContentModelEditor';
 import { ContentModelEditorCore } from '../../lib/publicTypes/ContentModelEditorCore';
@@ -23,6 +24,7 @@ describe('ContentModelEditor', () => {
             mockedContext
         );
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(mockedConfig);
+        spyOn(findAllEntities, 'findAllEntities');
 
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {
@@ -59,6 +61,7 @@ describe('ContentModelEditor', () => {
             mockedContext
         );
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(mockedConfig);
+        spyOn(findAllEntities, 'findAllEntities');
 
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {

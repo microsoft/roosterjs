@@ -1,3 +1,4 @@
+import type { EntityPluginState } from '../pluginState/EntityPluginState';
 import type { LifecyclePluginState } from '../pluginState/LifecyclePluginState';
 import type { DOMEventPluginState } from '../pluginState/DOMEventPluginState';
 import type { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
@@ -27,6 +28,11 @@ export interface StandaloneEditorCorePlugins {
      * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
      */
     readonly domEvent: PluginWithState<DOMEventPluginState>;
+
+    /**
+     * Entity Plugin handles all operations related to an entity and generate entity specified events
+     */
+    readonly entity: PluginWithState<EntityPluginState>;
 
     /**
      * Lifecycle plugin handles editor initialization and disposing

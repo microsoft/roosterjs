@@ -1,5 +1,4 @@
 import { createEditPlugin } from './EditPlugin';
-import { createEntityPlugin } from './EntityPlugin';
 import { createImageSelection } from './ImageSelection';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { createUndoPlugin } from './UndoPlugin';
@@ -20,7 +19,6 @@ export function createCorePlugins(options: ContentModelEditorOptions): UnportedC
     return {
         edit: map.edit || createEditPlugin(),
         undo: map.undo || createUndoPlugin(options),
-        entity: map.entity || createEntityPlugin(),
         imageSelection: map.imageSelection || createImageSelection(),
         normalizeTable: map.normalizeTable || createNormalizeTablePlugin(),
     };
@@ -35,6 +33,5 @@ export function getPluginState(corePlugins: UnportedCorePlugins): UnportedCorePl
     return {
         edit: corePlugins.edit.getState(),
         undo: corePlugins.undo.getState(),
-        entity: corePlugins.entity.getState(),
     };
 }

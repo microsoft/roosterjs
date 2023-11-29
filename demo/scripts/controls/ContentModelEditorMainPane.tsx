@@ -15,7 +15,7 @@ import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelEditPlugin } from 'roosterjs-content-model-plugins';
+import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
@@ -98,6 +98,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
+    private entityDelimiterPlugin: EntityDelimiterPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
@@ -115,6 +116,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
+        this.entityDelimiterPlugin = new EntityDelimiterPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
@@ -177,6 +179,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             this.contentModelEditPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
+            this.entityDelimiterPlugin,
             this.formatPainterPlugin,
             this.sampleEntityPlugin,
         ];
