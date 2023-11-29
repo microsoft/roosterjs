@@ -25,7 +25,7 @@ export const getSelectionRange: GetSelectionRange = (core, tryGetFromCache: bool
         }
 
         if (!result && tryGetFromCache) {
-            result = core.domEvent.selectionRange;
+            result = core.selection.selectionRange;
         }
 
         return result;

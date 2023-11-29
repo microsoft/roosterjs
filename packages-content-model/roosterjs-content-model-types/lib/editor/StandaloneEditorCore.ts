@@ -600,11 +600,6 @@ export interface StandaloneEditorCore
     readonly darkColorHandler: DarkColorHandler;
 
     /**
-     * Color of the border of a selectedImage. Default color: '#DB626C'
-     */
-    readonly imageSelectionBorderColor?: string;
-
-    /**
      * A handler to convert HTML string to a trust HTML string.
      * By default it will just return the original HTML string directly.
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler

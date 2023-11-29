@@ -23,20 +23,20 @@ export const select: Select = (core, arg1, arg2, arg3, arg4) => {
     const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
 
     if (rangeEx) {
-        const skipReselectOnFocus = core.domEvent.skipReselectOnFocus;
+        const skipReselectOnFocus = core.selection.skipReselectOnFocus;
 
         // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
         // Set skipReselectOnFocus to skip this behavior
-        core.domEvent.skipReselectOnFocus = true;
+        core.selection.skipReselectOnFocus = true;
 
         try {
             applyRangeEx(core, rangeEx);
         } finally {
-            core.domEvent.skipReselectOnFocus = skipReselectOnFocus;
+            core.selection.skipReselectOnFocus = skipReselectOnFocus;
         }
     } else {
-        core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-        core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+        core.selection.tableSelectionRange = core.api.selectTable(core, null);
+        core.selection.imageSelectionRange = core.api.selectImage(core, null);
     }
 
     return !!rangeEx;
@@ -100,25 +100,25 @@ function applyRangeEx(core: StandaloneEditorCore, rangeEx: SelectionRangeEx | nu
     switch (rangeEx?.type) {
         case SelectionRangeTypes.TableSelection:
             if (contains(core.contentDiv, rangeEx.table)) {
-                core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
-                core.domEvent.tableSelectionRange = core.api.selectTable(
+                core.selection.imageSelectionRange = core.api.selectImage(core, null);
+                core.selection.tableSelectionRange = core.api.selectTable(
                     core,
                     rangeEx.table,
                     rangeEx.coordinates
                 );
-                rangeEx = core.domEvent.tableSelectionRange;
+                rangeEx = core.selection.tableSelectionRange;
             }
             break;
         case SelectionRangeTypes.ImageSelection:
             if (contains(core.contentDiv, rangeEx.image)) {
-                core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-                core.domEvent.imageSelectionRange = core.api.selectImage(core, rangeEx.image);
-                rangeEx = core.domEvent.imageSelectionRange;
+                core.selection.tableSelectionRange = core.api.selectTable(core, null);
+                core.selection.imageSelectionRange = core.api.selectImage(core, rangeEx.image);
+                rangeEx = core.selection.imageSelectionRange;
             }
             break;
         case SelectionRangeTypes.Normal:
-            core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-            core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+            core.selection.tableSelectionRange = core.api.selectTable(core, null);
+            core.selection.imageSelectionRange = core.api.selectImage(core, null);
 
             if (contains(core.contentDiv, rangeEx.ranges[0])) {
                 core.api.selectRange(core, rangeEx.ranges[0]);

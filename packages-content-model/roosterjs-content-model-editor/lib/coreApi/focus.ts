@@ -21,8 +21,8 @@ export const focus: Focus = core => {
             // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
             // It should be better than the case you cannot type
             if (
-                !core.domEvent.selectionRange ||
-                !core.api.selectRange(core, core.domEvent.selectionRange, true /*skipSameRange*/)
+                !core.selection.selectionRange ||
+                !core.api.selectRange(core, core.selection.selectionRange, true /*skipSameRange*/)
             ) {
                 const node = getFirstLeafNode(core.contentDiv) || core.contentDiv;
                 core.api.selectRange(
@@ -34,7 +34,7 @@ export const focus: Focus = core => {
         }
 
         // remember to clear cached selection range
-        core.domEvent.selectionRange = null;
+        core.selection.selectionRange = null;
 
         // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor
         if (!core.api.hasFocus(core)) {

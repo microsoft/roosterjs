@@ -15,12 +15,12 @@ export const getSelectionRangeEx: GetSelectionRangeEx = core => {
         return createNormalSelectionEx([]);
     } else {
         if (core.api.hasFocus(core)) {
-            if (core.domEvent.tableSelectionRange) {
-                return core.domEvent.tableSelectionRange;
+            if (core.selection.tableSelectionRange) {
+                return core.selection.tableSelectionRange;
             }
 
-            if (core.domEvent.imageSelectionRange) {
-                return core.domEvent.imageSelectionRange;
+            if (core.selection.imageSelectionRange) {
+                return core.selection.imageSelectionRange;
             }
 
             const selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
@@ -33,10 +33,10 @@ export const getSelectionRangeEx: GetSelectionRangeEx = core => {
         }
 
         return (
-            core.domEvent.tableSelectionRange ??
-            core.domEvent.imageSelectionRange ??
+            core.selection.tableSelectionRange ??
+            core.selection.imageSelectionRange ??
             createNormalSelectionEx(
-                core.domEvent.selectionRange ? [core.domEvent.selectionRange] : []
+                core.selection.selectionRange ? [core.selection.selectionRange] : []
             )
         );
     }

@@ -79,9 +79,9 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 
 function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMetadata | undefined) {
     if (!core.lifecycle.shadowEditFragment && metadata) {
-        core.domEvent.tableSelectionRange = null;
-        core.domEvent.imageSelectionRange = null;
-        core.domEvent.selectionRange = null;
+        core.selection.tableSelectionRange = null;
+        core.selection.imageSelectionRange = null;
+        core.selection.selectionRange = null;
 
         switch (metadata.type) {
             case SelectionRangeTypes.Normal:
@@ -98,7 +98,11 @@ function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMeta
                 )[0] as HTMLTableElement;
 
                 if (table) {
-                    core.domEvent.tableSelectionRange = core.api.selectTable(core, table, metadata);
+                    core.selection.tableSelectionRange = core.api.selectTable(
+                        core,
+                        table,
+                        metadata
+                    );
                 }
                 break;
             case SelectionRangeTypes.ImageSelection:
@@ -108,7 +112,7 @@ function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMeta
                 )[0] as HTMLImageElement;
 
                 if (image) {
-                    core.domEvent.imageSelectionRange = core.api.selectImage(core, image);
+                    core.selection.imageSelectionRange = core.api.selectImage(core, image);
                 }
                 break;
         }

@@ -33,7 +33,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
             if (!option?.ignoreSelection) {
                 core.api.setDOMSelection(core, selection);
             } else if (selection.type == 'range') {
-                core.domEvent.selectionRange = selection.range;
+                core.selection.selectionRange = selection.range;
             }
         }
 
