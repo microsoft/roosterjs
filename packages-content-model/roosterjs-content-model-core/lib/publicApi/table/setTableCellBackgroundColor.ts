@@ -104,17 +104,18 @@ function setAdaptiveCellColor(cell: ContentModelTableCell) {
 }
 
 /**
- * If the cell background color is white or black, and the text color is white or black, we should remove the text color
+ * If the cell background color is too dark or too bright, and the text color is white or black, we should remove the text color
  * @param textColor the segment or block text color
  * @param cellBackgroundColor the cell background color
  * @returns
  */
 function shouldRemoveColor(textColor: string, cellBackgroundColor: string) {
+    const lightness = calculateLightness(cellBackgroundColor);
     if (
         ([White, 'rgb(255,255,255)'].indexOf(textColor) > -1 &&
-            [White, 'rgb(255,255,255)', ''].indexOf(cellBackgroundColor) > -1) ||
+            (lightness > BRIGHT_COLORS_LIGHTNESS || cellBackgroundColor == '')) ||
         ([Black, 'rgb(0,0,0)'].indexOf(textColor) > -1 &&
-            [Black, 'rgb(0,0,0)', ''].indexOf(cellBackgroundColor) > -1)
+            (lightness < DARK_COLORS_LIGHTNESS || cellBackgroundColor == ''))
     ) {
         return true;
     }
