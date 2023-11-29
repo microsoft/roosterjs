@@ -8,6 +8,7 @@ import * as EntityPlugin from 'roosterjs-content-model-core/lib/corePlugin/Entit
 import * as ImageSelection from '../../lib/corePlugins/ImageSelection';
 import * as LifecyclePlugin from 'roosterjs-content-model-core/lib/corePlugin/LifecyclePlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
+import * as SelectionPlugin from 'roosterjs-content-model-core/lib/corePlugin/SelectionPlugin';
 import * as UndoPlugin from '../../lib/corePlugins/UndoPlugin';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { createEditorCore } from '../../lib/editor/createEditorCore';
@@ -22,6 +23,7 @@ const mockedEntityState = 'ENTITYSTATE' as any;
 const mockedCopyPasteState = 'COPYPASTESTATE' as any;
 const mockedCacheState = 'CACHESTATE' as any;
 const mockedFormatState = 'FORMATSTATE' as any;
+const mockedSelectionState = 'SELECTION' as any;
 
 const mockedFormatPlugin = {
     getState: () => mockedFormatState,
@@ -43,6 +45,9 @@ const mockedDOMEventPlugin = {
 } as any;
 const mockedEntityPlugin = {
     getState: () => mockedEntityState,
+} as any;
+const mockedSelectionPlugin = {
+    getState: () => mockedSelectionState,
 } as any;
 const mockedImageSelection = 'ImageSelection' as any;
 const mockedNormalizeTablePlugin = 'NormalizeTablePlugin' as any;
@@ -73,6 +78,7 @@ describe('createEditorCore', () => {
         spyOn(EditPlugin, 'createEditPlugin').and.returnValue(mockedEditPlugin);
         spyOn(UndoPlugin, 'createUndoPlugin').and.returnValue(mockedUndoPlugin);
         spyOn(DOMEventPlugin, 'createDOMEventPlugin').and.returnValue(mockedDOMEventPlugin);
+        spyOn(SelectionPlugin, 'createSelectionPlugin').and.returnValue(mockedSelectionPlugin);
         spyOn(EntityPlugin, 'createEntityPlugin').and.returnValue(mockedEntityPlugin);
         spyOn(ImageSelection, 'createImageSelection').and.returnValue(mockedImageSelection);
         spyOn(NormalizeTablePlugin, 'createNormalizeTablePlugin').and.returnValue(
@@ -96,6 +102,7 @@ describe('createEditorCore', () => {
                 mockedFormatPlugin,
                 mockedCopyPastePlugin,
                 mockedDOMEventPlugin,
+                mockedSelectionPlugin,
                 mockedEntityPlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
@@ -111,6 +118,7 @@ describe('createEditorCore', () => {
             copyPaste: mockedCopyPasteState,
             cache: mockedCacheState,
             format: mockedFormatState,
+            selection: mockedSelectionState,
             trustedHTMLHandler: defaultTrustHtmlHandler,
             zoomScale: 1,
             sizeTransformer: jasmine.anything(),
@@ -150,6 +158,7 @@ describe('createEditorCore', () => {
                 mockedFormatPlugin,
                 mockedCopyPastePlugin,
                 mockedDOMEventPlugin,
+                mockedSelectionPlugin,
                 mockedEntityPlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
@@ -165,6 +174,7 @@ describe('createEditorCore', () => {
             copyPaste: mockedCopyPasteState,
             cache: mockedCacheState,
             format: mockedFormatState,
+            selection: mockedSelectionState,
             trustedHTMLHandler: defaultTrustHtmlHandler,
             zoomScale: 1,
             sizeTransformer: jasmine.anything(),

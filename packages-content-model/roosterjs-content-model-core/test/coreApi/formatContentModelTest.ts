@@ -491,7 +491,7 @@ describe('formatContentModel', () => {
 
     it('Has shouldClearCachedModel, and callback return false', () => {
         core.cache.cachedModel = 'Model' as any;
-        core.cache.cachedSelection = 'Selection' as any;
+        core.cache.previousSelection = 'Selection' as any;
 
         formatContentModel(
             core,
@@ -508,8 +508,8 @@ describe('formatContentModel', () => {
         expect(setContentModel).not.toHaveBeenCalled();
         expect(triggerEvent).not.toHaveBeenCalled();
         expect(core.cache).toEqual({
-            cachedModel: undefined,
-            cachedSelection: undefined,
+            cachedModel: null,
+            previousSelection: null,
         });
     });
 
