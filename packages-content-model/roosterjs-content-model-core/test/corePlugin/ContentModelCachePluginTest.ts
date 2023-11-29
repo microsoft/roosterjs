@@ -69,8 +69,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(plugin.getState()).toEqual({
-                cachedModel: null,
-                previousSelection: null,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
         });
@@ -84,15 +84,15 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(plugin.getState()).toEqual({
-                cachedModel: null,
-                previousSelection: null,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
         });
 
         it('Other key with collapsed selection', () => {
             const state = plugin.getState();
-            state.previousSelection = {
+            state.cachedSelection = {
                 type: 'range',
                 range: { collapsed: true } as any,
             };
@@ -105,15 +105,14 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                previousSelection: { type: 'range', range: { collapsed: true } as any },
+                cachedSelection: { type: 'range', range: { collapsed: true } as any },
                 domIndexer: undefined,
-                cachedModel: null,
             });
         });
 
         it('Expanded selection with text input', () => {
             const state = plugin.getState();
-            state.previousSelection = {
+            state.cachedSelection = {
                 type: 'range',
                 range: { collapsed: false } as any,
             };
@@ -126,18 +125,15 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: {
-                    type: 'range',
-                    range: { collapsed: false } as any,
-                },
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
         });
 
         it('Expanded selection with arrow input', () => {
             const state = plugin.getState();
-            state.previousSelection = {
+            state.cachedSelection = {
                 type: 'range',
                 range: { collapsed: false } as any,
             };
@@ -150,18 +146,17 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                previousSelection: {
+                cachedSelection: {
                     type: 'range',
                     range: { collapsed: false } as any,
                 },
-                cachedModel: null,
                 domIndexer: undefined,
             });
         });
 
         it('Table selection', () => {
             const state = plugin.getState();
-            state.previousSelection = {
+            state.cachedSelection = {
                 type: 'table',
             } as any;
 
@@ -173,17 +168,15 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: {
-                    type: 'table',
-                } as any,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
         });
 
         it('Image selection', () => {
             const state = plugin.getState();
-            state.previousSelection = {
+            state.cachedSelection = {
                 type: 'image',
             } as any;
 
@@ -195,10 +188,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: {
-                    type: 'image',
-                } as any,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
         });
@@ -216,8 +207,6 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 domIndexer: undefined,
-                cachedModel: null,
-                previousSelection: null,
             });
         });
     });
@@ -230,8 +219,8 @@ describe('ContentModelCachePlugin', () => {
 
         it('No cached range, no cached model', () => {
             const state = plugin.getState();
-            state.cachedModel = null;
-            state.previousSelection = null;
+            state.cachedModel = undefined;
+            state.cachedSelection = undefined;
 
             const selection = 'MockedRange' as any;
             getDOMSelectionSpy.and.returnValue(selection);
@@ -242,8 +231,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: null,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
         });
@@ -254,7 +243,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = null;
+            state.cachedSelection = undefined;
 
             getDOMSelectionSpy.and.returnValue(selection);
 
@@ -264,8 +253,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: null,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
         });
@@ -276,7 +265,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = null;
+            state.cachedSelection = undefined;
             state.domIndexer = domIndexer;
 
             getDOMSelectionSpy.and.returnValue(selection);
@@ -289,7 +278,7 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: model,
-                previousSelection: selection,
+                cachedSelection: selection,
                 domIndexer: domIndexer,
             });
         });
@@ -301,7 +290,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = oldRangeEx;
+            state.cachedSelection = oldRangeEx;
             getDOMSelectionSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
@@ -310,8 +299,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: null,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
         });
@@ -323,7 +312,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = oldRangeEx;
+            state.cachedSelection = oldRangeEx;
             state.domIndexer = domIndexer;
 
             getDOMSelectionSpy.and.returnValue(newRangeEx);
@@ -336,7 +325,7 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: model,
-                previousSelection: newRangeEx,
+                cachedSelection: newRangeEx,
                 domIndexer,
             });
         });
@@ -354,7 +343,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = selection;
+            state.cachedSelection = selection;
             state.domIndexer = domIndexer;
 
             getDOMSelectionSpy.and.returnValue(selection);
@@ -367,7 +356,7 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: model,
-                previousSelection: selection,
+                cachedSelection: selection,
                 domIndexer,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
@@ -380,7 +369,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = oldRangeEx;
+            state.cachedSelection = oldRangeEx;
             state.domIndexer = domIndexer;
 
             reconcileSelectionSpy.and.returnValue(true);
@@ -393,7 +382,7 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: model,
-                previousSelection: newRangeEx,
+                cachedSelection: newRangeEx,
                 domIndexer,
             });
             expect(reconcileSelectionSpy).toHaveBeenCalledWith(model, newRangeEx, oldRangeEx);
@@ -406,7 +395,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = oldRangeEx;
+            state.cachedSelection = oldRangeEx;
             state.domIndexer = domIndexer;
 
             reconcileSelectionSpy.and.returnValue(false);
@@ -418,8 +407,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: null,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer,
             });
             expect(reconcileSelectionSpy).toHaveBeenCalledWith(model, newRangeEx, oldRangeEx);
@@ -437,7 +426,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = null;
+            state.cachedSelection = undefined;
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.ContentChanged,
@@ -445,8 +434,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: null,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
@@ -459,7 +448,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = oldRangeEx;
+            state.cachedSelection = oldRangeEx;
 
             reconcileSelectionSpy.and.returnValue(true);
 
@@ -471,8 +460,8 @@ describe('ContentModelCachePlugin', () => {
             } as any);
 
             expect(state).toEqual({
-                cachedModel: null,
-                previousSelection: null,
+                cachedModel: undefined,
+                cachedSelection: undefined,
                 domIndexer: undefined,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
@@ -485,7 +474,7 @@ describe('ContentModelCachePlugin', () => {
             const state = plugin.getState();
 
             state.cachedModel = model;
-            state.previousSelection = oldRangeEx;
+            state.cachedSelection = oldRangeEx;
             state.domIndexer = domIndexer;
 
             reconcileSelectionSpy.and.returnValue(true);
@@ -499,7 +488,7 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: model,
-                previousSelection: newRangeEx,
+                cachedSelection: newRangeEx,
                 domIndexer,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();

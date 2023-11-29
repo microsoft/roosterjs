@@ -29,12 +29,12 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
     if (cachedModel) {
         return cachedModel;
     } else {
-        const selection = selectionOverride || core.api.getDOMSelection(core);
-        const model = internalCreateContentModel(core, selection ?? undefined, option);
+        const selection = selectionOverride || core.api.getDOMSelection(core) || undefined;
+        const model = internalCreateContentModel(core, selection, option);
 
         if (!option && !selectionOverride) {
             core.cache.cachedModel = model;
-            core.cache.previousSelection = selection;
+            core.cache.cachedSelection = selection;
         }
 
         return model;

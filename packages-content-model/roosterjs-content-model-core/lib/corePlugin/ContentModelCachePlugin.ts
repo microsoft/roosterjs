@@ -1,5 +1,6 @@
 import { areSameSelection } from './utils/areSameSelection';
 import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
+import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     ContentModelCachePluginState,
@@ -28,8 +29,6 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
     constructor(option: StandaloneEditorOptions) {
         this.state = {
             domIndexer: option.cacheModel ? contentModelDomIndexer : undefined,
-            previousSelection: null,
-            cachedModel: null,
         };
     }
 
@@ -107,7 +106,7 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
 
                     if (contentModel && this.state.domIndexer) {
                         this.state.cachedModel = contentModel;
-                        this.state.previousSelection = selection ?? null;
+                        this.state.cachedSelection = selection;
                     } else {
                         this.invalidateCache();
                     }
@@ -125,13 +124,15 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
 
     private invalidateCache() {
         if (!this.editor?.isInShadowEdit()) {
-            this.state.cachedModel = null;
-            this.state.previousSelection = null;
+            this.state.cachedModel = undefined;
+            this.state.cachedSelection = undefined;
         }
     }
 
     private updateCachedModel(editor: IStandaloneEditor, forceUpdate?: boolean) {
-        const cachedSelection = this.state.previousSelection;
+        const cachedSelection = this.state.cachedSelection;
+        this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
+
         const newRangeEx = editor.getDOMSelection() || undefined;
         const model = this.state.cachedModel;
         const isSelectionChanged =
@@ -144,18 +145,14 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
             if (
                 !model ||
                 !newRangeEx ||
-                !this.state.domIndexer?.reconcileSelection(
-                    model,
-                    newRangeEx,
-                    cachedSelection ?? undefined
-                )
+                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
             ) {
                 this.invalidateCache();
             } else {
-                this.state.previousSelection = newRangeEx;
+                this.state.cachedSelection = newRangeEx;
             }
         } else {
-            this.state.previousSelection = cachedSelection;
+            this.state.cachedSelection = cachedSelection;
         }
     }
 
@@ -177,6 +174,15 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
         // TODO: Handle ENTER key to better reuse content model
 
         if (rawEvent.key == 'Enter') {
+            return true;
+        }
+
+        // 4. Current selection is image or table or expanded range selection, and is inputting some text
+        if (
+            (this.state.cachedSelection?.type != 'range' ||
+                !this.state.cachedSelection.range.collapsed) &&
+            isCharacterValue(rawEvent)
+        ) {
             return true;
         }
 

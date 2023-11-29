@@ -80,7 +80,7 @@ export type SetContentModel = (
  */
 export type SetDOMSelection = (
     core: StandaloneEditorCore,
-    selection: DOMSelection | null,
+    selection: DOMSelection,
     skipSelectionChangedEvent?: boolean
 ) => void;
 
@@ -239,6 +239,20 @@ export type GetStyleBasedFormatState = (
 export type RestoreUndoSnapshot = (core: StandaloneEditorCore, step: number) => void;
 
 /**
+ * Ensure user will type into a container element rather than into the editor content DIV directly
+ * @param core The StandaloneEditorCore object.
+ * @param position The position that user is about to type to
+ * @param keyboardEvent Optional keyboard event object
+ * @param deprecated Deprecated parameter, not used
+ */
+export type EnsureTypeInContainer = (
+    core: StandaloneEditorCore,
+    position: NodePosition,
+    keyboardEvent?: KeyboardEvent,
+    deprecated?: boolean
+) => void;
+
+/**
  * Temp interface
  * TODO: Port other core API
  */
@@ -301,6 +315,19 @@ export interface PortedCoreApiMap {
      * @param core The StandaloneEditorCore object
      */
     getVisibleViewport: GetVisibleViewport;
+
+    /**
+     * Check if the editor has focus now
+     * @param core The StandaloneEditorCore object
+     * @returns True if the editor has focus, otherwise false
+     */
+    hasFocus: HasFocus;
+
+    /**
+     * Focus to editor. If there is a cached selection range, use it as current selection
+     * @param core The StandaloneEditorCore object
+     */
+    focus: Focus;
 }
 
 /**
@@ -349,19 +376,6 @@ export interface UnportedCoreApiMap {
     setContent: SetContent;
 
     /**
-     * Check if the editor has focus now
-     * @param core The StandaloneEditorCore object
-     * @returns True if the editor has focus, otherwise false
-     */
-    hasFocus: HasFocus;
-
-    /**
-     * Focus to editor. If there is a cached selection range, use it as current selection
-     * @param core The StandaloneEditorCore object
-     */
-    focus: Focus;
-
-    /**
      * Insert a DOM node into editor content
      * @param core The StandaloneEditorCore object. No op if null.
      * @param option An insert option object to specify how to insert the node
@@ -398,6 +412,15 @@ export interface UnportedCoreApiMap {
      * @param step Steps to move, can be 0, positive or negative
      */
     restoreUndoSnapshot: RestoreUndoSnapshot;
+
+    /**
+     * Ensure user will type into a container element rather than into the editor content DIV directly
+     * @param core The EditorCore object.
+     * @param position The position that user is about to type to
+     * @param keyboardEvent Optional keyboard event object
+     * @param deprecated Deprecated parameter, not used
+     */
+    ensureTypeInContainer: EnsureTypeInContainer;
 }
 
 /**

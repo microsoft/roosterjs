@@ -1,9 +1,8 @@
 import { addUndoSnapshot } from './addUndoSnapshot';
 import { attachDomEvent } from './attachDomEvent';
-import { focus } from './focus';
+import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { getContent } from './getContent';
 import { getStyleBasedFormatState } from './getStyleBasedFormatState';
-import { hasFocus } from './hasFocus';
 import { insertNode } from './insertNode';
 import { restoreUndoSnapshot } from './restoreUndoSnapshot';
 import { setContent } from './setContent';
@@ -17,10 +16,9 @@ import type { UnportedCoreApiMap } from 'roosterjs-content-model-types';
 export const coreApiMap: UnportedCoreApiMap = {
     attachDomEvent,
     addUndoSnapshot,
-    focus,
+    ensureTypeInContainer,
     getContent,
     getStyleBasedFormatState,
-    hasFocus,
     insertNode,
     restoreUndoSnapshot,
     setContent,

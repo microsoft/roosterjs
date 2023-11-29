@@ -219,6 +219,7 @@ export {
     GetContent,
     GetStyleBasedFormatState,
     RestoreUndoSnapshot,
+    EnsureTypeInContainer,
     GetVisibleViewport,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';

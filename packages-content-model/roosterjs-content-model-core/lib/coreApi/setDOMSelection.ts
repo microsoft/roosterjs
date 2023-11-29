@@ -27,38 +27,34 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
         let selectionRules: string[] | undefined;
         const rootSelector = '#' + addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
-        if (selection) {
-            switch (selection.type) {
-                case 'image':
-                    const image = selection.image;
+        switch (selection.type) {
+            case 'image':
+                const image = selection.image;
 
-                    selectionRules = buildImageCSS(
-                        rootSelector + ' #' + addUniqueId(image, IMAGE_ID),
-                        core.selection.imageSelectionBorderColor
-                    );
-                    core.selection.selection = selection;
+                selectionRules = buildImageCSS(
+                    rootSelector + ' #' + addUniqueId(image, IMAGE_ID),
+                    core.selection.imageSelectionBorderColor
+                );
+                core.selection.selection = selection;
 
-                    setRangeSelection(doc, image);
-                    break;
-                case 'table':
-                    const { table, firstColumn, firstRow } = selection;
+                setRangeSelection(doc, image);
+                break;
+            case 'table':
+                const { table, firstColumn, firstRow } = selection;
 
-                    selectionRules = buildTableCss(
-                        rootSelector + ' #' + addUniqueId(table, TABLE_ID),
-                        selection
-                    );
-                    core.selection.selection = selection;
+                selectionRules = buildTableCss(
+                    rootSelector + ' #' + addUniqueId(table, TABLE_ID),
+                    selection
+                );
+                core.selection.selection = selection;
 
-                    setRangeSelection(doc, table.rows[firstRow]?.cells[firstColumn]);
-                    break;
-                case 'range':
-                    addRangeToSelection(doc, selection.range);
+                setRangeSelection(doc, table.rows[firstRow]?.cells[firstColumn]);
+                break;
+            case 'range':
+                addRangeToSelection(doc, selection.range);
 
-                    core.selection.selection = core.api.hasFocus(core) ? null : selection;
-                    break;
-            }
-        } else {
-            core.selection.selection = null;
+                core.selection.selection = core.api.hasFocus(core) ? null : selection;
+                break;
         }
 
         if (sheet) {

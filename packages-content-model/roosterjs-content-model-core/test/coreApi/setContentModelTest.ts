@@ -68,7 +68,7 @@ describe('setContentModel', () => {
             undefined
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
-        expect(core.cache.previousSelection).toBe(mockedRange);
+        expect(core.cache.cachedSelection).toBe(mockedRange);
         expect(core.cache.cachedModel).toBe(mockedModel);
     });
 

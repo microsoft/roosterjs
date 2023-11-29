@@ -16,15 +16,15 @@ import type {
     BlockElement,
     ClipboardData,
     ContentChangedData,
+    DOMEventHandler,
     DarkColorHandler,
     DefaultFormat,
-    DOMEventHandler,
     EditorUndoState,
     ExperimentalFeatures,
     GenericContentEditFeature,
     IContentTraverser,
-    InsertOption,
     IPositionContentSearcher,
+    InsertOption,
     NodePosition,
     PendableFormatState,
     PluginEvent,
@@ -156,7 +156,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * This is the replacement of IEditor.select.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection | null) {
+    setDOMSelection(selection: DOMSelection) {
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
@@ -506,9 +506,13 @@ export class ContentModelEditor implements IContentModelEditor {
         const core = this.getCore();
         const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
         const selection = convertRangeExToDomSelection(rangeEx);
-        this.setDOMSelection(selection);
 
-        return true;
+        if (selection) {
+            this.setDOMSelection(selection);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -931,13 +935,13 @@ export class ContentModelEditor implements IContentModelEditor {
     }
 
     /**
-     * @deprecated We don't need this API any more
      * Ensure user will type into a container element rather than into the editor content DIV directly
      * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
      */
     ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
-        // NO OP
+        const core = this.getCore();
+        core.api.ensureTypeInContainer(core, position, keyboardEvent);
     }
 
     //#endregion
