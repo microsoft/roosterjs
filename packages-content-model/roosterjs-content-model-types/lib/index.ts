@@ -241,6 +241,7 @@ export {
 } from './pluginState/ContentModelFormatPluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
+export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -271,4 +272,5 @@ export {
     ContentModelContentChangedEvent,
     CompatibleContentModelContentChangedEvent,
     ContentModelContentChangedEventData,
+    ChangedEntity,
 } from './event/ContentModelContentChangedEvent';

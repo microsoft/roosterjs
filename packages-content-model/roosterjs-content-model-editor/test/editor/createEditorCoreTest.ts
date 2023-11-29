@@ -4,7 +4,7 @@ import * as ContentModelFormatPlugin from 'roosterjs-content-model-core/lib/core
 import * as createStandaloneEditorDefaultSettings from 'roosterjs-content-model-core/lib/editor/createStandaloneEditorDefaultSettings';
 import * as DOMEventPlugin from 'roosterjs-content-model-core/lib/corePlugin/DOMEventPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
-import * as EntityPlugin from '../../lib/corePlugins/EntityPlugin';
+import * as EntityPlugin from 'roosterjs-content-model-core/lib/corePlugin/EntityPlugin';
 import * as ImageSelection from '../../lib/corePlugins/ImageSelection';
 import * as LifecyclePlugin from 'roosterjs-content-model-core/lib/corePlugin/LifecyclePlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
@@ -96,9 +96,9 @@ describe('createEditorCore', () => {
                 mockedFormatPlugin,
                 mockedCopyPastePlugin,
                 mockedDOMEventPlugin,
+                mockedEntityPlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
-                mockedEntityPlugin,
                 mockedImageSelection,
                 mockedNormalizeTablePlugin,
                 mockedLifecyclePlugin,
@@ -151,9 +151,9 @@ describe('createEditorCore', () => {
                 mockedFormatPlugin,
                 mockedCopyPastePlugin,
                 mockedDOMEventPlugin,
+                mockedEntityPlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
-                mockedEntityPlugin,
                 mockedImageSelection,
                 mockedNormalizeTablePlugin,
                 mockedLifecyclePlugin,

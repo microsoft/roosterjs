@@ -1,5 +1,9 @@
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
-import { ContentModelEditPlugin, ContentModelPastePlugin } from 'roosterjs-content-model-plugins';
+import {
+    ContentModelEditPlugin,
+    ContentModelPastePlugin,
+    EntityDelimiterPlugin,
+} from 'roosterjs-content-model-plugins';
 import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     ContentModelEditorOptions,
@@ -20,7 +24,11 @@ export function createContentModelEditor(
     initialContent?: string
 ): IContentModelEditor {
     const plugins = additionalPlugins ? [...additionalPlugins] : [];
-    plugins.push(new ContentModelPastePlugin(), new ContentModelEditPlugin());
+    plugins.push(
+        new ContentModelPastePlugin(),
+        new ContentModelEditPlugin(),
+        new EntityDelimiterPlugin()
+    );
 
     const options: ContentModelEditorOptions = {
         plugins: plugins,
