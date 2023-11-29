@@ -486,6 +486,7 @@ describe('applyTableFormat', () => {
         expect(table.rows[0].cells[0].format.backgroundColor).toBe('blue');
         expect(table.rows[0].cells[0].dataset.editingInfo).toBe('{"bgColorOverride":true}');
     });
+
     it('Has borderOverride', () => {
         const table = createTable(1, 1);
         table.rows[0].cells[0].format.borderLeft = '1px solid red';
@@ -509,5 +510,125 @@ describe('applyTableFormat', () => {
         // Should not apply blue
         expect(table.rows[0].cells[0].format.borderTop).toBe('1px solid green');
         expect(table.rows[0].cells[0].dataset.editingInfo).toBe('{"borderOverride":true}');
+    });
+
+    it('Adaptive text color', () => {
+        const table = createTable(1, 1);
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: false,
+            hasFirstColumn: false,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+        };
+
+        // Try to apply default format black
+        applyTableFormat(table, format);
+
+        //apply HeaderRowColor
+        applyTableFormat(table, { ...format, hasHeaderRow: true });
+
+        //expect HeaderRowColor text color to be applied
+        table.rows[0].cells[0].blocks.forEach(block => {
+            if (block.blockType == 'Paragraph') {
+                expect(block.segmentFormat?.textColor).toBe('#ffffff');
+                block.segments.forEach(segment => {
+                    expect(segment.format?.textColor).toBe('#ffffff');
+                });
+            }
+        });
+    });
+
+    it(' Should not set adaptive text color', () => {
+        const table = createTable(1, 1);
+        table.rows[0].cells[0].blocks.forEach(block => {
+            if (block.blockType == 'Paragraph') {
+                block.segmentFormat = {
+                    textColor: '#ABABAB',
+                };
+                block.segments.forEach(segment => {
+                    segment.format = {
+                        textColor: '#ABABAB',
+                    };
+                });
+            }
+        });
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: false,
+            hasFirstColumn: false,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+        };
+
+        // Try to apply default format black
+        applyTableFormat(table, format);
+
+        //apply HeaderRowColor
+        applyTableFormat(table, { ...format, hasHeaderRow: true });
+
+        //expect HeaderRowColor text color to be applied
+        table.rows[0].cells[0].blocks.forEach(block => {
+            if (block.blockType == 'Paragraph') {
+                expect(block.segmentFormat?.textColor).toBe('#ABABAB');
+                block.segments.forEach(segment => {
+                    expect(segment.format?.textColor).toBe('#ABABAB');
+                });
+            }
+        });
+    });
+
+    it('Remove adaptive text color', () => {
+        const table = createTable(1, 1);
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: false,
+            hasFirstColumn: false,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+        };
+
+        // Try to apply default format black
+        applyTableFormat(table, format);
+
+        //apply HeaderRowColor
+        applyTableFormat(table, { ...format, hasHeaderRow: true });
+
+        //Toggle HeaderRowColor
+        applyTableFormat(table, { ...format, hasHeaderRow: false });
+
+        //expect HeaderRowColor text color to be applied
+        table.rows[0].cells[0].blocks.forEach(block => {
+            if (block.blockType == 'Paragraph') {
+                expect(block.segmentFormat?.textColor).toBe(undefined);
+                block.segments.forEach(segment => {
+                    expect(segment.format?.textColor).toBe(undefined);
+                });
+            }
+        });
     });
 });

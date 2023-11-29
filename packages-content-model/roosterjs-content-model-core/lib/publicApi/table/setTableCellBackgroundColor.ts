@@ -43,28 +43,81 @@ export function setTableCellBackgroundColor(
             delete cell.format.textColor;
         }
 
-        if (applyToSegments && cell.format.textColor) {
-            cell.blocks.forEach(block => {
-                if (block.blockType == 'Paragraph') {
-                    block.segmentFormat = {
-                        ...block.segmentFormat,
-                        textColor: cell.format.textColor,
-                    };
-                    block.segments.forEach(segment => {
-                        segment.format = {
-                            ...segment.format,
-                            textColor: cell.format.textColor,
-                        };
-                    });
-                }
-            });
+        if (applyToSegments) {
+            setAdaptiveCellColor(cell);
         }
     } else {
         delete cell.format.backgroundColor;
         delete cell.format.textColor;
+        if (applyToSegments) {
+            removeAdaptiveCellColor(cell);
+        }
     }
 
     delete cell.cachedElement;
+}
+
+function removeAdaptiveCellColor(cell: ContentModelTableCell) {
+    cell.blocks.forEach(block => {
+        if (block.blockType == 'Paragraph') {
+            if (
+                block.segmentFormat?.textColor &&
+                shouldRemoveColor(block.segmentFormat?.textColor, cell.format.backgroundColor || '')
+            ) {
+                delete block.segmentFormat.textColor;
+            }
+            block.segments.forEach(segment => {
+                if (
+                    segment.format.textColor &&
+                    shouldRemoveColor(segment.format.textColor, cell.format.backgroundColor || '')
+                ) {
+                    delete segment.format.textColor;
+                }
+            });
+        }
+    });
+}
+
+function setAdaptiveCellColor(cell: ContentModelTableCell) {
+    if (cell.format.textColor) {
+        cell.blocks.forEach(block => {
+            if (block.blockType == 'Paragraph') {
+                if (!block.segmentFormat?.textColor) {
+                    block.segmentFormat = {
+                        ...block.segmentFormat,
+                        textColor: cell.format.textColor,
+                    };
+                }
+                block.segments.forEach(segment => {
+                    if (!segment.format?.textColor) {
+                        segment.format = {
+                            ...segment.format,
+                            textColor: cell.format.textColor,
+                        };
+                    }
+                });
+            }
+        });
+    }
+}
+
+/**
+ * If the cell background color is too dark or too bright, and the text color is white or black, we should remove the text color
+ * @param textColor the segment or block text color
+ * @param cellBackgroundColor the cell background color
+ * @returns
+ */
+function shouldRemoveColor(textColor: string, cellBackgroundColor: string) {
+    const lightness = calculateLightness(cellBackgroundColor);
+    if (
+        ([White, 'rgb(255,255,255)'].indexOf(textColor) > -1 &&
+            (lightness > BRIGHT_COLORS_LIGHTNESS || cellBackgroundColor == '')) ||
+        ([Black, 'rgb(0,0,0)'].indexOf(textColor) > -1 &&
+            (lightness < DARK_COLORS_LIGHTNESS || cellBackgroundColor == ''))
+    ) {
+        return true;
+    }
+    return false;
 }
 
 function calculateLightness(color: string) {
