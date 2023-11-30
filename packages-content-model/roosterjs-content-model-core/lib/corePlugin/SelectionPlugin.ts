@@ -1,9 +1,14 @@
-import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
+import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { isModifierKey } from '../publicApi/domUtils/eventUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type {
     IStandaloneEditor,
     SelectionPluginState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
+
+const MouseMiddleButton = 1;
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: (IStandaloneEditor & IEditor) | null = null;
@@ -75,6 +80,97 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     getState(): SelectionPluginState {
         return this.state;
+    }
+
+    onPluginEvent(event: PluginEvent) {
+        if (!this.editor) {
+            return;
+        }
+
+        let image: HTMLImageElement | null;
+
+        switch (event.eventType) {
+            case PluginEventType.MouseUp:
+                if (
+                    (image = this.getClickingImage(event.rawEvent)) &&
+                    image.isContentEditable &&
+                    event.rawEvent.button != MouseMiddleButton
+                ) {
+                    this.selectImage(this.editor, image);
+                }
+                break;
+
+            case PluginEventType.MouseDown:
+                const mouseTarget = event.rawEvent.target;
+                const mouseSelection = this.editor.getDOMSelection();
+
+                if (mouseSelection?.type == 'image' && mouseSelection.image !== mouseTarget) {
+                    this.selectBeforeImage(this.editor, mouseSelection.image);
+                }
+                break;
+
+            case PluginEventType.KeyDown:
+                const rawEvent = event.rawEvent;
+                const key = rawEvent.key;
+                const keyDownSelection = this.editor.getDOMSelection();
+
+                if (
+                    !isModifierKey(rawEvent) &&
+                    !rawEvent.shiftKey &&
+                    keyDownSelection?.type == 'image' &&
+                    keyDownSelection.image.parentNode
+                ) {
+                    if (key === 'Escape') {
+                        this.selectBeforeImage(this.editor, keyDownSelection.image);
+                        event.rawEvent.stopPropagation();
+                    } else if (key !== 'Delete' && key !== 'Backspace') {
+                        this.selectBeforeImage(this.editor, keyDownSelection.image);
+                    }
+                }
+                break;
+
+            case PluginEventType.ContextMenu:
+                const actualSelection = this.editor.getDOMSelection();
+
+                if (
+                    (image = this.getClickingImage(event.rawEvent)) &&
+                    (actualSelection?.type != 'image' || actualSelection.image != image)
+                ) {
+                    this.selectImage(this.editor, image);
+                }
+        }
+    }
+
+    private selectImage(editor: IStandaloneEditor, image: HTMLImageElement) {
+        editor.setDOMSelection({
+            type: 'image',
+            image: image,
+        });
+    }
+
+    private selectBeforeImage(editor: IStandaloneEditor, image: HTMLImageElement) {
+        const doc = editor.getDocument();
+        const parent = image.parentNode;
+        const index = parent && toArray(parent.childNodes).indexOf(image);
+
+        if (parent && index !== null && index >= 0) {
+            const range = doc.createRange();
+            range.setStart(parent, index);
+            range.collapse();
+
+            editor.setDOMSelection({
+                type: 'range',
+                range: range,
+            });
+        }
+    }
+
+    private getClickingImage(event: UIEvent): HTMLImageElement | null {
+        const target = event.target as Node;
+
+        return isNodeOfType(target, 'ELEMENT_NODE') && isElementOfType(target, 'img')
+            ? target
+            : null;
     }
 
     private onFocus = () => {

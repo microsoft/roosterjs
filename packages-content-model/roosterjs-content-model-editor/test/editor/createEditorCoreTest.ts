@@ -5,7 +5,6 @@ import * as createStandaloneEditorDefaultSettings from 'roosterjs-content-model-
 import * as DOMEventPlugin from 'roosterjs-content-model-core/lib/corePlugin/DOMEventPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as EntityPlugin from 'roosterjs-content-model-core/lib/corePlugin/EntityPlugin';
-import * as ImageSelection from '../../lib/corePlugins/ImageSelection';
 import * as LifecyclePlugin from 'roosterjs-content-model-core/lib/corePlugin/LifecyclePlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
 import * as SelectionPlugin from 'roosterjs-content-model-core/lib/corePlugin/SelectionPlugin';
@@ -49,7 +48,6 @@ const mockedEntityPlugin = {
 const mockedSelectionPlugin = {
     getState: () => mockedSelectionState,
 } as any;
-const mockedImageSelection = 'ImageSelection' as any;
 const mockedNormalizeTablePlugin = 'NormalizeTablePlugin' as any;
 const mockedLifecyclePlugin = {
     getState: () => mockedLifecycleState,
@@ -80,7 +78,6 @@ describe('createEditorCore', () => {
         spyOn(DOMEventPlugin, 'createDOMEventPlugin').and.returnValue(mockedDOMEventPlugin);
         spyOn(SelectionPlugin, 'createSelectionPlugin').and.returnValue(mockedSelectionPlugin);
         spyOn(EntityPlugin, 'createEntityPlugin').and.returnValue(mockedEntityPlugin);
-        spyOn(ImageSelection, 'createImageSelection').and.returnValue(mockedImageSelection);
         spyOn(NormalizeTablePlugin, 'createNormalizeTablePlugin').and.returnValue(
             mockedNormalizeTablePlugin
         );
@@ -106,7 +103,6 @@ describe('createEditorCore', () => {
                 mockedEntityPlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
-                mockedImageSelection,
                 mockedNormalizeTablePlugin,
                 mockedLifecyclePlugin,
             ],
@@ -162,7 +158,6 @@ describe('createEditorCore', () => {
                 mockedEntityPlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
-                mockedImageSelection,
                 mockedNormalizeTablePlugin,
                 mockedLifecyclePlugin,
             ],

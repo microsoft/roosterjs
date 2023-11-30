@@ -21,7 +21,6 @@ export function createEditorCore(
         corePlugins.edit,
         ...(options.plugins ?? []),
         corePlugins.undo,
-        corePlugins.imageSelection,
         corePlugins.normalizeTable,
     ].filter(x => !!x);
 

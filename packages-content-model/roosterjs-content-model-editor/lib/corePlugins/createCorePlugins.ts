@@ -1,5 +1,4 @@
 import { createEditPlugin } from './EditPlugin';
-import { createImageSelection } from './ImageSelection';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { createUndoPlugin } from './UndoPlugin';
 import type { UnportedCorePlugins } from '../publicTypes/ContentModelCorePlugins';
@@ -19,7 +18,6 @@ export function createCorePlugins(options: ContentModelEditorOptions): UnportedC
     return {
         edit: map.edit || createEditPlugin(),
         undo: map.undo || createUndoPlugin(options),
-        imageSelection: map.imageSelection || createImageSelection(),
         normalizeTable: map.normalizeTable || createNormalizeTablePlugin(),
     };
 }
