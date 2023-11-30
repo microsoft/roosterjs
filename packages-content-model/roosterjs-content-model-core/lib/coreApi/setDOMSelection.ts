@@ -98,8 +98,8 @@ function buildTableCss(rootSelector: string, selection: TableSelection): string[
     const isAllTableSelected =
         firstRow == 0 &&
         firstColumn == 0 &&
-        lastRow == cells.length &&
-        lastColumn == cells[lastRow]?.length;
+        lastRow == cells.length - 1 &&
+        lastColumn == (cells[lastRow]?.length ?? 0) - 1;
     const selectors = isAllTableSelected
         ? handleAllTableSelected(rootSelector)
         : handleTableSelected(rootSelector, selection, cells);
