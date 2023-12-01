@@ -330,7 +330,9 @@ describe('insertLink', () => {
             getName: () => 'mock',
             onPluginEvent: onPluginEvent,
         };
-        const editor = new ContentModelEditor(div, { plugins: [mockedPlugin] });
+        const editor = new ContentModelEditor(div, {
+            plugins: [mockedPlugin],
+        });
 
         editor.focus();
 
@@ -341,7 +343,6 @@ describe('insertLink', () => {
         const a = div.querySelector('a');
 
         expect(a!.outerHTML).toBe('<a href="http://test.com" title="title">http://test.com</a>');
-        expect(onPluginEvent).toHaveBeenCalledTimes(4);
         expect(onPluginEvent).toHaveBeenCalledWith({
             eventType: PluginEventType.ContentChanged,
             source: ChangeSource.CreateLink,
@@ -351,6 +352,7 @@ describe('insertLink', () => {
             },
             contentModel: jasmine.anything(),
             selection: jasmine.anything(),
+            changedEntities: [],
         });
 
         document.body.removeChild(div);

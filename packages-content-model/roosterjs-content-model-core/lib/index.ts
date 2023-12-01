@@ -6,6 +6,8 @@ export {
     getClosestAncestorBlockGroupIndex,
     TypeOfBlockGroup,
 } from './publicApi/model/getClosestAncestorBlockGroupIndex';
+export { isBold } from './publicApi/model/isBold';
+export { createModelFromHtml } from './publicApi/model/createModelFromHtml';
 
 export {
     iterateSelections,
@@ -40,11 +42,9 @@ export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './metadata/updateTableMetadata';
 export { updateListMetadata } from './metadata/updateListMetadata';
 
-export { promoteToContentModelEditorCore } from './editor/promoteToContentModelEditorCore';
-export { createContentModelEditorCore } from './editor/createContentModelEditorCore';
 export { ChangeSource } from './constants/ChangeSource';
+export { BulletListType } from './constants/BulletListType';
+export { NumberingListType } from './constants/NumberingListType';
+export { TableBorderFormat } from './constants/TableBorderFormat';
 
-export { ContentModelCachePlugin } from './corePlugin/ContentModelCachePlugin';
-export { ContentModelCopyPastePlugin } from './corePlugin/ContentModelCopyPastePlugin';
-export { ContentModelFormatPlugin } from './corePlugin/ContentModelFormatPlugin';
-export { ContentModelTypeInContainerPlugin } from './corePlugin/ContentModelTypeInContainerPlugin';
+export { createStandaloneEditorCore } from './editor/createStandaloneEditorCore';

@@ -4,7 +4,6 @@ import {
     createDomToModelContextWithConfig,
     domToContentModel,
 } from 'roosterjs-content-model-dom';
-import type { EditorCore } from 'roosterjs-editor-types';
 import type {
     DOMSelection,
     DomToModelOption,
@@ -43,7 +42,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 };
 
 function internalCreateContentModel(
-    core: StandaloneEditorCore & EditorCore,
+    core: StandaloneEditorCore,
     selection?: DOMSelection,
     option?: DomToModelOption
 ) {

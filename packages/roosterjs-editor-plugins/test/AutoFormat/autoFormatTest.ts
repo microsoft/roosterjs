@@ -34,6 +34,9 @@ describe('AutoHyphen |', () => {
         plugin.onPluginEvent(keyDown(keysTyped[1]));
         plugin.onPluginEvent(keyDown(keysTyped[2]));
         plugin.onPluginEvent(keyDown(keysTyped[3]));
+        plugin.onPluginEvent(keyDown(keysTyped[4]));
+        plugin.onPluginEvent(keyDown(keysTyped[5]));
+        plugin.onPluginEvent(keyDown(keysTyped[6]));
         expect(editor.getContent()).toBe(expectedResult);
     }
 
@@ -41,6 +44,14 @@ describe('AutoHyphen |', () => {
         runTestShouldHandleAutoHyphen(
             '<div>t--</div><!--{"start":[0,0,4],"end":[0,0,4]}-->',
             ['t', '-', '-', 'b'],
+            '<div>t—</div>'
+        );
+    });
+
+    it('Should format with space ', () => {
+        runTestShouldHandleAutoHyphen(
+            '<div>t--</div><!--{"start":[0,0,4],"end":[0,0,4]}-->',
+            ['t', ' ', '-', '-', ' ', 'b'],
             '<div>t—</div>'
         );
     });

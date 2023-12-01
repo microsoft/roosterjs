@@ -7,19 +7,26 @@ import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModel
 import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFormatStatePlugin';
 import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
 import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
+import ContentModelRooster from './contentModel/editor/ContentModelRooster';
 import getToggleablePlugins from './getToggleablePlugins';
-import MainPaneBase from './MainPaneBase';
+import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
 import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelEditor } from 'roosterjs-content-model-editor';
-import { ContentModelEditPlugin } from 'roosterjs-content-model-plugins';
+import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
+import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
-import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
+import { EditorPlugin } from 'roosterjs-editor-types';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
+import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
+import {
+    ContentModelEditor,
+    ContentModelEditorOptions,
+    IContentModelEditor,
+} from 'roosterjs-content-model-editor';
 
 const styles = require('./ContentModelEditorMainPane.scss');
 
@@ -77,7 +84,11 @@ const DarkTheme: PartialTheme = {
     },
 };
 
-class ContentModelEditorMainPane extends MainPaneBase {
+interface ContentModelMainPaneState extends MainPaneBaseState {
+    editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) => IContentModelEditor;
+}
+
+class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {
     private formatStatePlugin: ContentModelFormatStatePlugin;
     private editorOptionPlugin: ContentModelEditorOptionsPlugin;
     private eventViewPlugin: ContentModelEventViewPlugin;
@@ -87,6 +98,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
+    private entityDelimiterPlugin: EntityDelimiterPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
@@ -104,6 +116,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
+        this.entityDelimiterPlugin = new EntityDelimiterPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
@@ -166,6 +179,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
             this.contentModelEditPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
+            this.entityDelimiterPlugin,
             this.formatPainterPlugin,
             this.sampleEntityPlugin,
         ];
@@ -182,12 +196,58 @@ class ContentModelEditorMainPane extends MainPaneBase {
     resetEditor() {
         this.toggleablePlugins = null;
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
+            editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) =>
                 new ContentModelEditor(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
                 }),
         });
+    }
+
+    renderEditor() {
+        const styles = this.getStyles();
+        const allPlugins = this.getPlugins();
+        const editorStyles = {
+            transform: `scale(${this.state.scale})`,
+            transformOrigin: this.state.isRtl ? 'right top' : 'left top',
+            height: `calc(${100 / this.state.scale}%)`,
+            width: `calc(${100 / this.state.scale}%)`,
+        };
+        const format = this.state.initState.defaultFormat;
+        const defaultFormat: ContentModelSegmentFormat = {
+            fontWeight: format.bold ? 'bold' : undefined,
+            italic: format.italic || undefined,
+            underline: format.underline || undefined,
+            fontFamily: format.fontFamily || undefined,
+            fontSize: format.fontSize || undefined,
+            textColor: format.textColors?.lightModeColor || format.textColor || undefined,
+            backgroundColor:
+                format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
+        };
+
+        this.updateContentPlugin.forceUpdate();
+
+        return (
+            <div className={styles.editorContainer} id="EditorContainer">
+                <div style={editorStyles}>
+                    {this.state.editorCreator && (
+                        <ContentModelRooster
+                            className={styles.editor}
+                            plugins={allPlugins}
+                            defaultSegmentFormat={defaultFormat}
+                            inDarkMode={this.state.isDarkMode}
+                            experimentalFeatures={this.state.initState.experimentalFeatures}
+                            undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
+                            trustedHTMLHandler={trustedHTMLHandler}
+                            zoomScale={this.state.scale}
+                            initialContent={this.content}
+                            editorCreator={this.state.editorCreator}
+                            dir={this.state.isRtl ? 'rtl' : 'ltr'}
+                        />
+                    )}
+                </div>
+            </div>
+        );
     }
 
     getTheme(isDark: boolean): PartialTheme {

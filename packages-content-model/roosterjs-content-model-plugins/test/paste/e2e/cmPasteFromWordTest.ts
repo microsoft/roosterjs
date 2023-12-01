@@ -96,15 +96,7 @@ describe(ID, () => {
                     decorator: { tagName: 'p', format: {} },
                 },
             ],
-            format: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
-            },
+            format: {},
         });
     });
 

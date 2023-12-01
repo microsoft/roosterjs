@@ -50,12 +50,8 @@ export { FloatFormat } from './format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './format/formatParts/EntityInfoFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
-export { TableMetadataFormat, TableBorderFormat } from './format/metadata/TableMetadataFormat';
-export {
-    ListMetadataFormat,
-    NumberingListType,
-    BulletListType,
-} from './format/metadata/ListMetadataFormat';
+export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';
+export { ListMetadataFormat } from './format/metadata/ListMetadataFormat';
 export {
     ImageResizeMetadataFormat,
     ImageCropMetadataFormat,
@@ -208,14 +204,45 @@ export {
     FormatContentModel,
     StandaloneCoreApiMap,
     StandaloneEditorCore,
+    StandaloneEditorDefaultSettings,
+    SwitchShadowEdit,
+    Select,
+    TriggerEvent,
+    GetSelectionRangeEx,
+    TransformColor,
+    AddUndoSnapshot,
+    SelectRange,
+    PortedCoreApiMap,
+    UnportedCoreApiMap,
+    SelectImage,
+    SelectTable,
+    SetContent,
+    GetSelectionRange,
+    HasFocus,
+    Focus,
+    InsertNode,
+    AttachDomEvent,
+    GetContent,
+    GetStyleBasedFormatState,
+    RestoreUndoSnapshot,
+    EnsureTypeInContainer,
+    GetVisibleViewport,
 } from './editor/StandaloneEditorCore';
+export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export { ContentModelPluginState } from './pluginState/ContentModelPluginState';
+export {
+    StandaloneEditorCorePluginState,
+    UnportedCorePluginState,
+} from './pluginState/StandaloneEditorPluginState';
 export {
     ContentModelFormatPluginState,
     PendingFormat,
 } from './pluginState/ContentModelFormatPluginState';
+export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
+export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
+export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
+export { SelectionPluginState } from './pluginState/SelectionPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -246,4 +273,5 @@ export {
     ContentModelContentChangedEvent,
     CompatibleContentModelContentChangedEvent,
     ContentModelContentChangedEventData,
+    ChangedEntity,
 } from './event/ContentModelContentChangedEvent';

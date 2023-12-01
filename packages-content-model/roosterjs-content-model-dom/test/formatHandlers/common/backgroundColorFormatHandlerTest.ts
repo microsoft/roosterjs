@@ -1,4 +1,3 @@
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
@@ -95,7 +94,6 @@ describe('backgroundColorFormatHandler.apply', () => {
 
     it('Simple color', () => {
         format.backgroundColor = 'red';
-        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock:' + s);
 
         backgroundColorFormatHandler.apply(format, div, context);
 
@@ -105,14 +103,14 @@ describe('backgroundColorFormatHandler.apply', () => {
     it('Simple color in dark mode', () => {
         format.backgroundColor = 'red';
         context.isDarkMode = true;
-        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock:' + s);
+        context.darkColorHandler = {
+            registerColor: (color: string, isDarkMode: boolean) =>
+                isDarkMode ? `var(--darkColor_${color}, ${color})` : color,
+        } as any;
 
         backgroundColorFormatHandler.apply(format, div, context);
 
-        const expectedResult = [
-            '<div style="--darkColor_red:darkMock:red; background-color: var(--darkColor_red, red);"></div>',
-            '<div style="--darkColor_red: darkMock:red; background-color: var(--darkColor_red, red);"></div>',
-        ];
+        const expectedResult = ['<div style="background-color: var(--darkColor_red, red);"></div>'];
 
         expectHtml(div.outerHTML, expectedResult);
     });

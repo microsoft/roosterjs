@@ -1355,7 +1355,7 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Image',
-                                        src: 'http://www.microsoft.com/',
+                                        src: 'http://www.microsoft.com',
                                         format: {
                                             letterSpacing: 'normal',
                                             fontFamily:
