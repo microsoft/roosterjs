@@ -15,7 +15,7 @@ export const selectRange: SelectRange = (core, range, skipSameRange) => {
         addRangeToSelection(range, skipSameRange);
 
         if (!core.api.hasFocus(core)) {
-            core.domEvent.selectionRange = range;
+            core.selection.selectionRange = range;
         }
 
         return true;

@@ -36,13 +36,13 @@ export function createStandaloneEditorCore(
             corePlugins.format,
             corePlugins.copyPaste,
             corePlugins.domEvent,
+            corePlugins.selection,
             corePlugins.entity,
             ...tempPlugins,
             corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(),
         darkColorHandler: new DarkColorHandlerImpl(contentDiv, options.baseDarkColor),
-        imageSelectionBorderColor: options.imageSelectionBorderColor, // TODO: Move to Selection core plugin
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         ...createStandaloneEditorDefaultSettings(options),
         ...getPluginState(corePlugins),
@@ -79,5 +79,6 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins): StandaloneEdi
         format: corePlugins.format.getState(),
         lifecycle: corePlugins.lifecycle.getState(),
         entity: corePlugins.entity.getState(),
+        selection: corePlugins.selection.getState(),
     };
 }

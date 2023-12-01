@@ -55,7 +55,7 @@ const select = (core: StandaloneEditorCore, image: HTMLImageElement) => {
 
 const buildBorderCSS = (core: StandaloneEditorCore, imageId: string): string => {
     const divId = core.contentDiv.id;
-    const color = core.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR;
+    const color = core.selection.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR;
 
     return `#${divId} #${imageId} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;
 };

@@ -1,3 +1,4 @@
+import type { SelectionPluginState } from './SelectionPluginState';
 import type {
     CopyPastePluginState,
     EditPluginState,
@@ -43,6 +44,11 @@ export interface StandaloneEditorCorePluginState {
      * Plugin state for EntityPlugin
      */
     entity: EntityPluginState;
+
+    /**
+     * Plugin state for SelectionPlugin
+     */
+    selection: SelectionPluginState;
 }
 
 /**
