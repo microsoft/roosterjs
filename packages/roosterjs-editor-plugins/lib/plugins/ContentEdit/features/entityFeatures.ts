@@ -463,8 +463,8 @@ function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean):
 }
 
 function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor: IEditor) {
-    let entity: Element | null = null;
-    let delimiterPair: Element | null = null;
+    let entity: HTMLElement | null = null;
+    let delimiterPair: HTMLElement | null = null;
     const traverser = getBlockTraverser(editor, delimiter);
     if (!traverser) {
         return { delimiterPair, entity };
@@ -486,11 +486,18 @@ function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor
         entity = entity || getElementFromInline(current, entitySelector);
         delimiterPair = delimiterPair || getElementFromInline(current, selector);
 
-        // If we found the entity but the next inline after the entity is not a delimiter,
-        // it means that the delimiter pair got removed or is invalid, return null instead.
-        if (entity && !delimiterPair && !getElementFromInline(current, entitySelector)) {
-            delimiterPair = null;
-            break;
+        if (entity) {
+            // If we found the entity but the next inline after the entity is not a delimiter,
+            // it means that the delimiter pair got removed or is invalid, return null instead.
+            if (!delimiterPair && !getElementFromInline(current, entitySelector)) {
+                delimiterPair = null;
+                break;
+            }
+            // If the delimiter is not editable keep looking for a editable one, by setting the value as null,
+            //  in case the entity is wrapping another inline readonly entity
+            if (delimiterPair && !delimiterPair.isContentEditable) {
+                delimiterPair = null;
+            }
         }
         current = traverseFn(traverser);
     }

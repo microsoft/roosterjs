@@ -2,7 +2,9 @@ import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRende
 import { createColorFormatRenderer } from '../utils/createColorFormatRender';
 import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { TableBorderFormat, TableMetadataFormat } from 'roosterjs-content-model-types';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { TableBorderFormat } from 'roosterjs-content-model-core';
+import { TableMetadataFormat } from 'roosterjs-content-model-types';
 
 export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] = [
     createColorFormatRenderer<TableMetadataFormat>(
@@ -60,17 +62,20 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
     createDropDownFormatRenderer<TableMetadataFormat, keyof typeof TableBorderFormat>(
         'TableBorderFormat',
         [
-            'DEFAULT',
-            'LIST_WITH_SIDE_BORDERS',
-            'NO_HEADER_BORDERS',
-            'NO_SIDE_BORDERS',
-            'FIRST_COLUMN_HEADER_EXTERNAL',
-            'ESPECIAL_TYPE_1',
-            'ESPECIAL_TYPE_2',
-            'ESPECIAL_TYPE_3',
-            'CLEAR',
+            'Default',
+            'ListWithSideBorders',
+            'NoHeaderBorders',
+            'NoSideBorders',
+            'FirstColumnHeaderExternal',
+            'EspecialType1',
+            'EspecialType2',
+            'EspecialType3',
+            'Clear',
         ],
-        format => TableBorderFormat[format.tableBorderFormat] as keyof typeof TableBorderFormat,
+        format =>
+            getObjectKeys(TableBorderFormat)[
+                Object.values(TableBorderFormat).indexOf(format.tableBorderFormat)
+            ],
         (format, newValue) => (format.tableBorderFormat = TableBorderFormat[newValue])
     ),
 ];

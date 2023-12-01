@@ -1,7 +1,7 @@
 import { BorderKeys } from 'roosterjs-content-model-dom';
 import { combineBorderValue, extractBorderValues } from '../domUtils/borderValues';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
-import { TableBorderFormat } from 'roosterjs-content-model-types';
+import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateTableCellMetadata } from '../../metadata/updateTableCellMetadata';
 import { updateTableMetadata } from '../../metadata/updateTableMetadata';
 import type {
@@ -22,7 +22,7 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     bgColorEven: null,
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
-    tableBorderFormat: TableBorderFormat.DEFAULT,
+    tableBorderFormat: TableBorderFormat.Default,
     verticalAlign: null,
 };
 
@@ -116,15 +116,15 @@ type ShouldUseTransparentBorder = (indexProp: {
     lastColumn: boolean;
 }) => [boolean, boolean, boolean, boolean];
 
-const BorderFormatters: Record<TableBorderFormat, ShouldUseTransparentBorder> = {
-    [TableBorderFormat.DEFAULT]: _ => [false, false, false, false],
-    [TableBorderFormat.LIST_WITH_SIDE_BORDERS]: ({ lastColumn, firstColumn }) => [
+const BorderFormatters: Record<number, ShouldUseTransparentBorder | undefined> = {
+    [TableBorderFormat.Default]: _ => [false, false, false, false],
+    [TableBorderFormat.ListWithSideBorders]: ({ lastColumn, firstColumn }) => [
         false,
         !lastColumn,
         false,
         !firstColumn,
     ],
-    [TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL]: ({
+    [TableBorderFormat.FirstColumnHeaderExternal]: ({
         firstColumn,
         firstRow,
         lastColumn,
@@ -135,37 +135,37 @@ const BorderFormatters: Record<TableBorderFormat, ShouldUseTransparentBorder> = 
         !lastRow && !firstRow,
         !firstColumn,
     ],
-    [TableBorderFormat.NO_HEADER_BORDERS]: ({ firstRow, firstColumn, lastColumn }) => [
+    [TableBorderFormat.NoHeaderBorders]: ({ firstRow, firstColumn, lastColumn }) => [
         firstRow,
         firstRow || lastColumn,
         false,
         firstRow || firstColumn,
     ],
-    [TableBorderFormat.NO_SIDE_BORDERS]: ({ firstColumn, lastColumn }) => [
+    [TableBorderFormat.NoSideBorders]: ({ firstColumn, lastColumn }) => [
         false,
         lastColumn,
         false,
         firstColumn,
     ],
-    [TableBorderFormat.ESPECIAL_TYPE_1]: ({ firstRow, firstColumn }) => [
+    [TableBorderFormat.EspecialType1]: ({ firstRow, firstColumn }) => [
         firstColumn && !firstRow,
         firstRow,
         firstColumn && !firstRow,
         firstRow && !firstColumn,
     ],
-    [TableBorderFormat.ESPECIAL_TYPE_2]: ({ firstRow, firstColumn }) => [
+    [TableBorderFormat.EspecialType2]: ({ firstRow, firstColumn }) => [
         !firstRow,
         firstRow || !firstColumn,
         !firstRow,
         !firstColumn,
     ],
-    [TableBorderFormat.ESPECIAL_TYPE_3]: ({ firstColumn, firstRow }) => [
+    [TableBorderFormat.EspecialType3]: ({ firstColumn, firstRow }) => [
         true,
         firstRow || !firstColumn,
         !firstRow,
         true,
     ],
-    [TableBorderFormat.CLEAR]: () => [true, true, true, true],
+    [TableBorderFormat.Clear]: () => [true, true, true, true],
 };
 
 /*
@@ -181,10 +181,11 @@ function formatCells(
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, colIndex) => {
             // Format Borders
-            if (!metaOverrides.borderOverrides[rowIndex][colIndex]) {
-                const transparentBorderMatrix = BorderFormatters[
-                    format.tableBorderFormat as TableBorderFormat
-                ]({
+            if (
+                !metaOverrides.borderOverrides[rowIndex][colIndex] &&
+                typeof format.tableBorderFormat == 'number'
+            ) {
+                const transparentBorderMatrix = BorderFormatters[format.tableBorderFormat]?.({
                     firstRow: rowIndex === 0,
                     lastRow: rowIndex === rows.length - 1,
                     firstColumn: colIndex === 0,
@@ -198,7 +199,7 @@ function formatCells(
                     format.verticalBorderColor,
                 ];
 
-                transparentBorderMatrix.forEach((alwaysUseTransparent, i) => {
+                transparentBorderMatrix?.forEach((alwaysUseTransparent, i) => {
                     const borderColor = (!alwaysUseTransparent && formatColor[i]) || '';
 
                     cell.format[BorderKeys[i]] = combineBorderValue({

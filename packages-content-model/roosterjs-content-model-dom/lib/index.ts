@@ -20,6 +20,14 @@ export { getObjectKeys } from './domUtils/getObjectKeys';
 export { default as toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
+export {
+    AllowedEntityClasses,
+    isEntityElement,
+    getAllEntityWrappers,
+    parseEntityClassName,
+    generateEntityClassNames,
+    addDelimiters,
+} from './domUtils/entityUtils';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
@@ -55,7 +63,7 @@ export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplici
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
-export { DeprecatedColors } from './formatHandlers/utils/color';
+export { DeprecatedColors, getColor, setColor } from './formatHandlers/utils/color';
 
 export {
     createDomToModelContext,

@@ -1,11 +1,7 @@
 import * as applyPendingFormat from '../../lib/corePlugin/utils/applyPendingFormat';
-import { ContentModelFormatPlugin } from '../../lib/corePlugin/ContentModelFormatPlugin';
+import { createContentModelFormatPlugin } from '../../lib/corePlugin/ContentModelFormatPlugin';
 import { IEditor, PluginEventType } from 'roosterjs-editor-types';
-import {
-    ContentModelFormatPluginState,
-    IStandaloneEditor,
-    PendingFormat,
-} from 'roosterjs-content-model-types';
+import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     addSegment,
     createContentModelDocument,
@@ -26,11 +22,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
         } as any) as IStandaloneEditor & IEditor;
-        const state = {
-            defaultFormat: {},
-            pendingFormat: ({} as any) as PendingFormat,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({});
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
@@ -41,7 +33,7 @@ describe('ContentModelFormatPlugin', () => {
         plugin.dispose();
 
         expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
-        expect(state.pendingFormat).toBeNull();
+        expect(plugin.getState().pendingFormat).toBeNull();
     });
 
     it('no selection, trigger input event', () => {
@@ -52,16 +44,15 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IStandaloneEditor & IEditor;
-        const state = {
-            defaultFormat: {},
-            pendingFormat: {
-                format: mockedFormat,
-            } as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({});
         const model = createContentModelDocument();
 
-        plugin.initialize(editor);
+        const state = plugin.getState();
+
+        (state.pendingFormat = {
+            format: mockedFormat,
+        } as any),
+            plugin.initialize(editor);
 
         plugin.onPluginEvent({
             eventType: PluginEventType.Input,
@@ -90,14 +81,14 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IStandaloneEditor & IEditor;
-        const state = {
-            defaultFormat: {},
-            pendingFormat: {
-                format: mockedFormat,
-            } as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({});
         plugin.initialize(editor);
+
+        const state = plugin.getState();
+
+        state.pendingFormat = {
+            format: mockedFormat,
+        } as any;
         plugin.onPluginEvent({
             eventType: PluginEventType.Input,
             rawEvent: ({ data: 'a', isComposing: true } as any) as InputEvent,
@@ -107,7 +98,7 @@ describe('ContentModelFormatPlugin', () => {
         expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
         expect(state.pendingFormat).toEqual({
             format: mockedFormat,
-        });
+        } as any);
     });
 
     it('with pending format and selection, trigger CompositionEnd event', () => {
@@ -124,13 +115,12 @@ describe('ContentModelFormatPlugin', () => {
             triggerPluginEvent,
             getVisibleViewport,
         } as any) as IStandaloneEditor & IEditor;
-        const state = {
-            defaultFormat: {},
-            pendingFormat: {
-                format: mockedFormat,
-            } as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({});
+        const state = plugin.getState();
+
+        state.pendingFormat = {
+            format: mockedFormat,
+        } as any;
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -154,14 +144,16 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             cacheContentModel: () => {},
         } as any) as IStandaloneEditor & IEditor;
-        const state = {
-            defaultFormat: {},
-            pendingFormat: {
-                format: mockedFormat,
-            } as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+
+        const plugin = createContentModelFormatPlugin({});
         plugin.initialize(editor);
+
+        const state = plugin.getState();
+
+        state.pendingFormat = {
+            format: mockedFormat,
+        } as any;
+
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
             rawEvent: ({ which: 17 } as any) as KeyboardEvent,
@@ -171,7 +163,7 @@ describe('ContentModelFormatPlugin', () => {
         expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
         expect(state.pendingFormat).toEqual({
             format: mockedFormat,
-        });
+        } as any);
     });
 
     it('Content changed event', () => {
@@ -184,13 +176,13 @@ describe('ContentModelFormatPlugin', () => {
             },
             cacheContentModel: () => {},
         } as any) as IStandaloneEditor & IEditor;
-        const state = {
-            defaultFormat: {},
-            pendingFormat: {
-                format: mockedFormat,
-            } as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+
+        const plugin = createContentModelFormatPlugin({});
+        const state = plugin.getState();
+
+        state.pendingFormat = {
+            format: mockedFormat,
+        } as any;
 
         spyOn(plugin as any, 'canApplyPendingFormat').and.returnValue(false);
 
@@ -213,13 +205,13 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             cacheContentModel: () => {},
         } as any) as IStandaloneEditor & IEditor;
-        const state = {
-            defaultFormat: {},
-            pendingFormat: {
-                format: mockedFormat,
-            } as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({});
+
+        const state = plugin.getState();
+
+        state.pendingFormat = {
+            format: mockedFormat,
+        } as any;
 
         spyOn(plugin as any, 'canApplyPendingFormat').and.returnValue(false);
 
@@ -243,13 +235,12 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IStandaloneEditor & IEditor;
-        const state = {
-            defaultFormat: {},
-            pendingFormat: {
-                format: mockedFormat,
-            } as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({});
+        const state = plugin.getState();
+
+        state.pendingFormat = {
+            format: mockedFormat,
+        } as any;
 
         spyOn(plugin as any, 'canApplyPendingFormat').and.returnValue(true);
 
@@ -263,7 +254,7 @@ describe('ContentModelFormatPlugin', () => {
         expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
         expect(state.pendingFormat).toEqual({
             format: mockedFormat,
-        });
+        } as any);
         expect((plugin as any).canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
 });
@@ -297,11 +288,11 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Collapsed range, text input, under editor directly', () => {
-        const state: ContentModelFormatPluginState = {
-            defaultFormat: { fontFamily: 'Arial' },
-            pendingFormat: null,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({
+            defaultSegmentFormat: {
+                fontFamily: 'Arial',
+            },
+        });
         const rawEvent = { key: 'a' } as any;
 
         getDOMSelection.and.returnValue({
@@ -346,16 +337,18 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         expect(context).toEqual({
-            newPendingFormat: { fontFamily: 'Arial' },
+            newPendingFormat: {
+                fontFamily: 'Arial',
+            },
         });
     });
 
     it('Expanded range, text input, under editor directly', () => {
-        const state = {
-            defaultFormat: { fontFamily: 'Arial' },
-            pendingFormat: null as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({
+            defaultSegmentFormat: {
+                fontFamily: 'Arial',
+            },
+        });
         const rawEvent = { key: 'a' } as any;
         const context = {} as any;
 
@@ -404,11 +397,11 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Collapsed range, IME input, under editor directly', () => {
-        const state = {
-            defaultFormat: { fontFamily: 'Arial' },
-            pendingFormat: null as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({
+            defaultSegmentFormat: {
+                fontFamily: 'Arial',
+            },
+        });
         const rawEvent = { key: 'Process' } as any;
         const context = {} as any;
 
@@ -452,16 +445,18 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         expect(context).toEqual({
-            newPendingFormat: { fontFamily: 'Arial' },
+            newPendingFormat: {
+                fontFamily: 'Arial',
+            },
         });
     });
 
     it('Collapsed range, other input, under editor directly', () => {
-        const state: ContentModelFormatPluginState = {
-            defaultFormat: { fontFamily: 'Arial' },
-            pendingFormat: null as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({
+            defaultSegmentFormat: {
+                fontFamily: 'Arial',
+            },
+        });
         const rawEvent = { key: 'Up' } as any;
         const context = {} as any;
 
@@ -508,11 +503,11 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Collapsed range, normal input, not under editor directly, no style', () => {
-        const state = {
-            defaultFormat: { fontFamily: 'Arial' },
-            pendingFormat: null as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({
+            defaultSegmentFormat: {
+                fontFamily: 'Arial',
+            },
+        });
         const rawEvent = { key: 'a' } as any;
         const div = document.createElement('div');
         const context = {} as any;
@@ -558,16 +553,18 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         expect(context).toEqual({
-            newPendingFormat: { fontFamily: 'Arial' },
+            newPendingFormat: {
+                fontFamily: 'Arial',
+            },
         });
     });
 
     it('Collapsed range, text input, under editor directly, has pending format', () => {
-        const state = {
-            defaultFormat: { fontFamily: 'Arial' },
-            pendingFormat: null as any,
-        };
-        const plugin = new ContentModelFormatPlugin(state);
+        const plugin = createContentModelFormatPlugin({
+            defaultSegmentFormat: {
+                fontFamily: 'Arial',
+            },
+        });
         const rawEvent = { key: 'a' } as any;
         const context = {} as any;
 
@@ -617,7 +614,10 @@ describe('ContentModelFormatPlugin for default format', () => {
         });
 
         expect(context).toEqual({
-            newPendingFormat: { fontFamily: 'Arial', fontSize: '10pt' },
+            newPendingFormat: {
+                fontFamily: 'Arial',
+                fontSize: '10pt',
+            },
         });
     });
 });

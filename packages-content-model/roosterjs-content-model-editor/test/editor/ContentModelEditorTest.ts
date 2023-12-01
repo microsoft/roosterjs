@@ -2,8 +2,9 @@ import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/c
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import ContentModelEditor from '../../lib/editor/ContentModelEditor';
+import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/utils/findAllEntities';
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
+import { ContentModelEditor } from '../../lib/editor/ContentModelEditor';
 import { ContentModelEditorCore } from '../../lib/publicTypes/ContentModelEditorCore';
 import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
 
@@ -23,11 +24,17 @@ describe('ContentModelEditor', () => {
             mockedContext
         );
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(mockedConfig);
+        spyOn(findAllEntities, 'findAllEntities');
 
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
-
-        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
+        const editor = new ContentModelEditor(div, {
+            coreApiOverride: {
+                createEditorContext: jasmine
+                    .createSpy('createEditorContext')
+                    .and.returnValue(editorContext),
+                setContentModel: jasmine.createSpy('setContentModel'),
+            },
+        });
 
         const model = editor.createContentModel();
 
@@ -54,11 +61,17 @@ describe('ContentModelEditor', () => {
             mockedContext
         );
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(mockedConfig);
+        spyOn(findAllEntities, 'findAllEntities');
 
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
-
-        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
+        const editor = new ContentModelEditor(div, {
+            coreApiOverride: {
+                createEditorContext: jasmine
+                    .createSpy('createEditorContext')
+                    .and.returnValue(editorContext),
+                setContentModel: jasmine.createSpy('setContentModel'),
+            },
+        });
 
         const model = editor.createContentModel();
 
@@ -97,7 +110,7 @@ describe('ContentModelEditor', () => {
 
         const selection = editor.setContentModel(mockedModel);
 
-        expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(1);
+        expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(2);
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
             document,
             div,
@@ -134,7 +147,7 @@ describe('ContentModelEditor', () => {
 
         const selection = editor.setContentModel(mockedModel);
 
-        expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(1);
+        expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(2);
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
             document,
             div,
@@ -175,16 +188,24 @@ describe('ContentModelEditor', () => {
 
         expect(model).toEqual({
             blockGroupType: 'Document',
-            blocks: [],
-            format: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
-            },
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    cachedElement: jasmine.anything(),
+                },
+            ],
         });
     });
 
@@ -219,20 +240,14 @@ describe('ContentModelEditor', () => {
     it('default format', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {
-            defaultFormat: {
-                bold: true,
+            defaultSegmentFormat: {
+                fontWeight: 'bold',
                 italic: true,
                 underline: true,
                 fontFamily: 'Arial',
                 fontSize: '10pt',
-                textColors: {
-                    lightModeColor: 'black',
-                    darkModeColor: 'white',
-                },
-                backgroundColors: {
-                    lightModeColor: 'white',
-                    darkModeColor: 'black',
-                },
+                textColor: 'black',
+                backgroundColor: 'white',
             },
         });
 

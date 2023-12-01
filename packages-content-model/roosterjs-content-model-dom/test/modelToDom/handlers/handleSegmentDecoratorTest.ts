@@ -1,4 +1,3 @@
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { handleSegmentDecorator } from '../../../lib/modelToDom/handlers/handleSegmentDecorator';
@@ -67,8 +66,6 @@ describe('handleSegmentDecorator', () => {
             },
             dataset: {},
         };
-
-        context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
         runTest(link, undefined, '<a href="http://test.com/test" style="color: red;">test</a>', [
             '<a href="http://test.com/test" style="color: red;">test</a>',
@@ -227,7 +224,6 @@ describe('handleSegmentDecorator', () => {
             },
             dataset: {},
         };
-        context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
         runTest(
             link,

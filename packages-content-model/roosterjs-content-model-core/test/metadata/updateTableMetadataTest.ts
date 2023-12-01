@@ -1,9 +1,6 @@
+import { ContentModelTable, TableMetadataFormat } from 'roosterjs-content-model-types';
+import { TableBorderFormat } from '../../lib/constants/TableBorderFormat';
 import { updateTableMetadata } from '../../lib/metadata/updateTableMetadata';
-import {
-    ContentModelTable,
-    TableBorderFormat,
-    TableMetadataFormat,
-} from 'roosterjs-content-model-types';
 
 describe('updateTableMetadata', () => {
     it('No value', () => {
@@ -64,7 +61,7 @@ describe('updateTableMetadata', () => {
             hasBandedRows: true,
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
-            tableBorderFormat: TableBorderFormat.DEFAULT,
+            tableBorderFormat: TableBorderFormat.Default,
             verticalAlign: 'top',
         };
         const table: ContentModelTable = {
@@ -104,7 +101,7 @@ describe('updateTableMetadata', () => {
             hasBandedRows: true,
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
-            tableBorderFormat: TableBorderFormat.DEFAULT,
+            tableBorderFormat: TableBorderFormat.Default,
             verticalAlign: 'top',
         };
         const table: ContentModelTable = {
@@ -147,7 +144,7 @@ describe('updateTableMetadata', () => {
             hasBandedRows: true,
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
-            tableBorderFormat: TableBorderFormat.DEFAULT,
+            tableBorderFormat: TableBorderFormat.Default,
             verticalAlign: 'top',
         };
         const table: ContentModelTable = {
@@ -195,7 +192,7 @@ describe('updateTableMetadata', () => {
             hasBandedRows: true,
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
-            tableBorderFormat: TableBorderFormat.DEFAULT,
+            tableBorderFormat: TableBorderFormat.Default,
             verticalAlign: 'top',
         };
         const table: ContentModelTable = {
@@ -267,7 +264,7 @@ describe('updateTableMetadata', () => {
             hasBandedRows: true,
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
-            tableBorderFormat: TableBorderFormat.DEFAULT,
+            tableBorderFormat: TableBorderFormat.Default,
             verticalAlign: 'top',
         };
         const table: ContentModelTable = {
