@@ -130,6 +130,7 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
     });
 
@@ -158,6 +159,7 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
     });
 
@@ -186,6 +188,7 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
     });
 
@@ -268,6 +271,7 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
     });
 
@@ -322,6 +326,45 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
+        });
+    });
+
+    it('Letter input, expanded selection, no modifier key, deleteSelection returns range, has segment format', () => {
+        const mockedFormat = 'FORMAT' as any;
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: false,
+            },
+        });
+        deleteSelectionSpy.and.returnValue({
+            deleteResult: 'range',
+            insertPoint: {
+                marker: {
+                    format: mockedFormat,
+                },
+            },
+        });
+
+        const rawEvent = {
+            key: 'A',
+        } as any;
+
+        keyboardInput(editor, rawEvent);
+
+        expect(getDOMSelectionSpy).toHaveBeenCalled();
+        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
+        expect(formatResult).toBeTrue();
+        expect(mockedContext).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            clearModelCache: true,
+            skipUndoSnapshot: true,
+            newPendingFormat: mockedFormat,
         });
     });
 });
