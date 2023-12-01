@@ -3,6 +3,7 @@ import { isModifierKey } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type {
+    DOMSelection,
     IStandaloneEditor,
     SelectionPluginState,
     StandaloneEditorOptions,
@@ -88,53 +89,54 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
 
         let image: HTMLImageElement | null;
+        let selection: DOMSelection | null;
 
         switch (event.eventType) {
             case PluginEventType.MouseUp:
                 if (
                     (image = this.getClickingImage(event.rawEvent)) &&
                     image.isContentEditable &&
-                    event.rawEvent.button != MouseMiddleButton
+                    event.rawEvent.button != MouseMiddleButton &&
+                    event.isClicking
                 ) {
                     this.selectImage(this.editor, image);
                 }
                 break;
 
             case PluginEventType.MouseDown:
-                const mouseTarget = event.rawEvent.target;
-                const mouseSelection = this.editor.getDOMSelection();
+                selection = this.editor.getDOMSelection();
 
-                if (mouseSelection?.type == 'image' && mouseSelection.image !== mouseTarget) {
-                    this.selectBeforeImage(this.editor, mouseSelection.image);
+                if (selection?.type == 'image' && selection.image !== event.rawEvent.target) {
+                    this.selectBeforeImage(this.editor, selection.image);
                 }
                 break;
 
             case PluginEventType.KeyDown:
                 const rawEvent = event.rawEvent;
                 const key = rawEvent.key;
-                const keyDownSelection = this.editor.getDOMSelection();
+                selection = this.editor.getDOMSelection();
 
                 if (
                     !isModifierKey(rawEvent) &&
                     !rawEvent.shiftKey &&
-                    keyDownSelection?.type == 'image' &&
-                    keyDownSelection.image.parentNode
+                    selection?.type == 'image' &&
+                    selection.image.parentNode
                 ) {
                     if (key === 'Escape') {
-                        this.selectBeforeImage(this.editor, keyDownSelection.image);
+                        this.selectBeforeImage(this.editor, selection.image);
                         event.rawEvent.stopPropagation();
                     } else if (key !== 'Delete' && key !== 'Backspace') {
-                        this.selectBeforeImage(this.editor, keyDownSelection.image);
+                        this.selectBeforeImage(this.editor, selection.image);
                     }
                 }
                 break;
 
             case PluginEventType.ContextMenu:
-                const actualSelection = this.editor.getDOMSelection();
+                selection = this.editor.getDOMSelection();
 
                 if (
                     (image = this.getClickingImage(event.rawEvent)) &&
-                    (actualSelection?.type != 'image' || actualSelection.image != image)
+                    (selection?.type != 'image' || selection.image != image)
                 ) {
                     this.selectImage(this.editor, image);
                 }

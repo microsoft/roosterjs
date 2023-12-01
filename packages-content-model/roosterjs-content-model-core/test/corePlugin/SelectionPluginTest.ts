@@ -175,13 +175,16 @@ describe('SelectionPlugin handle image selection', () => {
     let setDOMSelectionSpy: jasmine.Spy;
     let getDocumentSpy: jasmine.Spy;
     let createElementSpy: jasmine.Spy;
+    let createRangeSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         createElementSpy = jasmine.createSpy('createElement').and.returnValue(MockedStyleNode);
+        createRangeSpy = jasmine.createSpy('createRange');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createElement: createElementSpy,
+            createRange: createRangeSpy,
             head: {
                 appendChild: () => {},
             },
@@ -200,7 +203,7 @@ describe('SelectionPlugin handle image selection', () => {
         plugin.initialize(editor);
     });
 
-    it('No selection, mouse down to image', () => {
+    it('No selection, mouse down to div', () => {
         const node = document.createElement('div');
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
@@ -211,247 +214,373 @@ describe('SelectionPlugin handle image selection', () => {
 
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
     });
+
+    it('Image selection, mouse down to div', () => {
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+
+        mockedImage.parentNode.childNodes.push(mockedImage);
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        const node = document.createElement('div');
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseDown,
+            rawEvent: {
+                target: node,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range: mockedRange,
+        });
+    });
+
+    it('Image selection, mouse down to div, no parent of image', () => {
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        const node = document.createElement('div');
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseDown,
+            rawEvent: {
+                target: node,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('Image selection, mouse down to same image', () => {
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseDown,
+            rawEvent: {
+                target: mockedImage,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('no selection, mouse up to image, is clicking, isEditable', () => {
+        const mockedImage = document.createElement('img');
+
+        mockedImage.contentEditable = 'true';
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseUp,
+            isClicking: true,
+            rawEvent: {
+                target: mockedImage,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'image',
+            image: mockedImage,
+        });
+    });
+
+    it('no selection, mouse up to image, is clicking, not isEditable', () => {
+        const mockedImage = document.createElement('img');
+
+        mockedImage.contentEditable = 'false';
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseUp,
+            isClicking: true,
+            rawEvent: {
+                target: mockedImage,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('no selection, mouse up to image, is not clicking, isEditable', () => {
+        const mockedImage = document.createElement('img');
+
+        mockedImage.contentEditable = 'true';
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseUp,
+            isClicking: false,
+            rawEvent: {
+                target: mockedImage,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('key down - ESCAPE, no selection', () => {
+        const rawEvent = {
+            key: 'Escape',
+        } as any;
+        getDOMSelectionSpy.and.returnValue(null);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('key down - ESCAPE, range selection', () => {
+        const rawEvent = {
+            key: 'Escape',
+        } as any;
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+        });
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('key down - ESCAPE, image selection', () => {
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const rawEvent = {
+            key: 'Escape',
+            stopPropagation: stopPropagationSpy,
+        } as any;
+
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+
+        mockedImage.parentNode.childNodes.push(mockedImage);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(stopPropagationSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range: mockedRange,
+        });
+    });
+
+    it('key down - other key', () => {
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const rawEvent = {
+            key: 'A',
+            stopPropagation: stopPropagationSpy,
+        } as any;
+
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+
+        mockedImage.parentNode.childNodes.push(mockedImage);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range: mockedRange,
+        });
+    });
+
+    it('key down - other key with modifier key', () => {
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const rawEvent = {
+            key: 'A',
+            stopPropagation: stopPropagationSpy,
+            ctrlKey: true,
+        } as any;
+
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+
+        mockedImage.parentNode.childNodes.push(mockedImage);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('key down - other key, image has no parent', () => {
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const rawEvent = {
+            key: 'A',
+            stopPropagation: stopPropagationSpy,
+        } as any;
+
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('context menu, no selection, click on image', () => {
+        const mockedImage1 = document.createElement('img');
+
+        const rawEvent = {
+            target: mockedImage1,
+        } as any;
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContextMenu,
+            rawEvent: rawEvent,
+        } as any);
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'image',
+            image: mockedImage1,
+        });
+    });
+
+    it('context menu, image selection, click on same image', () => {
+        const mockedImage1 = document.createElement('img');
+
+        const rawEvent = {
+            target: mockedImage1,
+        } as any;
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage1,
+        });
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContextMenu,
+            rawEvent: rawEvent,
+        } as any);
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('context menu, image selection, click on different image', () => {
+        const mockedImage1 = document.createElement('img');
+        const mockedImage2 = document.createElement('img');
+
+        mockedImage1.id = 'image1';
+        mockedImage2.id = 'image2';
+
+        const rawEvent = {
+            target: mockedImage1,
+        } as any;
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage2,
+        });
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContextMenu,
+            rawEvent: rawEvent,
+        } as any);
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'image',
+            image: mockedImage1,
+        });
+    });
 });
-
-// describe('SelectionPlugin select image', () => {
-//     let editor: IEditor;
-//     let id = 'imageSelectionContainerId';
-//     let imageId = 'imageSelectionId';
-//     let imageId2 = 'imageSelectionId2';
-//     let imageSelection: ImageSelection;
-//     let editorIsFeatureEnabled: any;
-
-//     beforeEach(() => {
-//         let node = document.createElement('div');
-//         node.id = id;
-//         document.body.insertBefore(node, document.body.childNodes[0]);
-//         imageSelection = new ImageSelection();
-
-//         let options: EditorOptions = {
-//             plugins: [imageSelection],
-//             defaultFormat: {
-//                 fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
-//                 fontSize: '11pt',
-//                 textColor: '#000000',
-//             },
-//             corePluginOverride: {},
-//         };
-
-//         editor = new Editor(node as HTMLDivElement, options);
-
-//         editor.runAsync = callback => {
-//             callback(editor);
-//             return null;
-//         };
-//         editorIsFeatureEnabled = spyOn(editor, 'isFeatureEnabled');
-//     });
-
-//     afterEach(() => {
-//         editor.dispose();
-//         editor = null;
-//         const div = document.getElementById(id);
-//         div.parentNode.removeChild(div);
-//     });
-
-//     it('should be triggered in mouse up left click', () => {
-//         editor.setContent(`<img id=${imageId}></img>`);
-//         const target = document.getElementById(imageId);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         imageSelection.onPluginEvent(mouseDown(target!, 0));
-//         imageSelection.onPluginEvent(mouseup(target!, 0, true));
-//         editor.focus();
-
-//         const selection = editor.getSelectionRangeEx();
-//         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-//         expect(selection.areAllCollapsed).toBe(false);
-//     });
-
-//     it('should not be triggered in mouse up left click', () => {
-//         editor.setContent(`<img id=${imageId}></img>`);
-//         const target = document.getElementById(imageId);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         imageSelection.onPluginEvent(mouseDown(target!, 0));
-//         imageSelection.onPluginEvent(mouseup(target!, 0, false));
-//         editor.focus();
-
-//         const selection = editor.getSelectionRangeEx();
-//         expect(selection.type).toBe(SelectionRangeTypes.Normal);
-//         expect(selection.areAllCollapsed).toBe(true);
-//     });
-
-//     it('should handle a ESCAPE KEY in a image', () => {
-//         editor.setContent(`<img id=${imageId}></img>`);
-//         const target = document.getElementById(imageId);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         editor.focus();
-//         editor.select(target);
-//         const range = document.createRange();
-//         range.selectNode(target!);
-//         imageSelection.onPluginEvent(keyDown(Escape));
-//         imageSelection.onPluginEvent(keyUp(Escape));
-//         const selection = editor.getSelectionRangeEx();
-//         expect(selection.type).toBe(SelectionRangeTypes.Normal);
-//         expect(selection.areAllCollapsed).toBe(true);
-//     });
-
-//     it('should handle a DELETE KEY in a image', () => {
-//         editor.setContent(`<img id=${imageId}></img>`);
-//         const target = document.getElementById(imageId);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         editor.focus();
-//         editor.select(target);
-//         const range = document.createRange();
-//         range.selectNode(target!);
-//         imageSelection.onPluginEvent(keyDown(Delete));
-//         imageSelection.onPluginEvent(keyUp(Delete));
-//         expect(editor.getContent()).toBe('');
-//     });
-
-//     it('should handle any key in a image', () => {
-//         editor.setContent(`<img id=${imageId}></img>`);
-//         const target = document.getElementById(imageId);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         editor.focus();
-//         editor.select(target);
-//         const range = document.createRange();
-//         range.selectNode(target!);
-//         imageSelection.onPluginEvent(keyDown(Space));
-//         imageSelection.onPluginEvent(keyUp(Space));
-//         const selection = editor.getSelectionRangeEx();
-//         expect(selection.type).toBe(SelectionRangeTypes.Normal);
-//         expect(selection.areAllCollapsed).toBe(true);
-//     });
-
-//     it('should not handle any key in a image in ctrl', () => {
-//         editor.setContent(`<img id=${imageId}></img>`);
-//         const target = document.getElementById(imageId);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         editor.focus();
-//         editor.select(target);
-//         const range = document.createRange();
-//         range.selectNode(target!);
-//         imageSelection.onPluginEvent(keyDown(Space, true));
-//         imageSelection.onPluginEvent(keyUp(Space, true));
-//         const selection = editor.getSelectionRangeEx();
-//         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-//         expect(selection.areAllCollapsed).toBe(false);
-//     });
-
-//     it('should handle contextMenu', () => {
-//         editor.setContent(`<img id=${imageId}></img>`);
-//         const target = document.getElementById(imageId);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         editor.focus();
-//         const contextMenuEvent = contextMenu(target!);
-//         imageSelection.onPluginEvent(contextMenuEvent);
-//         const selection = editor.getSelectionRangeEx();
-//         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-//         expect(selection.areAllCollapsed).toBe(false);
-//     });
-
-//     it('should change image selection contextMenu', () => {
-//         editor.setContent(`<img id=${imageId}></img><img id=${imageId2}></img>`);
-//         const target = document.getElementById(imageId);
-//         const secondTarget = document.getElementById(imageId2);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         editor.focus();
-//         editor.select(secondTarget);
-//         const contextMenuEvent = contextMenu(target!);
-//         imageSelection.onPluginEvent(contextMenuEvent);
-//         const selection = editor.getSelectionRangeEx() as ImageSelectionRange;
-//         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-
-//         expect(selection.image.id).toBe(imageId);
-//     });
-
-//     it('should not change image selection contextMenu', () => {
-//         editor.setContent(`<img id=${imageId}></img>`);
-//         const target = document.getElementById(imageId);
-//         editorIsFeatureEnabled.and.returnValue(true);
-//         editor.focus();
-//         editor.select(target);
-//         const contextMenuEvent = contextMenu(target!);
-//         imageSelection.onPluginEvent(contextMenuEvent);
-//         spyOn(editor, 'select');
-//         expect(editor.select).not.toHaveBeenCalled();
-//     });
-
-//     const keyDown = (key: string, ctrlKey: boolean = false): PluginEvent => {
-//         return {
-//             eventType: PluginEventType.KeyDown,
-//             rawEvent: <KeyboardEvent>{
-//                 key: key,
-//                 preventDefault: () => {},
-//                 stopPropagation: () => {},
-//                 shiftKey: false,
-//                 ctrlKey: ctrlKey,
-//                 altKey: false,
-//                 metaKey: false,
-//             },
-//         };
-//     };
-
-//     const keyUp = (key: string, ctrlKey: boolean = false): PluginEvent => {
-//         return {
-//             eventType: PluginEventType.KeyUp,
-//             rawEvent: <KeyboardEvent>{
-//                 key: key,
-//                 preventDefault: () => {},
-//                 stopPropagation: () => {},
-//                 shiftKey: false,
-//                 ctrlKey: ctrlKey,
-//                 altKey: false,
-//                 metaKey: false,
-//             },
-//         };
-//     };
-
-//     const contextMenu = (target: HTMLElement): PluginEvent => {
-//         return {
-//             eventType: PluginEventType.ContextMenu,
-//             rawEvent: <any>{
-//                 target: target,
-//             },
-//             items: [],
-//         };
-//     };
-
-//     const mouseup = (
-//         target: HTMLElement,
-//         keyNumber: number,
-//         isClicking: boolean
-//     ): PluginMouseUpEvent => {
-//         const rect = target.getBoundingClientRect();
-//         return {
-//             eventType: PluginEventType.MouseUp,
-//             rawEvent: <any>{
-//                 target: target,
-//                 view: window,
-//                 bubbles: true,
-//                 cancelable: true,
-//                 clientX: rect.left,
-//                 clientY: rect.top,
-//                 shiftKey: false,
-//                 button: keyNumber,
-//             },
-//             isClicking,
-//         };
-//     };
-
-//     const mouseDown = (target: HTMLElement, keyNumber: number): PluginMouseDownEvent => {
-//         const rect = target.getBoundingClientRect();
-//         return {
-//             eventType: PluginEventType.MouseDown,
-//             rawEvent: <any>{
-//                 target: target,
-//                 view: window,
-//                 bubbles: true,
-//                 cancelable: true,
-//                 clientX: rect.left,
-//                 clientY: rect.top,
-//                 shiftKey: false,
-//                 button: keyNumber,
-//             },
-//         };
-//     };
-// });
