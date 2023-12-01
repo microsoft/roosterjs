@@ -32,7 +32,8 @@ export function createEditorCore(
         options.initialModel = createModelFromHtml(
             initContent,
             options.defaultDomToModelOptions,
-            options.trustedHTMLHandler
+            options.trustedHTMLHandler,
+            options.defaultSegmentFormat
         );
     }
 
