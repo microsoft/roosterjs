@@ -20,7 +20,6 @@ export function createEditorCore(
     const additionalPlugins: EditorPlugin[] = [
         corePlugins.edit,
         ...(options.plugins ?? []),
-        corePlugins.undo,
         corePlugins.normalizeTable,
     ].filter(x => !!x);
 

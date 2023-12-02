@@ -237,6 +237,7 @@ export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
+export { UndoPluginState } from './pluginState/UndoPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {

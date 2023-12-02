@@ -1,6 +1,5 @@
 import { createEditPlugin } from './EditPlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
-import { createUndoPlugin } from './UndoPlugin';
 import type { UnportedCorePlugins } from '../publicTypes/ContentModelCorePlugins';
 import type { UnportedCorePluginState } from 'roosterjs-content-model-types';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
@@ -17,7 +16,6 @@ export function createCorePlugins(options: ContentModelEditorOptions): UnportedC
     // can be handled in right order
     return {
         edit: map.edit || createEditPlugin(),
-        undo: map.undo || createUndoPlugin(options),
         normalizeTable: map.normalizeTable || createNormalizeTablePlugin(),
     };
 }
@@ -30,6 +28,5 @@ export function createCorePlugins(options: ContentModelEditorOptions): UnportedC
 export function getPluginState(corePlugins: UnportedCorePlugins): UnportedCorePluginState {
     return {
         edit: corePlugins.edit.getState(),
-        undo: corePlugins.undo.getState(),
     };
 }
