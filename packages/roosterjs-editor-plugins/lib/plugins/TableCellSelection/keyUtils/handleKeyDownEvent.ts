@@ -10,7 +10,6 @@ import { updateSelection } from '../utils/updateSelection';
 import type { TableCellSelectionState } from '../TableCellSelectionState';
 import {
     contains,
-    createRange,
     isCtrlOrMetaPressed,
     Position,
     safeInstanceOf,
@@ -72,9 +71,9 @@ export function handleKeyDownEvent(
         // Select all content in the first cell
         const row = range.ranges[0];
         const firstCell = row.startContainer.childNodes[row.startOffset];
-        const children = firstCell.childNodes;
-        const contentRange = createRange(children[0], children[children.length - 1]);
-        editor.select(contentRange);
+        const startPos = new Position(firstCell, PositionType.Begin).normalize();
+        const endPos = new Position(firstCell, PositionType.End).normalize();
+        editor.select(startPos, endPos);
     }
 }
 
