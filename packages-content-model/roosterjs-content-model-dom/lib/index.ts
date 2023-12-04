@@ -49,7 +49,6 @@ export { createListLevel } from './modelApi/creators/createListLevel';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
-export { ensureParagraph } from './modelApi/common/ensureParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';
