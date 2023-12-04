@@ -4,6 +4,7 @@ import type {
     ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelSegment,
+    ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,9 +17,10 @@ import type {
 export function addSegment(
     group: ContentModelBlockGroup,
     newSegment: ContentModelSegment,
-    blockFormat?: ContentModelBlockFormat
+    blockFormat?: ContentModelBlockFormat,
+    segmentFormat?: ContentModelSegmentFormat
 ): ContentModelParagraph {
-    const paragraph = ensureParagraph(group, blockFormat);
+    const paragraph = ensureParagraph(group, blockFormat, segmentFormat);
     const lastSegment = paragraph.segments[paragraph.segments.length - 1];
 
     if (newSegment.segmentType == 'SelectionMarker') {
