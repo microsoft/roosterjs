@@ -52,10 +52,10 @@ export interface StandaloneEditorOptions {
     scrollContainer?: HTMLElement;
 
     /**
-     * Base dark mode color. We will use this color to calculate the dark mode color from a given light mode color
-     * @default #333333
+     * A util function to transform light mode color to dark mode color
+     * Default value is to return the original light color
      */
-    baseDarkColor?: string;
+    getDarkColor?: (lightColor: string) => string;
 
     /**
      * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree

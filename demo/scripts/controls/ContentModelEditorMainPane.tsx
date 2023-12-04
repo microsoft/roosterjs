@@ -20,6 +20,7 @@ import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentMo
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
 import { EditorPlugin } from 'roosterjs-editor-types';
+import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import {
@@ -236,6 +237,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             plugins={allPlugins}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
+                            getDarkColor={getDarkColor}
                             experimentalFeatures={this.state.initState.experimentalFeatures}
                             undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
                             trustedHTMLHandler={trustedHTMLHandler}

@@ -1,4 +1,5 @@
 import { deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
+import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type { DOMSelection } from 'roosterjs-content-model-types';
 
@@ -25,6 +26,8 @@ export function keyboardInput(editor: IContentModelEditor, rawEvent: KeyboardEve
                 if (result.deleteResult == 'range') {
                     // We have deleted something, next input should inherit the segment format from deleted content, so set pending format here
                     context.newPendingFormat = result.insertPoint?.marker.format;
+
+                    normalizeContentModel(model);
 
                     // Do not preventDefault since we still want browser to handle the final input for now
                     return true;
