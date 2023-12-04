@@ -42,7 +42,10 @@ export function createStandaloneEditorCore(
             corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(),
-        darkColorHandler: new DarkColorHandlerImpl(contentDiv, options.baseDarkColor),
+        darkColorHandler: new DarkColorHandlerImpl(
+            contentDiv,
+            options.getDarkColor ?? getDarkColorFallback
+        ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         ...createStandaloneEditorDefaultSettings(options),
         ...getPluginState(corePlugins),
@@ -81,4 +84,9 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins): StandaloneEdi
         entity: corePlugins.entity.getState(),
         selection: corePlugins.selection.getState(),
     };
+}
+
+// A fallback function, always return original color
+function getDarkColorFallback(color: string) {
+    return color;
 }
