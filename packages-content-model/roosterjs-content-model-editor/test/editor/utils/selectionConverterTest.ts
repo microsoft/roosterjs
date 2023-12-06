@@ -1,13 +1,9 @@
 import * as createRange from 'roosterjs-editor-dom/lib/selection/createRange';
-import * as getSelectionPath from 'roosterjs-editor-dom/lib/selection/getSelectionPath';
-import * as queryElements from 'roosterjs-editor-dom/lib/utils/queryElements';
 import * as tableCellUtils from 'roosterjs-content-model-core/lib/publicApi/domUtils/tableCellUtils';
-import { ContentMetadata, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { DOMSelection } from 'roosterjs-content-model-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
-    convertDomSelectionToMetadata,
     convertDomSelectionToRangeEx,
-    convertMetadataToDOMSelection,
     convertRangeExToDomSelection,
 } from '../../../lib/editor/utils/selectionConverter';
 
@@ -185,200 +181,200 @@ describe('convertDomSelectionToRangeEx', () => {
     });
 });
 
-describe('convertDomSelectionToMetadata', () => {
-    let getSelectionPathSpy: jasmine.Spy;
+// describe('convertDomSelectionToMetadata', () => {
+//     let getSelectionPathSpy: jasmine.Spy;
 
-    beforeEach(() => {
-        getSelectionPathSpy = spyOn(getSelectionPath, 'default');
-    });
+//     beforeEach(() => {
+//         getSelectionPathSpy = spyOn(getSelectionPath, 'default');
+//     });
 
-    it('null selection', () => {
-        const mockedDiv = 'DIV' as any;
-        const result = convertDomSelectionToMetadata(mockedDiv, null);
+//     it('null selection', () => {
+//         const mockedDiv = 'DIV' as any;
+//         const result = convertDomSelectionToMetadata(mockedDiv, null);
 
-        expect(result).toBeNull();
-        expect(getSelectionPathSpy).not.toHaveBeenCalled();
-    });
+//         expect(result).toBeNull();
+//         expect(getSelectionPathSpy).not.toHaveBeenCalled();
+//     });
 
-    it('range selection', () => {
-        const mockedDiv = 'DIV' as any;
-        const mockedRange = 'RANGE' as any;
-        const mockedPathStart = 'START' as any;
-        const mockedPathEnd = 'END' as any;
+//     it('range selection', () => {
+//         const mockedDiv = 'DIV' as any;
+//         const mockedRange = 'RANGE' as any;
+//         const mockedPathStart = 'START' as any;
+//         const mockedPathEnd = 'END' as any;
 
-        const selection: DOMSelection = {
-            type: 'range',
-            range: mockedRange,
-        };
-        const mockedPath = {
-            start: mockedPathStart,
-            end: mockedPathEnd,
-        } as any;
+//         const selection: DOMSelection = {
+//             type: 'range',
+//             range: mockedRange,
+//         };
+//         const mockedPath = {
+//             start: mockedPathStart,
+//             end: mockedPathEnd,
+//         } as any;
 
-        getSelectionPathSpy.and.returnValue(mockedPath);
-        const result = convertDomSelectionToMetadata(mockedDiv, selection);
+//         getSelectionPathSpy.and.returnValue(mockedPath);
+//         const result = convertDomSelectionToMetadata(mockedDiv, selection);
 
-        expect(result).toEqual({
-            type: SelectionRangeTypes.Normal,
-            isDarkMode: false,
-            start: mockedPathStart,
-            end: mockedPathEnd,
-        });
-        expect(getSelectionPathSpy).toHaveBeenCalledWith(mockedDiv, mockedRange);
-    });
+//         expect(result).toEqual({
+//             type: SelectionRangeTypes.Normal,
+//             isDarkMode: false,
+//             start: mockedPathStart,
+//             end: mockedPathEnd,
+//         });
+//         expect(getSelectionPathSpy).toHaveBeenCalledWith(mockedDiv, mockedRange);
+//     });
 
-    it('image selection', () => {
-        const mockedDiv = 'DIV' as any;
-        const mockedImageId = 'IMAGEID';
-        const mockedImage = {
-            id: mockedImageId,
-        } as any;
+//     it('image selection', () => {
+//         const mockedDiv = 'DIV' as any;
+//         const mockedImageId = 'IMAGEID';
+//         const mockedImage = {
+//             id: mockedImageId,
+//         } as any;
 
-        const selection: DOMSelection = {
-            type: 'image',
-            image: mockedImage,
-        };
+//         const selection: DOMSelection = {
+//             type: 'image',
+//             image: mockedImage,
+//         };
 
-        const result = convertDomSelectionToMetadata(mockedDiv, selection);
+//         const result = convertDomSelectionToMetadata(mockedDiv, selection);
 
-        expect(result).toEqual({
-            type: SelectionRangeTypes.ImageSelection,
-            isDarkMode: false,
-            imageId: mockedImageId,
-        });
-        expect(getSelectionPathSpy).not.toHaveBeenCalled();
-    });
+//         expect(result).toEqual({
+//             type: SelectionRangeTypes.ImageSelection,
+//             isDarkMode: false,
+//             imageId: mockedImageId,
+//         });
+//         expect(getSelectionPathSpy).not.toHaveBeenCalled();
+//     });
 
-    it('table selection', () => {
-        const mockedDiv = 'DIV' as any;
-        const mockedTableId = 'TABLEID';
-        const mockedTable = {
-            id: mockedTableId,
-        } as any;
+//     it('table selection', () => {
+//         const mockedDiv = 'DIV' as any;
+//         const mockedTableId = 'TABLEID';
+//         const mockedTable = {
+//             id: mockedTableId,
+//         } as any;
 
-        const selection: DOMSelection = {
-            type: 'table',
-            table: mockedTable,
-            firstColumn: 1,
-            firstRow: 2,
-            lastColumn: 3,
-            lastRow: 4,
-        };
+//         const selection: DOMSelection = {
+//             type: 'table',
+//             table: mockedTable,
+//             firstColumn: 1,
+//             firstRow: 2,
+//             lastColumn: 3,
+//             lastRow: 4,
+//         };
 
-        const result = convertDomSelectionToMetadata(mockedDiv, selection);
+//         const result = convertDomSelectionToMetadata(mockedDiv, selection);
 
-        expect(result).toEqual({
-            type: SelectionRangeTypes.TableSelection,
-            isDarkMode: false,
-            tableId: mockedTableId,
-            firstCell: {
-                x: 1,
-                y: 2,
-            },
-            lastCell: {
-                x: 3,
-                y: 4,
-            },
-        });
-        expect(getSelectionPathSpy).not.toHaveBeenCalled();
-    });
-});
+//         expect(result).toEqual({
+//             type: SelectionRangeTypes.TableSelection,
+//             isDarkMode: false,
+//             tableId: mockedTableId,
+//             firstCell: {
+//                 x: 1,
+//                 y: 2,
+//             },
+//             lastCell: {
+//                 x: 3,
+//                 y: 4,
+//             },
+//         });
+//         expect(getSelectionPathSpy).not.toHaveBeenCalled();
+//     });
+// });
 
-describe('convertMetadataToDOMSelection', () => {
-    let createRangeSpy = jasmine.createSpy('createRange');
-    let queryElementsSpy = jasmine.createSpy('queryElements');
+// describe('convertMetadataToDOMSelection', () => {
+//     let createRangeSpy = jasmine.createSpy('createRange');
+//     let queryElementsSpy = jasmine.createSpy('queryElements');
 
-    beforeEach(() => {
-        createRangeSpy = spyOn(createRange, 'default');
-        queryElementsSpy = spyOn(queryElements, 'default');
-    });
+//     beforeEach(() => {
+//         createRangeSpy = spyOn(createRange, 'default');
+//         queryElementsSpy = spyOn(queryElements, 'default');
+//     });
 
-    it('null selection', () => {
-        const mockedDiv = 'DIV' as any;
-        const result = convertMetadataToDOMSelection(mockedDiv, undefined);
+//     it('null selection', () => {
+//         const mockedDiv = 'DIV' as any;
+//         const result = convertMetadataToDOMSelection(mockedDiv, undefined);
 
-        expect(result).toBeNull();
-        expect(createRangeSpy).not.toHaveBeenCalled();
-        expect(queryElementsSpy).not.toHaveBeenCalled();
-    });
+//         expect(result).toBeNull();
+//         expect(createRangeSpy).not.toHaveBeenCalled();
+//         expect(queryElementsSpy).not.toHaveBeenCalled();
+//     });
 
-    it('range selection', () => {
-        const mockedDiv = 'DIV' as any;
-        const mockedStartPath = 'START' as any;
-        const mockedEndPath = 'END' as any;
-        const mockedRange = 'RANGE' as any;
-        const metadata: ContentMetadata = {
-            type: SelectionRangeTypes.Normal,
-            isDarkMode: false,
-            start: mockedStartPath,
-            end: mockedEndPath,
-        };
+//     it('range selection', () => {
+//         const mockedDiv = 'DIV' as any;
+//         const mockedStartPath = 'START' as any;
+//         const mockedEndPath = 'END' as any;
+//         const mockedRange = 'RANGE' as any;
+//         const metadata: ContentMetadata = {
+//             type: SelectionRangeTypes.Normal,
+//             isDarkMode: false,
+//             start: mockedStartPath,
+//             end: mockedEndPath,
+//         };
 
-        createRangeSpy.and.returnValue(mockedRange);
+//         createRangeSpy.and.returnValue(mockedRange);
 
-        const result = convertMetadataToDOMSelection(mockedDiv, metadata);
+//         const result = convertMetadataToDOMSelection(mockedDiv, metadata);
 
-        expect(result).toEqual({
-            type: 'range',
-            range: mockedRange,
-        });
-        expect(createRangeSpy).toHaveBeenCalledWith(mockedDiv, mockedStartPath, mockedEndPath);
-        expect(queryElementsSpy).not.toHaveBeenCalled();
-    });
+//         expect(result).toEqual({
+//             type: 'range',
+//             range: mockedRange,
+//         });
+//         expect(createRangeSpy).toHaveBeenCalledWith(mockedDiv, mockedStartPath, mockedEndPath);
+//         expect(queryElementsSpy).not.toHaveBeenCalled();
+//     });
 
-    it('image selection', () => {
-        const mockedDiv = 'DIV' as any;
-        const mockedImage = 'IMAGE' as any;
-        const mockedImageId = 'IMAGEID';
-        const metadata: ContentMetadata = {
-            type: SelectionRangeTypes.ImageSelection,
-            isDarkMode: false,
-            imageId: mockedImageId,
-        };
+//     it('image selection', () => {
+//         const mockedDiv = 'DIV' as any;
+//         const mockedImage = 'IMAGE' as any;
+//         const mockedImageId = 'IMAGEID';
+//         const metadata: ContentMetadata = {
+//             type: SelectionRangeTypes.ImageSelection,
+//             isDarkMode: false,
+//             imageId: mockedImageId,
+//         };
 
-        queryElementsSpy.and.returnValue([mockedImage]);
+//         queryElementsSpy.and.returnValue([mockedImage]);
 
-        const result = convertMetadataToDOMSelection(mockedDiv, metadata);
+//         const result = convertMetadataToDOMSelection(mockedDiv, metadata);
 
-        expect(result).toEqual({
-            type: 'image',
-            image: mockedImage,
-        });
-        expect(createRangeSpy).not.toHaveBeenCalled();
-        expect(queryElementsSpy).toHaveBeenCalledWith(mockedDiv, '#' + mockedImageId);
-    });
+//         expect(result).toEqual({
+//             type: 'image',
+//             image: mockedImage,
+//         });
+//         expect(createRangeSpy).not.toHaveBeenCalled();
+//         expect(queryElementsSpy).toHaveBeenCalledWith(mockedDiv, '#' + mockedImageId);
+//     });
 
-    it('table selection', () => {
-        const mockedDiv = 'DIV' as any;
-        const mockedTable = 'TABLE' as any;
-        const mockedTableId = 'TABLEID';
-        const metadata: ContentMetadata = {
-            type: SelectionRangeTypes.TableSelection,
-            isDarkMode: false,
-            tableId: mockedTableId,
-            firstCell: {
-                x: 1,
-                y: 2,
-            },
-            lastCell: {
-                x: 3,
-                y: 4,
-            },
-        };
+//     it('table selection', () => {
+//         const mockedDiv = 'DIV' as any;
+//         const mockedTable = 'TABLE' as any;
+//         const mockedTableId = 'TABLEID';
+//         const metadata: ContentMetadata = {
+//             type: SelectionRangeTypes.TableSelection,
+//             isDarkMode: false,
+//             tableId: mockedTableId,
+//             firstCell: {
+//                 x: 1,
+//                 y: 2,
+//             },
+//             lastCell: {
+//                 x: 3,
+//                 y: 4,
+//             },
+//         };
 
-        queryElementsSpy.and.returnValue([mockedTable]);
+//         queryElementsSpy.and.returnValue([mockedTable]);
 
-        const result = convertMetadataToDOMSelection(mockedDiv, metadata);
+//         const result = convertMetadataToDOMSelection(mockedDiv, metadata);
 
-        expect(result).toEqual({
-            type: 'table',
-            table: mockedTable,
-            firstColumn: 1,
-            firstRow: 2,
-            lastColumn: 3,
-            lastRow: 4,
-        });
-        expect(createRangeSpy).not.toHaveBeenCalled();
-        expect(queryElementsSpy).toHaveBeenCalledWith(mockedDiv, '#' + mockedTableId);
-    });
-});
+//         expect(result).toEqual({
+//             type: 'table',
+//             table: mockedTable,
+//             firstColumn: 1,
+//             firstRow: 2,
+//             lastColumn: 3,
+//             lastRow: 4,
+//         });
+//         expect(createRangeSpy).not.toHaveBeenCalled();
+//         expect(queryElementsSpy).toHaveBeenCalledWith(mockedDiv, '#' + mockedTableId);
+//     });
+// });

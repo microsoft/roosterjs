@@ -95,6 +95,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -137,6 +138,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -178,6 +180,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -218,6 +221,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).toHaveBeenCalledTimes(1);
             expect(transformToDarkColorSpy).toHaveBeenCalledWith(
@@ -272,6 +276,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                 operation: EntityOperation.Overwrite,
@@ -282,6 +287,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper2,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -356,6 +362,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -420,6 +427,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper2,
                 },
+                state: undefined,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                 operation: EntityOperation.RemoveFromStart,
@@ -430,6 +438,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper1,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -487,6 +496,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper2,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -540,6 +550,7 @@ describe('EntityPlugin', () => {
                     isReadonly: false,
                     wrapper: mockedNode,
                 },
+                state: undefined,
             });
         });
 
@@ -575,6 +586,7 @@ describe('EntityPlugin', () => {
                     isReadonly: false,
                     wrapper: mockedNode1,
                 },
+                state: undefined,
             });
         });
 
@@ -634,6 +646,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper1,
                 },
+                state: undefined,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                 operation: EntityOperation.ReplaceTemporaryContent,
@@ -644,6 +657,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper2,
                 },
+                state: undefined,
             });
         });
     });

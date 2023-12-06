@@ -328,13 +328,15 @@ describe('DOMEventPlugin handle other event', () => {
     let eventMap: Record<string, any>;
     let scrollContainer: HTMLElement;
     let getElementAtCursorSpy: jasmine.Spy;
-    let editor: IEditor;
+    let triggerContentChangedEventSpy: jasmine.Spy;
+    let editor: IEditor & IStandaloneEditor;
 
     beforeEach(() => {
         addEventListener = jasmine.createSpy('addEventListener');
         removeEventListener = jasmine.createSpy('.removeEventListener');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
+        triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEvent');
 
         scrollContainer = {
             addEventListener: () => {},
@@ -347,7 +349,7 @@ describe('DOMEventPlugin handle other event', () => {
             null!
         );
 
-        editor = <IEditor>(<any>{
+        editor = <IEditor & IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
@@ -359,6 +361,7 @@ describe('DOMEventPlugin handle other event', () => {
                 return jasmine.createSpy('disposer');
             },
             getElementAtCursor: getElementAtCursorSpy,
+            triggerContentChangedEvent: triggerContentChangedEventSpy,
         });
         plugin.initialize(editor);
     });
@@ -442,9 +445,9 @@ describe('DOMEventPlugin handle other event', () => {
     });
 
     it('Trigger onDrop event', () => {
-        const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+        const appendSnapshotSpy = jasmine.createSpy('appendSnapshot');
         editor.runAsync = (callback: Function) => callback(editor);
-        editor.addUndoSnapshot = addUndoSnapshotSpy;
+        editor.appendSnapshot = appendSnapshotSpy;
 
         eventMap.drop();
         expect(plugin.getState()).toEqual({
@@ -455,7 +458,8 @@ describe('DOMEventPlugin handle other event', () => {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
-        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(jasmine.anything(), ChangeSource.Drop);
+        expect(appendSnapshotSpy).toHaveBeenCalledWith();
+        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(ChangeSource.Drop);
     });
 
     it('Trigger contextmenu event, skip reselect', () => {
