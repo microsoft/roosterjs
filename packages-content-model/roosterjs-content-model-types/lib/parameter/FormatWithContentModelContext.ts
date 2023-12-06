@@ -4,6 +4,28 @@ import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFor
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
 
 /**
+ * State for an entity. This is used for storing entity undo snapshot
+ */
+export interface EntityState {
+    /**
+     * Type of the entity
+     */
+    type: string;
+
+    /**
+     * Id of the entity
+     */
+    id: string;
+
+    /**
+     * The state of this entity to store into undo snapshot.
+     * The state can be any string, or a serialized JSON object.
+     * We are using string here instead of a JSON object to make sure the whole state is serializable.
+     */
+    state: string;
+}
+
+/**
  * Represents an entity that is deleted by a specified entity operation
  */
 export interface DeletedEntity {
@@ -63,4 +85,16 @@ export interface FormatWithContentModelContext {
      * Otherwise, leave it there and editor will automatically decide if the original pending format is still available
      */
     newPendingFormat?: ContentModelSegmentFormat | 'preserve';
+
+    /**
+     * @optional Entity states related to the format API that will be added together with undo snapshot.
+     * When entity states are set, each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
+     * when undo/redo to this snapshot
+     */
+    entityStates?: EntityState[];
+
+    /**
+     * True if this action can be undone when user press Backspace key (aka Auto Complete).
+     */
+    canUndoByBackspace?: boolean;
 }

@@ -146,6 +146,11 @@ export interface IStandaloneEditor {
     redo(): void;
 
     /**
+     * Add a single undo snapshot to undo stack
+     */
+    appendSnapshot(): void;
+
+    /**
      * Check if editor is in IME input sequence
      * @returns True if editor is in IME input sequence, otherwise false
      */

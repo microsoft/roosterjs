@@ -28,6 +28,7 @@ export {
     generateEntityClassNames,
     addDelimiters,
 } from './domUtils/entityUtils';
+export { reuseCachedElement } from './domUtils/reuseCachedElement';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';

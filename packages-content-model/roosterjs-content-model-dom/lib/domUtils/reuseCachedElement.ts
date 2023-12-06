@@ -1,4 +1,4 @@
-import { isEntityElement } from '../../domUtils/entityUtils';
+import { isEntityElement } from './entityUtils';
 
 /**
  * @internal

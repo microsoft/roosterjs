@@ -208,7 +208,6 @@ export {
     SwitchShadowEdit,
     TriggerEvent,
     TransformColor,
-    AddUndoSnapshot,
     PortedCoreApiMap,
     UnportedCoreApiMap,
     SetContent,
@@ -221,6 +220,7 @@ export {
     RestoreUndoSnapshot,
     EnsureTypeInContainer,
     GetVisibleViewport,
+    AppendSnapshot,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
@@ -237,10 +237,18 @@ export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
-export { UndoPluginState } from './pluginState/UndoPluginState';
+export {
+    UndoPluginState,
+    UndoSnapshotBase,
+    RangeUndoSnapshot,
+    TableUndoSnapshot,
+    ImageUndoSnapshot,
+    UndoSnapshot,
+} from './pluginState/UndoPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
+    EntityState,
     DeletedEntity,
     FormatWithContentModelContext,
 } from './parameter/FormatWithContentModelContext';

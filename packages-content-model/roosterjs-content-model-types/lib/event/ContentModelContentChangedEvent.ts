@@ -1,3 +1,4 @@
+import { EntityState } from '../parameter/FormatWithContentModelContext';
 import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
@@ -46,6 +47,11 @@ export interface ContentModelContentChangedEventData extends ContentChangedEvent
      * Entities got changed (added or removed) during the content change process
      */
     readonly changedEntities?: ChangedEntity[];
+
+    /**
+     * Entity states related to this event
+     */
+    readonly entityStates?: EntityState[];
 }
 
 /**

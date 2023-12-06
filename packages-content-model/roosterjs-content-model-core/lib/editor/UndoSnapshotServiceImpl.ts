@@ -1,11 +1,12 @@
-import type { Snapshot, Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
+import type { UndoSnapshot } from 'roosterjs-content-model-types';
+import type { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
 const MAX_SIZE_LIMIT = 1e7;
 
-class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
-    private snapshots: Snapshots<Snapshot>;
+class UndoSnapshotsServiceImpl implements UndoSnapshotsService<UndoSnapshot> {
+    private snapshots: Snapshots<UndoSnapshot>;
 
     constructor(maxSize: number) {
         this.snapshots = {
@@ -22,7 +23,7 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
         return newIndex >= 0 && newIndex < this.snapshots.snapshots.length;
     }
 
-    move(step: number): Snapshot | null {
+    move(step: number): UndoSnapshot | null {
         if (this.canMove(step)) {
             this.snapshots.currentIndex += step;
             this.snapshots.autoCompleteIndex = -1;
@@ -32,7 +33,7 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
         }
     }
 
-    addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean): void {
+    addSnapshot(snapshot: UndoSnapshot, isAutoCompleteSnapshot: boolean): void {
         const currentSnapshot = this.snapshots.snapshots[this.snapshots.currentIndex];
         const isSameSnapshot =
             currentSnapshot &&
@@ -96,7 +97,7 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
         );
     }
 
-    private getSnapshotLength(snapshot: Snapshot) {
+    private getSnapshotLength(snapshot: UndoSnapshot) {
         return snapshot.html?.length ?? 0;
     }
 }
@@ -106,6 +107,6 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
  */
 export function createUndoSnapshotService(
     maxSizeLimit: number = MAX_SIZE_LIMIT
-): UndoSnapshotsService<Snapshot> {
+): UndoSnapshotsService<UndoSnapshot> {
     return new UndoSnapshotsServiceImpl(maxSizeLimit);
 }

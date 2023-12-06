@@ -1,3 +1,4 @@
+import { appendSnapshot } from '../coreApi/appendSnapshot';
 import { createContentModel } from '../coreApi/createContentModel';
 import { createEditorContext } from '../coreApi/createEditorContext';
 import { focus } from '../coreApi/focus';
@@ -5,6 +6,7 @@ import { formatContentModel } from '../coreApi/formatContentModel';
 import { getDOMSelection } from '../coreApi/getDOMSelection';
 import { getVisibleViewport } from '../coreApi/getVisibleViewport';
 import { hasFocus } from '../coreApi/hasFocus';
+import { restoreUndoSnapshot } from '../coreApi/restoreUndoSnapshot';
 import { setContentModel } from '../coreApi/setContentModel';
 import { setDOMSelection } from '../coreApi/setDOMSelection';
 import { switchShadowEdit } from '../coreApi/switchShadowEdit';
@@ -25,4 +27,6 @@ export const standaloneCoreApiMap: PortedCoreApiMap = {
     getVisibleViewport: getVisibleViewport,
     focus: focus,
     hasFocus: hasFocus,
+    appendSnapshot: appendSnapshot,
+    restoreUndoSnapshot: restoreUndoSnapshot,
 };

@@ -16,6 +16,7 @@ import type {
     BlockElement,
     ClipboardData,
     ContentChangedData,
+    ContentChangedEvent,
     DOMEventHandler,
     DarkColorHandler,
     DefaultFormat,
@@ -184,6 +185,15 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     getPendingFormat(): ContentModelSegmentFormat | null {
         return this.getCore().format.pendingFormat?.format ?? null;
+    }
+
+    /**
+     * Add a single undo snapshot to undo stack
+     */
+    appendSnapshot(): void {
+        const core = this.getCore();
+
+        core.api.appendSnapshot(core, false /*canUndoByBackspace*/);
     }
 
     /**
@@ -677,13 +687,64 @@ export class ContentModelEditor implements IContentModelEditor {
         additionalData?: ContentChangedData
     ) {
         const core = this.getCore();
-        core.api.addUndoSnapshot(
-            core,
-            callback ?? null,
-            changeSource ?? null,
-            canUndoByBackspace ?? false,
-            additionalData
-        );
+        const undoState = core.undo;
+        const isNested = undoState.isNested;
+        let data: any;
+
+        if (!isNested) {
+            undoState.isNested = true;
+
+            // When there is getEntityState, it means this is triggered by an entity change.
+            // So if HTML content is not changed (hasNewContent is false), no need to add another snapshot before change
+            if (core.undo.hasNewContent || !additionalData?.getEntityState || !callback) {
+                core.api.appendSnapshot(
+                    core,
+                    !!canUndoByBackspace,
+                    additionalData?.getEntityState?.()
+                );
+            }
+        }
+
+        try {
+            if (callback) {
+                const selection = core.api.getDOMSelection(core);
+                const range = selection?.type == 'range' ? selection.range : null;
+                data = callback(
+                    range && Position.getStart(range).normalize(),
+                    range && Position.getEnd(range).normalize()
+                );
+
+                if (!isNested) {
+                    const entityStates = additionalData?.getEntityState?.();
+
+                    core.api.appendSnapshot(core, false /*isAutoCompleteSnapshot*/, entityStates);
+                }
+            }
+        } finally {
+            if (!isNested) {
+                undoState.isNested = false;
+            }
+        }
+
+        if (callback && changeSource) {
+            const event: ContentChangedEvent = {
+                eventType: PluginEventType.ContentChanged,
+                source: changeSource,
+                data: data,
+                additionalData,
+            };
+            core.api.triggerEvent(core, event, true /*broadcast*/);
+        }
+
+        if (canUndoByBackspace) {
+            const selection = core.api.getDOMSelection(core);
+
+            if (selection?.type == 'range') {
+                core.undo.hasNewContent = false;
+                core.undo.posContainer = selection.range.startContainer;
+                core.undo.posOffset = selection.range.startOffset;
+            }
+        }
     }
 
     /**

@@ -10,7 +10,7 @@ export function keyboardInput(editor: IContentModelEditor, rawEvent: KeyboardEve
     const selection = editor.getDOMSelection();
 
     if (shouldInputWithContentModel(selection, rawEvent)) {
-        editor.addUndoSnapshot();
+        editor.appendSnapshot();
 
         editor.formatContentModel(
             (model, context) => {

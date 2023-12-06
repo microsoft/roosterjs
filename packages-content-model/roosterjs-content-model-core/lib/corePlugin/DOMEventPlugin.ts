@@ -1,5 +1,6 @@
-import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource } from '../constants/ChangeSource';
 import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
+import { Keys, PluginEventType } from 'roosterjs-editor-types';
 import type {
     DOMEventPluginState,
     IStandaloneEditor,
@@ -131,8 +132,11 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         }
     };
     private onDrop = () => {
-        this.editor?.runAsync(editor => {
-            editor.addUndoSnapshot(() => {}, ChangeSource.Drop);
+        this.editor?.runAsync(() => {
+            if (this.editor) {
+                this.editor.appendSnapshot();
+                this.editor.triggerContentChangedEvent(ChangeSource.Drop);
+            }
         });
     };
 

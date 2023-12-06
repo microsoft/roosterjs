@@ -4,12 +4,12 @@ import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import { Border } from 'roosterjs-content-model-types';
+import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 import { EditorPlugin } from 'roosterjs-editor-types';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 
 export interface MainPaneBaseState {
     showSidePane: boolean;
