@@ -19,7 +19,7 @@ function normalize() {
 
     allPackages.forEach(packageName => {
         const versionKey = findPackageRoot(packageName);
-        const version = versions[versionKey];
+        const version = versions.overrides?.[packageName] ?? versions[versionKey];
         const packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
 
         Object.keys(packageJson.dependencies).forEach(dep => {
@@ -38,11 +38,11 @@ function normalize() {
             }
         });
 
-        if (packageJson.version && packageJson.version != '0.0.0') {
-            knownCustomizedPackages[packageName] = packageJson.version;
-        } else {
+        if (!packageJson.version || packageJson.version == '0.0.0') {
             packageJson.version = version;
         }
+
+        knownCustomizedPackages[packageName] = packageJson.version;
 
         packageJson.typings = './lib/index.d.ts';
         packageJson.main = './lib/index.js';

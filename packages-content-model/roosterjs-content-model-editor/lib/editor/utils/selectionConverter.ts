@@ -1,4 +1,5 @@
 import { createRange, getSelectionPath, queryElements } from 'roosterjs-editor-dom';
+import { createTableRanges } from 'roosterjs-content-model-core';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type { DOMSelection } from 'roosterjs-content-model-types';
 import type { ContentMetadata, SelectionRangeEx } from 'roosterjs-editor-types';
@@ -8,7 +9,9 @@ import type { ContentMetadata, SelectionRangeEx } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export function convertRangeExToDomSelection(rangeEx: SelectionRangeEx): DOMSelection | null {
+export function convertRangeExToDomSelection(
+    rangeEx: SelectionRangeEx | null
+): DOMSelection | null {
     switch (rangeEx?.type) {
         case SelectionRangeTypes.ImageSelection:
             return {
@@ -51,7 +54,7 @@ export function convertDomSelectionToRangeEx(selection: DOMSelection | null): Se
                 type: SelectionRangeTypes.ImageSelection,
                 image: selection.image,
                 areAllCollapsed: false,
-                ranges: [],
+                ranges: [createRange(selection.image)],
             };
 
         case 'range':
@@ -64,7 +67,7 @@ export function convertDomSelectionToRangeEx(selection: DOMSelection | null): Se
         case 'table':
             return {
                 type: SelectionRangeTypes.TableSelection,
-                ranges: [],
+                ranges: createTableRanges(selection),
                 areAllCollapsed: false,
                 table: selection.table,
                 coordinates: {
@@ -99,8 +102,8 @@ export function convertDomSelectionToMetadata(
                     y: selection.firstRow,
                 },
                 lastCell: {
-                    x: selection.firstColumn,
-                    y: selection.lastColumn,
+                    x: selection.lastColumn,
+                    y: selection.lastRow,
                 },
                 isDarkMode: false,
             };

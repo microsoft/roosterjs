@@ -1,8 +1,8 @@
 import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
 import { createElement } from 'roosterjs-editor-dom';
 import { CreateElementData, PluginEventType } from 'roosterjs-editor-types';
+import { DOMSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../lib/coreApi/setDOMSelection';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('setDOMSelection', () => {
     let core: StandaloneEditorCore;
@@ -58,6 +58,69 @@ describe('setDOMSelection', () => {
         } as any;
     });
 
+    describe('Null selection', () => {
+        beforeEach(() => {
+            querySelectorAllSpy.and.returnValue([]);
+        });
+
+        function runTest(originalSelection: DOMSelection | null) {
+            core.selection.selection = originalSelection;
+            (core.selection.selectionStyleNode!.sheet!.cssRules as any) = ['Rule1', 'Rule2'];
+
+            setDOMSelection(core, null);
+
+            expect(core.selection).toEqual({
+                skipReselectOnFocus: undefined,
+                selection: null,
+                selectionStyleNode: mockedStyleNode,
+            } as any);
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: null,
+                },
+                true
+            );
+            expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
+            expect(contentDiv.id).toBe('contentDiv_0');
+            expect(deleteRuleSpy).toHaveBeenCalledTimes(2);
+            expect(deleteRuleSpy).toHaveBeenCalledWith(1);
+            expect(deleteRuleSpy).toHaveBeenCalledWith(0);
+            expect(insertRuleSpy).not.toHaveBeenCalled();
+        }
+
+        it('From null selection', () => {
+            runTest(null);
+        });
+
+        it('From range selection', () => {
+            runTest({
+                type: 'range',
+                range: {} as any,
+            });
+        });
+
+        it('From image selection', () => {
+            runTest({
+                type: 'image',
+                image: {} as any,
+            });
+        });
+
+        it('From table selection', () => {
+            runTest({
+                type: 'table',
+                table: {} as any,
+                firstColumn: 0,
+                firstRow: 0,
+                lastColumn: 1,
+                lastRow: 1,
+            });
+        });
+    });
+
     describe('Range selection', () => {
         it('range selection, editor id is unique, editor has focus, trigger event', () => {
             const mockedSelection = {
@@ -79,7 +142,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
@@ -108,7 +175,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
@@ -158,7 +229,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
@@ -186,7 +261,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
@@ -216,7 +295,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
@@ -246,7 +329,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
@@ -291,7 +378,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
@@ -334,7 +425,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
@@ -377,7 +472,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
@@ -429,7 +528,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(selectNodeSpy).not.toHaveBeenCalled();
@@ -478,7 +581,11 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
-                { eventType: PluginEventType.SelectionChanged, selectionRangeEx: null },
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
+                    newSelection: mockedSelection,
+                },
                 true
             );
             expect(contentDiv.id).toBe('contentDiv_0');
