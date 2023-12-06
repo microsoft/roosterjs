@@ -156,7 +156,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * This is the replacement of IEditor.select.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection) {
+    setDOMSelection(selection: DOMSelection | null) {
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
@@ -507,12 +507,8 @@ export class ContentModelEditor implements IContentModelEditor {
         const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
         const selection = convertRangeExToDomSelection(rangeEx);
 
-        if (selection) {
-            this.setDOMSelection(selection);
-            return true;
-        } else {
-            return false;
-        }
+        this.setDOMSelection(selection);
+        return true;
     }
 
     /**
