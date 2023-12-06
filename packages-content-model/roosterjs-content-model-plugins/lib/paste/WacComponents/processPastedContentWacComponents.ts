@@ -1,13 +1,10 @@
 import addParser from '../utils/addParser';
 import { setProcessor } from '../utils/setProcessor';
 import {
+    CLASSES_TO_KEEP,
     COMMENT_HIGHLIGHT_CLASS,
     COMMENT_HIGHLIGHT_CLICKED_CLASS,
-    IMAGE_BORDER,
-    IMAGE_CONTAINER,
     LIST_CONTAINER_ELEMENT_CLASS_NAME,
-    OUTLINE_ELEMENT,
-    PARAGRAPH,
     TABLE_CONTAINER,
     TEMP_ELEMENTS_CLASSES,
     WAC_IDENTIFY_SELECTOR,
@@ -22,23 +19,6 @@ import type {
     ElementProcessor,
     FormatParser,
 } from 'roosterjs-content-model-types';
-
-export const CLASSES_TO_KEEP = [
-    OUTLINE_ELEMENT,
-    'NumberListStyle',
-    IMAGE_CONTAINER,
-    'ListContainerWrapper',
-    'BulletListStyle',
-    ...TEMP_ELEMENTS_CLASSES,
-    'TableCellContent',
-    PARAGRAPH,
-    'WACImageContainer',
-    IMAGE_BORDER,
-    TABLE_CONTAINER,
-    'LineBreakBlob',
-    COMMENT_HIGHLIGHT_CLASS,
-    COMMENT_HIGHLIGHT_CLICKED_CLASS,
-];
 
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
 const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
