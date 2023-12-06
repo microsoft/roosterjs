@@ -67,19 +67,14 @@ export function handleKeyDownEvent(
         });
     } else if (
         range?.type == SelectionRangeTypes.TableSelection &&
-        range.coordinates &&
         (!isCtrlOrMetaPressed(event.rawEvent) || which == Keys.HOME || which == Keys.END)
     ) {
         // Select all content in the first cell
-        const vtable = new VTable(range.table);
-        const firstCell =
-            vtable.cells?.[range.coordinates.firstCell.y]?.[range.coordinates.firstCell.x]?.td;
-
-        if (firstCell) {
-            const children = firstCell.childNodes;
-            const contentRange = createRange(children[0], children[children.length - 1]);
-            editor.select(contentRange);
-        }
+        const row = range.ranges[0];
+        const firstCell = row.startContainer.childNodes[row.startOffset];
+        const children = firstCell.childNodes;
+        const contentRange = createRange(children[0], children[children.length - 1]);
+        editor.select(contentRange);
     }
 }
 

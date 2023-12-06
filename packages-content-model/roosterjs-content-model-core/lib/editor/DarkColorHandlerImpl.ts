@@ -1,4 +1,3 @@
-import * as Color from 'color';
 import { getObjectKeys, parseColor, setColor } from 'roosterjs-editor-dom';
 import type {
     ColorKeyAndValue,
@@ -6,7 +5,6 @@ import type {
     ModeIndependentColor,
 } from 'roosterjs-editor-types';
 
-const DefaultLightness = 21.25; // Lightness for #333333
 const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';
 const COLOR_VAR_PREFIX = 'darkColor';
@@ -30,11 +28,8 @@ const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
  */
 export class DarkColorHandlerImpl implements DarkColorHandler {
     private knownColors: Record<string, Readonly<ModeIndependentColor>> = {};
-    readonly baseLightness: number;
 
-    constructor(private contentDiv: HTMLElement, baseDarkColor?: string) {
-        this.baseLightness = getLightness(baseDarkColor);
-    }
+    constructor(private contentDiv: HTMLElement, private getDarkColor: (color: string) => string) {}
 
     /**
      * Get a copy of known colors
@@ -66,7 +61,7 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
                 colorKey || `--${COLOR_VAR_PREFIX}_${lightModeColor.replace(/[^\d\w]/g, '_')}`;
 
             if (!this.knownColors[colorKey]) {
-                darkModeColor = darkModeColor || getDarkColor(lightModeColor, this.baseLightness);
+                darkModeColor = darkModeColor || this.getDarkColor(lightModeColor);
 
                 this.knownColors[colorKey] = { lightModeColor, darkModeColor };
                 this.contentDiv.style.setProperty(colorKey, darkModeColor);
@@ -175,31 +170,4 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
             }
         });
     }
-}
-
-function getDarkColor(color: string, baseLightness: number): string {
-    try {
-        const computedColor = Color(color || undefined);
-        const colorLab = computedColor.lab().array();
-        const newLValue = (100 - colorLab[0]) * ((100 - baseLightness) / 100) + baseLightness;
-        color = Color.lab(newLValue, colorLab[1], colorLab[2])
-            .rgb()
-            .alpha(computedColor.alpha())
-            .toString();
-    } catch {}
-
-    return color;
-}
-
-function getLightness(color?: string): number {
-    let result = DefaultLightness;
-
-    if (color) {
-        try {
-            const computedColor = Color(color || undefined);
-            result = computedColor.lab().array()[0];
-        } catch {}
-    }
-
-    return result;
 }

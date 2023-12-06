@@ -1,7 +1,12 @@
 import { addRangeToSelection } from '../corePlugin/utils/addRangeToSelection';
 import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { parseTableCells } from '../publicApi/domUtils/tableCellUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
-import type { SetDOMSelection, TableSelection } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSelectionChangedEvent,
+    SetDOMSelection,
+    TableSelection,
+} from 'roosterjs-content-model-types';
 
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
@@ -27,7 +32,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
         let selectionRules: string[] | undefined;
         const rootSelector = '#' + addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
-        switch (selection.type) {
+        switch (selection?.type) {
             case 'image':
                 const image = selection.image;
 
@@ -55,6 +60,10 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
                 core.selection.selection = core.api.hasFocus(core) ? null : selection;
                 break;
+
+            default:
+                core.selection.selection = null;
+                break;
         }
 
         if (sheet) {
@@ -73,14 +82,13 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 
     if (!skipSelectionChangedEvent) {
-        core.api.triggerEvent(
-            core,
-            {
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: null,
-            },
-            true /*broadcast*/
-        );
+        const eventData: ContentModelSelectionChangedEvent = {
+            eventType: PluginEventType.SelectionChanged,
+            newSelection: selection,
+            selectionRangeEx: null,
+        };
+
+        core.api.triggerEvent(core, eventData, true /*broadcast*/);
     }
 };
 
@@ -94,14 +102,14 @@ function buildImageCSS(rootSelector: string, borderColor?: string): string[] {
 
 function buildTableCss(rootSelector: string, selection: TableSelection): string[] {
     const { firstColumn, firstRow, lastColumn, lastRow } = selection;
-    const cells = createVirtualCells(selection.table);
+    const cells = parseTableCells(selection.table);
     const isAllTableSelected =
         firstRow == 0 &&
         firstColumn == 0 &&
         lastRow == cells.length - 1 &&
         lastColumn == (cells[lastRow]?.length ?? 0) - 1;
     const selectors = isAllTableSelected
-        ? handleAllTableSelected(rootSelector)
+        ? [rootSelector, `${rootSelector} *`]
         : handleTableSelected(rootSelector, selection, cells);
 
     const cssRules: string[] = [];
@@ -122,11 +130,11 @@ function buildTableCss(rootSelector: string, selection: TableSelection): string[
     return cssRules;
 }
 
-function handleAllTableSelected(rootSelector: string) {
-    return [rootSelector, `${rootSelector} *`];
-}
-
-function handleTableSelected(rootSelector: string, selection: TableSelection, cells: VirtualCells) {
+function handleTableSelected(
+    rootSelector: string,
+    selection: TableSelection,
+    cells: (HTMLTableCellElement | null)[][]
+) {
     const { firstRow, firstColumn, lastRow, lastColumn, table } = selection;
     const selectors: string[] = [];
 
@@ -207,35 +215,4 @@ function addUniqueId(element: HTMLElement, idPrefix: string): string {
     }
 
     return element.id;
-}
-
-type VirtualCells = (HTMLTableCellElement | null)[][];
-
-function createVirtualCells(table: HTMLTableElement): VirtualCells {
-    const trs = toArray(table.rows);
-    const cells: VirtualCells = trs.map(row => []);
-
-    trs.forEach((tr, rowIndex) => {
-        for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
-            // Skip the cells which already initialized
-            for (; cells[rowIndex][targetCol] !== undefined; targetCol++) {}
-
-            const td = tr.cells[sourceCol];
-
-            for (let colSpan = 0; colSpan < td.colSpan; colSpan++, targetCol++) {
-                for (let rowSpan = 0; rowSpan < td.rowSpan; rowSpan++) {
-                    if (cells[rowIndex + rowSpan]) {
-                        cells[rowIndex + rowSpan][targetCol] =
-                            colSpan == 0 && rowSpan == 0 ? td : null;
-                    }
-                }
-            }
-        }
-
-        for (let col = 0; col < cells[rowIndex].length; col++) {
-            cells[rowIndex][col] = cells[rowIndex][col] || null;
-        }
-    });
-
-    return cells;
 }

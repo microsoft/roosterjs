@@ -325,6 +325,7 @@ describe('childProcessor', () => {
                 { segmentType: 'SelectionMarker', format: { a: 'b' } as any, isSelected: true },
             ],
             isImplicit: true,
+            segmentFormat: { a: 'b' } as any,
             format: {},
         });
     });

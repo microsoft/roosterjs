@@ -80,7 +80,7 @@ export type SetContentModel = (
  */
 export type SetDOMSelection = (
     core: StandaloneEditorCore,
-    selection: DOMSelection,
+    selection: DOMSelection | null,
     skipSelectionChangedEvent?: boolean
 ) => void;
 

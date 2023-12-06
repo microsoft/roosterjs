@@ -62,7 +62,7 @@ export interface IStandaloneEditor {
      * This is the replacement of IEditor.select.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection): void;
+    setDOMSelection(selection: DOMSelection | null): void;
 
     /**
      * The general API to do format change with Content Model

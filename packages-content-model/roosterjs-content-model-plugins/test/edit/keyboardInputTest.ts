@@ -1,4 +1,5 @@
 import * as deleteSelection from 'roosterjs-content-model-core/lib/publicApi/selection/deleteSelection';
+import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { keyboardInput } from '../../lib/edit/keyboardInput';
 import {
@@ -14,6 +15,7 @@ describe('keyboardInput', () => {
     let getDOMSelectionSpy: jasmine.Spy;
     let deleteSelectionSpy: jasmine.Spy;
     let mockedModel: ContentModelDocument;
+    let normalizeContentModelSpy: jasmine.Spy;
     let mockedContext: FormatWithContentModelContext;
     let formatResult: boolean | undefined;
 
@@ -34,6 +36,7 @@ describe('keyboardInput', () => {
             });
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         deleteSelectionSpy = spyOn(deleteSelection, 'deleteSelection');
+        normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
 
         editor = {
             getDOMSelection: getDOMSelectionSpy,
@@ -69,6 +72,7 @@ describe('keyboardInput', () => {
             newEntities: [],
             newImages: [],
         });
+        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
     });
 
     it('Letter input, expanded selection, no modifier key, deleteSelection returns not deleted', () => {
@@ -100,6 +104,7 @@ describe('keyboardInput', () => {
             clearModelCache: true,
             skipUndoSnapshot: true,
         });
+        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
     });
 
     it('Letter input, expanded selection, no modifier key, deleteSelection returns range', () => {
@@ -130,7 +135,9 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
+        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
     });
 
     it('Letter input, table selection, no modifier key, deleteSelection returns range', () => {
@@ -158,7 +165,9 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
+        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
     });
 
     it('Letter input, image selection, no modifier key, deleteSelection returns range', () => {
@@ -186,7 +195,9 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
+        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
     });
 
     it('Letter input, no selection, no modifier key, deleteSelection returns range', () => {
@@ -211,6 +222,7 @@ describe('keyboardInput', () => {
             newEntities: [],
             newImages: [],
         });
+        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
     });
 
     it('Letter input, expanded selection, has modifier key, deleteSelection returns range', () => {
@@ -241,6 +253,7 @@ describe('keyboardInput', () => {
             newEntities: [],
             newImages: [],
         });
+        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
     });
 
     it('Space input, table selection, no modifier key, deleteSelection returns range', () => {
@@ -268,7 +281,9 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
+        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
     });
 
     it('Backspace input, table selection, no modifier key, deleteSelection returns range', () => {
@@ -295,6 +310,7 @@ describe('keyboardInput', () => {
             newEntities: [],
             newImages: [],
         });
+        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
     });
 
     it('Enter input, table selection, no modifier key, deleteSelection returns range', () => {
@@ -322,6 +338,47 @@ describe('keyboardInput', () => {
             newImages: [],
             clearModelCache: true,
             skipUndoSnapshot: true,
+            newPendingFormat: undefined,
         });
+        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
+    });
+
+    it('Letter input, expanded selection, no modifier key, deleteSelection returns range, has segment format', () => {
+        const mockedFormat = 'FORMAT' as any;
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: false,
+            },
+        });
+        deleteSelectionSpy.and.returnValue({
+            deleteResult: 'range',
+            insertPoint: {
+                marker: {
+                    format: mockedFormat,
+                },
+            },
+        });
+
+        const rawEvent = {
+            key: 'A',
+        } as any;
+
+        keyboardInput(editor, rawEvent);
+
+        expect(getDOMSelectionSpy).toHaveBeenCalled();
+        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
+        expect(formatResult).toBeTrue();
+        expect(mockedContext).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            clearModelCache: true,
+            skipUndoSnapshot: true,
+            newPendingFormat: mockedFormat,
+        });
+        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
     });
 });

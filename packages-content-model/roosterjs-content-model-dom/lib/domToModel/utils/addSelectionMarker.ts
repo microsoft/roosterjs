@@ -7,9 +7,13 @@ import type { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-conten
  * @internal
  */
 export function addSelectionMarker(group: ContentModelBlockGroup, context: DomToModelContext) {
-    const marker = createSelectionMarker(context.segmentFormat);
+    const segmentFormat = {
+        ...context.defaultFormat,
+        ...context.segmentFormat,
+    };
+    const marker = createSelectionMarker(segmentFormat);
 
     addDecorators(marker, context);
 
-    addSegment(group, marker, context.blockFormat);
+    addSegment(group, marker, context.blockFormat, segmentFormat);
 }

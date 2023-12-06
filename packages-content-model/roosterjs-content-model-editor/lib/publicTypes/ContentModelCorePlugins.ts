@@ -7,6 +7,11 @@ import type { EditPluginState, EditorPlugin, PluginWithState } from 'roosterjs-e
  */
 export interface UnportedCorePlugins {
     /**
+     * Translate Standalone editor event type to legacy event type
+     */
+    readonly eventTranslate: EditorPlugin;
+
+    /**
      * Edit plugin handles ContentEditFeatures
      */
     readonly edit: PluginWithState<EditPluginState>;

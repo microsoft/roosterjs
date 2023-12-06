@@ -148,6 +148,10 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                     entity.entityFormat.id = this.ensureUniqueId(entityType, id ?? '', wrapper);
                     wrapper.className = generateEntityClassNames(entity.entityFormat);
 
+                    if (entity.entityFormat.isReadonly) {
+                        wrapper.contentEditable = 'false';
+                    }
+
                     const eventResult = this.triggerEvent(editor, wrapper, operation, rawEvent);
 
                     this.state.entityMap[entity.entityFormat.id] = {

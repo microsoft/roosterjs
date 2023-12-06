@@ -270,3 +270,8 @@ export {
     ContentModelContentChangedEventData,
     ChangedEntity,
 } from './event/ContentModelContentChangedEvent';
+export {
+    CompatibleContentModelSelectionChangedEvent,
+    ContentModelSelectionChangedEvent,
+    ContentModelSelectionChangedEventData,
+} from './event/ContentModelSelectionChangedEvent';
