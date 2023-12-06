@@ -1,4 +1,4 @@
-import { EntityState } from '../parameter/FormatWithContentModelContext';
+import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
 import type { ContentModelDocument } from '../group/ContentModelDocument';

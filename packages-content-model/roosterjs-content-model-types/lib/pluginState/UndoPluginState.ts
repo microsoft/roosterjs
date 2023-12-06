@@ -2,6 +2,9 @@ import type { ModeIndependentColor, UndoSnapshotsService } from 'roosterjs-edito
 import type { SelectionType } from '../selection/DOMSelection';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 
+/**
+ * Base interface for an undo snapshot
+ */
 export interface UndoSnapshotBase<T extends SelectionType> {
     /**
      * HTML content string
@@ -30,6 +33,9 @@ export interface UndoSnapshotBase<T extends SelectionType> {
     type: T;
 }
 
+/**
+ * Undo snapshot with a range selection
+ */
 export interface RangeUndoSnapshot extends UndoSnapshotBase<'range'> {
     /**
      * Start path of selection
@@ -42,6 +48,9 @@ export interface RangeUndoSnapshot extends UndoSnapshotBase<'range'> {
     end: number[];
 }
 
+/**
+ * Undo snapshot with a table selection
+ */
 export interface TableUndoSnapshot extends UndoSnapshotBase<'table'> {
     /**
      * Id of selected table
@@ -69,11 +78,17 @@ export interface TableUndoSnapshot extends UndoSnapshotBase<'table'> {
     lastColumn: number;
 }
 
+/**
+ * Undo snapshot with an image selection
+ */
 export interface ImageUndoSnapshot extends UndoSnapshotBase<'image'> {
     /* Id of selected image*/
     imageId: string;
 }
 
+/**
+ * Union type for all 3 undo snapshot types
+ */
 export type UndoSnapshot = RangeUndoSnapshot | ImageUndoSnapshot | TableUndoSnapshot;
 
 /**

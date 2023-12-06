@@ -1,6 +1,8 @@
 import { ChangeSource, ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
+import { convertMetadataToDOMSelection } from '../editor/utils/selectionConverter';
 import { extractContentMetadata, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
-import type { SetContent } from 'roosterjs-content-model-types';
+import type { ContentMetadata } from 'roosterjs-editor-types';
+import type { SetContent, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -35,6 +37,7 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 
         const metadataFromContent = extractContentMetadata(core.contentDiv);
         metadata = metadata || metadataFromContent;
+        selectContentMetadata(core, metadata);
         contentChanged = true;
     }
 
@@ -64,3 +67,13 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
         );
     }
 };
+
+function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMetadata | undefined) {
+    if (!core.lifecycle.shadowEditFragment && metadata) {
+        const selection = convertMetadataToDOMSelection(core.contentDiv, metadata);
+
+        if (selection) {
+            core.api.setDOMSelection(core, selection);
+        }
+    }
+}

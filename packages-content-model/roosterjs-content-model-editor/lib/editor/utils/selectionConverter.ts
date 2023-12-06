@@ -1,8 +1,8 @@
-import { createRange } from 'roosterjs-editor-dom';
+import { createRange, getSelectionPath, queryElements } from 'roosterjs-editor-dom';
 import { createTableRanges } from 'roosterjs-content-model-core';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type { DOMSelection } from 'roosterjs-content-model-types';
-import type { SelectionRangeEx } from 'roosterjs-editor-types';
+import type { ContentMetadata, SelectionRangeEx } from 'roosterjs-editor-types';
 
 // In theory, all functions below are not necessary. We keep these functions here only for compatibility with old IEditor interface
 
@@ -82,5 +82,87 @@ export function convertDomSelectionToRangeEx(selection: DOMSelection | null): Se
                 ranges: [],
                 areAllCollapsed: true,
             };
+    }
+}
+
+/**
+ * @internal
+ */
+export function convertDomSelectionToMetadata(
+    contentDiv: HTMLElement,
+    selection: DOMSelection | null
+): ContentMetadata | null {
+    switch (selection?.type) {
+        case 'table':
+            return {
+                type: SelectionRangeTypes.TableSelection,
+                tableId: selection.table.id,
+                firstCell: {
+                    x: selection.firstColumn,
+                    y: selection.firstRow,
+                },
+                lastCell: {
+                    x: selection.lastColumn,
+                    y: selection.lastRow,
+                },
+                isDarkMode: false,
+            };
+        case 'image':
+            return {
+                type: SelectionRangeTypes.ImageSelection,
+                imageId: selection.image.id,
+                isDarkMode: false,
+            };
+        case 'range':
+            return {
+                type: SelectionRangeTypes.Normal,
+                isDarkMode: false,
+                start: [],
+                end: [],
+                ...(getSelectionPath(contentDiv, selection.range) || {}),
+            };
+        default:
+            return null;
+    }
+}
+
+/**
+ * @internal
+ */
+export function convertMetadataToDOMSelection(
+    contentDiv: HTMLElement,
+    metadata: ContentMetadata | undefined
+): DOMSelection | null {
+    switch (metadata?.type) {
+        case SelectionRangeTypes.Normal:
+            return {
+                type: 'range',
+                range: createRange(contentDiv, metadata.start, metadata.end),
+            };
+        case SelectionRangeTypes.TableSelection:
+            const table = queryElements(contentDiv, '#' + metadata.tableId)[0] as HTMLTableElement;
+
+            return table
+                ? {
+                      type: 'table',
+                      table: table,
+                      firstColumn: metadata.firstCell.x,
+                      firstRow: metadata.firstCell.y,
+                      lastColumn: metadata.lastCell.x,
+                      lastRow: metadata.lastCell.y,
+                  }
+                : null;
+        case SelectionRangeTypes.ImageSelection:
+            const image = queryElements(contentDiv, '#' + metadata.imageId)[0] as HTMLImageElement;
+
+            return image
+                ? {
+                      type: 'image',
+                      image: image,
+                  }
+                : null;
+
+        default:
+            return null;
     }
 }

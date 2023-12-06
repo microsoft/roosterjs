@@ -1,4 +1,4 @@
-import { UndoSnapshot } from '../pluginState/UndoPluginState';
+import type { UndoSnapshot } from '../pluginState/UndoPluginState';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
 import type {
