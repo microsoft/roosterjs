@@ -1,7 +1,7 @@
 {
     "packages": "8.59.0",
     "packages-ui": "8.54.0",
-    "packages-content-model": "0.21.1",
+    "packages-content-model": "0.21.2",
     "overrides": {
         "roosterjs-editor-core": "8.59.1",
         "roosterjs-editor-plugins": "8.59.1"
