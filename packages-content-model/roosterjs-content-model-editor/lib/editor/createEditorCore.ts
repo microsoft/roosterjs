@@ -18,6 +18,7 @@ export function createEditorCore(
     const corePlugins = createCorePlugins(options);
     const pluginState = getPluginState(corePlugins);
     const additionalPlugins: EditorPlugin[] = [
+        corePlugins.eventTranslate,
         corePlugins.edit,
         ...(options.plugins ?? []),
         corePlugins.undo,

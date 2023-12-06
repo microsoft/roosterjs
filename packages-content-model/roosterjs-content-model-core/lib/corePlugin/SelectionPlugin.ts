@@ -12,9 +12,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     constructor(options: StandaloneEditorOptions) {
         this.state = {
-            selectionRange: null,
-            tableSelectionRange: null,
-            imageSelectionRange: null,
+            selection: null,
             selectionStyleNode: null,
             imageSelectionBorderColor: options.imageSelectionBorderColor, // TODO: Move to Selection core plugin
         };
@@ -80,25 +78,19 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     private onFocus = () => {
-        if (!this.state.skipReselectOnFocus && this.editor) {
-            const { table, coordinates } = this.state.tableSelectionRange || {};
-            const { image } = this.state.imageSelectionRange || {};
-
-            if (table && coordinates) {
-                this.editor.select(table, coordinates);
-            } else if (image) {
-                this.editor.select(image);
-            } else if (this.state.selectionRange) {
-                this.editor.select(this.state.selectionRange);
-            }
+        if (!this.state.skipReselectOnFocus && this.state.selection) {
+            this.editor?.setDOMSelection(this.state.selection);
         }
 
-        this.state.selectionRange = null;
+        if (this.state.selection?.type == 'range') {
+            // Editor is focused, now we can get live selection. So no need to keep a selection if the selection type is range.
+            this.state.selection = null;
+        }
     };
 
     private onBlur = () => {
-        if (!this.state.selectionRange && this.editor) {
-            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
+        if (!this.state.selection && this.editor) {
+            this.state.selection = this.editor.getDOMSelection();
         }
     };
 

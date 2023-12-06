@@ -31,7 +31,8 @@ function getInitialRange(
     // Range inserts based on a provided range.
     // Both have the potential to use the current selection to restore cursor position
     // So in both cases we need to store the selection state.
-    let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+    const selection = core.api.getDOMSelection(core);
+    let range = selection?.type == 'range' ? selection.range : null;
     let rangeToRestore = null;
     if (option.position == ContentPosition.Range) {
         rangeToRestore = range;
@@ -182,7 +183,10 @@ export const insertNode: InsertNode = (
                     }
 
                     if (rangeToRestore) {
-                        core.api.selectRange(core, rangeToRestore);
+                        core.api.setDOMSelection(core, {
+                            type: 'range',
+                            range: rangeToRestore,
+                        });
                     }
 
                     break;
