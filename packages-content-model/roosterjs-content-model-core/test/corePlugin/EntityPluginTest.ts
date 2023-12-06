@@ -83,7 +83,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -125,7 +125,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -166,7 +166,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -206,7 +206,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -260,7 +260,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -344,7 +344,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -408,7 +408,7 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_E1 _EId_E1 _EReadonly_1"></div>'
             );
             expect(wrapper2.outerHTML).toBe(
-                '<div class="_Entity _EType_E2 _EId_E2 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_E2 _EId_E2 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -475,7 +475,7 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_E1 _EId_E1 _EReadonly_1"></div>'
             );
             expect(wrapper2.outerHTML).toBe(
-                '<div class="_Entity _EType_E2 _EId_E1_1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_E2 _EId_E1_1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
