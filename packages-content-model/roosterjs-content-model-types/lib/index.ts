@@ -221,6 +221,7 @@ export {
     RestoreUndoSnapshot,
     EnsureTypeInContainer,
     GetVisibleViewport,
+    AppendSnapshot,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
@@ -241,6 +242,7 @@ export { UndoPluginState } from './pluginState/UndoPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
+    EntityState,
     DeletedEntity,
     FormatWithContentModelContext,
 } from './parameter/FormatWithContentModelContext';

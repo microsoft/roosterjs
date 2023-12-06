@@ -88,47 +88,6 @@ export function convertDomSelectionToRangeEx(selection: DOMSelection | null): Se
 /**
  * @internal
  */
-export function convertDomSelectionToMetadata(
-    contentDiv: HTMLElement,
-    selection: DOMSelection | null
-): ContentMetadata | null {
-    switch (selection?.type) {
-        case 'table':
-            return {
-                type: SelectionRangeTypes.TableSelection,
-                tableId: selection.table.id,
-                firstCell: {
-                    x: selection.firstColumn,
-                    y: selection.firstRow,
-                },
-                lastCell: {
-                    x: selection.lastColumn,
-                    y: selection.lastRow,
-                },
-                isDarkMode: false,
-            };
-        case 'image':
-            return {
-                type: SelectionRangeTypes.ImageSelection,
-                imageId: selection.image.id,
-                isDarkMode: false,
-            };
-        case 'range':
-            return {
-                type: SelectionRangeTypes.Normal,
-                isDarkMode: false,
-                start: [],
-                end: [],
-                ...(getSelectionPath(contentDiv, selection.range) || {}),
-            };
-        default:
-            return null;
-    }
-}
-
-/**
- * @internal
- */
 export function convertMetadataToDOMSelection(
     contentDiv: HTMLElement,
     metadata: ContentMetadata | undefined

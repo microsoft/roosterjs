@@ -1,3 +1,4 @@
+import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
     CompatibleColorTransformDirection,
     CompatibleGetContentMode,
@@ -105,6 +106,20 @@ export type FormatContentModel = (
  * @param isOn True to switch On, False to switch Off
  */
 export type SwitchShadowEdit = (core: StandaloneEditorCore, isOn: boolean) => void;
+
+/**
+ * Add an undo snapshot to current undo snapshot stack
+ * @param core The StandaloneEditorCore object
+ * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+ * @param entityStates @optional Entity states related to this snapshot.
+ * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
+ * when undo/redo to this snapshot
+ */
+export type AppendSnapshot = (
+    core: StandaloneEditorCore,
+    canUndoByBackspace: boolean,
+    entityStates?: EntityState[]
+) => void;
 
 /**
  * Trigger a plugin event
@@ -328,6 +343,16 @@ export interface PortedCoreApiMap {
      * @param core The StandaloneEditorCore object
      */
     focus: Focus;
+
+    /**
+     * Add an undo snapshot to current undo snapshot stack
+     * @param core The StandaloneEditorCore object
+     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+     * @param entityStates @optional Entity states related to this snapshot.
+     * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
+     * when undo/redo to this snapshot
+     */
+    appendSnapshot: AppendSnapshot;
 }
 
 /**
