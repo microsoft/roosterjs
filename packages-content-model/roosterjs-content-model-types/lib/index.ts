@@ -206,18 +206,12 @@ export {
     StandaloneEditorCore,
     StandaloneEditorDefaultSettings,
     SwitchShadowEdit,
-    Select,
     TriggerEvent,
-    GetSelectionRangeEx,
     TransformColor,
     AddUndoSnapshot,
-    SelectRange,
     PortedCoreApiMap,
     UnportedCoreApiMap,
-    SelectImage,
-    SelectTable,
     SetContent,
-    GetSelectionRange,
     HasFocus,
     Focus,
     InsertNode,
@@ -275,3 +269,8 @@ export {
     ContentModelContentChangedEventData,
     ChangedEntity,
 } from './event/ContentModelContentChangedEvent';
+export {
+    CompatibleContentModelSelectionChangedEvent,
+    ContentModelSelectionChangedEvent,
+    ContentModelSelectionChangedEventData,
+} from './event/ContentModelSelectionChangedEvent';

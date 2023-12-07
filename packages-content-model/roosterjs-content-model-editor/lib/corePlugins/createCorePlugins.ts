@@ -1,4 +1,5 @@
 import { createEditPlugin } from './EditPlugin';
+import { createEventTypeTranslatePlugin } from './EventTypeTranslatePlugin';
 import { createImageSelection } from './ImageSelection';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { createUndoPlugin } from './UndoPlugin';
@@ -17,6 +18,7 @@ export function createCorePlugins(options: ContentModelEditorOptions): UnportedC
     // The order matters, some plugin needs to be put before/after others to make sure event
     // can be handled in right order
     return {
+        eventTranslate: map.eventTranslate || createEventTypeTranslatePlugin(),
         edit: map.edit || createEditPlugin(),
         undo: map.undo || createUndoPlugin(options),
         imageSelection: map.imageSelection || createImageSelection(),

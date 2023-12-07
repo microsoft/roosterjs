@@ -1,3 +1,4 @@
+import { buildRangeEx } from './utils/buildRangeEx';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
@@ -39,6 +40,10 @@ import type {
     TableSelection,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
+import {
+    convertDomSelectionToRangeEx,
+    convertRangeExToDomSelection,
+} from './utils/selectionConverter';
 import type {
     CompatibleChangeSource,
     CompatibleColorTransformDirection,
@@ -151,7 +156,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * This is the replacement of IEditor.select.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection) {
+    setDOMSelection(selection: DOMSelection | null) {
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
@@ -447,8 +452,9 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     getSelectionRange(tryGetFromCache: boolean = true): Range | null {
-        const core = this.getCore();
-        return core.api.getSelectionRange(core, tryGetFromCache);
+        const selection = this.getDOMSelection();
+
+        return selection?.type == 'range' ? selection.range : null;
     }
 
     /**
@@ -459,8 +465,9 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     getSelectionRangeEx(): SelectionRangeEx {
-        const core = this.getCore();
-        return core.api.getSelectionRangeEx(core);
+        const selection = this.getDOMSelection();
+
+        return convertDomSelectionToRangeEx(selection);
     }
 
     /**
@@ -497,8 +504,11 @@ export class ContentModelEditor implements IContentModelEditor {
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
+        const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+        const selection = convertRangeExToDomSelection(rangeEx);
 
-        return core.api.select(core, arg1, arg2, arg3, arg4);
+        this.setDOMSelection(selection);
+        return true;
     }
 
     /**

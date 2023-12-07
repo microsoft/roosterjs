@@ -5,6 +5,7 @@ import * as createStandaloneEditorDefaultSettings from 'roosterjs-content-model-
 import * as DOMEventPlugin from 'roosterjs-content-model-core/lib/corePlugin/DOMEventPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as EntityPlugin from 'roosterjs-content-model-core/lib/corePlugin/EntityPlugin';
+import * as EventTranslate from '../../lib/corePlugins/EventTypeTranslatePlugin';
 import * as ImageSelection from '../../lib/corePlugins/ImageSelection';
 import * as LifecyclePlugin from 'roosterjs-content-model-core/lib/corePlugin/LifecyclePlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
@@ -54,6 +55,7 @@ const mockedNormalizeTablePlugin = 'NormalizeTablePlugin' as any;
 const mockedLifecyclePlugin = {
     getState: () => mockedLifecycleState,
 } as any;
+const mockedEventTranslatePlugin = 'EventTranslate' as any;
 const mockedDefaultSettings = {
     settings: 'SETTINGS',
 } as any;
@@ -85,6 +87,9 @@ describe('createEditorCore', () => {
             mockedNormalizeTablePlugin
         );
         spyOn(LifecyclePlugin, 'createLifecyclePlugin').and.returnValue(mockedLifecyclePlugin);
+        spyOn(EventTranslate, 'createEventTypeTranslatePlugin').and.returnValue(
+            mockedEventTranslatePlugin
+        );
         spyOn(
             createStandaloneEditorDefaultSettings,
             'createStandaloneEditorDefaultSettings'
@@ -104,6 +109,7 @@ describe('createEditorCore', () => {
                 mockedDOMEventPlugin,
                 mockedSelectionPlugin,
                 mockedEntityPlugin,
+                mockedEventTranslatePlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
                 mockedImageSelection,
@@ -160,6 +166,7 @@ describe('createEditorCore', () => {
                 mockedDOMEventPlugin,
                 mockedSelectionPlugin,
                 mockedEntityPlugin,
+                mockedEventTranslatePlugin,
                 mockedEditPlugin,
                 mockedUndoPlugin,
                 mockedImageSelection,

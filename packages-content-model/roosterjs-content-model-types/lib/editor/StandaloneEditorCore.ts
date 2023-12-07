@@ -10,17 +10,11 @@ import type {
     DarkColorHandler,
     EditorPlugin,
     GetContentMode,
-    ImageSelectionRange,
     InsertOption,
     NodePosition,
     PluginEvent,
-    PositionType,
     Rect,
-    SelectionPath,
-    SelectionRangeEx,
     StyleBasedFormatState,
-    TableSelection,
-    TableSelectionRange,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
@@ -82,8 +76,13 @@ export type SetContentModel = (
  * Set current DOM selection from editor. This is the replacement of core API select
  * @param core The StandaloneEditorCore object
  * @param selection The selection to set
+ * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
  */
-export type SetDOMSelection = (core: StandaloneEditorCore, selection: DOMSelection) => void;
+export type SetDOMSelection = (
+    core: StandaloneEditorCore,
+    selection: DOMSelection | null,
+    skipSelectionChangedEvent?: boolean
+) => void;
 
 /**
  * The general API to do format change with Content Model
@@ -108,24 +107,6 @@ export type FormatContentModel = (
 export type SwitchShadowEdit = (core: StandaloneEditorCore, isOn: boolean) => void;
 
 /**
- * TODO: Remove this Core API and use setDOMSelection instead
- * Select content according to the given information.
- * There are a bunch of allowed combination of parameters. See IEditor.select for more details
- * @param core The editor core object
- * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
- * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
- * @param arg3 (optional) A Node
- * @param arg4 (optional) An offset number, or a PositionType
- */
-export type Select = (
-    core: StandaloneEditorCore,
-    arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
-    arg2?: NodePosition | number | PositionType | TableSelection | null,
-    arg3?: Node,
-    arg4?: number | PositionType
-) => boolean;
-
-/**
  * Trigger a plugin event
  * @param core The StandaloneEditorCore object
  * @param pluginEvent The event object to trigger
@@ -136,13 +117,6 @@ export type TriggerEvent = (
     pluginEvent: PluginEvent,
     broadcast: boolean
 ) => void;
-
-/**
- * Get current selection range
- * @param core The StandaloneEditorCore object
- * @returns A Range object of the selection range
- */
-export type GetSelectionRangeEx = (core: StandaloneEditorCore) => SelectionRangeEx;
 
 /**
  * Edit and transform color of elements between light mode and dark mode
@@ -189,45 +163,6 @@ export type AddUndoSnapshot = (
 export type GetVisibleViewport = (core: StandaloneEditorCore) => Rect | null;
 
 /**
- * Change the editor selection to the given range
- * @param core The StandaloneEditorCore object
- * @param range The range to select
- * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
- * in editor, otherwise it will always remove current selection range and set to the given one.
- * This parameter is always treated as true in Edge to avoid some weird runtime exception.
- */
-export type SelectRange = (
-    core: StandaloneEditorCore,
-    range: Range,
-    skipSameRange?: boolean
-) => boolean;
-
-/**
- * Select a table and save data of the selected range
- * @param core The StandaloneEditorCore object
- * @param image image to select
- * @returns true if successful
- */
-export type SelectImage = (
-    core: StandaloneEditorCore,
-    image: HTMLImageElement | null
-) => ImageSelectionRange | null;
-
-/**
- * Select a table and save data of the selected range
- * @param core The StandaloneEditorCore object
- * @param table table to select
- * @param coordinates first and last cell of the selection, if this parameter is null, instead of
- * selecting, will unselect the table.
- * @returns true if successful
- */
-export type SelectTable = (
-    core: StandaloneEditorCore,
-    table: HTMLTableElement | null,
-    coordinates?: TableSelection
-) => TableSelectionRange | null;
-
-/**
  * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
  * if triggerContentChangedEvent is set to true
  * @param core The StandaloneEditorCore object
@@ -240,17 +175,6 @@ export type SetContent = (
     triggerContentChangedEvent: boolean,
     metadata?: ContentMetadata
 ) => void;
-
-/**
- * Get current or cached selection range
- * @param core The StandaloneEditorCore object
- * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
- * @returns A Range object of the selection range
- */
-export type GetSelectionRange = (
-    core: StandaloneEditorCore,
-    tryGetFromCache: boolean
-) => Range | null;
 
 /**
  * Check if the editor has focus now
@@ -364,6 +288,7 @@ export interface PortedCoreApiMap {
      * Set current DOM selection from editor. This is the replacement of core API select
      * @param core The StandaloneEditorCore object
      * @param selection The selection to set
+     * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
      */
     setDOMSelection: SetDOMSelection;
 
@@ -390,6 +315,19 @@ export interface PortedCoreApiMap {
      * @param core The StandaloneEditorCore object
      */
     getVisibleViewport: GetVisibleViewport;
+
+    /**
+     * Check if the editor has focus now
+     * @param core The StandaloneEditorCore object
+     * @returns True if the editor has focus, otherwise false
+     */
+    hasFocus: HasFocus;
+
+    /**
+     * Focus to editor. If there is a cached selection range, use it as current selection
+     * @param core The StandaloneEditorCore object
+     */
+    focus: Focus;
 }
 
 /**
@@ -398,31 +336,12 @@ export interface PortedCoreApiMap {
  */
 export interface UnportedCoreApiMap {
     /**
-     * Select content according to the given information.
-     * There are a bunch of allowed combination of parameters. See IEditor.select for more details
-     * @param core The editor core object
-     * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
-     * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
-     * @param arg3 (optional) A Node
-     * @param arg4 (optional) An offset number, or a PositionType
-     */
-    select: Select;
-
-    /**
      * Trigger a plugin event
      * @param core The StandaloneEditorCore object
      * @param pluginEvent The event object to trigger
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
-
-    /**
-     * Get current or cached selection range
-     * @param core The StandaloneEditorCore object
-     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
-     * @returns A Range object of the selection range
-     */
-    getSelectionRangeEx: GetSelectionRangeEx;
 
     /**
      * Edit and transform color of elements between light mode and dark mode
@@ -448,36 +367,6 @@ export interface UnportedCoreApiMap {
     addUndoSnapshot: AddUndoSnapshot;
 
     /**
-     * Change the editor selection to the given range
-     * @param core The StandaloneEditorCore object
-     * @param range The range to select
-     * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
-     * in editor, otherwise it will always remove current selection range and set to the given one.
-     * This parameter is always treated as true in Edge to avoid some weird runtime exception.
-     */
-    selectRange: SelectRange;
-
-    /**
-     * Select a image and save data of the selected range
-     * @param core The StandaloneEditorCore object
-     * @param image image to select
-     * @param imageId the id of the image element
-     * @returns true if successful
-     */
-    selectImage: SelectImage;
-
-    /**
-     * Select a table and save data of the selected range
-     * @param core The StandaloneEditorCore object
-     * @param table table to select
-     * @param coordinates first and last cell of the selection, if this parameter is null, instead of
-     * selecting, will unselect the table.
-     * @param shouldAddStyles Whether need to update the style elements
-     * @returns true if successful
-     */
-    selectTable: SelectTable;
-
-    /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * if triggerContentChangedEvent is set to true
      * @param core The StandaloneEditorCore object
@@ -485,27 +374,6 @@ export interface UnportedCoreApiMap {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     setContent: SetContent;
-
-    /**
-     * Get current or cached selection range
-     * @param core The StandaloneEditorCore object
-     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
-     * @returns A Range object of the selection range
-     */
-    getSelectionRange: GetSelectionRange;
-
-    /**
-     * Check if the editor has focus now
-     * @param core The StandaloneEditorCore object
-     * @returns True if the editor has focus, otherwise false
-     */
-    hasFocus: HasFocus;
-
-    /**
-     * Focus to editor. If there is a cached selection range, use it as current selection
-     * @param core The StandaloneEditorCore object
-     */
-    focus: Focus;
 
     /**
      * Insert a DOM node into editor content
