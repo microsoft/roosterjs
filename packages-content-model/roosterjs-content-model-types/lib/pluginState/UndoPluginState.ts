@@ -2,31 +2,7 @@ import type { ModeIndependentColor, UndoSnapshotsService } from 'roosterjs-edito
 import type { SelectionType } from '../selection/DOMSelection';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 
-/**
- * Base interface for an undo snapshot
- */
-export interface UndoSnapshotBase<T extends SelectionType> {
-    /**
-     * HTML content string
-     */
-    html: string;
-
-    /**
-     * Known colors for dark mode
-     */
-    knownColors: Readonly<ModeIndependentColor>[];
-
-    /**
-     * Entity states related to this undo snapshots. When undo/redo to this snapshot, each entity state will trigger
-     * an EntityOperation event with operation = EntityOperation.UpdateEntityState
-     */
-    entityStates?: EntityState[];
-
-    /**
-     * Whether this snapshot was taken from dark mode
-     */
-    isDarkMode: boolean;
-
+export interface UndoSnapshotSelectionBase<T extends SelectionType> {
     /**
      * Type of selection
      */
@@ -36,7 +12,7 @@ export interface UndoSnapshotBase<T extends SelectionType> {
 /**
  * Undo snapshot with a range selection
  */
-export interface RangeUndoSnapshot extends UndoSnapshotBase<'range'> {
+export interface RangeSnapshotSelection extends UndoSnapshotSelectionBase<'range'> {
     /**
      * Start path of selection
      */
@@ -51,7 +27,7 @@ export interface RangeUndoSnapshot extends UndoSnapshotBase<'range'> {
 /**
  * Undo snapshot with a table selection
  */
-export interface TableUndoSnapshot extends UndoSnapshotBase<'table'> {
+export interface TableSnapshotSelection extends UndoSnapshotSelectionBase<'table'> {
     /**
      * Id of selected table
      */
@@ -81,7 +57,7 @@ export interface TableUndoSnapshot extends UndoSnapshotBase<'table'> {
 /**
  * Undo snapshot with an image selection
  */
-export interface ImageUndoSnapshot extends UndoSnapshotBase<'image'> {
+export interface ImageSnapshotSelection extends UndoSnapshotSelectionBase<'image'> {
     /* Id of selected image*/
     imageId: string;
 }
@@ -89,7 +65,41 @@ export interface ImageUndoSnapshot extends UndoSnapshotBase<'image'> {
 /**
  * Union type for all 3 undo snapshot types
  */
-export type UndoSnapshot = RangeUndoSnapshot | ImageUndoSnapshot | TableUndoSnapshot;
+export type UndoSnapshotSelection =
+    | RangeSnapshotSelection
+    | TableSnapshotSelection
+    | ImageSnapshotSelection;
+
+/**
+ * Represents an undo snapshot
+ */
+export interface UndoSnapshot {
+    /**
+     * HTML content string
+     */
+    html: string;
+
+    /**
+     * Known colors for dark mode
+     */
+    knownColors: Readonly<ModeIndependentColor>[];
+
+    /**
+     * Entity states related to this undo snapshots. When undo/redo to this snapshot, each entity state will trigger
+     * an EntityOperation event with operation = EntityOperation.UpdateEntityState
+     */
+    entityStates?: EntityState[];
+
+    /**
+     * Whether this snapshot was taken from dark mode
+     */
+    isDarkMode: boolean;
+
+    /**
+     * Selection of this snapshot
+     */
+    selection?: UndoSnapshotSelection;
+}
 
 /**
  * The state object for UndoPlugin

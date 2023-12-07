@@ -1,10 +1,9 @@
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type {
-    AppendSnapshot,
+    AddUndoSnapshot,
     DOMSelection,
-    EntityState,
-    StandaloneEditorCore,
     UndoSnapshot,
+    UndoSnapshotSelection,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,41 +15,37 @@ import type {
  * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
  * when undo/redo to this snapshot
  */
-export const appendSnapshot: AppendSnapshot = (core, canUndoByBackspace, entityStates) => {
-    if (!core.lifecycle.shadowEditFragment) {
-        const selection = core.api.getDOMSelection(core);
-        const snapshot = createUndoSnapshot(
-            core,
-            selection,
-            !!core.lifecycle.isDarkMode,
-            entityStates
-        );
+export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entityStates) => {
+    const { lifecycle, api, contentDiv, darkColorHandler, undo } = core;
 
-        core.undo.snapshotsService.addSnapshot(snapshot, !!canUndoByBackspace);
-        core.undo.hasNewContent = false;
+    if (!lifecycle.shadowEditFragment) {
+        const selection = api.getDOMSelection(core);
+        const snapshot: UndoSnapshot = {
+            html: contentDiv.innerHTML,
+            knownColors: darkColorHandler.getKnownColorsCopy(),
+            entityStates,
+            isDarkMode: !!lifecycle.isDarkMode,
+            selection: createUndoSnapshotSelection(contentDiv, selection),
+        };
+
+        undo.snapshotsService.addSnapshot(snapshot, !!canUndoByBackspace);
+        undo.hasNewContent = false;
+
+        return snapshot;
+    } else {
+        return null;
     }
 };
 
-function createUndoSnapshot(
-    core: StandaloneEditorCore,
-    selection: DOMSelection | null,
-    isDarkMode: boolean,
-    entityStates?: EntityState[]
-): UndoSnapshot {
-    const { contentDiv } = core;
-    const baseInfo = {
-        html: contentDiv.innerHTML,
-        knownColors: core.darkColorHandler.getKnownColorsCopy(),
-        entityStates,
-        isDarkMode,
-    };
-
+function createUndoSnapshotSelection(
+    contentDiv: HTMLDivElement,
+    selection: DOMSelection | null
+): UndoSnapshotSelection {
     switch (selection?.type) {
         case 'image':
             return {
                 type: 'image',
                 imageId: selection.image.id,
-                ...baseInfo,
             };
 
         case 'table':
@@ -61,7 +56,6 @@ function createUndoSnapshot(
                 lastColumn: selection.lastColumn,
                 firstRow: selection.firstRow,
                 lastRow: selection.lastRow,
-                ...baseInfo,
             };
 
         case 'range':
@@ -71,7 +65,6 @@ function createUndoSnapshot(
                 type: 'range',
                 start: getPath(range.startContainer, range.startOffset, contentDiv),
                 end: getPath(range.endContainer, range.endOffset, contentDiv),
-                ...baseInfo,
             };
 
         default:
@@ -79,7 +72,6 @@ function createUndoSnapshot(
                 type: 'range',
                 start: [],
                 end: [],
-                ...baseInfo,
             };
     }
 }

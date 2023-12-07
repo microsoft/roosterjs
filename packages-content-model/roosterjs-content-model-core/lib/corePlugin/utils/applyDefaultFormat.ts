@@ -42,7 +42,7 @@ export function applyDefaultFormat(
         if (result.deleteResult == 'range') {
             normalizeContentModel(model);
 
-            editor.appendSnapshot();
+            editor.takeSnapshot();
 
             return true;
         } else if (

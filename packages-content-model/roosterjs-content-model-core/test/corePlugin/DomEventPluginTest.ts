@@ -445,9 +445,9 @@ describe('DOMEventPlugin handle other event', () => {
     });
 
     it('Trigger onDrop event', () => {
-        const appendSnapshotSpy = jasmine.createSpy('appendSnapshot');
+        const takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         editor.runAsync = (callback: Function) => callback(editor);
-        editor.appendSnapshot = appendSnapshotSpy;
+        editor.takeSnapshot = takeSnapshotSpy;
 
         eventMap.drop();
         expect(plugin.getState()).toEqual({
@@ -458,7 +458,7 @@ describe('DOMEventPlugin handle other event', () => {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
-        expect(appendSnapshotSpy).toHaveBeenCalledWith();
+        expect(takeSnapshotSpy).toHaveBeenCalledWith();
         expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(ChangeSource.Drop);
     });
 

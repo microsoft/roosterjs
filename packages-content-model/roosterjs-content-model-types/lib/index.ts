@@ -208,6 +208,7 @@ export {
     SwitchShadowEdit,
     TriggerEvent,
     TransformColor,
+    AddUndoSnapshot,
     PortedCoreApiMap,
     UnportedCoreApiMap,
     SetContent,
@@ -220,7 +221,6 @@ export {
     RestoreUndoSnapshot,
     EnsureTypeInContainer,
     GetVisibleViewport,
-    AppendSnapshot,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
@@ -239,10 +239,11 @@ export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginSt
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
 export {
     UndoPluginState,
-    UndoSnapshotBase,
-    RangeUndoSnapshot,
-    TableUndoSnapshot,
-    ImageUndoSnapshot,
+    UndoSnapshotSelectionBase,
+    RangeSnapshotSelection,
+    ImageSnapshotSelection,
+    TableSnapshotSelection,
+    UndoSnapshotSelection,
     UndoSnapshot,
 } from './pluginState/UndoPluginState';
 

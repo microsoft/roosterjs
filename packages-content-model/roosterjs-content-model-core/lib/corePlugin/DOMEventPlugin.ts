@@ -134,7 +134,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private onDrop = () => {
         this.editor?.runAsync(() => {
             if (this.editor) {
-                this.editor.appendSnapshot();
+                this.editor.takeSnapshot();
                 this.editor.triggerContentChangedEvent(ChangeSource.Drop);
             }
         });

@@ -8,13 +8,13 @@ const MAX_SIZE_LIMIT = 1e7;
 class UndoSnapshotsServiceImpl implements UndoSnapshotsService<UndoSnapshot> {
     private snapshots: Snapshots<UndoSnapshot>;
 
-    constructor(maxSize: number) {
-        this.snapshots = {
+    constructor(snapshots?: Snapshots<UndoSnapshot>) {
+        this.snapshots = snapshots ?? {
             snapshots: [],
             totalSize: 0,
             currentIndex: -1,
             autoCompleteIndex: -1,
-            maxSize,
+            maxSize: MAX_SIZE_LIMIT,
         };
     }
 
@@ -103,10 +103,11 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<UndoSnapshot> {
 }
 
 /**
- * @internal
+ * Create a new instance of default Undo Snapshot service class
+ * @param snapshots @optional The snapshots object
  */
 export function createUndoSnapshotService(
-    maxSizeLimit: number = MAX_SIZE_LIMIT
+    snapshots?: Snapshots<UndoSnapshot>
 ): UndoSnapshotsService<UndoSnapshot> {
-    return new UndoSnapshotsServiceImpl(maxSizeLimit);
+    return new UndoSnapshotsServiceImpl(snapshots);
 }

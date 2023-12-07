@@ -1,3 +1,4 @@
+import type { UndoSnapshot } from '../pluginState/UndoPluginState';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
     CompatibleColorTransformDirection,
@@ -107,20 +108,6 @@ export type FormatContentModel = (
 export type SwitchShadowEdit = (core: StandaloneEditorCore, isOn: boolean) => void;
 
 /**
- * Add an undo snapshot to current undo snapshot stack
- * @param core The StandaloneEditorCore object
- * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
- * @param entityStates @optional Entity states related to this snapshot.
- * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
- * when undo/redo to this snapshot
- */
-export type AppendSnapshot = (
-    core: StandaloneEditorCore,
-    canUndoByBackspace: boolean,
-    entityStates?: EntityState[]
-) => void;
-
-/**
  * Trigger a plugin event
  * @param core The StandaloneEditorCore object
  * @param pluginEvent The event object to trigger
@@ -152,6 +139,20 @@ export type TransformColor = (
     forceTransform?: boolean,
     fromDarkMode?: boolean
 ) => void;
+
+/**
+ * Add an undo snapshot to current undo snapshot stack
+ * @param core The StandaloneEditorCore object
+ * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+ * @param entityStates @optional Entity states related to this snapshot.
+ * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
+ * when undo/redo to this snapshot
+ */
+export type AddUndoSnapshot = (
+    core: StandaloneEditorCore,
+    canUndoByBackspace: boolean,
+    entityStates?: EntityState[]
+) => UndoSnapshot | null;
 
 /**
  * Retrieves the rect of the visible viewport of the editor.
@@ -233,7 +234,7 @@ export type GetStyleBasedFormatState = (
  * @param core The StandaloneEditorCore object
  * @param step Steps to move, can be 0, positive or negative
  */
-export type RestoreUndoSnapshot = (core: StandaloneEditorCore, step: number) => void;
+export type RestoreUndoSnapshot = (core: StandaloneEditorCore, snapshot: UndoSnapshot) => void;
 
 /**
  * Ensure user will type into a container element rather than into the editor content DIV directly
@@ -334,7 +335,7 @@ export interface PortedCoreApiMap {
      * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
      * when undo/redo to this snapshot
      */
-    appendSnapshot: AppendSnapshot;
+    addUndoSnapshot: AddUndoSnapshot;
 
     /**
      * Restore an undo snapshot into editor

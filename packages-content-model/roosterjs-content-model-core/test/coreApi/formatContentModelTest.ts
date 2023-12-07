@@ -10,7 +10,7 @@ import {
 
 describe('formatContentModel', () => {
     let core: StandaloneEditorCore & EditorCore;
-    let appendSnapshot: jasmine.Spy;
+    let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
     let mockedModel: ContentModelDocument;
@@ -27,7 +27,7 @@ describe('formatContentModel', () => {
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
 
-        appendSnapshot = jasmine.createSpy('appendSnapshot');
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel').and.returnValue(mockedSelection);
         cacheContentModel = jasmine.createSpy('cacheContentModel');
@@ -39,7 +39,7 @@ describe('formatContentModel', () => {
 
         core = ({
             api: {
-                appendSnapshot,
+                addUndoSnapshot,
                 createContentModel,
                 setContentModel,
                 cacheContentModel,
@@ -65,7 +65,7 @@ describe('formatContentModel', () => {
             newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(appendSnapshot).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(setContentModel).not.toHaveBeenCalled();
         expect(triggerEvent).not.toHaveBeenCalled();
     });
@@ -82,8 +82,8 @@ describe('formatContentModel', () => {
             newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(appendSnapshot).toHaveBeenCalledTimes(1);
-        expect(appendSnapshot).toHaveBeenCalledWith(core, false, undefined);
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+        expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -120,7 +120,7 @@ describe('formatContentModel', () => {
             newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(appendSnapshot).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -153,7 +153,7 @@ describe('formatContentModel', () => {
             newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(appendSnapshot).toHaveBeenCalledWith(core, false, undefined);
+        expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -195,7 +195,7 @@ describe('formatContentModel', () => {
             newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(appendSnapshot).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -229,7 +229,7 @@ describe('formatContentModel', () => {
             newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(appendSnapshot).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, onNodeCreated);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -345,7 +345,7 @@ describe('formatContentModel', () => {
             }
         );
 
-        expect(appendSnapshot).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -386,7 +386,7 @@ describe('formatContentModel', () => {
             selectionOverride: range,
         });
 
-        expect(appendSnapshot).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(createContentModel).toHaveBeenCalledWith(core, undefined, range);
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -429,7 +429,7 @@ describe('formatContentModel', () => {
         );
 
         expect(getVisibleViewportSpy).toHaveBeenCalledTimes(1);
-        expect(appendSnapshot).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -462,7 +462,7 @@ describe('formatContentModel', () => {
             }
         );
 
-        expect(appendSnapshot).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -498,7 +498,7 @@ describe('formatContentModel', () => {
             }
         );
 
-        expect(appendSnapshot).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(setContentModel).not.toHaveBeenCalled();
         expect(triggerEvent).not.toHaveBeenCalled();
         expect(core.cache).toEqual({

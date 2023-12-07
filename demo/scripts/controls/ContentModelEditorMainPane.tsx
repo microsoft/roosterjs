@@ -8,18 +8,18 @@ import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFo
 import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
 import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
 import ContentModelRooster from './contentModel/editor/ContentModelRooster';
+import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
 import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
-import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import { ContentModelSegmentFormat, UndoSnapshot } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
-import { EditorPlugin } from 'roosterjs-editor-types';
+import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
@@ -99,19 +99,29 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
+    private snapshotPlugin: ContentModelSnapshotPlugin;
     private entityDelimiterPlugin: EntityDelimiterPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
+    private snapshots: Snapshots<UndoSnapshot>;
 
     constructor(props: {}) {
         super(props);
+
+        this.snapshots = {
+            snapshots: [],
+            totalSize: 0,
+            currentIndex: -1,
+            autoCompleteIndex: -1,
+            maxSize: 1e7,
+        };
 
         this.formatStatePlugin = new ContentModelFormatStatePlugin();
         this.editorOptionPlugin = new ContentModelEditorOptionsPlugin();
         this.eventViewPlugin = new ContentModelEventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
-        this.snapshotPlugin = new SnapshotPlugin();
+        this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.contentModelEditPlugin = new ContentModelEditPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
@@ -239,7 +249,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
                             experimentalFeatures={this.state.initState.experimentalFeatures}
-                            // undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
+                            undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
                             trustedHTMLHandler={trustedHTMLHandler}
                             zoomScale={this.state.scale}
                             initialContent={this.content}

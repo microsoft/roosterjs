@@ -22,103 +22,91 @@ import type {
  * @param core The editor core object
  * @param step Steps to move, can be 0, positive or negative
  */
-export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, step) => {
-    if (core.undo.hasNewContent && step < 0) {
-        core.api.appendSnapshot(core, false /*canUndoByBackspace*/);
-    }
+export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, snapshot) => {
+    const body = new DOMParser().parseFromString(
+        core.trustedHTMLHandler?.(snapshot.html) ?? snapshot.html,
+        'text/html'
+    ).body;
 
-    const snapshot = core.undo.snapshotsService.move(step);
+    core.api.triggerEvent(
+        core,
+        {
+            eventType: PluginEventType.BeforeSetContent,
+            newContent: snapshot.html,
+        },
+        true /*broadcast*/
+    );
 
-    if (snapshot && snapshot.html != null) {
-        const body = new DOMParser().parseFromString(
-            core.trustedHTMLHandler?.(snapshot.html) ?? snapshot.html,
-            'text/html'
-        ).body;
+    let refNode: Node | null = core.contentDiv.firstChild;
 
-        core.api.triggerEvent(
-            core,
-            {
-                eventType: PluginEventType.BeforeSetContent,
-                newContent: snapshot.html,
-            },
-            true /*broadcast*/
-        );
+    try {
+        core.undo.isRestoring = true;
 
-        let refNode: Node | null = core.contentDiv.firstChild;
+        for (let currentNode = body.firstChild; currentNode; ) {
+            const next = currentNode.nextSibling;
+            const originalEntityElement = tryGetEntityElement(core, currentNode);
 
-        try {
-            core.undo.isRestoring = true;
+            if (originalEntityElement) {
+                refNode = reuseCachedElement(core.contentDiv, originalEntityElement, refNode);
+            } else {
+                core.contentDiv.insertBefore(currentNode, refNode);
 
-            for (let currentNode = body.firstChild; currentNode; ) {
-                const next = currentNode.nextSibling;
-                const originalEntityElement = tryGetEntityElement(core, currentNode);
+                if (isNodeOfType(currentNode, 'ELEMENT_NODE')) {
+                    const childEntities = getAllEntityWrappers(currentNode);
 
-                if (originalEntityElement) {
-                    refNode = reuseCachedElement(core.contentDiv, originalEntityElement, refNode);
-                } else {
-                    core.contentDiv.insertBefore(currentNode, refNode);
+                    childEntities.forEach(element => {
+                        const wrapper = tryGetEntityElement(core, element);
 
-                    if (isNodeOfType(currentNode, 'ELEMENT_NODE')) {
-                        const childEntities = getAllEntityWrappers(currentNode);
-
-                        childEntities.forEach(element => {
-                            const wrapper = tryGetEntityElement(core, element);
-
-                            if (wrapper) {
-                                element.parentNode?.replaceChild(wrapper, element);
-                            }
-                        });
-                    }
+                        if (wrapper) {
+                            element.parentNode?.replaceChild(wrapper, element);
+                        }
+                    });
                 }
-                currentNode = next;
             }
-
-            while (refNode) {
-                const next = refNode.nextSibling;
-
-                refNode.parentNode?.removeChild(refNode);
-                refNode = next;
-            }
-
-            const selection = getSelectionFromSnapshot(core.contentDiv, snapshot);
-
-            core.api.setDOMSelection(core, selection);
-
-            const isDarkMode = core.lifecycle.isDarkMode;
-            const darkColorHandler = core.darkColorHandler;
-
-            snapshot.knownColors.forEach(color => {
-                darkColorHandler.registerColor(
-                    color.lightModeColor,
-                    isDarkMode,
-                    color.darkModeColor
-                );
-            });
-
-            if (!!snapshot.isDarkMode != !!isDarkMode) {
-                core.api.transformColor(
-                    core,
-                    core.contentDiv,
-                    false /*includeSelf*/,
-                    null /*callback*/,
-                    isDarkMode
-                        ? ColorTransformDirection.LightToDark
-                        : ColorTransformDirection.DarkToLight,
-                    true /*forceTransform*/,
-                    snapshot.isDarkMode
-                );
-            }
-
-            const event: ContentModelContentChangedEvent = {
-                eventType: PluginEventType.ContentChanged,
-                entityStates: snapshot.entityStates,
-                source: ChangeSource.SetContent,
-            };
-
-            core.api.triggerEvent(core, event, false /*broadcast*/);
-        } finally {
-            core.undo.isRestoring = false;
+            currentNode = next;
         }
+
+        while (refNode) {
+            const next = refNode.nextSibling;
+
+            refNode.parentNode?.removeChild(refNode);
+            refNode = next;
+        }
+
+        const selection = getSelectionFromSnapshot(core.contentDiv, snapshot);
+
+        core.api.setDOMSelection(core, selection);
+
+        const isDarkMode = core.lifecycle.isDarkMode;
+        const darkColorHandler = core.darkColorHandler;
+
+        snapshot.knownColors.forEach(color => {
+            darkColorHandler.registerColor(color.lightModeColor, isDarkMode, color.darkModeColor);
+        });
+
+        if (!!snapshot.isDarkMode != !!isDarkMode) {
+            core.api.transformColor(
+                core,
+                core.contentDiv,
+                false /*includeSelf*/,
+                null /*callback*/,
+                isDarkMode
+                    ? ColorTransformDirection.LightToDark
+                    : ColorTransformDirection.DarkToLight,
+                true /*forceTransform*/,
+                snapshot.isDarkMode
+            );
+        }
+
+        const event: ContentModelContentChangedEvent = {
+            eventType: PluginEventType.ContentChanged,
+            entityStates: snapshot.entityStates,
+            source: ChangeSource.SetContent,
+        };
+
+        core.api.triggerEvent(core, event, false /*broadcast*/);
+    } finally {
+        core.undo.isRestoring = false;
     }
 };
 
@@ -142,44 +130,48 @@ function getSelectionFromSnapshot(
     contentDiv: HTMLElement,
     snapshot: UndoSnapshot
 ): DOMSelection | null {
-    switch (snapshot.type) {
-        case 'range':
-            const startPos = getPositionFromPath(contentDiv, snapshot.start);
-            const endPos = getPositionFromPath(contentDiv, snapshot.end);
-            const range = contentDiv.ownerDocument.createRange();
+    const selection = snapshot.selection;
 
-            range.setStart(startPos.node, startPos.offset);
-            range.setEnd(endPos.node, endPos.offset);
+    if (selection) {
+        switch (selection.type) {
+            case 'range':
+                const startPos = getPositionFromPath(contentDiv, selection.start);
+                const endPos = getPositionFromPath(contentDiv, selection.end);
+                const range = contentDiv.ownerDocument.createRange();
 
-            return {
-                type: 'range',
-                range,
-            };
-        case 'table':
-            const table = contentDiv.querySelector('#' + snapshot.tableId) as HTMLTableElement;
+                range.setStart(startPos.node, startPos.offset);
+                range.setEnd(endPos.node, endPos.offset);
 
-            return table
-                ? {
-                      type: 'table',
-                      table: table,
-                      firstColumn: snapshot.firstColumn,
-                      firstRow: snapshot.firstRow,
-                      lastColumn: snapshot.lastColumn,
-                      lastRow: snapshot.lastRow,
-                  }
-                : null;
-        case 'image':
-            const image = contentDiv.querySelector('#' + snapshot.imageId) as HTMLImageElement;
+                return {
+                    type: 'range',
+                    range,
+                };
+            case 'table':
+                const table = contentDiv.querySelector('#' + selection.tableId) as HTMLTableElement;
 
-            return image
-                ? {
-                      type: 'image',
-                      image: image,
-                  }
-                : null;
-        default:
-            return null;
+                return table
+                    ? {
+                          type: 'table',
+                          table: table,
+                          firstColumn: selection.firstColumn,
+                          firstRow: selection.firstRow,
+                          lastColumn: selection.lastColumn,
+                          lastRow: selection.lastRow,
+                      }
+                    : null;
+            case 'image':
+                const image = contentDiv.querySelector('#' + selection.imageId) as HTMLImageElement;
+
+                return image
+                    ? {
+                          type: 'image',
+                          image: image,
+                      }
+                    : null;
+        }
     }
+
+    return null;
 }
 
 function getPositionFromPath(node: Node, path: number[]): { node: Node; offset: number } {

@@ -43,20 +43,21 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             core.undo.isNested = true;
 
             if (core.undo.hasNewContent || entityStates) {
-                core.api.appendSnapshot(core, !!canUndoByBackspace);
+                core.api.addUndoSnapshot(core, !!canUndoByBackspace);
             }
         }
 
         try {
+            handleImages(core, context);
+
             selection =
                 core.api.setContentModel(core, model, undefined /*options*/, onNodeCreated) ??
                 undefined;
 
-            handleImages(core, context);
             handlePendingFormat(core, context, selection);
 
             if (shouldAddSnapshot) {
-                core.api.appendSnapshot(core, false /*canUndoByBackspace*/, entityStates);
+                core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/, entityStates);
             }
         } finally {
             if (!isNested) {

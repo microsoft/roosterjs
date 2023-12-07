@@ -88,6 +88,7 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
     EditorEnvironment,
+    UndoSnapshot,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -190,10 +191,20 @@ export class ContentModelEditor implements IContentModelEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    appendSnapshot(): void {
+    takeSnapshot(): UndoSnapshot | null {
         const core = this.getCore();
 
-        core.api.appendSnapshot(core, false /*canUndoByBackspace*/);
+        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+    }
+
+    /**
+     * Restore the given undo snapshot
+     * @param snapshot The snapshot to restore
+     */
+    restoreSnapshot(snapshot: UndoSnapshot): void {
+        const core = this.getCore();
+
+        core.api.restoreUndoSnapshot(core, snapshot);
     }
 
     /**
@@ -658,7 +669,16 @@ export class ContentModelEditor implements IContentModelEditor {
     undo() {
         this.focus();
         const core = this.getCore();
-        core.api.restoreUndoSnapshot(core, -1 /*step*/);
+
+        if (core.undo.hasNewContent) {
+            core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        }
+
+        const snapshot = core.undo.snapshotsService.move(-1);
+
+        if (snapshot) {
+            core.api.restoreUndoSnapshot(core, snapshot);
+        }
     }
 
     /**
@@ -666,8 +686,13 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     redo() {
         this.focus();
+
         const core = this.getCore();
-        core.api.restoreUndoSnapshot(core, 1 /*step*/);
+        const snapshot = core.undo.snapshotsService.move(1);
+
+        if (snapshot) {
+            core.api.restoreUndoSnapshot(core, snapshot);
+        }
     }
 
     /**
@@ -697,7 +722,7 @@ export class ContentModelEditor implements IContentModelEditor {
             // When there is getEntityState, it means this is triggered by an entity change.
             // So if HTML content is not changed (hasNewContent is false), no need to add another snapshot before change
             if (core.undo.hasNewContent || !additionalData?.getEntityState || !callback) {
-                core.api.appendSnapshot(
+                core.api.addUndoSnapshot(
                     core,
                     !!canUndoByBackspace,
                     additionalData?.getEntityState?.()
@@ -717,7 +742,7 @@ export class ContentModelEditor implements IContentModelEditor {
                 if (!isNested) {
                     const entityStates = additionalData?.getEntityState?.();
 
-                    core.api.appendSnapshot(core, false /*isAutoCompleteSnapshot*/, entityStates);
+                    core.api.addUndoSnapshot(core, false /*isAutoCompleteSnapshot*/, entityStates);
                 }
             }
         } finally {

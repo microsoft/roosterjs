@@ -239,7 +239,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
     }
 
     private addUndoSnapshot() {
-        this.editor?.appendSnapshot();
+        this.editor?.takeSnapshot();
         this.state.posContainer = null;
         this.state.posOffset = null;
     }

@@ -49,3 +49,4 @@ export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
 export { createStandaloneEditorCore } from './editor/createStandaloneEditorCore';
+export { createUndoSnapshotService } from './editor/UndoSnapshotServiceImpl';

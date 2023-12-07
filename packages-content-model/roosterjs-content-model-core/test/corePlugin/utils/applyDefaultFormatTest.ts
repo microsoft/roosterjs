@@ -26,7 +26,7 @@ describe('applyDefaultFormat', () => {
     let formatContentModelSpy: jasmine.Spy;
     let deleteSelectionSpy: jasmine.Spy;
     let normalizeContentModelSpy: jasmine.Spy;
-    let appendSnapshotSpy: jasmine.Spy;
+    let takeSnapshotSpy: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
 
     let context: FormatWithContentModelContext | undefined;
@@ -47,7 +47,7 @@ describe('applyDefaultFormat', () => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelectionSpy');
         deleteSelectionSpy = spyOn(deleteSelection, 'deleteSelection');
         normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
-        appendSnapshotSpy = jasmine.createSpy('appendSnapshot');
+        takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         getPendingFormatSpy = jasmine.createSpy('getPendingFormat');
 
         formatContentModelSpy = jasmine
@@ -68,7 +68,7 @@ describe('applyDefaultFormat', () => {
             contains: () => true,
             getDOMSelection: getDOMSelectionSpy,
             formatContentModel: formatContentModelSpy,
-            appendSnapshot: appendSnapshotSpy,
+            takeSnapshot: takeSnapshotSpy,
             getPendingFormat: getPendingFormatSpy,
         } as any;
     });
@@ -118,7 +118,7 @@ describe('applyDefaultFormat', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(normalizeContentModelSpy).toHaveBeenCalledWith(model);
-        expect(appendSnapshotSpy).toHaveBeenCalledTimes(1);
+        expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
         expect(context).toEqual({
             deletedEntities: [],
@@ -147,7 +147,7 @@ describe('applyDefaultFormat', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(normalizeContentModelSpy).not.toHaveBeenCalledWith();
-        expect(appendSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -176,7 +176,7 @@ describe('applyDefaultFormat', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(normalizeContentModelSpy).not.toHaveBeenCalledWith();
-        expect(appendSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -217,7 +217,7 @@ describe('applyDefaultFormat', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(appendSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -258,7 +258,7 @@ describe('applyDefaultFormat', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(appendSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -300,7 +300,7 @@ describe('applyDefaultFormat', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(appendSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -341,7 +341,7 @@ describe('applyDefaultFormat', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(appendSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -391,7 +391,7 @@ describe('applyDefaultFormat', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(appendSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],

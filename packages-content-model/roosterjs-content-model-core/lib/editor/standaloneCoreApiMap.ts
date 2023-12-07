@@ -1,4 +1,4 @@
-import { appendSnapshot } from '../coreApi/appendSnapshot';
+import { addUndoSnapshot } from '../coreApi/addUndoSnapshot';
 import { createContentModel } from '../coreApi/createContentModel';
 import { createEditorContext } from '../coreApi/createEditorContext';
 import { focus } from '../coreApi/focus';
@@ -27,6 +27,6 @@ export const standaloneCoreApiMap: PortedCoreApiMap = {
     getVisibleViewport: getVisibleViewport,
     focus: focus,
     hasFocus: hasFocus,
-    appendSnapshot: appendSnapshot,
+    addUndoSnapshot: addUndoSnapshot,
     restoreUndoSnapshot: restoreUndoSnapshot,
 };
