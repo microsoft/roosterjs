@@ -1,4 +1,4 @@
-import { UndoSnapshot } from '../pluginState/UndoPluginState';
+import type { UndoSnapshot } from '../pluginState/UndoPluginState';
 import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
