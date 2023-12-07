@@ -18,6 +18,9 @@ export { getSelectionRootNode } from './publicApi/selection/getSelectionRootNode
 export { deleteSelection } from './publicApi/selection/deleteSelection';
 export { deleteSegment } from './publicApi/selection/deleteSegment';
 export { deleteBlock } from './publicApi/selection/deleteBlock';
+export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
+export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
+export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export {
     OperationalBlocks,
     getFirstSelectedListItem,
