@@ -500,6 +500,51 @@ describe('EntityPlugin', () => {
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
+
+        it('With content state', () => {
+            const id = 'ID';
+            const entityType = 'Entity1';
+            const entityState = 'STATE';
+            const state = plugin.getState();
+            const wrapper = document.createElement('div');
+            const entity = createEntity(wrapper, true, undefined, entityType, id);
+            const doc = createContentModelDocument();
+
+            wrapper.className = entityUtils.generateEntityClassNames({
+                entityType,
+                id: id,
+                isReadonly: true,
+            });
+            doc.blocks.push(entity);
+            createContentModelSpy.and.returnValue(doc);
+
+            state.entityMap[id] = {
+                element: wrapper,
+            };
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.ContentChanged,
+                entityStates: [
+                    {
+                        id,
+                        state: entityState,
+                    },
+                ],
+            } as any);
+
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.UpdateEntityState,
+                rawEvent: undefined,
+                entity: {
+                    id,
+                    type: entityType,
+                    isReadonly: true,
+                    wrapper,
+                },
+                state: entityState,
+            });
+        });
     });
 
     describe('MouseUp event', () => {

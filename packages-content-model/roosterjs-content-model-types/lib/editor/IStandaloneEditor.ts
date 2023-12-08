@@ -1,4 +1,4 @@
-import type { UndoSnapshot } from '../pluginState/UndoPluginState';
+import type { Snapshot } from '../parameter/Snapshot';
 import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
@@ -149,13 +149,13 @@ export interface IStandaloneEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): UndoSnapshot | null;
+    takeSnapshot(): void;
 
     /**
-     * Restore the given undo snapshot
+     * Restore an undo snapshot into editor
      * @param snapshot The snapshot to restore
      */
-    restoreSnapshot(snapshot: UndoSnapshot): void;
+    restoreSnapshot(snapshot: Snapshot): void;
 
     /**
      * Check if editor is in IME input sequence

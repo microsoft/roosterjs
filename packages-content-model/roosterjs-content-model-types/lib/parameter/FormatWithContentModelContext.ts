@@ -94,7 +94,7 @@ export interface FormatWithContentModelContext {
     entityStates?: EntityState[];
 
     /**
-     * True if this action can be undone when user press Backspace key (aka Auto Complete).
+     * @optional Set to true if this action can be undone when user press Backspace key (aka Auto Complete).
      */
     canUndoByBackspace?: boolean;
 }

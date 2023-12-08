@@ -175,22 +175,20 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
             }
         });
 
-        if (entityStates) {
-            entityStates.forEach(entityState => {
-                const { id, state } = entityState;
-                const wrapper = this.state.entityMap[id]?.element;
+        entityStates?.forEach(entityState => {
+            const { id, state } = entityState;
+            const wrapper = this.state.entityMap[id]?.element;
 
-                if (wrapper) {
-                    this.triggerEvent(
-                        editor,
-                        wrapper,
-                        'updateEntityState',
-                        undefined /*rawEvent*/,
-                        state
-                    );
-                }
-            });
-        }
+            if (wrapper) {
+                this.triggerEvent(
+                    editor,
+                    wrapper,
+                    'updateEntityState',
+                    undefined /*rawEvent*/,
+                    state
+                );
+            }
+        });
     }
 
     private getChangedEntities(editor: IStandaloneEditor): ChangedEntity[] {

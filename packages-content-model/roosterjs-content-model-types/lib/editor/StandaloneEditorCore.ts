@@ -1,4 +1,4 @@
-import type { UndoSnapshot } from '../pluginState/UndoPluginState';
+import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
     CompatibleColorTransformDirection,
@@ -152,7 +152,7 @@ export type AddUndoSnapshot = (
     core: StandaloneEditorCore,
     canUndoByBackspace: boolean,
     entityStates?: EntityState[]
-) => UndoSnapshot | null;
+) => void;
 
 /**
  * Retrieves the rect of the visible viewport of the editor.
@@ -234,7 +234,7 @@ export type GetStyleBasedFormatState = (
  * @param core The StandaloneEditorCore object
  * @param step Steps to move, can be 0, positive or negative
  */
-export type RestoreUndoSnapshot = (core: StandaloneEditorCore, snapshot: UndoSnapshot) => void;
+export type RestoreUndoSnapshot = (core: StandaloneEditorCore, snapshot: Snapshot) => void;
 
 /**
  * Ensure user will type into a container element rather than into the editor content DIV directly

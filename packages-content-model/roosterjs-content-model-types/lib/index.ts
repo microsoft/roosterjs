@@ -237,15 +237,7 @@ export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
-export {
-    UndoPluginState,
-    UndoSnapshotSelectionBase,
-    RangeSnapshotSelection,
-    ImageSnapshotSelection,
-    TableSnapshotSelection,
-    UndoSnapshotSelection,
-    UndoSnapshot,
-} from './pluginState/UndoPluginState';
+export { UndoPluginState } from './pluginState/UndoPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -267,6 +259,14 @@ export {
     DeleteSelectionStep,
     ValidDeleteSelectionContext,
 } from './parameter/DeleteSelectionStep';
+export {
+    SnapshotSelectionBase,
+    RangeSnapshotSelection,
+    ImageSnapshotSelection,
+    TableSnapshotSelection,
+    SnapshotSelection,
+    Snapshot,
+} from './parameter/Snapshot';
 
 export {
     ContentModelBeforePasteEvent,

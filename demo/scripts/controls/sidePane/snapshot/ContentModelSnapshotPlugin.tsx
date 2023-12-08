@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ContentModelSnapshotPane from './ContentModelSnapshotPane';
 import SidePanePlugin from '../../SidePanePlugin';
-import { createUndoSnapshotService } from 'roosterjs-content-model-core';
-import { IStandaloneEditor, UndoSnapshot } from 'roosterjs-content-model-types';
+import { createUndoSnapshotService } from 'roosterjs-content-model-core/lib/editor/UndoSnapshotServiceImpl';
+import { IStandaloneEditor, Snapshot } from 'roosterjs-content-model-types';
 import {
     IEditor,
     PluginEvent,
@@ -11,60 +11,58 @@ import {
     UndoSnapshotsService,
 } from 'roosterjs-editor-types';
 
-class ContentModelUndoSnapshotServiceProxy implements UndoSnapshotsService<UndoSnapshot> {
-    private innerService: UndoSnapshotsService<UndoSnapshot>;
+class UndoSnapshotsServiceProxy implements UndoSnapshotsService<Snapshot> {
+    private innerService: UndoSnapshotsService<Snapshot>;
+    private hijackUndoSnapshotCallback: undefined | ((snapshot: Snapshot) => void);
 
-    constructor(private snapshots: Snapshots<UndoSnapshot>, private onChange: () => void) {
+    constructor(snapshots: Snapshots<Snapshot>, private onChange: () => void) {
         this.innerService = createUndoSnapshotService(snapshots);
     }
 
-    canMove(step: number): boolean {
-        return this.innerService.canMove(step);
+    public startHijackUndoSnapshot(callback: (snapshot: Snapshot) => void) {
+        this.hijackUndoSnapshotCallback = callback;
     }
 
-    move(step: number): UndoSnapshot {
-        const result = this.innerService.move(step);
+    public stopHijackUndoSnapshot() {
+        this.hijackUndoSnapshotCallback = undefined;
+    }
+
+    public canMove(delta: number): boolean {
+        return this.innerService.canMove(delta);
+    }
+
+    public move(delta: number): Snapshot {
+        const result = this.innerService.move(delta);
         this.onChange();
         return result;
     }
 
-    addSnapshot(snapshot: UndoSnapshot, isAutoCompleteSnapshot: boolean): void {
-        this.innerService.addSnapshot(snapshot, isAutoCompleteSnapshot);
-        this.onChange();
+    public addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean) {
+        if (this.hijackUndoSnapshotCallback) {
+            this.hijackUndoSnapshotCallback(snapshot);
+        } else {
+            this.innerService.addSnapshot(snapshot, isAutoCompleteSnapshot);
+            this.onChange();
+        }
     }
 
-    clearRedo(): void {
+    public clearRedo() {
         this.innerService.clearRedo();
         this.onChange();
     }
 
-    canUndoAutoComplete(): boolean {
+    public canUndoAutoComplete() {
         return this.innerService.canUndoAutoComplete();
-    }
-
-    getSnapshots() {
-        return this.snapshots.snapshots;
-    }
-
-    getCurrentIndex() {
-        return this.snapshots.currentIndex;
-    }
-
-    getAutoCompleteIndex() {
-        return this.snapshots.autoCompleteIndex;
     }
 }
 
 export default class ContentModelSnapshotPlugin implements SidePanePlugin {
     private editorInstance: IEditor & IStandaloneEditor;
     private component: ContentModelSnapshotPane;
-    private outerService: ContentModelUndoSnapshotServiceProxy;
+    private undoService: UndoSnapshotsServiceProxy;
 
-    constructor(snapshots: Snapshots<UndoSnapshot>) {
-        this.outerService = new ContentModelUndoSnapshotServiceProxy(
-            snapshots,
-            this.updateSnapshots
-        );
+    constructor(private snapshots: Snapshots<Snapshot>) {
+        this.undoService = new UndoSnapshotsServiceProxy(snapshots, this.updateSnapshots);
     }
 
     getName() {
@@ -94,7 +92,7 @@ export default class ContentModelSnapshotPlugin implements SidePanePlugin {
     }
 
     getSnapshotService() {
-        return this.outerService;
+        return this.undoService;
     }
 
     private refCallback = (ref: ContentModelSnapshotPane) => {
@@ -112,16 +110,27 @@ export default class ContentModelSnapshotPlugin implements SidePanePlugin {
         };
     }
 
-    private onTakeSnapshot = (): UndoSnapshot => {
-        return this.editorInstance.takeSnapshot();
+    private onTakeSnapshot = (): Snapshot => {
+        let newSnapshot: Snapshot;
+
+        try {
+            this.undoService.startHijackUndoSnapshot(snapshot => {
+                newSnapshot = snapshot;
+            });
+            this.editorInstance.addUndoSnapshot();
+        } finally {
+            this.undoService.stopHijackUndoSnapshot();
+        }
+
+        return newSnapshot;
     };
 
     private onMove = (step: number) => {
-        const snapshot = this.outerService.move(step);
+        const snapshot = this.undoService.move(step);
         this.onRestoreSnapshot(snapshot);
     };
 
-    private onRestoreSnapshot = (snapshot: UndoSnapshot) => {
+    private onRestoreSnapshot = (snapshot: Snapshot) => {
         this.editorInstance.focus();
         this.editorInstance.restoreSnapshot(snapshot);
     };
@@ -132,9 +141,9 @@ export default class ContentModelSnapshotPlugin implements SidePanePlugin {
         }
 
         this.component.updateSnapshots(
-            this.outerService.getSnapshots(),
-            this.outerService.getCurrentIndex(),
-            this.outerService.getAutoCompleteIndex()
+            this.snapshots.snapshots,
+            this.snapshots.currentIndex,
+            this.snapshots.autoCompleteIndex
         );
     };
 }

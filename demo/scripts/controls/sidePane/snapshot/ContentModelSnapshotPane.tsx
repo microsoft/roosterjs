@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { EntityState, UndoSnapshot, UndoSnapshotSelection } from 'roosterjs-content-model-types';
+import { EntityState, Snapshot, SnapshotSelection } from 'roosterjs-content-model-types';
 import { ModeIndependentColor } from 'roosterjs-editor-types';
 
 const styles = require('./SnapshotPane.scss');
 
 export interface ContentModelSnapshotPaneProps {
-    onTakeSnapshot: () => UndoSnapshot;
-    onRestoreSnapshot: (snapshot: UndoSnapshot, triggerContentChangedEvent: boolean) => void;
+    onTakeSnapshot: () => Snapshot;
+    onRestoreSnapshot: (snapshot: Snapshot, triggerContentChangedEvent: boolean) => void;
     onMove: (moveStep: number) => void;
 }
 
 export interface ContentModelSnapshotPaneState {
-    snapshots: UndoSnapshot[];
+    snapshots: Snapshot[];
     currentIndex: number;
     autoCompleteIndex: number;
 }
@@ -67,7 +67,7 @@ export default class ContentModelSnapshotPane extends React.Component<
     private onClickRestoreSnapshot = () => {
         const html = this.html.current.value;
         const selection = this.selection.current.value
-            ? (JSON.parse(this.selection.current.value) as UndoSnapshotSelection)
+            ? (JSON.parse(this.selection.current.value) as SnapshotSelection)
             : undefined;
         const knownColors = this.knownColors.current.value
             ? (JSON.parse(this.knownColors.current.value) as ModeIndependentColor[])
@@ -89,7 +89,7 @@ export default class ContentModelSnapshotPane extends React.Component<
         );
     };
 
-    updateSnapshots(snapshots: UndoSnapshot[], currentIndex: number, autoCompleteIndex: number) {
+    updateSnapshots(snapshots: Snapshot[], currentIndex: number, autoCompleteIndex: number) {
         this.setState({
             snapshots,
             currentIndex,
@@ -97,7 +97,7 @@ export default class ContentModelSnapshotPane extends React.Component<
         });
     }
 
-    snapshotToString(snapshot: UndoSnapshot) {
+    snapshotToString(snapshot: Snapshot) {
         return (
             snapshot.html +
             (snapshot.selection ? `<!--${JSON.stringify(snapshot.selection)}-->` : '')
@@ -109,7 +109,7 @@ export default class ContentModelSnapshotPane extends React.Component<
         this.setSnapshot(snapshot);
     };
 
-    private setSnapshot = (snapshot: UndoSnapshot) => {
+    private setSnapshot = (snapshot: Snapshot) => {
         this.html.current.value = snapshot.html;
         this.entityStates.current.value = snapshot.entityStates
             ? JSON.stringify(snapshot.entityStates)
@@ -121,7 +121,7 @@ export default class ContentModelSnapshotPane extends React.Component<
         this.isDarkColor.current.checked = !!snapshot.isDarkMode;
     };
 
-    private renderItem = (snapshot: UndoSnapshot, index: number) => {
+    private renderItem = (snapshot: Snapshot, index: number) => {
         let className = '';
         if (index == this.state.currentIndex) {
             className += ' ' + styles.current;

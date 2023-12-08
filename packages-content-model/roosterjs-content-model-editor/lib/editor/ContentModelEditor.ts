@@ -88,7 +88,7 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
     EditorEnvironment,
-    UndoSnapshot,
+    Snapshot,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -191,17 +191,17 @@ export class ContentModelEditor implements IContentModelEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): UndoSnapshot | null {
+    takeSnapshot(): void {
         const core = this.getCore();
 
-        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
     }
 
     /**
-     * Restore the given undo snapshot
+     * Restore an undo snapshot into editor
      * @param snapshot The snapshot to restore
      */
-    restoreSnapshot(snapshot: UndoSnapshot): void {
+    restoreSnapshot(snapshot: Snapshot): void {
         const core = this.getCore();
 
         core.api.restoreUndoSnapshot(core, snapshot);

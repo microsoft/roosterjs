@@ -17,7 +17,7 @@ import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { ContentModelSegmentFormat, UndoSnapshot } from 'roosterjs-content-model-types';
+import { ContentModelSegmentFormat, Snapshot } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
 import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
@@ -104,7 +104,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
-    private snapshots: Snapshots<UndoSnapshot>;
+    private snapshots: Snapshots<Snapshot>;
 
     constructor(props: {}) {
         super(props);

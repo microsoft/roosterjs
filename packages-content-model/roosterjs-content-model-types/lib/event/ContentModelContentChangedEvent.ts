@@ -24,7 +24,7 @@ export interface ChangedEntity {
     operation: EntityRemovalOperation | 'newEntity';
 
     /**
-     * @optional Raw DOM event that causes the chagne
+     * @optional Raw DOM event that causes the change
      */
     rawEvent?: Event;
 }

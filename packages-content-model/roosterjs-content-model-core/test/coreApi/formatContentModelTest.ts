@@ -5,6 +5,7 @@ import { formatContentModel } from '../../lib/coreApi/formatContentModel';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
+    FormatWithContentModelContext,
     StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
@@ -682,6 +683,122 @@ describe('formatContentModel', () => {
                 posContainer: mockedStartContainer1,
                 posOffset: mockedStartOffset1,
             });
+        });
+    });
+
+    describe('Undo snapshot related logic', () => {
+        it('trigger addUndoSnapshot when hasNewContent', () => {
+            core.undo.hasNewContent = true;
+
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                hasNewContent: true,
+                isNested: false,
+            } as any);
+        });
+
+        it('trigger addUndoSnapshot when has entityStates', () => {
+            const mockedEntityState = 'STATE' as any;
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake(
+                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
+                        context.entityStates = mockedEntityState;
+                        return true;
+                    }
+                );
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: false,
+            } as any);
+        });
+
+        it('trigger addUndoSnapshot when has canUndoByBackspace', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake(
+                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
+                        context.canUndoByBackspace = true;
+                        return true;
+                    }
+                );
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: false,
+            } as any);
+        });
+
+        it('trigger addUndoSnapshot when has canUndoByBackspace and has valid range selection', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake(
+                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
+                        context.canUndoByBackspace = true;
+                        return true;
+                    }
+                );
+
+            setContentModel.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: mockedContainer,
+                    startOffset: mockedOffset,
+                },
+            });
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: false,
+                hasNewContent: false,
+                posContainer: mockedContainer,
+                posOffset: mockedOffset,
+            } as any);
+        });
+
+        it('Do not trigger addUndoSnapshot when isNested', () => {
+            core.undo.isNested = true;
+
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: true,
+            } as any);
         });
     });
 });

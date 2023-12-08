@@ -1,14 +1,14 @@
-import type { UndoSnapshot } from 'roosterjs-content-model-types';
+import type { Snapshot } from 'roosterjs-content-model-types';
 import type { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
 const MAX_SIZE_LIMIT = 1e7;
 
-class UndoSnapshotsServiceImpl implements UndoSnapshotsService<UndoSnapshot> {
-    private snapshots: Snapshots<UndoSnapshot>;
+class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
+    private snapshots: Snapshots<Snapshot>;
 
-    constructor(snapshots?: Snapshots<UndoSnapshot>) {
+    constructor(snapshots?: Snapshots<Snapshot>) {
         this.snapshots = snapshots ?? {
             snapshots: [],
             totalSize: 0,
@@ -23,7 +23,7 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<UndoSnapshot> {
         return newIndex >= 0 && newIndex < this.snapshots.snapshots.length;
     }
 
-    move(step: number): UndoSnapshot | null {
+    move(step: number): Snapshot | null {
         if (this.canMove(step)) {
             this.snapshots.currentIndex += step;
             this.snapshots.autoCompleteIndex = -1;
@@ -33,7 +33,7 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<UndoSnapshot> {
         }
     }
 
-    addSnapshot(snapshot: UndoSnapshot, isAutoCompleteSnapshot: boolean): void {
+    addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean): void {
         const currentSnapshot = this.snapshots.snapshots[this.snapshots.currentIndex];
         const isSameSnapshot =
             currentSnapshot &&
@@ -97,17 +97,16 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<UndoSnapshot> {
         );
     }
 
-    private getSnapshotLength(snapshot: UndoSnapshot) {
+    private getSnapshotLength(snapshot: Snapshot) {
         return snapshot.html?.length ?? 0;
     }
 }
 
 /**
- * Create a new instance of default Undo Snapshot service class
- * @param snapshots @optional The snapshots object
+ * @internal
  */
 export function createUndoSnapshotService(
-    snapshots?: Snapshots<UndoSnapshot>
-): UndoSnapshotsService<UndoSnapshot> {
+    snapshots?: Snapshots<Snapshot>
+): UndoSnapshotsService<Snapshot> {
     return new UndoSnapshotsServiceImpl(snapshots);
 }
