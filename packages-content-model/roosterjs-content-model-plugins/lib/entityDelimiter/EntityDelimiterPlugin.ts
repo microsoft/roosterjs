@@ -147,7 +147,11 @@ export function normalizeDelimitersInEditor(editor: IEditor) {
 
 function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
     nodes.forEach(node => {
-        if (isEntityElement(node)) {
+        if (
+            isNodeOfType(node, 'ELEMENT_NODE') &&
+            isEntityElement(node) &&
+            !node.isContentEditable
+        ) {
             addDelimiters(node.ownerDocument, node as HTMLElement);
         }
     });
