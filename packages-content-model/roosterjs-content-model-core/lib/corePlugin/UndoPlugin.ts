@@ -1,5 +1,5 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { createUndoSnapshotService } from '../editor/UndoSnapshotServiceImpl';
+import { createUndoSnapshotsService } from '../editor/UndoSnapshotServiceImpl';
 import { isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type {
@@ -32,7 +32,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
      */
     constructor(options: StandaloneEditorOptions) {
         this.state = {
-            snapshotsService: options.undoMetadataSnapshotService || createUndoSnapshotService(),
+            snapshotsService: options.undoSnapshotService || createUndoSnapshotsService(),
             isRestoring: false,
             hasNewContent: false,
             isNested: false,

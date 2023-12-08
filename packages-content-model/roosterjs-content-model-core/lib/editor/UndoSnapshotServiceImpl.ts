@@ -105,7 +105,7 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
 /**
  * @internal
  */
-export function createUndoSnapshotService(
+export function createUndoSnapshotsService(
     maxSizeLimit: number = MAX_SIZE_LIMIT
 ): UndoSnapshotsService<Snapshot> {
     return new UndoSnapshotsServiceImpl(maxSizeLimit);

@@ -99,5 +99,5 @@ export interface StandaloneEditorOptions {
      * Undo snapshot service based on content metadata. Use this parameter to customize the undo snapshot service.
      * When this property is set, value of undoSnapshotService will be ignored.
      */
-    undoMetadataSnapshotService?: UndoSnapshotsService<Snapshot>;
+    undoSnapshotService?: UndoSnapshotsService<Snapshot>;
 }
