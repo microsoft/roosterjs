@@ -27,12 +27,6 @@ export interface UnportedCorePlugins {
     readonly undo: PluginWithState<UndoPluginState>;
 
     /**
-     * Image selection Plugin detects image selection and help highlight the image
-     */
-
-    readonly imageSelection: EditorPlugin;
-
-    /**
      * NormalizeTable plugin makes sure each table in editor has TBODY/THEAD/TFOOT tag around TR tags
      */
     readonly normalizeTable: EditorPlugin;
