@@ -105,7 +105,7 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
 /**
  * @internal
  */
-export function createUndoSnapshotService(
+export function createUndoSnapshotsService(
     snapshots?: Snapshots<Snapshot>
 ): UndoSnapshotsService<Snapshot> {
     return new UndoSnapshotsServiceImpl(snapshots);

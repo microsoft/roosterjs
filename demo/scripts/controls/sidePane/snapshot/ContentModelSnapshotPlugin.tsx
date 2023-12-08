@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ContentModelSnapshotPane from './ContentModelSnapshotPane';
 import SidePanePlugin from '../../SidePanePlugin';
-import { createUndoSnapshotService } from 'roosterjs-content-model-core/lib/editor/UndoSnapshotServiceImpl';
+import { createUndoSnapshotsService } from 'roosterjs-content-model-core/lib/editor/UndoSnapshotServiceImpl';
 import { IStandaloneEditor, Snapshot } from 'roosterjs-content-model-types';
 import {
     IEditor,
@@ -16,7 +16,7 @@ class UndoSnapshotsServiceProxy implements UndoSnapshotsService<Snapshot> {
     private hijackUndoSnapshotCallback: undefined | ((snapshot: Snapshot) => void);
 
     constructor(snapshots: Snapshots<Snapshot>, private onChange: () => void) {
-        this.innerService = createUndoSnapshotService(snapshots);
+        this.innerService = createUndoSnapshotsService(snapshots);
     }
 
     public startHijackUndoSnapshot(callback: (snapshot: Snapshot) => void) {
