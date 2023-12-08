@@ -2,6 +2,7 @@ import { addRangeToSelection } from './utils/addRangeToSelection';
 import { ChangeSource } from '../constants/ChangeSource';
 import { cloneModel } from '../publicApi/model/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
+import { deleteEmptyList } from './utils/deleteEmptyList';
 import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
@@ -170,7 +171,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                         editor.formatContentModel(
                             (model, context) => {
                                 if (
-                                    deleteSelection(model, [], context, true /** isCut */)
+                                    deleteSelection(model, [deleteEmptyList], context)
                                         .deleteResult == 'range'
                                 ) {
                                     normalizeContentModel(model);
