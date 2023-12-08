@@ -241,6 +241,7 @@ export { UndoPluginState } from './pluginState/UndoPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
+    EntityState,
     DeletedEntity,
     FormatWithContentModelContext,
 } from './parameter/FormatWithContentModelContext';
@@ -258,6 +259,7 @@ export {
     DeleteSelectionStep,
     ValidDeleteSelectionContext,
 } from './parameter/DeleteSelectionStep';
+export { Snapshot } from './parameter/Snapshot';
 
 export {
     ContentModelBeforePasteEvent,

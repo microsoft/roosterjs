@@ -1,4 +1,5 @@
-import type { Snapshot, Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
+import type { Snapshot } from 'roosterjs-content-model-types';
+import type { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB

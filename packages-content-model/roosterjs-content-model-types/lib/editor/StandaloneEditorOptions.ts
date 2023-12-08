@@ -1,8 +1,8 @@
+import type { Snapshot } from '../parameter/Snapshot';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
 import type {
     EditorPlugin,
-    Snapshot,
     TrustedHTMLHandler,
     UndoSnapshotsService,
 } from 'roosterjs-editor-types';

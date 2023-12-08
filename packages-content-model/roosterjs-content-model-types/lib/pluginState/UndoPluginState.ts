@@ -1,4 +1,5 @@
-import type { Snapshot, UndoSnapshotsService } from 'roosterjs-editor-types';
+import type { UndoSnapshotsService } from 'roosterjs-editor-types';
+import type { Snapshot } from '../parameter/Snapshot';
 
 /**
  * The state object for UndoPlugin
