@@ -1,5 +1,5 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { createUndoSnapshotsService } from '../editor/UndoSnapshotServiceImpl';
+import { createUndoSnapshotsService } from '../editor/UndoSnapshotsServiceImpl';
 import { isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type {
@@ -23,7 +23,6 @@ const Enter = 'Enter';
  */
 class UndoPlugin implements PluginWithState<UndoPluginState> {
     private editor: (IStandaloneEditor & IEditor) | null = null;
-    private lastKeyPress: string | null = 'null';
     private state: UndoPluginState;
 
     /**
@@ -38,6 +37,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
             isNested: false,
             posContainer: null,
             posOffset: null,
+            lastKeyPress: null,
         };
     }
 
@@ -132,7 +132,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
                 editor.undo();
                 this.state.posContainer = null;
                 this.state.posOffset = null;
-                this.lastKeyPress = evt.key;
+                this.state.lastKeyPress = evt.key;
             } else if (!evt.defaultPrevented) {
                 const selection = editor.getDOMSelection();
 
@@ -144,7 +144,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
                     selection &&
                     (selection.type != 'range' ||
                         !selection.range.collapsed ||
-                        this.lastKeyPress != evt.key ||
+                        this.state.lastKeyPress != evt.key ||
                         this.isCtrlOrMetaPressed(editor, evt))
                 ) {
                     this.addUndoSnapshot();
@@ -152,15 +152,15 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
 
                 // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
                 this.state.hasNewContent = true;
-                this.lastKeyPress = evt.key;
+                this.state.lastKeyPress = evt.key;
             }
         } else if (isCursorMovingKey(evt)) {
             // PageUp, PageDown, Home, End, Left, Right, Up, Down
             if (this.state.hasNewContent) {
                 this.addUndoSnapshot();
             }
-            this.lastKeyPress = null;
-        } else if (this.lastKeyPress == Backspace || this.lastKeyPress == Delete) {
+            this.state.lastKeyPress = null;
+        } else if (this.state.lastKeyPress == Backspace || this.state.lastKeyPress == Delete) {
             if (this.state.hasNewContent) {
                 this.addUndoSnapshot();
             }
@@ -178,7 +178,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
 
         if (
             (selection && (selection.type != 'range' || !selection.range.collapsed)) ||
-            (evt.key == ' ' && this.lastKeyPress != ' ') ||
+            (evt.key == ' ' && this.state.lastKeyPress != ' ') ||
             evt.key == Enter
         ) {
             this.addUndoSnapshot();
@@ -192,18 +192,18 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
             this.clearRedoForInput();
         }
 
-        this.lastKeyPress = evt.key;
+        this.state.lastKeyPress = evt.key;
     }
 
     private onBeforeKeyboardEditing(event: KeyboardEvent) {
         // For keyboard event (triggered from Content Model), we can get its keycode from event.data
         // And when user is keep pressing the same key, mark editor with "hasNewContent" so that next time user
         // do some other action or press a different key, we will add undo snapshot
-        if (event.key != this.lastKeyPress) {
+        if (event.key != this.state.lastKeyPress) {
             this.addUndoSnapshot();
         }
 
-        this.lastKeyPress = event.key;
+        this.state.lastKeyPress = event.key;
         this.state.hasNewContent = true;
     }
 
@@ -222,7 +222,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
 
     private clearRedoForInput() {
         this.state.snapshotsService.clearRedo();
-        this.lastKeyPress = null;
+        this.state.lastKeyPress = null;
         this.state.hasNewContent = true;
     }
 

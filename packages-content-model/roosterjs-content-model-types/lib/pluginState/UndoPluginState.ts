@@ -34,4 +34,9 @@ export interface UndoPluginState {
      * Offset after last auto complete. Undo autoComplete only works if the current position matches this one
      */
     posOffset: number | null;
+
+    /**
+     * Last key user pressed
+     */
+    lastKeyPress: string | null;
 }
