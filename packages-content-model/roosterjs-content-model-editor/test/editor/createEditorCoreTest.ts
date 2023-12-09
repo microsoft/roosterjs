@@ -9,7 +9,7 @@ import * as EventTranslate from '../../lib/corePlugins/EventTypeTranslatePlugin'
 import * as LifecyclePlugin from 'roosterjs-content-model-core/lib/corePlugin/LifecyclePlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
 import * as SelectionPlugin from 'roosterjs-content-model-core/lib/corePlugin/SelectionPlugin';
-import * as UndoPlugin from '../../lib/corePlugins/UndoPlugin';
+import * as UndoPlugin from 'roosterjs-content-model-core/lib/corePlugin/UndoPlugin';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { createEditorCore } from '../../lib/editor/createEditorCore';
 import { defaultTrustHtmlHandler } from 'roosterjs-content-model-core/lib/editor/createStandaloneEditorCore';
@@ -108,8 +108,8 @@ describe('createEditorCore', () => {
                 mockedEntityPlugin,
                 mockedEventTranslatePlugin,
                 mockedEditPlugin,
-                mockedUndoPlugin,
                 mockedNormalizeTablePlugin,
+                mockedUndoPlugin,
                 mockedLifecyclePlugin,
             ],
             domEvent: mockedDomEventState,
@@ -164,8 +164,8 @@ describe('createEditorCore', () => {
                 mockedEntityPlugin,
                 mockedEventTranslatePlugin,
                 mockedEditPlugin,
-                mockedUndoPlugin,
                 mockedNormalizeTablePlugin,
+                mockedUndoPlugin,
                 mockedLifecyclePlugin,
             ],
             domEvent: mockedDomEventState,

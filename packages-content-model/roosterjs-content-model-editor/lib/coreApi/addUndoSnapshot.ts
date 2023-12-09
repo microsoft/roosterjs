@@ -70,7 +70,8 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 
         if (selection?.type == 'range') {
             core.undo.hasNewContent = false;
-            core.undo.autoCompletePosition = Position.getStart(selection.range);
+            core.undo.posContainer = selection.range.startContainer;
+            core.undo.posOffset = selection.range.startOffset;
         }
     }
 };
