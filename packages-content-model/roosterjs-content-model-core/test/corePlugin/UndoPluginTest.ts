@@ -16,7 +16,7 @@ describe('UndoPlugin', () => {
     let canUndoAutoCompleteSpy: jasmine.Spy;
     let isInIMESpy: jasmine.Spy;
     let getUndoStateSpy: jasmine.Spy;
-    let addUndoSnapshotSpy: jasmine.Spy;
+    let takeSnapshotSpy: jasmine.Spy;
     let undoSpy: jasmine.Spy;
     let clearRedoSpy: jasmine.Spy;
     let mockedUndoSnapshotsService: UndoSnapshotsService<Snapshot>;
@@ -26,7 +26,7 @@ describe('UndoPlugin', () => {
         canUndoAutoCompleteSpy = jasmine.createSpy('canUndoAutoComplete');
         isInIMESpy = jasmine.createSpy('isInIME');
         getUndoStateSpy = jasmine.createSpy('getUndoState');
-        addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+        takeSnapshotSpy = jasmine.createSpy('takeUndoSnapshot');
         undoSpy = jasmine.createSpy('undo');
         clearRedoSpy = jasmine.createSpy('clearRedo');
 
@@ -44,7 +44,7 @@ describe('UndoPlugin', () => {
             getDOMSelection: getDOMSelectionSpy,
             isInIME: isInIMESpy,
             getUndoState: getUndoStateSpy,
-            addUndoSnapshot: addUndoSnapshotSpy,
+            takeSnapshot: takeSnapshotSpy,
             undo: undoSpy,
         } as any;
     });
@@ -291,7 +291,7 @@ describe('UndoPlugin', () => {
                 eventType: PluginEventType.EditorReady,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(plugin.getState()).toEqual({
                 snapshotsService: mockedUndoSnapshotsService,
                 isRestoring: false,
@@ -315,7 +315,7 @@ describe('UndoPlugin', () => {
                 eventType: PluginEventType.EditorReady,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 snapshotsService: mockedUndoSnapshotsService,
                 isRestoring: false,
@@ -339,7 +339,7 @@ describe('UndoPlugin', () => {
                 eventType: PluginEventType.EditorReady,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 snapshotsService: mockedUndoSnapshotsService,
                 isRestoring: false,
@@ -381,7 +381,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(undoSpy).toHaveBeenCalledTimes(1);
             expect(plugin.getState()).toEqual({
@@ -415,7 +415,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -445,7 +445,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -475,7 +475,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -508,7 +508,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -542,7 +542,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -573,7 +573,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -608,7 +608,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -643,7 +643,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -674,7 +674,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -705,7 +705,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -733,7 +733,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -761,7 +761,7 @@ describe('UndoPlugin', () => {
                 } as any,
             });
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -786,7 +786,7 @@ describe('UndoPlugin', () => {
                 },
             } as any);
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -812,7 +812,7 @@ describe('UndoPlugin', () => {
                 source: 'Test',
             } as any);
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -835,7 +835,7 @@ describe('UndoPlugin', () => {
                 source: ChangeSource.SwitchToDarkMode,
             } as any);
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -858,7 +858,7 @@ describe('UndoPlugin', () => {
                 source: ChangeSource.SwitchToLightMode,
             } as any);
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -881,7 +881,7 @@ describe('UndoPlugin', () => {
                 source: ChangeSource.Keyboard,
             } as any);
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -904,7 +904,7 @@ describe('UndoPlugin', () => {
                 source: 'Test',
             } as any);
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -932,7 +932,7 @@ describe('UndoPlugin', () => {
                 },
             } as any);
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
@@ -960,7 +960,7 @@ describe('UndoPlugin', () => {
                 },
             } as any);
 
-            expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(0);
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({

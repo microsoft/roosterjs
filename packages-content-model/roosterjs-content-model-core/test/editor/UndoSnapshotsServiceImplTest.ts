@@ -63,14 +63,14 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
             },
             0,
             4,
-            [{ html: 'test', knownColors: [], metadata: {} as any }],
+            [{ html: 'test', knownColors: [], isDarkMode: false }],
             -1
         );
     });
@@ -83,14 +83,14 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     true
                 );
             },
             0,
             4,
-            [{ html: 'test', knownColors: [], metadata: {} as any }],
+            [{ html: 'test', knownColors: [], isDarkMode: false }],
             0
         );
     });
@@ -103,7 +103,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -111,7 +111,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test2',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -119,8 +119,8 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
             1,
             10,
             [
-                { html: 'test1', knownColors: [], metadata: {} as any },
-                { html: 'test2', knownColors: [], metadata: {} as any },
+                { html: 'test1', knownColors: [], isDarkMode: false },
+                { html: 'test2', knownColors: [], isDarkMode: false },
             ],
             -1
         );
@@ -134,7 +134,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test01',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -154,7 +154,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -162,7 +162,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test2',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -173,7 +173,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                 {
                     html: 'test2',
                     knownColors: [],
-                    metadata: {} as any,
+                    isDarkMode: false,
                 },
             ],
             -1
@@ -188,7 +188,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -196,7 +196,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test2',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -205,7 +205,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test03',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -216,12 +216,12 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                 {
                     html: 'test1',
                     knownColors: [],
-                    metadata: {} as any,
+                    isDarkMode: false,
                 },
                 {
                     html: 'test03',
                     knownColors: [],
-                    metadata: {} as any,
+                    isDarkMode: false,
                 },
             ],
             -1
@@ -236,7 +236,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -244,7 +244,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -255,7 +255,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                 {
                     html: 'test1',
                     knownColors: [],
-                    metadata: {} as any,
+                    isDarkMode: false,
                 },
             ],
             -1
@@ -263,13 +263,12 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
     });
 
     it('Add snapshot with entity state', () => {
-        const mockedMetadata = 'METADATA' as any;
         const mockedEntityStates = 'ENTITYSTATES' as any;
 
         service.addSnapshot(
             {
                 html: 'test',
-                metadata: null,
+                isDarkMode: false,
                 knownColors: [],
             },
             false
@@ -278,7 +277,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         expect(snapshots.snapshots).toEqual([
             {
                 html: 'test',
-                metadata: null,
+                isDarkMode: false,
                 knownColors: [],
             },
         ]);
@@ -286,7 +285,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         service.addSnapshot(
             {
                 html: 'test',
-                metadata: mockedMetadata,
+                isDarkMode: false,
                 knownColors: [],
             },
             false
@@ -295,7 +294,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         expect(snapshots.snapshots).toEqual([
             {
                 html: 'test',
-                metadata: mockedMetadata,
+                isDarkMode: false,
                 knownColors: [],
             },
         ]);
@@ -303,7 +302,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         service.addSnapshot(
             {
                 html: 'test',
-                metadata: null,
+                isDarkMode: false,
                 knownColors: [],
                 entityStates: mockedEntityStates,
             },
@@ -313,12 +312,12 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         expect(snapshots.snapshots).toEqual([
             {
                 html: 'test',
-                metadata: mockedMetadata,
+                isDarkMode: false,
                 knownColors: [],
             },
             {
                 html: 'test',
-                metadata: null,
+                isDarkMode: false,
                 knownColors: [],
                 entityStates: mockedEntityStates,
             },
