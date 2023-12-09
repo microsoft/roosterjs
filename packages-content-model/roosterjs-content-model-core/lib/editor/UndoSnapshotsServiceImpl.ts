@@ -61,7 +61,10 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
             if (removeCount > 0) {
                 this.snapshots.snapshots.splice(0, removeCount);
                 this.snapshots.currentIndex -= removeCount;
-                this.snapshots.autoCompleteIndex -= removeCount;
+
+                if (this.snapshots.autoCompleteIndex >= 0) {
+                    this.snapshots.autoCompleteIndex -= removeCount;
+                }
             }
 
             if (isAutoCompleteSnapshot) {
