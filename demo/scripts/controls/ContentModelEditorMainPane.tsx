@@ -249,7 +249,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
                             experimentalFeatures={this.state.initState.experimentalFeatures}
-                            undoSnapshotService={this.snapshotPlugin.getSnapshotService()}
+                            snapshotsManager={this.snapshotPlugin.getSnapshotsManager()}
                             trustedHTMLHandler={trustedHTMLHandler}
                             zoomScale={this.state.scale}
                             initialContent={this.content}

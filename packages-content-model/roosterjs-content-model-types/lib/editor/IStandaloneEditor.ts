@@ -1,3 +1,4 @@
+import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
@@ -11,12 +12,7 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type {
-    EditorUndoState,
-    PluginEventData,
-    PluginEventFromType,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import type { PluginEventData, PluginEventFromType, PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * An interface of standalone Content Model editor.
@@ -118,9 +114,9 @@ export interface IStandaloneEditor {
     ): PluginEventFromType<T>;
 
     /**
-     * Whether there is an available undo/redo snapshot
+     * Get undo snapshots manager
      */
-    getUndoState(): EditorUndoState;
+    getSnapshotsManager(): SnapshotsManager;
 
     /**
      * Check if the editor is in dark mode
@@ -135,16 +131,6 @@ export interface IStandaloneEditor {
      * @returns current zoom scale number
      */
     getZoomScale(): number;
-
-    /**
-     * Undo last edit operation
-     */
-    undo(): void;
-
-    /**
-     * Redo next edit operation
-     */
-    redo(): void;
 
     /**
      * Add a single undo snapshot to undo stack

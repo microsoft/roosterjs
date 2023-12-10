@@ -42,7 +42,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         if (shouldAddSnapshot) {
             core.undo.isNested = true;
 
-            if (core.undo.hasNewContent || entityStates) {
+            if (core.undo.snapshotsManager.hasNewContent || entityStates) {
                 core.api.addUndoSnapshot(core, !!canUndoByBackspace);
             }
         }
@@ -80,7 +80,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         core.api.triggerEvent(core, eventData, true /*broadcast*/);
 
         if (canUndoByBackspace && selection?.type == 'range') {
-            core.undo.hasNewContent = false;
+            core.undo.snapshotsManager.hasNewContent = false;
             core.undo.posContainer = selection.range.startContainer;
             core.undo.posOffset = selection.range.startOffset;
         }

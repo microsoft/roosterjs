@@ -2,7 +2,7 @@ import { buildRangeEx } from './utils/buildRangeEx';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import { isBold, paste } from 'roosterjs-content-model-core';
+import { isBold, paste, redo, undo } from 'roosterjs-content-model-core';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -89,6 +89,7 @@ import type {
     FormatWithContentModelOptions,
     EditorEnvironment,
     Snapshot,
+    SnapshotsManager,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -664,35 +665,26 @@ export class ContentModelEditor implements IContentModelEditor {
     //#region Undo API
 
     /**
+     * Get undo snapshots manager
+     */
+    getSnapshotsManager(): SnapshotsManager {
+        const core = this.getCore();
+
+        return core.undo.snapshotsManager;
+    }
+
+    /**
      * Undo last edit operation
      */
     undo() {
-        this.focus();
-        const core = this.getCore();
-
-        if (core.undo.hasNewContent) {
-            core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
-        }
-
-        const snapshot = core.undo.snapshotsService.move(-1);
-
-        if (snapshot) {
-            core.api.restoreUndoSnapshot(core, snapshot);
-        }
+        undo(this);
     }
 
     /**
      * Redo next edit operation
      */
     redo() {
-        this.focus();
-
-        const core = this.getCore();
-        const snapshot = core.undo.snapshotsService.move(1);
-
-        if (snapshot) {
-            core.api.restoreUndoSnapshot(core, snapshot);
-        }
+        redo(this);
     }
 
     /**
@@ -721,7 +713,11 @@ export class ContentModelEditor implements IContentModelEditor {
 
             // When there is getEntityState, it means this is triggered by an entity change.
             // So if HTML content is not changed (hasNewContent is false), no need to add another snapshot before change
-            if (core.undo.hasNewContent || !additionalData?.getEntityState || !callback) {
+            if (
+                core.undo.snapshotsManager.hasNewContent ||
+                !additionalData?.getEntityState ||
+                !callback
+            ) {
                 core.api.addUndoSnapshot(
                     core,
                     !!canUndoByBackspace,
@@ -765,7 +761,7 @@ export class ContentModelEditor implements IContentModelEditor {
             const selection = core.api.getDOMSelection(core);
 
             if (selection?.type == 'range') {
-                core.undo.hasNewContent = false;
+                core.undo.snapshotsManager.hasNewContent = false;
                 core.undo.posContainer = selection.range.startContainer;
                 core.undo.posOffset = selection.range.startOffset;
             }
@@ -776,10 +772,11 @@ export class ContentModelEditor implements IContentModelEditor {
      * Whether there is an available undo/redo snapshot
      */
     getUndoState(): EditorUndoState {
-        const { hasNewContent, snapshotsService } = this.getCore().undo;
+        const { snapshotsManager } = this.getCore().undo;
         return {
-            canUndo: hasNewContent || snapshotsService.canMove(-1 /*previousSnapshot*/),
-            canRedo: snapshotsService.canMove(1 /*nextSnapshot*/),
+            canUndo:
+                snapshotsManager.hasNewContent || snapshotsManager.canMove(-1 /*previousSnapshot*/),
+            canRedo: snapshotsManager.canMove(1 /*nextSnapshot*/),
         };
     }
 

@@ -1,7 +1,8 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { createUndoSnapshotsService } from '../editor/UndoSnapshotsServiceImpl';
+import { createSnapshotsManager } from '../editor/SnapshotsManagerImpl';
 import { isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
+import { undo } from '../publicApi/undo/undo';
 import type {
     IStandaloneEditor,
     StandaloneEditorOptions,
@@ -31,9 +32,8 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
      */
     constructor(options: StandaloneEditorOptions) {
         this.state = {
-            snapshotsService: options.undoSnapshotService || createUndoSnapshotsService(),
+            snapshotsManager: options.snapshotsManager || createSnapshotsManager(),
             isRestoring: false,
-            hasNewContent: false,
             isNested: false,
             posContainer: null,
             posOffset: null,
@@ -96,8 +96,11 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
 
         switch (event.eventType) {
             case PluginEventType.EditorReady:
-                const undoState = this.editor.getUndoState();
-                if (!undoState.canUndo && !undoState.canRedo) {
+                const manager = this.state.snapshotsManager;
+                const canUndo = manager.hasNewContent || manager.canMove(-1);
+                const canRedo = manager.canMove(1);
+
+                if (!canUndo && !canRedo) {
                     // Only add initial snapshot when there is no existing snapshot
                     // Otherwise preserved undo/redo state may be ruined
                     this.addUndoSnapshot();
@@ -123,13 +126,15 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
     }
 
     private onKeyDown(editor: IStandaloneEditor, evt: KeyboardEvent): void {
+        const { snapshotsManager } = this.state;
+
         // Handle backspace/delete when there is a selection to take a snapshot
         // since we want the state prior to deletion restorable
         // Ignore if keycombo is ALT+BACKSPACE
         if ((evt.key == Backspace && !evt.altKey) || evt.key == Delete) {
             if (evt.key == Backspace && !evt.ctrlKey && this.canUndoAutoComplete(editor)) {
                 evt.preventDefault();
-                editor.undo();
+                undo(editor);
                 this.state.posContainer = null;
                 this.state.posOffset = null;
                 this.state.lastKeyPress = evt.key;
@@ -151,17 +156,17 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
                 }
 
                 // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
-                this.state.hasNewContent = true;
+                snapshotsManager.hasNewContent = true;
                 this.state.lastKeyPress = evt.key;
             }
         } else if (isCursorMovingKey(evt)) {
             // PageUp, PageDown, Home, End, Left, Right, Up, Down
-            if (this.state.hasNewContent) {
+            if (snapshotsManager.hasNewContent) {
                 this.addUndoSnapshot();
             }
             this.state.lastKeyPress = null;
         } else if (this.state.lastKeyPress == Backspace || this.state.lastKeyPress == Delete) {
-            if (this.state.hasNewContent) {
+            if (snapshotsManager.hasNewContent) {
                 this.addUndoSnapshot();
             }
         }
@@ -186,7 +191,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
             if (evt.key == Enter) {
                 // Treat ENTER as new content so if there is no input after ENTER and undo,
                 // we restore the snapshot before ENTER
-                this.state.hasNewContent = true;
+                this.state.snapshotsManager.hasNewContent = true;
             }
         } else {
             this.clearRedoForInput();
@@ -204,7 +209,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
         }
 
         this.state.lastKeyPress = event.key;
-        this.state.hasNewContent = true;
+        this.state.snapshotsManager.hasNewContent = true;
     }
 
     private onContentChanged(event: ContentChangedEvent) {
@@ -221,16 +226,16 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
     }
 
     private clearRedoForInput() {
-        this.state.snapshotsService.clearRedo();
+        this.state.snapshotsManager.clearRedo();
         this.state.lastKeyPress = null;
-        this.state.hasNewContent = true;
+        this.state.snapshotsManager.hasNewContent = true;
     }
 
     private canUndoAutoComplete(editor: IStandaloneEditor) {
         const selection = editor.getDOMSelection();
 
         return (
-            this.state.snapshotsService.canUndoAutoComplete() &&
+            this.state.snapshotsManager.canUndoAutoComplete() &&
             selection?.type == 'range' &&
             selection.range.collapsed &&
             selection.range.startContainer == this.state.posContainer &&

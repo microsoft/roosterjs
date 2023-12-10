@@ -1,22 +1,29 @@
 import * as React from 'react';
 import ContentModelSnapshotPane from './ContentModelSnapshotPane';
 import SidePanePlugin from '../../SidePanePlugin';
-import { createUndoSnapshotsService } from 'roosterjs-content-model-core/lib/editor/UndoSnapshotsServiceImpl';
-import { IStandaloneEditor, Snapshot } from 'roosterjs-content-model-types';
+import { createSnapshotsManager } from 'roosterjs-content-model-core/lib/editor/SnapshotsManagerImpl';
+import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
-    IEditor,
-    PluginEvent,
-    PluginEventType,
+    IStandaloneEditor,
+    Snapshot,
     Snapshots,
-    UndoSnapshotsService,
-} from 'roosterjs-editor-types';
+    SnapshotsManager,
+} from 'roosterjs-content-model-types';
 
-class UndoSnapshotsServiceProxy implements UndoSnapshotsService<Snapshot> {
-    private innerService: UndoSnapshotsService<Snapshot>;
+class SnapshotsManagerProxy implements SnapshotsManager {
+    private innerManager: SnapshotsManager;
     private hijackUndoSnapshotCallback: undefined | ((snapshot: Snapshot) => void);
 
-    constructor(snapshots: Snapshots<Snapshot>, private onChange: () => void) {
-        this.innerService = createUndoSnapshotsService(snapshots);
+    constructor(snapshots: Snapshots, private onChange: () => void) {
+        this.innerManager = createSnapshotsManager(snapshots);
+    }
+
+    get hasNewContent() {
+        return this.innerManager.hasNewContent;
+    }
+
+    set hasNewContent(value: boolean) {
+        this.innerManager.hasNewContent = value;
     }
 
     public startHijackUndoSnapshot(callback: (snapshot: Snapshot) => void) {
@@ -28,11 +35,11 @@ class UndoSnapshotsServiceProxy implements UndoSnapshotsService<Snapshot> {
     }
 
     public canMove(delta: number): boolean {
-        return this.innerService.canMove(delta);
+        return this.innerManager.canMove(delta);
     }
 
     public move(delta: number): Snapshot {
-        const result = this.innerService.move(delta);
+        const result = this.innerManager.move(delta);
         this.onChange();
         return result;
     }
@@ -41,28 +48,28 @@ class UndoSnapshotsServiceProxy implements UndoSnapshotsService<Snapshot> {
         if (this.hijackUndoSnapshotCallback) {
             this.hijackUndoSnapshotCallback(snapshot);
         } else {
-            this.innerService.addSnapshot(snapshot, isAutoCompleteSnapshot);
+            this.innerManager.addSnapshot(snapshot, isAutoCompleteSnapshot);
             this.onChange();
         }
     }
 
     public clearRedo() {
-        this.innerService.clearRedo();
+        this.innerManager.clearRedo();
         this.onChange();
     }
 
     public canUndoAutoComplete() {
-        return this.innerService.canUndoAutoComplete();
+        return this.innerManager.canUndoAutoComplete();
     }
 }
 
 export default class ContentModelSnapshotPlugin implements SidePanePlugin {
     private editorInstance: IEditor & IStandaloneEditor;
     private component: ContentModelSnapshotPane;
-    private undoService: UndoSnapshotsServiceProxy;
+    private snapshotManager: SnapshotsManagerProxy;
 
-    constructor(private snapshots: Snapshots<Snapshot>) {
-        this.undoService = new UndoSnapshotsServiceProxy(snapshots, this.updateSnapshots);
+    constructor(private snapshots: Snapshots) {
+        this.snapshotManager = new SnapshotsManagerProxy(snapshots, this.updateSnapshots);
     }
 
     getName() {
@@ -91,8 +98,8 @@ export default class ContentModelSnapshotPlugin implements SidePanePlugin {
         return <ContentModelSnapshotPane {...this.getComponentProps()} ref={this.refCallback} />;
     }
 
-    getSnapshotService() {
-        return this.undoService;
+    getSnapshotsManager() {
+        return this.snapshotManager;
     }
 
     private refCallback = (ref: ContentModelSnapshotPane) => {
@@ -114,19 +121,19 @@ export default class ContentModelSnapshotPlugin implements SidePanePlugin {
         let newSnapshot: Snapshot;
 
         try {
-            this.undoService.startHijackUndoSnapshot(snapshot => {
+            this.snapshotManager.startHijackUndoSnapshot(snapshot => {
                 newSnapshot = snapshot;
             });
             this.editorInstance.addUndoSnapshot();
         } finally {
-            this.undoService.stopHijackUndoSnapshot();
+            this.snapshotManager.stopHijackUndoSnapshot();
         }
 
         return newSnapshot;
     };
 
     private onMove = (step: number) => {
-        const snapshot = this.undoService.move(step);
+        const snapshot = this.snapshotManager.move(step);
         this.onRestoreSnapshot(snapshot);
     };
 

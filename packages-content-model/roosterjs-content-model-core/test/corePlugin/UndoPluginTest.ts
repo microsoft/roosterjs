@@ -1,51 +1,51 @@
-import * as createUndoSnapshotsService from '../../lib/editor/UndoSnapshotsServiceImpl';
+import * as SnapshotsManagerImpl from '../../lib/editor/SnapshotsManagerImpl';
+import * as undo from '../../lib/publicApi/undo/undo';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createUndoPlugin } from '../../lib/corePlugin/UndoPlugin';
-import { IStandaloneEditor, Snapshot, UndoPluginState } from 'roosterjs-content-model-types';
+import { IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
 import {
-    IEditor,
-    PluginEventType,
-    PluginWithState,
-    UndoSnapshotsService,
-} from 'roosterjs-editor-types';
+    IStandaloneEditor,
+    SnapshotsManager,
+    UndoPluginState,
+} from 'roosterjs-content-model-types';
 
 describe('UndoPlugin', () => {
     let editor: IEditor & IStandaloneEditor;
-    let createUndoSnapshotsServiceSpy: jasmine.Spy;
+    let createSnapshotsManagerSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let canUndoAutoCompleteSpy: jasmine.Spy;
     let isInIMESpy: jasmine.Spy;
-    let getUndoStateSpy: jasmine.Spy;
     let takeSnapshotSpy: jasmine.Spy;
     let undoSpy: jasmine.Spy;
     let clearRedoSpy: jasmine.Spy;
-    let mockedUndoSnapshotsService: UndoSnapshotsService<Snapshot>;
+    let canMoveSpy: jasmine.Spy;
+    let mockedSnapshotsManager: SnapshotsManager;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         canUndoAutoCompleteSpy = jasmine.createSpy('canUndoAutoComplete');
         isInIMESpy = jasmine.createSpy('isInIME');
-        getUndoStateSpy = jasmine.createSpy('getUndoState');
+        canMoveSpy = jasmine.createSpy('canMove');
         takeSnapshotSpy = jasmine.createSpy('takeUndoSnapshot');
-        undoSpy = jasmine.createSpy('undo');
+        undoSpy = spyOn(undo, 'undo');
         clearRedoSpy = jasmine.createSpy('clearRedo');
 
-        mockedUndoSnapshotsService = {
+        mockedSnapshotsManager = {
             canUndoAutoComplete: canUndoAutoCompleteSpy,
             clearRedo: clearRedoSpy,
+            hasNewContent: false,
+            canMove: canMoveSpy,
         } as any;
 
-        createUndoSnapshotsServiceSpy = spyOn(
-            createUndoSnapshotsService,
-            'createUndoSnapshotsService'
-        ).and.returnValue(mockedUndoSnapshotsService);
+        createSnapshotsManagerSpy = spyOn(
+            SnapshotsManagerImpl,
+            'createSnapshotsManager'
+        ).and.returnValue(mockedSnapshotsManager);
 
         editor = {
             getDOMSelection: getDOMSelectionSpy,
             isInIME: isInIMESpy,
-            getUndoState: getUndoStateSpy,
             takeSnapshot: takeSnapshotSpy,
-            undo: undoSpy,
         } as any;
     });
 
@@ -55,35 +55,33 @@ describe('UndoPlugin', () => {
             const state = plugin.getState();
 
             expect(state).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createUndoSnapshotsServiceSpy).toHaveBeenCalledWith();
+            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
         it('ctor with option', () => {
-            const mockedService = 'SERVICE' as any;
+            const mockedManager = 'MANAGER' as any;
             const plugin = createUndoPlugin({
-                undoSnapshotService: mockedService,
+                snapshotsManager: mockedManager,
             });
             const state = plugin.getState();
 
             expect(state).toEqual({
-                snapshotsService: mockedService,
+                snapshotsManager: mockedManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createUndoSnapshotsServiceSpy).not.toHaveBeenCalled();
+            expect(createSnapshotsManagerSpy).not.toHaveBeenCalled();
             expect(undoSpy).not.toHaveBeenCalled();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
@@ -282,10 +280,8 @@ describe('UndoPlugin', () => {
         });
 
         it('EditorReady event, no undo/redo', () => {
-            getUndoStateSpy.and.returnValue({
-                canUndo: false,
-                canRedo: false,
-            });
+            canMoveSpy.and.returnValue(false);
+            plugin.getState().snapshotsManager.hasNewContent = false;
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,
@@ -293,23 +289,21 @@ describe('UndoPlugin', () => {
 
             expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalse();
             expect(undoSpy).not.toHaveBeenCalled();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
         it('EditorReady event, has undo', () => {
-            getUndoStateSpy.and.returnValue({
-                canUndo: true,
-                canRedo: false,
-            });
+            canMoveSpy.and.callFake((step: number) => step < 0);
+            plugin.getState().snapshotsManager.hasNewContent = false;
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,
@@ -317,23 +311,21 @@ describe('UndoPlugin', () => {
 
             expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalse();
             expect(undoSpy).not.toHaveBeenCalled();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
         it('EditorReady event, has redo', () => {
-            getUndoStateSpy.and.returnValue({
-                canUndo: true,
-                canRedo: false,
-            });
+            canMoveSpy.and.callFake((step: number) => step > 0);
+            plugin.getState().snapshotsManager.hasNewContent = false;
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,
@@ -341,14 +333,14 @@ describe('UndoPlugin', () => {
 
             expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalse();
             expect(undoSpy).not.toHaveBeenCalled();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
@@ -385,14 +377,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(undoSpy).toHaveBeenCalledTimes(1);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'Backspace',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalse();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -419,14 +411,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'Backspace',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -449,14 +441,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'Delete',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -479,14 +471,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -496,7 +488,7 @@ describe('UndoPlugin', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const state = plugin.getState();
 
-            state.hasNewContent = true;
+            state.snapshotsManager.hasNewContent = true;
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
@@ -512,14 +504,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -529,7 +521,7 @@ describe('UndoPlugin', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const state = plugin.getState();
 
-            state.hasNewContent = true;
+            state.snapshotsManager.hasNewContent = true;
             state.lastKeyPress = 'Backspace';
 
             plugin.onPluginEvent({
@@ -546,14 +538,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'Backspace',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -577,14 +569,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -612,14 +604,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'Enter',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -647,14 +639,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'A',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -678,14 +670,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: ' ',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -709,14 +701,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: ' ',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(1);
         });
 
@@ -737,14 +729,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'Enter',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -765,14 +757,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'A',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(1);
         });
 
@@ -790,14 +782,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(1);
         });
 
@@ -816,14 +808,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: true,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -839,14 +831,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -862,14 +854,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -885,14 +877,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: false,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -908,14 +900,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: null,
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(1);
         });
 
@@ -936,14 +928,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'B',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -964,14 +956,14 @@ describe('UndoPlugin', () => {
             expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
             expect(undoSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
-                snapshotsService: mockedUndoSnapshotsService,
+                snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
-                hasNewContent: true,
                 isNested: false,
                 posContainer: null,
                 posOffset: null,
                 lastKeyPress: 'A',
             });
+            expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
     });

@@ -23,7 +23,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
             selection: createSnapshotSelection(contentDiv, selection),
         };
 
-        undo.snapshotsService.addSnapshot(snapshot, !!canUndoByBackspace);
-        undo.hasNewContent = false;
+        undo.snapshotsManager.addSnapshot(snapshot, !!canUndoByBackspace);
+        undo.snapshotsManager.hasNewContent = false;
     }
 };

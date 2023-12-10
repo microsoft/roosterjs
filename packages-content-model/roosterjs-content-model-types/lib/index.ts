@@ -266,7 +266,9 @@ export {
     TableSnapshotSelection,
     SnapshotSelection,
     Snapshot,
+    Snapshots,
 } from './parameter/Snapshot';
+export { SnapshotsManager } from './parameter/SnapshotsManager';
 
 export {
     ContentModelBeforePasteEvent,

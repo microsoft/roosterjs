@@ -1,10 +1,9 @@
-import { createUndoSnapshotsService } from '../../lib/editor/UndoSnapshotsServiceImpl';
-import { Snapshot } from 'roosterjs-content-model-types';
-import { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
+import { createSnapshotsManager } from '../../lib/editor/SnapshotsManagerImpl';
+import { Snapshot, Snapshots, SnapshotsManager } from 'roosterjs-content-model-types';
 
-describe('UndoSnapshotsServiceImpl.ctor', () => {
+describe('SnapshotsManagerImpl.ctor', () => {
     it('No param', () => {
-        const service = createUndoSnapshotsService();
+        const service = createSnapshotsManager();
 
         expect((service as any).snapshots).toEqual({
             snapshots: [],
@@ -17,15 +16,15 @@ describe('UndoSnapshotsServiceImpl.ctor', () => {
 
     it('Has param', () => {
         const mockedSnapshots = 'SNAPSHOTS' as any;
-        const service = createUndoSnapshotsService(mockedSnapshots);
+        const service = createSnapshotsManager(mockedSnapshots);
 
         expect((service as any).snapshots).toEqual(mockedSnapshots);
     });
 });
 
-describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.addSnapshot', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -35,7 +34,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
             autoCompleteIndex: -1,
             maxSize: 1e7,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -325,9 +324,9 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
     });
 });
 
-describe('UndoSnapshotsServiceImpl.canMove', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.canMove', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -337,7 +336,7 @@ describe('UndoSnapshotsServiceImpl.canMove', () => {
             autoCompleteIndex: -1,
             maxSize: 100,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -444,9 +443,9 @@ describe('UndoSnapshotsServiceImpl.canMove', () => {
     });
 });
 
-describe('UndoSnapshotsServiceImpl.move', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.move', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -456,7 +455,7 @@ describe('UndoSnapshotsServiceImpl.move', () => {
             autoCompleteIndex: -1,
             maxSize: 100,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -527,9 +526,9 @@ describe('UndoSnapshotsServiceImpl.move', () => {
     });
 });
 
-describe('UndoSnapshotsServiceImpl.clearRedo', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.clearRedo', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -539,7 +538,7 @@ describe('UndoSnapshotsServiceImpl.clearRedo', () => {
             autoCompleteIndex: -1,
             maxSize: 100,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -595,9 +594,9 @@ describe('UndoSnapshotsServiceImpl.clearRedo', () => {
     });
 });
 
-describe('UndoSnapshotsServiceImpl.canUndoAutoComplete', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.canUndoAutoComplete', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -607,7 +606,7 @@ describe('UndoSnapshotsServiceImpl.canUndoAutoComplete', () => {
             autoCompleteIndex: -1,
             maxSize: 100,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     it('can undo', () => {

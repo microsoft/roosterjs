@@ -1,7 +1,6 @@
 import * as createSnapshotSelection from '../../lib/utils/createSnapshotSelection';
 import { addUndoSnapshot } from '../../lib/coreApi/addUndoSnapshot';
-import { Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
-import { UndoSnapshotsService } from 'roosterjs-editor-types';
+import { SnapshotsManager, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('addUndoSnapshot', () => {
     let core: StandaloneEditorCore;
@@ -10,7 +9,7 @@ describe('addUndoSnapshot', () => {
     let addSnapshotSpy: jasmine.Spy;
     let getKnownColorsCopySpy: jasmine.Spy;
     let createSnapshotSelectionSpy: jasmine.Spy;
-    let snapshotsService: UndoSnapshotsService<Snapshot>;
+    let snapshotsManager: SnapshotsManager;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
@@ -19,7 +18,7 @@ describe('addUndoSnapshot', () => {
         createSnapshotSelectionSpy = spyOn(createSnapshotSelection, 'createSnapshotSelection');
         contentDiv = { innerHTML: '' } as any;
 
-        snapshotsService = {
+        snapshotsManager = {
             addSnapshot: addSnapshotSpy,
         } as any;
 
@@ -33,7 +32,7 @@ describe('addUndoSnapshot', () => {
                 getDOMSelection: getDOMSelectionSpy,
             },
             undo: {
-                snapshotsService,
+                snapshotsManager,
             },
         } as any;
     });
@@ -63,9 +62,9 @@ describe('addUndoSnapshot', () => {
         addUndoSnapshot(core, false);
 
         expect(core.undo).toEqual({
-            snapshotsService: snapshotsService,
-            hasNewContent: false,
+            snapshotsManager: snapshotsManager,
         } as any);
+        expect(snapshotsManager.hasNewContent).toBeFalse();
         expect(getDOMSelectionSpy).toHaveBeenCalledWith(core);
         expect(createSnapshotSelectionSpy).toHaveBeenCalledWith(contentDiv, mockedSelection);
         expect(addSnapshotSpy).toHaveBeenCalledWith(
@@ -94,9 +93,9 @@ describe('addUndoSnapshot', () => {
 
         addUndoSnapshot(core, true);
         expect(core.undo).toEqual({
-            snapshotsService: snapshotsService,
-            hasNewContent: false,
+            snapshotsManager: snapshotsManager,
         } as any);
+        expect(snapshotsManager.hasNewContent).toBeFalse();
         expect(getDOMSelectionSpy).toHaveBeenCalledWith(core);
         expect(createSnapshotSelectionSpy).toHaveBeenCalledWith(contentDiv, mockedSelection);
         expect(addSnapshotSpy).toHaveBeenCalledWith(
@@ -127,9 +126,9 @@ describe('addUndoSnapshot', () => {
         addUndoSnapshot(core, false, mockedEntityStates);
 
         expect(core.undo).toEqual({
-            snapshotsService: snapshotsService,
-            hasNewContent: false,
+            snapshotsManager: snapshotsManager,
         } as any);
+        expect(snapshotsManager.hasNewContent).toBeFalse();
         expect(getDOMSelectionSpy).toHaveBeenCalledWith(core);
         expect(createSnapshotSelectionSpy).toHaveBeenCalledWith(contentDiv, mockedSelection);
         expect(addSnapshotSpy).toHaveBeenCalledWith(
