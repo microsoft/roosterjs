@@ -31,7 +31,6 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             const level = block.levels.pop();
-            console.log('level', level);
 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
