@@ -44,11 +44,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
             document.addEventListener('keydown', this.onKeyDownDocument);
             document.defaultView?.addEventListener('blur', this.onBlur);
-            this.disposer = this.editor.addDomEventHandler('focus', this.onFocus);
+            this.disposer = this.editor.attachDomEvent({ focus: { beforeDispatch: this.onFocus } });
         } else {
-            this.disposer = this.editor.addDomEventHandler({
-                focus: this.onFocus,
-                blur: this.onBlur,
+            this.disposer = this.editor.attachDomEvent({
+                focus: { beforeDispatch: this.onFocus },
+                blur: { beforeDispatch: this.onBlur },
             });
         }
     }

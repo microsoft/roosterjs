@@ -1,3 +1,4 @@
+import type { DOMEventHandler } from '../parameter/DOMEventHandler';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -148,6 +149,12 @@ export interface IStandaloneEditor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     isInIME(): boolean;
+
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent(eventMap: Record<string, DOMEventHandler>): () => void;
 
     //#endregion
 }

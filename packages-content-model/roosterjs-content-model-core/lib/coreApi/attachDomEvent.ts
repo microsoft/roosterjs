@@ -1,10 +1,6 @@
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type { AttachDomEvent } from 'roosterjs-content-model-types';
-import type {
-    DOMEventHandler,
-    DOMEventHandlerObject,
-    PluginDomEvent,
-} from 'roosterjs-editor-types';
+import type { PluginDomEvent } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -16,12 +12,13 @@ import type {
  */
 export const attachDomEvent: AttachDomEvent = (core, eventMap) => {
     const disposers = getObjectKeys(eventMap || {}).map(key => {
-        const { pluginEventType, beforeDispatch } = extractHandler(eventMap[key]);
+        const { pluginEventType, beforeDispatch } = eventMap[key];
         const eventName = key as keyof HTMLElementEventMap;
         const onEvent = (event: HTMLElementEventMap[typeof eventName]) => {
             if (beforeDispatch) {
                 beforeDispatch(event);
             }
+
             if (pluginEventType != null) {
                 core.api.triggerEvent(
                     core,
@@ -40,21 +37,6 @@ export const attachDomEvent: AttachDomEvent = (core, eventMap) => {
             core.contentDiv.removeEventListener(eventName, onEvent);
         };
     });
+
     return () => disposers.forEach(disposers => disposers());
 };
-
-function extractHandler(handlerObj: DOMEventHandler): DOMEventHandlerObject {
-    let result: DOMEventHandlerObject = {
-        pluginEventType: null,
-        beforeDispatch: null,
-    };
-
-    if (typeof handlerObj === 'number') {
-        result.pluginEventType = handlerObj;
-    } else if (typeof handlerObj === 'function') {
-        result.beforeDispatch = handlerObj;
-    } else if (typeof handlerObj === 'object') {
-        result = handlerObj;
-    }
-    return result;
-}

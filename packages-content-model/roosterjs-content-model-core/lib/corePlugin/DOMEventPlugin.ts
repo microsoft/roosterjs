@@ -4,11 +4,11 @@ import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     DOMEventPluginState,
     IStandaloneEditor,
+    DOMEventHandler,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 import type {
     ContextMenuProvider,
-    DOMEventHandler,
     EditorPlugin,
     IEditor,
     PluginWithState,
@@ -62,7 +62,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.editor = editor as IStandaloneEditor & IEditor;
 
         const document = this.editor.getDocument();
-        //Record<string, DOMEventHandler>
         const eventHandlers: Partial<
             { [P in keyof HTMLElementEventMap]: DOMEventHandler<HTMLElementEventMap[P]> }
         > = {
@@ -72,27 +71,22 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             keyup: this.getEventHandler(PluginEventType.KeyUp),
 
             // 2. Mouse event
-            mousedown: this.onMouseDown,
-            contextmenu: this.onContextMenuEvent,
+            mousedown: { beforeDispatch: this.onMouseDown },
+            contextmenu: { beforeDispatch: this.onContextMenuEvent },
 
             // 3. IME state management
-            compositionstart: () => (this.state.isInIME = true),
-            compositionend: (rawEvent: CompositionEvent) => {
-                this.state.isInIME = false;
-                editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
-                    rawEvent,
-                });
-            },
+            compositionstart: { beforeDispatch: this.onCompositionStart },
+            compositionend: { beforeDispatch: this.onCompositionEnd },
 
             // 4. Drag and Drop event
-            dragstart: this.onDragStart,
-            drop: this.onDrop,
+            dragstart: { beforeDispatch: this.onDragStart },
+            drop: { beforeDispatch: this.onDrop },
 
             // 5. Input event
             input: this.getEventHandler(PluginEventType.Input),
         };
 
-        this.disposer = editor.addDomEventHandler(<Record<string, DOMEventHandler>>eventHandlers);
+        this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventHandler>>eventHandlers);
 
         // 7. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
@@ -224,6 +218,17 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.editor?.triggerPluginEvent(PluginEventType.ContextMenu, {
             rawEvent: event,
             items: allItems,
+        });
+    };
+
+    private onCompositionStart = () => {
+        this.state.isInIME = true;
+    };
+
+    private onCompositionEnd = (rawEvent: CompositionEvent) => {
+        this.state.isInIME = false;
+        this.editor?.triggerPluginEvent(PluginEventType.CompositionEnd, {
+            rawEvent,
         });
     };
 
