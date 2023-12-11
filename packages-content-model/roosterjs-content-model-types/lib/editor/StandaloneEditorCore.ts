@@ -1,12 +1,8 @@
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
+import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
-    CompatibleColorTransformDirection,
-    CompatibleGetContentMode,
-} from 'roosterjs-editor-types/lib/compatibleTypes';
-import type {
-    ColorTransformDirection,
     ContentMetadata,
     DarkColorHandler,
     EditorPlugin,
@@ -117,27 +113,6 @@ export type TriggerEvent = (
     core: StandaloneEditorCore,
     pluginEvent: PluginEvent,
     broadcast: boolean
-) => void;
-
-/**
- * Edit and transform color of elements between light mode and dark mode
- * @param core The StandaloneEditorCore object
- * @param rootNode The root HTML node to transform
- * @param includeSelf True to transform the root node as well, otherwise false
- * @param callback The callback function to invoke before do color transformation
- * @param direction To specify the transform direction, light to dark, or dark to light
- * @param forceTransform By default this function will only work when editor core is in dark mode.
- * Pass true to this value to force do color transformation even editor core is in light mode
- * @param fromDarkModel Whether the given content is already in dark mode
- */
-export type TransformColor = (
-    core: StandaloneEditorCore,
-    rootNode: Node | null,
-    includeSelf: boolean,
-    callback: (() => void) | null,
-    direction: ColorTransformDirection | CompatibleColorTransformDirection,
-    forceTransform?: boolean,
-    fromDarkMode?: boolean
 ) => void;
 
 /**
@@ -365,19 +340,6 @@ export interface PortedCoreApiMap {
  * TODO: Port these core API
  */
 export interface UnportedCoreApiMap {
-    /**
-     * Edit and transform color of elements between light mode and dark mode
-     * @param core The StandaloneEditorCore object
-     * @param rootNode The root HTML element to transform
-     * @param includeSelf True to transform the root node as well, otherwise false
-     * @param callback The callback function to invoke before do color transformation
-     * @param direction To specify the transform direction, light to dark, or dark to light
-     * @param forceTransform By default this function will only work when editor core is in dark mode.
-     * Pass true to this value to force do color transformation even editor core is in light mode
-     * @param fromDarkModel Whether the given content is already in dark mode
-     */
-    transformColor: TransformColor;
-
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * if triggerContentChangedEvent is set to true

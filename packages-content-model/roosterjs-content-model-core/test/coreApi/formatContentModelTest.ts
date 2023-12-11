@@ -1,3 +1,4 @@
+import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createImage } from 'roosterjs-content-model-dom';
 import { EditorCore, PluginEventType } from 'roosterjs-editor-types';
@@ -329,11 +330,10 @@ describe('formatContentModel', () => {
             wrapper: wrapper2,
         } as any;
         const rawEvent = 'RawEvent' as any;
-        const transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
+        const transformColorSpy = spyOn(transformColor, 'transformColor');
         const mockedData = 'DATA';
 
         core.lifecycle.isDarkMode = true;
-        core.api.transformColor = transformToDarkColorSpy;
 
         formatContentModel(
             core,
@@ -378,7 +378,7 @@ describe('formatContentModel', () => {
             },
             true
         );
-        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+        expect(transformColorSpy).not.toHaveBeenCalled();
     });
 
     it('With selectionOverride', () => {

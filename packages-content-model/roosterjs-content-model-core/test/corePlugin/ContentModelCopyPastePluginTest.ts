@@ -6,6 +6,7 @@ import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/e
 import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../lib/publicApi/model/paste';
+import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
@@ -21,12 +22,7 @@ import {
     createContentModelCopyPastePlugin,
     onNodeCreated,
 } from '../../lib/corePlugin/ContentModelCopyPastePlugin';
-import {
-    ClipboardData,
-    ColorTransformDirection,
-    EditorPlugin,
-    IEditor,
-} from 'roosterjs-editor-types';
+import { ClipboardData, DarkColorHandler, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 
 const modelValue = 'model' as any;
 const pasteModelValue = 'pasteModelValue' as any;
@@ -52,10 +48,11 @@ describe('ContentModelCopyPastePlugin |', () => {
     let isDisposed: jasmine.Spy;
     let pasteSpy: jasmine.Spy;
     let cloneModelSpy: jasmine.Spy;
-    let transformToDarkColorSpy: jasmine.Spy;
+    let transformColorSpy: jasmine.Spy;
     let getVisibleViewportSpy: jasmine.Spy;
     let formatResult: boolean | undefined;
     let modelResult: ContentModelDocument | undefined;
+    let mockedDarkColorHandler: DarkColorHandler;
 
     beforeEach(() => {
         modelResult = undefined;
@@ -78,7 +75,8 @@ describe('ContentModelCopyPastePlugin |', () => {
         cloneModelSpy = spyOn(cloneModelFile, 'cloneModel').and.callFake(
             (model: any) => pasteModelValue
         );
-        transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
+        transformColorSpy = spyOn(transformColor, 'transformColor');
+        mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -130,7 +128,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             paste: (ar1: any) => {
                 pasteSpy(ar1);
             },
-            transformToDarkColor: transformToDarkColorSpy,
+            getDarkColorHandler: () => mockedDarkColorHandler,
             isDisposed,
             getVisibleViewport: getVisibleViewportSpy,
             formatContentModel: formatContentModelSpy,
@@ -329,10 +327,12 @@ describe('ContentModelCopyPastePlugin |', () => {
                     '<span class="_Entity _EType_Entity _EId_Entity _EReadonly_1" contenteditable="false" style="color: inherit; background-color: inherit;"></span>'
                 );
                 expect(cloneEntity).not.toBe(wrapper);
-                expect(transformToDarkColorSpy).toHaveBeenCalledTimes(1);
-                expect(transformToDarkColorSpy).toHaveBeenCalledWith(
+                expect(transformColorSpy).toHaveBeenCalledTimes(1);
+                expect(transformColorSpy).toHaveBeenCalledWith(
                     cloneEntity,
-                    ColorTransformDirection.DarkToLight
+                    true,
+                    'darkToLight',
+                    mockedDarkColorHandler
                 );
 
                 return pasteModelValue;
