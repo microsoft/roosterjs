@@ -31,12 +31,26 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             const level = block.levels.pop();
+            console.log('level', level);
 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
                 block.levels.push(level);
             } else if (block.blocks.length == 1) {
                 setParagraphNotImplicit(block.blocks[0]);
+                block.blocks.forEach(x => {
+                    if (block.format.marginLeft) {
+                        x.format.marginLeft = block.format.marginLeft;
+                    }
+
+                    if (block.format.marginRight) {
+                        x.format.marginRight = block.format.marginRight;
+                    }
+
+                    if (block.format.textAlign) {
+                        x.format.textAlign = block.format.textAlign;
+                    }
+                });
             }
         } else {
             const index = parent.blocks.indexOf(block);
@@ -78,6 +92,19 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                     }
 
                     newListItem.blocks.push(block);
+
+                    if (block.format.marginRight) {
+                        newListItem.format.marginRight = block.format.marginRight;
+                        block.format.marginRight = undefined;
+                    }
+                    if (block.format.marginLeft) {
+                        newListItem.format.marginLeft = block.format.marginLeft;
+                        block.format.marginLeft = undefined;
+                    }
+
+                    if (block.format.textAlign) {
+                        newListItem.format.textAlign = block.format.textAlign;
+                    }
 
                     parent.blocks.splice(index, 1, newListItem);
                     existingListItems.push(newListItem);
