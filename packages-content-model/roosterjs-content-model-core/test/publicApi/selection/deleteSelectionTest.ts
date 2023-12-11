@@ -1749,7 +1749,7 @@ describe('deleteSelection - list -  when cut', () => {
         listItem1.blocks.push(table);
         model.blocks.push(listItem1);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
+        const result = deleteSelection(model, [deleteEmptyList], undefined);
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [
