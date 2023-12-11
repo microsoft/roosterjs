@@ -996,7 +996,7 @@ describe('deleteSelection - list -  when cut', () => {
         para2.segments.push(text2, marker);
         model.blocks.push(listItem1, listItem2);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
+        const result = deleteSelection(model, [deleteEmptyList], undefined);
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [
@@ -1101,7 +1101,7 @@ describe('deleteSelection - list -  when cut', () => {
         para2.segments.push(text2);
         model.blocks.push(listItem1, listItem2);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
+        const result = deleteSelection(model, [deleteEmptyList], undefined);
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [
@@ -1305,7 +1305,7 @@ describe('deleteSelection - list -  when cut', () => {
         para1.segments.push(text1);
         model.blocks.push(listItem1);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
+        const result = deleteSelection(model, [deleteEmptyList], undefined);
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [
@@ -1467,7 +1467,7 @@ describe('deleteSelection - list -  when cut', () => {
         para4.segments.push(text4);
         model.blocks.push(listItem1, listItem2, listItem3, listItem4);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
+        const result = deleteSelection(model, [deleteEmptyList], undefined);
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [

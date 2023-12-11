@@ -1,7 +1,11 @@
 import hasSelectionInBlock from '../../publicApi/selection/hasSelectionInBlock';
 import hasSelectionInBlockGroup from '../../publicApi/selection/hasSelectionInBlockGroup';
 import { getClosestAncestorBlockGroupIndex } from '../../publicApi/model/getClosestAncestorBlockGroupIndex';
-import type { ContentModelBlock, DeleteSelectionContext } from 'roosterjs-content-model-types';
+import type {
+    ContentModelBlock,
+    DeleteSelectionContext,
+    DeleteSelectionStep,
+} from 'roosterjs-content-model-types';
 
 function isEmptyBlock(block: ContentModelBlock | undefined): boolean {
     if (block && block.blockType == 'Paragraph') {
@@ -22,7 +26,7 @@ function isEmptyBlock(block: ContentModelBlock | undefined): boolean {
  * If the first item o the list is selected in a expanded selection, we need to remove the list item levels
  * @param context A context object provided by formatContentModel API
  */
-export function deleteEmptyList(context: DeleteSelectionContext) {
+export const deleteEmptyList: DeleteSelectionStep = (context: DeleteSelectionContext) => {
     const { insertPoint, deleteResult } = context;
     if (deleteResult == 'range' && insertPoint?.path) {
         const index = getClosestAncestorBlockGroupIndex(
@@ -51,4 +55,4 @@ export function deleteEmptyList(context: DeleteSelectionContext) {
             }
         }
     }
-}
+};

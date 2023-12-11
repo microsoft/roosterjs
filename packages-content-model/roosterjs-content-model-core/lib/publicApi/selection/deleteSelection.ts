@@ -1,7 +1,6 @@
 import { deleteExpandedSelection } from '../../modelApi/edit/deleteExpandedSelection';
 import type {
     ContentModelDocument,
-    DeleteResult,
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,
@@ -14,23 +13,17 @@ import type {
  * @param model The model to delete selected content from
  * @param additionalSteps @optional Addition delete steps
  * @param formatContext @optional A context object provided by formatContentModel API
- * @param additionalStepsResult  @optional The delete result to trigger the additional steps @default 'notDeleted'
  * @returns A DeleteSelectionResult object to specify the deletion result
  */
 export function deleteSelection(
     model: ContentModelDocument,
     additionalSteps: (DeleteSelectionStep | null)[] = [],
-    formatContext?: FormatWithContentModelContext,
-    additionalStepsResult: DeleteResult = 'notDeleted'
+    formatContext?: FormatWithContentModelContext
 ): DeleteSelectionResult {
     const context = deleteExpandedSelection(model, formatContext);
 
     additionalSteps.forEach(step => {
-        if (
-            step &&
-            isValidDeleteSelectionContext(context) &&
-            context.deleteResult == additionalStepsResult
-        ) {
+        if (step && isValidDeleteSelectionContext(context)) {
             step(context);
         }
     });
