@@ -135,5 +135,21 @@ export interface IStandaloneEditor {
      */
     getZoomScale(): number;
 
+    /**
+     * Undo last edit operation
+     */
+    undo(): void;
+
+    /**
+     * Redo next edit operation
+     */
+    redo(): void;
+
+    /**
+     * Check if editor is in IME input sequence
+     * @returns True if editor is in IME input sequence, otherwise false
+     */
+    isInIME(): boolean;
+
     //#endregion
 }
