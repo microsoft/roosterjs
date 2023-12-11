@@ -15,7 +15,7 @@ import {
     ContentModelFormatter,
     FormatWithContentModelOptions,
     IStandaloneEditor,
-    DOMEventHandler,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelCopyPastePlugin,
@@ -38,7 +38,7 @@ const allowedCustomPasteType = ['Test'];
 describe('ContentModelCopyPastePlugin |', () => {
     let editor: IEditor = null!;
     let plugin: EditorPlugin;
-    let domEvents: Record<string, DOMEventHandler> = {};
+    let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
 
     let selectionValue: DOMSelection;
@@ -98,7 +98,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             allowedCustomPasteType,
         });
         editor = <IStandaloneEditor & IEditor>(<any>{
-            attachDomEvent: (eventMap: Record<string, DOMEventHandler>) => {
+            attachDomEvent: (eventMap: Record<string, DOMEventRecord>) => {
                 domEvents = eventMap;
             },
             createContentModel: (options: any) => createContentModelSpy(options),
