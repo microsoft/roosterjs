@@ -1,4 +1,3 @@
-import { contains } from 'roosterjs-editor-dom';
 import type { HasFocus } from 'roosterjs-content-model-types';
 
 /**
@@ -9,7 +8,5 @@ import type { HasFocus } from 'roosterjs-content-model-types';
  */
 export const hasFocus: HasFocus = core => {
     const activeElement = core.contentDiv.ownerDocument.activeElement;
-    return !!(
-        activeElement && contains(core.contentDiv, activeElement, true /*treatSameNodeAsContain*/)
-    );
+    return !!(activeElement && core.contentDiv.contains(activeElement));
 };

@@ -1,26 +1,21 @@
 import { ColorKeyAndValue } from 'roosterjs-editor-types';
 import { DarkColorHandlerImpl } from '../../lib/editor/DarkColorHandlerImpl';
 
+function getDarkColor(color: string) {
+    return 'Dark_' + color;
+}
+
 describe('DarkColorHandlerImpl.ctor', () => {
     it('No additional param', () => {
         const div = document.createElement('div');
-        const handler = new DarkColorHandlerImpl(div);
+        const handler = new DarkColorHandlerImpl(div, getDarkColor);
 
         expect(handler).toBeDefined();
-        expect(handler.baseLightness).toBe(21.25);
-    });
-
-    it('With customized base color', () => {
-        const div = document.createElement('div');
-        const handler = new DarkColorHandlerImpl(div, '#555555');
-
-        expect(handler).toBeDefined();
-        expect(Math.round(handler.baseLightness)).toBe(36);
     });
 
     it('Calculate color using customized base color', () => {
         const div = document.createElement('div');
-        const handler = new DarkColorHandlerImpl(div, '#555555');
+        const handler = new DarkColorHandlerImpl(div, getDarkColor);
 
         const darkColor = handler.registerColor('red', true);
         const parsedColor = handler.parseColorValue(darkColor);
@@ -29,7 +24,7 @@ describe('DarkColorHandlerImpl.ctor', () => {
         expect(parsedColor).toEqual({
             key: '--darkColor_red',
             lightModeColor: 'red',
-            darkModeColor: 'rgb(255, 72, 40)',
+            darkModeColor: 'Dark_red',
         });
     });
 });
@@ -40,7 +35,7 @@ describe('DarkColorHandlerImpl.parseColorValue', () => {
 
     beforeEach(() => {
         div = document.createElement('div');
-        handler = new DarkColorHandlerImpl(div);
+        handler = new DarkColorHandlerImpl(div, getDarkColor);
     });
 
     function runTest(input: string, expectedOutput: ColorKeyAndValue) {
@@ -143,7 +138,7 @@ describe('DarkColorHandlerImpl.registerColor', () => {
                 setProperty,
             },
         } as any) as HTMLElement;
-        handler = new DarkColorHandlerImpl(div);
+        handler = new DarkColorHandlerImpl(div, getDarkColor);
     });
 
     function runTest(
@@ -186,10 +181,10 @@ describe('DarkColorHandlerImpl.registerColor', () => {
             {
                 '--darkColor_red': {
                     lightModeColor: 'red',
-                    darkModeColor: 'rgb(255, 39, 17)',
+                    darkModeColor: 'Dark_red',
                 },
             },
-            [['--darkColor_red', 'rgb(255, 39, 17)']]
+            [['--darkColor_red', 'Dark_red']]
         );
     });
 
@@ -222,10 +217,10 @@ describe('DarkColorHandlerImpl.registerColor', () => {
             {
                 '--aa': {
                     lightModeColor: 'red',
-                    darkModeColor: 'rgb(255, 39, 17)',
+                    darkModeColor: 'Dark_red',
                 },
             },
-            [['--aa', 'rgb(255, 39, 17)']]
+            [['--aa', 'Dark_red']]
         );
     });
 
@@ -395,7 +390,7 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
-        handler = new DarkColorHandlerImpl(contentDiv);
+        handler = new DarkColorHandlerImpl(contentDiv, getDarkColor);
 
         parseColorSpy = spyOn(handler, 'parseColorValue').and.callThrough();
         registerColorSpy = spyOn(handler, 'registerColor').and.callThrough();

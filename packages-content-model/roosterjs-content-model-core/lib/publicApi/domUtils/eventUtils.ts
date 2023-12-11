@@ -2,6 +2,17 @@ const CTRL_CHAR_CODE = 'Control';
 const ALT_CHAR_CODE = 'Alt';
 const META_CHAR_CODE = 'Meta';
 
+const CursorMovingKeys = new Set<string>([
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'Home',
+    'End',
+    'PageUp',
+    'PageDown',
+]);
+
 /**
  * Returns true when the event was fired from a modifier key, otherwise false
  * @param event The keyboard event object
@@ -23,4 +34,14 @@ export function isModifierKey(event: KeyboardEvent): boolean {
  */
 export function isCharacterValue(event: KeyboardEvent): boolean {
     return !isModifierKey(event) && !!event.key && event.key.length == 1;
+}
+
+/**
+ * @internal
+ * Returns true if the given event is a cursor moving event (Left, Right, Up, Down, Home, End, Page Up, Page Down).
+ * This does not check modifier keys (Ctrl, Alt, Meta). So if there are modifier keys pressed, it can still return true if one of the modifier key is pressed
+ * @param event The keyboard event to check
+ */
+export function isCursorMovingKey(event: KeyboardEvent): boolean {
+    return CursorMovingKeys.has(event.key);
 }

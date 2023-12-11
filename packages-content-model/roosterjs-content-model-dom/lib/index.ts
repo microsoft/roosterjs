@@ -28,6 +28,7 @@ export {
     generateEntityClassNames,
     addDelimiters,
 } from './domUtils/entityUtils';
+export { reuseCachedElement } from './domUtils/reuseCachedElement';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
@@ -49,7 +50,6 @@ export { createListLevel } from './modelApi/creators/createListLevel';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
-export { ensureParagraph } from './modelApi/common/ensureParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';

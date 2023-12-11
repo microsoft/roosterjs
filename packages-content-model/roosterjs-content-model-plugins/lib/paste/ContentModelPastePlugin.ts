@@ -49,8 +49,12 @@ export class ContentModelPastePlugin implements EditorPlugin {
     /**
      * Construct a new instance of Paste class
      * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
+     * @param allowExcelNoBorderTable Allow table copied from Excel without border
      */
-    constructor(private unknownTagReplacement: string = 'SPAN') {}
+    constructor(
+        private unknownTagReplacement: string = 'SPAN',
+        private allowExcelNoBorderTable?: boolean
+    ) {}
 
     /**
      * Get name of this plugin
@@ -110,7 +114,11 @@ export class ContentModelPastePlugin implements EditorPlugin {
             case 'excelDesktop':
                 if (pasteType === 'normal' || pasteType === 'mergeFormat') {
                     // Handle HTML copied from Excel
-                    processPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
+                    processPastedContentFromExcel(
+                        ev,
+                        this.editor.getTrustedHTMLHandler(),
+                        this.allowExcelNoBorderTable
+                    );
                 }
                 break;
             case 'googleSheets':

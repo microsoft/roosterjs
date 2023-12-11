@@ -83,7 +83,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -95,6 +95,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -125,7 +126,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -137,6 +138,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -166,7 +168,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -178,6 +180,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -206,7 +209,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -218,6 +221,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).toHaveBeenCalledTimes(1);
             expect(transformToDarkColorSpy).toHaveBeenCalledWith(
@@ -260,7 +264,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -272,6 +276,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                 operation: EntityOperation.Overwrite,
@@ -282,6 +287,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper2,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -344,7 +350,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(wrapper.outerHTML).toBe(
-                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -356,6 +362,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -408,7 +415,7 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_E1 _EId_E1 _EReadonly_1"></div>'
             );
             expect(wrapper2.outerHTML).toBe(
-                '<div class="_Entity _EType_E2 _EId_E2 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_E2 _EId_E2 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -420,6 +427,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper2,
                 },
+                state: undefined,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                 operation: EntityOperation.RemoveFromStart,
@@ -430,6 +438,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper1,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         });
@@ -475,7 +484,7 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_E1 _EId_E1 _EReadonly_1"></div>'
             );
             expect(wrapper2.outerHTML).toBe(
-                '<div class="_Entity _EType_E2 _EId_E1_1 _EReadonly_1"></div>'
+                '<div class="_Entity _EType_E2 _EId_E1_1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -487,8 +496,54 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper2,
                 },
+                state: undefined,
             });
             expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+        });
+
+        it('With content state', () => {
+            const id = 'ID';
+            const entityType = 'Entity1';
+            const entityState = 'STATE';
+            const state = plugin.getState();
+            const wrapper = document.createElement('div');
+            const entity = createEntity(wrapper, true, undefined, entityType, id);
+            const doc = createContentModelDocument();
+
+            wrapper.className = entityUtils.generateEntityClassNames({
+                entityType,
+                id: id,
+                isReadonly: true,
+            });
+            doc.blocks.push(entity);
+            createContentModelSpy.and.returnValue(doc);
+
+            state.entityMap[id] = {
+                element: wrapper,
+            };
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.ContentChanged,
+                entityStates: [
+                    {
+                        id,
+                        state: entityState,
+                    },
+                ],
+            } as any);
+
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.UpdateEntityState,
+                rawEvent: undefined,
+                entity: {
+                    id,
+                    type: entityType,
+                    isReadonly: true,
+                    wrapper,
+                },
+                state: entityState,
+            });
         });
     });
 
@@ -540,6 +595,7 @@ describe('EntityPlugin', () => {
                     isReadonly: false,
                     wrapper: mockedNode,
                 },
+                state: undefined,
             });
         });
 
@@ -575,6 +631,7 @@ describe('EntityPlugin', () => {
                     isReadonly: false,
                     wrapper: mockedNode1,
                 },
+                state: undefined,
             });
         });
 
@@ -634,6 +691,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper1,
                 },
+                state: undefined,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                 operation: EntityOperation.ReplaceTemporaryContent,
@@ -644,6 +702,7 @@ describe('EntityPlugin', () => {
                     isReadonly: true,
                     wrapper: wrapper2,
                 },
+                state: undefined,
             });
         });
     });

@@ -1,5 +1,9 @@
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
-import type { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
+import type {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
+    DomToModelOption,
+} from 'roosterjs-content-model-types';
 import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 /**
@@ -12,11 +16,20 @@ import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 export function createModelFromHtml(
     html: string,
     options?: DomToModelOption,
-    trustedHTMLHandler?: TrustedHTMLHandler
+    trustedHTMLHandler?: TrustedHTMLHandler,
+    defaultSegmentFormat?: ContentModelSegmentFormat
 ): ContentModelDocument | undefined {
     const doc = new DOMParser().parseFromString(trustedHTMLHandler?.(html) ?? html, 'text/html');
 
     return doc?.body
-        ? domToContentModel(doc.body, createDomToModelContext(undefined /*editorContext*/, options))
+        ? domToContentModel(
+              doc.body,
+              createDomToModelContext(
+                  {
+                      defaultFormat: defaultSegmentFormat,
+                  },
+                  options
+              )
+          )
         : undefined;
 }

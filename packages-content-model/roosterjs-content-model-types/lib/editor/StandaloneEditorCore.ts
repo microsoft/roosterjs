@@ -1,26 +1,21 @@
+import type { Snapshot } from '../parameter/Snapshot';
+import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
     CompatibleColorTransformDirection,
     CompatibleGetContentMode,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     ColorTransformDirection,
-    ContentChangedData,
     ContentMetadata,
     DOMEventHandler,
     DarkColorHandler,
     EditorPlugin,
     GetContentMode,
-    ImageSelectionRange,
     InsertOption,
     NodePosition,
     PluginEvent,
-    PositionType,
     Rect,
-    SelectionPath,
-    SelectionRangeEx,
     StyleBasedFormatState,
-    TableSelection,
-    TableSelectionRange,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
@@ -82,8 +77,13 @@ export type SetContentModel = (
  * Set current DOM selection from editor. This is the replacement of core API select
  * @param core The StandaloneEditorCore object
  * @param selection The selection to set
+ * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
  */
-export type SetDOMSelection = (core: StandaloneEditorCore, selection: DOMSelection) => void;
+export type SetDOMSelection = (
+    core: StandaloneEditorCore,
+    selection: DOMSelection | null,
+    skipSelectionChangedEvent?: boolean
+) => void;
 
 /**
  * The general API to do format change with Content Model
@@ -108,24 +108,6 @@ export type FormatContentModel = (
 export type SwitchShadowEdit = (core: StandaloneEditorCore, isOn: boolean) => void;
 
 /**
- * TODO: Remove this Core API and use setDOMSelection instead
- * Select content according to the given information.
- * There are a bunch of allowed combination of parameters. See IEditor.select for more details
- * @param core The editor core object
- * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
- * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
- * @param arg3 (optional) A Node
- * @param arg4 (optional) An offset number, or a PositionType
- */
-export type Select = (
-    core: StandaloneEditorCore,
-    arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
-    arg2?: NodePosition | number | PositionType | TableSelection | null,
-    arg3?: Node,
-    arg4?: number | PositionType
-) => boolean;
-
-/**
  * Trigger a plugin event
  * @param core The StandaloneEditorCore object
  * @param pluginEvent The event object to trigger
@@ -136,13 +118,6 @@ export type TriggerEvent = (
     pluginEvent: PluginEvent,
     broadcast: boolean
 ) => void;
-
-/**
- * Get current selection range
- * @param core The StandaloneEditorCore object
- * @returns A Range object of the selection range
- */
-export type GetSelectionRangeEx = (core: StandaloneEditorCore) => SelectionRangeEx;
 
 /**
  * Edit and transform color of elements between light mode and dark mode
@@ -166,20 +141,17 @@ export type TransformColor = (
 ) => void;
 
 /**
- * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
- * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
+ * Add an undo snapshot to current undo snapshot stack
  * @param core The StandaloneEditorCore object
- * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
- * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
- * @param additionalData Optional parameter to provide additional data related to the ContentChanged Event.
+ * @param entityStates @optional Entity states related to this snapshot.
+ * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
+ * when undo/redo to this snapshot
  */
 export type AddUndoSnapshot = (
     core: StandaloneEditorCore,
-    callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
-    changeSource: string | null,
     canUndoByBackspace: boolean,
-    additionalData?: ContentChangedData
+    entityStates?: EntityState[]
 ) => void;
 
 /**
@@ -187,45 +159,6 @@ export type AddUndoSnapshot = (
  * @param core The StandaloneEditorCore object
  */
 export type GetVisibleViewport = (core: StandaloneEditorCore) => Rect | null;
-
-/**
- * Change the editor selection to the given range
- * @param core The StandaloneEditorCore object
- * @param range The range to select
- * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
- * in editor, otherwise it will always remove current selection range and set to the given one.
- * This parameter is always treated as true in Edge to avoid some weird runtime exception.
- */
-export type SelectRange = (
-    core: StandaloneEditorCore,
-    range: Range,
-    skipSameRange?: boolean
-) => boolean;
-
-/**
- * Select a table and save data of the selected range
- * @param core The StandaloneEditorCore object
- * @param image image to select
- * @returns true if successful
- */
-export type SelectImage = (
-    core: StandaloneEditorCore,
-    image: HTMLImageElement | null
-) => ImageSelectionRange | null;
-
-/**
- * Select a table and save data of the selected range
- * @param core The StandaloneEditorCore object
- * @param table table to select
- * @param coordinates first and last cell of the selection, if this parameter is null, instead of
- * selecting, will unselect the table.
- * @returns true if successful
- */
-export type SelectTable = (
-    core: StandaloneEditorCore,
-    table: HTMLTableElement | null,
-    coordinates?: TableSelection
-) => TableSelectionRange | null;
 
 /**
  * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
@@ -240,17 +173,6 @@ export type SetContent = (
     triggerContentChangedEvent: boolean,
     metadata?: ContentMetadata
 ) => void;
-
-/**
- * Get current or cached selection range
- * @param core The StandaloneEditorCore object
- * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
- * @returns A Range object of the selection range
- */
-export type GetSelectionRange = (
-    core: StandaloneEditorCore,
-    tryGetFromCache: boolean
-) => Range | null;
 
 /**
  * Check if the editor has focus now
@@ -312,7 +234,7 @@ export type GetStyleBasedFormatState = (
  * @param core The StandaloneEditorCore object
  * @param step Steps to move, can be 0, positive or negative
  */
-export type RestoreUndoSnapshot = (core: StandaloneEditorCore, step: number) => void;
+export type RestoreUndoSnapshot = (core: StandaloneEditorCore, snapshot: Snapshot) => void;
 
 /**
  * Ensure user will type into a container element rather than into the editor content DIV directly
@@ -364,6 +286,7 @@ export interface PortedCoreApiMap {
      * Set current DOM selection from editor. This is the replacement of core API select
      * @param core The StandaloneEditorCore object
      * @param selection The selection to set
+     * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
      */
     setDOMSelection: SetDOMSelection;
 
@@ -390,6 +313,36 @@ export interface PortedCoreApiMap {
      * @param core The StandaloneEditorCore object
      */
     getVisibleViewport: GetVisibleViewport;
+
+    /**
+     * Check if the editor has focus now
+     * @param core The StandaloneEditorCore object
+     * @returns True if the editor has focus, otherwise false
+     */
+    hasFocus: HasFocus;
+
+    /**
+     * Focus to editor. If there is a cached selection range, use it as current selection
+     * @param core The StandaloneEditorCore object
+     */
+    focus: Focus;
+
+    /**
+     * Add an undo snapshot to current undo snapshot stack
+     * @param core The StandaloneEditorCore object
+     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+     * @param entityStates @optional Entity states related to this snapshot.
+     * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
+     * when undo/redo to this snapshot
+     */
+    addUndoSnapshot: AddUndoSnapshot;
+
+    /**
+     * Restore an undo snapshot into editor
+     * @param core The editor core object
+     * @param step Steps to move, can be 0, positive or negative
+     */
+    restoreUndoSnapshot: RestoreUndoSnapshot;
 }
 
 /**
@@ -398,31 +351,12 @@ export interface PortedCoreApiMap {
  */
 export interface UnportedCoreApiMap {
     /**
-     * Select content according to the given information.
-     * There are a bunch of allowed combination of parameters. See IEditor.select for more details
-     * @param core The editor core object
-     * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
-     * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
-     * @param arg3 (optional) A Node
-     * @param arg4 (optional) An offset number, or a PositionType
-     */
-    select: Select;
-
-    /**
      * Trigger a plugin event
      * @param core The StandaloneEditorCore object
      * @param pluginEvent The event object to trigger
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
-
-    /**
-     * Get current or cached selection range
-     * @param core The StandaloneEditorCore object
-     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
-     * @returns A Range object of the selection range
-     */
-    getSelectionRangeEx: GetSelectionRangeEx;
 
     /**
      * Edit and transform color of elements between light mode and dark mode
@@ -438,46 +372,6 @@ export interface UnportedCoreApiMap {
     transformColor: TransformColor;
 
     /**
-     * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
-     * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
-     * @param core The StandaloneEditorCore object
-     * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
-     * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
-     * @param canUndoByBackspace True if this action can be undone when user presses Backspace key (aka Auto Complete).
-     */
-    addUndoSnapshot: AddUndoSnapshot;
-
-    /**
-     * Change the editor selection to the given range
-     * @param core The StandaloneEditorCore object
-     * @param range The range to select
-     * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
-     * in editor, otherwise it will always remove current selection range and set to the given one.
-     * This parameter is always treated as true in Edge to avoid some weird runtime exception.
-     */
-    selectRange: SelectRange;
-
-    /**
-     * Select a image and save data of the selected range
-     * @param core The StandaloneEditorCore object
-     * @param image image to select
-     * @param imageId the id of the image element
-     * @returns true if successful
-     */
-    selectImage: SelectImage;
-
-    /**
-     * Select a table and save data of the selected range
-     * @param core The StandaloneEditorCore object
-     * @param table table to select
-     * @param coordinates first and last cell of the selection, if this parameter is null, instead of
-     * selecting, will unselect the table.
-     * @param shouldAddStyles Whether need to update the style elements
-     * @returns true if successful
-     */
-    selectTable: SelectTable;
-
-    /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * if triggerContentChangedEvent is set to true
      * @param core The StandaloneEditorCore object
@@ -485,27 +379,6 @@ export interface UnportedCoreApiMap {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     setContent: SetContent;
-
-    /**
-     * Get current or cached selection range
-     * @param core The StandaloneEditorCore object
-     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
-     * @returns A Range object of the selection range
-     */
-    getSelectionRange: GetSelectionRange;
-
-    /**
-     * Check if the editor has focus now
-     * @param core The StandaloneEditorCore object
-     * @returns True if the editor has focus, otherwise false
-     */
-    hasFocus: HasFocus;
-
-    /**
-     * Focus to editor. If there is a cached selection range, use it as current selection
-     * @param core The StandaloneEditorCore object
-     */
-    focus: Focus;
 
     /**
      * Insert a DOM node into editor content
@@ -537,13 +410,6 @@ export interface UnportedCoreApiMap {
      * @param node The node to get style from
      */
     getStyleBasedFormatState: GetStyleBasedFormatState;
-
-    /**
-     * Restore an undo snapshot into editor
-     * @param core The editor core object
-     * @param step Steps to move, can be 0, positive or negative
-     */
-    restoreUndoSnapshot: RestoreUndoSnapshot;
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly
@@ -598,11 +464,6 @@ export interface StandaloneEditorCore
      * If keep it null, editor will still use original dataset-based dark mode solution.
      */
     readonly darkColorHandler: DarkColorHandler;
-
-    /**
-     * Color of the border of a selectedImage. Default color: '#DB626C'
-     */
-    readonly imageSelectionBorderColor?: string;
 
     /**
      * A handler to convert HTML string to a trust HTML string.

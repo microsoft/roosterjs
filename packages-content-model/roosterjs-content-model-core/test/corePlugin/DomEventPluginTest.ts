@@ -33,10 +33,7 @@ describe('DOMEventPlugin', () => {
         expect(state).toEqual({
             isInIME: false,
             scrollContainer: div,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -85,10 +82,7 @@ describe('DOMEventPlugin', () => {
         expect(state).toEqual({
             isInIME: false,
             scrollContainer: divScrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -142,7 +136,6 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         expect(eventMap.compositionend).toBeDefined();
         expect(eventMap.dragstart).toBeDefined();
         expect(eventMap.drop).toBeDefined();
-        expect(eventMap.focus).toBeDefined();
         expect(eventMap.mouseup).not.toBeDefined();
     });
 
@@ -243,10 +236,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -265,10 +255,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -285,10 +272,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: false,
@@ -311,10 +295,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -331,10 +312,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: false,
@@ -350,13 +328,15 @@ describe('DOMEventPlugin handle other event', () => {
     let eventMap: Record<string, any>;
     let scrollContainer: HTMLElement;
     let getElementAtCursorSpy: jasmine.Spy;
-    let editor: IEditor;
+    let triggerContentChangedEventSpy: jasmine.Spy;
+    let editor: IEditor & IStandaloneEditor;
 
     beforeEach(() => {
         addEventListener = jasmine.createSpy('addEventListener');
         removeEventListener = jasmine.createSpy('.removeEventListener');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
+        triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEvent');
 
         scrollContainer = {
             addEventListener: () => {},
@@ -369,7 +349,7 @@ describe('DOMEventPlugin handle other event', () => {
             null!
         );
 
-        editor = <IEditor>(<any>{
+        editor = <IEditor & IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
@@ -381,6 +361,7 @@ describe('DOMEventPlugin handle other event', () => {
                 return jasmine.createSpy('disposer');
             },
             getElementAtCursor: getElementAtCursorSpy,
+            triggerContentChangedEvent: triggerContentChangedEventSpy,
         });
         plugin.initialize(editor);
     });
@@ -394,10 +375,7 @@ describe('DOMEventPlugin handle other event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: true,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -410,10 +388,7 @@ describe('DOMEventPlugin handle other event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -436,10 +411,7 @@ describe('DOMEventPlugin handle other event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -462,10 +434,7 @@ describe('DOMEventPlugin handle other event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -476,75 +445,21 @@ describe('DOMEventPlugin handle other event', () => {
     });
 
     it('Trigger onDrop event', () => {
-        const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+        const takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         editor.runAsync = (callback: Function) => callback(editor);
-        editor.addUndoSnapshot = addUndoSnapshotSpy;
+        editor.takeSnapshot = takeSnapshotSpy;
 
         eventMap.drop();
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            selectionRange: null,
             contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
-        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(jasmine.anything(), ChangeSource.Drop);
-    });
-
-    it('Trigger onFocus event', () => {
-        const selectSpy = jasmine.createSpy('select');
-        editor.select = selectSpy;
-
-        const state = plugin.getState();
-        const mockedRange = 'RANGE' as any;
-
-        state.skipReselectOnFocus = false;
-        state.selectionRange = mockedRange;
-
-        eventMap.focus();
-        expect(plugin.getState()).toEqual({
-            isInIME: false,
-            scrollContainer: scrollContainer,
-            selectionRange: null,
-            contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
-            mouseDownX: null,
-            mouseDownY: null,
-            mouseUpEventListerAdded: false,
-            skipReselectOnFocus: false,
-        });
-        expect(selectSpy).toHaveBeenCalledWith(mockedRange);
-    });
-
-    it('Trigger onFocus event, skip reselect', () => {
-        const selectSpy = jasmine.createSpy('select');
-        editor.select = selectSpy;
-
-        const state = plugin.getState();
-        const mockedRange = 'RANGE' as any;
-
-        state.skipReselectOnFocus = true;
-        state.selectionRange = mockedRange;
-
-        eventMap.focus();
-        expect(plugin.getState()).toEqual({
-            isInIME: false,
-            scrollContainer: scrollContainer,
-            selectionRange: null,
-            contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
-            mouseDownX: null,
-            mouseDownY: null,
-            mouseUpEventListerAdded: false,
-            skipReselectOnFocus: true,
-        });
-        expect(selectSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalledWith();
+        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(ChangeSource.Drop);
     });
 
     it('Trigger contextmenu event, skip reselect', () => {
