@@ -37,16 +37,22 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                 block.levels.push(level);
             } else if (block.blocks.length == 1) {
                 setParagraphNotImplicit(block.blocks[0]);
-                const listBlock = block.blocks[0];
-                if (block.format.marginLeft) {
-                    listBlock.format.marginLeft = block.format.marginLeft;
-                }
-                if (block.format.marginRight) {
-                    listBlock.format.marginRight = block.format.marginRight;
-                }
-                if (block.format.textAlign) {
-                    listBlock.format.textAlign = block.format.textAlign;
-                }
+            }
+
+            if (alreadyInExpectedType) {
+                block.blocks.forEach(x => {
+                    if (block.format.marginLeft) {
+                        x.format.marginLeft = block.format.marginLeft;
+                    }
+
+                    if (block.format.marginRight) {
+                        x.format.marginRight = block.format.marginRight;
+                    }
+
+                    if (block.format.textAlign) {
+                        x.format.textAlign = block.format.textAlign;
+                    }
+                });
             }
         } else {
             const index = parent.blocks.indexOf(block);
