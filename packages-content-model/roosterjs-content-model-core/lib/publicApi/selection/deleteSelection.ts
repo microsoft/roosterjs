@@ -23,17 +23,12 @@ export function deleteSelection(
     const context = deleteExpandedSelection(model, formatContext);
 
     additionalSteps.forEach(step => {
-        if (
-            step &&
-            isValidDeleteSelectionContext(context) &&
-            context.deleteResult == 'notDeleted'
-        ) {
+        if (step && isValidDeleteSelectionContext(context)) {
             step(context);
         }
     });
 
     mergeParagraphAfterDelete(context);
-
     return context;
 }
 
