@@ -40,6 +40,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             }
 
             if (alreadyInExpectedType) {
+                //if the list item has margins or textAlign, we need to apply them to the block to preserve the indention and alignment
                 block.blocks.forEach(x => {
                     if (block.format.marginLeft) {
                         x.format.marginLeft = block.format.marginLeft;
