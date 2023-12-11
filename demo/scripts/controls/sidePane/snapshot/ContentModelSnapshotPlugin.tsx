@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ContentModelSnapshotPane from './ContentModelSnapshotPane';
 import SidePanePlugin from '../../SidePanePlugin';
-import { createSnapshotsManager } from 'roosterjs-content-model-core/lib/editor/SnapshotsManagerImpl';
+import { createSnapshotsManager } from 'roosterjs-content-model-core';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     IStandaloneEditor,
