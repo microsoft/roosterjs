@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages-content-model/roosterjs-content-model-core/lib/editor/UndoSnapshotsServiceImpl.ts</title>
+    <title>Code coverage report for packages-content-model/roosterjs-content-model-core/lib/utils/createSnapshotSelection.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-core/lib/editor</a> UndoSnapshotsServiceImpl.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-core/lib/utils</a> createSnapshotSelection.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.96% </span>
+                <span class="strong">97.06% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>48/49</span>
+                <span class='fraction'>33/34</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.74% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>35/39</span>
+                <span class='fraction'>42/48</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.96% </span>
+                <span class="strong">96.97% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>48/49</span>
+                <span class='fraction'>32/33</span>
             </div>
         
             
@@ -161,246 +161,213 @@
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
 <a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a>
-<a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a>
-<a name='L108'></a><a href='#L108'>108</a>
-<a name='L109'></a><a href='#L109'>109</a>
-<a name='L110'></a><a href='#L110'>110</a>
-<a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">73x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L105'></a><a href='#L105'>105</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">240x</span>
-<span class="cline-any cline-yes">240x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-yes">71x</span>
-<span class="cline-any cline-yes">71x</span>
-<span class="cline-any cline-yes">71x</span>
-<span class="cline-any cline-yes">71x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">71x</span>
-<span class="cline-any cline-yes">71x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">71x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">50x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">71x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">109x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">101x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">50x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">76x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">73x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { Snapshot } from 'roosterjs-content-model-types';
-import type { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
-&nbsp;
-// Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
-// to keep size under limit. This is kept at 10MB
-const MAX_SIZE_LIMIT = 1e7;
-&nbsp;
-class UndoSnapshotsServiceImpl implements UndoSnapshotsService&lt;Snapshot&gt; {
-    private snapshots: Snapshots&lt;Snapshot&gt;;
-&nbsp;
-    constructor(snapshots?: Snapshots&lt;Snapshot&gt;) {
-        this.snapshots = snapshots ?? {
-            snapshots: [],
-            totalSize: 0,
-            currentIndex: -1,
-            autoCompleteIndex: -1,
-            maxSize: MAX_SIZE_LIMIT,
-        };
-    }
-&nbsp;
-    canMove(step: number): boolean {
-        const newIndex = this.snapshots.currentIndex + step;
-        return newIndex &gt;= 0 &amp;&amp; newIndex &lt; this.snapshots.snapshots.length;
-    }
-&nbsp;
-    move(step: number): Snapshot | null {
-        if (this.canMove(step)) {
-            this.snapshots.currentIndex += step;
-            this.snapshots.autoCompleteIndex = -1;
-            return this.snapshots.snapshots[this.snapshots.currentIndex];
-        } else {
-            return null;
-        }
-    }
-&nbsp;
-    addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean): void {
-        const currentSnapshot = this.snapshots.snapshots[this.snapshots.currentIndex];
-        const isSameSnapshot =
-            currentSnapshot &amp;&amp;
-            currentSnapshot.html == snapshot.html &amp;&amp;
-            !currentSnapshot.entityStates &amp;&amp;
-            !snapshot.entityStates;
-&nbsp;
-        if (this.snapshots.currentIndex &lt; 0 || !currentSnapshot || !isSameSnapshot) {
-            this.clearRedo();
-            this.snapshots.snapshots.push(snapshot);
-            this.snapshots.currentIndex++;
-            this.snapshots.totalSize += this.getSnapshotLength(snapshot);
-&nbsp;
-            let removeCount = 0;
-            while (
-                removeCount &lt; this.snapshots.snapshots.length &amp;&amp;
-                this.snapshots.totalSize &gt; this.snapshots.maxSize
-            ) {
-                this.snapshots.totalSize -= this.getSnapshotLength(
-                    this.snapshots.snapshots[removeCount]
-                );
-                removeCount++;
-            }
-&nbsp;
-            if (removeCount &gt; 0) {
-                this.snapshots.snapshots.splice(0, removeCount);
-                this.snapshots.currentIndex -= removeCount;
-&nbsp;
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (this.snapshots.autoCompleteIndex &gt;= 0) {
-<span class="cstat-no" title="statement not covered" >                    this.snapshots.autoCompleteIndex -= removeCount;</span>
-                }
-            }
-&nbsp;
-            if (isAutoCompleteSnapshot) {
-                this.snapshots.autoCompleteIndex = this.snapshots.currentIndex;
-            }
-        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (isSameSnapshot) {
-            // replace the currentSnapshot's metadata so the selection is updated
-            this.snapshots.snapshots.splice(this.snapshots.currentIndex, 1, snapshot);
-        }
-    }
-&nbsp;
-    clearRedo(): void {
-        if (this.canMove(1)) {
-            let removedSize = 0;
-            for (
-                let i = this.snapshots.currentIndex + 1;
-                i &lt; this.snapshots.snapshots.length;
-                i++
-            ) {
-                removedSize += this.getSnapshotLength(this.snapshots.snapshots[i]);
-            }
-&nbsp;
-            this.snapshots.snapshots.splice(this.snapshots.currentIndex + 1);
-            this.snapshots.totalSize -= removedSize;
-            this.snapshots.autoCompleteIndex = -1;
-        }
-    }
-&nbsp;
-    canUndoAutoComplete(): boolean {
-        return (
-            this.snapshots.autoCompleteIndex &gt;= 0 &amp;&amp;
-            this.snapshots.currentIndex - this.snapshots.autoCompleteIndex == 1
-        );
-    }
-&nbsp;
-    private getSnapshotLength(snapshot: Snapshot) {
-        return snapshot.html<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength ?? <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
-    }
-}
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isNodeOfType } from 'roosterjs-content-model-dom';
+import type { DOMSelection, SnapshotSelection } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
  */
-export function createUndoSnapshotsService(
-    snapshots?: Snapshots&lt;Snapshot&gt;
-): UndoSnapshotsService&lt;Snapshot&gt; {
-    return new UndoSnapshotsServiceImpl(snapshots);
+export function createSnapshotSelection(
+    contentDiv: HTMLElement,
+    selection: DOMSelection | null
+): SnapshotSelection {
+    switch (selection?.type) {
+        case 'image':
+            return {
+                type: 'image',
+                imageId: selection.image.id,
+            };
+&nbsp;
+        case 'table':
+            return {
+                type: 'table',
+                tableId: selection.table.id,
+                firstColumn: selection.firstColumn,
+                lastColumn: selection.lastColumn,
+                firstRow: selection.firstRow,
+                lastRow: selection.lastRow,
+            };
+&nbsp;
+        case 'range':
+            const range = selection.range;
+&nbsp;
+            return {
+                type: 'range',
+                start: getPath(range.startContainer, range.startOffset, contentDiv),
+                end: getPath(range.endContainer, range.endOffset, contentDiv),
+            };
+&nbsp;
+        default:
+            return {
+                type: 'range',
+                start: [],
+                end: [],
+            };
+    }
+}
+&nbsp;
+/**
+ * Get the path of the node relative to rootNode.
+ * The path of the node is an array of integer indices into the childNodes of the given node.
+ *
+ * The node path will be what the node path will be on a _normalized_ dom
+ * (e.g. empty text nodes will be ignored and adjacent text nodes will be concatenated)
+ *
+ * @param rootNode the node the path will be relative to
+ * @param position the position to get indexes from. Follows the same semantics
+ * as selectionRange (if node is of type Text, it is an offset into the text of that node.
+ * If node is of type Element, it is the index of a child in that Element node.)
+ */
+function getPath(node: Node | null, offset: number, rootNode: Node): number[] {
+    const result: number[] = [];
+    let parent: Node | null;
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!node || !rootNode.contains(node)) {
+<span class="cstat-no" title="statement not covered" >        return result;</span>
+    }
+&nbsp;
+    if (isNodeOfType(node, 'TEXT_NODE')) {
+        parent = node.parentNode;
+&nbsp;
+        while (node.previousSibling &amp;&amp; isNodeOfType(node.previousSibling, 'TEXT_NODE')) {
+            offset += node.previousSibling.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength || <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
+            node = node.previousSibling;
+        }
+&nbsp;
+        result.unshift(offset);
+    } else {
+        parent = node;
+        node = node.childNodes[offset];
+    }
+&nbsp;
+    do {
+        offset = 0;
+        let isPreviousText = false;
+&nbsp;
+        for (let c: Node | null = parent<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>irstChild || null; c &amp;&amp; c != node; c = c.nextSibling) {
+            if (isNodeOfType(c, 'TEXT_NODE')) {
+                if (c.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength === 0 || isPreviousText) {
+                    continue;
+                }
+&nbsp;
+                isPreviousText = true;
+            } else {
+                isPreviousText = false;
+            }
+&nbsp;
+            offset++;
+        }
+&nbsp;
+        result.unshift(offset);
+        node = parent;
+        parent = parent<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>arentNode || null;
+    } while (node &amp;&amp; node != rootNode);
+&nbsp;
+    return result;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -409,7 +376,7 @@ export function createUndoSnapshotsService(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Dec 11 2023 19:06:32 GMT+0000 (Coordinated Universal Time)
+                at Mon Dec 11 2023 20:56:35 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

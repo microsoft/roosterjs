@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages-content-model/roosterjs-content-model-editor/lib/coreApi/restoreUndoSnapshot.ts</title>
+    <title>Code coverage report for packages-content-model/roosterjs-content-model-core/lib/utils/restoreSnapshotHTML.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-editor/lib/coreApi</a> restoreUndoSnapshot.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-core/lib/utils</a> restoreSnapshotHTML.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.29% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/21</span>
+                <span class='fraction'>34/34</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">88.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>31/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">10% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/20</span>
+                <span class='fraction'>33/33</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -126,19 +126,94 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,124 +221,109 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">56x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">63x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">56x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { getEntityFromElement, getEntitySelector, queryElements } from 'roosterjs-editor-dom';
-import type { RestoreUndoSnapshot } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
+    getAllEntityWrappers,
+    isEntityElement,
+    isNodeOfType,
+    parseEntityClassName,
+    reuseCachedElement,
+} from 'roosterjs-content-model-dom';
+import type {
+    Snapshot,
+    StandaloneEditorCore,
+    KnownEntityItem,
+    ContentModelEntityFormat,
+} from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
- * Restore an undo snapshot into editor
- * @param core The editor core object
- * @param step Steps to move, can be 0, positive or negative
  */
-export const restoreUndoSnapshot: RestoreUndoSnapshot = <span class="fstat-no" title="function not covered" >(c</span>ore, step) =&gt; {
-<span class="cstat-no" title="statement not covered" >    if (core.undo.hasNewContent &amp;&amp; step &lt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >        core.api.addUndoSnapshot(</span>
-            core,
-            null /*callback*/,
-            null /*changeSource*/,
-            false /*canUndoByBackspace*/
-        );
-    }
+export function restoreSnapshotHTML(core: StandaloneEditorCore, snapshot: Snapshot) {
+    const {
+        contentDiv,
+        entity: { entityMap },
+    } = core;
+    let refNode: Node | null = contentDiv.firstChild;
 &nbsp;
-    const snapshot = <span class="cstat-no" title="statement not covered" >core.undo.snapshotsService.move(step);</span>
+    const body = new DOMParser().parseFromString(
+        core.trustedHTMLHandler?.(snapshot.html) ?? snapshot.html,
+        'text/html'
+    ).body;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (snapshot &amp;&amp; snapshot.html != null) {</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            core.undo.isRestoring = true;</span>
-<span class="cstat-no" title="statement not covered" >            core.api.setContent(</span>
-                core,
-                snapshot.html,
-                true /*triggerContentChangedEvent*/,
-                snapshot.metadata ?? undefined
-            );
+    for (let currentNode = body.firstChild; currentNode; ) {
+        const next = currentNode.nextSibling;
+        const originalEntityElement = tryGetEntityElement(entityMap, currentNode);
 &nbsp;
-            const darkColorHandler = <span class="cstat-no" title="statement not covered" >core.darkColorHandler;</span>
-            const isDarkModel = <span class="cstat-no" title="statement not covered" >core.lifecycle.isDarkMode;</span>
+        if (originalEntityElement) {
+            refNode = reuseCachedElement(contentDiv, originalEntityElement, refNode);
+        } else {
+            contentDiv.insertBefore(currentNode, refNode);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            snapshot.knownColors.forEach(<span class="fstat-no" title="function not covered" >color </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                darkColorHandler.registerColor(</span>
-                    color.lightModeColor,
-                    isDarkModel,
-                    color.darkModeColor
-                );
-            });
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (isNodeOfType(currentNode, 'ELEMENT_NODE')) {
+                const childEntities = getAllEntityWrappers(currentNode);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            snapshot.entityStates?.forEach(<span class="fstat-no" title="function not covered" >entityState </span>=&gt; {</span>
-                const { type, id, state } = <span class="cstat-no" title="statement not covered" >entityState;</span>
-                const wrapper = <span class="cstat-no" title="statement not covered" >queryElements(</span>
-                    core.contentDiv,
-                    getEntitySelector(type, id)
-                )[0] as HTMLElement;
-                const entity = <span class="cstat-no" title="statement not covered" >wrapper &amp;&amp; getEntityFromElement(wrapper);</span>
+                childEntities.forEach(element =&gt; {
+                    const wrapper = tryGetEntityElement(entityMap, element);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                if (entity) {</span>
-<span class="cstat-no" title="statement not covered" >                    core.api.triggerEvent(</span>
-                        core,
-                        {
-                            eventType: PluginEventType.EntityOperation,
-                            operation: EntityOperation.UpdateEntityState,
-                            entity: entity,
-                            state,
-                        },
-                        false
-                    );
-                }
-            });
-        } finally {
-<span class="cstat-no" title="statement not covered" >            core.undo.isRestoring = false;</span>
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (wrapper) {
+                        if (wrapper == refNode) {
+                            // In case the node we are moving is just the ref node,
+                            // We create a temporary clone and insert it before the refNode, the use this cloned node as refNode
+                            // Then after replaceChild(), the original refNode will be moved away
+                            const markerNode = wrapper.cloneNode();
+&nbsp;
+                            contentDiv.insertBefore(markerNode, refNode);
+                            refNode = markerNode;
+                        }
+&nbsp;
+                        element.parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>eplaceChild(wrapper, element);
+                    }
+                });
+            }
         }
+        currentNode = next;
     }
-};
+&nbsp;
+    while (refNode) {
+        const next = refNode.nextSibling;
+&nbsp;
+        refNode.parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>emoveChild(refNode);
+        refNode = next;
+    }
+}
+&nbsp;
+function tryGetEntityElement(
+    entityMap: Record&lt;string, KnownEntityItem&gt;,
+    node: Node
+): HTMLElement | null {
+    let result: HTMLElement | null = null;
+&nbsp;
+    if (isNodeOfType(node, 'ELEMENT_NODE') &amp;&amp; isEntityElement(node)) {
+        const format: ContentModelEntityFormat = {};
+&nbsp;
+        node.classList.forEach(name =&gt; {
+            parseEntityClassName(name, format);
+        });
+&nbsp;
+        result = (format.id &amp;&amp; entityMap[format.id]?.element) || null;
+    }
+&nbsp;
+    return result;
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -271,7 +331,7 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = <span class="fstat-no" t
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Dec 11 2023 19:06:32 GMT+0000 (Coordinated Universal Time)
+                at Mon Dec 11 2023 20:56:35 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

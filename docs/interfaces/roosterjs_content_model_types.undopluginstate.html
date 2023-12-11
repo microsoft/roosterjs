@@ -88,13 +88,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.undopluginstate.html#hasnewcontent" class="tsd-kind-icon">has<wbr>New<wbr>Content</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.undopluginstate.html#isnested" class="tsd-kind-icon">is<wbr>Nested</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.undopluginstate.html#isrestoring" class="tsd-kind-icon">is<wbr>Restoring</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.undopluginstate.html#lastkeypress" class="tsd-kind-icon">last<wbr>Key<wbr>Press</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.undopluginstate.html#poscontainer" class="tsd-kind-icon">pos<wbr>Container</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.undopluginstate.html#posoffset" class="tsd-kind-icon">pos<wbr>Offset</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.undopluginstate.html#snapshotsservice" class="tsd-kind-icon">snapshots<wbr>Service</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.undopluginstate.html#snapshotsmanager" class="tsd-kind-icon">snapshots<wbr>Manager</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,32 +102,17 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="hasnewcontent" class="tsd-anchor"></a>
-					<h3>has<wbr>New<wbr>Content</h3>
-					<div class="tsd-signature tsd-kind-icon">has<wbr>New<wbr>Content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/85add15/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L21">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:21</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Whether there is new content change after last undo snapshot is taken</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="isnested" class="tsd-anchor"></a>
 					<h3>is<wbr>Nested</h3>
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Nested<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/85add15/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L26">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cb55c5b/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L20">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>If addUndoSnapshot() is called nested in another one, this will be true</p>
+							<p>If addUndoSnapshot() or formatContentModel() is called nested in another one, this will be true</p>
 						</div>
 					</div>
 				</section>
@@ -138,7 +122,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Restoring<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/85add15/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L16">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cb55c5b/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L15">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -153,7 +137,7 @@
 					<div class="tsd-signature tsd-kind-icon">last<wbr>Key<wbr>Press<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/85add15/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L41">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cb55c5b/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L35">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -168,7 +152,7 @@
 					<div class="tsd-signature tsd-kind-icon">pos<wbr>Container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Node</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/85add15/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L31">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cb55c5b/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L25">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -183,7 +167,7 @@
 					<div class="tsd-signature tsd-kind-icon">pos<wbr>Offset<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/85add15/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L36">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cb55c5b/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L30">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -193,12 +177,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="snapshotsservice" class="tsd-anchor"></a>
-					<h3>snapshots<wbr>Service</h3>
-					<div class="tsd-signature tsd-kind-icon">snapshots<wbr>Service<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.undosnapshotsservice.html" class="tsd-signature-type" data-tsd-kind="Interface">UndoSnapshotsService</a><span class="tsd-signature-symbol">&lt;</span><a href="roosterjs_content_model_types.snapshot.html" class="tsd-signature-type" data-tsd-kind="Interface">Snapshot</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="snapshotsmanager" class="tsd-anchor"></a>
+					<h3>snapshots<wbr>Manager</h3>
+					<div class="tsd-signature tsd-kind-icon">snapshots<wbr>Manager<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.snapshotsmanager.html" class="tsd-signature-type" data-tsd-kind="Interface">SnapshotsManager</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/85add15/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L11">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cb55c5b/packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts#L10">packages-content-model/roosterjs-content-model-types/lib/pluginState/UndoPluginState.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -264,9 +248,6 @@
 						<a href="roosterjs_content_model_types.undopluginstate.html" class="tsd-kind-icon">Undo<wbr>Plugin<wbr>State</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.undopluginstate.html#hasnewcontent" class="tsd-kind-icon">has<wbr>New<wbr>Content</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.undopluginstate.html#isnested" class="tsd-kind-icon">is<wbr>Nested</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
@@ -282,7 +263,7 @@
 								<a href="roosterjs_content_model_types.undopluginstate.html#posoffset" class="tsd-kind-icon">pos<wbr>Offset</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.undopluginstate.html#snapshotsservice" class="tsd-kind-icon">snapshots<wbr>Service</a>
+								<a href="roosterjs_content_model_types.undopluginstate.html#snapshotsmanager" class="tsd-kind-icon">snapshots<wbr>Manager</a>
 							</li>
 						</ul>
 					</li>
