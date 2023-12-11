@@ -114,7 +114,8 @@ class SnapshotsManagerImpl implements SnapshotsManager {
 }
 
 /**
- * @internal
+ * Create a new instance of Undo Snapshots Manager
+ * @param snapshots @optional Snapshots object for storing undo snapshots. If not passed, default implementation will be used
  */
 export function createSnapshotsManager(snapshots?: Snapshots): SnapshotsManager {
     return new SnapshotsManagerImpl(snapshots);
