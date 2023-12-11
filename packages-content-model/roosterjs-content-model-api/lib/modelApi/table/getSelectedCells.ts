@@ -1,4 +1,4 @@
-import hasSelectionInBlockGroup from '../../publicApi/selection/hasSelectionInBlockGroup';
+import { hasSelectionInBlockGroup } from 'roosterjs-content-model-core';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 /**

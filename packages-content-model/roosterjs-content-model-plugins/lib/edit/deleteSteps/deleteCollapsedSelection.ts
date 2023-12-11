@@ -6,6 +6,10 @@ import type { ContentModelSegment, DeleteSelectionStep } from 'roosterjs-content
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return context => {
+        if (context.deleteResult != 'notDeleted') {
+            return;
+        }
+
         const isForward = direction == 'forward';
         const { paragraph, marker, path, tableContext } = context.insertPoint;
         const segments = paragraph.segments;
