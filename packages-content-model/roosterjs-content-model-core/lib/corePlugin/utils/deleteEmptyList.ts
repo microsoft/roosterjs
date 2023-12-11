@@ -1,7 +1,7 @@
 import hasSelectionInBlock from '../../publicApi/selection/hasSelectionInBlock';
 import hasSelectionInBlockGroup from '../../publicApi/selection/hasSelectionInBlockGroup';
-import { ContentModelBlock, DeleteSelectionContext } from 'roosterjs-content-model-types';
 import { getClosestAncestorBlockGroupIndex } from '../../publicApi/model/getClosestAncestorBlockGroupIndex';
+import type { ContentModelBlock, DeleteSelectionContext } from 'roosterjs-content-model-types';
 
 function isEmptyBlock(block: ContentModelBlock | undefined): boolean {
     if (block && block.blockType == 'Paragraph') {
