@@ -2,13 +2,14 @@ import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelec
 import * as cloneModelFile from '../../lib/publicApi/model/cloneModel';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as deleteSelectionsFile from '../../lib/publicApi/selection/deleteSelection';
-import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
+import * as extractClipboardItemsFile from '../../lib/utils/extractClipboardItems';
 import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../lib/publicApi/model/paste';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
+import { DarkColorHandler, IEditor, PluginWithState } from 'roosterjs-editor-types';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,
@@ -17,12 +18,13 @@ import {
     FormatWithContentModelOptions,
     IStandaloneEditor,
     DOMEventRecord,
+    ClipboardData,
+    CopyPastePluginState,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelCopyPastePlugin,
     onNodeCreated,
 } from '../../lib/corePlugin/ContentModelCopyPastePlugin';
-import { ClipboardData, DarkColorHandler, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 
 const modelValue = 'model' as any;
 const pasteModelValue = 'pasteModelValue' as any;
@@ -33,7 +35,7 @@ const allowedCustomPasteType = ['Test'];
 
 describe('ContentModelCopyPastePlugin |', () => {
     let editor: IEditor = null!;
-    let plugin: EditorPlugin;
+    let plugin: PluginWithState<CopyPastePluginState>;
     let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
 
@@ -95,6 +97,7 @@ describe('ContentModelCopyPastePlugin |', () => {
         plugin = createContentModelCopyPastePlugin({
             allowedCustomPasteType,
         });
+        plugin.getState().tempDiv = div;
         editor = <IStandaloneEditor & IEditor>(<any>{
             attachDomEvent: (eventMap: Record<string, DOMEventRecord>) => {
                 domEvents = eventMap;
@@ -114,13 +117,6 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelection: setDOMSelectionSpy,
             getDocument() {
                 return document;
-            },
-            getCustomData<HTMLDivElement>(
-                key: string,
-                getter?: (() => HTMLDivElement) | undefined,
-                disposer?: ((value: HTMLDivElement) => void) | undefined
-            ) {
-                return div;
             },
             isDarkMode: () => {
                 return false;
@@ -552,7 +548,9 @@ describe('ContentModelCopyPastePlugin |', () => {
                     preventDefaultSpy();
                 },
             };
-            spyOn(extractClipboardItemsFile, 'default').and.returnValue(<Promise<ClipboardData>>{
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
                 then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
                     cb(clipboardData);
                 },
@@ -563,12 +561,9 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             expect(pasteSpy).not.toHaveBeenCalledWith(clipboardData);
             expect(PasteFile.paste).toHaveBeenCalled();
-            expect(extractClipboardItemsFile.default).toHaveBeenCalledWith(
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                {
-                    allowedCustomPasteType,
-                },
-                true
+                allowedCustomPasteType
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -584,7 +579,9 @@ describe('ContentModelCopyPastePlugin |', () => {
                 },
             };
 
-            spyOn(extractClipboardItemsFile, 'default').and.returnValue(<Promise<ClipboardData>>{
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
                 then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
                     cb(clipboardData);
                 },
@@ -594,12 +591,9 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
             expect(pasteSpy).not.toHaveBeenCalled();
-            expect(extractClipboardItemsFile.default).toHaveBeenCalledWith(
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                {
-                    allowedCustomPasteType,
-                },
-                true
+                allowedCustomPasteType
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });

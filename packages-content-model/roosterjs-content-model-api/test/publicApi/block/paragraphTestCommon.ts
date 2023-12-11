@@ -24,7 +24,6 @@ export function paragraphTestCommon(
         });
     const editor = ({
         focus: jasmine.createSpy(),
-        getCustomData: () => ({}),
         getFocusedPosition: () => ({}),
         formatContentModel,
     } as any) as IStandaloneEditor;

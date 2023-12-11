@@ -1,11 +1,11 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { Browser } from 'roosterjs-editor-dom';
-import { ClipboardData } from 'roosterjs-editor-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { paste } from 'roosterjs-content-model-core';
 import { tableProcessor } from 'roosterjs-content-model-dom';
+import type { ClipboardData } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_Excel_E2E';
 const clipboardData = <ClipboardData>(<any>{

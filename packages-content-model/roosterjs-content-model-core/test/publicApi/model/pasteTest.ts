@@ -13,6 +13,7 @@ import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from '../../../../roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
 import {
+    ClipboardData,
     ContentModelDocument,
     DomToModelOption,
     ContentModelFormatter,
@@ -26,7 +27,6 @@ import {
 } from '../../../../roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 import {
     BeforePasteEvent,
-    ClipboardData,
     IEditor,
     PasteType,
     PluginEvent,
