@@ -171,7 +171,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                         editor.formatContentModel(
                             (model, context) => {
                                 if (
-                                    deleteSelection(model, [deleteEmptyList], context)
+                                    deleteSelection(model, [deleteEmptyList], context, 'range')
                                         .deleteResult == 'range'
                                 ) {
                                     normalizeContentModel(model);

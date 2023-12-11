@@ -996,7 +996,7 @@ describe('deleteSelection - list -  when cut', () => {
         para2.segments.push(text2, marker);
         model.blocks.push(listItem1, listItem2);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined);
+        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [
@@ -1101,7 +1101,7 @@ describe('deleteSelection - list -  when cut', () => {
         para2.segments.push(text2);
         model.blocks.push(listItem1, listItem2);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined);
+        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [
@@ -1305,7 +1305,7 @@ describe('deleteSelection - list -  when cut', () => {
         para1.segments.push(text1);
         model.blocks.push(listItem1);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined);
+        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [
@@ -1467,7 +1467,7 @@ describe('deleteSelection - list -  when cut', () => {
         para4.segments.push(text4);
         model.blocks.push(listItem1, listItem2, listItem3, listItem4);
 
-        const result = deleteSelection(model, [deleteEmptyList], undefined);
+        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
         normalizeContentModel(model);
 
         const path: ContentModelBlockGroup[] = [
@@ -1713,6 +1713,308 @@ describe('deleteSelection - list -  when cut', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Delete list with table', () => {
+        const model = createContentModelDocument();
+        const level = createListLevel('UL');
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+        const listItem1 = createListItem([level]);
+        const table = createTable(1);
+        const cell = createTableCell();
+        const para = createParagraph();
+        const text = createText('test1');
+        para.segments.push(text);
+        cell.blocks.push(para);
+        text.isSelected = true;
+        para.segments.push(marker);
+        table.rows[0].cells.push(cell);
+        listItem1.blocks.push(table);
+        model.blocks.push(listItem1);
+
+        const result = deleteSelection(model, [deleteEmptyList], undefined, 'range');
+        normalizeContentModel(model);
+
+        const path: ContentModelBlockGroup[] = [
+            {
+                blockGroupType: 'TableCell',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+                spanLeft: false,
+                spanAbove: false,
+                isHeader: false,
+                dataset: {},
+            },
+            {
+                blockType: 'BlockGroup',
+                blockGroupType: 'ListItem',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                height: 0,
+                                format: {},
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'SelectionMarker',
+                                                        isSelected: true,
+                                                        format: {},
+                                                    },
+                                                    {
+                                                        segmentType: 'Br',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: {},
+                        widths: [],
+                        dataset: {},
+                    },
+                ],
+                levels: [
+                    {
+                        listType: 'UL',
+                        format: {},
+                        dataset: {},
+                    },
+                ],
+                formatHolder: {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                format: {},
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Table',
+                                rows: [
+                                    {
+                                        height: 0,
+                                        format: {},
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'SelectionMarker',
+                                                                isSelected: true,
+                                                                format: {},
+                                                            },
+                                                            {
+                                                                segmentType: 'Br',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
+                                ],
+                                format: {},
+                                widths: [],
+                                dataset: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            },
+        ];
+
+        expect(result.deleteResult).toBe('range');
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    {
+                        segmentType: 'Br',
+                        format: {},
+                    },
+                ],
+                format: {},
+            },
+            path: path,
+            tableContext: {
+                table: {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
+                                                    format: {},
+                                                },
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [],
+                    dataset: {},
+                },
+                rowIndex: 0,
+                colIndex: 0,
+                isWholeTableSelected: false,
+            },
+        });
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Table',
+                            rows: [
+                                {
+                                    height: 0,
+                                    format: {},
+                                    cells: [
+                                        {
+                                            blockGroupType: 'TableCell',
+                                            blocks: [
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: true,
+                                                            format: {},
+                                                        },
+                                                        {
+                                                            segmentType: 'Br',
+                                                            format: {},
+                                                        },
+                                                    ],
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            spanLeft: false,
+                                            spanAbove: false,
+                                            isHeader: false,
+                                            dataset: {},
+                                        },
+                                    ],
+                                },
+                            ],
+                            format: {},
+                            widths: [],
+                            dataset: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
                             format: {},
                             dataset: {},
                         },

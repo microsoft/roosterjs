@@ -22,7 +22,11 @@ function isEmptyBlock(block: ContentModelBlock | undefined): boolean {
 export function deleteEmptyList(context: DeleteSelectionContext) {
     const { insertPoint, deleteResult } = context;
     if (deleteResult == 'range' && insertPoint?.path) {
-        const index = getClosestAncestorBlockGroupIndex(insertPoint.path, ['ListItem']);
+        const index = getClosestAncestorBlockGroupIndex(
+            insertPoint.path,
+            ['ListItem'],
+            ['TableCell']
+        );
         const item = insertPoint.path[index];
         if (index >= 0 && item && item.blockGroupType == 'ListItem') {
             const listItemIndex = insertPoint.path[index + 1].blocks.indexOf(item);
