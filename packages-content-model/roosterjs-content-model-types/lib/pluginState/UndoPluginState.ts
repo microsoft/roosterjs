@@ -1,5 +1,4 @@
-import type { UndoSnapshotsService } from 'roosterjs-editor-types';
-import type { Snapshot } from '../parameter/Snapshot';
+import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 
 /**
  * The state object for UndoPlugin
@@ -8,7 +7,7 @@ export interface UndoPluginState {
     /**
      * Snapshot service for undo, it helps handle snapshot add, remove and retrieve
      */
-    snapshotsService: UndoSnapshotsService<Snapshot>;
+    snapshotsManager: SnapshotsManager;
 
     /**
      * Whether restoring of undo snapshot is in progress.
@@ -16,12 +15,7 @@ export interface UndoPluginState {
     isRestoring: boolean;
 
     /**
-     * Whether there is new content change after last undo snapshot is taken
-     */
-    hasNewContent: boolean;
-
-    /**
-     * If addUndoSnapshot() is called nested in another one, this will be true
+     * If addUndoSnapshot() or formatContentModel() is called nested in another one, this will be true
      */
     isNested: boolean;
 

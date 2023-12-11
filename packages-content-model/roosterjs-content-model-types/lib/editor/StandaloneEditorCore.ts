@@ -1,10 +1,11 @@
+import type { Snapshot } from '../parameter/Snapshot';
+import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
     CompatibleColorTransformDirection,
     CompatibleGetContentMode,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     ColorTransformDirection,
-    ContentChangedData,
     ContentMetadata,
     DOMEventHandler,
     DarkColorHandler,
@@ -140,20 +141,17 @@ export type TransformColor = (
 ) => void;
 
 /**
- * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
- * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
+ * Add an undo snapshot to current undo snapshot stack
  * @param core The StandaloneEditorCore object
- * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
- * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
- * @param additionalData Optional parameter to provide additional data related to the ContentChanged Event.
+ * @param entityStates @optional Entity states related to this snapshot.
+ * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
+ * when undo/redo to this snapshot
  */
 export type AddUndoSnapshot = (
     core: StandaloneEditorCore,
-    callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
-    changeSource: string | null,
     canUndoByBackspace: boolean,
-    additionalData?: ContentChangedData
+    entityStates?: EntityState[]
 ) => void;
 
 /**
@@ -236,7 +234,7 @@ export type GetStyleBasedFormatState = (
  * @param core The StandaloneEditorCore object
  * @param step Steps to move, can be 0, positive or negative
  */
-export type RestoreUndoSnapshot = (core: StandaloneEditorCore, step: number) => void;
+export type RestoreUndoSnapshot = (core: StandaloneEditorCore, snapshot: Snapshot) => void;
 
 /**
  * Ensure user will type into a container element rather than into the editor content DIV directly
@@ -328,6 +326,23 @@ export interface PortedCoreApiMap {
      * @param core The StandaloneEditorCore object
      */
     focus: Focus;
+
+    /**
+     * Add an undo snapshot to current undo snapshot stack
+     * @param core The StandaloneEditorCore object
+     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+     * @param entityStates @optional Entity states related to this snapshot.
+     * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
+     * when undo/redo to this snapshot
+     */
+    addUndoSnapshot: AddUndoSnapshot;
+
+    /**
+     * Restore an undo snapshot into editor
+     * @param core The editor core object
+     * @param step Steps to move, can be 0, positive or negative
+     */
+    restoreUndoSnapshot: RestoreUndoSnapshot;
 }
 
 /**
@@ -355,16 +370,6 @@ export interface UnportedCoreApiMap {
      * @param fromDarkModel Whether the given content is already in dark mode
      */
     transformColor: TransformColor;
-
-    /**
-     * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
-     * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
-     * @param core The StandaloneEditorCore object
-     * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
-     * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
-     * @param canUndoByBackspace True if this action can be undone when user presses Backspace key (aka Auto Complete).
-     */
-    addUndoSnapshot: AddUndoSnapshot;
 
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
@@ -405,13 +410,6 @@ export interface UnportedCoreApiMap {
      * @param node The node to get style from
      */
     getStyleBasedFormatState: GetStyleBasedFormatState;
-
-    /**
-     * Restore an undo snapshot into editor
-     * @param core The editor core object
-     * @param step Steps to move, can be 0, positive or negative
-     */
-    restoreUndoSnapshot: RestoreUndoSnapshot;
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly

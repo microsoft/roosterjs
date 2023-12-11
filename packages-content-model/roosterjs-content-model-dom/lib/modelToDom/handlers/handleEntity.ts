@@ -1,7 +1,7 @@
 import { addDelimiters } from '../../domUtils/entityUtils';
 import { applyFormat } from '../utils/applyFormat';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
-import { reuseCachedElement } from '../utils/reuseCachedElement';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,

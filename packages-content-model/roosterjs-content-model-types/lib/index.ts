@@ -259,7 +259,16 @@ export {
     DeleteSelectionStep,
     ValidDeleteSelectionContext,
 } from './parameter/DeleteSelectionStep';
-export { Snapshot } from './parameter/Snapshot';
+export {
+    SnapshotSelectionBase,
+    RangeSnapshotSelection,
+    ImageSnapshotSelection,
+    TableSnapshotSelection,
+    SnapshotSelection,
+    Snapshot,
+    Snapshots,
+} from './parameter/Snapshot';
+export { SnapshotsManager } from './parameter/SnapshotsManager';
 
 export {
     ContentModelBeforePasteEvent,

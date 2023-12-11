@@ -1,14 +1,14 @@
-import type { Snapshot } from 'roosterjs-content-model-types';
-import type { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
+import type { Snapshot, Snapshots, SnapshotsManager } from 'roosterjs-content-model-types';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
 const MAX_SIZE_LIMIT = 1e7;
 
-class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
-    private snapshots: Snapshots<Snapshot>;
+class SnapshotsManagerImpl implements SnapshotsManager {
+    private snapshots: Snapshots;
+    private hasNewContentValue: boolean = false;
 
-    constructor(snapshots?: Snapshots<Snapshot>) {
+    constructor(snapshots?: Snapshots) {
         this.snapshots = snapshots ?? {
             snapshots: [],
             totalSize: 0,
@@ -16,6 +16,14 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
             autoCompleteIndex: -1,
             maxSize: MAX_SIZE_LIMIT,
         };
+    }
+
+    get hasNewContent(): boolean {
+        return this.hasNewContentValue;
+    }
+
+    set hasNewContent(value: boolean) {
+        this.hasNewContentValue = value;
     }
 
     canMove(step: number): boolean {
@@ -108,8 +116,6 @@ class UndoSnapshotsServiceImpl implements UndoSnapshotsService<Snapshot> {
 /**
  * @internal
  */
-export function createUndoSnapshotsService(
-    snapshots?: Snapshots<Snapshot>
-): UndoSnapshotsService<Snapshot> {
-    return new UndoSnapshotsServiceImpl(snapshots);
+export function createSnapshotsManager(snapshots?: Snapshots): SnapshotsManager {
+    return new SnapshotsManagerImpl(snapshots);
 }

@@ -1,6 +1,6 @@
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { reuseCachedElement } from '../utils/reuseCachedElement';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,

@@ -1,10 +1,9 @@
-import { createUndoSnapshotsService } from '../../lib/editor/UndoSnapshotsServiceImpl';
-import { Snapshot } from 'roosterjs-content-model-types';
-import { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
+import { createSnapshotsManager } from '../../lib/editor/SnapshotsManagerImpl';
+import { Snapshot, Snapshots, SnapshotsManager } from 'roosterjs-content-model-types';
 
-describe('UndoSnapshotsServiceImpl.ctor', () => {
+describe('SnapshotsManagerImpl.ctor', () => {
     it('No param', () => {
-        const service = createUndoSnapshotsService();
+        const service = createSnapshotsManager();
 
         expect((service as any).snapshots).toEqual({
             snapshots: [],
@@ -17,15 +16,15 @@ describe('UndoSnapshotsServiceImpl.ctor', () => {
 
     it('Has param', () => {
         const mockedSnapshots = 'SNAPSHOTS' as any;
-        const service = createUndoSnapshotsService(mockedSnapshots);
+        const service = createSnapshotsManager(mockedSnapshots);
 
         expect((service as any).snapshots).toEqual(mockedSnapshots);
     });
 });
 
-describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.addSnapshot', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -35,7 +34,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
             autoCompleteIndex: -1,
             maxSize: 1e7,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -63,14 +62,14 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
             },
             0,
             4,
-            [{ html: 'test', knownColors: [], metadata: {} as any }],
+            [{ html: 'test', knownColors: [], isDarkMode: false }],
             -1
         );
     });
@@ -83,14 +82,14 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     true
                 );
             },
             0,
             4,
-            [{ html: 'test', knownColors: [], metadata: {} as any }],
+            [{ html: 'test', knownColors: [], isDarkMode: false }],
             0
         );
     });
@@ -103,7 +102,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -111,7 +110,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test2',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -119,8 +118,8 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
             1,
             10,
             [
-                { html: 'test1', knownColors: [], metadata: {} as any },
-                { html: 'test2', knownColors: [], metadata: {} as any },
+                { html: 'test1', knownColors: [], isDarkMode: false },
+                { html: 'test2', knownColors: [], isDarkMode: false },
             ],
             -1
         );
@@ -134,7 +133,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test01',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -154,7 +153,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -162,7 +161,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test2',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -173,7 +172,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                 {
                     html: 'test2',
                     knownColors: [],
-                    metadata: {} as any,
+                    isDarkMode: false,
                 },
             ],
             -1
@@ -188,7 +187,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -196,7 +195,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test2',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -205,7 +204,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test03',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -216,12 +215,12 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                 {
                     html: 'test1',
                     knownColors: [],
-                    metadata: {} as any,
+                    isDarkMode: false,
                 },
                 {
                     html: 'test03',
                     knownColors: [],
-                    metadata: {} as any,
+                    isDarkMode: false,
                 },
             ],
             -1
@@ -236,7 +235,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -244,7 +243,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                     {
                         html: 'test1',
                         knownColors: [],
-                        metadata: {} as any,
+                        isDarkMode: false,
                     },
                     false
                 );
@@ -255,7 +254,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
                 {
                     html: 'test1',
                     knownColors: [],
-                    metadata: {} as any,
+                    isDarkMode: false,
                 },
             ],
             -1
@@ -263,13 +262,12 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
     });
 
     it('Add snapshot with entity state', () => {
-        const mockedMetadata = 'METADATA' as any;
         const mockedEntityStates = 'ENTITYSTATES' as any;
 
         service.addSnapshot(
             {
                 html: 'test',
-                metadata: null,
+                isDarkMode: false,
                 knownColors: [],
             },
             false
@@ -278,7 +276,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         expect(snapshots.snapshots).toEqual([
             {
                 html: 'test',
-                metadata: null,
+                isDarkMode: false,
                 knownColors: [],
             },
         ]);
@@ -286,7 +284,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         service.addSnapshot(
             {
                 html: 'test',
-                metadata: mockedMetadata,
+                isDarkMode: false,
                 knownColors: [],
             },
             false
@@ -295,7 +293,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         expect(snapshots.snapshots).toEqual([
             {
                 html: 'test',
-                metadata: mockedMetadata,
+                isDarkMode: false,
                 knownColors: [],
             },
         ]);
@@ -303,7 +301,7 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         service.addSnapshot(
             {
                 html: 'test',
-                metadata: null,
+                isDarkMode: false,
                 knownColors: [],
                 entityStates: mockedEntityStates,
             },
@@ -313,12 +311,12 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
         expect(snapshots.snapshots).toEqual([
             {
                 html: 'test',
-                metadata: mockedMetadata,
+                isDarkMode: false,
                 knownColors: [],
             },
             {
                 html: 'test',
-                metadata: null,
+                isDarkMode: false,
                 knownColors: [],
                 entityStates: mockedEntityStates,
             },
@@ -326,9 +324,9 @@ describe('UndoSnapshotsServiceImpl.addSnapshot', () => {
     });
 });
 
-describe('UndoSnapshotsServiceImpl.canMove', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.canMove', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -338,7 +336,7 @@ describe('UndoSnapshotsServiceImpl.canMove', () => {
             autoCompleteIndex: -1,
             maxSize: 100,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -445,9 +443,9 @@ describe('UndoSnapshotsServiceImpl.canMove', () => {
     });
 });
 
-describe('UndoSnapshotsServiceImpl.move', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.move', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -457,7 +455,7 @@ describe('UndoSnapshotsServiceImpl.move', () => {
             autoCompleteIndex: -1,
             maxSize: 100,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -528,9 +526,9 @@ describe('UndoSnapshotsServiceImpl.move', () => {
     });
 });
 
-describe('UndoSnapshotsServiceImpl.clearRedo', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.clearRedo', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -540,7 +538,7 @@ describe('UndoSnapshotsServiceImpl.clearRedo', () => {
             autoCompleteIndex: -1,
             maxSize: 100,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -596,9 +594,9 @@ describe('UndoSnapshotsServiceImpl.clearRedo', () => {
     });
 });
 
-describe('UndoSnapshotsServiceImpl.canUndoAutoComplete', () => {
-    let service: UndoSnapshotsService<Snapshot>;
-    let snapshots: Snapshots<Snapshot>;
+describe('SnapshotsManagerImpl.canUndoAutoComplete', () => {
+    let service: SnapshotsManager;
+    let snapshots: Snapshots;
 
     beforeEach(() => {
         snapshots = {
@@ -608,7 +606,7 @@ describe('UndoSnapshotsServiceImpl.canUndoAutoComplete', () => {
             autoCompleteIndex: -1,
             maxSize: 100,
         };
-        service = createUndoSnapshotsService(snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     it('can undo', () => {

@@ -1,14 +1,10 @@
-import type { Snapshot } from '../parameter/Snapshot';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
-import type {
-    EditorPlugin,
-    TrustedHTMLHandler,
-    UndoSnapshotsService,
-} from 'roosterjs-editor-types';
+import type { EditorPlugin, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 
 /**
  * Options for Content Model editor
@@ -99,5 +95,5 @@ export interface StandaloneEditorOptions {
      * Undo snapshot service based on content metadata. Use this parameter to customize the undo snapshot service.
      * When this property is set, value of undoSnapshotService will be ignored.
      */
-    undoSnapshotService?: UndoSnapshotsService<Snapshot>;
+    snapshotsManager?: SnapshotsManager;
 }
