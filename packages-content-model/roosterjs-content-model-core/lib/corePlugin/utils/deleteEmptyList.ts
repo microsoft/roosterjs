@@ -17,8 +17,11 @@ function isEmptyBlock(block: ContentModelBlock | undefined): boolean {
     return !!block;
 }
 
-//Verify if we need to remove the list item levels
-//If the first item o the list is selected in a expanded selection, we need to remove the list item levels
+/**
+ * @internal
+ * If the first item o the list is selected in a expanded selection, we need to remove the list item levels
+ * @param context A context object provided by formatContentModel API
+ */
 export function deleteEmptyList(context: DeleteSelectionContext) {
     const { insertPoint, deleteResult } = context;
     if (deleteResult == 'range' && insertPoint?.path) {
