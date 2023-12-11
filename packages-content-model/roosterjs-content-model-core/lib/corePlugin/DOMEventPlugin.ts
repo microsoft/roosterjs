@@ -4,7 +4,7 @@ import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     DOMEventPluginState,
     IStandaloneEditor,
-    DOMEventHandler,
+    DOMEventRecord,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 import type {
@@ -63,7 +63,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
         const document = this.editor.getDocument();
         const eventHandlers: Partial<
-            { [P in keyof HTMLElementEventMap]: DOMEventHandler<HTMLElementEventMap[P]> }
+            { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
         > = {
             // 1. Keyboard event
             keypress: this.getEventHandler(PluginEventType.KeyPress),
@@ -86,7 +86,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             input: this.getEventHandler(PluginEventType.Input),
         };
 
-        this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventHandler>>eventHandlers);
+        this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
 
         // 7. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
@@ -141,7 +141,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         });
     };
 
-    private getEventHandler(eventType: PluginEventType): DOMEventHandler {
+    private getEventHandler(eventType: PluginEventType): DOMEventRecord {
         const beforeDispatch = (event: Event) =>
             eventType == PluginEventType.Input
                 ? this.onInputEvent(<InputEvent>event)

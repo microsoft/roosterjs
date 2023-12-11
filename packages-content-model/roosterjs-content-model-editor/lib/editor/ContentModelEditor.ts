@@ -17,7 +17,7 @@ import type {
     ClipboardData,
     ContentChangedData,
     ContentChangedEvent,
-    DOMEventHandler as LegacyDOMEventHandler,
+    DOMEventHandler,
     DarkColorHandler,
     DefaultFormat,
     EditorUndoState,
@@ -90,7 +90,7 @@ import type {
     EditorEnvironment,
     Snapshot,
     SnapshotsManager,
-    DOMEventHandler,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -617,21 +617,21 @@ export class ContentModelEditor implements IContentModelEditor {
      * Attach a DOM event to the editor content DIV
      * @param eventMap A map from event name to its handler
      */
-    attachDomEvent(eventMap: Record<string, DOMEventHandler>): () => void {
+    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void {
         const core = this.getCore();
         return core.api.attachDomEvent(core, eventMap);
     }
 
     addDomEventHandler(
-        nameOrMap: string | Record<string, LegacyDOMEventHandler>,
-        handler?: LegacyDOMEventHandler
+        nameOrMap: string | Record<string, DOMEventHandler>,
+        handler?: DOMEventHandler
     ): () => void {
         const eventsMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
-        const eventsMapResult: Record<string, DOMEventHandler> = {};
+        const eventsMapResult: Record<string, DOMEventRecord> = {};
 
         getObjectKeys(eventsMap).forEach(key => {
             const handlerObj = eventsMap[key];
-            let result: DOMEventHandler = {
+            let result: DOMEventRecord = {
                 pluginEventType: null,
                 beforeDispatch: null,
             };
@@ -641,7 +641,7 @@ export class ContentModelEditor implements IContentModelEditor {
             } else if (typeof handlerObj === 'function') {
                 result.beforeDispatch = handlerObj;
             } else if (typeof handlerObj === 'object') {
-                result = handlerObj as DOMEventHandler;
+                result = handlerObj as DOMEventRecord;
             }
 
             eventsMapResult[key] = result;

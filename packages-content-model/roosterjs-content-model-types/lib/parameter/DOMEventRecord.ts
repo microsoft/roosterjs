@@ -8,7 +8,7 @@ export type DOMEventHandlerFunction<E = Event> = (event: E) => void;
 /**
  * DOM event handler object with mapped plugin event type and handler function
  */
-export interface DOMEventHandler<E = Event> {
+export interface DOMEventRecord<E = Event> {
     /**
      * Type of plugin event. The DOM event will be mapped with this plugin event type
      */

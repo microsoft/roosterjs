@@ -1,4 +1,4 @@
-import type { DOMEventHandler } from '../parameter/DOMEventHandler';
+import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
@@ -205,7 +205,7 @@ export type InsertNode = (
  */
 export type AttachDomEvent = (
     core: StandaloneEditorCore,
-    eventMap: Record<string, DOMEventHandler>
+    eventMap: Record<string, DOMEventRecord>
 ) => () => void;
 
 /**
