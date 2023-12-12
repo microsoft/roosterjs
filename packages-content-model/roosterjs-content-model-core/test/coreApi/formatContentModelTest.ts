@@ -5,6 +5,7 @@ import { formatContentModel } from '../../lib/coreApi/formatContentModel';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
+    FormatWithContentModelContext,
     StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
@@ -18,6 +19,7 @@ describe('formatContentModel', () => {
     let getFocusedPosition: jasmine.Spy;
     let triggerEvent: jasmine.Spy;
     let getDOMSelection: jasmine.Spy;
+    let hasFocus: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedContainer = 'C' as any;
@@ -27,9 +29,7 @@ describe('formatContentModel', () => {
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
 
-        addUndoSnapshot = jasmine
-            .createSpy('addUndoSnapshot')
-            .and.callFake((_, callback) => callback?.());
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel').and.returnValue(mockedSelection);
         cacheContentModel = jasmine.createSpy('cacheContentModel');
@@ -38,6 +38,7 @@ describe('formatContentModel', () => {
             .and.returnValue({ node: mockedContainer, offset: mockedOffset });
         triggerEvent = jasmine.createSpy('triggerPluginEvent');
         getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue(null);
+        hasFocus = jasmine.createSpy('hasFocus');
 
         core = ({
             api: {
@@ -48,468 +49,506 @@ describe('formatContentModel', () => {
                 getFocusedPosition,
                 triggerEvent,
                 getDOMSelection,
+                hasFocus,
             },
             lifecycle: {},
             cache: {},
+            undo: {
+                snapshotsManager: {},
+            },
         } as any) as StandaloneEditorCore & EditorCore;
     });
 
-    it('Callback return false', () => {
-        const callback = jasmine.createSpy('callback').and.returnValue(false);
-
-        formatContentModel(core, callback, { apiName });
-
-        expect(callback).toHaveBeenCalledWith(mockedModel, {
-            newEntities: [],
-            deletedEntities: [],
-            rawEvent: undefined,
-            newImages: [],
-        });
-        expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot).not.toHaveBeenCalled();
-        expect(setContentModel).not.toHaveBeenCalled();
-        expect(triggerEvent).not.toHaveBeenCalled();
-    });
-
-    it('Callback return true', () => {
-        const callback = jasmine.createSpy('callback').and.returnValue(true);
-
-        formatContentModel(core, callback, { apiName });
-
-        expect(callback).toHaveBeenCalledWith(mockedModel, {
-            newEntities: [],
-            deletedEntities: [],
-            rawEvent: undefined,
-            newImages: [],
-        });
-        expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot.calls.argsFor(0)[2]).toBe(null);
-        expect(addUndoSnapshot.calls.argsFor(0)[3]).toBe(false);
-        expect(addUndoSnapshot.calls.argsFor(0)[4]).toEqual({
-            formatApiName: apiName,
-        });
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: ChangeSource.Format,
-                data: undefined,
-                additionalData: {
-                    formatApiName: apiName,
-                },
-                changedEntities: [],
-            },
-            true
-        );
-    });
-
-    it('Skip undo snapshot', () => {
-        const callback = jasmine.createSpy('callback').and.callFake((model, context) => {
-            context.skipUndoSnapshot = true;
-            return true;
+    describe('Editor has focus', () => {
+        beforeEach(() => {
+            hasFocus.and.returnValue(true);
         });
 
-        formatContentModel(core, callback, { apiName });
+        it('Callback return false', () => {
+            const callback = jasmine.createSpy('callback').and.returnValue(false);
 
-        expect(callback).toHaveBeenCalledWith(mockedModel, {
-            newEntities: [],
-            deletedEntities: [],
-            rawEvent: undefined,
-            skipUndoSnapshot: true,
-            newImages: [],
-        });
-        expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot).not.toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: ChangeSource.Format,
-                data: undefined,
-                additionalData: {
-                    formatApiName: apiName,
-                },
-                changedEntities: [],
-            },
-            true
-        );
-    });
+            formatContentModel(core, callback, { apiName });
 
-    it('Customize change source', () => {
-        const callback = jasmine.createSpy('callback').and.returnValue(true);
-
-        formatContentModel(core, callback, { changeSource: 'TEST', apiName });
-
-        expect(callback).toHaveBeenCalledWith(mockedModel, {
-            newEntities: [],
-            deletedEntities: [],
-            rawEvent: undefined,
-            newImages: [],
-        });
-        expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(addUndoSnapshot.calls.argsFor(0)[2]).toBe(null!);
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: 'TEST',
-                data: undefined,
-                additionalData: {
-                    formatApiName: apiName,
-                },
-                changedEntities: [],
-            },
-            true
-        );
-    });
-
-    it('Customize change source, getChangeData and skip undo snapshot', () => {
-        const callback = jasmine.createSpy('callback').and.callFake((model, context) => {
-            context.skipUndoSnapshot = true;
-            return true;
-        });
-        const returnData = 'DATA';
-
-        formatContentModel(core, callback, {
-            apiName,
-            changeSource: 'TEST',
-            getChangeData: () => returnData,
+            expect(callback).toHaveBeenCalledWith(mockedModel, {
+                newEntities: [],
+                deletedEntities: [],
+                rawEvent: undefined,
+                newImages: [],
+            });
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).not.toHaveBeenCalled();
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(triggerEvent).not.toHaveBeenCalled();
         });
 
-        expect(callback).toHaveBeenCalledWith(mockedModel, {
-            newEntities: [],
-            deletedEntities: [],
-            rawEvent: undefined,
-            skipUndoSnapshot: true,
-            newImages: [],
-        });
-        expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot).not.toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: 'TEST',
-                data: returnData,
-                additionalData: {
-                    formatApiName: apiName,
-                },
-                changedEntities: [],
-            },
-            true
-        );
-    });
+        it('Callback return true', () => {
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
 
-    it('Has onNodeCreated', () => {
-        const callback = jasmine.createSpy('callback').and.returnValue(true);
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+            formatContentModel(core, callback, { apiName });
 
-        formatContentModel(core, callback, { onNodeCreated: onNodeCreated, apiName });
-
-        expect(callback).toHaveBeenCalledWith(mockedModel, {
-            newEntities: [],
-            deletedEntities: [],
-            rawEvent: undefined,
-            newImages: [],
-        });
-        expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, onNodeCreated);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: ChangeSource.Format,
-                data: undefined,
-                additionalData: {
-                    formatApiName: apiName,
-                },
-                changedEntities: [],
-            },
-            true
-        );
-    });
-
-    it('Has entity got deleted', () => {
-        const entity1 = {
-            entityFormat: { id: 'E1', entityType: 'E', isReadonly: true },
-            wrapper: {},
-        } as any;
-        const entity2 = {
-            entityFormat: { id: 'E2', entityType: 'E', isReadonly: true },
-            wrapper: {},
-        } as any;
-        const rawEvent = 'RawEvent' as any;
-
-        formatContentModel(
-            core,
-            (model, context) => {
-                context.deletedEntities.push(
-                    {
-                        entity: entity1,
-                        operation: 'removeFromStart',
+            expect(callback).toHaveBeenCalledWith(mockedModel, {
+                newEntities: [],
+                deletedEntities: [],
+                rawEvent: undefined,
+                newImages: [],
+            });
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    additionalData: {
+                        formatApiName: apiName,
                     },
-                    {
-                        entity: entity2,
-                        operation: 'removeFromEnd',
-                    }
-                );
+                    changedEntities: [],
+                },
+                true
+            );
+        });
+
+        it('Skip undo snapshot', () => {
+            const callback = jasmine.createSpy('callback').and.callFake((model, context) => {
+                context.skipUndoSnapshot = true;
                 return true;
-            },
-            {
-                apiName,
-                rawEvent: rawEvent,
-            }
-        );
+            });
 
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            formatContentModel(core, callback, { apiName });
 
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: ChangeSource.Format,
-                data: undefined,
-                additionalData: {
-                    formatApiName: apiName,
+            expect(callback).toHaveBeenCalledWith(mockedModel, {
+                newEntities: [],
+                deletedEntities: [],
+                rawEvent: undefined,
+                skipUndoSnapshot: true,
+                newImages: [],
+            });
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).not.toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [],
                 },
-                changedEntities: [
-                    {
-                        entity: entity1,
-                        operation: 'removeFromStart',
-                        rawEvent: 'RawEvent',
-                    },
-                    {
-                        entity: entity2,
-                        operation: 'removeFromEnd',
-                        rawEvent: 'RawEvent',
-                    },
-                ],
-            },
-            true
-        );
-    });
-
-    it('Has new entity in dark mode', () => {
-        const wrapper1 = 'W1' as any;
-        const wrapper2 = 'W2' as any;
-        const entity1 = {
-            entityFormat: { id: 'E1', entityType: 'E', isReadonly: true },
-            wrapper: wrapper1,
-        } as any;
-        const entity2 = {
-            entityFormat: { id: 'E2', entityType: 'E', isReadonly: true },
-            wrapper: wrapper2,
-        } as any;
-        const rawEvent = 'RawEvent' as any;
-        const transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
-        const mockedData = 'DATA';
-
-        core.lifecycle.isDarkMode = true;
-        core.api.transformColor = transformToDarkColorSpy;
-
-        formatContentModel(
-            core,
-            (model, context) => {
-                context.newEntities.push(entity1, entity2);
-                return true;
-            },
-            {
-                apiName,
-                rawEvent: rawEvent,
-                getChangeData: () => mockedData,
-            }
-        );
-
-        expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: ChangeSource.Format,
-                data: mockedData,
-                additionalData: {
-                    formatApiName: apiName,
-                },
-                changedEntities: [
-                    {
-                        entity: entity1,
-                        operation: 'newEntity',
-                        rawEvent: 'RawEvent',
-                    },
-                    {
-                        entity: entity2,
-                        operation: 'newEntity',
-                        rawEvent: 'RawEvent',
-                    },
-                ],
-            },
-            true
-        );
-        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
-    });
-
-    it('With selectionOverride', () => {
-        const range = 'MockedRangeEx' as any;
-
-        formatContentModel(core, () => true, {
-            apiName,
-            selectionOverride: range,
+                true
+            );
         });
 
-        expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(createContentModel).toHaveBeenCalledWith(core, undefined, range);
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: ChangeSource.Format,
-                data: undefined,
-                additionalData: {
-                    formatApiName: apiName,
+        it('Customize change source', () => {
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+
+            formatContentModel(core, callback, { changeSource: 'TEST', apiName });
+
+            expect(callback).toHaveBeenCalledWith(mockedModel, {
+                newEntities: [],
+                deletedEntities: [],
+                rawEvent: undefined,
+                newImages: [],
+            });
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: 'TEST',
+                    data: undefined,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [],
                 },
-                changedEntities: [],
-            },
-            true
-        );
-    });
+                true
+            );
+        });
 
-    it('Has image', () => {
-        const image = createImage('test');
-        const rawEvent = 'RawEvent' as any;
-        const getVisibleViewportSpy = jasmine
-            .createSpy('getVisibleViewport')
-            .and.returnValue({ top: 100, bottom: 200, left: 100, right: 200 });
-        core.api.getVisibleViewport = getVisibleViewportSpy;
-
-        formatContentModel(
-            core,
-            (model, context) => {
-                context.newImages.push(image);
+        it('Customize change source, getChangeData and skip undo snapshot', () => {
+            const callback = jasmine.createSpy('callback').and.callFake((model, context) => {
+                context.skipUndoSnapshot = true;
                 return true;
-            },
-            {
-                apiName,
-                rawEvent: rawEvent,
-            }
-        );
+            });
+            const returnData = 'DATA';
 
-        expect(getVisibleViewportSpy).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: mockedModel,
-                selection: mockedSelection,
-                source: ChangeSource.Format,
-                data: undefined,
-                additionalData: {
-                    formatApiName: apiName,
+            formatContentModel(core, callback, {
+                apiName,
+                changeSource: 'TEST',
+                getChangeData: () => returnData,
+            });
+
+            expect(callback).toHaveBeenCalledWith(mockedModel, {
+                newEntities: [],
+                deletedEntities: [],
+                rawEvent: undefined,
+                skipUndoSnapshot: true,
+                newImages: [],
+            });
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).not.toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: 'TEST',
+                    data: returnData,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [],
                 },
-                changedEntities: [],
-            },
-            true
-        );
+                true
+            );
+        });
+
+        it('Has onNodeCreated', () => {
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+            const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+            formatContentModel(core, callback, { onNodeCreated: onNodeCreated, apiName });
+
+            expect(callback).toHaveBeenCalledWith(mockedModel, {
+                newEntities: [],
+                deletedEntities: [],
+                rawEvent: undefined,
+                newImages: [],
+            });
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                onNodeCreated
+            );
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [],
+                },
+                true
+            );
+        });
+
+        it('Has entity got deleted', () => {
+            const entity1 = {
+                entityFormat: { id: 'E1', entityType: 'E', isReadonly: true },
+                wrapper: {},
+            } as any;
+            const entity2 = {
+                entityFormat: { id: 'E2', entityType: 'E', isReadonly: true },
+                wrapper: {},
+            } as any;
+            const rawEvent = 'RawEvent' as any;
+
+            formatContentModel(
+                core,
+                (model, context) => {
+                    context.deletedEntities.push(
+                        {
+                            entity: entity1,
+                            operation: 'removeFromStart',
+                        },
+                        {
+                            entity: entity2,
+                            operation: 'removeFromEnd',
+                        }
+                    );
+                    return true;
+                },
+                {
+                    apiName,
+                    rawEvent: rawEvent,
+                }
+            );
+
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [
+                        {
+                            entity: entity1,
+                            operation: 'removeFromStart',
+                            rawEvent: 'RawEvent',
+                        },
+                        {
+                            entity: entity2,
+                            operation: 'removeFromEnd',
+                            rawEvent: 'RawEvent',
+                        },
+                    ],
+                },
+                true
+            );
+        });
+
+        it('Has new entity in dark mode', () => {
+            const wrapper1 = 'W1' as any;
+            const wrapper2 = 'W2' as any;
+            const entity1 = {
+                entityFormat: { id: 'E1', entityType: 'E', isReadonly: true },
+                wrapper: wrapper1,
+            } as any;
+            const entity2 = {
+                entityFormat: { id: 'E2', entityType: 'E', isReadonly: true },
+                wrapper: wrapper2,
+            } as any;
+            const rawEvent = 'RawEvent' as any;
+            const transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
+            const mockedData = 'DATA';
+
+            core.lifecycle.isDarkMode = true;
+            core.api.transformColor = transformToDarkColorSpy;
+
+            formatContentModel(
+                core,
+                (model, context) => {
+                    context.newEntities.push(entity1, entity2);
+                    return true;
+                },
+                {
+                    apiName,
+                    rawEvent: rawEvent,
+                    getChangeData: () => mockedData,
+                }
+            );
+
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: mockedData,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [
+                        {
+                            entity: entity1,
+                            operation: 'newEntity',
+                            rawEvent: 'RawEvent',
+                        },
+                        {
+                            entity: entity2,
+                            operation: 'newEntity',
+                            rawEvent: 'RawEvent',
+                        },
+                    ],
+                },
+                true
+            );
+            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+        });
+
+        it('With selectionOverride', () => {
+            const range = 'MockedRangeEx' as any;
+
+            formatContentModel(core, () => true, {
+                apiName,
+                selectionOverride: range,
+            });
+
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(createContentModel).toHaveBeenCalledWith(core, undefined, range);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [],
+                },
+                true
+            );
+        });
+
+        it('Has image', () => {
+            const image = createImage('test');
+            const rawEvent = 'RawEvent' as any;
+            const getVisibleViewportSpy = jasmine
+                .createSpy('getVisibleViewport')
+                .and.returnValue({ top: 100, bottom: 200, left: 100, right: 200 });
+            core.api.getVisibleViewport = getVisibleViewportSpy;
+
+            formatContentModel(
+                core,
+                (model, context) => {
+                    context.newImages.push(image);
+                    return true;
+                },
+                {
+                    apiName,
+                    rawEvent: rawEvent,
+                }
+            );
+
+            expect(getVisibleViewportSpy).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [],
+                },
+                true
+            );
+        });
+
+        it('Has shouldClearCachedModel', () => {
+            formatContentModel(
+                core,
+                (model, context) => {
+                    context.clearModelCache = true;
+                    return true;
+                },
+                {
+                    apiName,
+                }
+            );
+
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    contentModel: undefined,
+                    selection: undefined,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
+                    changedEntities: [],
+                },
+                true
+            );
+        });
+
+        it('Has shouldClearCachedModel, and callback return false', () => {
+            core.cache.cachedModel = 'Model' as any;
+            core.cache.cachedSelection = 'Selection' as any;
+
+            formatContentModel(
+                core,
+                (model, context) => {
+                    context.clearModelCache = true;
+                    return false;
+                },
+                {
+                    apiName,
+                }
+            );
+
+            expect(addUndoSnapshot).not.toHaveBeenCalled();
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(triggerEvent).not.toHaveBeenCalled();
+            expect(core.cache).toEqual({
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
+        });
     });
 
-    it('Has shouldClearCachedModel', () => {
-        formatContentModel(
-            core,
-            (model, context) => {
-                context.clearModelCache = true;
-                return true;
-            },
-            {
-                apiName,
-            }
-        );
+    describe('Editor does not have focus', () => {
+        it('Editor did not have focus, do not focus back', () => {
+            hasFocus.and.returnValue(false);
 
-        expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                contentModel: undefined,
-                selection: undefined,
-                source: ChangeSource.Format,
-                data: undefined,
-                additionalData: {
-                    formatApiName: apiName,
+            formatContentModel(
+                core,
+                (model, context) => {
+                    return true;
                 },
-                changedEntities: [],
-            },
-            true
-        );
-    });
+                {
+                    apiName,
+                }
+            );
 
-    it('Has shouldClearCachedModel, and callback return false', () => {
-        core.cache.cachedModel = 'Model' as any;
-        core.cache.cachedSelection = 'Selection' as any;
-
-        formatContentModel(
-            core,
-            (model, context) => {
-                context.clearModelCache = true;
-                return false;
-            },
-            {
-                apiName,
-            }
-        );
-
-        expect(addUndoSnapshot).not.toHaveBeenCalled();
-        expect(setContentModel).not.toHaveBeenCalled();
-        expect(triggerEvent).not.toHaveBeenCalled();
-        expect(core.cache).toEqual({
-            cachedModel: undefined,
-            cachedSelection: undefined,
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                {
+                    ignoreSelection: true,
+                },
+                undefined
+            );
+            expect(triggerEvent).toHaveBeenCalled();
+            expect(core.cache).toEqual({});
         });
     });
 
@@ -523,6 +562,8 @@ describe('formatContentModel', () => {
         const mockedFormat2: ContentModelSegmentFormat = { fontFamily: 'Arial' };
 
         beforeEach(() => {
+            hasFocus.and.returnValue(true);
+
             core.format = {
                 defaultFormat: {},
                 pendingFormat: null,
@@ -688,6 +729,133 @@ describe('formatContentModel', () => {
                 posContainer: mockedStartContainer1,
                 posOffset: mockedStartOffset1,
             });
+        });
+    });
+
+    describe('Undo snapshot related logic', () => {
+        beforeEach(() => {
+            hasFocus.and.returnValue(true);
+        });
+
+        it('trigger addUndoSnapshot when hasNewContent', () => {
+            core.undo.snapshotsManager.hasNewContent = true;
+
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                snapshotsManager: {
+                    hasNewContent: true,
+                },
+                isNested: false,
+            } as any);
+        });
+
+        it('trigger addUndoSnapshot when has entityStates', () => {
+            const mockedEntityState = 'STATE' as any;
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake(
+                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
+                        context.entityStates = mockedEntityState;
+                        return true;
+                    }
+                );
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: false,
+                snapshotsManager: {},
+            } as any);
+        });
+
+        it('trigger addUndoSnapshot when has canUndoByBackspace', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake(
+                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
+                        context.canUndoByBackspace = true;
+                        return true;
+                    }
+                );
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: false,
+                snapshotsManager: {},
+            } as any);
+        });
+
+        it('trigger addUndoSnapshot when has canUndoByBackspace and has valid range selection', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake(
+                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
+                        context.canUndoByBackspace = true;
+                        return true;
+                    }
+                );
+
+            setContentModel.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: mockedContainer,
+                    startOffset: mockedOffset,
+                },
+            });
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: false,
+                snapshotsManager: {
+                    hasNewContent: false,
+                },
+                posContainer: mockedContainer,
+                posOffset: mockedOffset,
+            } as any);
+        });
+
+        it('Do not trigger addUndoSnapshot when isNested', () => {
+            core.undo.isNested = true;
+
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+
+            formatContentModel(core, callback);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: true,
+                snapshotsManager: {},
+            } as any);
         });
     });
 });

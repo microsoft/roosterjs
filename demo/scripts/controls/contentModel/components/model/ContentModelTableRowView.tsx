@@ -5,7 +5,7 @@ import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
 import { ContentModelView } from '../ContentModelView';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
-import { hasSelectionInBlockGroup } from 'roosterjs-content-model-api';
+import { hasSelectionInBlockGroup } from 'roosterjs-content-model-core';
 import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelTableRowView.scss');

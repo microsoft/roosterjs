@@ -1,5 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { reuseCachedElement } from '../utils/reuseCachedElement';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import type {
     ContentModelBlockHandler,
     ContentModelDivider,

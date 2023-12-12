@@ -41,7 +41,8 @@ export function applyDefaultFormat(
 
         if (result.deleteResult == 'range') {
             normalizeContentModel(model);
-            editor.addUndoSnapshot();
+
+            editor.takeSnapshot();
 
             return true;
         } else if (

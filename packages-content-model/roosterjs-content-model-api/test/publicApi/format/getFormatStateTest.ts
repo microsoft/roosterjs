@@ -30,9 +30,9 @@ describe('getFormatState', () => {
         expectedFormat: ContentModelFormatState
     ) {
         const editor = ({
-            getUndoState: () => ({
-                canUndo: false,
-                canRedo: false,
+            getSnapshotsManager: () => ({
+                hasNewContent: false,
+                canMove: () => false,
             }),
             isDarkMode: () => false,
             getZoomScale: () => 1,

@@ -1,9 +1,15 @@
-import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
+import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { isModifierKey } from '../publicApi/domUtils/eventUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type {
+    DOMSelection,
     IStandaloneEditor,
     SelectionPluginState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
+
+const MouseMiddleButton = 1;
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: (IStandaloneEditor & IEditor) | null = null;
@@ -12,9 +18,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     constructor(options: StandaloneEditorOptions) {
         this.state = {
-            selectionRange: null,
-            tableSelectionRange: null,
-            imageSelectionRange: null,
+            selection: null,
             selectionStyleNode: null,
             imageSelectionBorderColor: options.imageSelectionBorderColor, // TODO: Move to Selection core plugin
         };
@@ -79,26 +83,112 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         return this.state;
     }
 
-    private onFocus = () => {
-        if (!this.state.skipReselectOnFocus && this.editor) {
-            const { table, coordinates } = this.state.tableSelectionRange || {};
-            const { image } = this.state.imageSelectionRange || {};
-
-            if (table && coordinates) {
-                this.editor.select(table, coordinates);
-            } else if (image) {
-                this.editor.select(image);
-            } else if (this.state.selectionRange) {
-                this.editor.select(this.state.selectionRange);
-            }
+    onPluginEvent(event: PluginEvent) {
+        if (!this.editor) {
+            return;
         }
 
-        this.state.selectionRange = null;
+        let image: HTMLImageElement | null;
+        let selection: DOMSelection | null;
+
+        switch (event.eventType) {
+            case PluginEventType.MouseUp:
+                if (
+                    (image = this.getClickingImage(event.rawEvent)) &&
+                    image.isContentEditable &&
+                    event.rawEvent.button != MouseMiddleButton &&
+                    event.isClicking
+                ) {
+                    this.selectImage(this.editor, image);
+                }
+                break;
+
+            case PluginEventType.MouseDown:
+                selection = this.editor.getDOMSelection();
+
+                if (selection?.type == 'image' && selection.image !== event.rawEvent.target) {
+                    this.selectBeforeImage(this.editor, selection.image);
+                }
+                break;
+
+            case PluginEventType.KeyDown:
+                const rawEvent = event.rawEvent;
+                const key = rawEvent.key;
+                selection = this.editor.getDOMSelection();
+
+                if (
+                    !isModifierKey(rawEvent) &&
+                    !rawEvent.shiftKey &&
+                    selection?.type == 'image' &&
+                    selection.image.parentNode
+                ) {
+                    if (key === 'Escape') {
+                        this.selectBeforeImage(this.editor, selection.image);
+                        event.rawEvent.stopPropagation();
+                    } else if (key !== 'Delete' && key !== 'Backspace') {
+                        this.selectBeforeImage(this.editor, selection.image);
+                    }
+                }
+                break;
+
+            case PluginEventType.ContextMenu:
+                selection = this.editor.getDOMSelection();
+
+                if (
+                    (image = this.getClickingImage(event.rawEvent)) &&
+                    (selection?.type != 'image' || selection.image != image)
+                ) {
+                    this.selectImage(this.editor, image);
+                }
+        }
+    }
+
+    private selectImage(editor: IStandaloneEditor, image: HTMLImageElement) {
+        editor.setDOMSelection({
+            type: 'image',
+            image: image,
+        });
+    }
+
+    private selectBeforeImage(editor: IStandaloneEditor, image: HTMLImageElement) {
+        const doc = editor.getDocument();
+        const parent = image.parentNode;
+        const index = parent && toArray(parent.childNodes).indexOf(image);
+
+        if (parent && index !== null && index >= 0) {
+            const range = doc.createRange();
+            range.setStart(parent, index);
+            range.collapse();
+
+            editor.setDOMSelection({
+                type: 'range',
+                range: range,
+            });
+        }
+    }
+
+    private getClickingImage(event: UIEvent): HTMLImageElement | null {
+        const target = event.target as Node;
+
+        return isNodeOfType(target, 'ELEMENT_NODE') && isElementOfType(target, 'img')
+            ? target
+            : null;
+    }
+
+    private onFocus = () => {
+        if (!this.state.skipReselectOnFocus && this.state.selection) {
+            this.editor?.setDOMSelection(this.state.selection);
+        }
+
+        if (this.state.selection?.type == 'range') {
+            // Editor is focused, now we can get live selection. So no need to keep a selection if the selection type is range.
+            this.state.selection = null;
+        }
     };
 
     private onBlur = () => {
-        if (!this.state.selectionRange && this.editor) {
-            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
+        if (!this.state.selection && this.editor) {
+            this.state.selection = this.editor.getDOMSelection();
         }
     };
 
