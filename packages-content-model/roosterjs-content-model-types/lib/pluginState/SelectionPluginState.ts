@@ -1,4 +1,4 @@
-import type { ImageSelectionRange, TableSelectionRange } from 'roosterjs-editor-types';
+import type { DOMSelection } from '../selection/DOMSelection';
 
 /**
  * The state object for SelectionPlugin
@@ -7,17 +7,7 @@ export interface SelectionPluginState {
     /**
      * Cached selection range
      */
-    selectionRange: Range | null;
-
-    /**
-     * Table selection range
-     */
-    tableSelectionRange: TableSelectionRange | null;
-
-    /**
-     * Image selection range
-     */
-    imageSelectionRange: ImageSelectionRange | null;
+    selection: DOMSelection | null;
 
     /**
      * A style node in current document to help implement image and table selection
