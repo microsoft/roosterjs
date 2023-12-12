@@ -132,7 +132,7 @@ describe('setContentModel', () => {
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
     });
 
-    it('option ignore selection ', () => {
+    it('restore selection ', () => {
         core.selection = {
             selection: null,
             selectionStyleNode: null,
