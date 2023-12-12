@@ -30,6 +30,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         rawEvent,
         newImages: [],
     };
+    const hasFocus = core.api.hasFocus(core);
     let selection: DOMSelection | undefined;
 
     if (formatter(model, context)) {
@@ -37,8 +38,12 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             handleImages(core, context);
 
             selection =
-                core.api.setContentModel(core, model, undefined /*options*/, onNodeCreated) ||
-                undefined;
+                core.api.setContentModel(
+                    core,
+                    model,
+                    hasFocus ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
+                    onNodeCreated
+                ) || undefined;
 
             handlePendingFormat(core, context, selection);
         };
