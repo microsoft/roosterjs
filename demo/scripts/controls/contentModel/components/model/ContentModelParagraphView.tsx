@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BlockFormatView } from '../format/BlockFormatView';
 import { ContentModelSegmentView } from './ContentModelSegmentView';
 import { ContentModelView } from '../ContentModelView';
-import { hasSelectionInBlock } from 'roosterjs-content-model-api';
+import { hasSelectionInBlock } from 'roosterjs-content-model-core';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import { useProperty } from '../../hooks/useProperty';
 import {

@@ -1,9 +1,8 @@
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { TriggerEvent } from 'roosterjs-content-model-types';
 import type { EditorPlugin, PluginEvent } from 'roosterjs-editor-types';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
-const allowedEventsInShadowEdit: (PluginEventType | CompatiblePluginEventType)[] = [
+const allowedEventsInShadowEdit: PluginEventType[] = [
     PluginEventType.EditorReady,
     PluginEventType.BeforeDispose,
     PluginEventType.ExtractContentWithDom,
@@ -20,7 +19,7 @@ const allowedEventsInShadowEdit: (PluginEventType | CompatiblePluginEventType)[]
 export const triggerEvent: TriggerEvent = (core, pluginEvent, broadcast) => {
     if (
         (!core.lifecycle.shadowEditFragment ||
-            allowedEventsInShadowEdit.indexOf(pluginEvent.eventType) >= 0) &&
+            allowedEventsInShadowEdit.indexOf(pluginEvent.eventType as PluginEventType) >= 0) &&
         (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin)))
     ) {
         core.plugins.forEach(plugin => {
