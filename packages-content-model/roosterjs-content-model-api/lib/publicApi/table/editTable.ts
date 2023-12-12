@@ -1,4 +1,3 @@
-import hasSelectionInBlock from '../selection/hasSelectionInBlock';
 import { alignTable } from '../../modelApi/table/alignTable';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
@@ -11,7 +10,9 @@ import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
+
 import {
+    hasSelectionInBlock,
     applyTableFormat,
     getFirstSelectedTable,
     normalizeTable,

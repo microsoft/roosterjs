@@ -1,6 +1,7 @@
 import { addRangeToSelection } from './utils/addRangeToSelection';
 import { ChangeSource } from '../constants/ChangeSource';
 import { cloneModel } from '../publicApi/model/cloneModel';
+import { deleteEmptyList } from './utils/deleteEmptyList';
 import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from '../utils/extractClipboardItems';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
@@ -164,7 +165,10 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                     if (isCut) {
                         editor.formatContentModel(
                             (model, context) => {
-                                if (deleteSelection(model, [], context).deleteResult == 'range') {
+                                if (
+                                    deleteSelection(model, [deleteEmptyList], context)
+                                        .deleteResult == 'range'
+                                ) {
                                     normalizeContentModel(model);
                                 }
 

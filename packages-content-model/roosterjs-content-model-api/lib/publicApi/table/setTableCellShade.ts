@@ -1,5 +1,5 @@
-import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
 import {
+    hasSelectionInBlockGroup,
     getFirstSelectedTable,
     normalizeTable,
     setTableCellBackgroundColor,
