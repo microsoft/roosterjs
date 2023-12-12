@@ -23,7 +23,13 @@ export function insertTableColumn(
                 row.cells.splice(
                     insertLeft ? sel.firstCol : sel.lastCol + 1,
                     0,
-                    createTableCell(cell.spanLeft, cell.spanAbove, cell.isHeader, cell.format)
+                    createTableCell(
+                        cell.spanLeft,
+                        cell.spanAbove,
+                        cell.isHeader,
+                        cell.format,
+                        cell.dataset
+                    )
                 );
             });
             table.widths.splice(

@@ -19,7 +19,13 @@ export function insertTableRow(table: ContentModelTable, operation: TableVertica
             table.rows.splice(insertAbove ? sel.firstRow : sel.lastRow + 1, 0, {
                 format: { ...sourceRow.format },
                 cells: sourceRow.cells.map(cell =>
-                    createTableCell(cell.spanLeft, cell.spanAbove, cell.isHeader, cell.format)
+                    createTableCell(
+                        cell.spanLeft,
+                        cell.spanAbove,
+                        cell.isHeader,
+                        cell.format,
+                        cell.dataset
+                    )
                 ),
                 height: sourceRow.height,
             });
