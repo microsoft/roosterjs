@@ -29,6 +29,6 @@ export function createTableCell(
         spanLeft,
         spanAbove,
         isHeader: !!isHeader,
-        dataset: { ...dataset } ?? {},
+        dataset: { ...dataset },
     };
 }
