@@ -132,9 +132,10 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         editor: IStandaloneEditor & IEditor,
         event?: ContentChangedEvent
     ) {
+        const cmEvent = event as ContentModelContentChangedEvent | undefined;
         const modifiedEntities: ChangedEntity[] =
-            (event as ContentModelContentChangedEvent)?.changedEntities ??
-            this.getChangedEntities(editor);
+            cmEvent?.changedEntities ?? this.getChangedEntities(editor);
+        const entityStates = cmEvent?.entityStates;
 
         modifiedEntities.forEach(entry => {
             const { entity, operation, rawEvent } = entry;
@@ -147,6 +148,10 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                 if (operation == 'newEntity') {
                     entity.entityFormat.id = this.ensureUniqueId(entityType, id ?? '', wrapper);
                     wrapper.className = generateEntityClassNames(entity.entityFormat);
+
+                    if (entity.entityFormat.isReadonly) {
+                        wrapper.contentEditable = 'false';
+                    }
 
                     const eventResult = this.triggerEvent(editor, wrapper, operation, rawEvent);
 
@@ -167,6 +172,21 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
 
                     this.triggerEvent(editor, wrapper, operation, rawEvent);
                 }
+            }
+        });
+
+        entityStates?.forEach(entityState => {
+            const { id, state } = entityState;
+            const wrapper = this.state.entityMap[id]?.element;
+
+            if (wrapper) {
+                this.triggerEvent(
+                    editor,
+                    wrapper,
+                    'updateEntityState',
+                    undefined /*rawEvent*/,
+                    state
+                );
             }
         });
     }
@@ -228,7 +248,8 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         editor: IEditor & IStandaloneEditor,
         wrapper: HTMLElement,
         operation: EntityOperation,
-        rawEvent?: Event
+        rawEvent?: Event,
+        state?: string
     ) {
         const format: ContentModelEntityFormat = {};
         wrapper.classList.forEach(name => {
@@ -245,6 +266,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                       isReadonly: !!format.isReadonly,
                       wrapper,
                   },
+                  state: operation == 'updateEntityState' ? state : undefined,
               })
             : null;
     }

@@ -4,6 +4,7 @@ import type { EditorPlugin, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 
 /**
  * Options for Content Model editor
@@ -89,4 +90,10 @@ export interface StandaloneEditorOptions {
      * If the editor is currently in dark mode
      */
     inDarkMode?: boolean;
+
+    /**
+     * Undo snapshot service based on content metadata. Use this parameter to customize the undo snapshot service.
+     * When this property is set, value of undoSnapshotService will be ignored.
+     */
+    snapshotsManager?: SnapshotsManager;
 }

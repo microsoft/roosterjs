@@ -32,12 +32,12 @@ export const getContent: GetContent = (core, mode): string => {
         const clonedRoot = cloneNode(root);
         clonedRoot.normalize();
 
-        const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+        const originalRange = core.api.getDOMSelection(core);
         const path =
             !includeSelectionMarker || core.lifecycle.shadowEditFragment
                 ? null
-                : originalRange
-                ? getSelectionPath(core.contentDiv, originalRange)
+                : originalRange?.type == 'range'
+                ? getSelectionPath(core.contentDiv, originalRange.range)
                 : null;
         const range = path && createRange(clonedRoot, path.start, path.end);
 

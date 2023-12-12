@@ -1,9 +1,6 @@
+import type { UndoPluginState } from './UndoPluginState';
 import type { SelectionPluginState } from './SelectionPluginState';
-import type {
-    CopyPastePluginState,
-    EditPluginState,
-    UndoPluginState,
-} from 'roosterjs-editor-types';
+import type { CopyPastePluginState, EditPluginState } from 'roosterjs-editor-types';
 import type { ContentModelCachePluginState } from './ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from './ContentModelFormatPluginState';
 import type { DOMEventPluginState } from './DOMEventPluginState';
@@ -49,6 +46,11 @@ export interface StandaloneEditorCorePluginState {
      * Plugin state for SelectionPlugin
      */
     selection: SelectionPluginState;
+
+    /**
+     * Plugin state for UndoPlugin
+     */
+    undo: UndoPluginState;
 }
 
 /**
@@ -56,6 +58,5 @@ export interface StandaloneEditorCorePluginState {
  * TODO: Port these plugins
  */
 export interface UnportedCorePluginState {
-    undo: UndoPluginState;
     edit: EditPluginState;
 }

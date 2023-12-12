@@ -18,6 +18,9 @@ export { getSelectionRootNode } from './publicApi/selection/getSelectionRootNode
 export { deleteSelection } from './publicApi/selection/deleteSelection';
 export { deleteSegment } from './publicApi/selection/deleteSegment';
 export { deleteBlock } from './publicApi/selection/deleteBlock';
+export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
+export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
+export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export {
     OperationalBlocks,
     getFirstSelectedListItem,
@@ -36,6 +39,9 @@ export { setTableCellBackgroundColor } from './publicApi/table/setTableCellBackg
 export { isCharacterValue, isModifierKey } from './publicApi/domUtils/eventUtils';
 export { combineBorderValue, extractBorderValues } from './publicApi/domUtils/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stringUtil';
+export { parseTableCells, createTableRanges } from './publicApi/domUtils/tableCellUtils';
+export { undo } from './publicApi/undo/undo';
+export { redo } from './publicApi/undo/redo';
 
 export { updateImageMetadata } from './metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';
@@ -48,3 +54,4 @@ export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
 export { createStandaloneEditorCore } from './editor/createStandaloneEditorCore';
+export { createSnapshotsManager } from './editor/SnapshotsManagerImpl';

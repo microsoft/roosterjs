@@ -1,3 +1,5 @@
+import type { SnapshotsManager } from '../parameter/SnapshotsManager';
+import type { Snapshot } from '../parameter/Snapshot';
 import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
@@ -10,12 +12,7 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type {
-    EditorUndoState,
-    PluginEventData,
-    PluginEventFromType,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import type { PluginEventData, PluginEventFromType, PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * An interface of standalone Content Model editor.
@@ -62,7 +59,7 @@ export interface IStandaloneEditor {
      * This is the replacement of IEditor.select.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection): void;
+    setDOMSelection(selection: DOMSelection | null): void;
 
     /**
      * The general API to do format change with Content Model
@@ -117,9 +114,9 @@ export interface IStandaloneEditor {
     ): PluginEventFromType<T>;
 
     /**
-     * Whether there is an available undo/redo snapshot
+     * Get undo snapshots manager
      */
-    getUndoState(): EditorUndoState;
+    getSnapshotsManager(): SnapshotsManager;
 
     /**
      * Check if the editor is in dark mode
@@ -134,6 +131,23 @@ export interface IStandaloneEditor {
      * @returns current zoom scale number
      */
     getZoomScale(): number;
+
+    /**
+     * Add a single undo snapshot to undo stack
+     */
+    takeSnapshot(): void;
+
+    /**
+     * Restore an undo snapshot into editor
+     * @param snapshot The snapshot to restore
+     */
+    restoreSnapshot(snapshot: Snapshot): void;
+
+    /**
+     * Check if editor is in IME input sequence
+     * @returns True if editor is in IME input sequence, otherwise false
+     */
+    isInIME(): boolean;
 
     //#endregion
 }

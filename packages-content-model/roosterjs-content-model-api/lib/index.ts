@@ -21,9 +21,6 @@ export { default as changeCapitalization } from './publicApi/segment/changeCapit
 export { default as insertImage } from './publicApi/image/insertImage';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
-export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
-export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
-export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export { default as setIndentation } from './publicApi/block/setIndentation';
 export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';

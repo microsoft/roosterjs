@@ -1,3 +1,4 @@
+import type { UndoPluginState } from '../pluginState/UndoPluginState';
 import type { SelectionPluginState } from '../pluginState/SelectionPluginState';
 import type { EntityPluginState } from '../pluginState/EntityPluginState';
 import type { LifecyclePluginState } from '../pluginState/LifecyclePluginState';
@@ -39,6 +40,11 @@ export interface StandaloneEditorCorePlugins {
      * Entity Plugin handles all operations related to an entity and generate entity specified events
      */
     readonly entity: PluginWithState<EntityPluginState>;
+
+    /**
+     * Undo plugin provides the ability to undo/redo
+     */
+    readonly undo: PluginWithState<UndoPluginState>;
 
     /**
      * Lifecycle plugin handles editor initialization and disposing
