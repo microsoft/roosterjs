@@ -10,8 +10,6 @@ import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-mod
  * @param file The image file
  */
 export default function changeImage(editor: IStandaloneEditor, file: File) {
-    editor.focus();
-
     const selection = editor.getDOMSelection();
     readFile(file, dataUrl => {
         if (dataUrl && !editor.isDisposed() && selection?.type === 'image') {

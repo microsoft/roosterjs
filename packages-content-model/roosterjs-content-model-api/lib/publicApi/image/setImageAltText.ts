@@ -8,8 +8,6 @@ import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-mod
  * @param altText The image alt text
  */
 export default function setImageAltText(editor: IStandaloneEditor, altText: string) {
-    editor.focus();
-
     formatImageWithContentModel(editor, 'setImageAltText', (image: ContentModelImage) => {
         image.alt = altText;
     });

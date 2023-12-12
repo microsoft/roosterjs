@@ -9,8 +9,6 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
  * @param file Image Blob file or source string
  */
 export default function insertImage(editor: IStandaloneEditor, imageFileOrSrc: File | string) {
-    editor.focus();
-
     if (typeof imageFileOrSrc == 'string') {
         insertImageWithSrc(editor, imageFileOrSrc);
     } else {

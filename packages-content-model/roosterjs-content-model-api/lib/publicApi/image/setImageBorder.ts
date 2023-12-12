@@ -14,8 +14,6 @@ export default function setImageBorder(
     border: Border | null,
     borderRadius?: string
 ) {
-    editor.focus();
-
     formatImageWithContentModel(editor, 'setImageBorder', (image: ContentModelImage) => {
         applyImageBorderFormat(image, border, borderRadius);
     });
