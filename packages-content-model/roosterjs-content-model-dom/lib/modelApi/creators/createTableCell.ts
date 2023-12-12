@@ -1,6 +1,7 @@
 import type {
     ContentModelTableCell,
     ContentModelTableCellFormat,
+    DatasetFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -14,7 +15,8 @@ export function createTableCell(
     spanLeftOrColSpan?: boolean | number,
     spanAboveOrRowSpan?: boolean | number,
     isHeader?: boolean,
-    format?: ContentModelTableCellFormat
+    format?: ContentModelTableCellFormat,
+    dataset?: DatasetFormat
 ): ContentModelTableCell {
     const spanLeft =
         typeof spanLeftOrColSpan === 'number' ? spanLeftOrColSpan > 1 : !!spanLeftOrColSpan;
@@ -27,6 +29,6 @@ export function createTableCell(
         spanLeft,
         spanAbove,
         isHeader: !!isHeader,
-        dataset: {},
+        dataset: dataset ?? {},
     };
 }
