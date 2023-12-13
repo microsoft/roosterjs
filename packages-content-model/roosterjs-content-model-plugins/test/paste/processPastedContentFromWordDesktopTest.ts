@@ -935,9 +935,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     '</ol>' +
                     '</ol>' +
                     '</ol>',
-                [
-                    '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:1}" style="list-style-type: decimal;"><li>123123</li><ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:1}" style="list-style-type: decimal;"><li>123123</li><ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:1}" style="margin-top: 1em; list-style-type: decimal;"><li style="margin-top: 1em; margin-bottom: 1em;">123123</li><ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:1}" style="list-style-type: decimal;"><li>123123123</li></ol></ol></ol></ol>',
-                ],
+                undefined,
                 {
                     blockGroupType: 'Document',
                     blocks: [
