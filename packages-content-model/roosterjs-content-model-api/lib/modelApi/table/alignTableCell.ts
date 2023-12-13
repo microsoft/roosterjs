@@ -1,5 +1,4 @@
-import { getSelectedCells } from './getSelectedCells';
-import { updateTableCellMetadata } from 'roosterjs-content-model-core';
+import { getSelectedCells, updateTableCellMetadata } from 'roosterjs-content-model-core';
 import type {
     ContentModelTable,
     ContentModelTableCell,
@@ -63,7 +62,7 @@ function alignTableCellInternal(
 
     if (sel) {
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
-            for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
+            for (let colIndex = sel.firstColumn; colIndex <= sel.lastColumn; colIndex++) {
                 const cell = table.rows[rowIndex]?.cells[colIndex];
                 const format = cell?.format;
 
