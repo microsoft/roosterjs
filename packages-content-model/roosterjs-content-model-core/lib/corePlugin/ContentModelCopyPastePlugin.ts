@@ -5,6 +5,7 @@ import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types
 import { deleteEmptyList } from './utils/deleteEmptyList';
 import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
+import { getSelectedCells } from '../publicApi/table/getSelectedCells';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { paste } from '../publicApi/model/paste';
 import {
@@ -18,6 +19,7 @@ import {
     wrap,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelTable,
     DOMSelection,
     IStandaloneEditor,
     OnNodeCreated,
@@ -61,10 +63,16 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
      */
     initialize(editor: IEditor) {
         this.editor = editor as IStandaloneEditor & IEditor;
-        this.disposer = this.editor.addDomEventHandler({
-            paste: e => this.onPaste(e),
-            copy: e => this.onCutCopy(e, false /*isCut*/),
-            cut: e => this.onCutCopy(e, true /*isCut*/),
+        this.disposer = this.editor.attachDomEvent({
+            paste: {
+                beforeDispatch: e => this.onPaste(e),
+            },
+            copy: {
+                beforeDispatch: e => this.onCutCopy(e, false /*isCut*/),
+            },
+            cut: {
+                beforeDispatch: e => this.onCutCopy(e, true /*isCut*/),
+            },
         });
     }
 
@@ -122,15 +130,8 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
             if (selection.type === 'table') {
                 iterateSelections(pasteModel, (_, tableContext) => {
                     if (tableContext?.table) {
-                        const table = tableContext?.table;
-                        table.rows = table.rows
-                            .map(row => {
-                                return {
-                                    ...row,
-                                    cells: row.cells.filter(cell => cell.isSelected),
-                                };
-                            })
-                            .filter(row => row.cells.length > 0);
+                        preprocessTable(tableContext.table);
+
                         return true;
                     }
                     return false;
@@ -299,6 +300,28 @@ export const onNodeCreated: OnNodeCreated = (_, node): void => {
         node.removeAttribute('contenteditable');
     }
 };
+
+/**
+ * @internal
+ * Exported only for unit testing
+ */
+export function preprocessTable(table: ContentModelTable) {
+    const sel = getSelectedCells(table);
+    table.rows = table.rows
+        .map(row => {
+            return {
+                ...row,
+                cells: row.cells.filter(cell => cell.isSelected),
+            };
+        })
+        .filter(row => row.cells.length > 0);
+
+    delete table.format.width;
+
+    table.widths = sel
+        ? table.widths.filter((_, index) => index >= sel?.firstColumn && index <= sel?.lastColumn)
+        : [];
+}
 
 /**
  * @internal

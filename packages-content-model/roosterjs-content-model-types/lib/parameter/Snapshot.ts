@@ -1,3 +1,4 @@
+import type { TableSelectionCoordinates } from '../selection/TableSelectionCoordinates';
 import type { EntityState } from './FormatWithContentModelContext';
 import type { ModeIndependentColor } from 'roosterjs-editor-types';
 import type { SelectionType } from '../selection/DOMSelection';
@@ -30,31 +31,13 @@ export interface RangeSnapshotSelection extends SnapshotSelectionBase<'range'> {
 /**
  * Undo snapshot selection from table
  */
-export interface TableSnapshotSelection extends SnapshotSelectionBase<'table'> {
+export interface TableSnapshotSelection
+    extends TableSelectionCoordinates,
+        SnapshotSelectionBase<'table'> {
     /**
      * Id of selected table
      */
     tableId: string;
-
-    /**
-     * Number of first selected row
-     */
-    firstRow: number;
-
-    /**
-     * Number of last selected row
-     */
-    lastRow: number;
-
-    /**
-     * Number of first selected column
-     */
-    firstColumn: number;
-
-    /**
-     * Number of last selected column
-     */
-    lastColumn: number;
 }
 
 /**

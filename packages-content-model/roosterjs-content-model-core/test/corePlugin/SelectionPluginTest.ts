@@ -12,9 +12,7 @@ describe('SelectionPlugin', () => {
             .createSpy('createElement')
             .and.returnValue(MockedStyleNode);
         const appendChildSpy = jasmine.createSpy('appendChild');
-        const addDomEventHandler = jasmine
-            .createSpy('addDomEventHandler')
-            .and.returnValue(disposer);
+        const attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
         const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createElement: createElementSpy,
@@ -26,7 +24,7 @@ describe('SelectionPlugin', () => {
         const state = plugin.getState();
         const editor = ({
             getDocument: getDocumentSpy,
-            addDomEventHandler,
+            attachDomEvent,
             getEnvironment: () => ({}),
         } as any) as IStandaloneEditor & IEditor;
 
@@ -37,7 +35,7 @@ describe('SelectionPlugin', () => {
             selectionStyleNode: MockedStyleNode,
             imageSelectionBorderColor: undefined,
         });
-        expect(addDomEventHandler).toHaveBeenCalled();
+        expect(attachDomEvent).toHaveBeenCalled();
         expect(removeEventListenerSpy).not.toHaveBeenCalled();
         expect(disposer).not.toHaveBeenCalled();
 
@@ -53,8 +51,8 @@ describe('SelectionPlugin', () => {
         });
         const state = plugin.getState();
 
-        const addDomEventHandler = jasmine
-            .createSpy('addDomEventHandler')
+        const attachDomEvent = jasmine
+            .createSpy('attachDomEvent')
             .and.returnValue(jasmine.createSpy('disposer'));
         const createElementSpy = jasmine
             .createSpy('createElement')
@@ -71,7 +69,7 @@ describe('SelectionPlugin', () => {
 
         plugin.initialize(<IEditor>(<any>{
             getDocument: getDocumentSpy,
-            addDomEventHandler,
+            attachDomEvent,
             getEnvironment: () => ({}),
         }));
 
@@ -81,7 +79,7 @@ describe('SelectionPlugin', () => {
             imageSelectionBorderColor: 'red',
         });
 
-        expect(addDomEventHandler).toHaveBeenCalled();
+        expect(attachDomEvent).toHaveBeenCalled();
 
         plugin.dispose();
     });
@@ -121,7 +119,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
             getDocument: getDocumentSpy,
             triggerPluginEvent,
             getEnvironment: () => ({}),
-            addDomEventHandler: (map: Record<string, any>) => {
+            attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');
             },
@@ -142,7 +140,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         state.skipReselectOnFocus = false;
         state.selection = mockedRange;
 
-        eventMap.focus();
+        eventMap.focus.beforeDispatch();
         expect(plugin.getState()).toEqual({
             selection: mockedRange,
             selectionStyleNode: MockedStyleNode,
@@ -158,7 +156,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         state.skipReselectOnFocus = true;
         state.selection = mockedRange;
 
-        eventMap.focus();
+        eventMap.focus.beforeDispatch();
         expect(plugin.getState()).toEqual({
             selection: mockedRange,
             selectionStyleNode: MockedStyleNode,
@@ -195,7 +193,7 @@ describe('SelectionPlugin handle image selection', () => {
             setDOMSelection: setDOMSelectionSpy,
             getDocument: getDocumentSpy,
             getEnvironment: () => ({}),
-            addDomEventHandler: (map: Record<string, any>) => {
+            attachDomEvent: (map: Record<string, any>) => {
                 return jasmine.createSpy('disposer');
             },
         } as any;
