@@ -1,4 +1,4 @@
-import { hasSelectionInBlockGroup } from 'roosterjs-content-model-core';
+import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
 import type { ContentModelTable, TableSelectionCoordinates } from 'roosterjs-content-model-types';
 
 /**
