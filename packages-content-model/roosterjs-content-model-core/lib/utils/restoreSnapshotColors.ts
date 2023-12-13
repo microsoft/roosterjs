@@ -1,4 +1,4 @@
-import { ColorTransformDirection } from 'roosterjs-editor-types';
+import { transformColor } from '../publicApi/color/transformColor';
 import type { StandaloneEditorCore, Snapshot } from 'roosterjs-content-model-types';
 
 /**
@@ -13,14 +13,11 @@ export function restoreSnapshotColors(core: StandaloneEditorCore, snapshot: Snap
     });
 
     if (!!snapshot.isDarkMode != !!isDarkMode) {
-        core.api.transformColor(
-            core,
+        transformColor(
             core.contentDiv,
             false /*includeSelf*/,
-            null /*callback*/,
-            isDarkMode ? ColorTransformDirection.LightToDark : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/,
-            snapshot.isDarkMode
+            isDarkMode ? 'lightToDark' : 'darkToLight',
+            darkColorHandler
         );
     }
 }

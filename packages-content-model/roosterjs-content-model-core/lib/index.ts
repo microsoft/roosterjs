@@ -42,6 +42,7 @@ export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stri
 export { parseTableCells, createTableRanges } from './publicApi/domUtils/tableCellUtils';
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
+export { transformColor } from './publicApi/color/transformColor';
 
 export { updateImageMetadata } from './metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';

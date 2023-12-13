@@ -1,4 +1,5 @@
-import { ColorTransformDirection } from 'roosterjs-editor-types';
+import * as transformColor from '../../lib/publicApi/color/transformColor';
+import { DarkColorHandler } from 'roosterjs-editor-types';
 import { restoreSnapshotColors } from '../../lib/utils/restoreSnapshotColors';
 import { Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
@@ -6,21 +7,20 @@ describe('restoreSnapshotColors', () => {
     let core: StandaloneEditorCore;
     let registerColorSpy: jasmine.Spy;
     let transformColorSpy: jasmine.Spy;
+    let darkColorHandler: DarkColorHandler;
     const mockedDiv = 'DIV' as any;
 
     beforeEach(() => {
         registerColorSpy = jasmine.createSpy('registerColor');
-        transformColorSpy = jasmine.createSpy('transformColor');
+        transformColorSpy = spyOn(transformColor, 'transformColor');
+        darkColorHandler = {
+            registerColor: registerColorSpy,
+        } as any;
 
         core = {
             lifecycle: {},
             contentDiv: mockedDiv,
-            darkColorHandler: {
-                registerColor: registerColorSpy,
-            },
-            api: {
-                transformColor: transformColorSpy,
-            },
+            darkColorHandler,
         } as any;
     });
 
@@ -51,13 +51,10 @@ describe('restoreSnapshotColors', () => {
         expect(registerColorSpy).not.toHaveBeenCalled();
         expect(transformColorSpy).toHaveBeenCalledTimes(1);
         expect(transformColorSpy).toHaveBeenCalledWith(
-            core,
             mockedDiv,
             false,
-            null,
-            ColorTransformDirection.LightToDark,
-            true,
-            false
+            'lightToDark',
+            darkColorHandler
         );
     });
 
@@ -88,13 +85,10 @@ describe('restoreSnapshotColors', () => {
         expect(registerColorSpy).not.toHaveBeenCalled();
         expect(transformColorSpy).toHaveBeenCalledTimes(1);
         expect(transformColorSpy).toHaveBeenCalledWith(
-            core,
             mockedDiv,
             false,
-            null,
-            ColorTransformDirection.DarkToLight,
-            true,
-            true
+            'darkToLight',
+            darkColorHandler
         );
     });
 
@@ -157,13 +151,10 @@ describe('restoreSnapshotColors', () => {
 
         expect(transformColorSpy).toHaveBeenCalledTimes(1);
         expect(transformColorSpy).toHaveBeenCalledWith(
-            core,
             mockedDiv,
             false,
-            null,
-            ColorTransformDirection.LightToDark,
-            true,
-            false
+            'lightToDark',
+            darkColorHandler
         );
     });
 });

@@ -1,13 +1,9 @@
+import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
+import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
-    CompatibleColorTransformDirection,
-    CompatibleGetContentMode,
-} from 'roosterjs-editor-types/lib/compatibleTypes';
-import type {
-    ColorTransformDirection,
     ContentMetadata,
-    DOMEventHandler,
     DarkColorHandler,
     EditorPlugin,
     GetContentMode,
@@ -120,27 +116,6 @@ export type TriggerEvent = (
 ) => void;
 
 /**
- * Edit and transform color of elements between light mode and dark mode
- * @param core The StandaloneEditorCore object
- * @param rootNode The root HTML node to transform
- * @param includeSelf True to transform the root node as well, otherwise false
- * @param callback The callback function to invoke before do color transformation
- * @param direction To specify the transform direction, light to dark, or dark to light
- * @param forceTransform By default this function will only work when editor core is in dark mode.
- * Pass true to this value to force do color transformation even editor core is in light mode
- * @param fromDarkModel Whether the given content is already in dark mode
- */
-export type TransformColor = (
-    core: StandaloneEditorCore,
-    rootNode: Node | null,
-    includeSelf: boolean,
-    callback: (() => void) | null,
-    direction: ColorTransformDirection | CompatibleColorTransformDirection,
-    forceTransform?: boolean,
-    fromDarkMode?: boolean
-) => void;
-
-/**
  * Add an undo snapshot to current undo snapshot stack
  * @param core The StandaloneEditorCore object
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
@@ -205,7 +180,7 @@ export type InsertNode = (
  */
 export type AttachDomEvent = (
     core: StandaloneEditorCore,
-    eventMap: Record<string, DOMEventHandler>
+    eventMap: Record<string, DOMEventRecord>
 ) => () => void;
 
 /**
@@ -343,13 +318,14 @@ export interface PortedCoreApiMap {
      * @param step Steps to move, can be 0, positive or negative
      */
     restoreUndoSnapshot: RestoreUndoSnapshot;
-}
 
-/**
- * Temp interface
- * TODO: Port these core API
- */
-export interface UnportedCoreApiMap {
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param core The StandaloneEditorCore object
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent: AttachDomEvent;
+
     /**
      * Trigger a plugin event
      * @param core The StandaloneEditorCore object
@@ -357,20 +333,13 @@ export interface UnportedCoreApiMap {
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
+}
 
-    /**
-     * Edit and transform color of elements between light mode and dark mode
-     * @param core The StandaloneEditorCore object
-     * @param rootNode The root HTML element to transform
-     * @param includeSelf True to transform the root node as well, otherwise false
-     * @param callback The callback function to invoke before do color transformation
-     * @param direction To specify the transform direction, light to dark, or dark to light
-     * @param forceTransform By default this function will only work when editor core is in dark mode.
-     * Pass true to this value to force do color transformation even editor core is in light mode
-     * @param fromDarkModel Whether the given content is already in dark mode
-     */
-    transformColor: TransformColor;
-
+/**
+ * Temp interface
+ * TODO: Port these core API
+ */
+export interface UnportedCoreApiMap {
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * if triggerContentChangedEvent is set to true
@@ -386,15 +355,6 @@ export interface UnportedCoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
-
-    /**
-     * Attach a DOM event to the editor content DIV
-     * @param core The StandaloneEditorCore object
-     * @param eventName The DOM event name
-     * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
-     * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
-     */
-    attachDomEvent: AttachDomEvent;
 
     /**
      * Get current editor content as HTML string

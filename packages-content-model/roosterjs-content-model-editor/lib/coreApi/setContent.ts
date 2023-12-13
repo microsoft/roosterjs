@@ -1,6 +1,7 @@
-import { ChangeSource, ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource, transformColor } from 'roosterjs-content-model-core';
 import { convertMetadataToDOMSelection } from '../editor/utils/selectionConverter';
 import { extractContentMetadata, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentMetadata } from 'roosterjs-editor-types';
 import type { SetContent, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
@@ -44,14 +45,11 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
     const isDarkMode = core.lifecycle.isDarkMode;
 
     if ((!metadata && isDarkMode) || (metadata && !!metadata.isDarkMode != !!isDarkMode)) {
-        core.api.transformColor(
-            core,
+        transformColor(
             core.contentDiv,
             false /*includeSelf*/,
-            null /*callback*/,
-            isDarkMode ? ColorTransformDirection.LightToDark : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/,
-            metadata?.isDarkMode
+            isDarkMode ? 'lightToDark' : 'darkToLight',
+            core.darkColorHandler
         );
         contentChanged = true;
     }

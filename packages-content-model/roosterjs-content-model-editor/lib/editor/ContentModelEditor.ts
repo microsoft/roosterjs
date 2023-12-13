@@ -2,7 +2,7 @@ import { buildRangeEx } from './utils/buildRangeEx';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import { isBold, paste, redo, undo } from 'roosterjs-content-model-core';
+import { isBold, paste, redo, transformColor, undo } from 'roosterjs-content-model-core';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -90,6 +90,7 @@ import type {
     EditorEnvironment,
     Snapshot,
     SnapshotsManager,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -289,13 +290,11 @@ export class ContentModelEditor implements IContentModelEditor {
         const core = this.getCore();
         // Only replace the node when it falls within editor
         if (this.contains(existingNode) && toNode) {
-            core.api.transformColor(
-                core,
-                transformColorForDarkMode ? toNode : null,
-                true /*includeSelf*/,
-                () => existingNode.parentNode?.replaceChild(toNode, existingNode),
-                ColorTransformDirection.LightToDark
-            );
+            if (core.lifecycle.isDarkMode && transformColorForDarkMode) {
+                this.transformToDarkColor(toNode, ColorTransformDirection.LightToDark);
+            }
+
+            existingNode.parentNode?.replaceChild(toNode, existingNode);
 
             return true;
         }
@@ -612,13 +611,41 @@ export class ContentModelEditor implements IContentModelEditor {
 
     //#region EVENT API
 
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void {
+        const core = this.getCore();
+        return core.api.attachDomEvent(core, eventMap);
+    }
+
     addDomEventHandler(
         nameOrMap: string | Record<string, DOMEventHandler>,
         handler?: DOMEventHandler
     ): () => void {
-        const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
-        const core = this.getCore();
-        return core.api.attachDomEvent(core, eventsToMap);
+        const eventsMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
+        const eventsMapResult: Record<string, DOMEventRecord> = {};
+
+        getObjectKeys(eventsMap).forEach(key => {
+            const handlerObj = eventsMap[key];
+            let result: DOMEventRecord = {
+                pluginEventType: null,
+                beforeDispatch: null,
+            };
+
+            if (typeof handlerObj === 'number') {
+                result.pluginEventType = handlerObj as PluginEventType;
+            } else if (typeof handlerObj === 'function') {
+                result.beforeDispatch = handlerObj;
+            } else if (typeof handlerObj === 'object') {
+                result = handlerObj as DOMEventRecord;
+            }
+
+            eventsMapResult[key] = result;
+        });
+
+        return this.attachDomEvent(eventsMapResult);
     }
 
     /**
@@ -1039,16 +1066,11 @@ export class ContentModelEditor implements IContentModelEditor {
         }
         const core = this.getCore();
 
-        core.api.transformColor(
-            core,
+        transformColor(
             core.contentDiv,
-            false /*includeSelf*/,
-            null /*callback*/,
-            nextDarkMode
-                ? ColorTransformDirection.LightToDark
-                : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/,
-            isDarkMode
+            true /*includeSelf*/,
+            nextDarkMode ? 'lightToDark' : 'darkToLight',
+            core.darkColorHandler
         );
 
         this.triggerContentChangedEvent(
@@ -1076,7 +1098,13 @@ export class ContentModelEditor implements IContentModelEditor {
             | CompatibleColorTransformDirection = ColorTransformDirection.LightToDark
     ) {
         const core = this.getCore();
-        core.api.transformColor(core, node, true /*includeSelf*/, null /*callback*/, direction);
+
+        transformColor(
+            node,
+            true /*includeSelf*/,
+            direction == ColorTransformDirection.DarkToLight ? 'darkToLight' : 'lightToDark',
+            core.darkColorHandler
+        );
     }
 
     /**
