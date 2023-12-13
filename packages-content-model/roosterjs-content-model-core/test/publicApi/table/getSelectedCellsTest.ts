@@ -1,5 +1,5 @@
 import { addSegment, createBr, createTable, createTableCell } from 'roosterjs-content-model-dom';
-import { getSelectedCells } from '../../../lib/modelApi/table/getSelectedCells';
+import { getSelectedCells } from '../../../lib/publicApi/table/getSelectedCells';
 
 describe('getSelectedCells', () => {
     it('empty table', () => {
@@ -30,9 +30,9 @@ describe('getSelectedCells', () => {
 
         expect(selection).toEqual({
             firstRow: 1,
-            firstCol: 1,
+            firstColumn: 1,
             lastRow: 1,
-            lastCol: 1,
+            lastColumn: 1,
         });
     });
 
@@ -46,9 +46,9 @@ describe('getSelectedCells', () => {
 
         expect(selection).toEqual({
             firstRow: 0,
-            firstCol: 1,
+            firstColumn: 1,
             lastRow: 0,
-            lastCol: 1,
+            lastColumn: 1,
         });
     });
 
@@ -63,9 +63,9 @@ describe('getSelectedCells', () => {
 
         expect(selection).toEqual({
             firstRow: 0,
-            firstCol: 0,
+            firstColumn: 0,
             lastRow: 1,
-            lastCol: 1,
+            lastColumn: 1,
         });
     });
 });

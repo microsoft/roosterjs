@@ -1,24 +1,15 @@
 import { hasSelectionInBlockGroup } from 'roosterjs-content-model-core';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import type { ContentModelTable, TableSelectionCoordinates } from 'roosterjs-content-model-types';
 
 /**
- * @internal
- */
-export interface TableSelectionCoordinates {
-    firstRow: number;
-    firstCol: number;
-    lastRow: number;
-    lastCol: number;
-}
-
-/**
- * @internal
+ * Get selection coordinates of a table. If there is no selection, return null
+ * @param table The table model to get selection from
  */
 export function getSelectedCells(table: ContentModelTable): TableSelectionCoordinates | null {
     let firstRow = -1;
-    let firstCol = -1;
+    let firstColumn = -1;
     let lastRow = -1;
-    let lastCol = -1;
+    let lastColumn = -1;
     let hasSelection = false;
 
     table.rows.forEach((row, rowIndex) =>
@@ -30,15 +21,15 @@ export function getSelectedCells(table: ContentModelTable): TableSelectionCoordi
                     firstRow = rowIndex;
                 }
 
-                if (firstCol < 0) {
-                    firstCol = colIndex;
+                if (firstColumn < 0) {
+                    firstColumn = colIndex;
                 }
 
                 lastRow = Math.max(lastRow, rowIndex);
-                lastCol = Math.max(lastCol, colIndex);
+                lastColumn = Math.max(lastColumn, colIndex);
             }
         })
     );
 
-    return hasSelection ? { firstRow, firstCol, lastRow, lastCol } : null;
+    return hasSelection ? { firstRow, firstColumn, lastRow, lastColumn } : null;
 }

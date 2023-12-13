@@ -1,5 +1,5 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
-import { getSelectedCells } from './getSelectedCells';
+import { getSelectedCells } from 'roosterjs-content-model-core';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 const MIN_WIDTH = 30;
@@ -11,7 +11,7 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
     const sel = getSelectedCells(table);
 
     if (sel) {
-        for (let colIndex = sel.lastCol; colIndex >= sel.firstCol; colIndex--) {
+        for (let colIndex = sel.lastColumn; colIndex >= sel.firstColumn; colIndex--) {
             if (
                 table.rows.every(
                     (row, rowIndex) =>
