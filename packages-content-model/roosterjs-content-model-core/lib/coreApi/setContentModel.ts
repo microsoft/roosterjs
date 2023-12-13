@@ -31,6 +31,8 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
 
         if (!option?.ignoreSelection && selection) {
             core.api.setDOMSelection(core, selection);
+        } else if (!selection || selection.type !== 'range') {
+            core.selection.selection = selection;
         }
 
         core.cache.cachedModel = model;
