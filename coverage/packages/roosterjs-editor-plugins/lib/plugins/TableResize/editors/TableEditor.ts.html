@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">49.39% </span>
+                <span class="strong">50.94% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>81/164</span>
+                <span class='fraction'>81/159</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.5% </span>
+                <span class="strong">16.1% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/131</span>
+                <span class='fraction'>19/118</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">49.69% </span>
+                <span class="strong">51.27% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>81/163</span>
+                <span class='fraction'>81/158</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -470,18 +470,7 @@
 <a name='L411'></a><a href='#L411'>411</a>
 <a name='L412'></a><a href='#L412'>412</a>
 <a name='L413'></a><a href='#L413'>413</a>
-<a name='L414'></a><a href='#L414'>414</a>
-<a name='L415'></a><a href='#L415'>415</a>
-<a name='L416'></a><a href='#L416'>416</a>
-<a name='L417'></a><a href='#L417'>417</a>
-<a name='L418'></a><a href='#L418'>418</a>
-<a name='L419'></a><a href='#L419'>419</a>
-<a name='L420'></a><a href='#L420'>420</a>
-<a name='L421'></a><a href='#L421'>421</a>
-<a name='L422'></a><a href='#L422'>422</a>
-<a name='L423'></a><a href='#L423'>423</a>
-<a name='L424'></a><a href='#L424'>424</a>
-<a name='L425'></a><a href='#L425'>425</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L414'></a><a href='#L414'>414</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -605,12 +594,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -624,8 +607,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -649,9 +630,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1022,34 +1000,26 @@ export default class TableEditor {
     }
 &nbsp;
 <span class="fstat-no" title="function not covered" >    onMouseMove(</span>x: number, y: number) {
-        //Get Cell [0,0]
-        const firstCell = <span class="cstat-no" title="statement not covered" >this.table.rows[0]?.cells[0];</span>
+        // Get whole table rect
+        const tableRect = <span class="cstat-no" title="statement not covered" >normalizeRect(this.table.getBoundingClientRect());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (!firstCell) {</span>
-<span class="cstat-no" title="statement not covered" >            return;</span>
-        }
-&nbsp;
-        const firstCellRect = <span class="cstat-no" title="statement not covered" >normalizeRect(firstCell.getBoundingClientRect());</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        if (!firstCellRect) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!tableRect) {</span>
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
 &nbsp;
         // Determine if cursor is on top or side
         const topOrSide =
-<span class="cstat-no" title="statement not covered" >            y &lt;= firstCellRect.top + INSERTER_HOVER_OFFSET</span>
+<span class="cstat-no" title="statement not covered" >            y &lt;= tableRect.top + INSERTER_HOVER_OFFSET</span>
                 ? TOP_OR_SIDE.top
                 : this.isRTL
-                ? x &gt;= firstCellRect.right - INSERTER_HOVER_OFFSET
+                ? x &gt;= tableRect.right - INSERTER_HOVER_OFFSET
                     ? TOP_OR_SIDE.side
                     : undefined
-                : x &lt;= firstCellRect.left + INSERTER_HOVER_OFFSET
+                : x &lt;= tableRect.left + INSERTER_HOVER_OFFSET
                 ? TOP_OR_SIDE.side
                 : undefined;
         const topOrSideBinary = <span class="cstat-no" title="statement not covered" >topOrSide ? 1 : 0;</span>
 &nbsp;
-        // Get whole table rect
-        const tableRect = <span class="cstat-no" title="statement not covered" >normalizeRect(this.table.getBoundingClientRect());</span>
         // i is row index, j is column index
 <span class="cstat-no" title="statement not covered" >        for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; this.table.rows.length; i++) {</span>
             const tr = <span class="cstat-no" title="statement not covered" >this.table.rows[i];</span>
@@ -1073,9 +1043,6 @@ export default class TableEditor {
                     : x &gt;= tdRect.left - INSERTER_HOVER_OFFSET * topOrSideBinary;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (lessThanBottom &amp;&amp; lessThanRight &amp;&amp; moreThanLeft) {</span>
-                    const isOnLeftOrRight = <span class="cstat-no" title="statement not covered" >this.isRTL</span>
-                        ? tdRect.right &lt;= tableRect.right &amp;&amp; tdRect.right &gt;= tableRect.right - 1
-                        : tdRect.left &gt;= tableRect.left &amp;&amp; tdRect.left &lt;= tableRect.left + 1;
 <span class="cstat-no" title="statement not covered" >                    if (i === 0 &amp;&amp; topOrSide == TOP_OR_SIDE.top) {</span>
                         const center = <span class="cstat-no" title="statement not covered" >(tdRect.left + tdRect.right) / 2;</span>
                         const isOnRightHalf = <span class="cstat-no" title="statement not covered" >this.isRTL ? x &lt; center : x &gt; center;</span>
@@ -1083,7 +1050,7 @@ export default class TableEditor {
                             isOnRightHalf ? td : tr.cells[j - 1],
                             false /*isHorizontal*/
                         );
-                    } else <span class="cstat-no" title="statement not covered" >if (j === 0 &amp;&amp; topOrSide == TOP_OR_SIDE.side &amp;&amp; isOnLeftOrRight) {</span>
+                    } else <span class="cstat-no" title="statement not covered" >if (j === 0 &amp;&amp; topOrSide == TOP_OR_SIDE.side) {</span>
                         const tdAbove = <span class="cstat-no" title="statement not covered" >this.table.rows[i - 1]?.cells[0];</span>
                         const tdAboveRect = <span class="cstat-no" title="statement not covered" >tdAbove</span>
                             ? normalizeRect(tdAbove.getBoundingClientRect())
@@ -1336,7 +1303,7 @@ export default class TableEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Dec 13 2023 13:12:32 GMT+0000 (Coordinated Universal Time)
+                at Wed Dec 13 2023 17:10:17 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../prettify.js"></script>
