@@ -270,6 +270,7 @@ export {
     Snapshots,
 } from './parameter/Snapshot';
 export { SnapshotsManager } from './parameter/SnapshotsManager';
+export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
 
 export {
     ContentModelBeforePasteEvent,

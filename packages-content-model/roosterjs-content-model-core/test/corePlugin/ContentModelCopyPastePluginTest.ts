@@ -15,6 +15,7 @@ import {
     ContentModelFormatter,
     FormatWithContentModelOptions,
     IStandaloneEditor,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelCopyPastePlugin,
@@ -24,7 +25,6 @@ import {
 import {
     ClipboardData,
     ColorTransformDirection,
-    DOMEventHandlerFunction,
     EditorPlugin,
     IEditor,
 } from 'roosterjs-editor-types';
@@ -39,7 +39,7 @@ const allowedCustomPasteType = ['Test'];
 describe('ContentModelCopyPastePlugin |', () => {
     let editor: IEditor = null!;
     let plugin: EditorPlugin;
-    let domEvents: Record<string, DOMEventHandlerFunction> = {};
+    let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
 
     let selectionValue: DOMSelection;
@@ -99,13 +99,8 @@ describe('ContentModelCopyPastePlugin |', () => {
             allowedCustomPasteType,
         });
         editor = <IStandaloneEditor & IEditor>(<any>{
-            addDomEventHandler: (
-                nameOrMap: string | Record<string, DOMEventHandlerFunction>,
-                handler?: DOMEventHandlerFunction
-            ) => {
-                domEvents = ((typeof nameOrMap == 'string'
-                    ? { [nameOrMap]: handler! }
-                    : nameOrMap) as any) as Record<string, DOMEventHandlerFunction>;
+            attachDomEvent: (eventMap: Record<string, DOMEventRecord>) => {
+                domEvents = eventMap;
             },
             createContentModel: (options: any) => createContentModelSpy(options),
             triggerPluginEvent(eventType: any, data: any, broadcast: any) {
@@ -157,7 +152,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             focusSpy.and.callThrough();
             setDOMSelectionSpy.and.callThrough();
 
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(createContentModelSpy).not.toHaveBeenCalled();
@@ -183,7 +178,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -231,7 +226,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -275,7 +270,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -345,7 +340,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             });
 
             // Act
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -384,7 +379,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut?.(<Event>{});
+            domEvents.cut.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -419,7 +414,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut?.(<Event>{});
+            domEvents.cut.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -470,7 +465,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut?.(<Event>{});
+            domEvents.cut.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -519,7 +514,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut?.(<Event>{});
+            domEvents.cut.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -565,7 +560,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             });
             isDisposed.and.returnValue(false);
 
-            domEvents.paste?.(clipboardEvent);
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
 
             expect(pasteSpy).not.toHaveBeenCalledWith(clipboardData);
             expect(PasteFile.paste).toHaveBeenCalled();
@@ -597,7 +592,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             });
             isDisposed.and.returnValue(true);
 
-            domEvents.paste?.(clipboardEvent);
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
 
             expect(pasteSpy).not.toHaveBeenCalled();
             expect(extractClipboardItemsFile.default).toHaveBeenCalledWith(

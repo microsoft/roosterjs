@@ -90,6 +90,7 @@ import type {
     EditorEnvironment,
     Snapshot,
     SnapshotsManager,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -612,13 +613,41 @@ export class ContentModelEditor implements IContentModelEditor {
 
     //#region EVENT API
 
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void {
+        const core = this.getCore();
+        return core.api.attachDomEvent(core, eventMap);
+    }
+
     addDomEventHandler(
         nameOrMap: string | Record<string, DOMEventHandler>,
         handler?: DOMEventHandler
     ): () => void {
-        const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
-        const core = this.getCore();
-        return core.api.attachDomEvent(core, eventsToMap);
+        const eventsMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
+        const eventsMapResult: Record<string, DOMEventRecord> = {};
+
+        getObjectKeys(eventsMap).forEach(key => {
+            const handlerObj = eventsMap[key];
+            let result: DOMEventRecord = {
+                pluginEventType: null,
+                beforeDispatch: null,
+            };
+
+            if (typeof handlerObj === 'number') {
+                result.pluginEventType = handlerObj as PluginEventType;
+            } else if (typeof handlerObj === 'function') {
+                result.beforeDispatch = handlerObj;
+            } else if (typeof handlerObj === 'object') {
+                result = handlerObj as DOMEventRecord;
+            }
+
+            eventsMapResult[key] = result;
+        });
+
+        return this.attachDomEvent(eventsMapResult);
     }
 
     /**

@@ -63,10 +63,16 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
      */
     initialize(editor: IEditor) {
         this.editor = editor as IStandaloneEditor & IEditor;
-        this.disposer = this.editor.addDomEventHandler({
-            paste: e => this.onPaste(e),
-            copy: e => this.onCutCopy(e, false /*isCut*/),
-            cut: e => this.onCutCopy(e, true /*isCut*/),
+        this.disposer = this.editor.attachDomEvent({
+            paste: {
+                beforeDispatch: e => this.onPaste(e),
+            },
+            copy: {
+                beforeDispatch: e => this.onCutCopy(e, false /*isCut*/),
+            },
+            cut: {
+                beforeDispatch: e => this.onCutCopy(e, true /*isCut*/),
+            },
         });
     }
 
