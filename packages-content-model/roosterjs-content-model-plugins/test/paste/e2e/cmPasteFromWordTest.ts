@@ -25,7 +25,7 @@ describe(ID, () => {
     beforeEach(() => {
         editor = initEditor(ID);
         spyOn(wordFile, 'processPastedContentFromWordDesktop').and.callThrough();
-        delete clipboardData.snapshotBeforePaste;
+        delete clipboardData.modelBeforePaste;
     });
 
     afterEach(() => {
