@@ -4,6 +4,7 @@ import { ContentModelBeforePasteEvent, ContentModelDocument } from 'roosterjs-co
 import { expectEqual } from './e2e/testUtils';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import { processPastedContentFromWordDesktop } from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
+import { WordMetadata } from '../../lib/paste/WordDesktop/WordMetadata';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
@@ -248,7 +249,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 'mso-level-number-format': 'bullet',
             };
             spyOn(getStyleMetadata, 'default').and.returnValue(
-                new Map<string, getStyleMetadata.WordMetadata>().set('l0:level1', dta)
+                new Map<string, WordMetadata>().set('l0:level1', dta)
             );
 
             runTest(html, undefined /* expected html */, {
@@ -337,9 +338,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 'mso-level-number-format': 'bullet',
             };
             spyOn(getStyleMetadata, 'default').and.returnValue(
-                new Map<string, getStyleMetadata.WordMetadata>()
-                    .set('l0:level1', dta)
-                    .set('l0:level2', dta)
+                new Map<string, WordMetadata>().set('l0:level1', dta).set('l0:level2', dta)
             );
 
             runTest(html, undefined, {
@@ -436,9 +435,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 'mso-level-number-format': 'bullet',
             };
             spyOn(getStyleMetadata, 'default').and.returnValue(
-                new Map<string, getStyleMetadata.WordMetadata>()
-                    .set('l0:level1', dta)
-                    .set('l0:level3', dta)
+                new Map<string, WordMetadata>().set('l0:level1', dta).set('l0:level3', dta)
             );
 
             runTest(html, undefined, {
@@ -542,9 +539,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 'mso-level-number-format': 'bullet',
             };
             spyOn(getStyleMetadata, 'default').and.returnValue(
-                new Map<string, getStyleMetadata.WordMetadata>()
-                    .set('l0:level1', dta)
-                    .set('l1:level3', dta)
+                new Map<string, WordMetadata>().set('l0:level1', dta).set('l1:level3', dta)
             );
             runTest(html, undefined, {
                 blockGroupType: 'Document',
@@ -650,7 +645,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 'mso-level-number-format': 'bullet',
             };
             spyOn(getStyleMetadata, 'default').and.returnValue(
-                new Map<string, getStyleMetadata.WordMetadata>()
+                new Map<string, WordMetadata>()
                     .set('l1:level2', dta)
                     .set('l1:level3', dta)
                     .set('l1:level5', dta)
@@ -968,10 +963,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         startNumberOverride: 1,
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
                                     },
-                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
                                 },
                             ],
                             formatHolder: {
@@ -979,9 +974,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: true,
                                 format: {},
                             },
-                            format: {
-                                marginLeft: undefined,
-                            },
+                            format: {},
                         },
                         {
                             blockType: 'BlockGroup',
@@ -1003,20 +996,19 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
+                                    format: {},
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
                                     },
-                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
                                     format: {
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
                                         startNumberOverride: 1,
                                     },
-                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
                                 },
                             ],
                             formatHolder: {
@@ -1024,9 +1016,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: true,
                                 format: {},
                             },
-                            format: {
-                                marginLeft: undefined,
-                            },
+                            format: {},
                         },
                         {
                             blockType: 'BlockGroup',
@@ -1048,27 +1038,22 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
+                                    format: {},
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
                                     },
-                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
+                                    format: {},
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
                                     },
-                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
-                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -1083,7 +1068,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             format: {
                                 marginTop: '1em',
                                 marginBottom: '1em',
-                                marginLeft: undefined,
                             },
                         },
                         {
@@ -1106,36 +1090,30 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
+                                    format: {},
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
                                     },
-                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
+                                    format: {},
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
                                     },
-                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
                                     },
-                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
                                 },
                                 {
                                     listType: 'OL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        marginBottom: undefined,
-                                        startNumberOverride: 1,
-                                    },
+                                    format: {},
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
                                     },
@@ -1146,12 +1124,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: true,
                                 format: {},
                             },
-                            format: {
-                                marginLeft: undefined,
-                            },
+                            format: {},
                         },
                     ],
-                }
+                },
+                true
             );
         });
 
@@ -1160,7 +1137,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 '<p style="margin:0in;font-size:12pt;font-family:Calibri, sans-serif">Test</p><p style="margin:0in;font-size:12pt;font-family:Calibri, sans-serif">Test</p><p style="margin:0in 0in 0in 0.5in;font-size:12pt;font-family:Calibri, sans-serif;text-indent:-.25in;mso-list:l0 level1 lfo1"><span style="font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n</span></span></span>TEST</p>';
 
             spyOn(getStyleMetadata, 'default').and.returnValue(
-                new Map<string, getStyleMetadata.WordMetadata>().set('l0:level1', {
+                new Map<string, WordMetadata>().set('l0:level1', {
                     'mso-level-number-format': 'bullet',
                 })
             );
@@ -1347,7 +1324,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         marginBottom: undefined,
-                                        startNumberOverride: 1,
                                     },
                                 },
                             ],
@@ -1471,7 +1447,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -1513,7 +1488,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -1618,7 +1592,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 52,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":6}',
@@ -1735,7 +1708,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":6}',
@@ -1813,7 +1785,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 65,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -1909,7 +1880,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 15,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":3}',
@@ -2005,7 +1975,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":17}',
@@ -2101,7 +2070,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":5}',
@@ -2197,7 +2165,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -2293,7 +2260,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":13}',

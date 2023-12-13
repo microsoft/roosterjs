@@ -201,15 +201,13 @@ function startNumberOverrideParser(
             wordKnownLevels,
             wordLevel,
             wordList,
+            levels,
         } = context.listFormat as WordDesktopListFormat;
         if (typeof wordLevel === 'number' && wordList) {
             const start = parseInt(listMetadata?.['mso-level-start-at'] || '1');
-            const levels = wordKnownLevels?.get(wordList);
-            const supportCurrentLevel =
-                levels == undefined || levels[wordLevel - 1]
-                    ? levels?.[wordLevel - 1].format.startNumberOverride != start
-                    : true;
-            if (start != undefined && !isNaN(start) && supportCurrentLevel) {
+            const knownLevel = wordKnownLevels?.get(wordList) || [];
+
+            if (start != undefined && !isNaN(start) && knownLevel.length != levels.length) {
                 format.startNumberOverride = start;
             }
         }
