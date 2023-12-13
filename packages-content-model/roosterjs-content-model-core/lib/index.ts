@@ -40,7 +40,7 @@ export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stri
 export { updateImageMetadata } from './metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './metadata/updateTableMetadata';
-export { updateListMetadata } from './metadata/updateListMetadata';
+export { updateListMetadata, getListStyleTypeFromString } from './metadata/updateListMetadata';
 
 export { ChangeSource } from './constants/ChangeSource';
 export { BulletListType } from './constants/BulletListType';

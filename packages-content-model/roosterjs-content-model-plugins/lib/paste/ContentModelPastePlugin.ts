@@ -101,7 +101,7 @@ export class ContentModelPastePlugin implements EditorPlugin {
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(ev);
+                processPastedContentFromWordDesktop(ev, this.editor.getTrustedHTMLHandler());
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(ev);
