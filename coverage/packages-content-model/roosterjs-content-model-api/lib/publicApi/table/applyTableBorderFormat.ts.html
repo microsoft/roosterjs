@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.38% </span>
+                <span class="strong">79.25% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>127/160</span>
+                <span class='fraction'>126/159</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.71% </span>
+                <span class="strong">78.57% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>122/155</span>
+                <span class='fraction'>121/154</span>
             </div>
         
             
@@ -484,9 +484,10 @@
 <a name='L425'></a><a href='#L425'>425</a>
 <a name='L426'></a><a href='#L426'>426</a>
 <a name='L427'></a><a href='#L427'>427</a>
-<a name='L428'></a><a href='#L428'>428</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L428'></a><a href='#L428'>428</a>
+<a name='L429'></a><a href='#L429'>429</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -688,6 +689,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -911,11 +913,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getSelectedCells } from '../../modelApi/table/getSelectedCells';
-import { parseValueWithUnit } from 'roosterjs-content-model-dom';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import {
     extractBorderValues,
     getFirstSelectedTable,
+    getSelectedCells,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-core';
 import type {
@@ -924,8 +926,8 @@ import type {
     ContentModelTable,
     ContentModelTableCell,
     BorderOperations,
+    TableSelectionCoordinates,
 } from 'roosterjs-content-model-types';
-import type { TableSelectionCoordinates } from '../../modelApi/table/getSelectedCells';
 &nbsp;
 /**
  * @internal
@@ -1022,8 +1024,8 @@ export default function applyTableBorderFormat(
                                     rowIndex++
                                 ) {
                                     for (
-                                        let colIndex = sel.firstCol;
-                                        colIndex &lt;= sel.lastCol;
+                                        let colIndex = sel.firstColumn;
+                                        colIndex &lt;= sel.lastColumn;
                                         colIndex++
                                     ) {
                                         const cell = tableModel.rows[rowIndex].cells[colIndex];
@@ -1045,7 +1047,7 @@ export default function applyTableBorderFormat(
                                     rowIndex &lt;= sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = tableModel.rows[rowIndex].cells[sel.firstCol];
+                                    const cell = tableModel.rows[rowIndex].cells[sel.firstColumn];
                                     // Format cells - Left border
                                     applyBorderFormat(cell, borderFormat, leftBorder);
                                 }
@@ -1060,7 +1062,7 @@ export default function applyTableBorderFormat(
                                     rowIndex &lt;= sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = tableModel.rows[rowIndex].cells[sel.lastCol];
+                                    const cell = tableModel.rows[rowIndex].cells[sel.lastColumn];
                                     // Format cells - Right border
                                     applyBorderFormat(cell, borderFormat, rightBorder);
                                 }
@@ -1071,8 +1073,8 @@ export default function applyTableBorderFormat(
                             case 'topBorders':
                                 const topBorder: BorderPositions[] = ['borderTop'];
                                 for (
-                                    let colIndex = sel.firstCol;
-                                    colIndex &lt;= sel.lastCol;
+                                    let colIndex = sel.firstColumn;
+                                    colIndex &lt;= sel.lastColumn;
                                     colIndex++
                                 ) {
                                     const cell = tableModel.rows[sel.firstRow].cells[colIndex];
@@ -1086,8 +1088,8 @@ export default function applyTableBorderFormat(
                             case 'bottomBorders':
                                 const bottomBorder: BorderPositions[] = ['borderBottom'];
                                 for (
-                                    let colIndex = sel.firstCol;
-                                    colIndex &lt;= sel.lastCol;
+                                    let colIndex = sel.firstColumn;
+                                    colIndex &lt;= sel.lastColumn;
                                     colIndex++
                                 ) {
                                     const cell = tableModel.rows[sel.lastRow].cells[colIndex];
@@ -1100,7 +1102,7 @@ export default function applyTableBorderFormat(
                                 break;
                             case 'insideBorders':
                                 // Format cells - Inside borders
-                                const singleCol = sel.lastCol == sel.firstCol;
+                                const singleCol = sel.lastColumn == sel.firstColumn;
                                 const singleRow = sel.lastRow == sel.firstRow;
                                 // Single cell selection
                                 <span class="missing-if-branch" title="if path not taken" >I</span>if (singleCol &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >singleRow)</span> {
@@ -1109,7 +1111,7 @@ export default function applyTableBorderFormat(
                                 // Single column selection
                                 <span class="missing-if-branch" title="if path not taken" >I</span>if (singleCol) {
 <span class="cstat-no" title="statement not covered" >                                    applyBorderFormat(</span>
-                                        tableModel.rows[sel.firstRow].cells[sel.firstCol],
+                                        tableModel.rows[sel.firstRow].cells[sel.firstColumn],
                                         borderFormat,
                                         ['borderBottom']
                                     );
@@ -1118,14 +1120,15 @@ export default function applyTableBorderFormat(
                                         rowIndex &lt;= sel.lastRow - 1;
                                         rowIndex++
                                     ) {
-                                        const cell = <span class="cstat-no" title="statement not covered" >tableModel.rows[rowIndex].cells[sel.firstCol];</span>
+                                        const cell =
+<span class="cstat-no" title="statement not covered" >                                            tableModel.rows[rowIndex].cells[sel.firstColumn];</span>
 <span class="cstat-no" title="statement not covered" >                                        applyBorderFormat(cell, borderFormat, [</span>
                                             'borderTop',
                                             'borderBottom',
                                         ]);
                                     }
 <span class="cstat-no" title="statement not covered" >                                    applyBorderFormat(</span>
-                                        tableModel.rows[sel.lastRow].cells[sel.firstCol],
+                                        tableModel.rows[sel.lastRow].cells[sel.firstColumn],
                                         borderFormat,
                                         ['borderTop']
                                     );
@@ -1134,13 +1137,13 @@ export default function applyTableBorderFormat(
                                 // Single row selection
                                 <span class="missing-if-branch" title="if path not taken" >I</span>if (singleRow) {
 <span class="cstat-no" title="statement not covered" >                                    applyBorderFormat(</span>
-                                        tableModel.rows[sel.firstRow].cells[sel.firstCol],
+                                        tableModel.rows[sel.firstRow].cells[sel.firstColumn],
                                         borderFormat,
                                         ['borderRight']
                                     );
 <span class="cstat-no" title="statement not covered" >                                    for (</span>
-                                        let colIndex = <span class="cstat-no" title="statement not covered" >sel.firstCol + 1;</span>
-                                        colIndex &lt;= sel.lastCol - 1;
+                                        let colIndex = <span class="cstat-no" title="statement not covered" >sel.firstColumn + 1;</span>
+                                        colIndex &lt;= sel.lastColumn - 1;
                                         colIndex++
                                     ) {
                                         const cell = <span class="cstat-no" title="statement not covered" >tableModel.rows[sel.firstRow].cells[colIndex];</span>
@@ -1150,7 +1153,7 @@ export default function applyTableBorderFormat(
                                         ]);
                                     }
 <span class="cstat-no" title="statement not covered" >                                    applyBorderFormat(</span>
-                                        tableModel.rows[sel.firstRow].cells[sel.lastCol],
+                                        tableModel.rows[sel.firstRow].cells[sel.lastColumn],
                                         borderFormat,
                                         ['borderLeft']
                                     );
@@ -1160,32 +1163,32 @@ export default function applyTableBorderFormat(
                                 // For multiple rows and columns selections
                                 // Top left cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.firstRow].cells[sel.firstCol],
+                                    tableModel.rows[sel.firstRow].cells[sel.firstColumn],
                                     borderFormat,
                                     ['borderBottom', 'borderRight']
                                 );
                                 // Top right cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.firstRow].cells[sel.lastCol],
+                                    tableModel.rows[sel.firstRow].cells[sel.lastColumn],
                                     borderFormat,
                                     ['borderBottom', 'borderLeft']
                                 );
                                 // Bottom left cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.lastRow].cells[sel.firstCol],
+                                    tableModel.rows[sel.lastRow].cells[sel.firstColumn],
                                     borderFormat,
                                     ['borderTop', 'borderRight']
                                 );
                                 // Bottom right cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.lastRow].cells[sel.lastCol],
+                                    tableModel.rows[sel.lastRow].cells[sel.lastColumn],
                                     borderFormat,
                                     ['borderTop', 'borderLeft']
                                 );
                                 // First row
                                 for (
-                                    let colIndex = sel.firstCol + 1;
-                                    colIndex &lt; sel.lastCol;
+                                    let colIndex = sel.firstColumn + 1;
+                                    colIndex &lt; sel.lastColumn;
                                     colIndex++
                                 ) {
                                     const cell = <span class="cstat-no" title="statement not covered" >tableModel.rows[sel.firstRow].cells[colIndex];</span>
@@ -1197,8 +1200,8 @@ export default function applyTableBorderFormat(
                                 }
                                 // Last row
                                 for (
-                                    let colIndex = sel.firstCol + 1;
-                                    colIndex &lt; sel.lastCol;
+                                    let colIndex = sel.firstColumn + 1;
+                                    colIndex &lt; sel.lastColumn;
                                     colIndex++
                                 ) {
                                     const cell = <span class="cstat-no" title="statement not covered" >tableModel.rows[sel.lastRow].cells[colIndex];</span>
@@ -1214,7 +1217,7 @@ export default function applyTableBorderFormat(
                                     rowIndex &lt; sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = <span class="cstat-no" title="statement not covered" >tableModel.rows[rowIndex].cells[sel.firstCol];</span>
+                                    const cell = <span class="cstat-no" title="statement not covered" >tableModel.rows[rowIndex].cells[sel.firstColumn];</span>
 <span class="cstat-no" title="statement not covered" >                                    applyBorderFormat(cell, borderFormat, [</span>
                                         'borderTop',
                                         'borderBottom',
@@ -1227,7 +1230,7 @@ export default function applyTableBorderFormat(
                                     rowIndex &lt; sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = <span class="cstat-no" title="statement not covered" >tableModel.rows[rowIndex].cells[sel.lastCol];</span>
+                                    const cell = <span class="cstat-no" title="statement not covered" >tableModel.rows[rowIndex].cells[sel.lastColumn];</span>
 <span class="cstat-no" title="statement not covered" >                                    applyBorderFormat(cell, borderFormat, [</span>
                                         'borderTop',
                                         'borderBottom',
@@ -1235,9 +1238,9 @@ export default function applyTableBorderFormat(
                                     ]);
                                 }
                                 // Inner cells
-                                sel.firstCol++;
+                                sel.firstColumn++;
                                 sel.firstRow++;
-                                sel.lastCol--;
+                                sel.lastColumn--;
                                 sel.lastRow--;
                                 operations.push('allBorders');
                                 break;
@@ -1311,29 +1314,29 @@ function modifyPerimeter(
 ) {
     // Top of selection
     if (perimeter.Top &amp;&amp; sel.firstRow - 1 &gt;= 0) {
-        for (let colIndex = sel.firstCol; colIndex &lt;= sel.lastCol; colIndex++) {
+        for (let colIndex = sel.firstColumn; colIndex &lt;= sel.lastColumn; colIndex++) {
             const cell = tableModel.rows[sel.firstRow - 1].cells[colIndex];
             applyBorderFormat(cell, borderFormat, ['borderBottom']);
         }
     }
     // Bottom of selection
     if (perimeter.Bottom &amp;&amp; sel.lastRow + 1 &lt; tableModel.rows.length) {
-        for (let colIndex = sel.firstCol; colIndex &lt;= sel.lastCol; colIndex++) {
+        for (let colIndex = sel.firstColumn; colIndex &lt;= sel.lastColumn; colIndex++) {
             const cell = tableModel.rows[sel.lastRow + 1].cells[colIndex];
             applyBorderFormat(cell, borderFormat, ['borderTop']);
         }
     }
     // Left of selection
-    if (perimeter.Left &amp;&amp; sel.firstCol - 1 &gt;= 0) {
+    if (perimeter.Left &amp;&amp; sel.firstColumn - 1 &gt;= 0) {
         for (let rowIndex = sel.firstRow; rowIndex &lt;= sel.lastRow; rowIndex++) {
-            const cell = tableModel.rows[rowIndex].cells[sel.firstCol - 1];
+            const cell = tableModel.rows[rowIndex].cells[sel.firstColumn - 1];
             applyBorderFormat(cell, borderFormat, ['borderRight']);
         }
     }
     // Right of selection
-    if (perimeter.Right &amp;&amp; sel.lastCol + 1 &lt; tableModel.rows[0].cells.length) {
+    if (perimeter.Right &amp;&amp; sel.lastColumn + 1 &lt; tableModel.rows[0].cells.length) {
         for (let rowIndex = sel.firstRow; rowIndex &lt;= sel.lastRow; rowIndex++) {
-            const cell = tableModel.rows[rowIndex].cells[sel.lastCol + 1];
+            const cell = tableModel.rows[rowIndex].cells[sel.lastColumn + 1];
             applyBorderFormat(cell, borderFormat, ['borderLeft']);
         }
     }
@@ -1345,7 +1348,7 @@ function modifyPerimeter(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Dec 13 2023 17:51:35 GMT+0000 (Coordinated Universal Time)
+                at Wed Dec 13 2023 18:55:19 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
