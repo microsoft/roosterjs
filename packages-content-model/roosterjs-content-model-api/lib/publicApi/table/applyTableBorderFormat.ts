@@ -1,8 +1,8 @@
-import { getSelectedCells } from '../../modelApi/table/getSelectedCells';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import {
     extractBorderValues,
     getFirstSelectedTable,
+    getSelectedCells,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-core';
 import type {
@@ -11,8 +11,8 @@ import type {
     ContentModelTable,
     ContentModelTableCell,
     BorderOperations,
+    TableSelectionCoordinates,
 } from 'roosterjs-content-model-types';
-import type { TableSelectionCoordinates } from '../../modelApi/table/getSelectedCells';
 
 /**
  * @internal
@@ -109,8 +109,8 @@ export default function applyTableBorderFormat(
                                     rowIndex++
                                 ) {
                                     for (
-                                        let colIndex = sel.firstCol;
-                                        colIndex <= sel.lastCol;
+                                        let colIndex = sel.firstColumn;
+                                        colIndex <= sel.lastColumn;
                                         colIndex++
                                     ) {
                                         const cell = tableModel.rows[rowIndex].cells[colIndex];
@@ -132,7 +132,7 @@ export default function applyTableBorderFormat(
                                     rowIndex <= sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = tableModel.rows[rowIndex].cells[sel.firstCol];
+                                    const cell = tableModel.rows[rowIndex].cells[sel.firstColumn];
                                     // Format cells - Left border
                                     applyBorderFormat(cell, borderFormat, leftBorder);
                                 }
@@ -147,7 +147,7 @@ export default function applyTableBorderFormat(
                                     rowIndex <= sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = tableModel.rows[rowIndex].cells[sel.lastCol];
+                                    const cell = tableModel.rows[rowIndex].cells[sel.lastColumn];
                                     // Format cells - Right border
                                     applyBorderFormat(cell, borderFormat, rightBorder);
                                 }
@@ -158,8 +158,8 @@ export default function applyTableBorderFormat(
                             case 'topBorders':
                                 const topBorder: BorderPositions[] = ['borderTop'];
                                 for (
-                                    let colIndex = sel.firstCol;
-                                    colIndex <= sel.lastCol;
+                                    let colIndex = sel.firstColumn;
+                                    colIndex <= sel.lastColumn;
                                     colIndex++
                                 ) {
                                     const cell = tableModel.rows[sel.firstRow].cells[colIndex];
@@ -173,8 +173,8 @@ export default function applyTableBorderFormat(
                             case 'bottomBorders':
                                 const bottomBorder: BorderPositions[] = ['borderBottom'];
                                 for (
-                                    let colIndex = sel.firstCol;
-                                    colIndex <= sel.lastCol;
+                                    let colIndex = sel.firstColumn;
+                                    colIndex <= sel.lastColumn;
                                     colIndex++
                                 ) {
                                     const cell = tableModel.rows[sel.lastRow].cells[colIndex];
@@ -187,7 +187,7 @@ export default function applyTableBorderFormat(
                                 break;
                             case 'insideBorders':
                                 // Format cells - Inside borders
-                                const singleCol = sel.lastCol == sel.firstCol;
+                                const singleCol = sel.lastColumn == sel.firstColumn;
                                 const singleRow = sel.lastRow == sel.firstRow;
                                 // Single cell selection
                                 if (singleCol && singleRow) {
@@ -196,7 +196,7 @@ export default function applyTableBorderFormat(
                                 // Single column selection
                                 if (singleCol) {
                                     applyBorderFormat(
-                                        tableModel.rows[sel.firstRow].cells[sel.firstCol],
+                                        tableModel.rows[sel.firstRow].cells[sel.firstColumn],
                                         borderFormat,
                                         ['borderBottom']
                                     );
@@ -205,14 +205,15 @@ export default function applyTableBorderFormat(
                                         rowIndex <= sel.lastRow - 1;
                                         rowIndex++
                                     ) {
-                                        const cell = tableModel.rows[rowIndex].cells[sel.firstCol];
+                                        const cell =
+                                            tableModel.rows[rowIndex].cells[sel.firstColumn];
                                         applyBorderFormat(cell, borderFormat, [
                                             'borderTop',
                                             'borderBottom',
                                         ]);
                                     }
                                     applyBorderFormat(
-                                        tableModel.rows[sel.lastRow].cells[sel.firstCol],
+                                        tableModel.rows[sel.lastRow].cells[sel.firstColumn],
                                         borderFormat,
                                         ['borderTop']
                                     );
@@ -221,13 +222,13 @@ export default function applyTableBorderFormat(
                                 // Single row selection
                                 if (singleRow) {
                                     applyBorderFormat(
-                                        tableModel.rows[sel.firstRow].cells[sel.firstCol],
+                                        tableModel.rows[sel.firstRow].cells[sel.firstColumn],
                                         borderFormat,
                                         ['borderRight']
                                     );
                                     for (
-                                        let colIndex = sel.firstCol + 1;
-                                        colIndex <= sel.lastCol - 1;
+                                        let colIndex = sel.firstColumn + 1;
+                                        colIndex <= sel.lastColumn - 1;
                                         colIndex++
                                     ) {
                                         const cell = tableModel.rows[sel.firstRow].cells[colIndex];
@@ -237,7 +238,7 @@ export default function applyTableBorderFormat(
                                         ]);
                                     }
                                     applyBorderFormat(
-                                        tableModel.rows[sel.firstRow].cells[sel.lastCol],
+                                        tableModel.rows[sel.firstRow].cells[sel.lastColumn],
                                         borderFormat,
                                         ['borderLeft']
                                     );
@@ -247,32 +248,32 @@ export default function applyTableBorderFormat(
                                 // For multiple rows and columns selections
                                 // Top left cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.firstRow].cells[sel.firstCol],
+                                    tableModel.rows[sel.firstRow].cells[sel.firstColumn],
                                     borderFormat,
                                     ['borderBottom', 'borderRight']
                                 );
                                 // Top right cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.firstRow].cells[sel.lastCol],
+                                    tableModel.rows[sel.firstRow].cells[sel.lastColumn],
                                     borderFormat,
                                     ['borderBottom', 'borderLeft']
                                 );
                                 // Bottom left cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.lastRow].cells[sel.firstCol],
+                                    tableModel.rows[sel.lastRow].cells[sel.firstColumn],
                                     borderFormat,
                                     ['borderTop', 'borderRight']
                                 );
                                 // Bottom right cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.lastRow].cells[sel.lastCol],
+                                    tableModel.rows[sel.lastRow].cells[sel.lastColumn],
                                     borderFormat,
                                     ['borderTop', 'borderLeft']
                                 );
                                 // First row
                                 for (
-                                    let colIndex = sel.firstCol + 1;
-                                    colIndex < sel.lastCol;
+                                    let colIndex = sel.firstColumn + 1;
+                                    colIndex < sel.lastColumn;
                                     colIndex++
                                 ) {
                                     const cell = tableModel.rows[sel.firstRow].cells[colIndex];
@@ -284,8 +285,8 @@ export default function applyTableBorderFormat(
                                 }
                                 // Last row
                                 for (
-                                    let colIndex = sel.firstCol + 1;
-                                    colIndex < sel.lastCol;
+                                    let colIndex = sel.firstColumn + 1;
+                                    colIndex < sel.lastColumn;
                                     colIndex++
                                 ) {
                                     const cell = tableModel.rows[sel.lastRow].cells[colIndex];
@@ -301,7 +302,7 @@ export default function applyTableBorderFormat(
                                     rowIndex < sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = tableModel.rows[rowIndex].cells[sel.firstCol];
+                                    const cell = tableModel.rows[rowIndex].cells[sel.firstColumn];
                                     applyBorderFormat(cell, borderFormat, [
                                         'borderTop',
                                         'borderBottom',
@@ -314,7 +315,7 @@ export default function applyTableBorderFormat(
                                     rowIndex < sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = tableModel.rows[rowIndex].cells[sel.lastCol];
+                                    const cell = tableModel.rows[rowIndex].cells[sel.lastColumn];
                                     applyBorderFormat(cell, borderFormat, [
                                         'borderTop',
                                         'borderBottom',
@@ -322,9 +323,9 @@ export default function applyTableBorderFormat(
                                     ]);
                                 }
                                 // Inner cells
-                                sel.firstCol++;
+                                sel.firstColumn++;
                                 sel.firstRow++;
-                                sel.lastCol--;
+                                sel.lastColumn--;
                                 sel.lastRow--;
                                 operations.push('allBorders');
                                 break;
@@ -398,29 +399,29 @@ function modifyPerimeter(
 ) {
     // Top of selection
     if (perimeter.Top && sel.firstRow - 1 >= 0) {
-        for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
+        for (let colIndex = sel.firstColumn; colIndex <= sel.lastColumn; colIndex++) {
             const cell = tableModel.rows[sel.firstRow - 1].cells[colIndex];
             applyBorderFormat(cell, borderFormat, ['borderBottom']);
         }
     }
     // Bottom of selection
     if (perimeter.Bottom && sel.lastRow + 1 < tableModel.rows.length) {
-        for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
+        for (let colIndex = sel.firstColumn; colIndex <= sel.lastColumn; colIndex++) {
             const cell = tableModel.rows[sel.lastRow + 1].cells[colIndex];
             applyBorderFormat(cell, borderFormat, ['borderTop']);
         }
     }
     // Left of selection
-    if (perimeter.Left && sel.firstCol - 1 >= 0) {
+    if (perimeter.Left && sel.firstColumn - 1 >= 0) {
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
-            const cell = tableModel.rows[rowIndex].cells[sel.firstCol - 1];
+            const cell = tableModel.rows[rowIndex].cells[sel.firstColumn - 1];
             applyBorderFormat(cell, borderFormat, ['borderRight']);
         }
     }
     // Right of selection
-    if (perimeter.Right && sel.lastCol + 1 < tableModel.rows[0].cells.length) {
+    if (perimeter.Right && sel.lastColumn + 1 < tableModel.rows[0].cells.length) {
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
-            const cell = tableModel.rows[rowIndex].cells[sel.lastCol + 1];
+            const cell = tableModel.rows[rowIndex].cells[sel.lastColumn + 1];
             applyBorderFormat(cell, borderFormat, ['borderLeft']);
         }
     }

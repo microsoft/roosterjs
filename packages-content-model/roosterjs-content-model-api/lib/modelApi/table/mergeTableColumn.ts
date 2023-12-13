@@ -1,5 +1,5 @@
 import { canMergeCells } from './canMergeCells';
-import { getSelectedCells } from './getSelectedCells';
+import { getSelectedCells } from 'roosterjs-content-model-core';
 import type {
     ContentModelTable,
     TableHorizontalMergeOperation,
@@ -16,7 +16,7 @@ export function mergeTableColumn(
     const mergeLeft = operation == 'mergeLeft';
 
     if (sel) {
-        const mergingColIndex = mergeLeft ? sel.firstCol : sel.lastCol + 1;
+        const mergingColIndex = mergeLeft ? sel.firstColumn : sel.lastColumn + 1;
 
         if (mergingColIndex > 0 && mergingColIndex < table.rows[0].cells.length) {
             for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
