@@ -18,10 +18,9 @@ export function createEditorCore(
     const corePlugins = createCorePlugins(options);
     const pluginState = getPluginState(corePlugins);
     const additionalPlugins: EditorPlugin[] = [
+        corePlugins.eventTranslate,
         corePlugins.edit,
         ...(options.plugins ?? []),
-        corePlugins.undo,
-        corePlugins.imageSelection,
         corePlugins.normalizeTable,
     ].filter(x => !!x);
 
@@ -32,7 +31,8 @@ export function createEditorCore(
         options.initialModel = createModelFromHtml(
             initContent,
             options.defaultDomToModelOptions,
-            options.trustedHTMLHandler
+            options.trustedHTMLHandler,
+            options.defaultSegmentFormat
         );
     }
 

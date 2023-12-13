@@ -2,6 +2,7 @@ import { addRangeToSelection } from './utils/addRangeToSelection';
 import { ChangeSource } from '../constants/ChangeSource';
 import { cloneModel } from '../publicApi/model/cloneModel';
 import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
+import { deleteEmptyList } from './utils/deleteEmptyList';
 import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
@@ -60,10 +61,16 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
      */
     initialize(editor: IEditor) {
         this.editor = editor as IStandaloneEditor & IEditor;
-        this.disposer = this.editor.addDomEventHandler({
-            paste: e => this.onPaste(e),
-            copy: e => this.onCutCopy(e, false /*isCut*/),
-            cut: e => this.onCutCopy(e, true /*isCut*/),
+        this.disposer = this.editor.attachDomEvent({
+            paste: {
+                beforeDispatch: e => this.onPaste(e),
+            },
+            copy: {
+                beforeDispatch: e => this.onCutCopy(e, false /*isCut*/),
+            },
+            cut: {
+                beforeDispatch: e => this.onCutCopy(e, true /*isCut*/),
+            },
         });
     }
 
@@ -169,7 +176,10 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                     if (isCut) {
                         editor.formatContentModel(
                             (model, context) => {
-                                if (deleteSelection(model, [], context).deleteResult == 'range') {
+                                if (
+                                    deleteSelection(model, [deleteEmptyList], context)
+                                        .deleteResult == 'range'
+                                ) {
                                     normalizeContentModel(model);
                                 }
 

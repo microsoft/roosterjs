@@ -1,7 +1,8 @@
+import { buildRangeEx } from './utils/buildRangeEx';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import { isBold, paste } from 'roosterjs-content-model-core';
+import { isBold, paste, redo, undo } from 'roosterjs-content-model-core';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -15,6 +16,7 @@ import type {
     BlockElement,
     ClipboardData,
     ContentChangedData,
+    ContentChangedEvent,
     DOMEventHandler,
     DarkColorHandler,
     DefaultFormat,
@@ -39,6 +41,10 @@ import type {
     TableSelection,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
+import {
+    convertDomSelectionToRangeEx,
+    convertRangeExToDomSelection,
+} from './utils/selectionConverter';
 import type {
     CompatibleChangeSource,
     CompatibleColorTransformDirection,
@@ -82,6 +88,9 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
     EditorEnvironment,
+    Snapshot,
+    SnapshotsManager,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -151,7 +160,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * This is the replacement of IEditor.select.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection) {
+    setDOMSelection(selection: DOMSelection | null) {
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
@@ -179,6 +188,25 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     getPendingFormat(): ContentModelSegmentFormat | null {
         return this.getCore().format.pendingFormat?.format ?? null;
+    }
+
+    /**
+     * Add a single undo snapshot to undo stack
+     */
+    takeSnapshot(): void {
+        const core = this.getCore();
+
+        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+    }
+
+    /**
+     * Restore an undo snapshot into editor
+     * @param snapshot The snapshot to restore
+     */
+    restoreSnapshot(snapshot: Snapshot): void {
+        const core = this.getCore();
+
+        core.api.restoreUndoSnapshot(core, snapshot);
     }
 
     /**
@@ -447,8 +475,9 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     getSelectionRange(tryGetFromCache: boolean = true): Range | null {
-        const core = this.getCore();
-        return core.api.getSelectionRange(core, tryGetFromCache);
+        const selection = this.getDOMSelection();
+
+        return selection?.type == 'range' ? selection.range : null;
     }
 
     /**
@@ -459,8 +488,9 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     getSelectionRangeEx(): SelectionRangeEx {
-        const core = this.getCore();
-        return core.api.getSelectionRangeEx(core);
+        const selection = this.getDOMSelection();
+
+        return convertDomSelectionToRangeEx(selection);
     }
 
     /**
@@ -497,8 +527,11 @@ export class ContentModelEditor implements IContentModelEditor {
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
+        const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+        const selection = convertRangeExToDomSelection(rangeEx);
 
-        return core.api.select(core, arg1, arg2, arg3, arg4);
+        this.setDOMSelection(selection);
+        return true;
     }
 
     /**
@@ -580,13 +613,41 @@ export class ContentModelEditor implements IContentModelEditor {
 
     //#region EVENT API
 
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void {
+        const core = this.getCore();
+        return core.api.attachDomEvent(core, eventMap);
+    }
+
     addDomEventHandler(
         nameOrMap: string | Record<string, DOMEventHandler>,
         handler?: DOMEventHandler
     ): () => void {
-        const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
-        const core = this.getCore();
-        return core.api.attachDomEvent(core, eventsToMap);
+        const eventsMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
+        const eventsMapResult: Record<string, DOMEventRecord> = {};
+
+        getObjectKeys(eventsMap).forEach(key => {
+            const handlerObj = eventsMap[key];
+            let result: DOMEventRecord = {
+                pluginEventType: null,
+                beforeDispatch: null,
+            };
+
+            if (typeof handlerObj === 'number') {
+                result.pluginEventType = handlerObj as PluginEventType;
+            } else if (typeof handlerObj === 'function') {
+                result.beforeDispatch = handlerObj;
+            } else if (typeof handlerObj === 'object') {
+                result = handlerObj as DOMEventRecord;
+            }
+
+            eventsMapResult[key] = result;
+        });
+
+        return this.attachDomEvent(eventsMapResult);
     }
 
     /**
@@ -633,21 +694,26 @@ export class ContentModelEditor implements IContentModelEditor {
     //#region Undo API
 
     /**
+     * Get undo snapshots manager
+     */
+    getSnapshotsManager(): SnapshotsManager {
+        const core = this.getCore();
+
+        return core.undo.snapshotsManager;
+    }
+
+    /**
      * Undo last edit operation
      */
     undo() {
-        this.focus();
-        const core = this.getCore();
-        core.api.restoreUndoSnapshot(core, -1 /*step*/);
+        undo(this);
     }
 
     /**
      * Redo next edit operation
      */
     redo() {
-        this.focus();
-        const core = this.getCore();
-        core.api.restoreUndoSnapshot(core, 1 /*step*/);
+        redo(this);
     }
 
     /**
@@ -667,23 +733,79 @@ export class ContentModelEditor implements IContentModelEditor {
         additionalData?: ContentChangedData
     ) {
         const core = this.getCore();
-        core.api.addUndoSnapshot(
-            core,
-            callback ?? null,
-            changeSource ?? null,
-            canUndoByBackspace ?? false,
-            additionalData
-        );
+        const undoState = core.undo;
+        const isNested = undoState.isNested;
+        let data: any;
+
+        if (!isNested) {
+            undoState.isNested = true;
+
+            // When there is getEntityState, it means this is triggered by an entity change.
+            // So if HTML content is not changed (hasNewContent is false), no need to add another snapshot before change
+            if (
+                core.undo.snapshotsManager.hasNewContent ||
+                !additionalData?.getEntityState ||
+                !callback
+            ) {
+                core.api.addUndoSnapshot(
+                    core,
+                    !!canUndoByBackspace,
+                    additionalData?.getEntityState?.()
+                );
+            }
+        }
+
+        try {
+            if (callback) {
+                const selection = core.api.getDOMSelection(core);
+                const range = selection?.type == 'range' ? selection.range : null;
+                data = callback(
+                    range && Position.getStart(range).normalize(),
+                    range && Position.getEnd(range).normalize()
+                );
+
+                if (!isNested) {
+                    const entityStates = additionalData?.getEntityState?.();
+
+                    core.api.addUndoSnapshot(core, false /*isAutoCompleteSnapshot*/, entityStates);
+                }
+            }
+        } finally {
+            if (!isNested) {
+                undoState.isNested = false;
+            }
+        }
+
+        if (callback && changeSource) {
+            const event: ContentChangedEvent = {
+                eventType: PluginEventType.ContentChanged,
+                source: changeSource,
+                data: data,
+                additionalData,
+            };
+            core.api.triggerEvent(core, event, true /*broadcast*/);
+        }
+
+        if (canUndoByBackspace) {
+            const selection = core.api.getDOMSelection(core);
+
+            if (selection?.type == 'range') {
+                core.undo.snapshotsManager.hasNewContent = false;
+                core.undo.posContainer = selection.range.startContainer;
+                core.undo.posOffset = selection.range.startOffset;
+            }
+        }
     }
 
     /**
      * Whether there is an available undo/redo snapshot
      */
     getUndoState(): EditorUndoState {
-        const { hasNewContent, snapshotsService } = this.getCore().undo;
+        const { snapshotsManager } = this.getCore().undo;
         return {
-            canUndo: hasNewContent || snapshotsService.canMove(-1 /*previousSnapshot*/),
-            canRedo: snapshotsService.canMove(1 /*nextSnapshot*/),
+            canUndo:
+                snapshotsManager.hasNewContent || snapshotsManager.canMove(-1 /*previousSnapshot*/),
+            canRedo: snapshotsManager.canMove(1 /*nextSnapshot*/),
         };
     }
 

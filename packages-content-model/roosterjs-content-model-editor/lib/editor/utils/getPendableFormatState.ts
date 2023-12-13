@@ -11,7 +11,8 @@ import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
  * @returns The cached format state if it exists. If the cached position do not exist, search for pendable elements in the DOM tree and return the pendable format state.
  */
 export function getPendableFormatState(core: StandaloneEditorCore): PendableFormatState {
-    const range = core.api.getSelectionRange(core, true /* tryGetFromCache*/);
+    const selection = core.api.getDOMSelection(core);
+    const range = selection?.type == 'range' ? selection.range : null;
     const currentPosition = range && Position.getStart(range).normalize();
 
     return currentPosition ? queryCommandStateFromDOM(core, currentPosition) : {};
