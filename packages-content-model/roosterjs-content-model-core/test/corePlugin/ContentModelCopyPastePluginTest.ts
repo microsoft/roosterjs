@@ -7,6 +7,7 @@ import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSel
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../lib/publicApi/model/paste';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
+import { ClipboardData, DarkColorHandler, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
 import { DarkColorHandler, IEditor, PluginWithState } from 'roosterjs-editor-types';
