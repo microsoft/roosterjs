@@ -1,6 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
-import { reuseCachedElement } from '../utils/reuseCachedElement';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 import type {
     ContentModelBlockFormat,

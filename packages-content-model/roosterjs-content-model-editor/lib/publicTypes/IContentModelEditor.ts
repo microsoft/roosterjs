@@ -1,11 +1,5 @@
 import type { ContentModelCorePlugins } from './ContentModelCorePlugins';
-import type {
-    EditorPlugin,
-    ExperimentalFeatures,
-    IEditor,
-    Snapshot,
-    UndoSnapshotsService,
-} from 'roosterjs-editor-types';
+import type { EditorPlugin, ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
 import type { StandaloneEditorOptions, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -18,12 +12,6 @@ export interface IContentModelEditor extends IEditor, IStandaloneEditor {}
  * Options for Content Model editor
  */
 export interface ContentModelEditorOptions extends StandaloneEditorOptions {
-    /**
-     * Undo snapshot service based on content metadata. Use this parameter to customize the undo snapshot service.
-     * When this property is set, value of undoSnapshotService will be ignored.
-     */
-    undoMetadataSnapshotService?: UndoSnapshotsService<Snapshot>;
-
     /**
      * Initial HTML content
      * Default value is whatever already inside the editor content DIV

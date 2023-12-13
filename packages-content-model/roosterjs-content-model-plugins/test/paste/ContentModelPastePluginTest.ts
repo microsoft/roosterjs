@@ -99,7 +99,8 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler
+                trustedHTMLHandler,
+                undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
@@ -116,7 +117,8 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(ExcelFile.processPastedContentFromExcel).not.toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler
+                trustedHTMLHandler,
+                undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
@@ -132,7 +134,8 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler
+                trustedHTMLHandler,
+                undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
@@ -148,7 +151,8 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler
+                trustedHTMLHandler,
+                undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);

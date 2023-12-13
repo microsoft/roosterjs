@@ -5,6 +5,7 @@ import { createDOMEventPlugin } from './DOMEventPlugin';
 import { createEntityPlugin } from './EntityPlugin';
 import { createLifecyclePlugin } from './LifecyclePlugin';
 import { createSelectionPlugin } from './SelectionPlugin';
+import { createUndoPlugin } from './UndoPlugin';
 import type {
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
@@ -27,5 +28,6 @@ export function createStandaloneEditorCorePlugins(
         lifecycle: createLifecyclePlugin(options, contentDiv),
         entity: createEntityPlugin(),
         selection: createSelectionPlugin(options),
+        undo: createUndoPlugin(options),
     };
 }

@@ -109,6 +109,7 @@ class MainPane extends MainPaneBase<MainPaneState> {
     private emojiPlugin: EditorPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private sampleEntityPlugin: SampleEntityPlugin;
+    private snapshotPlugin: SnapshotPlugin;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
 
