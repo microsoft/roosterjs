@@ -31,6 +31,8 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         newImages: [],
     };
 
+    const hasFocus = core.api.hasFocus(core);
+
     const changed = formatter(model, context);
     const { skipUndoSnapshot, clearModelCache, entityStates, canUndoByBackspace } = context;
 
@@ -51,8 +53,12 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             handleImages(core, context);
 
             selection =
-                core.api.setContentModel(core, model, undefined /*options*/, onNodeCreated) ??
-                undefined;
+                core.api.setContentModel(
+                    core,
+                    model,
+                    hasFocus ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
+                    onNodeCreated
+                ) ?? undefined;
 
             handlePendingFormat(core, context, selection);
 

@@ -7,7 +7,7 @@ import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSel
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../lib/publicApi/model/paste';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
-import { createModelToDomContext } from 'roosterjs-content-model-dom';
+import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
 import { DarkColorHandler, IEditor, PluginWithState } from 'roosterjs-editor-types';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
@@ -24,6 +24,7 @@ import {
 import {
     createContentModelCopyPastePlugin,
     onNodeCreated,
+    preprocessTable,
 } from '../../lib/corePlugin/ContentModelCopyPastePlugin';
 
 const modelValue = 'model' as any;
@@ -621,5 +622,78 @@ describe('ContentModelCopyPastePlugin |', () => {
         onNodeCreated(null!, span);
 
         expect(div.innerHTML).toBe('<span></span>');
+    });
+
+    describe('preprocessTable', () => {
+        it('Preprocess table without selection', () => {
+            const cell1 = createTableCell();
+            const cell2 = createTableCell();
+            const cell3 = createTableCell();
+            const cell4 = createTableCell();
+            const table = createTable(1);
+
+            table.rows[0].cells.push(cell1, cell2, cell3, cell4);
+            table.widths = [100, 20, 30, 80];
+
+            preprocessTable(table);
+
+            expect(table).toEqual({
+                blockType: 'Table',
+                rows: [],
+                format: {},
+                widths: [],
+                dataset: {},
+            });
+        });
+
+        it('Preprocess table with selection', () => {
+            const cell1 = createTableCell();
+            const cell2 = createTableCell();
+            const cell3 = createTableCell();
+            const cell4 = createTableCell();
+            const table = createTable(1);
+
+            table.rows[0].cells.push(cell1, cell2, cell3, cell4);
+            table.widths = [100, 20, 30, 80];
+            cell2.isSelected = true;
+            cell3.isSelected = true;
+
+            preprocessTable(table);
+
+            expect(table).toEqual({
+                blockType: 'Table',
+                rows: [
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {},
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                                isSelected: true,
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {},
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+                format: {},
+                widths: [20, 30],
+                dataset: {},
+            });
+        });
     });
 });

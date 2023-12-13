@@ -4,7 +4,9 @@ import { EditorCore } from 'roosterjs-editor-types';
 import { setContentModel } from '../../lib/coreApi/setContentModel';
 import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
-const mockedRange = 'RANGE' as any;
+const mockedRange = {
+    type: 'image',
+} as any;
 const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
 const mockedEditorContext = 'EDITORCONTEXT' as any;
@@ -128,5 +130,28 @@ describe('setContentModel', () => {
             undefined
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('restore selection ', () => {
+        core.selection = {
+            selection: null,
+            selectionStyleNode: null,
+        };
+        setContentModel(core, mockedModel, {
+            ignoreSelection: true,
+        });
+
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(mockedEditorContext, {
+            ignoreSelection: true,
+        });
+        expect(contentModelToDomSpy).toHaveBeenCalledWith(
+            mockedDoc,
+            mockedDiv,
+            mockedModel,
+            mockedContext,
+            undefined
+        );
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(core.selection.selection).toBe(mockedRange);
     });
 });
