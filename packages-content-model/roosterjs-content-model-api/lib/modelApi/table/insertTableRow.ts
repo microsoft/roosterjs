@@ -1,5 +1,5 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
-import { getSelectedCells } from './getSelectedCells';
+import { getSelectedCells } from 'roosterjs-content-model-core';
 import type {
     ContentModelTable,
     TableVerticalInsertOperation,

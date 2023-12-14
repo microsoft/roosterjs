@@ -4,6 +4,7 @@ import { cloneModel } from '../publicApi/model/cloneModel';
 import { deleteEmptyList } from './utils/deleteEmptyList';
 import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
+import { getSelectedCells } from '../publicApi/table/getSelectedCells';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { paste } from '../publicApi/model/paste';
 import { PluginEventType } from 'roosterjs-editor-types';
@@ -19,6 +20,7 @@ import {
     wrap,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelTable,
     DOMSelection,
     IStandaloneEditor,
     OnNodeCreated,
@@ -111,15 +113,8 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
             if (selection.type === 'table') {
                 iterateSelections(pasteModel, (_, tableContext) => {
                     if (tableContext?.table) {
-                        const table = tableContext?.table;
-                        table.rows = table.rows
-                            .map(row => {
-                                return {
-                                    ...row,
-                                    cells: row.cells.filter(cell => cell.isSelected),
-                                };
-                            })
-                            .filter(row => row.cells.length > 0);
+                        preprocessTable(tableContext.table);
+
                         return true;
                     }
                     return false;
@@ -307,6 +302,28 @@ export const onNodeCreated: OnNodeCreated = (_, node): void => {
         node.removeAttribute('contenteditable');
     }
 };
+
+/**
+ * @internal
+ * Exported only for unit testing
+ */
+export function preprocessTable(table: ContentModelTable) {
+    const sel = getSelectedCells(table);
+    table.rows = table.rows
+        .map(row => {
+            return {
+                ...row,
+                cells: row.cells.filter(cell => cell.isSelected),
+            };
+        })
+        .filter(row => row.cells.length > 0);
+
+    delete table.format.width;
+
+    table.widths = sel
+        ? table.widths.filter((_, index) => index >= sel?.firstColumn && index <= sel?.lastColumn)
+        : [];
+}
 
 /**
  * @internal
