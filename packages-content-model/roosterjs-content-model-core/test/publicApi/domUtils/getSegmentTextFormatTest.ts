@@ -1,7 +1,7 @@
 import { createImage, createText } from 'roosterjs-content-model-dom';
-import { getCurrentSegmentTextFormat } from '../../../lib/publicApi/domUtils/getCurrentSegmentTextFormat';
+import { getSegmentTextFormat } from '../../../lib/publicApi/domUtils/getSegmentTextFormat';
 
-describe('getCurrentSegmentTextFormat', () => {
+describe('getSegmentTextFormat', () => {
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',
@@ -11,7 +11,7 @@ describe('getCurrentSegmentTextFormat', () => {
             letterSpacing: '1px',
             lineHeight: '1.5',
         });
-        expect(getCurrentSegmentTextFormat(segment)).toEqual({
+        expect(getSegmentTextFormat(segment)).toEqual({
             fontFamily: 'Arial',
             fontSize: '12px',
             textColor: 'red',
@@ -27,7 +27,7 @@ describe('getCurrentSegmentTextFormat', () => {
             backgroundColor: 'blue',
             letterSpacing: '1px',
         });
-        expect(getCurrentSegmentTextFormat(segment)).toEqual({
+        expect(getSegmentTextFormat(segment)).toEqual({
             fontFamily: 'Arial',
             backgroundColor: 'blue',
             letterSpacing: '1px',
@@ -42,7 +42,7 @@ describe('getCurrentSegmentTextFormat', () => {
             backgroundColor: 'blue',
             letterSpacing: '1px',
         });
-        expect(getCurrentSegmentTextFormat(segment)).toEqual({
+        expect(getSegmentTextFormat(segment)).toEqual({
             fontFamily: 'Arial',
             backgroundColor: 'blue',
             letterSpacing: '1px',

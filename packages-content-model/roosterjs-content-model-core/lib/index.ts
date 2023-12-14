@@ -40,7 +40,7 @@ export { isCharacterValue, isModifierKey } from './publicApi/domUtils/eventUtils
 export { combineBorderValue, extractBorderValues } from './publicApi/domUtils/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stringUtil';
 export { parseTableCells, createTableRanges } from './publicApi/domUtils/tableCellUtils';
-export { getCurrentSegmentTextFormat } from './publicApi/domUtils/getCurrentSegmentTextFormat';
+export { getSegmentTextFormat } from './publicApi/domUtils/getSegmentTextFormat';
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
 
