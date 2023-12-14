@@ -1,5 +1,14 @@
 import addParser from '../utils/addParser';
 import { setProcessor } from '../utils/setProcessor';
+import {
+    CLASSES_TO_KEEP,
+    COMMENT_HIGHLIGHT_CLASS,
+    COMMENT_HIGHLIGHT_CLICKED_CLASS,
+    LIST_CONTAINER_ELEMENT_CLASS_NAME,
+    TABLE_CONTAINER,
+    TEMP_ELEMENTS_CLASSES,
+    WAC_IDENTIFY_SELECTOR,
+} from './constants';
 import type {
     ContentModelBeforePasteEvent,
     ContentModelBlockFormat,
@@ -11,40 +20,11 @@ import type {
     FormatParser,
 } from 'roosterjs-content-model-types';
 
-const WAC_IDENTIFY_SELECTOR =
-    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer,span.WACImageBorder';
-const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
-
-const PARAGRAPH = 'Paragraph';
-const TABLE_CONTAINER = 'TableContainer';
-
-const TEMP_ELEMENTS_CLASSES = [
-    'TableInsertRowGapBlank',
-    'TableColumnResizeHandle',
-    'TableCellTopBorderHandle',
-    'TableCellLeftBorderHandle',
-    'TableHoverColumnHandle',
-    'TableHoverRowHandle',
-    'ListMarkerWrappingSpan',
-];
-
-const CLASSES_TO_KEEP = [
-    'OutlineElement',
-    'NumberListStyle',
-    'WACImageContainer',
-    'ListContainerWrapper',
-    'BulletListStyle',
-    ...TEMP_ELEMENTS_CLASSES,
-    'TableCellContent',
-    PARAGRAPH,
-    'WACImageContainer',
-    'WACImageBorder',
-    TABLE_CONTAINER,
-    'LineBreakBlob',
-];
-
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
 const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
+
+const COMMENT_BG_COLOR_REST = 'rgba(209, 209, 209, 0.5)';
+const COMMENTS_TEXT_HIGHLIGHT_CLICKED = 'rgba(197, 139, 204, 0.5)';
 
 /**
  * Wac components do not use sub and super tags, instead only add vertical align to a span.
@@ -191,6 +171,19 @@ function shouldClearListContext(
     );
 }
 
+const wacCommentParser: FormatParser<ContentModelSegmentFormat> = (
+    format: ContentModelSegmentFormat,
+    element: HTMLElement
+): void => {
+    if (
+        (element.className.includes(COMMENT_HIGHLIGHT_CLASS) &&
+            element.style.backgroundColor == COMMENT_BG_COLOR_REST) ||
+        (element.className.includes(COMMENT_HIGHLIGHT_CLICKED_CLASS) &&
+            element.style.backgroundColor == COMMENTS_TEXT_HIGHLIGHT_CLICKED)
+    ) {
+        delete format.backgroundColor;
+    }
+};
 /**
  * @internal
  * Convert pasted content from Office Online
@@ -203,6 +196,7 @@ export function processPastedContentWacComponents(ev: ContentModelBeforePasteEve
     addParser(ev.domToModelOption, 'listItemThread', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
     addParser(ev.domToModelOption, 'container', wacBlockParser);
+    addParser(ev.domToModelOption, 'segment', wacCommentParser);
 
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
