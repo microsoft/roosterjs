@@ -63,6 +63,11 @@ export interface IStandaloneEditor {
     setDOMSelection(selection: DOMSelection | null): void;
 
     /**
+     * Get default DOM to Content Model conversion options of current editor
+     */
+    getDOMToModelOptions(): ReadonlyArray<DomToModelOption>;
+
+    /**
      * The general API to do format change with Content Model
      * It will grab a Content Model for current editor content, and invoke a callback function
      * to do format change. Then according to the return value, write back the modified content model into editor.

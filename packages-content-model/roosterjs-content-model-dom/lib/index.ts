@@ -21,7 +21,6 @@ export { default as toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
 export {
-    AllowedEntityClasses,
     isEntityElement,
     getAllEntityWrappers,
     parseEntityClassName,

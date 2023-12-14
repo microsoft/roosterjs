@@ -184,6 +184,15 @@ export class ContentModelEditor implements IContentModelEditor {
     }
 
     /**
+     * Get default DOM to Content Model conversion options of current editor
+     */
+    getDOMToModelOptions(): ReadonlyArray<DomToModelOption> {
+        const core = this.getCore();
+
+        return core.defaultDomToModelOptions.filter((x): x is DomToModelOption => !!x);
+    }
+
+    /**
      * Get pending format of editor if any, or return null
      */
     getPendingFormat(): ContentModelSegmentFormat | null {

@@ -1,3 +1,4 @@
+import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { EdgeLinkPreview } from './EdgeLinkPreview';
 
 /**
@@ -44,7 +45,7 @@ export interface ClipboardData {
     /**
      * An editor content snapshot before pasting happens. This is used for changing paste format
      */
-    snapshotBeforePaste?: string;
+    modelBeforePaste?: ContentModelDocument;
 
     /**
      * BASE64 encoded data uri of the image if any
