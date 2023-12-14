@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.53% </span>
+                <span class="strong">4.71% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/85</span>
+                <span class='fraction'>4/85</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">2.44% </span>
+                <span class="strong">3.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/82</span>
+                <span class='fraction'>3/82</span>
             </div>
         
             
@@ -284,28 +284,8 @@
 <a name='L225'></a><a href='#L225'>225</a>
 <a name='L226'></a><a href='#L226'>226</a>
 <a name='L227'></a><a href='#L227'>227</a>
-<a name='L228'></a><a href='#L228'>228</a>
-<a name='L229'></a><a href='#L229'>229</a>
-<a name='L230'></a><a href='#L230'>230</a>
-<a name='L231'></a><a href='#L231'>231</a>
-<a name='L232'></a><a href='#L232'>232</a>
-<a name='L233'></a><a href='#L233'>233</a>
-<a name='L234'></a><a href='#L234'>234</a>
-<a name='L235'></a><a href='#L235'>235</a>
-<a name='L236'></a><a href='#L236'>236</a>
-<a name='L237'></a><a href='#L237'>237</a>
-<a name='L238'></a><a href='#L238'>238</a>
-<a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a>
-<a name='L243'></a><a href='#L243'>243</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L228'></a><a href='#L228'>228</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -375,12 +355,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -416,9 +392,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -493,9 +466,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -541,14 +511,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { BlockElement, InsertOption, NodePosition } from 'roosterjs-editor-types';
-import {
-    ContentPosition,
-    ColorTransformDirection,
-    NodeType,
-    PositionType,
-    RegionType,
-} from 'roosterjs-editor-types';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentPosition, NodeType, PositionType, RegionType } from 'roosterjs-editor-types';
+import { transformColor } from 'roosterjs-content-model-core';
+import type { BlockElement, InsertOption, NodePosition } from 'roosterjs-editor-types';
 import {
     createRange,
     getBlockElementAtNode,
@@ -616,127 +581,117 @@ export const insertNode: InsertNode = <span class="fstat-no" title="function not
 <span class="cstat-no" title="statement not covered" >        return true;</span>
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    core.api.transformColor(</span>
-        core,
-        node,
-        true /*includeSelf*/,
-<span class="fstat-no" title="function not covered" >        () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            if (!option) {</span>
-<span class="cstat-no" title="statement not covered" >                return;</span>
-            }
-<span class="cstat-no" title="statement not covered" >            switch (option.position) {</span>
-                case ContentPosition.Begin:
-                case ContentPosition.End: {
-                    const isBegin = <span class="cstat-no" title="statement not covered" >option.position == ContentPosition.Begin;</span>
-                    const block = <span class="cstat-no" title="statement not covered" >getFirstLastBlockElement(contentDiv, isBegin);</span>
-                    let insertedNode: Node | Node[] | undefined;
-<span class="cstat-no" title="statement not covered" >                    if (block) {</span>
-                        const refNode = <span class="cstat-no" title="statement not covered" >isBegin ? block.getStartNode() : block.getEndNode();</span>
-<span class="cstat-no" title="statement not covered" >                        if (</span>
-                            option.insertOnNewLine ||
-                            refNode.nodeType == NodeType.Text ||
-                            isVoidHtmlElement(refNode)
-                        ) {
-                            // For insert on new line, or refNode is text or void html element (HR, BR etc.)
-                            // which cannot have children, i.e. &lt;div&gt;hello&lt;br&gt;world&lt;/div&gt;. 'hello', 'world' are the
-                            // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-<span class="cstat-no" title="statement not covered" >                            if (safeInstanceOf(node, 'DocumentFragment')) {</span>
-                                // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
-                                // because insertBefore() returns an empty DocumentFragment
-<span class="cstat-no" title="statement not covered" >                                insertedNode = toArray(node.childNodes);</span>
-<span class="cstat-no" title="statement not covered" >                                refNode.parentNode?.insertBefore(</span>
-                                    node,
-                                    isBegin ? refNode : refNode.nextSibling
-                                );
-                            } else {
-<span class="cstat-no" title="statement not covered" >                                insertedNode = refNode.parentNode?.insertBefore(</span>
-                                    node,
-                                    isBegin ? refNode : refNode.nextSibling
-                                );
-                            }
-                        } else {
-                            // if the refNode can have child, use appendChild (which is like to insert as first/last child)
-                            // i.e. &lt;div&gt;hello&lt;/div&gt;, the content will be inserted before/after hello
-<span class="cstat-no" title="statement not covered" >                            insertedNode = refNode.insertBefore(</span>
-                                node,
-                                isBegin ? refNode.firstChild : null
-                            );
-                        }
+<span class="cstat-no" title="statement not covered" >    if (core.lifecycle.isDarkMode) {</span>
+<span class="cstat-no" title="statement not covered" >        transformColor(node, true /*includeSelf*/, 'lightToDark', core.darkColorHandler);</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    switch (option.position) {</span>
+        case ContentPosition.Begin:
+        case ContentPosition.End: {
+            const isBegin = <span class="cstat-no" title="statement not covered" >option.position == ContentPosition.Begin;</span>
+            const block = <span class="cstat-no" title="statement not covered" >getFirstLastBlockElement(contentDiv, isBegin);</span>
+            let insertedNode: Node | Node[] | undefined;
+<span class="cstat-no" title="statement not covered" >            if (block) {</span>
+                const refNode = <span class="cstat-no" title="statement not covered" >isBegin ? block.getStartNode() : block.getEndNode();</span>
+<span class="cstat-no" title="statement not covered" >                if (</span>
+                    option.insertOnNewLine ||
+                    refNode.nodeType == NodeType.Text ||
+                    isVoidHtmlElement(refNode)
+                ) {
+                    // For insert on new line, or refNode is text or void html element (HR, BR etc.)
+                    // which cannot have children, i.e. &lt;div&gt;hello&lt;br&gt;world&lt;/div&gt;. 'hello', 'world' are the
+                    // first and last node. Insert before 'hello' or after 'world', but still inside DIV
+<span class="cstat-no" title="statement not covered" >                    if (safeInstanceOf(node, 'DocumentFragment')) {</span>
+                        // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
+                        // because insertBefore() returns an empty DocumentFragment
+<span class="cstat-no" title="statement not covered" >                        insertedNode = toArray(node.childNodes);</span>
+<span class="cstat-no" title="statement not covered" >                        refNode.parentNode?.insertBefore(</span>
+                            node,
+                            isBegin ? refNode : refNode.nextSibling
+                        );
                     } else {
-                        // No first block, this can happen when editor is empty. Use appendChild to insert the content in contentDiv
-<span class="cstat-no" title="statement not covered" >                        insertedNode = contentDiv.appendChild(node);</span>
-                    }
-&nbsp;
-                    // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
-                    // add a DIV wrapping
-<span class="cstat-no" title="statement not covered" >                    if (insertedNode &amp;&amp; option.insertOnNewLine) {</span>
-                        const nodes = <span class="cstat-no" title="statement not covered" >Array.isArray(insertedNode) ? insertedNode : [insertedNode];</span>
-<span class="cstat-no" title="statement not covered" >                        if (!isBlockElement(nodes[0]) || !isBlockElement(nodes[nodes.length - 1])) {</span>
-<span class="cstat-no" title="statement not covered" >                            wrap(nodes);</span>
-                        }
-                    }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                    break;</span>
-                }
-                case ContentPosition.DomEnd:
-                    // Use appendChild to insert the node at the end of the content div.
-                    const insertedNode = <span class="cstat-no" title="statement not covered" >contentDiv.appendChild(node);</span>
-                    // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
-                    // add a DIV wrapping
-<span class="cstat-no" title="statement not covered" >                    if (insertedNode &amp;&amp; option.insertOnNewLine &amp;&amp; !isBlockElement(insertedNode)) {</span>
-<span class="cstat-no" title="statement not covered" >                        wrap(insertedNode);</span>
-                    }
-<span class="cstat-no" title="statement not covered" >                    break;</span>
-                case ContentPosition.Range:
-                case ContentPosition.SelectionStart:
-                    let { range<span class="cstat-no" title="statement not covered" >, r</span>angeToRestore<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >g</span>etInitialRange(core, option);</span>
-<span class="cstat-no" title="statement not covered" >                    if (!range) {</span>
-<span class="cstat-no" title="statement not covered" >                        return;</span>
-                    }
-&nbsp;
-                    // if to replace the selection and the selection is not collapsed, remove the the content at selection first
-<span class="cstat-no" title="statement not covered" >                    if (option.replaceSelection &amp;&amp; !range.collapsed) {</span>
-<span class="cstat-no" title="statement not covered" >                        range.deleteContents();</span>
-                    }
-&nbsp;
-                    let pos: NodePosition = <span class="cstat-no" title="statement not covered" >Position.getStart(range);</span>
-                    let blockElement<span class="cstat-no" title="statement not covered" >: BlockElement | null;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                    if (option.insertOnNewLine &amp;&amp; option.insertToRegionRoot) {</span>
-<span class="cstat-no" title="statement not covered" >                        pos = adjustInsertPositionRegionRoot(core, range, pos);</span>
-                    } else <span class="cstat-no" title="statement not covered" >if (</span>
-                        option.insertOnNewLine &amp;&amp;
-                        (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
-                    ) {
-<span class="cstat-no" title="statement not covered" >                        pos = adjustInsertPositionNewLine(blockElement, core, pos);</span>
-                    } else {
-<span class="cstat-no" title="statement not covered" >                        pos = adjustInsertPosition(contentDiv, node, pos, range);</span>
-                    }
-&nbsp;
-                    const nodeForCursor =
-<span class="cstat-no" title="statement not covered" >                        node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                    range = createRange(pos);</span>
-<span class="cstat-no" title="statement not covered" >                    range.insertNode(node);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                    if (option.updateCursor &amp;&amp; nodeForCursor) {</span>
-<span class="cstat-no" title="statement not covered" >                        rangeToRestore = createRange(</span>
-                            new Position(nodeForCursor, PositionType.After).normalize()
+<span class="cstat-no" title="statement not covered" >                        insertedNode = refNode.parentNode?.insertBefore(</span>
+                            node,
+                            isBegin ? refNode : refNode.nextSibling
                         );
                     }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                    if (rangeToRestore) {</span>
-<span class="cstat-no" title="statement not covered" >                        core.api.setDOMSelection(core, {</span>
-                            type: 'range',
-                            range: rangeToRestore,
-                        });
-                    }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                    break;</span>
+                } else {
+                    // if the refNode can have child, use appendChild (which is like to insert as first/last child)
+                    // i.e. &lt;div&gt;hello&lt;/div&gt;, the content will be inserted before/after hello
+<span class="cstat-no" title="statement not covered" >                    insertedNode = refNode.insertBefore(node, isBegin ? refNode.firstChild : null);</span>
+                }
+            } else {
+                // No first block, this can happen when editor is empty. Use appendChild to insert the content in contentDiv
+<span class="cstat-no" title="statement not covered" >                insertedNode = contentDiv.appendChild(node);</span>
             }
-        },
-        ColorTransformDirection.LightToDark
-    );
+&nbsp;
+            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
+            // add a DIV wrapping
+<span class="cstat-no" title="statement not covered" >            if (insertedNode &amp;&amp; option.insertOnNewLine) {</span>
+                const nodes = <span class="cstat-no" title="statement not covered" >Array.isArray(insertedNode) ? insertedNode : [insertedNode];</span>
+<span class="cstat-no" title="statement not covered" >                if (!isBlockElement(nodes[0]) || !isBlockElement(nodes[nodes.length - 1])) {</span>
+<span class="cstat-no" title="statement not covered" >                    wrap(nodes);</span>
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            break;</span>
+        }
+        case ContentPosition.DomEnd:
+            // Use appendChild to insert the node at the end of the content div.
+            const insertedNode = <span class="cstat-no" title="statement not covered" >contentDiv.appendChild(node);</span>
+            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
+            // add a DIV wrapping
+<span class="cstat-no" title="statement not covered" >            if (insertedNode &amp;&amp; option.insertOnNewLine &amp;&amp; !isBlockElement(insertedNode)) {</span>
+<span class="cstat-no" title="statement not covered" >                wrap(insertedNode);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            break;</span>
+        case ContentPosition.Range:
+        case ContentPosition.SelectionStart:
+            let { range<span class="cstat-no" title="statement not covered" >, r</span>angeToRestore<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >g</span>etInitialRange(core, option);</span>
+<span class="cstat-no" title="statement not covered" >            if (!range) {</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
+            }
+&nbsp;
+            // if to replace the selection and the selection is not collapsed, remove the the content at selection first
+<span class="cstat-no" title="statement not covered" >            if (option.replaceSelection &amp;&amp; !range.collapsed) {</span>
+<span class="cstat-no" title="statement not covered" >                range.deleteContents();</span>
+            }
+&nbsp;
+            let pos: NodePosition = <span class="cstat-no" title="statement not covered" >Position.getStart(range);</span>
+            let blockElement<span class="cstat-no" title="statement not covered" >: BlockElement | null;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (option.insertOnNewLine &amp;&amp; option.insertToRegionRoot) {</span>
+<span class="cstat-no" title="statement not covered" >                pos = adjustInsertPositionRegionRoot(core, range, pos);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (</span>
+                option.insertOnNewLine &amp;&amp;
+                (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
+            ) {
+<span class="cstat-no" title="statement not covered" >                pos = adjustInsertPositionNewLine(blockElement, core, pos);</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                pos = adjustInsertPosition(contentDiv, node, pos, range);</span>
+            }
+&nbsp;
+            const nodeForCursor =
+<span class="cstat-no" title="statement not covered" >                node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            range = createRange(pos);</span>
+<span class="cstat-no" title="statement not covered" >            range.insertNode(node);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (option.updateCursor &amp;&amp; nodeForCursor) {</span>
+<span class="cstat-no" title="statement not covered" >                rangeToRestore = createRange(</span>
+                    new Position(nodeForCursor, PositionType.After).normalize()
+                );
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (rangeToRestore) {</span>
+<span class="cstat-no" title="statement not covered" >                core.api.setDOMSelection(core, {</span>
+                    type: 'range',
+                    range: rangeToRestore,
+                });
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            break;</span>
+    }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return true;</span>
 };
@@ -790,7 +745,7 @@ function <span class="fstat-no" title="function not covered" >adjustInsertPositi
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Dec 14 2023 14:42:20 GMT+0000 (Coordinated Universal Time)
+                at Thu Dec 14 2023 17:15:54 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
