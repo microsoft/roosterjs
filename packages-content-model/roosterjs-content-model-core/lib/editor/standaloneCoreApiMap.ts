@@ -1,4 +1,5 @@
 import { addUndoSnapshot } from '../coreApi/addUndoSnapshot';
+import { attachDomEvent } from '../coreApi/attachDomEvent';
 import { createContentModel } from '../coreApi/createContentModel';
 import { createEditorContext } from '../coreApi/createEditorContext';
 import { focus } from '../coreApi/focus';
@@ -10,6 +11,7 @@ import { restoreUndoSnapshot } from '../coreApi/restoreUndoSnapshot';
 import { setContentModel } from '../coreApi/setContentModel';
 import { setDOMSelection } from '../coreApi/setDOMSelection';
 import { switchShadowEdit } from '../coreApi/switchShadowEdit';
+import { triggerEvent } from '../coreApi/triggerEvent';
 import type { PortedCoreApiMap } from 'roosterjs-content-model-types';
 
 /**
@@ -29,4 +31,6 @@ export const standaloneCoreApiMap: PortedCoreApiMap = {
     hasFocus: hasFocus,
     addUndoSnapshot: addUndoSnapshot,
     restoreUndoSnapshot: restoreUndoSnapshot,
+    attachDomEvent: attachDomEvent,
+    triggerEvent: triggerEvent,
 };
