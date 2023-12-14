@@ -1,6 +1,5 @@
 import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model-dom';
-import { mergeModel } from 'roosterjs-content-model-core';
-import { readFile } from '../../modelApi/domUtils/readFile';
+import { mergeModel, readFile } from 'roosterjs-content-model-core';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
