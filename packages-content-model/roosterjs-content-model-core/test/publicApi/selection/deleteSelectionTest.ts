@@ -970,6 +970,46 @@ describe('deleteSelection - selectionOnly', () => {
             format: { fontFamily: 'Arial' },
         });
     });
+
+    it('Delete image with border', () => {
+        const model = createContentModelDocument();
+        const image = createImage('hr', { borderBottom: '1px solid red' });
+        const para = createParagraph();
+        para.segments.push(image);
+
+        image.isSelected = true;
+        model.blocks.push(para);
+
+        const result = deleteSelection(model);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+
+        expect(result.deleteResult).toBe('range');
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [marker],
+                },
+            ],
+        });
+    });
 });
 
 describe('deleteSelection - list -  when cut', () => {
