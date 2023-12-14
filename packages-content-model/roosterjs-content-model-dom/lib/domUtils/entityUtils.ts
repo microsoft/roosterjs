@@ -116,16 +116,3 @@ function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
 
     return span;
 }
-
-/**
- * Allowed CSS selector for entity, used by HtmlSanitizer.
- * TODO: Revisit paste logic and check if we can remove HtmlSanitizer
- */
-export const AllowedEntityClasses: ReadonlyArray<string> = [
-    '^' + ENTITY_INFO_NAME + '$',
-    '^' + ENTITY_ID_PREFIX,
-    '^' + ENTITY_TYPE_PREFIX,
-    '^' + ENTITY_READONLY_PREFIX,
-    '^' + DELIMITER_BEFORE + '$',
-    '^' + DELIMITER_AFTER + '$',
-];

@@ -8,13 +8,29 @@ import type {
 } from 'roosterjs-editor-types';
 
 /**
+ * Options for DOM to Content Model conversion for paste only
+ */
+export interface DomToModelOptionForPaste extends Required<DomToModelOption> {
+    /**
+     * Additional allowed HTML tags in lower case. Element with these tags will be preserved
+     */
+    additionalAllowedTags: string[];
+
+    /**
+     * Additional disallowed HTML tags in lower case. Elements with these tags will be dropped
+     */
+    additionalDisallowedTags: string[];
+}
+
+/**
  * Data of ContentModelBeforePasteEvent
  */
 export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
     /**
      * domToModel Options to use when creating the content model from the paste fragment
      */
-    domToModelOption: Partial<DomToModelOption>;
+    domToModelOption: DomToModelOptionForPaste;
+
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */

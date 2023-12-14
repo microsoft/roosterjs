@@ -1,7 +1,6 @@
 import addParser from '../utils/addParser';
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { getStyles } from '../utils/getStyles';
-import { moveChildNodes } from 'roosterjs-content-model-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
@@ -39,11 +38,7 @@ export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteE
     );
 
     // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
-    chainSanitizerCallback(ev.sanitizingOption.elementCallbacks, 'O:P', element => {
-        moveChildNodes(element);
-        element.appendChild(element.ownerDocument.createTextNode('\u00A0')); // &nbsp;
-        return true;
-    });
+    ev.domToModelOption.additionalAllowedTags.push('o:p');
 }
 
 /**

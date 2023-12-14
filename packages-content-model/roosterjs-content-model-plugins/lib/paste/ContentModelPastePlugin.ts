@@ -122,9 +122,9 @@ export class ContentModelPastePlugin implements EditorPlugin {
                 }
                 break;
             case 'googleSheets':
-                ev.sanitizingOption.additionalTagReplacements[
+                ev.domToModelOption.additionalAllowedTags.push(
                     PastePropertyNames.GOOGLE_SHEET_NODE_NAME
-                ] = '*';
+                );
                 break;
             case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());

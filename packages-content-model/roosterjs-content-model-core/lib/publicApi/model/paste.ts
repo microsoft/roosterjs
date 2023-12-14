@@ -1,123 +1,125 @@
 import { ChangeSource } from '../../constants/ChangeSource';
-import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
+import { convertInlineCss } from '../../utils/paste/convertInlineCss';
+import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
+import { createPasteFragment } from '../../utils/paste/createPasteFragment';
+import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
+import { generatePendingFormat } from '../../utils/paste/generatePendingFormat';
 import { getSelectedSegments } from '../selection/collectSelections';
-import { mergeModel } from './mergeModel';
+import { handleLastPaste } from '../../utils/paste/handleLastPaste';
+import { mergePasteContent } from '../../utils/paste/mergePasteContent';
+import { pasteEntityProcessor } from '../../override/pasteEntityProcessor';
+import { retrieveFirstLevelTags } from '../../utils/paste/retrieveFirstLevelTags';
+import { retrieveGlobalCss } from '../../utils/paste/retrieveGlobalCSS';
+import { retrieveHtml } from '../../utils/paste/retrieveHtml';
+import { retrievePasteMetadata } from '../../utils/paste/retrievePasteMetadata';
+import { triggerBeforePasteEvent } from '../../utils/paste/triggerBeforePasteEvent';
+import type { HtmlFromClipboard } from '../../utils/paste/retrieveHtml';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
-    FormatWithContentModelContext,
-    InsertPoint,
     PasteType,
-    ContentModelBeforePasteEventData,
-    ContentModelBeforePasteEvent,
     IStandaloneEditor,
     ClipboardData,
+    DomToModelOption,
 } from 'roosterjs-content-model-types';
-import type { IEditor } from 'roosterjs-editor-types';
-import {
-    AllowedEntityClasses,
-    applySegmentFormatToElement,
-    createDomToModelContext,
-    domToContentModel,
-    moveChildNodes,
-} from 'roosterjs-content-model-dom';
-import {
-    createDefaultHtmlSanitizerOptions,
-    handleImagePaste,
-    handleTextPaste,
-    retrieveMetadataFromClipboard,
-    sanitizePasteContent,
-} from 'roosterjs-editor-dom';
-
-// Map new PasteType to old PasteType
-// TODO: We can remove this once we have standalone editor
-const PasteTypeMap: Record<PasteType, OldPasteType> = {
-    asImage: OldPasteType.AsImage,
-    asPlainText: OldPasteType.AsPlainText,
-    mergeFormat: OldPasteType.MergeFormat,
-    normal: OldPasteType.Normal,
-};
-const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
-    backgroundColor: '',
-    fontFamily: '',
-    fontSize: '',
-    fontWeight: '',
-    italic: false,
-    letterSpacing: '',
-    lineHeight: '',
-    strikethrough: false,
-    superOrSubScriptSequence: '',
-    textColor: '',
-    underline: false,
-};
+import type { IEditor, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 /**
  * Paste into editor using a clipboardData object
  * @param editor The editor to paste content into
  * @param clipboardData Clipboard data retrieved from clipboard
  * @param pasteType Type of content to paste. @default normal
+ * @param [defaultDomToModelOptions=[]] Default options for DOM to Content model conversion
  */
 export function paste(
     editor: IStandaloneEditor & IEditor,
     clipboardData: ClipboardData,
-    pasteType: PasteType = 'normal'
+    pasteType: PasteType = 'normal',
+    domToModelOptions?: DomToModelOption
 ) {
-    if (clipboardData.snapshotBeforePaste) {
-        // Restore original content before paste a new one
-        editor.setContent(clipboardData.snapshotBeforePaste);
-    } else {
-        clipboardData.snapshotBeforePaste = editor.getContent(GetContentMode.RawHTMLWithSelection);
-    }
-
     editor.focus();
-    let originalFormat: ContentModelSegmentFormat | undefined;
-
     editor.formatContentModel(
         (model, context) => {
-            const eventData = createBeforePasteEventData(editor, clipboardData, pasteType);
-            const currentSegment = getSelectedSegments(model, true /*includingFormatHolder*/)[0];
-            const { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight } =
-                currentSegment?.format ?? {};
-            const {
-                domToModelOption,
-                fragment,
-                customizedMerge,
-            } = triggerPluginEventAndCreatePasteFragment(
+            handleLastPaste(clipboardData, model);
+
+            // 1. Prepare variables
+            const trustHtmlHandler = editor.getTrustedHTMLHandler();
+            const doc = createDOMFromHtml(clipboardData.rawHtml, trustHtmlHandler);
+            const htmlAttributes: Record<string, string> = {};
+            const cssRules: CSSStyleRule[] = [];
+            const outboundHtml: HtmlFromClipboard = {};
+            const currentFormat = getCurrentSegmentFormat(model);
+
+            // 2. Handle HTML from clipboard
+            if (doc) {
+                doc.body.normalize();
+
+                retrievePasteMetadata(doc, htmlAttributes);
+                retrieveGlobalCss(doc, cssRules);
+                retrieveHtml(clipboardData, outboundHtml);
+
+                clipboardData.html = outboundHtml.html;
+                clipboardData.htmlFirstLevelChildTags = retrieveFirstLevelTags(doc);
+            }
+
+            // 3. Create target fragment
+            const body =
+                (clipboardData.rawHtml == clipboardData.html
+                    ? doc
+                    : createDOMFromHtml(clipboardData.html, trustHtmlHandler)
+                )?.body ?? null;
+            const sourceFragment = createPasteFragment(
+                editor.getDocument(),
+                clipboardData,
+                currentFormat,
+                pasteType,
+                body
+            );
+
+            // 4. Trigger BeforePaste event to allow plugins modify the fragment
+            const { domToModelOption, customizedMerge, fragment } = triggerBeforePasteEvent(
                 editor,
                 clipboardData,
-                pasteType,
-                eventData,
-                { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight }
+                sourceFragment,
+                outboundHtml,
+                htmlAttributes,
+                pasteType
             );
 
-            const pasteModel = domToContentModel(
+            // 5. Convert global CSS to inline CSS
+            convertInlineCss(fragment, cssRules);
+
+            // 6. Merge pasted content into main Content Model
+            const copiedModel = domToContentModel(
                 fragment,
-                createDomToModelContext(undefined /*editorContext*/, domToModelOption)
+                createDomToModelContext(
+                    undefined /*editorContext*/,
+                    domToModelOptions,
+                    {
+                        processorOverride: {
+                            entity: pasteEntityProcessor,
+                            '*': createPasteGeneralProcessor(domToModelOption),
+                        },
+                    },
+                    domToModelOption
+                )
             );
-
             const insertPoint = mergePasteContent(
                 model,
                 context,
-                pasteModel,
+                copiedModel,
                 pasteType == 'mergeFormat',
                 customizedMerge
             );
 
-            if (insertPoint) {
-                originalFormat = insertPoint.marker.format;
-            }
-
-            if (originalFormat) {
-                context.newPendingFormat = {
-                    ...EmptySegmentFormat,
-                    ...model.format,
-                    ...originalFormat,
-                }; // Use empty format as initial value to clear any other format inherits from pasted content
-            }
+            // 6. Resume original segment as pending format
+            context.newPendingFormat = generatePendingFormat(
+                model.format,
+                insertPoint?.marker.format
+            );
 
             return true;
         },
-
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
@@ -126,127 +128,23 @@ export function paste(
     );
 }
 
-/**
- * @internal
- * Export only for unit test
- */
-export function mergePasteContent(
-    model: ContentModelDocument,
-    context: FormatWithContentModelContext,
-    pasteModel: ContentModelDocument,
-    applyCurrentFormat: boolean,
-    customizedMerge:
-        | undefined
-        | ((source: ContentModelDocument, target: ContentModelDocument) => InsertPoint | null)
-): InsertPoint | null {
-    return customizedMerge
-        ? customizedMerge(model, pasteModel)
-        : mergeModel(model, pasteModel, context, {
-              mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
-              mergeTable: shouldMergeTable(pasteModel),
-          });
-}
-
-function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined {
-    // If model contains a table and a paragraph element after the table with a single BR segment, remove the Paragraph after the table
-    if (
-        pasteModel.blocks.length == 2 &&
-        pasteModel.blocks[0].blockType === 'Table' &&
-        pasteModel.blocks[1].blockType === 'Paragraph' &&
-        pasteModel.blocks[1].segments.length === 1 &&
-        pasteModel.blocks[1].segments[0].segmentType === 'Br'
-    ) {
-        pasteModel.blocks.splice(1);
-    }
-    // Only merge table when the document contain a single table.
-    return pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table';
-}
-
-function createBeforePasteEventData(
-    editor: IEditor,
-    clipboardData: ClipboardData,
-    pasteType: PasteType
-): ContentModelBeforePasteEventData {
-    const options = createDefaultHtmlSanitizerOptions();
-
-    options.additionalAllowedCssClasses.push(...AllowedEntityClasses);
-
-    // Remove "caret-color" style generated by Safari to make sure caret shows in right color after paste
-    options.cssStyleCallbacks['caret-color'] = () => false;
-
+function getCurrentSegmentFormat(model: ContentModelDocument): ContentModelSegmentFormat {
+    const currentSegment = getSelectedSegments(model, true /*includingFormatHolder*/)[0];
+    const { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight } =
+        currentSegment?.format ?? {};
     return {
-        clipboardData,
-        fragment: editor.getDocument().createDocumentFragment(),
-        sanitizingOption: options,
-        htmlBefore: '',
-        htmlAfter: '',
-        htmlAttributes: {},
-        domToModelOption: {},
-        pasteType: PasteTypeMap[pasteType],
+        fontFamily,
+        fontSize,
+        textColor,
+        backgroundColor,
+        letterSpacing,
+        lineHeight,
     };
 }
 
-/**
- * This function is used to create a BeforePasteEvent object after trigger the event, so other plugins can modify the event object
- * This function will also create a DocumentFragment for paste.
- */
-function triggerPluginEventAndCreatePasteFragment(
-    editor: IEditor,
-    clipboardData: ClipboardData,
-    pasteType: PasteType,
-    eventData: ContentModelBeforePasteEventData,
-    currentFormat: ContentModelSegmentFormat
-): ContentModelBeforePasteEventData {
-    const event = {
-        eventType: PluginEventType.BeforePaste,
-        ...eventData,
-    } as ContentModelBeforePasteEvent;
-
-    const { fragment } = event;
-    const { rawHtml, text, imageDataUri } = clipboardData;
-    const trustedHTMLHandler = editor.getTrustedHTMLHandler();
-
-    const doc: Document | undefined = rawHtml
-        ? new DOMParser().parseFromString(trustedHTMLHandler(rawHtml), 'text/html')
-        : undefined;
-
-    // Step 2: Retrieve Metadata from Html and the Html that was copied.
-    retrieveMetadataFromClipboard(doc, event, trustedHTMLHandler);
-
-    // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
-    if (
-        (pasteType == 'asImage' && imageDataUri) ||
-        (pasteType != 'asPlainText' && !text && imageDataUri)
-    ) {
-        // Paste image
-        handleImagePaste(imageDataUri, fragment);
-    } else if (pasteType != 'asPlainText' && rawHtml && doc ? doc.body : false) {
-        moveChildNodes(fragment, doc?.body);
-    } else if (text) {
-        // Paste text
-        handleTextPaste(text, null /*position*/, fragment);
-    }
-
-    const formatContainer = fragment.ownerDocument.createElement('span');
-
-    moveChildNodes(formatContainer, fragment);
-    fragment.appendChild(formatContainer);
-
-    applySegmentFormatToElement(formatContainer, currentFormat);
-
-    let pluginEvent: ContentModelBeforePasteEvent = event;
-
-    // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste, when the type of paste is different than Plain Text
-    if (pasteType !== 'asPlainText') {
-        pluginEvent = editor.triggerPluginEvent(
-            PluginEventType.BeforePaste,
-            event,
-            true /* broadcast */
-        ) as ContentModelBeforePasteEvent;
-    }
-
-    // Step 5. Sanitize the fragment before paste to make sure the content is safe
-    sanitizePasteContent(event, null /*position*/);
-
-    return pluginEvent;
+function createDOMFromHtml(
+    html: string | null | undefined,
+    trustedHTMLHandler: TrustedHTMLHandler
+): Document | null {
+    return html ? new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html') : null;
 }
