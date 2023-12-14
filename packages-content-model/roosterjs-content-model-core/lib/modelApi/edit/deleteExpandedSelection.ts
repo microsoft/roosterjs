@@ -1,13 +1,12 @@
 import { deleteBlock } from '../../publicApi/selection/deleteBlock';
 import { deleteSegment } from '../../publicApi/selection/deleteSegment';
+import { getCurrentSegmentTextFormat } from '../../publicApi/domUtils/getCurrentSegmentTextFormat';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import type { IterateSelectionsOption } from '../../publicApi/selection/iterateSelections';
 import type {
     ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelParagraph,
-    ContentModelSegment,
-    ContentModelSegmentFormat,
     ContentModelSelectionMarker,
     DeleteSelectionContext,
     FormatWithContentModelContext,
@@ -62,7 +61,7 @@ export function deleteExpandedSelection(
                     // so we can put cursor here after delete
                     paragraph = block;
                     insertMarkerIndex = paragraph.segments.indexOf(segments[0]);
-                    markerFormat = getMarkerFormat(segments[0]);
+                    markerFormat = getCurrentSegmentTextFormat(segments[0]);
 
                     context.lastParagraph = paragraph;
                     context.lastTableContext = tableContext;
@@ -128,10 +127,6 @@ export function deleteExpandedSelection(
     );
 
     return context;
-}
-
-function getMarkerFormat(segment: ContentModelSegment): ContentModelSegmentFormat | undefined {
-    return segment.segmentType !== 'Image' ? segment.format : undefined;
 }
 
 function createInsertPoint(
