@@ -1,13 +1,14 @@
 import { addRangeToSelection } from './utils/addRangeToSelection';
 import { ChangeSource } from '../constants/ChangeSource';
 import { cloneModel } from '../publicApi/model/cloneModel';
-import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
 import { deleteEmptyList } from './utils/deleteEmptyList';
 import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
 import { getSelectedCells } from '../publicApi/table/getSelectedCells';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { paste } from '../publicApi/model/paste';
+import { PluginEventType } from 'roosterjs-editor-types';
+import { transformColor } from '../publicApi/color/transformColor';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -104,28 +105,10 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
 
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const model = this.editor.createContentModel();
+            const cacheProcessor = this.editor.isDarkMode() ? this.processEntityColor : false;
 
             const pasteModel = cloneModel(model, {
-                includeCachedElement: this.editor.isDarkMode()
-                    ? (node, type) => {
-                          if (type == 'cache') {
-                              return undefined;
-                          } else {
-                              const result = node.cloneNode(true /*deep*/) as HTMLElement;
-
-                              this.editor?.transformToDarkColor(
-                                  result,
-                                  ColorTransformDirection.DarkToLight
-                              );
-
-                              result.style.color = result.style.color || 'inherit';
-                              result.style.backgroundColor =
-                                  result.style.backgroundColor || 'inherit';
-
-                              return result;
-                          }
-                      }
-                    : false,
+                includeCachedElement: cacheProcessor,
             });
             if (selection.type === 'table') {
                 iterateSelections(pasteModel, (_, tableContext) => {
@@ -247,6 +230,25 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
 
         return div;
     }
+
+    private processEntityColor = (
+        node: HTMLElement,
+        type: 'general' | 'entity' | 'cache'
+    ): HTMLElement | undefined => {
+        if (type == 'cache' || !this.editor) {
+            return undefined;
+        }
+
+        const result = node.cloneNode(true /*deep*/) as HTMLElement;
+        const colorHandler = this.editor.getDarkColorHandler();
+
+        transformColor(result, true /*includeSelf*/, 'darkToLight', colorHandler);
+
+        result.style.color = result.style.color || 'inherit';
+        result.style.backgroundColor = result.style.backgroundColor || 'inherit';
+
+        return result;
+    };
 }
 
 function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {

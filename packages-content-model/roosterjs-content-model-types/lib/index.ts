@@ -208,7 +208,6 @@ export {
     StandaloneEditorDefaultSettings,
     SwitchShadowEdit,
     TriggerEvent,
-    TransformColor,
     AddUndoSnapshot,
     PortedCoreApiMap,
     UnportedCoreApiMap,
