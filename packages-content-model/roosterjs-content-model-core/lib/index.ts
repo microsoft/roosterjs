@@ -41,6 +41,8 @@ export { isCharacterValue, isModifierKey } from './publicApi/domUtils/eventUtils
 export { combineBorderValue, extractBorderValues } from './publicApi/domUtils/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stringUtil';
 export { parseTableCells, createTableRanges } from './publicApi/domUtils/tableCellUtils';
+export { readFile } from './publicApi/domUtils/readFile';
+
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
 export { transformColor } from './publicApi/color/transformColor';

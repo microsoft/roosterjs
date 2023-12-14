@@ -11,8 +11,9 @@ import type {
     ContentModelBeforePasteEventData,
     ContentModelBeforePasteEvent,
     IStandaloneEditor,
+    ClipboardData,
 } from 'roosterjs-content-model-types';
-import type { ClipboardData, IEditor } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 import {
     AllowedEntityClasses,
     applySegmentFormatToElement,

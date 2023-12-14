@@ -238,6 +238,7 @@ export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
 export { UndoPluginState } from './pluginState/UndoPluginState';
+export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -270,6 +271,8 @@ export {
 } from './parameter/Snapshot';
 export { SnapshotsManager } from './parameter/SnapshotsManager';
 export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
+export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
+export { ClipboardData } from './parameter/ClipboardData';
 
 export {
     ContentModelBeforePasteEvent,
