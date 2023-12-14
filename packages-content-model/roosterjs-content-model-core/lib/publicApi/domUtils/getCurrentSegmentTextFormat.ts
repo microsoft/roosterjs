@@ -1,4 +1,4 @@
-import { ContentModelSegment, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { ContentModelSegment, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
  * Get the text format of the current selected segment
