@@ -1,3 +1,4 @@
+import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
@@ -7,7 +8,6 @@ import type {
 import type {
     ColorTransformDirection,
     ContentMetadata,
-    DOMEventHandler,
     DarkColorHandler,
     EditorPlugin,
     GetContentMode,
@@ -205,7 +205,7 @@ export type InsertNode = (
  */
 export type AttachDomEvent = (
     core: StandaloneEditorCore,
-    eventMap: Record<string, DOMEventHandler>
+    eventMap: Record<string, DOMEventRecord>
 ) => () => void;
 
 /**
@@ -343,13 +343,14 @@ export interface PortedCoreApiMap {
      * @param step Steps to move, can be 0, positive or negative
      */
     restoreUndoSnapshot: RestoreUndoSnapshot;
-}
 
-/**
- * Temp interface
- * TODO: Port these core API
- */
-export interface UnportedCoreApiMap {
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param core The StandaloneEditorCore object
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent: AttachDomEvent;
+
     /**
      * Trigger a plugin event
      * @param core The StandaloneEditorCore object
@@ -357,7 +358,13 @@ export interface UnportedCoreApiMap {
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
+}
 
+/**
+ * Temp interface
+ * TODO: Port these core API
+ */
+export interface UnportedCoreApiMap {
     /**
      * Edit and transform color of elements between light mode and dark mode
      * @param core The StandaloneEditorCore object
@@ -386,15 +393,6 @@ export interface UnportedCoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
-
-    /**
-     * Attach a DOM event to the editor content DIV
-     * @param core The StandaloneEditorCore object
-     * @param eventName The DOM event name
-     * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
-     * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
-     */
-    attachDomEvent: AttachDomEvent;
 
     /**
      * Get current editor content as HTML string

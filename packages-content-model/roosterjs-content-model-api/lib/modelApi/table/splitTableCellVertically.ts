@@ -1,5 +1,5 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
-import { getSelectedCells } from './getSelectedCells';
+import { getSelectedCells } from 'roosterjs-content-model-core';
 import type { ContentModelTable, ContentModelTableRow } from 'roosterjs-content-model-types';
 
 const MIN_HEIGHT = 22;
@@ -24,11 +24,13 @@ export function splitTableCellVertically(table: ContentModelTable) {
             if (
                 belowRow?.cells.every(
                     (belowCell, colIndex) =>
-                        colIndex < sel.firstCol || colIndex > sel.lastCol || belowCell.spanAbove
+                        colIndex < sel.firstColumn ||
+                        colIndex > sel.lastColumn ||
+                        belowCell.spanAbove
                 )
             ) {
                 belowRow.cells.forEach((belowCell, colIndex) => {
-                    if (colIndex >= sel.firstCol && colIndex <= sel.lastCol) {
+                    if (colIndex >= sel.firstColumn && colIndex <= sel.lastColumn) {
                         belowCell.spanAbove = false;
                         delete belowCell.cachedElement;
                     }
@@ -50,7 +52,7 @@ export function splitTableCellVertically(table: ContentModelTable) {
 
                         newCell.dataset = { ...cell.dataset };
 
-                        if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
+                        if (colIndex < sel.firstColumn || colIndex > sel.lastColumn) {
                             newCell.spanAbove = true;
                         } else {
                             newCell.isSelected = cell.isSelected;

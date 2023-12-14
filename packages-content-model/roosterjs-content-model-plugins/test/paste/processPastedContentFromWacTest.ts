@@ -2917,4 +2917,38 @@ describe('wordOnlineHandler', () => {
             result
         );
     });
+
+    it('Comment Removal', () => {
+        runTest(
+            '<div><span class="CommentHighlightRest" style="background-color: rgba(209, 209, 209, 0.5)">Test</span></div>',
+            '<div>Test</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'Test', format: {} }],
+                        format: {},
+                    },
+                ],
+            }
+        );
+    });
+
+    it('Comment Removal 2', () => {
+        runTest(
+            '<div><span class="CommentHighlightClicked" style="background-color: rgba(197, 139, 204, 0.5)">Test</span></div>',
+            '<div>Test</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'Test', format: {} }],
+                        format: {},
+                    },
+                ],
+            }
+        );
+    });
 });

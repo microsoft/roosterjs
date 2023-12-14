@@ -1,5 +1,5 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
-import { getSelectedCells } from './getSelectedCells';
+import { getSelectedCells } from 'roosterjs-content-model-core';
 import type {
     ContentModelTable,
     TableHorizontalInsertOperation,
@@ -16,12 +16,12 @@ export function insertTableColumn(
     const insertLeft = operation == 'insertLeft';
 
     if (sel) {
-        for (let i = sel?.firstCol; i <= sel.lastCol; i++) {
+        for (let i = sel?.firstColumn; i <= sel.lastColumn; i++) {
             table.rows.forEach(row => {
-                const cell = row.cells[insertLeft ? sel.firstCol : sel.lastCol];
+                const cell = row.cells[insertLeft ? sel.firstColumn : sel.lastColumn];
 
                 row.cells.splice(
-                    insertLeft ? sel.firstCol : sel.lastCol + 1,
+                    insertLeft ? sel.firstColumn : sel.lastColumn + 1,
                     0,
                     createTableCell(
                         cell.spanLeft,
@@ -33,9 +33,9 @@ export function insertTableColumn(
                 );
             });
             table.widths.splice(
-                insertLeft ? sel.firstCol : sel.lastCol + 1,
+                insertLeft ? sel.firstColumn : sel.lastColumn + 1,
                 0,
-                table.widths[insertLeft ? sel.firstCol : sel.lastCol]
+                table.widths[insertLeft ? sel.firstColumn : sel.lastColumn]
             );
         }
     }

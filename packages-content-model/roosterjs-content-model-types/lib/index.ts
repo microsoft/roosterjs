@@ -129,6 +129,7 @@ export {
 } from './selection/DOMSelection';
 export { InsertPoint } from './selection/InsertPoint';
 export { TableSelectionContext } from './selection/TableSelectionContext';
+export { TableSelectionCoordinates } from './selection/TableSelectionCoordinates';
 
 export {
     ContentModelHandlerMap,
@@ -269,6 +270,7 @@ export {
     Snapshots,
 } from './parameter/Snapshot';
 export { SnapshotsManager } from './parameter/SnapshotsManager';
+export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
 
 export {
     ContentModelBeforePasteEvent,
