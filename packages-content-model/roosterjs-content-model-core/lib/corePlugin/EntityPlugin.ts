@@ -1,4 +1,5 @@
 import { findAllEntities } from './utils/findAllEntities';
+import { transformColor } from '../publicApi/color/transformColor';
 import {
     createEntity,
     generateEntityClassNames,
@@ -7,11 +8,7 @@ import {
     isEntityElement,
     parseEntityClassName,
 } from 'roosterjs-content-model-dom';
-import {
-    ColorTransformDirection,
-    EntityOperation as LegacyEntityOperation,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { EntityOperation as LegacyEntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import type {
     ChangedEntity,
     ContentModelContentChangedEvent,
@@ -161,7 +158,12 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                     };
 
                     if (editor.isDarkMode()) {
-                        editor.transformToDarkColor(wrapper, ColorTransformDirection.LightToDark);
+                        transformColor(
+                            wrapper,
+                            true /*includeSelf*/,
+                            'lightToDark',
+                            editor.getDarkColorHandler()
+                        );
                     }
                 } else if (id) {
                     const mapEntry = this.state.entityMap[id];

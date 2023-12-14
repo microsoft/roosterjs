@@ -42,8 +42,11 @@ export { combineBorderValue, extractBorderValues } from './publicApi/domUtils/bo
 export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stringUtil';
 export { parseTableCells, createTableRanges } from './publicApi/domUtils/tableCellUtils';
 export { getSegmentTextFormat } from './publicApi/domUtils/getSegmentTextFormat';
+export { readFile } from './publicApi/domUtils/readFile';
+
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
+export { transformColor } from './publicApi/color/transformColor';
 
 export { updateImageMetadata } from './metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';

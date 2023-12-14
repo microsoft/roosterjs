@@ -1,6 +1,5 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ClipboardData } from 'roosterjs-editor-types';
-import { DomToModelOption } from 'roosterjs-content-model-types';
+import { ClipboardData, DomToModelOption } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';

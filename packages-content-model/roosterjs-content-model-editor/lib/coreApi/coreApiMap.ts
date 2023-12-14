@@ -3,7 +3,6 @@ import { getContent } from './getContent';
 import { getStyleBasedFormatState } from './getStyleBasedFormatState';
 import { insertNode } from './insertNode';
 import { setContent } from './setContent';
-import { transformColor } from './transformColor';
 import type { UnportedCoreApiMap } from 'roosterjs-content-model-types';
 
 /**
@@ -15,5 +14,4 @@ export const coreApiMap: UnportedCoreApiMap = {
     getStyleBasedFormatState,
     insertNode,
     setContent,
-    transformColor,
 };
