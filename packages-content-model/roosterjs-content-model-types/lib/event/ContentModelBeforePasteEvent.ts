@@ -14,12 +14,12 @@ export interface DomToModelOptionForPaste extends Required<DomToModelOption> {
     /**
      * Additional allowed HTML tags in lower case. Element with these tags will be preserved
      */
-    additionalAllowedTags: string[];
+    additionalAllowedTags: Lowercase<string>[];
 
     /**
      * Additional disallowed HTML tags in lower case. Elements with these tags will be dropped
      */
-    additionalDisallowedTags: string[];
+    additionalDisallowedTags: Lowercase<string>[];
 }
 
 /**

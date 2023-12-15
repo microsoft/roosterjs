@@ -116,6 +116,8 @@ describe(ID, () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
                                                                     },
                                                                     decorator: {
                                                                         tagName: 'p',
@@ -131,9 +133,7 @@ describe(ID, () => {
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
-                                                                paddingTop: '0px',
                                                                 paddingRight: '7px',
-                                                                paddingBottom: '0px',
                                                                 paddingLeft: '7px',
                                                             },
                                                         },
@@ -148,6 +148,7 @@ describe(ID, () => {
                                                         borderLeft: '1px solid',
                                                         verticalAlign: 'top',
                                                         width: '312px',
+                                                        backgroundColor: 'transparent',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -191,6 +192,8 @@ describe(ID, () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
                                                                     },
                                                                     decorator: {
                                                                         tagName: 'p',
@@ -206,9 +209,7 @@ describe(ID, () => {
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
-                                                                paddingTop: '0px',
                                                                 paddingRight: '7px',
-                                                                paddingBottom: '0px',
                                                                 paddingLeft: '7px',
                                                             },
                                                         },
@@ -223,6 +224,7 @@ describe(ID, () => {
                                                         borderLeft: '1px solid',
                                                         verticalAlign: 'top',
                                                         width: '312px',
+                                                        backgroundColor: 'transparent',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -299,6 +301,7 @@ describe(ID, () => {
                                 marginRight: '0px',
                                 marginBottom: '0px',
                                 marginLeft: '0px',
+                                backgroundColor: 'transparent',
                             },
                             decorator: {
                                 tagName: 'p',

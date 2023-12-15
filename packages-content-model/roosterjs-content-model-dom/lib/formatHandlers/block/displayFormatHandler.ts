@@ -8,7 +8,7 @@ export const displayFormatHandler: FormatHandler<DisplayFormat> = {
     parse: (format, element) => {
         const display = element.style.display;
 
-        if (display) {
+        if (display && display != 'flex') {
             format.display = display;
         }
     },

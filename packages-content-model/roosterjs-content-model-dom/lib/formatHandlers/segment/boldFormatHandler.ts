@@ -9,7 +9,7 @@ export const boldFormatHandler: FormatHandler<BoldFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const fontWeight = element.style.fontWeight || defaultStyle.fontWeight;
 
-        if (fontWeight) {
+        if (fontWeight && fontWeight != 'inherit') {
             format.fontWeight = fontWeight;
         }
     },

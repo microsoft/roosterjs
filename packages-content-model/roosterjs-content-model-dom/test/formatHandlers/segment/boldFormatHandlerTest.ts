@@ -38,6 +38,13 @@ describe('boldFormatHandler.parse', () => {
         });
     });
 
+    it('inherit', () => {
+        div.style.fontWeight = 'inherit';
+        boldFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontWeight).toBeUndefined;
+    });
+
     it('bold 600', () => {
         div.style.fontWeight = '600';
         boldFormatHandler.parse(format, div, context, {});
