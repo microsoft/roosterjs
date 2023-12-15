@@ -1615,7 +1615,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: ' ',
+                                    text: ' ',
                                     format: {
                                         fontSize: '11pt',
                                         lineHeight: '116%',
@@ -1636,7 +1636,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: ' ',
+                                    text: ' ',
                                     format: {},
                                 },
                             ],
@@ -1697,7 +1697,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: ' ',
+                                            text: ' ',
                                             format: {},
                                         },
                                     ],
@@ -1774,7 +1774,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: ' ',
+                                            text: ' ',
                                             format: {},
                                         },
                                     ],
@@ -1808,7 +1808,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: ' ',
+                                    text: ' ',
                                     format: {},
                                 },
                             ],
@@ -1869,7 +1869,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: ' ',
+                                            text: ' ',
                                             format: {},
                                         },
                                     ],
@@ -1903,7 +1903,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: ' ',
+                                    text: ' ',
                                     format: {},
                                 },
                             ],
@@ -1964,7 +1964,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: ' ',
+                                            text: ' ',
                                             format: {},
                                         },
                                     ],
@@ -1998,7 +1998,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: ' ',
+                                    text: ' ',
                                     format: {},
                                 },
                             ],
@@ -2059,7 +2059,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: ' ',
+                                            text: ' ',
                                             format: {},
                                         },
                                     ],
@@ -2093,7 +2093,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: ' ',
+                                    text: ' ',
                                     format: {},
                                 },
                             ],
@@ -2154,7 +2154,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: ' ',
+                                            text: ' ',
                                             format: {},
                                         },
                                     ],
@@ -2188,7 +2188,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: ' ',
+                                    text: ' ',
                                     format: {},
                                 },
                             ],
@@ -2249,7 +2249,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: ' ',
+                                            text: ' ',
                                             format: {},
                                         },
                                     ],
@@ -2283,7 +2283,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: ' ',
+                                    text: ' ',
                                     format: {},
                                 },
                             ],
