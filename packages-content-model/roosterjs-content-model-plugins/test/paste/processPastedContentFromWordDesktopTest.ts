@@ -1,3 +1,4 @@
+import * as getStyleMetadata from '../../lib/paste/WordDesktop/getStyleMetadata';
 import { expectEqual } from './e2e/testUtils';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import { PluginEventType } from 'roosterjs-editor-types';
