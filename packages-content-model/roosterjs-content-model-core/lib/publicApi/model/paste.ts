@@ -1,14 +1,11 @@
 import { ChangeSource } from '../../constants/ChangeSource';
+import { cloneModel, CloneModelOptions } from './cloneModel';
 import { convertInlineCss } from '../../utils/paste/convertInlineCss';
-import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createPasteFragment } from '../../utils/paste/createPasteFragment';
-import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
 import { generatePendingFormat } from '../../utils/paste/generatePendingFormat';
 import { getSegmentTextFormat } from '../domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../selection/collectSelections';
-import { handleLastPaste } from '../../utils/paste/handleLastPaste';
 import { mergePasteContent } from '../../utils/paste/mergePasteContent';
-import { pasteEntityProcessor } from '../../override/pasteEntityProcessor';
 import { retrieveFirstLevelTags } from '../../utils/paste/retrieveFirstLevelTags';
 import { retrieveGlobalCss } from '../../utils/paste/retrieveGlobalCSS';
 import { retrieveHtml } from '../../utils/paste/retrieveHtml';
@@ -23,30 +20,39 @@ import type {
 } from 'roosterjs-content-model-types';
 import type { IEditor, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
+const CloneOption: CloneModelOptions = {
+    includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
+};
+
 /**
  * Paste into editor using a clipboardData object
  * @param editor The editor to paste content into
  * @param clipboardData Clipboard data retrieved from clipboard
  * @param pasteType Type of content to paste. @default normal
- * @param [defaultDomToModelOptions=[]] Default options for DOM to Content model conversion
+ * @param defaultDomToModelOptions Default options for DOM to Content model conversion
  */
 export function paste(
     editor: IStandaloneEditor & IEditor,
     clipboardData: ClipboardData,
     pasteType: PasteType = 'normal',
-    domToModelOptions?: DomToModelOption
+    defaultDomToModelOptions?: DomToModelOption
 ) {
     editor.focus();
+
+    if (clipboardData.modelBeforePaste) {
+        editor.setContentModel(cloneModel(clipboardData.modelBeforePaste, CloneOption));
+    } else {
+        clipboardData.modelBeforePaste = cloneModel(editor.createContentModel(), CloneOption);
+    }
+
     editor.formatContentModel(
         (model, context) => {
-            handleLastPaste(clipboardData, model);
-
             // 1. Prepare variables
             const trustHtmlHandler = editor.getTrustedHTMLHandler();
             const doc = createDOMFromHtml(clipboardData.rawHtml, trustHtmlHandler);
             const htmlAttributes: Record<string, string> = {};
             const cssRules: CSSStyleRule[] = [];
-            const outboundHtml: HtmlFromClipboard = {};
+            const htmlFromClipboard: HtmlFromClipboard = {};
             const selectedSegment = getSelectedSegments(model, true /*includeFormatHodler*/)[0];
             const currentFormat = selectedSegment ? getSegmentTextFormat(selectedSegment) : {};
 
@@ -56,63 +62,47 @@ export function paste(
 
                 retrievePasteMetadata(doc, htmlAttributes);
                 retrieveGlobalCss(doc, cssRules);
-                retrieveHtml(clipboardData, outboundHtml);
+                retrieveHtml(clipboardData, htmlFromClipboard);
 
-                clipboardData.html = outboundHtml.html;
+                clipboardData.html = htmlFromClipboard.html;
                 clipboardData.htmlFirstLevelChildTags = retrieveFirstLevelTags(doc);
             }
 
             // 3. Create target fragment
-            const body =
-                (clipboardData.rawHtml == clipboardData.html
-                    ? doc
-                    : createDOMFromHtml(clipboardData.html, trustHtmlHandler)
-                )?.body ?? null;
             const sourceFragment = createPasteFragment(
                 editor.getDocument(),
                 clipboardData,
                 currentFormat,
                 pasteType,
-                body
+                (clipboardData.rawHtml == clipboardData.html
+                    ? doc
+                    : createDOMFromHtml(clipboardData.html, trustHtmlHandler)
+                )?.body
             );
 
             // 4. Trigger BeforePaste event to allow plugins modify the fragment
-            const { domToModelOption, customizedMerge, fragment } = triggerBeforePasteEvent(
+            // const { domToModelOption, customizedMerge, fragment } =
+            const eventResult = triggerBeforePasteEvent(
                 editor,
                 clipboardData,
                 sourceFragment,
-                outboundHtml,
+                htmlFromClipboard,
                 htmlAttributes,
                 pasteType
             );
 
             // 5. Convert global CSS to inline CSS
-            convertInlineCss(fragment, cssRules);
+            convertInlineCss(eventResult.fragment, cssRules);
 
             // 6. Merge pasted content into main Content Model
-            const copiedModel = domToContentModel(
-                fragment,
-                createDomToModelContext(
-                    undefined /*editorContext*/,
-                    domToModelOptions,
-                    {
-                        processorOverride: {
-                            entity: pasteEntityProcessor,
-                            '*': createPasteGeneralProcessor(domToModelOption),
-                        },
-                    },
-                    domToModelOption
-                )
-            );
             const insertPoint = mergePasteContent(
                 model,
                 context,
-                copiedModel,
-                pasteType == 'mergeFormat',
-                customizedMerge
+                eventResult,
+                defaultDomToModelOptions
             );
 
-            // 6. Resume original segment as pending format
+            // 7. Resume original segment as pending format
             context.newPendingFormat = generatePendingFormat(
                 model.format,
                 insertPoint?.marker.format

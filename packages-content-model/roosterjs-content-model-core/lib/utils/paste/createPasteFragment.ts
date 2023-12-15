@@ -17,7 +17,7 @@ export function createPasteFragment(
     clipboardData: ClipboardData,
     currentFormat: ContentModelSegmentFormat,
     pasteType: PasteType,
-    root: HTMLElement | null
+    root: HTMLElement | undefined
 ): DocumentFragment {
     const { imageDataUri, text } = clipboardData;
     const formatContainer = document.createElement('span');

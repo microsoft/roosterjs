@@ -1,7 +1,9 @@
+import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
+import { PasteType } from 'roosterjs-editor-types';
 
 describe('mergePasteContent', () => {
     it('merge table', () => {
@@ -103,13 +105,17 @@ describe('mergePasteContent', () => {
         };
 
         spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+        spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
+
+        const eventResult = {
+            pasteType: PasteType.Normal,
+            domToModelOption: { additionalAllowedTags: [] },
+        } as any;
 
         mergePasteContent(
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
-            pasteModel,
-            false /* applyCurrentFormat */,
-            undefined /* customizedMerge */
+            eventResult
         );
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
@@ -191,13 +197,18 @@ describe('mergePasteContent', () => {
         const customizedMerge = jasmine.createSpy('customizedMerge');
 
         spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+        spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
+
+        const eventResult = {
+            pasteType: PasteType.Normal,
+            domToModelOption: { additionalAllowedTags: [] },
+            customizedMerge,
+        } as any;
 
         mergePasteContent(
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
-            pasteModel,
-            false /* applyCurrentFormat */,
-            customizedMerge /* customizedMerge */
+            eventResult
         );
 
         expect(mergeModelFile.mergeModel).not.toHaveBeenCalled();
@@ -209,13 +220,17 @@ describe('mergePasteContent', () => {
         const sourceModel: ContentModelDocument = createContentModelDocument();
 
         spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+        spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
+
+        const eventResult = {
+            pasteType: PasteType.MergeFormat,
+            domToModelOption: { additionalAllowedTags: [] },
+        } as any;
 
         mergePasteContent(
             sourceModel,
             { newEntities: [], deletedEntities: [], newImages: [] },
-            pasteModel,
-            true /* applyCurrentFormat */,
-            undefined /* customizedMerge */
+            eventResult
         );
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(

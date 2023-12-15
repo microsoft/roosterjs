@@ -3,7 +3,6 @@ import type { HtmlFromClipboard } from './retrieveHtml';
 import type {
     ClipboardData,
     ContentModelBeforePasteEvent,
-    ContentModelBeforePasteEventData,
     DomToModelOptionForPaste,
     IStandaloneEditor,
     PasteType,
@@ -25,10 +24,10 @@ export function triggerBeforePasteEvent(
     editor: IStandaloneEditor,
     clipboardData: ClipboardData,
     fragment: DocumentFragment,
-    outboundHtml: HtmlFromClipboard,
+    htmlFromClipboard: HtmlFromClipboard,
     htmlAttributes: Record<string, string>,
     pasteType: PasteType
-) {
+): ContentModelBeforePasteEvent {
     const domToModelOption: DomToModelOptionForPaste = {
         additionalAllowedTags: [],
         additionalDisallowedTags: [],
@@ -37,11 +36,12 @@ export function triggerBeforePasteEvent(
         processorOverride: {},
     };
 
-    let event: ContentModelBeforePasteEventData = {
+    let event: ContentModelBeforePasteEvent = {
+        eventType: PluginEventType.BeforePaste,
         clipboardData,
         fragment,
-        htmlBefore: outboundHtml.htmlBefore ?? '',
-        htmlAfter: outboundHtml.htmlAfter ?? '',
+        htmlBefore: htmlFromClipboard.htmlBefore ?? '',
+        htmlAfter: htmlFromClipboard.htmlAfter ?? '',
         htmlAttributes,
         pasteType: PasteTypeMap[pasteType],
         domToModelOption,

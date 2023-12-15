@@ -1,6 +1,12 @@
-import { mergeModel } from '../../publicApi/model/mergeModel';
+import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
+import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
+import { mergeModel, MergeModelOption } from '../../publicApi/model/mergeModel';
+import { pasteEntityProcessor } from '../../override/pasteEntityProcessor';
+import { PasteType } from 'roosterjs-editor-types';
 import type {
+    ContentModelBeforePasteEvent,
     ContentModelDocument,
+    DomToModelOption,
     FormatWithContentModelContext,
     InsertPoint,
 } from 'roosterjs-content-model-types';
@@ -11,18 +17,30 @@ import type {
 export function mergePasteContent(
     model: ContentModelDocument,
     context: FormatWithContentModelContext,
-    pasteModel: ContentModelDocument,
-    applyCurrentFormat: boolean,
-    customizedMerge:
-        | undefined
-        | ((source: ContentModelDocument, target: ContentModelDocument) => InsertPoint | null)
+    eventResult: ContentModelBeforePasteEvent,
+    defaultDomToModelOptions?: DomToModelOption
 ): InsertPoint | null {
+    const { fragment, domToModelOption, customizedMerge, pasteType } = eventResult;
+    const domToModelContext = createDomToModelContext(
+        undefined /*editorContext*/,
+        defaultDomToModelOptions,
+        {
+            processorOverride: {
+                entity: pasteEntityProcessor,
+                '*': createPasteGeneralProcessor(domToModelOption),
+            },
+        },
+        domToModelOption
+    );
+    const pasteModel = domToContentModel(fragment, domToModelContext);
+    const mergeOption: MergeModelOption = {
+        mergeFormat: pasteType == PasteType.MergeFormat ? 'keepSourceEmphasisFormat' : 'none',
+        mergeTable: shouldMergeTable(pasteModel),
+    };
+
     return customizedMerge
         ? customizedMerge(model, pasteModel)
-        : mergeModel(model, pasteModel, context, {
-              mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
-              mergeTable: shouldMergeTable(pasteModel),
-          });
+        : mergeModel(model, pasteModel, context, mergeOption);
 }
 
 function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined {
