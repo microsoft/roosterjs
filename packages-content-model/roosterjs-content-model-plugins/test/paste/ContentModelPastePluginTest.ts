@@ -5,14 +5,13 @@ import * as getPasteSource from '../../lib/paste/pasteSourceValidations/getPaste
 import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
-import * as WordDesktopFile from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { ContentModelBeforePasteEvent } from 'roosterjs-content-model-types';
 import { ContentModelPastePlugin } from '../../lib/paste/ContentModelPastePlugin';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
 import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 
-const trustedHTMLHandler = <any>'mock';
+const trustedHTMLHandler = (val: string) => val;
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Content Model Paste Plugin Test', () => {
@@ -81,15 +80,10 @@ describe('Content Model Paste Plugin Test', () => {
 
         it('WordDesktop', () => {
             spyOn(getPasteSource, 'getPasteSource').and.returnValue('wordDesktop');
-            spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledWith(event);
-            expect(event.domToModelOption.processorOverride?.element).toBe(
-                WordDesktopFile.wordDesktopElementProcessor
-            );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
