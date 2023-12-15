@@ -22,7 +22,6 @@ describe('insertEntity', () => {
     let appendChildSpy: jasmine.Spy;
     let insertEntityModelSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
-    let transformToDarkColorSpy: jasmine.Spy;
     let normalizeContentModelSpy: jasmine.Spy;
 
     const type = 'Entity';
@@ -39,7 +38,6 @@ describe('insertEntity', () => {
         appendChildSpy = jasmine.createSpy('appendChildSpy');
         insertEntityModelSpy = spyOn(insertEntityModel, 'insertEntityModel');
         isDarkModeSpy = jasmine.createSpy('isDarkMode');
-        transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
 
         wrapper = {
             style: {
@@ -65,7 +63,6 @@ describe('insertEntity', () => {
             triggerContentChangedEvent: triggerContentChangedEventSpy,
             getDocument: getDocumentSpy,
             isDarkMode: isDarkModeSpy,
-            transformToDarkColor: transformToDarkColorSpy,
             formatContentModel: formatWithContentModelSpy,
         } as any;
     });
@@ -99,7 +96,6 @@ describe('insertEntity', () => {
             context
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
-        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
         expect(entity).toEqual({
@@ -144,7 +140,6 @@ describe('insertEntity', () => {
             context
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
-        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
         expect(entity).toEqual({
@@ -197,7 +192,6 @@ describe('insertEntity', () => {
             context
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
-        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
         expect(entity).toEqual({

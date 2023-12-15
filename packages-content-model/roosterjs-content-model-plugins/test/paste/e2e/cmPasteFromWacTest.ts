@@ -1,6 +1,5 @@
 import * as processPastedContentWacComponents from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
-import { ClipboardData } from 'roosterjs-editor-types';
-import { DomToModelOption } from 'roosterjs-content-model-types';
+import { ClipboardData, DomToModelOption } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { paste } from 'roosterjs-content-model-core';

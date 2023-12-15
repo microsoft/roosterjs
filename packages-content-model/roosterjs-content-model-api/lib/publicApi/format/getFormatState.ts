@@ -25,8 +25,10 @@ export default function getFormatState(editor: IStandaloneEditor): ContentModelF
             child: reducedModelChildProcessor,
         },
     });
+    const manager = editor.getSnapshotsManager();
     const result: ContentModelFormatState = {
-        ...editor.getUndoState(),
+        canUndo: manager.hasNewContent || manager.canMove(-1),
+        canRedo: manager.canMove(1),
         isDarkMode: editor.isDarkMode(),
         zoomScale: editor.getZoomScale(),
     };

@@ -15,7 +15,12 @@ describe('collapseTableSelection', () => {
         const cell2 = createTableCell();
         table.rows[0].cells.push(cell1, cell2);
 
-        collapseTableSelection(table.rows, { firstCol: 0, firstRow: 0, lastCol: 0, lastRow: 0 });
+        collapseTableSelection(table.rows, {
+            firstColumn: 0,
+            firstRow: 0,
+            lastColumn: 0,
+            lastRow: 0,
+        });
 
         expect(addSegment.addSegment).toHaveBeenCalledWith(table.rows[0].cells[0], selectionMarker);
     });
@@ -30,7 +35,12 @@ describe('collapseTableSelection', () => {
         const cell2 = createTableCell();
         table.rows[0].cells.push(cell1, cell2);
 
-        collapseTableSelection(table.rows, { firstCol: 1, firstRow: 1, lastCol: 0, lastRow: 0 });
+        collapseTableSelection(table.rows, {
+            firstColumn: 1,
+            firstRow: 1,
+            lastColumn: 0,
+            lastRow: 0,
+        });
 
         expect(createSelectionMarker.createSelectionMarker).not.toHaveBeenCalled();
         expect(addSegment.addSegment).not.toHaveBeenCalled();

@@ -20,6 +20,7 @@ import {
     ContentModelListLevel,
     ContentModelSegmentFormat,
     ContentModelTableCellFormat,
+    DatasetFormat,
 } from 'roosterjs-content-model-types';
 
 describe('Creators', () => {
@@ -325,6 +326,48 @@ describe('Creators', () => {
             isHeader: true,
             format: { textAlign: 'start' },
             dataset: {},
+        });
+    });
+
+    it('createTableCell with dataset', () => {
+        const obj = { bgColorOverride: true, vAlignOverride: true, borderOverride: true };
+        const dataset: DatasetFormat = {
+            'data-editing-info': JSON.stringify(obj),
+        };
+        const unchangedDataset = { ...dataset };
+        const tdModel = createTableCell(
+            1 /*colSpan*/,
+            1 /*rowSpan*/,
+            false /*isHeader*/,
+            undefined /*format*/,
+            dataset
+        );
+
+        expect(tdModel).toEqual({
+            blockGroupType: 'TableCell',
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            format: {},
+            dataset: unchangedDataset,
+        });
+
+        // Change original dataset object should not impact the created table cell
+        dataset['data-editing-info'] = JSON.stringify({
+            bgColorOverride: false,
+            vAlignOverride: false,
+            borderOverride: false,
+        });
+
+        expect(tdModel).toEqual({
+            blockGroupType: 'TableCell',
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            format: {},
+            dataset: unchangedDataset,
         });
     });
 

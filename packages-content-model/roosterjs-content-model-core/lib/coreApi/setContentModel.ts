@@ -29,12 +29,10 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     if (!core.lifecycle.shadowEditFragment) {
         core.cache.cachedSelection = selection || undefined;
 
-        if (selection) {
-            if (!option?.ignoreSelection) {
-                core.api.setDOMSelection(core, selection);
-            } else if (selection.type == 'range') {
-                core.selection.selectionRange = selection.range;
-            }
+        if (!option?.ignoreSelection && selection) {
+            core.api.setDOMSelection(core, selection);
+        } else if (!selection || selection.type !== 'range') {
+            core.selection.selection = selection;
         }
 
         core.cache.cachedModel = model;

@@ -10,7 +10,7 @@ import {
 
 describe('keyboardInput', () => {
     let editor: IContentModelEditor;
-    let addUndoSnapshotSpy: jasmine.Spy;
+    let takeSnapshotSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let deleteSelectionSpy: jasmine.Spy;
@@ -28,7 +28,7 @@ describe('keyboardInput', () => {
         };
 
         formatResult = undefined;
-        addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+        takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake((callback: ContentModelFormatter) => {
@@ -40,7 +40,7 @@ describe('keyboardInput', () => {
 
         editor = {
             getDOMSelection: getDOMSelectionSpy,
-            addUndoSnapshot: addUndoSnapshotSpy,
+            takeSnapshot: takeSnapshotSpy,
             formatContentModel: formatContentModelSpy,
         } as any;
     });
@@ -63,7 +63,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatContentModelSpy).not.toHaveBeenCalled();
         expect(deleteSelectionSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeUndefined();
@@ -93,7 +93,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
         expect(formatResult).toBeFalse();
@@ -125,7 +125,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
         expect(formatResult).toBeTrue();
@@ -155,7 +155,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
         expect(formatResult).toBeTrue();
@@ -185,7 +185,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
         expect(formatResult).toBeTrue();
@@ -213,7 +213,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatContentModelSpy).not.toHaveBeenCalled();
         expect(deleteSelectionSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeUndefined();
@@ -244,7 +244,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatContentModelSpy).not.toHaveBeenCalled();
         expect(deleteSelectionSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeUndefined();
@@ -271,7 +271,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
         expect(formatResult).toBeTrue();
@@ -301,7 +301,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).not.toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatContentModelSpy).not.toHaveBeenCalled();
         expect(deleteSelectionSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeUndefined();
@@ -328,7 +328,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
         expect(formatResult).toBeTrue();
@@ -367,7 +367,7 @@ describe('keyboardInput', () => {
         keyboardInput(editor, rawEvent);
 
         expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(addUndoSnapshotSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
         expect(formatResult).toBeTrue();

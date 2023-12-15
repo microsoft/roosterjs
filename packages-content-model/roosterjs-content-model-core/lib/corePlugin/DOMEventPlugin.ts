@@ -1,13 +1,14 @@
-import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
-import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
+import { ChangeSource } from '../constants/ChangeSource';
+import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     DOMEventPluginState,
     IStandaloneEditor,
+    DOMEventRecord,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 import type {
     ContextMenuProvider,
-    DOMEventHandler,
     EditorPlugin,
     IEditor,
     PluginWithState,
@@ -61,9 +62,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.editor = editor as IStandaloneEditor & IEditor;
 
         const document = this.editor.getDocument();
-        //Record<string, DOMEventHandler>
         const eventHandlers: Partial<
-            { [P in keyof HTMLElementEventMap]: DOMEventHandler<HTMLElementEventMap[P]> }
+            { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
         > = {
             // 1. Keyboard event
             keypress: this.getEventHandler(PluginEventType.KeyPress),
@@ -71,27 +71,22 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             keyup: this.getEventHandler(PluginEventType.KeyUp),
 
             // 2. Mouse event
-            mousedown: this.onMouseDown,
-            contextmenu: this.onContextMenuEvent,
+            mousedown: { beforeDispatch: this.onMouseDown },
+            contextmenu: { beforeDispatch: this.onContextMenuEvent },
 
             // 3. IME state management
-            compositionstart: () => (this.state.isInIME = true),
-            compositionend: (rawEvent: CompositionEvent) => {
-                this.state.isInIME = false;
-                editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
-                    rawEvent,
-                });
-            },
+            compositionstart: { beforeDispatch: this.onCompositionStart },
+            compositionend: { beforeDispatch: this.onCompositionEnd },
 
             // 4. Drag and Drop event
-            dragstart: this.onDragStart,
-            drop: this.onDrop,
+            dragstart: { beforeDispatch: this.onDragStart },
+            drop: { beforeDispatch: this.onDrop },
 
             // 5. Input event
             input: this.getEventHandler(PluginEventType.Input),
         };
 
-        this.disposer = editor.addDomEventHandler(<Record<string, DOMEventHandler>>eventHandlers);
+        this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
 
         // 7. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
@@ -131,8 +126,11 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         }
     };
     private onDrop = () => {
-        this.editor?.runAsync(editor => {
-            editor.addUndoSnapshot(() => {}, ChangeSource.Drop);
+        this.editor?.runAsync(() => {
+            if (this.editor) {
+                this.editor.takeSnapshot();
+                this.editor.triggerContentChangedEvent(ChangeSource.Drop);
+            }
         });
     };
 
@@ -143,7 +141,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         });
     };
 
-    private getEventHandler(eventType: PluginEventType): DOMEventHandler {
+    private getEventHandler(eventType: PluginEventType): DOMEventRecord {
         const beforeDispatch = (event: Event) =>
             eventType == PluginEventType.Input
                 ? this.onInputEvent(<InputEvent>event)
@@ -156,7 +154,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     }
 
     private onKeyboardEvent = (event: KeyboardEvent) => {
-        if (isCharacterValue(event) || (event.which >= Keys.PAGEUP && event.which <= Keys.DOWN)) {
+        if (isCharacterValue(event) || isCursorMovingKey(event)) {
             // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
             // since editor already handles these keys and no need to propagate to parents
             event.stopPropagation();
@@ -220,6 +218,17 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.editor?.triggerPluginEvent(PluginEventType.ContextMenu, {
             rawEvent: event,
             items: allItems,
+        });
+    };
+
+    private onCompositionStart = () => {
+        this.state.isInIME = true;
+    };
+
+    private onCompositionEnd = (rawEvent: CompositionEvent) => {
+        this.state.isInIME = false;
+        this.editor?.triggerPluginEvent(PluginEventType.CompositionEnd, {
+            rawEvent,
         });
     };
 

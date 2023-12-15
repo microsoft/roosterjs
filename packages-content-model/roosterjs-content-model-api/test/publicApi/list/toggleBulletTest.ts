@@ -37,7 +37,6 @@ describe('toggleBullet', () => {
         editor = ({
             focus,
             formatContentModel,
-            getCustomData: () => ({}),
             getFocusedPosition: () => ({}),
         } as any) as IStandaloneEditor;
 

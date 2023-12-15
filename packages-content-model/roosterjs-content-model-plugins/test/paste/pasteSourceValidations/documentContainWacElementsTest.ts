@@ -91,4 +91,70 @@ describe('documentContainWacElements |', () => {
 
         expect(result).toBeTrue();
     });
+
+    it('span.WACImageContainer', () => {
+        const fragment = document.createDocumentFragment();
+
+        const span = document.createElement('span');
+        span.className = 'WACImageContainer';
+        fragment.appendChild(span);
+
+        const result = documentContainWacElements(<GetSourceInputParams>{ fragment });
+
+        expect(result).toBeTrue();
+    });
+
+    it('span.WACImageBorder', () => {
+        const fragment = document.createDocumentFragment();
+
+        const span = document.createElement('span');
+        span.className = 'WACImageBorder';
+        fragment.appendChild(span);
+
+        const result = documentContainWacElements(<GetSourceInputParams>{ fragment });
+
+        expect(result).toBeTrue();
+    });
+
+    it('CommentHighlightRest', () => {
+        const fragment = document.createDocumentFragment();
+
+        const span = document.createElement('span');
+        span.className = 'CommentHighlightRest';
+        fragment.appendChild(span);
+
+        const result = documentContainWacElements(<GetSourceInputParams>{ fragment });
+
+        expect(result).toBeTrue();
+    });
+
+    it('CommentHighlightClicked', () => {
+        const fragment = document.createDocumentFragment();
+
+        const span = document.createElement('span');
+        span.className = 'CommentHighlightClicked';
+        fragment.appendChild(span);
+
+        const result = documentContainWacElements(<GetSourceInputParams>{ fragment });
+
+        expect(result).toBeTrue();
+    });
+
+    it('Table Temp Element TableCellTopBorderHandle', () => {
+        const fragment = document.createDocumentFragment();
+
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+        div.className = 'TableCellTopBorderHandle';
+        td.appendChild(div);
+        tr.appendChild(td);
+        table.appendChild(tr);
+        fragment.appendChild(table);
+
+        const result = documentContainWacElements(<GetSourceInputParams>{ fragment });
+
+        expect(result).toBeTrue();
+    });
 });
