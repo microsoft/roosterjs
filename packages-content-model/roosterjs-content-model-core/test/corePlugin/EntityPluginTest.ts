@@ -1,8 +1,9 @@
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
+import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createContentModelDocument, createEntity } from '../../../roosterjs-content-model-dom/lib';
 import { createEntityPlugin } from '../../lib/corePlugin/EntityPlugin';
 import {
-    ColorTransformDirection,
+    DarkColorHandler,
     EntityOperation,
     EntityPluginState,
     IEditor,
@@ -17,21 +18,23 @@ describe('EntityPlugin', () => {
     let triggerPluginEventSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
     let containsSpy: jasmine.Spy;
-    let transformToDarkColorSpy: jasmine.Spy;
+    let transformColorSpy: jasmine.Spy;
+    let mockedDarkColorHandler: DarkColorHandler;
 
     beforeEach(() => {
         createContentModelSpy = jasmine.createSpy('createContentModel');
         triggerPluginEventSpy = jasmine.createSpy('triggerPluginEvent');
         isDarkModeSpy = jasmine.createSpy('isDarkMode');
         containsSpy = jasmine.createSpy('contains');
-        transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
+        transformColorSpy = spyOn(transformColor, 'transformColor');
+        mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
 
         editor = {
             createContentModel: createContentModelSpy,
             triggerPluginEvent: triggerPluginEventSpy,
             isDarkMode: isDarkModeSpy,
             contains: containsSpy,
-            transformToDarkColor: transformToDarkColorSpy,
+            getDarkColorHandler: () => mockedDarkColorHandler,
         } as any;
         plugin = createEntityPlugin();
         plugin.initialize(editor);
@@ -57,7 +60,7 @@ describe('EntityPlugin', () => {
             expect(state).toEqual({
                 entityMap: {},
             });
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
 
         it('Doc with entity', () => {
@@ -97,7 +100,7 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
 
         it('Doc with entity, can persist', () => {
@@ -140,7 +143,7 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
     });
 
@@ -182,7 +185,7 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
 
         it('New entity in dark mode', () => {
@@ -223,10 +226,12 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(transformToDarkColorSpy).toHaveBeenCalledTimes(1);
-            expect(transformToDarkColorSpy).toHaveBeenCalledWith(
+            expect(transformColorSpy).toHaveBeenCalledTimes(1);
+            expect(transformColorSpy).toHaveBeenCalledWith(
                 wrapper,
-                ColorTransformDirection.LightToDark
+                true,
+                'lightToDark',
+                mockedDarkColorHandler
             );
         });
 
@@ -289,7 +294,7 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
 
         it('Do not trigger event for already deleted entity', () => {
@@ -319,7 +324,7 @@ describe('EntityPlugin', () => {
                 },
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(0);
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
 
         it('Add back a deleted entity', () => {
@@ -364,7 +369,7 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
 
         it('Has changedEntities parameter', () => {
@@ -440,7 +445,7 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
 
         it('Handle conflict id', () => {
@@ -498,7 +503,7 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+            expect(transformColorSpy).not.toHaveBeenCalled();
         });
 
         it('With content state', () => {

@@ -1,4 +1,4 @@
-import { ClipboardData } from 'roosterjs-editor-types';
+import { ClipboardData } from 'roosterjs-content-model-types';
 import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
 import { shouldConvertToSingleImage } from '../../../lib/paste/pasteSourceValidations/shouldConvertToSingleImage';
 
