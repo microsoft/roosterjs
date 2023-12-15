@@ -1,5 +1,5 @@
 import { ChangeSource } from '../../constants/ChangeSource';
-import { cloneModel, CloneModelOptions } from './cloneModel';
+import { cloneModel } from './cloneModel';
 import { convertInlineCss } from '../../utils/paste/convertInlineCss';
 import { createPasteFragment } from '../../utils/paste/createPasteFragment';
 import { generatePendingFormat } from '../../utils/paste/generatePendingFormat';
@@ -11,6 +11,7 @@ import { retrieveGlobalCss } from '../../utils/paste/retrieveGlobalCSS';
 import { retrieveHtml } from '../../utils/paste/retrieveHtml';
 import { retrievePasteMetadata } from '../../utils/paste/retrievePasteMetadata';
 import { triggerBeforePasteEvent } from '../../utils/paste/triggerBeforePasteEvent';
+import type { CloneModelOptions } from './cloneModel';
 import type { HtmlFromClipboard } from '../../utils/paste/retrieveHtml';
 import type {
     PasteType,

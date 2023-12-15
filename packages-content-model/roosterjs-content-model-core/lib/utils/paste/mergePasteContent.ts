@@ -1,8 +1,9 @@
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
-import { mergeModel, MergeModelOption } from '../../publicApi/model/mergeModel';
+import { mergeModel } from '../../publicApi/model/mergeModel';
 import { pasteEntityProcessor } from '../../override/pasteEntityProcessor';
 import { PasteType } from 'roosterjs-editor-types';
+import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
     ContentModelBeforePasteEvent,
     ContentModelDocument,
