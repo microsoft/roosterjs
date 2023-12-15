@@ -27,7 +27,6 @@ import type {
     IStandaloneEditor,
     OnNodeCreated,
     StandaloneEditorOptions,
-    DomToModelOption,
 } from 'roosterjs-content-model-types';
 import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
 
@@ -38,17 +37,16 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
     private editor: (IStandaloneEditor & IEditor) | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
-    private editorDomToModelOptions?: DomToModelOption;
 
     /**
      * Construct a new instance of CopyPastePlugin
      * @param option The editor option
      */
     constructor(option: StandaloneEditorOptions) {
-        this.editorDomToModelOptions = option.defaultDomToModelOptions;
         this.state = {
             allowedCustomPasteType: option.allowedCustomPasteType || [],
             tempDiv: null,
+            pasteDomToModelOptions: option.defaultDomToModelOptions,
         };
     }
 
@@ -197,7 +195,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                     this.state.allowedCustomPasteType
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
-                        paste(editor, clipboardData, 'normal', this.editorDomToModelOptions);
+                        paste(editor, clipboardData, 'normal', this.state.pasteDomToModelOptions);
                     }
                 });
             }

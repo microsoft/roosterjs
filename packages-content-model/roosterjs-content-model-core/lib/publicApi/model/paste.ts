@@ -4,6 +4,7 @@ import { createDomToModelContext, domToContentModel } from 'roosterjs-content-mo
 import { createPasteFragment } from '../../utils/paste/createPasteFragment';
 import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
 import { generatePendingFormat } from '../../utils/paste/generatePendingFormat';
+import { getSegmentTextFormat } from '../domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../selection/collectSelections';
 import { handleLastPaste } from '../../utils/paste/handleLastPaste';
 import { mergePasteContent } from '../../utils/paste/mergePasteContent';
@@ -15,8 +16,6 @@ import { retrievePasteMetadata } from '../../utils/paste/retrievePasteMetadata';
 import { triggerBeforePasteEvent } from '../../utils/paste/triggerBeforePasteEvent';
 import type { HtmlFromClipboard } from '../../utils/paste/retrieveHtml';
 import type {
-    ContentModelDocument,
-    ContentModelSegmentFormat,
     PasteType,
     IStandaloneEditor,
     ClipboardData,
@@ -48,7 +47,8 @@ export function paste(
             const htmlAttributes: Record<string, string> = {};
             const cssRules: CSSStyleRule[] = [];
             const outboundHtml: HtmlFromClipboard = {};
-            const currentFormat = getCurrentSegmentFormat(model);
+            const selectedSegment = getSelectedSegments(model, true /*includeFormatHodler*/)[0];
+            const currentFormat = selectedSegment ? getSegmentTextFormat(selectedSegment) : {};
 
             // 2. Handle HTML from clipboard
             if (doc) {
@@ -126,20 +126,6 @@ export function paste(
             apiName: 'paste',
         }
     );
-}
-
-function getCurrentSegmentFormat(model: ContentModelDocument): ContentModelSegmentFormat {
-    const currentSegment = getSelectedSegments(model, true /*includingFormatHolder*/)[0];
-    const { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight } =
-        currentSegment?.format ?? {};
-    return {
-        fontFamily,
-        fontSize,
-        textColor,
-        backgroundColor,
-        letterSpacing,
-        lineHeight,
-    };
 }
 
 function createDOMFromHtml(
