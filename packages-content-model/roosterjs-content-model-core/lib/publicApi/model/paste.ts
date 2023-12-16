@@ -3,9 +3,6 @@ import { cloneModel } from './cloneModel';
 import { convertInlineCss } from '../../utils/paste/convertInlineCss';
 import { createPasteFragment } from '../../utils/paste/createPasteFragment';
 import { generatePasteOptionFromPlugins } from '../../utils/paste/generatePasteOptionFromPlugins';
-import { generatePendingFormat } from '../../utils/paste/generatePendingFormat';
-import { getSegmentTextFormat } from '../domUtils/getSegmentTextFormat';
-import { getSelectedSegments } from '../selection/collectSelections';
 import { mergePasteContent } from '../../utils/paste/mergePasteContent';
 import { retrieveHtmlInfo } from '../../utils/paste/retrieveHtmlInfo';
 import type { CloneModelOptions } from './cloneModel';
@@ -47,8 +44,6 @@ export function paste(
             // 1. Prepare variables
             const trustHtmlHandler = editor.getTrustedHTMLHandler();
             const doc = createDOMFromHtml(clipboardData.rawHtml, trustHtmlHandler);
-            const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
-            const currentFormat = selectedSegment ? getSegmentTextFormat(selectedSegment) : {};
 
             // 2. Handle HTML from clipboard
             const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
@@ -57,7 +52,6 @@ export function paste(
             const sourceFragment = createPasteFragment(
                 editor.getDocument(),
                 clipboardData,
-                currentFormat,
                 pasteType,
                 (clipboardData.rawHtml == clipboardData.html
                     ? doc
@@ -79,18 +73,7 @@ export function paste(
             convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
 
             // 6. Merge pasted content into main Content Model
-            const insertPoint = mergePasteContent(
-                model,
-                context,
-                eventResult,
-                defaultDomToModelOptions
-            );
-
-            // 7. Resume original segment as pending format
-            context.newPendingFormat = generatePendingFormat(
-                model.format,
-                insertPoint?.marker.format
-            );
+            mergePasteContent(model, context, eventResult, defaultDomToModelOptions);
 
             return true;
         },

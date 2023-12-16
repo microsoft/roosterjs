@@ -1,9 +1,17 @@
+import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
+import * as createPasteGeneralProcessor from '../../../lib/override/pasteGeneralProcessor';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
+import { pasteEntityProcessor } from '../../../lib/override/pasteEntityProcessor';
 import { PasteType } from 'roosterjs-editor-types';
+import {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
+    FormatWithContentModelContext,
+    InsertPoint,
+} from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
     it('merge table', () => {
@@ -112,21 +120,36 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
         } as any;
 
-        mergePasteContent(
-            sourceModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            eventResult
-        );
+        const context: FormatWithContentModelContext = {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        };
 
-        expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
-            sourceModel,
-            pasteModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            {
-                mergeFormat: 'none',
-                mergeTable: true,
-            }
-        );
+        mergePasteContent(sourceModel, context, eventResult);
+
+        expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(sourceModel, pasteModel, context, {
+            mergeFormat: 'none',
+            mergeTable: true,
+        });
+        expect(context).toEqual({
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+            newPendingFormat: {
+                backgroundColor: '',
+                fontFamily: '',
+                fontSize: '',
+                fontWeight: '',
+                italic: false,
+                letterSpacing: '',
+                lineHeight: '',
+                strikethrough: false,
+                superOrSubScriptSequence: '',
+                textColor: '',
+                underline: false,
+            },
+        });
         expect(sourceModel).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -242,5 +265,121 @@ describe('mergePasteContent', () => {
                 mergeTable: false,
             }
         );
+    });
+
+    it('Set pending format after merge', () => {
+        const pasteModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [],
+        };
+        const targetModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                italic: true,
+                                lineHeight: '1pt',
+                            },
+                            text: 'test',
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+            format: {
+                fontFamily: 'Tahoma',
+                fontSize: '11pt',
+            },
+        };
+        const insertPointFormat: ContentModelSegmentFormat = {
+            fontFamily: 'Arial',
+        };
+        const insertPoint: InsertPoint = {
+            marker: {
+                format: insertPointFormat,
+                isSelected: true,
+                segmentType: 'SelectionMarker',
+            },
+            paragraph: null!,
+            path: [],
+        };
+        const mockedPasteGeneralProcessor = 'GENERALPROCESSOR' as any;
+        const mockedDomToModelContext = {
+            name: 'DOMTOMODELCONTEXT',
+        } as any;
+
+        const domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel').and.returnValue(
+            pasteModel
+        );
+        const mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.returnValue(insertPoint);
+        const createPasteGeneralProcessorSpy = spyOn(
+            createPasteGeneralProcessor,
+            'createPasteGeneralProcessor'
+        ).and.returnValue(mockedPasteGeneralProcessor);
+        const createDomToModelContextSpy = spyOn(
+            createDomToModelContext,
+            'createDomToModelContext'
+        ).and.returnValue(mockedDomToModelContext);
+
+        const context: FormatWithContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
+        const mockedDomToModelOptions = 'OPTION1' as any;
+        const mockedDefaultDomToModelOptions = 'OPTIONS3' as any;
+        const mockedFragment = 'FRAGMENT' as any;
+
+        mergePasteContent(
+            targetModel,
+            context,
+            {
+                fragment: mockedFragment,
+                domToModelOption: mockedDefaultDomToModelOptions,
+            } as any,
+            mockedDomToModelOptions
+        );
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            newPendingFormat: {
+                backgroundColor: '',
+                fontFamily: 'Arial',
+                fontSize: '11pt',
+                fontWeight: '',
+                italic: false,
+                letterSpacing: '',
+                lineHeight: '',
+                strikethrough: false,
+                superOrSubScriptSequence: '',
+                textColor: '',
+                underline: false,
+            },
+        });
+        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedFragment, mockedDomToModelContext);
+        expect(mergeModelSpy).toHaveBeenCalledWith(targetModel, pasteModel, context, {
+            mergeFormat: 'none',
+            mergeTable: false,
+        });
+        expect(createPasteGeneralProcessorSpy).toHaveBeenCalledWith(mockedDefaultDomToModelOptions);
+        expect(createDomToModelContextSpy).toHaveBeenCalledWith(
+            undefined,
+            mockedDomToModelOptions,
+            {
+                processorOverride: {
+                    entity: pasteEntityProcessor,
+                    '*': mockedPasteGeneralProcessor,
+                },
+            },
+            mockedDefaultDomToModelOptions
+        );
+        expect(mockedDomToModelContext.segmentFormat).toEqual({ lineHeight: '1pt' });
     });
 });

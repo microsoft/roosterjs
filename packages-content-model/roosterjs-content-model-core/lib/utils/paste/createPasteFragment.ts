@@ -1,9 +1,5 @@
-import { applySegmentFormatToElement, moveChildNodes, wrap } from 'roosterjs-content-model-dom';
-import type {
-    ClipboardData,
-    ContentModelSegmentFormat,
-    PasteType,
-} from 'roosterjs-content-model-types';
+import { moveChildNodes, wrap } from 'roosterjs-content-model-dom';
+import type { ClipboardData, PasteType } from 'roosterjs-content-model-types';
 
 const NBSP_HTML = '\u00A0';
 const ENSP_HTML = '\u2002';
@@ -15,14 +11,11 @@ const TAB_SPACES = 6;
 export function createPasteFragment(
     document: Document,
     clipboardData: ClipboardData,
-    currentFormat: ContentModelSegmentFormat,
     pasteType: PasteType,
     root: HTMLElement | undefined
 ): DocumentFragment {
     const { imageDataUri, text } = clipboardData;
-    const formatContainer = document.createElement('span');
-
-    applySegmentFormatToElement(formatContainer, currentFormat);
+    const fragment = document.createDocumentFragment();
 
     if (
         (pasteType == 'asImage' && imageDataUri) ||
@@ -32,13 +25,14 @@ export function createPasteFragment(
         const img = document.createElement('img');
         img.style.maxWidth = '100%';
         img.src = imageDataUri;
-        formatContainer.appendChild(img);
+        fragment.appendChild(img);
     } else if (pasteType != 'asPlainText' && root) {
-        moveChildNodes(formatContainer, root);
+        moveChildNodes(fragment, root);
     } else if (text) {
         text.split('\n').forEach((line, index, lines) => {
             line = line
                 .replace(/^ /g, NBSP_HTML)
+                .replace(/ $/g, NBSP_HTML)
                 .replace(/\r/g, '')
                 .replace(/ {2}/g, ' ' + NBSP_HTML);
 
@@ -54,23 +48,19 @@ export function createPasteFragment(
             // 3. 3 or More lines, For first and last line, paste as it is. For middle lines, wrap with DIV, and add BR if it is empty line
             if (lines.length == 2 && index == 0) {
                 // 1 of 2 lines scenario, add BR
-                formatContainer.appendChild(textNode);
-                formatContainer.appendChild(document.createElement('br'));
+                fragment.appendChild(textNode);
+                fragment.appendChild(document.createElement('br'));
             } else if (index > 0 && index < lines.length - 1) {
                 // Middle line of >=3 lines scenario, wrap with DIV
-                formatContainer.appendChild(
+                fragment.appendChild(
                     wrap(document, line == '' ? document.createElement('br') : textNode, 'div')
                 );
             } else {
                 // All others, paste as it is
-                formatContainer.appendChild(textNode);
+                fragment.appendChild(textNode);
             }
         });
     }
-
-    const fragment = document.createDocumentFragment();
-
-    fragment.appendChild(formatContainer);
 
     return fragment;
 }
