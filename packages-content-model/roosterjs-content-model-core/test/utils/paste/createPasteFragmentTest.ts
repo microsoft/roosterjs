@@ -1,6 +1,7 @@
 import * as moveChildNodes from 'roosterjs-content-model-dom/lib/domUtils/moveChildNodes';
 import { ClipboardData, PasteType } from 'roosterjs-content-model-types';
 import { createPasteFragment } from '../../../lib/utils/paste/createPasteFragment';
+import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 
 describe('createPasteFragment', () => {
     let moveChildNodesSpy: jasmine.Spy;
@@ -13,7 +14,7 @@ describe('createPasteFragment', () => {
         root: HTMLElement,
         clipboardData: ClipboardData,
         pasteType: PasteType,
-        expectedHtml: string,
+        expectedHtml: string | string[],
         isMoveChildNodesCalled: boolean
     ) {
         const tempDiv = document.createElement('div');
@@ -22,7 +23,7 @@ describe('createPasteFragment', () => {
 
         tempDiv.appendChild(fragment);
 
-        expect(tempDiv.innerHTML).toEqual(expectedHtml);
+        expectHtml(tempDiv.innerHTML, expectedHtml);
 
         if (isMoveChildNodesCalled) {
             expect(moveChildNodesSpy).toHaveBeenCalledWith(fragment, root);
@@ -62,7 +63,10 @@ describe('createPasteFragment', () => {
                 imageDataUri: 'test',
             },
             'asImage',
-            '<img src="test" style="max-width: 100%;">',
+            [
+                '<img src="test" style="max-width: 100%;">',
+                '<img style="max-width: 100%;" src="test">',
+            ],
             false
         );
     });
@@ -79,7 +83,10 @@ describe('createPasteFragment', () => {
                 imageDataUri: 'test',
             },
             'normal',
-            '<img src="test" style="max-width: 100%;">',
+            [
+                '<img src="test" style="max-width: 100%;">',
+                '<img style="max-width: 100%;" src="test">',
+            ],
             false
         );
     });
