@@ -1,14 +1,14 @@
 import { toArray } from 'roosterjs-content-model-dom';
+import type { CssRule } from './retrieveHtmlInfo';
 
 /**
  * @internal
  */
-export function convertInlineCss(root: ParentNode, cssRules: CSSStyleRule[]) {
+export function convertInlineCss(root: ParentNode, cssRules: CssRule[]) {
     for (let i = cssRules.length - 1; i >= 0; i--) {
-        const rule = cssRules[i];
-        const text = rule.style.cssText;
+        const { selectors, text } = cssRules[i];
 
-        for (const selector of rule.selectorText.split(',')) {
+        for (const selector of selectors) {
             if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
                 continue;
             }

@@ -7,7 +7,7 @@ import { generatePendingFormat } from '../../utils/paste/generatePendingFormat';
 import { getSegmentTextFormat } from '../domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../selection/collectSelections';
 import { mergePasteContent } from '../../utils/paste/mergePasteContent';
-import { retrieveHtml } from '../../utils/paste/retrieveHtml';
+import { retrieveHtmlInfo } from '../../utils/paste/retrieveHtmlInfo';
 import type { CloneModelOptions } from './cloneModel';
 import type {
     PasteType,
@@ -51,7 +51,7 @@ export function paste(
             const currentFormat = selectedSegment ? getSegmentTextFormat(selectedSegment) : {};
 
             // 2. Handle HTML from clipboard
-            const htmlFromClipboard = retrieveHtml(doc, clipboardData);
+            const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
 
             // 3. Create target fragment
             const sourceFragment = createPasteFragment(

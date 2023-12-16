@@ -1,5 +1,5 @@
 import { PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
-import type { HtmlFromClipboard } from './retrieveHtml';
+import type { HtmlFromClipboard } from './retrieveHtmlInfo';
 import type {
     ClipboardData,
     ContentModelBeforePasteEvent,
