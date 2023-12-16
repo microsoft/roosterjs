@@ -7,6 +7,7 @@ import type {
     IStandaloneEditor,
     PasteType,
 } from 'roosterjs-content-model-types';
+import type { MergePasteContentOption } from './mergePasteContent';
 
 // Map new PasteType to old PasteType
 // TODO: We can remove this once we have standalone editor
@@ -20,14 +21,13 @@ const PasteTypeMap: Record<PasteType, OldPasteType> = {
 /**
  * @internal
  */
-export function triggerBeforePasteEvent(
+export function generatePasteOptionFromPlugins(
     editor: IStandaloneEditor,
     clipboardData: ClipboardData,
     fragment: DocumentFragment,
     htmlFromClipboard: HtmlFromClipboard,
-    htmlAttributes: Record<string, string>,
     pasteType: PasteType
-): ContentModelBeforePasteEvent {
+): MergePasteContentOption {
     const domToModelOption: DomToModelOptionForPaste = {
         additionalAllowedTags: [],
         additionalDisallowedTags: [],
@@ -42,7 +42,7 @@ export function triggerBeforePasteEvent(
         fragment,
         htmlBefore: htmlFromClipboard.htmlBefore ?? '',
         htmlAfter: htmlFromClipboard.htmlAfter ?? '',
-        htmlAttributes,
+        htmlAttributes: htmlFromClipboard.metadata,
         pasteType: PasteTypeMap[pasteType],
         domToModelOption,
 
@@ -70,5 +70,10 @@ export function triggerBeforePasteEvent(
         ) as ContentModelBeforePasteEvent;
     }
 
-    return event;
+    return {
+        fragment: event.fragment,
+        domToModelOption: event.domToModelOption,
+        customizedMerge: event.customizedMerge,
+        pasteType: event.pasteType,
+    };
 }

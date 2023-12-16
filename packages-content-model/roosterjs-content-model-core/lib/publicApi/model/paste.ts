@@ -2,17 +2,13 @@ import { ChangeSource } from '../../constants/ChangeSource';
 import { cloneModel } from './cloneModel';
 import { convertInlineCss } from '../../utils/paste/convertInlineCss';
 import { createPasteFragment } from '../../utils/paste/createPasteFragment';
+import { generatePasteOptionFromPlugins } from '../../utils/paste/generatePasteOptionFromPlugins';
 import { generatePendingFormat } from '../../utils/paste/generatePendingFormat';
 import { getSegmentTextFormat } from '../domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../selection/collectSelections';
 import { mergePasteContent } from '../../utils/paste/mergePasteContent';
-import { retrieveFirstLevelTags } from '../../utils/paste/retrieveFirstLevelTags';
-import { retrieveGlobalCss } from '../../utils/paste/retrieveGlobalCSS';
 import { retrieveHtml } from '../../utils/paste/retrieveHtml';
-import { retrievePasteMetadata } from '../../utils/paste/retrievePasteMetadata';
-import { triggerBeforePasteEvent } from '../../utils/paste/triggerBeforePasteEvent';
 import type { CloneModelOptions } from './cloneModel';
-import type { HtmlFromClipboard } from '../../utils/paste/retrieveHtml';
 import type {
     PasteType,
     IStandaloneEditor,
@@ -51,23 +47,11 @@ export function paste(
             // 1. Prepare variables
             const trustHtmlHandler = editor.getTrustedHTMLHandler();
             const doc = createDOMFromHtml(clipboardData.rawHtml, trustHtmlHandler);
-            const htmlAttributes: Record<string, string> = {};
-            const cssRules: CSSStyleRule[] = [];
-            const htmlFromClipboard: HtmlFromClipboard = {};
-            const selectedSegment = getSelectedSegments(model, true /*includeFormatHodler*/)[0];
+            const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
             const currentFormat = selectedSegment ? getSegmentTextFormat(selectedSegment) : {};
 
             // 2. Handle HTML from clipboard
-            if (doc) {
-                doc.body.normalize();
-
-                retrievePasteMetadata(doc, htmlAttributes);
-                retrieveGlobalCss(doc, cssRules);
-                retrieveHtml(clipboardData, htmlFromClipboard);
-
-                clipboardData.html = htmlFromClipboard.html;
-                clipboardData.htmlFirstLevelChildTags = retrieveFirstLevelTags(doc);
-            }
+            const htmlFromClipboard = retrieveHtml(doc, clipboardData);
 
             // 3. Create target fragment
             const sourceFragment = createPasteFragment(
@@ -83,17 +67,16 @@ export function paste(
 
             // 4. Trigger BeforePaste event to allow plugins modify the fragment
             // const { domToModelOption, customizedMerge, fragment } =
-            const eventResult = triggerBeforePasteEvent(
+            const eventResult = generatePasteOptionFromPlugins(
                 editor,
                 clipboardData,
                 sourceFragment,
                 htmlFromClipboard,
-                htmlAttributes,
                 pasteType
             );
 
             // 5. Convert global CSS to inline CSS
-            convertInlineCss(eventResult.fragment, cssRules);
+            convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
 
             // 6. Merge pasted content into main Content Model
             const insertPoint = mergePasteContent(

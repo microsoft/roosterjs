@@ -3,14 +3,26 @@ import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcesso
 import { mergeModel } from '../../publicApi/model/mergeModel';
 import { pasteEntityProcessor } from '../../override/pasteEntityProcessor';
 import { PasteType } from 'roosterjs-editor-types';
+import type { CompatiblePasteType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
-    ContentModelBeforePasteEvent,
     ContentModelDocument,
     DomToModelOption,
+    DomToModelOptionForPaste,
     FormatWithContentModelContext,
     InsertPoint,
+    MergePastedContentFunc,
 } from 'roosterjs-content-model-types';
+
+/**
+ * @internal
+ */
+export interface MergePasteContentOption {
+    fragment: DocumentFragment;
+    domToModelOption: DomToModelOptionForPaste;
+    customizedMerge?: MergePastedContentFunc;
+    pasteType: PasteType | CompatiblePasteType;
+}
 
 /**
  * @internal
@@ -18,7 +30,7 @@ import type {
 export function mergePasteContent(
     model: ContentModelDocument,
     context: FormatWithContentModelContext,
-    eventResult: ContentModelBeforePasteEvent,
+    eventResult: MergePasteContentOption,
     defaultDomToModelOptions?: DomToModelOption
 ): InsertPoint | null {
     const { fragment, domToModelOption, customizedMerge, pasteType } = eventResult;

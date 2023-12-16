@@ -275,6 +275,7 @@ export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 
 export {
+    MergePastedContentFunc,
     DomToModelOptionForPaste,
     ContentModelBeforePasteEvent,
     ContentModelBeforePasteEventData,

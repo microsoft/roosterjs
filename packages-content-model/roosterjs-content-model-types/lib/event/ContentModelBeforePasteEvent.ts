@@ -23,6 +23,17 @@ export interface DomToModelOptionForPaste extends Required<DomToModelOption> {
 }
 
 /**
+ * A function type used by merging pasted content into current Content Model
+ * @param target Target Content Model to merge into
+ * @param source Source Content Model to merge from
+ * @returns Insert point after merge
+ */
+export type MergePastedContentFunc = (
+    target: ContentModelDocument,
+    source: ContentModelDocument
+) => InsertPoint | null;
+
+/**
  * Data of ContentModelBeforePasteEvent
  */
 export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
@@ -34,10 +45,7 @@ export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
-    customizedMerge?: (
-        target: ContentModelDocument,
-        source: ContentModelDocument
-    ) => InsertPoint | null;
+    customizedMerge?: MergePastedContentFunc;
 }
 
 /**
