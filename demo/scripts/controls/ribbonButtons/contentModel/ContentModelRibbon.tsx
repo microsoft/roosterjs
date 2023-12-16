@@ -33,6 +33,7 @@ import { ltrButton } from './ltrButton';
 import { numberedListButton } from './numberedListButton';
 import { pasteButton } from './pasteButton';
 import { popout } from '../popout';
+import { redoButton } from './redoButton';
 import { removeLinkButton } from './removeLinkButton';
 import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import { rtlButton } from './rtlButton';
@@ -52,6 +53,7 @@ import { tableBorderStyleButton } from './tableBorderStyleButton';
 import { tableBorderWidthButton } from './tableBorderWidthButton';
 import { textColorButton } from './textColorButton';
 import { underlineButton } from './underlineButton';
+import { undoButton } from './undoButton';
 import { zoom } from '../zoom';
 import {
     tableAlignCellButton,
@@ -92,6 +94,8 @@ const buttons = [
     codeButton,
     ltrButton,
     rtlButton,
+    undoButton,
+    redoButton,
     clearFormatButton,
     setBulletedListStyleButton,
     setNumberedListStyleButton,

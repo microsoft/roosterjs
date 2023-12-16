@@ -1,10 +1,12 @@
+import type { CopyPastePluginState } from '../pluginState/CopyPastePluginState';
+import type { UndoPluginState } from '../pluginState/UndoPluginState';
 import type { SelectionPluginState } from '../pluginState/SelectionPluginState';
 import type { EntityPluginState } from '../pluginState/EntityPluginState';
 import type { LifecyclePluginState } from '../pluginState/LifecyclePluginState';
 import type { DOMEventPluginState } from '../pluginState/DOMEventPluginState';
 import type { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from '../pluginState/ContentModelFormatPluginState';
-import type { CopyPastePluginState, PluginWithState } from 'roosterjs-editor-types';
+import type { PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * Core plugins for standalone editor
@@ -39,6 +41,11 @@ export interface StandaloneEditorCorePlugins {
      * Entity Plugin handles all operations related to an entity and generate entity specified events
      */
     readonly entity: PluginWithState<EntityPluginState>;
+
+    /**
+     * Undo plugin provides the ability to undo/redo
+     */
+    readonly undo: PluginWithState<UndoPluginState>;
 
     /**
      * Lifecycle plugin handles editor initialization and disposing

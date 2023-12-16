@@ -30,11 +30,26 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         rawEvent,
         newImages: [],
     };
-    const hasFocus = core.api.hasFocus(core);
-    let selection: DOMSelection | undefined;
 
-    if (formatter(model, context)) {
-        const writeBack = () => {
+    const hasFocus = core.api.hasFocus(core);
+
+    const changed = formatter(model, context);
+    const { skipUndoSnapshot, clearModelCache, entityStates, canUndoByBackspace } = context;
+
+    if (changed) {
+        const isNested = core.undo.isNested;
+        const shouldAddSnapshot = !skipUndoSnapshot && !isNested;
+        let selection: DOMSelection | undefined;
+
+        if (shouldAddSnapshot) {
+            core.undo.isNested = true;
+
+            if (core.undo.snapshotsManager.hasNewContent || entityStates) {
+                core.api.addUndoSnapshot(core, !!canUndoByBackspace);
+            }
+        }
+
+        try {
             handleImages(core, context);
 
             selection =
@@ -43,53 +58,40 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
                     model,
                     hasFocus ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
                     onNodeCreated
-                ) || undefined;
+                ) ?? undefined;
 
             handlePendingFormat(core, context, selection);
-        };
 
-        if (context.skipUndoSnapshot) {
-            writeBack();
-        } else {
-            core.api.addUndoSnapshot(
-                core,
-                writeBack,
-                null /*changeSource, passing undefined here to avoid triggering ContentChangedEvent. We will trigger it using it with Content Model below */,
-                false /*canUndoByBackspace*/,
-                {
-                    formatApiName: apiName,
-                }
-            );
+            if (shouldAddSnapshot) {
+                core.api.addUndoSnapshot(core, !!canUndoByBackspace, entityStates);
+            }
+        } finally {
+            if (!isNested) {
+                core.undo.isNested = false;
+            }
         }
 
         const eventData: ContentModelContentChangedEvent = {
             eventType: PluginEventType.ContentChanged,
-            contentModel: context.clearModelCache ? undefined : model,
-            selection: context.clearModelCache ? undefined : selection,
+            contentModel: clearModelCache ? undefined : model,
+            selection: clearModelCache ? undefined : selection,
             source: changeSource || ChangeSource.Format,
             data: getChangeData?.(),
             additionalData: {
                 formatApiName: apiName,
             },
-            changedEntities: context.newEntities
-                .map(
-                    (entity): ChangedEntity => ({
-                        entity,
-                        operation: 'newEntity',
-                        rawEvent,
-                    })
-                )
-                .concat(
-                    context.deletedEntities.map(entry => ({
-                        entity: entry.entity,
-                        operation: entry.operation,
-                        rawEvent,
-                    }))
-                ),
+            changedEntities: getChangedEntities(context, rawEvent),
         };
+
         core.api.triggerEvent(core, eventData, true /*broadcast*/);
+
+        if (canUndoByBackspace && selection?.type == 'range') {
+            core.undo.snapshotsManager.hasNewContent = false;
+            core.undo.posContainer = selection.range.startContainer;
+            core.undo.posOffset = selection.range.startOffset;
+        }
     } else {
-        if (context.clearModelCache) {
+        if (clearModelCache) {
             core.cache.cachedModel = undefined;
             core.cache.cachedSelection = undefined;
         }
@@ -130,4 +132,25 @@ function handlePendingFormat(
             posOffset: selection.range.startOffset,
         };
     }
+}
+
+function getChangedEntities(
+    context: FormatWithContentModelContext,
+    rawEvent?: Event
+): ChangedEntity[] {
+    return context.newEntities
+        .map(
+            (entity): ChangedEntity => ({
+                entity,
+                operation: 'newEntity',
+                rawEvent,
+            })
+        )
+        .concat(
+            context.deletedEntities.map(entry => ({
+                entity: entry.entity,
+                operation: entry.operation,
+                rawEvent,
+            }))
+        );
 }

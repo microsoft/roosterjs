@@ -1,5 +1,5 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { ColorTransformDirection, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import {
     createBr,
     createContentModelDocument,
@@ -8,17 +8,10 @@ import {
     setColor,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDecorator,
     ContentModelDocument,
-    ContentModelEntity,
-    ContentModelSegment,
     ContentModelSegmentFormat,
-    ContentModelTableRow,
     IStandaloneEditor,
     LifecyclePluginState,
-    OnNodeCreated,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 import type { IEditor, PluginWithState, PluginEvent } from 'roosterjs-editor-types';
@@ -85,11 +78,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     initialize(editor: IEditor) {
         this.editor = editor as IEditor & IStandaloneEditor;
 
-        this.editor.setContentModel(
-            this.initialModel,
-            { ignoreSelection: true },
-            this.editor.isDarkMode() ? this.onInitialNodeCreated : undefined
-        );
+        this.editor.setContentModel(this.initialModel, { ignoreSelection: true });
 
         // Initial model is only used once. After that we can just clean it up to make sure we don't cache anything useless
         // including the cached DOM element inside the model.
@@ -173,26 +162,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
 
         return model;
     }
-
-    private onInitialNodeCreated: OnNodeCreated = (model, node) => {
-        if (isEntity(model) && this.editor) {
-            this.editor.transformToDarkColor(node, ColorTransformDirection.LightToDark);
-        }
-    };
-}
-
-function isEntity(
-    modelElement:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow
-): modelElement is ContentModelEntity {
-    return (
-        (modelElement as ContentModelSegment).segmentType == 'Entity' ||
-        (modelElement as ContentModelBlock).blockType == 'Entity'
-    );
 }
 
 /**

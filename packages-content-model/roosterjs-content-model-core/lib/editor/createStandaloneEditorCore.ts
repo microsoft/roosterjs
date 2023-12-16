@@ -39,6 +39,7 @@ export function createStandaloneEditorCore(
             corePlugins.selection,
             corePlugins.entity,
             ...tempPlugins,
+            corePlugins.undo,
             corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(),
@@ -83,6 +84,7 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins): StandaloneEdi
         lifecycle: corePlugins.lifecycle.getState(),
         entity: corePlugins.entity.getState(),
         selection: corePlugins.selection.getState(),
+        undo: corePlugins.undo.getState(),
     };
 }
 

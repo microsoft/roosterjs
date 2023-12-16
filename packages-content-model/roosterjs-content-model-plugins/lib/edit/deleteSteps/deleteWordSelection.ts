@@ -23,6 +23,10 @@ interface CharInfo {
 
 function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return context => {
+        if (context.deleteResult != 'notDeleted') {
+            return;
+        }
+
         const { marker, paragraph } = context.insertPoint;
         const startIndex = paragraph.segments.indexOf(marker);
         const deleteNext = direction == 'forward';
