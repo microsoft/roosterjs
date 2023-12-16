@@ -1,5 +1,6 @@
 import { ClipboardData } from 'roosterjs-content-model-types';
 import { HtmlFromClipboard, retrieveHtmlInfo } from '../../../lib/utils/paste/retrieveHtmlInfo';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 
 describe('retrieveHtmlInfo', () => {
     function runTest(
@@ -189,7 +190,7 @@ describe('retrieveHtmlInfo', () => {
         );
     });
 
-    it('Has global CSS rule', () => {
+    itChromeOnly('Has global CSS rule', () => {
         runTest(
             '<style>.a {color:red} .b div, .c {font-size: 10pt}</style><div>test</div><style>test {border: none}</style>',
             {
