@@ -1,3 +1,6 @@
+import { AllowedTags, DisallowedTags } from './allowedTags';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
+
 const VARIABLE_REGEX = /^\s*var\(\s*[a-zA-Z0-9-_]+\s*(,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';
 
@@ -128,17 +131,50 @@ const DefaultStyleValue: { [name: string]: string } = {
 
 /**
  * @internal
- * Sanitize single element. This is mostly used by paste
- * @param element
  */
-export function getSanitizedElement(
+export function sanitizeElement(
+    element: HTMLElement,
+    allowedTags: ReadonlyArray<string> = AllowedTags,
+    disallowedTags: ReadonlyArray<string> = DisallowedTags
+): HTMLElement | null {
+    const tag = element.tagName.toLowerCase();
+    const sanitizedElement =
+        disallowedTags.indexOf(tag) >= 0
+            ? null
+            : createSanitizedElement(
+                  element.ownerDocument,
+                  allowedTags.indexOf(tag) >= 0 ? tag : 'span',
+                  element.attributes
+              );
+
+    if (sanitizedElement) {
+        for (let child = element.firstChild; child; child = child.nextSibling) {
+            const newChild = isNodeOfType(child, 'ELEMENT_NODE')
+                ? sanitizeElement(child, allowedTags, disallowedTags)
+                : isNodeOfType(child, 'TEXT_NODE')
+                ? child.cloneNode()
+                : null;
+
+            if (newChild) {
+                sanitizedElement?.appendChild(newChild);
+            }
+        }
+    }
+
+    return sanitizedElement;
+}
+
+/**
+ * @internal
+ */
+export function createSanitizedElement(
     doc: Document,
     tag: string,
     attributes: NamedNodeMap
 ): HTMLElement {
-    const element = doc.createElement('tag');
+    const element = doc.createElement(tag);
 
-    for (let i = attributes.length - 1; i >= 0; i--) {
+    for (let i = 0; i < attributes.length; i++) {
         const attribute = attributes[i];
         const name = attribute.name.toLowerCase().trim();
         const value = attribute.value;

@@ -1,9 +1,9 @@
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
+import { createPasteEntityProcessor } from '../../override/pasteEntityProcessor';
 import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
-import { pasteEntityProcessor } from '../../override/pasteEntityProcessor';
 import { PasteType } from 'roosterjs-editor-types';
 import type { CompatiblePasteType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
@@ -56,7 +56,7 @@ export function mergePasteContent(
         defaultDomToModelOptions,
         {
             processorOverride: {
-                entity: pasteEntityProcessor,
+                entity: createPasteEntityProcessor(domToModelOption),
                 '*': createPasteGeneralProcessor(domToModelOption),
             },
         },

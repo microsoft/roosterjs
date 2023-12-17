@@ -1,7 +1,7 @@
 /**
  * @internal
  */
-export const AllowedTags = [
+export const AllowedTags: ReadonlyArray<string> = [
     'a',
     'abbr',
     'address',
@@ -108,7 +108,7 @@ export const AllowedTags = [
 /**
  * @internal
  */
-export const DisallowedTags = [
+export const DisallowedTags: ReadonlyArray<string> = [
     'applet',
     'audio',
     'base',

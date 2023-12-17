@@ -1,5 +1,5 @@
 import { AllowedTags, DisallowedTags } from '../utils/allowedTags';
-import { getSanitizedElement } from '../utils/getSanitizeElement';
+import { createSanitizedElement } from '../utils/sanitizeElement';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
 import type { DomToModelOptionForPaste, ElementProcessor } from 'roosterjs-content-model-types';
 
@@ -26,7 +26,7 @@ export function createPasteGeneralProcessor(
 }
 
 const internalGeneralProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const sanitizedElement = getSanitizedElement(
+    const sanitizedElement = createSanitizedElement(
         element.ownerDocument,
         element.tagName,
         element.attributes

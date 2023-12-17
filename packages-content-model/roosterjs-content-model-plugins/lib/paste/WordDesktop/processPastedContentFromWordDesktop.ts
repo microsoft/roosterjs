@@ -36,9 +36,6 @@ export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteE
         'border',
         (value, element) => element.tagName != 'IMG' || value != 'none'
     );
-
-    // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
-    ev.domToModelOption.additionalAllowedTags.push('o:p');
 }
 
 /**
