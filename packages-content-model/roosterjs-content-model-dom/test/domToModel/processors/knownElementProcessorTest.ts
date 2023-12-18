@@ -313,8 +313,6 @@ describe('knownElementProcessor', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'FormatContainer',
                     format: {
-                        paddingLeft: '0px',
-                        paddingRight: '0px',
                         paddingTop: '20px',
                         paddingBottom: '40px',
                     },

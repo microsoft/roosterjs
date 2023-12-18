@@ -224,13 +224,11 @@ describe(ID, () => {
                                             blockType: 'Paragraph',
                                             format: {
                                                 textAlign: 'center',
-                                                whiteSpace: 'normal',
                                             },
                                         },
                                     ],
                                     format: {
                                         textAlign: 'center',
-                                        whiteSpace: 'normal',
                                         borderTop: '0.5pt solid',
                                         borderRight: '0.5pt solid',
                                         borderBottom: '0.5pt solid',
@@ -263,7 +261,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -304,7 +301,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -351,7 +347,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -396,7 +391,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -437,7 +431,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -484,7 +477,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -529,7 +521,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -570,7 +561,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -617,7 +607,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -662,7 +651,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -703,7 +691,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -750,7 +737,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -795,7 +781,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -836,7 +821,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -883,7 +867,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -928,7 +911,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -969,7 +951,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -1016,7 +997,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -1061,7 +1041,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -1102,7 +1081,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -1149,7 +1127,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
