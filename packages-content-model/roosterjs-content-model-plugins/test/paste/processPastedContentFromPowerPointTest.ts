@@ -3,11 +3,11 @@ import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
 import { processPastedContentFromPowerPoint } from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import {
     BeforePasteEvent,
-    ClipboardData,
     PasteType,
     PluginEventType,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
+import type { ClipboardData } from 'roosterjs-content-model-types';
 
 const getPasteEvent = (): BeforePasteEvent => {
     return {

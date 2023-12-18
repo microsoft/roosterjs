@@ -129,6 +129,7 @@ export {
 } from './selection/DOMSelection';
 export { InsertPoint } from './selection/InsertPoint';
 export { TableSelectionContext } from './selection/TableSelectionContext';
+export { TableSelectionCoordinates } from './selection/TableSelectionCoordinates';
 
 export {
     ContentModelHandlerMap,
@@ -206,18 +207,11 @@ export {
     StandaloneEditorCore,
     StandaloneEditorDefaultSettings,
     SwitchShadowEdit,
-    Select,
     TriggerEvent,
-    GetSelectionRangeEx,
-    TransformColor,
     AddUndoSnapshot,
-    SelectRange,
     PortedCoreApiMap,
     UnportedCoreApiMap,
-    SelectImage,
-    SelectTable,
     SetContent,
-    GetSelectionRange,
     HasFocus,
     Focus,
     InsertNode,
@@ -242,9 +236,13 @@ export {
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
+export { SelectionPluginState } from './pluginState/SelectionPluginState';
+export { UndoPluginState } from './pluginState/UndoPluginState';
+export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
+    EntityState,
     DeletedEntity,
     FormatWithContentModelContext,
 } from './parameter/FormatWithContentModelContext';
@@ -262,6 +260,19 @@ export {
     DeleteSelectionStep,
     ValidDeleteSelectionContext,
 } from './parameter/DeleteSelectionStep';
+export {
+    SnapshotSelectionBase,
+    RangeSnapshotSelection,
+    ImageSnapshotSelection,
+    TableSnapshotSelection,
+    SnapshotSelection,
+    Snapshot,
+    Snapshots,
+} from './parameter/Snapshot';
+export { SnapshotsManager } from './parameter/SnapshotsManager';
+export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
+export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
+export { ClipboardData } from './parameter/ClipboardData';
 
 export {
     ContentModelBeforePasteEvent,
@@ -274,3 +285,8 @@ export {
     ContentModelContentChangedEventData,
     ChangedEntity,
 } from './event/ContentModelContentChangedEvent';
+export {
+    CompatibleContentModelSelectionChangedEvent,
+    ContentModelSelectionChangedEvent,
+    ContentModelSelectionChangedEventData,
+} from './event/ContentModelSelectionChangedEvent';

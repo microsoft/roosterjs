@@ -1,5 +1,8 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { setListType } from '../../../lib/modelApi/list/setListType';
+import { setModelIndentation } from '../../../lib/modelApi/block/setModelIndentation';
+
 import {
     createBr,
     createContentModelDocument,
@@ -8,6 +11,7 @@ import {
     createListItem,
     createListLevel,
     createParagraph,
+    createSelectionMarker,
     createTable,
     createTableCell,
     createText,
@@ -381,7 +385,9 @@ describe('indent', () => {
                         },
                         isSelected: true,
                     },
-                    format: {},
+                    format: {
+                        textAlign: 'start',
+                    },
                 },
             ],
         });
@@ -696,6 +702,223 @@ describe('indent', () => {
                     format: {},
                 },
             ],
+        });
+    });
+
+    it('turn on list on indented paragraph', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const marker = createSelectionMarker();
+        para1.segments.push(marker, createText('test1'));
+        para2.segments.push(createText('test1'), marker);
+        group.blocks.push(para1, para2);
+        setModelIndentation(group, 'indent');
+        setListType(group, 'UL');
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para1],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {
+                                startNumberOverride: 1,
+                                direction: undefined,
+                                textAlign: undefined,
+                                marginTop: undefined,
+                                marginBlockEnd: '0px',
+                                marginBlockStart: '0px',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {
+                        marginLeft: '40px',
+                    },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para2],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {
+                                startNumberOverride: undefined,
+                                direction: undefined,
+                                textAlign: undefined,
+                                marginTop: undefined,
+                                marginBlockEnd: '0px',
+                                marginBlockStart: '0px',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {
+                        marginLeft: '40px',
+                    },
+                },
+            ],
+        });
+    });
+
+    it('turn off list on indented paragraph', () => {
+        const group: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test1',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {
+                                marginBlockStart: '0px',
+                                marginBlockEnd: '0px',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {
+                        marginLeft: '40px',
+                    },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test2',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {
+                                marginBlockStart: '0px',
+                                marginBlockEnd: '0px',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {
+                        marginLeft: '40px',
+                    },
+                },
+            ],
+            format: {},
+        };
+        normalizeContentModelSpy.and.callThrough();
+        setListType(group, 'UL');
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {
+                        marginLeft: '40px',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test2',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginLeft: '40px',
+                    },
+                },
+            ],
+            format: {},
         });
     });
 });

@@ -42,7 +42,6 @@ describe('formatParagraphWithContentModel', () => {
             );
 
         editor = ({
-            getCustomData: () => ({}),
             getFocusedPosition: () => ({ node: mockedContainer, offset: mockedOffset }),
             formatContentModel,
         } as any) as IStandaloneEditor;

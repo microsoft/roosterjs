@@ -1,5 +1,5 @@
 import { createTableCell } from 'roosterjs-content-model-dom';
-import { getSelectedCells } from './getSelectedCells';
+import { getSelectedCells } from 'roosterjs-content-model-core';
 import type {
     ContentModelTable,
     TableVerticalInsertOperation,
@@ -19,7 +19,13 @@ export function insertTableRow(table: ContentModelTable, operation: TableVertica
             table.rows.splice(insertAbove ? sel.firstRow : sel.lastRow + 1, 0, {
                 format: { ...sourceRow.format },
                 cells: sourceRow.cells.map(cell =>
-                    createTableCell(cell.spanLeft, cell.spanAbove, cell.isHeader, cell.format)
+                    createTableCell(
+                        cell.spanLeft,
+                        cell.spanAbove,
+                        cell.isHeader,
+                        cell.format,
+                        cell.dataset
+                    )
                 ),
                 height: sourceRow.height,
             });

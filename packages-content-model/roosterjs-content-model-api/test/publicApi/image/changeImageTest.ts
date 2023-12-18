@@ -1,4 +1,4 @@
-import * as readFile from '../../../lib/modelApi/domUtils/readFile';
+import * as readFile from 'roosterjs-content-model-core/lib/publicApi/domUtils/readFile';
 import changeImage from '../../../lib/publicApi/image/changeImage';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import { PluginEventType } from 'roosterjs-editor-types';

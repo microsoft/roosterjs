@@ -11,8 +11,9 @@ import type {
     ContentModelBeforePasteEventData,
     ContentModelBeforePasteEvent,
     IStandaloneEditor,
+    ClipboardData,
 } from 'roosterjs-content-model-types';
-import type { ClipboardData, IEditor } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 import {
     AllowedEntityClasses,
     applySegmentFormatToElement,
@@ -107,7 +108,11 @@ export function paste(
             }
 
             if (originalFormat) {
-                context.newPendingFormat = { ...EmptySegmentFormat, ...originalFormat }; // Use empty format as initial value to clear any other format inherits from pasted content
+                context.newPendingFormat = {
+                    ...EmptySegmentFormat,
+                    ...model.format,
+                    ...originalFormat,
+                }; // Use empty format as initial value to clear any other format inherits from pasted content
             }
 
             return true;

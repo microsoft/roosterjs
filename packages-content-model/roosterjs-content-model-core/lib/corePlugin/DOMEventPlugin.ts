@@ -1,13 +1,14 @@
-import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
-import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
+import { ChangeSource } from '../constants/ChangeSource';
+import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     DOMEventPluginState,
     IStandaloneEditor,
+    DOMEventRecord,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 import type {
     ContextMenuProvider,
-    DOMEventHandler,
     EditorPlugin,
     IEditor,
     PluginWithState,
@@ -38,11 +39,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
-            selectionRange: null,
             contextMenuProviders:
                 options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -64,9 +62,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.editor = editor as IStandaloneEditor & IEditor;
 
         const document = this.editor.getDocument();
-        //Record<string, DOMEventHandler>
         const eventHandlers: Partial<
-            { [P in keyof HTMLElementEventMap]: DOMEventHandler<HTMLElementEventMap[P]> }
+            { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
         > = {
             // 1. Keyboard event
             keypress: this.getEventHandler(PluginEventType.KeyPress),
@@ -74,43 +71,24 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             keyup: this.getEventHandler(PluginEventType.KeyUp),
 
             // 2. Mouse event
-            mousedown: this.onMouseDown,
-            contextmenu: this.onContextMenuEvent,
+            mousedown: { beforeDispatch: this.onMouseDown },
+            contextmenu: { beforeDispatch: this.onContextMenuEvent },
 
             // 3. IME state management
-            compositionstart: () => (this.state.isInIME = true),
-            compositionend: (rawEvent: CompositionEvent) => {
-                this.state.isInIME = false;
-                editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
-                    rawEvent,
-                });
-            },
+            compositionstart: { beforeDispatch: this.onCompositionStart },
+            compositionend: { beforeDispatch: this.onCompositionEnd },
 
             // 4. Drag and Drop event
-            dragstart: this.onDragStart,
-            drop: this.onDrop,
+            dragstart: { beforeDispatch: this.onDragStart },
+            drop: { beforeDispatch: this.onDrop },
 
-            // 5. Focus management
-            focus: this.onFocus,
-
-            // 6. Input event
+            // 5. Input event
             input: this.getEventHandler(PluginEventType.Input),
         };
 
-        const env = this.editor.getEnvironment();
+        this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
 
-        // 7. onBlur handlers
-        if (env.isSafari) {
-            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
-            document.addEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.addEventListener('blur', this.cacheSelection);
-        } else {
-            eventHandlers.blur = this.cacheSelection;
-        }
-
-        this.disposer = editor.addDomEventHandler(<Record<string, DOMEventHandler>>eventHandlers);
-
-        // 8. Scroll event
+        // 7. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
         document.defaultView?.addEventListener('scroll', this.onScroll);
         document.defaultView?.addEventListener('resize', this.onScroll);
@@ -123,15 +101,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.removeMouseUpEventListener();
 
         const document = this.editor?.getDocument();
-        if (document) {
-            document.removeEventListener(
-                'mousedown',
-                this.onMouseDownDocument,
-                true /*useCapture*/
-            );
-            document.removeEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.removeEventListener('blur', this.cacheSelection);
-        }
 
         document?.defaultView?.removeEventListener('resize', this.onScroll);
         document?.defaultView?.removeEventListener('scroll', this.onScroll);
@@ -157,48 +126,14 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         }
     };
     private onDrop = () => {
-        this.editor?.runAsync(editor => {
-            editor.addUndoSnapshot(() => {}, ChangeSource.Drop);
+        this.editor?.runAsync(() => {
+            if (this.editor) {
+                this.editor.takeSnapshot();
+                this.editor.triggerContentChangedEvent(ChangeSource.Drop);
+            }
         });
     };
 
-    private onFocus = () => {
-        if (!this.state.skipReselectOnFocus) {
-            const { table, coordinates } = this.state.tableSelectionRange || {};
-            const { image } = this.state.imageSelectionRange || {};
-
-            if (table && coordinates) {
-                this.editor?.select(table, coordinates);
-            } else if (image) {
-                this.editor?.select(image);
-            } else if (this.state.selectionRange) {
-                this.editor?.select(this.state.selectionRange);
-            }
-        }
-
-        this.state.selectionRange = null;
-    };
-    private onKeyDownDocument = (event: KeyboardEvent) => {
-        if (event.which == Keys.TAB && !event.defaultPrevented) {
-            this.cacheSelection();
-        }
-    };
-
-    private onMouseDownDocument = (event: MouseEvent) => {
-        if (
-            this.editor &&
-            !this.state.selectionRange &&
-            !this.editor.contains(event.target as Node)
-        ) {
-            this.cacheSelection();
-        }
-    };
-
-    private cacheSelection = () => {
-        if (!this.state.selectionRange && this.editor) {
-            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
-        }
-    };
     private onScroll = (e: Event) => {
         this.editor?.triggerPluginEvent(PluginEventType.Scroll, {
             rawEvent: e,
@@ -206,7 +141,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         });
     };
 
-    private getEventHandler(eventType: PluginEventType): DOMEventHandler {
+    private getEventHandler(eventType: PluginEventType): DOMEventRecord {
         const beforeDispatch = (event: Event) =>
             eventType == PluginEventType.Input
                 ? this.onInputEvent(<InputEvent>event)
@@ -219,7 +154,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     }
 
     private onKeyboardEvent = (event: KeyboardEvent) => {
-        if (isCharacterValue(event) || (event.which >= Keys.PAGEUP && event.which <= Keys.DOWN)) {
+        if (isCharacterValue(event) || isCursorMovingKey(event)) {
             // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
             // since editor already handles these keys and no need to propagate to parents
             event.stopPropagation();
@@ -283,6 +218,17 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.editor?.triggerPluginEvent(PluginEventType.ContextMenu, {
             rawEvent: event,
             items: allItems,
+        });
+    };
+
+    private onCompositionStart = () => {
+        this.state.isInIME = true;
+    };
+
+    private onCompositionEnd = (rawEvent: CompositionEvent) => {
+        this.state.isInIME = false;
+        this.editor?.triggerPluginEvent(PluginEventType.CompositionEnd, {
+            rawEvent,
         });
     };
 
