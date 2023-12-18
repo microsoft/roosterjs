@@ -19,7 +19,7 @@ export function createPasteGeneralProcessor(
                 ? internalGeneralProcessor
                 : disallowedTags.indexOf(tag) >= 0
                 ? undefined // Ignore those disallowed tags
-                : context.elementProcessors.span; // For other unknown tags, treat them as SPAN
+                : context.defaultElementProcessors.span; // For other unknown tags, treat them as SPAN
 
         processor?.(group, element, context);
     };
