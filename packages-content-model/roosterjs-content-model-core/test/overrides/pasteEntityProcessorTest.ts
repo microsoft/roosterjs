@@ -41,7 +41,9 @@ describe('pasteEntityProcessor', () => {
 
         expect(sanitizedElement?.outerHTML).toEqual('<div></div>');
         expect(sanitizeElementSpy).toHaveBeenCalledTimes(1);
-        expect(sanitizeElementSpy).toHaveBeenCalledWith(element, AllowedTags, DisallowedTags);
+        expect(sanitizeElementSpy).toHaveBeenCalledWith(element, AllowedTags, DisallowedTags, {
+            position: sanitizeElement.removeStyle,
+        });
         expect(entityProcessorSpy).toHaveBeenCalledTimes(1);
         expect(entityProcessorSpy).toHaveBeenCalledWith(group, sanitizedElement, context);
     });
@@ -63,7 +65,10 @@ describe('pasteEntityProcessor', () => {
         expect(sanitizeElementSpy).toHaveBeenCalledWith(
             element,
             AllowedTags.concat('allowed'),
-            DisallowedTags.concat('disallowed')
+            DisallowedTags.concat('disallowed'),
+            {
+                position: sanitizeElement.removeStyle,
+            }
         );
         expect(entityProcessorSpy).toHaveBeenCalledTimes(1);
         expect(entityProcessorSpy).toHaveBeenCalledWith(group, sanitizedElement, context);

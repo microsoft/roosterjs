@@ -90,6 +90,22 @@ describe('sanitizeElement', () => {
             '<div style="color:red"><span style="font-size:10pt">test</span>test2</div>'
         );
     });
+
+    it('Empty element with style callback', () => {
+        const element = document.createElement('div');
+
+        element.style.color = 'red';
+        element.style.position = 'absolute';
+
+        const positionCallback = jasmine.createSpy('position').and.callFake(() => 'relative');
+
+        const result = sanitizeElement(element, AllowedTags, DisallowedTags, {
+            position: positionCallback,
+        });
+
+        expect(element.outerHTML).toBe('<div style="color: red; position: absolute;"></div>');
+        expect(result!.outerHTML).toBe('<div style="color:red;position:relative"></div>');
+    });
 });
 
 describe('sanitizeHtml', () => {
@@ -144,7 +160,7 @@ describe('sanitizeHtml', () => {
     it('Html contains disallowed CSS', () => {
         runTest(
             '<span style="color:red;position:absolute">aa</span>',
-            '<span style="color:red:">aa</span>'
+            '<span style="color:red;position:absolute">aa</span>'
         );
         runTest(
             '<span style="color:red; width:expression(0)">aa</span>',

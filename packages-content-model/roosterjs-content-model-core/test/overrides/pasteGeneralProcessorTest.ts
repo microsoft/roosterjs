@@ -35,7 +35,14 @@ describe('pasteGeneralProcessor', () => {
         pasteGeneralProcessor(group, element, context);
 
         expect(createSanitizedElementSpy).toHaveBeenCalledTimes(1);
-        expect(createSanitizedElementSpy).toHaveBeenCalledWith(document, 'DIV', element.attributes);
+        expect(createSanitizedElementSpy).toHaveBeenCalledWith(
+            document,
+            'DIV',
+            element.attributes,
+            {
+                position: sanitizeElement.removeStyle,
+            }
+        );
         expect(generalProcessorSpy).toHaveBeenCalledTimes(1);
         expect(generalProcessorSpy).toHaveBeenCalledWith(group, element, context);
         expect(spanProcessorSpy).toHaveBeenCalledTimes(0);
@@ -75,7 +82,10 @@ describe('pasteGeneralProcessor', () => {
         expect(createSanitizedElementSpy).toHaveBeenCalledWith(
             document,
             'TEST',
-            element.attributes
+            element.attributes,
+            {
+                position: sanitizeElement.removeStyle,
+            }
         );
         expect(generalProcessorSpy).toHaveBeenCalledTimes(1);
         expect(generalProcessorSpy).toHaveBeenCalledWith(group, element, context);

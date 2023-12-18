@@ -1,4 +1,3 @@
-import { AllowedTags, DisallowedTags } from './allowedTags';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 
 const VARIABLE_REGEX = /^\s*var\(\s*[a-zA-Z0-9-_]+\s*(,\s*(.*))?\)\s*$/;
@@ -134,8 +133,9 @@ const DefaultStyleValue: { [name: string]: string } = {
  */
 export function sanitizeElement(
     element: HTMLElement,
-    allowedTags: ReadonlyArray<string> = AllowedTags,
-    disallowedTags: ReadonlyArray<string> = DisallowedTags
+    allowedTags: ReadonlyArray<string>,
+    disallowedTags: ReadonlyArray<string>,
+    styleCallbacks?: Record<string, (value: string, tagName: string) => string | null>
 ): HTMLElement | null {
     const tag = element.tagName.toLowerCase();
     const sanitizedElement =
@@ -144,13 +144,14 @@ export function sanitizeElement(
             : createSanitizedElement(
                   element.ownerDocument,
                   allowedTags.indexOf(tag) >= 0 ? tag : 'span',
-                  element.attributes
+                  element.attributes,
+                  styleCallbacks
               );
 
     if (sanitizedElement) {
         for (let child = element.firstChild; child; child = child.nextSibling) {
             const newChild = isNodeOfType(child, 'ELEMENT_NODE')
-                ? sanitizeElement(child, allowedTags, disallowedTags)
+                ? sanitizeElement(child, allowedTags, disallowedTags, styleCallbacks)
                 : isNodeOfType(child, 'TEXT_NODE')
                 ? child.cloneNode()
                 : null;
@@ -170,7 +171,8 @@ export function sanitizeElement(
 export function createSanitizedElement(
     doc: Document,
     tag: string,
-    attributes: NamedNodeMap
+    attributes: NamedNodeMap,
+    styleCallbacks?: Record<string, (value: string, tagName: string) => string | null>
 ): HTMLElement {
     const element = doc.createElement(tag);
 
@@ -181,7 +183,7 @@ export function createSanitizedElement(
 
         const newValue =
             name == 'style'
-                ? processStyles(value)
+                ? processStyles(tag, value, styleCallbacks)
                 : AllowedAttributes.indexOf(name) >= 0 || name.indexOf('data-') == 0
                 ? value
                 : null;
@@ -198,18 +200,35 @@ export function createSanitizedElement(
     return element;
 }
 
-function processStyles(value: string) {
+/**
+ * @internal
+ */
+export function removeStyle(): string | null {
+    return null;
+}
+
+function processStyles(
+    tagName: string,
+    value: string,
+    styleCallbacks?: Record<string, (value: string, tagName: string) => string | null>
+) {
     const pairs = value.split(';');
     const result: string[] = [];
 
     pairs.forEach(pair => {
         const valueIndex = pair.indexOf(':');
         const name = pair.slice(0, valueIndex).trim();
-        let value = pair.slice(valueIndex + 1).trim();
+        let value: string | null = pair.slice(valueIndex + 1).trim();
 
         if (name && value) {
             if (isCssVariable(value)) {
                 value = processCssVariable(value);
+            }
+
+            const callback = styleCallbacks?.[name];
+
+            if (callback) {
+                value = callback(value, tagName);
             }
 
             if (

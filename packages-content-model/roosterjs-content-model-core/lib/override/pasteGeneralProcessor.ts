@@ -1,5 +1,5 @@
 import { AllowedTags, DisallowedTags } from '../utils/allowedTags';
-import { createSanitizedElement } from '../utils/sanitizeElement';
+import { createSanitizedElement, removeStyle } from '../utils/sanitizeElement';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
 import type { DomToModelOptionForPaste, ElementProcessor } from 'roosterjs-content-model-types';
 
@@ -29,7 +29,10 @@ const internalGeneralProcessor: ElementProcessor<HTMLElement> = (group, element,
     const sanitizedElement = createSanitizedElement(
         element.ownerDocument,
         element.tagName,
-        element.attributes
+        element.attributes,
+        {
+            position: removeStyle,
+        }
     );
 
     moveChildNodes(sanitizedElement, element);
