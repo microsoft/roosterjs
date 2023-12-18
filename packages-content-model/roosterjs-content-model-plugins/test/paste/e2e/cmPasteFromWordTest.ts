@@ -25,7 +25,7 @@ describe(ID, () => {
     beforeEach(() => {
         editor = initEditor(ID);
         spyOn(wordFile, 'processPastedContentFromWordDesktop').and.callThrough();
-        delete clipboardData.snapshotBeforePaste;
+        delete clipboardData.modelBeforePaste;
     });
 
     afterEach(() => {
@@ -57,7 +57,7 @@ describe(ID, () => {
                     isImplicit: undefined,
                     segments: [
                         {
-                            text: 'Test ',
+                            text: 'Test',
                             segmentType: 'Text',
                             isSelected: undefined,
                             format: { fontFamily: 'Calibri, sans-serif', fontSize: '11pt' },
@@ -130,7 +130,7 @@ describe(ID, () => {
                                         {
                                             segments: [
                                                 {
-                                                    text: 'Asdasdsad ',
+                                                    text: 'Asdasdsad',
                                                     segmentType: 'Text',
                                                     format: {},
                                                 },
@@ -170,7 +170,7 @@ describe(ID, () => {
                                         {
                                             segments: [
                                                 {
-                                                    text: 'asdadasd ',
+                                                    text: 'asdadasd',
                                                     segmentType: 'Text',
                                                     format: {},
                                                 },
@@ -232,7 +232,7 @@ describe(ID, () => {
                 {
                     segments: [
                         {
-                            text: 'asdsadasdasdsadasdsadsad ',
+                            text: 'asdsadasdasdsadasdsadsad',
                             segmentType: 'Text',
                             format: {},
                         },

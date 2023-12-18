@@ -2,6 +2,7 @@ import { Browser } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { pasteDisplayFormatParser } from 'roosterjs-content-model-core/lib/override/pasteDisplayFormatParser';
 import { processPastedContentWacComponents } from '../../lib/paste/WacComponents/processPastedContentWacComponents';
 import {
     listItemMetadataApplier,
@@ -151,7 +152,15 @@ describe('wordOnlineHandler', () => {
 
         const model = domToContentModel(
             fragment,
-            createDomToModelContext(undefined, event.domToModelOption)
+            createDomToModelContext(
+                undefined,
+                {
+                    formatParserOverride: {
+                        display: pasteDisplayFormatParser,
+                    },
+                },
+                event.domToModelOption
+            )
         );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
@@ -1357,12 +1366,10 @@ describe('wordOnlineHandler', () => {
                                         segmentType: 'Image',
                                         src: 'http://www.microsoft.com',
                                         format: {
-                                            letterSpacing: 'normal',
                                             fontFamily:
                                                 '"Segoe UI", "Segoe UI Web", Arial, Verdana, sans-serif',
                                             fontSize: '12px',
                                             italic: false,
-                                            fontWeight: '400',
                                             textColor: 'rgb(0, 0, 0)',
                                             backgroundColor: 'rgb(255, 255, 255)',
                                             width: '264px',
@@ -1371,10 +1378,6 @@ describe('wordOnlineHandler', () => {
                                             marginRight: '0px',
                                             marginBottom: '0px',
                                             marginLeft: '0px',
-                                            paddingTop: '0px',
-                                            paddingRight: '0px',
-                                            paddingBottom: '0px',
-                                            paddingLeft: '0px',
                                             borderTop: Browser.isFirefox ? 'medium none' : '',
                                             borderRight: Browser.isFirefox ? 'medium none' : '',
                                             borderBottom: Browser.isFirefox ? 'medium none' : '',
@@ -1662,8 +1665,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: 'ODSP',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '20pt',
@@ -1679,8 +1680,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '20pt',
@@ -1696,8 +1695,6 @@ describe('wordOnlineHandler', () => {
                                                                         {
                                                                             segmentType: 'Br',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '20pt',
@@ -1714,8 +1711,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: 'xFun',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '20pt',
@@ -1731,8 +1726,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '20pt',
@@ -1754,12 +1747,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -1774,14 +1761,11 @@ describe('wordOnlineHandler', () => {
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
-                                                                whiteSpace: 'normal',
                                                                 marginTop: '0px',
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
-                                                                paddingTop: '0px',
                                                                 paddingRight: '6px',
-                                                                paddingBottom: '0px',
                                                                 paddingLeft: '6px',
                                                             },
                                                         },
@@ -1789,17 +1773,11 @@ describe('wordOnlineHandler', () => {
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
-                                                        whiteSpace: 'normal',
                                                         backgroundColor: 'rgb(21, 96, 130)',
                                                         width: '312px',
                                                         borderTop: '1px solid',
-                                                        borderRight: '0px none',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
                                                         borderLeft: '1px solid',
-                                                        paddingTop: '0px',
-                                                        paddingRight: '0px',
-                                                        paddingBottom: '0px',
-                                                        paddingLeft: '0px',
                                                         verticalAlign: 'middle',
                                                     },
                                                     spanLeft: false,
@@ -1825,8 +1803,6 @@ describe('wordOnlineHandler', () => {
                                                                             text:
                                                                                 'Title of Announcement',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '21.5pt',
@@ -1842,8 +1818,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '21.5pt',
@@ -1865,12 +1839,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -1885,14 +1853,11 @@ describe('wordOnlineHandler', () => {
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
-                                                                whiteSpace: 'normal',
                                                                 marginTop: '0px',
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
-                                                                paddingTop: '0px',
                                                                 paddingRight: '6px',
-                                                                paddingBottom: '0px',
                                                                 paddingLeft: '6px',
                                                             },
                                                         },
@@ -1900,17 +1865,11 @@ describe('wordOnlineHandler', () => {
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
-                                                        whiteSpace: 'normal',
                                                         backgroundColor: 'rgb(21, 96, 130)',
                                                         width: '312px',
                                                         borderTop: '1px solid',
                                                         borderRight: '1px solid',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
-                                                        borderLeft: '0px none',
-                                                        paddingTop: '0px',
-                                                        paddingRight: '0px',
-                                                        paddingBottom: '0px',
-                                                        paddingLeft: '0px',
                                                         verticalAlign: 'middle',
                                                     },
                                                     spanLeft: false,
@@ -1941,8 +1900,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: 'Announcement ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'Aptos_MSFontService, Aptos_MSFontService_EmbeddedFont, Aptos_MSFontService_MSFontService, sans-serif',
                                                                                 fontSize: '14pt',
@@ -1958,8 +1915,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'Aptos_MSFontService, Aptos_MSFontService_EmbeddedFont, Aptos_MSFontService_MSFontService, sans-serif',
                                                                                 fontSize: '14pt',
@@ -1981,12 +1936,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2001,14 +1950,11 @@ describe('wordOnlineHandler', () => {
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
-                                                                whiteSpace: 'normal',
                                                                 marginTop: '0px',
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
-                                                                paddingTop: '0px',
                                                                 paddingRight: '6px',
-                                                                paddingBottom: '0px',
                                                                 paddingLeft: '6px',
                                                             },
                                                         },
@@ -2016,17 +1962,12 @@ describe('wordOnlineHandler', () => {
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
-                                                        whiteSpace: 'normal',
                                                         backgroundColor: 'rgb(0, 0, 0)',
                                                         width: '624px',
                                                         borderTop: '1px solid rgb(0, 0, 0)',
                                                         borderRight: '1px solid',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
                                                         borderLeft: '1px solid',
-                                                        paddingTop: '0px',
-                                                        paddingRight: '0px',
-                                                        paddingBottom: '0px',
-                                                        paddingLeft: '0px',
                                                         verticalAlign: 'middle',
                                                     },
                                                     spanLeft: false,
@@ -2042,17 +1983,12 @@ describe('wordOnlineHandler', () => {
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
-                                                        whiteSpace: 'normal',
                                                         backgroundColor: 'rgb(0, 0, 0)',
                                                         width: '624px',
                                                         borderTop: '1px solid rgb(0, 0, 0)',
                                                         borderRight: '1px solid',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
                                                         borderLeft: '1px solid',
-                                                        paddingTop: '0px',
-                                                        paddingRight: '0px',
-                                                        paddingBottom: '0px',
-                                                        paddingLeft: '0px',
                                                         verticalAlign: 'middle',
                                                     },
                                                     spanLeft: true,
@@ -2083,8 +2019,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: 'Hello ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2101,8 +2035,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2124,12 +2056,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2147,8 +2073,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2170,12 +2094,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2194,8 +2112,6 @@ describe('wordOnlineHandler', () => {
                                                                             text:
                                                                                 '[Brief description of change]',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2212,8 +2128,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2229,8 +2143,6 @@ describe('wordOnlineHandler', () => {
                                                                         {
                                                                             segmentType: 'Br',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2247,8 +2159,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2270,12 +2180,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2294,8 +2198,6 @@ describe('wordOnlineHandler', () => {
                                                                             text:
                                                                                 '[What changed and how it ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2313,8 +2215,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: 'benefits',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2331,8 +2231,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2349,8 +2247,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: 'devs',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2367,8 +2263,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ']',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2385,8 +2279,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2408,12 +2300,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2431,8 +2317,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2453,12 +2337,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2477,8 +2355,6 @@ describe('wordOnlineHandler', () => {
                                                                             text:
                                                                                 '[Any action needed by devs]',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2494,8 +2370,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2516,12 +2390,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2539,8 +2407,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2561,12 +2427,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2585,8 +2445,6 @@ describe('wordOnlineHandler', () => {
                                                                             text:
                                                                                 '[Link to Documentation ]',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2602,8 +2460,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2618,8 +2474,6 @@ describe('wordOnlineHandler', () => {
                                                                         {
                                                                             segmentType: 'Br',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2635,8 +2489,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2652,8 +2504,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2674,12 +2524,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2698,8 +2542,6 @@ describe('wordOnlineHandler', () => {
                                                                             text:
                                                                                 '[What comes next if something comes next]',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2716,8 +2558,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2733,8 +2573,6 @@ describe('wordOnlineHandler', () => {
                                                                         {
                                                                             segmentType: 'Br',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2751,8 +2589,6 @@ describe('wordOnlineHandler', () => {
                                                                             segmentType: 'Text',
                                                                             text: ' ',
                                                                             format: {
-                                                                                letterSpacing:
-                                                                                    'normal',
                                                                                 fontFamily:
                                                                                     '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
                                                                                 fontSize: '12pt',
@@ -2774,12 +2610,6 @@ describe('wordOnlineHandler', () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        paddingLeft: '0px',
-                                                                        paddingRight: '0px',
-                                                                        backgroundColor:
-                                                                            'transparent',
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
@@ -2794,14 +2624,11 @@ describe('wordOnlineHandler', () => {
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
-                                                                whiteSpace: 'normal',
                                                                 marginTop: '0px',
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
-                                                                paddingTop: '0px',
                                                                 paddingRight: '6px',
-                                                                paddingBottom: '0px',
                                                                 paddingLeft: '6px',
                                                             },
                                                         },
@@ -2809,18 +2636,12 @@ describe('wordOnlineHandler', () => {
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
-                                                        whiteSpace: 'normal',
                                                         borderTop: '1px solid rgb(0, 0, 0)',
                                                         borderRight: '1px solid rgb(0, 0, 0)',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
                                                         borderLeft: '1px solid rgb(0, 0, 0)',
                                                         verticalAlign: 'top',
                                                         width: '624px',
-                                                        backgroundColor: 'transparent',
-                                                        paddingTop: '0px',
-                                                        paddingRight: '0px',
-                                                        paddingBottom: '0px',
-                                                        paddingLeft: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -2835,18 +2656,12 @@ describe('wordOnlineHandler', () => {
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
-                                                        whiteSpace: 'normal',
                                                         borderTop: '1px solid rgb(0, 0, 0)',
                                                         borderRight: '1px solid rgb(0, 0, 0)',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
                                                         borderLeft: '1px solid rgb(0, 0, 0)',
                                                         verticalAlign: 'top',
                                                         width: '624px',
-                                                        backgroundColor: 'transparent',
-                                                        paddingTop: '0px',
-                                                        paddingRight: '0px',
-                                                        paddingBottom: '0px',
-                                                        paddingLeft: '0px',
                                                     },
                                                     spanLeft: true,
                                                     spanAbove: false,
@@ -2861,8 +2676,6 @@ describe('wordOnlineHandler', () => {
                                     format: {
                                         direction: 'ltr',
                                         textAlign: 'start',
-                                        whiteSpace: 'normal',
-                                        backgroundColor: 'transparent',
                                         marginTop: '0px',
                                         marginRight: '0px',
                                         marginBottom: '0px',
@@ -2881,31 +2694,20 @@ describe('wordOnlineHandler', () => {
                             format: {
                                 direction: 'ltr',
                                 textAlign: 'start',
-                                whiteSpace: 'normal',
                                 marginTop: '2px',
                                 marginRight: '0px',
                                 marginBottom: '2px',
-                                display: 'flex',
-                                paddingTop: '0px',
-                                paddingRight: '0px',
-                                paddingBottom: '0px',
-                                paddingLeft: '0px',
                             },
                         },
                     ],
                     format: {
                         direction: 'ltr',
                         textAlign: 'start',
-                        whiteSpace: 'normal',
                         backgroundColor: 'rgb(255, 255, 255)',
                         marginTop: '0px',
                         marginRight: '0px',
                         marginBottom: '0px',
                         marginLeft: '0px',
-                        paddingTop: '0px',
-                        paddingRight: '0px',
-                        paddingBottom: '0px',
-                        paddingLeft: '0px',
                     },
                 },
             ],
