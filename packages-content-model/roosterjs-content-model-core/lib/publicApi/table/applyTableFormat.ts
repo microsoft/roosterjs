@@ -1,4 +1,3 @@
-import { BorderKeys } from 'roosterjs-content-model-dom';
 import { combineBorderValue, extractBorderValues } from '../domUtils/borderValues';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
@@ -10,6 +9,14 @@ import type {
     ContentModelTableRow,
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
+
+export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
+    'borderTop',
+    'borderInlineEnd',
+    'borderBottom',
+    'borderInlineStart',
+    'borderRadius',
+];
 
 const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     topBorderColor: '#ABABAB',
@@ -287,8 +294,8 @@ function setHeaderRowFormat(
             }
 
             setBorderColor(cell.format, 'borderTop', format.headerRowColor);
-            setBorderColor(cell.format, 'borderRight', format.headerRowColor);
-            setBorderColor(cell.format, 'borderLeft', format.headerRowColor);
+            setBorderColor(cell.format, 'borderInlineEnd', format.headerRowColor);
+            setBorderColor(cell.format, 'borderInlineStart', format.headerRowColor);
         }
     });
 }

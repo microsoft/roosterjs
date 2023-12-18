@@ -55,8 +55,8 @@ export function processPastedContentFromExcel(
     addParser(event.domToModelOption, 'tableCell', (format, element) => {
         if (element.style.borderStyle === 'none') {
             format.borderBottom = DEFAULT_BORDER_STYLE;
-            format.borderLeft = DEFAULT_BORDER_STYLE;
-            format.borderRight = DEFAULT_BORDER_STYLE;
+            format.borderInlineStart = DEFAULT_BORDER_STYLE;
+            format.borderInlineEnd = DEFAULT_BORDER_STYLE;
             format.borderTop = DEFAULT_BORDER_STYLE;
         }
     });

@@ -10,6 +10,8 @@ export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderBottom',
     'borderLeft',
     'borderRadius',
+    'borderInlineStart',
+    'borderInlineEnd',
 ];
 
 /**

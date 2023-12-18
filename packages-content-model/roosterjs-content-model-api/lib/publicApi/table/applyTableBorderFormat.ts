@@ -18,7 +18,7 @@ import type { TableSelectionCoordinates } from '../../modelApi/table/getSelected
  * @internal
  * Border positions
  */
-type BorderPositions = 'borderTop' | 'borderBottom' | 'borderLeft' | 'borderRight';
+type BorderPositions = 'borderTop' | 'borderBottom' | 'borderInlineStart' | 'borderInlineEnd';
 
 /**
  * @internal
@@ -100,8 +100,8 @@ export default function applyTableBorderFormat(
                                 const allBorders: BorderPositions[] = [
                                     'borderTop',
                                     'borderBottom',
-                                    'borderLeft',
-                                    'borderRight',
+                                    'borderInlineStart',
+                                    'borderInlineEnd',
                                 ];
                                 for (
                                     let rowIndex = sel.firstRow;
@@ -126,7 +126,7 @@ export default function applyTableBorderFormat(
                                 perimeter.Right = true;
                                 break;
                             case 'leftBorders':
-                                const leftBorder: BorderPositions[] = ['borderLeft'];
+                                const leftBorder: BorderPositions[] = ['borderInlineStart'];
                                 for (
                                     let rowIndex = sel.firstRow;
                                     rowIndex <= sel.lastRow;
@@ -141,7 +141,7 @@ export default function applyTableBorderFormat(
                                 perimeter.Left = true;
                                 break;
                             case 'rightBorders':
-                                const rightBorder: BorderPositions[] = ['borderRight'];
+                                const rightBorder: BorderPositions[] = ['borderInlineEnd'];
                                 for (
                                     let rowIndex = sel.firstRow;
                                     rowIndex <= sel.lastRow;
@@ -223,7 +223,7 @@ export default function applyTableBorderFormat(
                                     applyBorderFormat(
                                         tableModel.rows[sel.firstRow].cells[sel.firstCol],
                                         borderFormat,
-                                        ['borderRight']
+                                        ['borderInlineEnd']
                                     );
                                     for (
                                         let colIndex = sel.firstCol + 1;
@@ -232,14 +232,14 @@ export default function applyTableBorderFormat(
                                     ) {
                                         const cell = tableModel.rows[sel.firstRow].cells[colIndex];
                                         applyBorderFormat(cell, borderFormat, [
-                                            'borderLeft',
-                                            'borderRight',
+                                            'borderInlineStart',
+                                            'borderInlineEnd',
                                         ]);
                                     }
                                     applyBorderFormat(
                                         tableModel.rows[sel.firstRow].cells[sel.lastCol],
                                         borderFormat,
-                                        ['borderLeft']
+                                        ['borderInlineStart']
                                     );
                                     break;
                                 }
@@ -249,25 +249,25 @@ export default function applyTableBorderFormat(
                                 applyBorderFormat(
                                     tableModel.rows[sel.firstRow].cells[sel.firstCol],
                                     borderFormat,
-                                    ['borderBottom', 'borderRight']
+                                    ['borderBottom', 'borderInlineEnd']
                                 );
                                 // Top right cell
                                 applyBorderFormat(
                                     tableModel.rows[sel.firstRow].cells[sel.lastCol],
                                     borderFormat,
-                                    ['borderBottom', 'borderLeft']
+                                    ['borderBottom', 'borderInlineStart']
                                 );
                                 // Bottom left cell
                                 applyBorderFormat(
                                     tableModel.rows[sel.lastRow].cells[sel.firstCol],
                                     borderFormat,
-                                    ['borderTop', 'borderRight']
+                                    ['borderTop', 'borderInlineEnd']
                                 );
                                 // Bottom right cell
                                 applyBorderFormat(
                                     tableModel.rows[sel.lastRow].cells[sel.lastCol],
                                     borderFormat,
-                                    ['borderTop', 'borderLeft']
+                                    ['borderTop', 'borderInlineStart']
                                 );
                                 // First row
                                 for (
@@ -278,8 +278,8 @@ export default function applyTableBorderFormat(
                                     const cell = tableModel.rows[sel.firstRow].cells[colIndex];
                                     applyBorderFormat(cell, borderFormat, [
                                         'borderBottom',
-                                        'borderLeft',
-                                        'borderRight',
+                                        'borderInlineStart',
+                                        'borderInlineEnd',
                                     ]);
                                 }
                                 // Last row
@@ -291,8 +291,8 @@ export default function applyTableBorderFormat(
                                     const cell = tableModel.rows[sel.lastRow].cells[colIndex];
                                     applyBorderFormat(cell, borderFormat, [
                                         'borderTop',
-                                        'borderLeft',
-                                        'borderRight',
+                                        'borderInlineStart',
+                                        'borderInlineEnd',
                                     ]);
                                 }
                                 // First column
@@ -305,7 +305,7 @@ export default function applyTableBorderFormat(
                                     applyBorderFormat(cell, borderFormat, [
                                         'borderTop',
                                         'borderBottom',
-                                        'borderRight',
+                                        'borderInlineEnd',
                                     ]);
                                 }
                                 // Last column
@@ -318,7 +318,7 @@ export default function applyTableBorderFormat(
                                     applyBorderFormat(cell, borderFormat, [
                                         'borderTop',
                                         'borderBottom',
-                                        'borderLeft',
+                                        'borderInlineStart',
                                     ]);
                                 }
                                 // Inner cells
@@ -414,14 +414,14 @@ function modifyPerimeter(
     if (perimeter.Left && sel.firstCol - 1 >= 0) {
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
             const cell = tableModel.rows[rowIndex].cells[sel.firstCol - 1];
-            applyBorderFormat(cell, borderFormat, ['borderRight']);
+            applyBorderFormat(cell, borderFormat, ['borderInlineEnd']);
         }
     }
     // Right of selection
     if (perimeter.Right && sel.lastCol + 1 < tableModel.rows[0].cells.length) {
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
             const cell = tableModel.rows[rowIndex].cells[sel.lastCol + 1];
-            applyBorderFormat(cell, borderFormat, ['borderLeft']);
+            applyBorderFormat(cell, borderFormat, ['borderInlineStart']);
         }
     }
 }
