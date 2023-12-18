@@ -1,9 +1,9 @@
-import { getStyles } from '../utils/getStyles';
+import { getListStyleTypeFromString, updateListMetadata } from 'roosterjs-content-model-core';
+import type { WordMetadata } from './WordMetadata';
 import {
     addBlock,
     createListItem,
     createListLevel,
-    isNodeOfType,
     parseFormat,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -18,8 +18,9 @@ import type {
 /** Word list metadata style name */
 const MSO_LIST = 'mso-list';
 const MSO_LIST_IGNORE = 'ignore';
-const LOOKUP_DEPTH = 5;
 const WORD_FIRST_LIST = 'l0';
+
+const TEMPLATE_VALUE_REGEX = /%[0-9a-zA-Z]+/g;
 
 interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel?: number | '';
@@ -27,6 +28,7 @@ interface WordDesktopListFormat extends DomToModelListFormat {
     wordKnownLevels?: Map<string, ContentModelListLevel[]>;
 }
 
+const BULLET_METADATA = 'bullet';
 /**
  * @internal
  * @param styles
@@ -39,7 +41,8 @@ export function processWordList(
     styles: Record<string, string>,
     group: ContentModelBlockGroup,
     element: HTMLElement,
-    context: DomToModelContext
+    context: DomToModelContext,
+    metadata: Map<string, WordMetadata>
 ) {
     const listFormat = context.listFormat as WordDesktopListFormat;
     if (!listFormat.wordKnownLevels) {
@@ -53,21 +56,25 @@ export function processWordList(
         return true;
     }
 
-    const listProps = wordListStyle.split(' ');
+    const [lNumber, level] = wordListStyle.split(' ');
     // Try get the list metadata from word, which follows this format: l1 level1 lfo2
     // If we are able to get the level property means we can process this element to be a list
-    listFormat.wordLevel = listProps[1] && parseInt(listProps[1].substr('level'.length));
+    listFormat.wordLevel = level && parseInt(level.substr('level'.length));
 
-    listFormat.wordList = listProps[0] || WORD_FIRST_LIST;
+    listFormat.wordList = lNumber || WORD_FIRST_LIST;
     if (listFormat.levels.length == 0) {
-        listFormat.levels = listFormat.wordKnownLevels.get(listFormat.wordList) || [];
+        listFormat.levels =
+            (listFormat.wordList && listFormat.wordKnownLevels.get(listFormat.wordList)) || [];
     }
 
     if (wordListStyle && group && typeof listFormat.wordLevel === 'number') {
-        const { wordLevel } = listFormat;
+        const { wordLevel, wordList } = listFormat;
         // Retrieve the Fake bullet on the element and also the list type
-        const fakeBullet = getFakeBulletText(element);
-        const listType = getFakeBulletTagName(fakeBullet);
+        const listMetadata = metadata.get(`${lNumber}:${level}`);
+        const listType =
+            listMetadata?.['mso-level-number-format']?.toLowerCase() != BULLET_METADATA
+                ? 'OL'
+                : 'UL';
 
         // Create the new level of the list item and parse the format
         const newLevel: ContentModelListLevel = createListLevel(listType);
@@ -86,13 +93,13 @@ export function processWordList(
 
         listFormat.listParent = group;
 
-        processAsListItem(listFormat, context, element, group, fakeBullet);
+        processAsListItem(listFormat, context, element, group, listMetadata);
 
         if (
             listFormat.levels.length > 0 &&
-            listFormat.wordKnownLevels.get(listFormat.wordList) != listFormat.levels
+            listFormat.wordKnownLevels.get(wordList) != listFormat.levels
         ) {
-            listFormat.wordKnownLevels.set(listFormat.wordList, [...listFormat.levels]);
+            listFormat.wordKnownLevels.set(wordList, [...listFormat.levels]);
         }
         return true;
     }
@@ -105,18 +112,29 @@ function processAsListItem(
     context: DomToModelContext,
     element: HTMLElement,
     group: ContentModelBlockGroup,
-    fakeBullet: string
+    listMetadata: WordMetadata | undefined
 ) {
+    const listLevel = listFormat.levels[listFormat.levels.length - 1];
+    const { listType } = listLevel;
+    const bullet = getBulletFromMetadata(listMetadata, listType);
+    if (bullet) {
+        updateListMetadata(listFormat.levels[listFormat.levels.length - 1], metadata =>
+            Object.assign({}, metadata, {
+                unorderedStyleType: listType == 'UL' ? bullet : undefined,
+                orderedStyleType: listType == 'OL' ? bullet : undefined,
+            })
+        );
+    }
+
     const listItem = createListItem(listFormat.levels, context.segmentFormat);
-    const lastLevel = listItem.levels[listItem.levels.length - 1];
 
     parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
     parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
 
-    if (lastLevel?.listType == 'OL') {
+    if (listType == 'OL') {
         parseFormat(
             element,
-            [startNumberOverrideParser(fakeBullet)],
+            [startNumberOverrideParser(listMetadata)],
             listItem.levels[listItem.levels.length - 1].format,
             context
         );
@@ -126,91 +144,72 @@ function processAsListItem(
     addBlock(group, listItem);
 }
 
+function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType: 'OL' | 'UL') {
+    const templateType = listMetadata?.['mso-level-number-format'] || 'decimal';
+    let templateFinal: string;
+
+    if (listMetadata?.['mso-level-text']) {
+        let templateValue: string = '';
+        switch (templateType) {
+            case 'alpha-upper':
+                templateValue = 'UpperAlpha';
+                break;
+            case 'alpha-lower':
+                templateValue = 'LowerAlpha';
+                break;
+            case 'roman-lower':
+                templateValue = 'LowerRoman';
+                break;
+            case 'roman-upper':
+                templateValue = 'UpperRoman';
+                break;
+            default:
+                templateValue = 'Number';
+                break;
+        }
+        const template = (listMetadata['mso-level-text'] || '')
+            .replace('\\', '')
+            .replace('"', '')
+            .replace(TEMPLATE_VALUE_REGEX, '${' + templateValue + '}');
+
+        templateFinal = '"' + template + ' "';
+    } else {
+        switch (templateType) {
+            case 'alpha-lower':
+                templateFinal = 'lower-alpha';
+                break;
+            case 'roman-lower':
+                templateFinal = 'lower-roman';
+                break;
+            case 'roman-upper':
+                templateFinal = 'upper-roman';
+                break;
+            default:
+                templateFinal = 'decimal';
+                break;
+        }
+    }
+
+    return getListStyleTypeFromString(listType, templateFinal);
+}
+
 function startNumberOverrideParser(
-    fakeBullet: string
+    listMetadata: WordMetadata | undefined
 ): FormatParser<ContentModelListItemLevelFormat> | null {
     return (format, _, context) => {
         const {
             wordKnownLevels,
             wordLevel,
             wordList,
+            levels,
         } = context.listFormat as WordDesktopListFormat;
         if (typeof wordLevel === 'number' && wordList) {
-            const start = parseInt(fakeBullet);
-            if (start != undefined && !isNaN(start) && !wordKnownLevels?.has(wordList)) {
+            const start = parseInt(listMetadata?.['mso-level-start-at'] || '1');
+            const knownLevel = wordKnownLevels?.get(wordList) || [];
+
+            if (start != undefined && !isNaN(start) && knownLevel.length != levels.length) {
                 format.startNumberOverride = start;
             }
         }
     };
-}
-
-/**
- * Check whether the string is a fake bullet from word Desktop
- */
-function isFakeBullet(fakeBullet: string): boolean {
-    return ['o', '·', '§', '-'].indexOf(fakeBullet) >= 0;
-}
-
-/** Given a fake bullet text, returns the type of list that should be used for it */
-function getFakeBulletTagName(fakeBullet: string): 'UL' | 'OL' {
-    return isFakeBullet(fakeBullet) ? 'UL' : 'OL';
-}
-
-/**
- * Finds the fake bullet text out of the specified node and returns it. For images, it will return
- * a bullet string. If not found, it returns null...
- */
-function getFakeBulletText(node: Node, levels?: number): string {
-    // Word uses the following format for their bullets:
-    // &lt;p style="mso-list:l1 level1 lfo2"&gt;
-    // &lt;span style="..."&gt;
-    // &lt;span style="mso-list:Ignore"&gt;1.&lt;span style="..."&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/span&gt;&lt;/span&gt;
-    // &lt;/span&gt;
-    // Content here...
-    // &lt;/p&gt;
-    //
-    // Basically, we need to locate the mso-list:Ignore SPAN, which holds either one text or image node. That
-    // text or image node will be the fake bullet we are looking for
-    let result: string = '';
-    levels = levels || LOOKUP_DEPTH;
-    let child: Node | null = node.firstChild;
-    while (!result && child) {
-        // Check if this is the node that holds the fake bullets (mso-list: Ignore)
-        if (isIgnoreNode(child)) {
-            // Yes... this is the node that holds either the text or image data
-            result = child.textContent?.trim() ?? '';
-
-            // This is the case for image case
-            if (result.length == 0) {
-                result = 'o';
-            }
-        } else if (isNodeOfType(child, 'ELEMENT_NODE') && levels > 1) {
-            // If this is an element and we are not in the last level, try to get the fake bullet
-            // out of the child
-            result = getFakeBulletText(child, levels - 1);
-        }
-
-        child = child.nextSibling;
-    }
-
-    return result;
-}
-/**
- * Checks if the specified node is marked as a mso-list: Ignore. These
- * nodes need to be ignored when a list item is converted into standard
- * HTML lists
- */
-function isIgnoreNode(node: Node): boolean {
-    if (isNodeOfType(node, 'ELEMENT_NODE')) {
-        const listAttribute = getStyles(node as HTMLElement)[MSO_LIST];
-        if (
-            listAttribute &&
-            listAttribute.length > 0 &&
-            listAttribute.trim().toLowerCase() == MSO_LIST_IGNORE
-        ) {
-            return true;
-        }
-    }
-
-    return false;
 }

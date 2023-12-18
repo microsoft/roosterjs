@@ -1,10 +1,12 @@
 import addParser from '../utils/addParser';
+import getStyleMetadata from './getStyleMetadata';
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { getStyles } from '../utils/getStyles';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
+import type { WordMetadata } from './WordMetadata';
 import type {
     ContentModelBeforePasteEvent,
     ContentModelBlockFormat,
@@ -23,8 +25,13 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
  * Handles Pasted content when source is Word Desktop
  * @param ev ContentModelBeforePasteEvent
  */
-export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteEvent) {
-    setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor);
+export function processPastedContentFromWordDesktop(
+    ev: ContentModelBeforePasteEvent,
+    trustedHTMLHandler: (text: string) => string
+) {
+    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev, trustedHTMLHandler);
+
+    setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'listItemElement', listItemElementParser);
@@ -46,22 +53,21 @@ export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteE
     });
 }
 
-/**
- * @internal
- * Exported only for unit test
- */
-export const wordDesktopElementProcessor: ElementProcessor<HTMLElement> = (
-    group,
-    element,
-    context
-) => {
-    const styles = getStyles(element);
-    // Process Word Lists or Word Commands, otherwise use the default processor on this element.
-    if (
-        !(processWordList(styles, group, element, context) || processWordComments(styles, element))
-    ) {
-        context.defaultElementProcessors.element(group, element, context);
-    }
+const wordDesktopElementProcessor = (
+    metadataKey: Map<string, WordMetadata>
+): ElementProcessor<HTMLElement> => {
+    return (group, element, context) => {
+        const styles = getStyles(element);
+        // Process Word Lists or Word Commands, otherwise use the default processor on this element.
+        if (
+            !(
+                processWordList(styles, group, element, context, metadataKey) ||
+                processWordComments(styles, element)
+            )
+        ) {
+            context.defaultElementProcessors.element(group, element, context);
+        }
+    };
 };
 
 function removeNonValidLineHeight(
