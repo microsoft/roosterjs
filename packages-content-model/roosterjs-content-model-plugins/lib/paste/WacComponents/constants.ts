@@ -40,10 +40,6 @@ export const LIST_CONTAINER_ELEMENT_CLASS_NAME: string = 'ListContainerWrapper';
 /**
  * @internal
  **/
-export const TABLE_CONTAINER: string = 'TableContainer';
-/**
- * @internal
- **/
 export const COMMENT_HIGHLIGHT_CLASS: string = 'CommentHighlightRest';
 /**
  * @internal
@@ -71,9 +67,9 @@ export const CLASSES_TO_KEEP: string[] = [
     ...TEMP_ELEMENTS_CLASSES,
     PARAGRAPH,
     IMAGE_BORDER,
-    TABLE_CONTAINER,
     COMMENT_HIGHLIGHT_CLASS,
     COMMENT_HIGHLIGHT_CLICKED_CLASS,
+    'TableContainer',
     'NumberListStyle',
     'ListContainerWrapper',
     'BulletListStyle',
