@@ -4,7 +4,7 @@ import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcesso
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
-import { pasteDisplayFormatParser } from 'roosterjs-content-model-core/lib/override/pasteDisplayFormatParser';
+import { pasteDisplayFormatParser } from '../../override/pasteDisplayFormatParser';
 import { PasteType } from 'roosterjs-editor-types';
 import type { CompatiblePasteType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';

@@ -36,7 +36,7 @@ export function generatePasteOptionFromPlugins(
         processorOverride: {},
     };
 
-    let event: ContentModelBeforePasteEvent = {
+    const event: ContentModelBeforePasteEvent = {
         eventType: PluginEventType.BeforePaste,
         clipboardData,
         fragment,
