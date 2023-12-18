@@ -3,7 +3,6 @@ import { Browser } from 'roosterjs-editor-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
-import { paste } from 'roosterjs-content-model-core';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 import type { ClipboardData } from 'roosterjs-content-model-types';
 
@@ -39,7 +38,7 @@ describe(ID, () => {
         }
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData);
+        editor.paste(clipboardData);
         editor.createContentModel({});
 
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
@@ -51,7 +50,7 @@ describe(ID, () => {
         }
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData, 'asImage');
+        editor.paste(clipboardData, false, false, true);
 
         const model = editor.createContentModel({
             processorOverride: {
@@ -102,7 +101,7 @@ describe(ID, () => {
             snapshotBeforePaste: '<br><!--{"start":[0],"end":[0]}-->',
         });
 
-        paste(editor, CD);
+        editor.paste(CD);
 
         const model = editor.createContentModel({
             processorOverride: {

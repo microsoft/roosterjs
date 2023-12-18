@@ -1,3 +1,5 @@
+import type { ClipboardData } from '../parameter/ClipboardData';
+import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
@@ -226,6 +228,18 @@ export type EnsureTypeInContainer = (
 ) => void;
 
 /**
+ * Paste into editor using a clipboardData object
+ * @param core The StandaloneEditorCore object.
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @param pasteType Type of content to paste. @default normal
+ */
+export type Paste = (
+    core: StandaloneEditorCore,
+    clipboardData: ClipboardData,
+    pasteType: PasteType
+) => void;
+
+/**
  * Temp interface
  * TODO: Port other core API
  */
@@ -333,6 +347,14 @@ export interface PortedCoreApiMap {
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param editor The editor to paste content into
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteType Type of content to paste. @default normal
+     */
+    paste: Paste;
 }
 
 /**

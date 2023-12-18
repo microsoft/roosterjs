@@ -6,7 +6,6 @@ import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from '../utils/extractClipboardItems';
 import { getSelectedCells } from '../publicApi/table/getSelectedCells';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
-import { paste } from '../publicApi/model/paste';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { transformColor } from '../publicApi/color/transformColor';
 import {
@@ -194,7 +193,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                     this.state.allowedCustomPasteType
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
-                        paste(editor, clipboardData);
+                        editor.paste(clipboardData);
                     }
                 });
             }

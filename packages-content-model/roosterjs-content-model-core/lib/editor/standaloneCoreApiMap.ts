@@ -7,6 +7,7 @@ import { formatContentModel } from '../coreApi/formatContentModel';
 import { getDOMSelection } from '../coreApi/getDOMSelection';
 import { getVisibleViewport } from '../coreApi/getVisibleViewport';
 import { hasFocus } from '../coreApi/hasFocus';
+import { paste } from '../coreApi/paste';
 import { restoreUndoSnapshot } from '../coreApi/restoreUndoSnapshot';
 import { setContentModel } from '../coreApi/setContentModel';
 import { setDOMSelection } from '../coreApi/setDOMSelection';
@@ -33,4 +34,5 @@ export const standaloneCoreApiMap: PortedCoreApiMap = {
     restoreUndoSnapshot: restoreUndoSnapshot,
     attachDomEvent: attachDomEvent,
     triggerEvent: triggerEvent,
+    paste: paste,
 };

@@ -1,7 +1,8 @@
-import { ChangeSource } from '../../constants/ChangeSource';
+import { ChangeSource } from '../constants/ChangeSource';
+import { getSelectedSegments } from '../publicApi/selection/collectSelections';
+import { mergeModel } from '../publicApi/model/mergeModel';
 import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
-import { getSelectedSegments } from '../selection/collectSelections';
-import { mergeModel } from './mergeModel';
+import type { BeforePasteEvent } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -10,16 +11,17 @@ import type {
     PasteType,
     ContentModelBeforePasteEventData,
     ContentModelBeforePasteEvent,
-    IStandaloneEditor,
     ClipboardData,
+    Paste,
+    StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
-import type { IEditor } from 'roosterjs-editor-types';
 import {
     AllowedEntityClasses,
     applySegmentFormatToElement,
     createDomToModelContext,
     domToContentModel,
     moveChildNodes,
+    tableProcessor,
 } from 'roosterjs-content-model-dom';
 import {
     createDefaultHtmlSanitizerOptions,
@@ -52,29 +54,38 @@ const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
 };
 
 /**
+ * @internal
  * Paste into editor using a clipboardData object
- * @param editor The editor to paste content into
+ * @param core The StandaloneEditorCore object.
  * @param clipboardData Clipboard data retrieved from clipboard
  * @param pasteType Type of content to paste. @default normal
  */
-export function paste(
-    editor: IStandaloneEditor & IEditor,
+export const paste: Paste = (
+    core: StandaloneEditorCore,
     clipboardData: ClipboardData,
     pasteType: PasteType = 'normal'
-) {
+) => {
     if (clipboardData.snapshotBeforePaste) {
         // Restore original content before paste a new one
-        editor.setContent(clipboardData.snapshotBeforePaste);
+        core.api.setContent(
+            core,
+            clipboardData.snapshotBeforePaste,
+            true /* triggerContentChangedEvent */
+        );
     } else {
-        clipboardData.snapshotBeforePaste = editor.getContent(GetContentMode.RawHTMLWithSelection);
+        clipboardData.snapshotBeforePaste = core.api.getContent(
+            core,
+            GetContentMode.RawHTMLWithSelection
+        );
     }
 
-    editor.focus();
+    core.api.focus(core);
     let originalFormat: ContentModelSegmentFormat | undefined;
 
-    editor.formatContentModel(
+    core.api.formatContentModel(
+        core,
         (model, context) => {
-            const eventData = createBeforePasteEventData(editor, clipboardData, pasteType);
+            const eventData = createBeforePasteEventData(core, clipboardData, pasteType);
             const currentSegment = getSelectedSegments(model, true /*includingFormatHolder*/)[0];
             const { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight } =
                 currentSegment?.format ?? {};
@@ -83,7 +94,7 @@ export function paste(
                 fragment,
                 customizedMerge,
             } = triggerPluginEventAndCreatePasteFragment(
-                editor,
+                core,
                 clipboardData,
                 pasteType,
                 eventData,
@@ -117,14 +128,13 @@ export function paste(
 
             return true;
         },
-
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
             apiName: 'paste',
         }
     );
-}
+};
 
 /**
  * @internal
@@ -163,7 +173,7 @@ function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined
 }
 
 function createBeforePasteEventData(
-    editor: IEditor,
+    core: StandaloneEditorCore,
     clipboardData: ClipboardData,
     pasteType: PasteType
 ): ContentModelBeforePasteEventData {
@@ -176,12 +186,22 @@ function createBeforePasteEventData(
 
     return {
         clipboardData,
-        fragment: editor.getDocument().createDocumentFragment(),
+        fragment: core.contentDiv.ownerDocument.createDocumentFragment(),
         sanitizingOption: options,
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
-        domToModelOption: {},
+        domToModelOption: Object.assign(
+            {},
+            ...[
+                core.defaultDomToModelOptions,
+                {
+                    processorOverride: {
+                        table: tableProcessor,
+                    },
+                },
+            ]
+        ),
         pasteType: PasteTypeMap[pasteType],
     };
 }
@@ -191,7 +211,7 @@ function createBeforePasteEventData(
  * This function will also create a DocumentFragment for paste.
  */
 function triggerPluginEventAndCreatePasteFragment(
-    editor: IEditor,
+    core: StandaloneEditorCore,
     clipboardData: ClipboardData,
     pasteType: PasteType,
     eventData: ContentModelBeforePasteEventData,
@@ -204,14 +224,14 @@ function triggerPluginEventAndCreatePasteFragment(
 
     const { fragment } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
-    const trustedHTMLHandler = editor.getTrustedHTMLHandler();
+    const trustedHTMLHandler = core.trustedHTMLHandler;
 
     const doc: Document | undefined = rawHtml
         ? new DOMParser().parseFromString(trustedHTMLHandler(rawHtml), 'text/html')
         : undefined;
 
     // Step 2: Retrieve Metadata from Html and the Html that was copied.
-    retrieveMetadataFromClipboard(doc, event, trustedHTMLHandler);
+    retrieveMetadataFromClipboard(doc, event as BeforePasteEvent, trustedHTMLHandler);
 
     // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
     if (
@@ -234,19 +254,13 @@ function triggerPluginEventAndCreatePasteFragment(
 
     applySegmentFormatToElement(formatContainer, currentFormat);
 
-    let pluginEvent: ContentModelBeforePasteEvent = event;
-
     // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste, when the type of paste is different than Plain Text
     if (pasteType !== 'asPlainText') {
-        pluginEvent = editor.triggerPluginEvent(
-            PluginEventType.BeforePaste,
-            event,
-            true /* broadcast */
-        ) as ContentModelBeforePasteEvent;
+        core.api.triggerEvent(core, event, true /* broadcast */);
     }
 
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
     sanitizePasteContent(event, null /*position*/);
 
-    return pluginEvent;
+    return event;
 }
