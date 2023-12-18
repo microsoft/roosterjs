@@ -5,7 +5,6 @@ import * as deleteSelectionsFile from '../../lib/publicApi/selection/deleteSelec
 import * as extractClipboardItemsFile from '../../lib/utils/extractClipboardItems';
 import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import * as PasteFile from '../../lib/publicApi/model/paste';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
@@ -539,7 +538,6 @@ describe('ContentModelCopyPastePlugin |', () => {
         let clipboardData = <ClipboardData>{};
 
         it('Handle', () => {
-            spyOn(PasteFile, 'paste').and.callFake(() => {});
             const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
@@ -560,8 +558,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).not.toHaveBeenCalledWith(clipboardData);
-            expect(PasteFile.paste).toHaveBeenCalled();
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType
