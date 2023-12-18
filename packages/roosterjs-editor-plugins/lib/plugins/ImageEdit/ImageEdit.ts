@@ -428,6 +428,7 @@ export default class ImageEdit implements EditorPlugin {
 
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
             if (this.clonedImage) {
+                this.clonedImage.src = this.editInfo.src;
                 this.clonedImage.style.position = 'absolute';
             }
 
