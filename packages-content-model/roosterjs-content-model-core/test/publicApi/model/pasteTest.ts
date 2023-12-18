@@ -553,9 +553,9 @@ describe('mergePasteContent', () => {
                                     format: {
                                         useBorderBox: true,
                                         borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
+                                        borderInlineEnd: '1px solid #ABABAB',
                                         borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderInlineStart: '1px solid #ABABAB',
                                     },
                                     spanLeft: false,
                                     spanAbove: false,
