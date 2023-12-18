@@ -10,6 +10,7 @@ import type {
     ContentModelBlockFormat,
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
+    ContentModelTableFormat,
     DomToModelContext,
     ElementProcessor,
     FormatParser,
@@ -28,6 +29,8 @@ export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteE
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'listItemElement', listItemElementParser);
+    addParser(ev.domToModelOption, 'container', wordTableParser);
+    addParser(ev.domToModelOption, 'table', wordTableParser);
 
     // Remove "border:none" for image to fix image resize behavior
     // We found a problem that when paste an image with "border:none" then the resize border will be
@@ -56,6 +59,7 @@ export const wordDesktopElementProcessor: ElementProcessor<HTMLElement> = (
     context
 ) => {
     const styles = getStyles(element);
+
     // Process Word Lists or Word Commands, otherwise use the default processor on this element.
     if (
         !(processWordList(styles, group, element, context) || processWordComments(styles, element))
@@ -103,5 +107,11 @@ const listItemElementParser: FormatParser<ContentModelListItemFormat> = (
     }
     if (element.style.marginRight) {
         format.marginRight = undefined;
+    }
+};
+
+const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
+    if (format.marginLeft?.startsWith('-')) {
+        delete format.marginLeft;
     }
 };

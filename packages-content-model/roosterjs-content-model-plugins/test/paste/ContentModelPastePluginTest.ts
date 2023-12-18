@@ -90,7 +90,7 @@ describe('Content Model Paste Plugin Test', () => {
             expect(event.domToModelOption.processorOverride?.element).toBe(
                 WordDesktopFile.wordDesktopElementProcessor
             );
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
+            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
@@ -189,7 +189,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(WacFile.processPastedContentWacComponents).toHaveBeenCalledWith(event);
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
+            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(4);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });

@@ -2951,4 +2951,52 @@ describe('wordOnlineHandler', () => {
             }
         );
     });
+
+    it('Remove Negative Left margin from table', () => {
+        runTest(
+            '<div><table style="margin-left: -5px;"><tbody><tr><td>Test</td></tr><tbody></table></div>',
+            '<table><tbody><tr><td>Test</td></tr></tbody></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                height: 0,
+                                format: {},
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Text',
+                                                        text: 'Test',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {},
+                                                isImplicit: true,
+                                            },
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: {},
+                        widths: [],
+                        dataset: {},
+                    },
+                ],
+            }
+        );
+    });
 });
