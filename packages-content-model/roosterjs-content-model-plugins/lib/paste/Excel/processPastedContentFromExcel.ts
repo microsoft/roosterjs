@@ -18,7 +18,8 @@ const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
 
 export function processPastedContentFromExcel(
     event: ContentModelBeforePasteEvent,
-    trustedHTMLHandler: TrustedHTMLHandler
+    trustedHTMLHandler: TrustedHTMLHandler,
+    allowExcelNoBorderTable?: boolean
 ) {
     const { fragment, htmlBefore, clipboardData } = event;
     const html = clipboardData.html ? excelHandler(clipboardData.html, htmlBefore) : undefined;
@@ -53,7 +54,7 @@ export function processPastedContentFromExcel(
     }
 
     addParser(event.domToModelOption, 'tableCell', (format, element) => {
-        if (element.style.borderStyle === 'none') {
+        if (!allowExcelNoBorderTable && element.style.borderStyle === 'none') {
             format.borderBottom = DEFAULT_BORDER_STYLE;
             format.borderInlineStart = DEFAULT_BORDER_STYLE;
             format.borderInlineEnd = DEFAULT_BORDER_STYLE;

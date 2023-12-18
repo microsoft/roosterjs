@@ -2,12 +2,13 @@ import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelec
 import * as cloneModelFile from '../../lib/publicApi/model/cloneModel';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as deleteSelectionsFile from '../../lib/publicApi/selection/deleteSelection';
-import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
+import * as extractClipboardItemsFile from '../../lib/utils/extractClipboardItems';
 import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import * as PasteFile from '../../lib/publicApi/model/paste';
-import { createModelToDomContext } from 'roosterjs-content-model-dom';
+import * as transformColor from '../../lib/publicApi/color/transformColor';
+import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
+import { DarkColorHandler, IEditor, PluginWithState } from 'roosterjs-editor-types';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,
@@ -15,18 +16,15 @@ import {
     ContentModelFormatter,
     FormatWithContentModelOptions,
     IStandaloneEditor,
+    DOMEventRecord,
+    ClipboardData,
+    CopyPastePluginState,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelCopyPastePlugin,
     onNodeCreated,
+    preprocessTable,
 } from '../../lib/corePlugin/ContentModelCopyPastePlugin';
-import {
-    ClipboardData,
-    ColorTransformDirection,
-    DOMEventHandlerFunction,
-    EditorPlugin,
-    IEditor,
-} from 'roosterjs-editor-types';
 
 const modelValue = 'model' as any;
 const pasteModelValue = 'pasteModelValue' as any;
@@ -37,8 +35,8 @@ const allowedCustomPasteType = ['Test'];
 
 describe('ContentModelCopyPastePlugin |', () => {
     let editor: IEditor = null!;
-    let plugin: EditorPlugin;
-    let domEvents: Record<string, DOMEventHandlerFunction> = {};
+    let plugin: PluginWithState<CopyPastePluginState>;
+    let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
 
     let selectionValue: DOMSelection;
@@ -52,10 +50,11 @@ describe('ContentModelCopyPastePlugin |', () => {
     let isDisposed: jasmine.Spy;
     let pasteSpy: jasmine.Spy;
     let cloneModelSpy: jasmine.Spy;
-    let transformToDarkColorSpy: jasmine.Spy;
+    let transformColorSpy: jasmine.Spy;
     let getVisibleViewportSpy: jasmine.Spy;
     let formatResult: boolean | undefined;
     let modelResult: ContentModelDocument | undefined;
+    let mockedDarkColorHandler: DarkColorHandler;
 
     beforeEach(() => {
         modelResult = undefined;
@@ -78,7 +77,8 @@ describe('ContentModelCopyPastePlugin |', () => {
         cloneModelSpy = spyOn(cloneModelFile, 'cloneModel').and.callFake(
             (model: any) => pasteModelValue
         );
-        transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
+        transformColorSpy = spyOn(transformColor, 'transformColor');
+        mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -97,14 +97,10 @@ describe('ContentModelCopyPastePlugin |', () => {
         plugin = createContentModelCopyPastePlugin({
             allowedCustomPasteType,
         });
+        plugin.getState().tempDiv = div;
         editor = <IStandaloneEditor & IEditor>(<any>{
-            addDomEventHandler: (
-                nameOrMap: string | Record<string, DOMEventHandlerFunction>,
-                handler?: DOMEventHandlerFunction
-            ) => {
-                domEvents = ((typeof nameOrMap == 'string'
-                    ? { [nameOrMap]: handler! }
-                    : nameOrMap) as any) as Record<string, DOMEventHandlerFunction>;
+            attachDomEvent: (eventMap: Record<string, DOMEventRecord>) => {
+                domEvents = eventMap;
             },
             createContentModel: (options: any) => createContentModelSpy(options),
             triggerPluginEvent(eventType: any, data: any, broadcast: any) {
@@ -122,20 +118,13 @@ describe('ContentModelCopyPastePlugin |', () => {
             getDocument() {
                 return document;
             },
-            getCustomData<HTMLDivElement>(
-                key: string,
-                getter?: (() => HTMLDivElement) | undefined,
-                disposer?: ((value: HTMLDivElement) => void) | undefined
-            ) {
-                return div;
-            },
             isDarkMode: () => {
                 return false;
             },
             paste: (ar1: any) => {
                 pasteSpy(ar1);
             },
-            transformToDarkColor: transformToDarkColorSpy,
+            getDarkColorHandler: () => mockedDarkColorHandler,
             isDisposed,
             getVisibleViewport: getVisibleViewportSpy,
             formatContentModel: formatContentModelSpy,
@@ -156,7 +145,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             focusSpy.and.callThrough();
             setDOMSelectionSpy.and.callThrough();
 
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(createContentModelSpy).not.toHaveBeenCalled();
@@ -182,7 +171,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -230,7 +219,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -274,7 +263,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -334,17 +323,19 @@ describe('ContentModelCopyPastePlugin |', () => {
                     '<span class="_Entity _EType_Entity _EId_Entity _EReadonly_1" contenteditable="false" style="color: inherit; background-color: inherit;"></span>'
                 );
                 expect(cloneEntity).not.toBe(wrapper);
-                expect(transformToDarkColorSpy).toHaveBeenCalledTimes(1);
-                expect(transformToDarkColorSpy).toHaveBeenCalledWith(
+                expect(transformColorSpy).toHaveBeenCalledTimes(1);
+                expect(transformColorSpy).toHaveBeenCalledWith(
                     cloneEntity,
-                    ColorTransformDirection.DarkToLight
+                    true,
+                    'darkToLight',
+                    mockedDarkColorHandler
                 );
 
                 return pasteModelValue;
             });
 
             // Act
-            domEvents.copy?.(<Event>{});
+            domEvents.copy.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -383,7 +374,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut?.(<Event>{});
+            domEvents.cut.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -418,7 +409,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut?.(<Event>{});
+            domEvents.cut.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -469,7 +460,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut?.(<Event>{});
+            domEvents.cut.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -518,7 +509,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut?.(<Event>{});
+            domEvents.cut.beforeDispatch?.(<Event>{});
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -547,7 +538,6 @@ describe('ContentModelCopyPastePlugin |', () => {
         let clipboardData = <ClipboardData>{};
 
         it('Handle', () => {
-            spyOn(PasteFile, 'paste').and.callFake(() => {});
             const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
@@ -557,23 +547,21 @@ describe('ContentModelCopyPastePlugin |', () => {
                     preventDefaultSpy();
                 },
             };
-            spyOn(extractClipboardItemsFile, 'default').and.returnValue(<Promise<ClipboardData>>{
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
                 then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
                     cb(clipboardData);
                 },
             });
             isDisposed.and.returnValue(false);
 
-            domEvents.paste?.(clipboardEvent);
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).not.toHaveBeenCalledWith(clipboardData);
-            expect(PasteFile.paste).toHaveBeenCalled();
-            expect(extractClipboardItemsFile.default).toHaveBeenCalledWith(
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData);
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                {
-                    allowedCustomPasteType,
-                },
-                true
+                allowedCustomPasteType
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -589,22 +577,21 @@ describe('ContentModelCopyPastePlugin |', () => {
                 },
             };
 
-            spyOn(extractClipboardItemsFile, 'default').and.returnValue(<Promise<ClipboardData>>{
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
                 then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
                     cb(clipboardData);
                 },
             });
             isDisposed.and.returnValue(true);
 
-            domEvents.paste?.(clipboardEvent);
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
 
             expect(pasteSpy).not.toHaveBeenCalled();
-            expect(extractClipboardItemsFile.default).toHaveBeenCalledWith(
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                {
-                    allowedCustomPasteType,
-                },
-                true
+                allowedCustomPasteType
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -632,5 +619,78 @@ describe('ContentModelCopyPastePlugin |', () => {
         onNodeCreated(null!, span);
 
         expect(div.innerHTML).toBe('<span></span>');
+    });
+
+    describe('preprocessTable', () => {
+        it('Preprocess table without selection', () => {
+            const cell1 = createTableCell();
+            const cell2 = createTableCell();
+            const cell3 = createTableCell();
+            const cell4 = createTableCell();
+            const table = createTable(1);
+
+            table.rows[0].cells.push(cell1, cell2, cell3, cell4);
+            table.widths = [100, 20, 30, 80];
+
+            preprocessTable(table);
+
+            expect(table).toEqual({
+                blockType: 'Table',
+                rows: [],
+                format: {},
+                widths: [],
+                dataset: {},
+            });
+        });
+
+        it('Preprocess table with selection', () => {
+            const cell1 = createTableCell();
+            const cell2 = createTableCell();
+            const cell3 = createTableCell();
+            const cell4 = createTableCell();
+            const table = createTable(1);
+
+            table.rows[0].cells.push(cell1, cell2, cell3, cell4);
+            table.widths = [100, 20, 30, 80];
+            cell2.isSelected = true;
+            cell3.isSelected = true;
+
+            preprocessTable(table);
+
+            expect(table).toEqual({
+                blockType: 'Table',
+                rows: [
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {},
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                                isSelected: true,
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {},
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+                format: {},
+                widths: [20, 30],
+                dataset: {},
+            });
+        });
     });
 });

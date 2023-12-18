@@ -1,10 +1,9 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
-import { ClipboardData } from 'roosterjs-editor-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
-import { paste } from 'roosterjs-content-model-core';
 import { tableProcessor } from 'roosterjs-content-model-dom';
+import type { ClipboardData } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_ExcelOnline_E2E';
 const clipboardData = <ClipboardData>(<any>{
@@ -35,7 +34,7 @@ describe(ID, () => {
     it('E2E', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData);
+        editor.paste(clipboardData);
         editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,
@@ -59,7 +58,7 @@ describe(ID, () => {
             snapshotBeforePaste: '<div><br></div><!--{"start":[0,0],"end":[0,0]}-->',
         });
 
-        paste(editor, CD);
+        editor.paste(CD);
 
         const model = editor.createContentModel({
             processorOverride: {

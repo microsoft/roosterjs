@@ -5,6 +5,10 @@ import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
  * @internal
  */
 export const deleteAllSegmentBefore: DeleteSelectionStep = context => {
+    if (context.deleteResult != 'notDeleted') {
+        return;
+    }
+
     const { paragraph, marker } = context.insertPoint;
     const index = paragraph.segments.indexOf(marker);
 

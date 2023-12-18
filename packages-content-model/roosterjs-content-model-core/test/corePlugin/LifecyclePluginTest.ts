@@ -44,8 +44,7 @@ describe('LifecyclePlugin', () => {
                     },
                 ],
             },
-            { ignoreSelection: true },
-            undefined
+            { ignoreSelection: true }
         );
 
         plugin.dispose();
@@ -84,11 +83,7 @@ describe('LifecyclePlugin', () => {
         });
 
         expect(setContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(setContentModelSpy).toHaveBeenCalledWith(
-            mockedModel,
-            { ignoreSelection: true },
-            undefined
-        );
+        expect(setContentModelSpy).toHaveBeenCalledWith(mockedModel, { ignoreSelection: true });
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
@@ -135,8 +130,7 @@ describe('LifecyclePlugin', () => {
                     },
                 ],
             },
-            { ignoreSelection: true },
-            undefined
+            { ignoreSelection: true }
         );
 
         plugin.dispose();
@@ -174,8 +168,7 @@ describe('LifecyclePlugin', () => {
                     },
                 ],
             },
-            { ignoreSelection: true },
-            undefined
+            { ignoreSelection: true }
         );
         expect(div.isContentEditable).toBeFalse();
         expect(div.style.userSelect).toBe('');

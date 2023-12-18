@@ -1,4 +1,5 @@
-import { ColorTransformDirection, GetContentMode, PluginEventType } from 'roosterjs-editor-types';
+import { GetContentMode, PluginEventType } from 'roosterjs-editor-types';
+import { transformColor } from 'roosterjs-content-model-core';
 import {
     createRange,
     getHtmlWithSelectionPath,
@@ -32,24 +33,18 @@ export const getContent: GetContent = (core, mode): string => {
         const clonedRoot = cloneNode(root);
         clonedRoot.normalize();
 
-        const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+        const originalRange = core.api.getDOMSelection(core);
         const path =
             !includeSelectionMarker || core.lifecycle.shadowEditFragment
                 ? null
-                : originalRange
-                ? getSelectionPath(core.contentDiv, originalRange)
+                : originalRange?.type == 'range'
+                ? getSelectionPath(core.contentDiv, originalRange.range)
                 : null;
         const range = path && createRange(clonedRoot, path.start, path.end);
 
-        core.api.transformColor(
-            core,
-            clonedRoot,
-            false /*includeSelf*/,
-            null /*callback*/,
-            ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/,
-            core.lifecycle.isDarkMode
-        );
+        if (core.lifecycle.isDarkMode) {
+            transformColor(clonedRoot, false /*includeSelf*/, 'darkToLight', core.darkColorHandler);
+        }
 
         if (triggerExtractContentEvent) {
             core.api.triggerEvent(

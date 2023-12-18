@@ -5,11 +5,11 @@ import * as createStandaloneEditorDefaultSettings from 'roosterjs-content-model-
 import * as DOMEventPlugin from 'roosterjs-content-model-core/lib/corePlugin/DOMEventPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as EntityPlugin from 'roosterjs-content-model-core/lib/corePlugin/EntityPlugin';
-import * as ImageSelection from '../../lib/corePlugins/ImageSelection';
+import * as EventTranslate from '../../lib/corePlugins/EventTypeTranslatePlugin';
 import * as LifecyclePlugin from 'roosterjs-content-model-core/lib/corePlugin/LifecyclePlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
 import * as SelectionPlugin from 'roosterjs-content-model-core/lib/corePlugin/SelectionPlugin';
-import * as UndoPlugin from '../../lib/corePlugins/UndoPlugin';
+import * as UndoPlugin from 'roosterjs-content-model-core/lib/corePlugin/UndoPlugin';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { createEditorCore } from '../../lib/editor/createEditorCore';
 import { defaultTrustHtmlHandler } from 'roosterjs-content-model-core/lib/editor/createStandaloneEditorCore';
@@ -49,11 +49,11 @@ const mockedEntityPlugin = {
 const mockedSelectionPlugin = {
     getState: () => mockedSelectionState,
 } as any;
-const mockedImageSelection = 'ImageSelection' as any;
 const mockedNormalizeTablePlugin = 'NormalizeTablePlugin' as any;
 const mockedLifecyclePlugin = {
     getState: () => mockedLifecycleState,
 } as any;
+const mockedEventTranslatePlugin = 'EventTranslate' as any;
 const mockedDefaultSettings = {
     settings: 'SETTINGS',
 } as any;
@@ -80,11 +80,13 @@ describe('createEditorCore', () => {
         spyOn(DOMEventPlugin, 'createDOMEventPlugin').and.returnValue(mockedDOMEventPlugin);
         spyOn(SelectionPlugin, 'createSelectionPlugin').and.returnValue(mockedSelectionPlugin);
         spyOn(EntityPlugin, 'createEntityPlugin').and.returnValue(mockedEntityPlugin);
-        spyOn(ImageSelection, 'createImageSelection').and.returnValue(mockedImageSelection);
         spyOn(NormalizeTablePlugin, 'createNormalizeTablePlugin').and.returnValue(
             mockedNormalizeTablePlugin
         );
         spyOn(LifecyclePlugin, 'createLifecyclePlugin').and.returnValue(mockedLifecyclePlugin);
+        spyOn(EventTranslate, 'createEventTypeTranslatePlugin').and.returnValue(
+            mockedEventTranslatePlugin
+        );
         spyOn(
             createStandaloneEditorDefaultSettings,
             'createStandaloneEditorDefaultSettings'
@@ -104,10 +106,10 @@ describe('createEditorCore', () => {
                 mockedDOMEventPlugin,
                 mockedSelectionPlugin,
                 mockedEntityPlugin,
+                mockedEventTranslatePlugin,
                 mockedEditPlugin,
-                mockedUndoPlugin,
-                mockedImageSelection,
                 mockedNormalizeTablePlugin,
+                mockedUndoPlugin,
                 mockedLifecyclePlugin,
             ],
             domEvent: mockedDomEventState,
@@ -160,10 +162,10 @@ describe('createEditorCore', () => {
                 mockedDOMEventPlugin,
                 mockedSelectionPlugin,
                 mockedEntityPlugin,
+                mockedEventTranslatePlugin,
                 mockedEditPlugin,
-                mockedUndoPlugin,
-                mockedImageSelection,
                 mockedNormalizeTablePlugin,
+                mockedUndoPlugin,
                 mockedLifecyclePlugin,
             ],
             domEvent: mockedDomEventState,

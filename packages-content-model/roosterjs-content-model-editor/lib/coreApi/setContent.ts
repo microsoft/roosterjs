@@ -1,15 +1,7 @@
-import {
-    ChangeSource,
-    ColorTransformDirection,
-    PluginEventType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
-import {
-    createRange,
-    extractContentMetadata,
-    queryElements,
-    restoreContentWithEntityPlaceholder,
-} from 'roosterjs-editor-dom';
+import { ChangeSource, transformColor } from 'roosterjs-content-model-core';
+import { convertMetadataToDOMSelection } from '../editor/utils/selectionConverter';
+import { extractContentMetadata, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentMetadata } from 'roosterjs-editor-types';
 import type { SetContent, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
@@ -53,14 +45,11 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
     const isDarkMode = core.lifecycle.isDarkMode;
 
     if ((!metadata && isDarkMode) || (metadata && !!metadata.isDarkMode != !!isDarkMode)) {
-        core.api.transformColor(
-            core,
+        transformColor(
             core.contentDiv,
             false /*includeSelf*/,
-            null /*callback*/,
-            isDarkMode ? ColorTransformDirection.LightToDark : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/,
-            metadata?.isDarkMode
+            isDarkMode ? 'lightToDark' : 'darkToLight',
+            core.darkColorHandler
         );
         contentChanged = true;
     }
@@ -79,42 +68,10 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 
 function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMetadata | undefined) {
     if (!core.lifecycle.shadowEditFragment && metadata) {
-        core.selection.tableSelectionRange = null;
-        core.selection.imageSelectionRange = null;
-        core.selection.selectionRange = null;
+        const selection = convertMetadataToDOMSelection(core.contentDiv, metadata);
 
-        switch (metadata.type) {
-            case SelectionRangeTypes.Normal:
-                core.api.selectTable(core, null);
-                core.api.selectImage(core, null);
-
-                const range = createRange(core.contentDiv, metadata.start, metadata.end);
-                core.api.selectRange(core, range);
-                break;
-            case SelectionRangeTypes.TableSelection:
-                const table = queryElements(
-                    core.contentDiv,
-                    '#' + metadata.tableId
-                )[0] as HTMLTableElement;
-
-                if (table) {
-                    core.selection.tableSelectionRange = core.api.selectTable(
-                        core,
-                        table,
-                        metadata
-                    );
-                }
-                break;
-            case SelectionRangeTypes.ImageSelection:
-                const image = queryElements(
-                    core.contentDiv,
-                    '#' + metadata.imageId
-                )[0] as HTMLImageElement;
-
-                if (image) {
-                    core.selection.imageSelectionRange = core.api.selectImage(core, image);
-                }
-                break;
+        if (selection) {
+            core.api.setDOMSelection(core, selection);
         }
     }
 }

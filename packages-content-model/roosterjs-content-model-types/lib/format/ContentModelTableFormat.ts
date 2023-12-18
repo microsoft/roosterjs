@@ -6,6 +6,7 @@ import type { IdFormat } from './formatParts/IdFormat';
 import type { MarginFormat } from './formatParts/MarginFormat';
 import type { SpacingFormat } from './formatParts/SpacingFormat';
 import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
+import type { SizeFormat } from './formatParts/SizeFormat';
 
 /**
  * Format of Table
@@ -17,4 +18,5 @@ export type ContentModelTableFormat = ContentModelBlockFormat &
     SpacingFormat &
     MarginFormat &
     DisplayFormat &
-    TableLayoutFormat;
+    TableLayoutFormat &
+    SizeFormat;
