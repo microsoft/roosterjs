@@ -43,7 +43,7 @@ describe('Content Model Paste Plugin Test', () => {
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
-        domToModelOption: {},
+        domToModelOption: { additionalAllowedTags: [], additionalDisallowedTags: [] },
     });
 
     describe('onPluginEvent', () => {
@@ -54,7 +54,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             event = <ContentModelBeforePasteEvent>(<any>{
                 eventType: PluginEventType.BeforePaste,
-                domToModelOption: {},
+                domToModelOption: { additionalAllowedTags: [], additionalDisallowedTags: [] },
                 sanitizingOption: {
                     elementCallbacks: {},
                     attributeCallbacks: {},
