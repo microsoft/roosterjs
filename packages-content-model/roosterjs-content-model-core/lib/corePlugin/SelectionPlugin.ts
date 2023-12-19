@@ -105,8 +105,18 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             case PluginEventType.MouseDown:
                 selection = this.editor.getDOMSelection();
-
-                if (selection?.type == 'image' && selection.image !== event.rawEvent.target) {
+                const env = this.editor.getEnvironment();
+                if (
+                    env.isMac &&
+                    event.rawEvent.button === 2 &&
+                    (image = this.getClickingImage(event.rawEvent))
+                ) {
+                    this.selectImage(this.editor, image);
+                } else if (
+                    !env.isMac &&
+                    selection?.type == 'image' &&
+                    selection.image !== event.rawEvent.target
+                ) {
                     this.selectBeforeImage(this.editor, selection.image);
                 }
                 break;
@@ -130,16 +140,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     }
                 }
                 break;
-
-            case PluginEventType.ContextMenu:
-                selection = this.editor.getDOMSelection();
-
-                if (
-                    (image = this.getClickingImage(event.rawEvent)) &&
-                    (selection?.type != 'image' || selection.image != image)
-                ) {
-                    this.selectImage(this.editor, image);
-                }
         }
     }
 
