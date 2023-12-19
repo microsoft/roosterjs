@@ -73,6 +73,24 @@ describe('borderFormatHandler.parse', () => {
 
         expect(format).toEqual({});
     });
+
+    it('Has 0 width border', () => {
+        div.style.border = '0px sold black';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({});
+    });
+
+    it('Has border radius', () => {
+        div.style.borderRadius = '10px';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderRadius: '10px',
+        });
+    });
 });
 
 describe('borderFormatHandler.apply', () => {

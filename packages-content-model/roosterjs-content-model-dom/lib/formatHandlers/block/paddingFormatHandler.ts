@@ -12,11 +12,16 @@ const PaddingKeys: (keyof PaddingFormat & keyof CSSStyleDeclaration)[] = [
  * @internal
  */
 export const paddingFormatHandler: FormatHandler<PaddingFormat> = {
-    parse: (format, element) => {
+    parse: (format, element, _, defaultStyle) => {
         PaddingKeys.forEach(key => {
-            const value = element.style[key];
+            let value = element.style[key];
+            const defaultValue = defaultStyle[key] ?? '0px';
 
-            if (value) {
+            if (value == '0') {
+                value = '0px';
+            }
+
+            if (value && value != defaultValue) {
                 format[key] = value;
             }
         });

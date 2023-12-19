@@ -1,3 +1,4 @@
+import { shouldSetValue } from '../utils/shouldSetValue';
 import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
 import type { BoldFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
@@ -9,7 +10,7 @@ export const boldFormatHandler: FormatHandler<BoldFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const fontWeight = element.style.fontWeight || defaultStyle.fontWeight;
 
-        if (fontWeight) {
+        if (shouldSetValue(fontWeight, '400', format.fontWeight, defaultStyle.fontWeight)) {
             format.fontWeight = fontWeight;
         }
     },
