@@ -1,4 +1,5 @@
 import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
+import * as cloneModel from '../../lib/publicApi/model/cloneModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
 import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
@@ -12,6 +13,7 @@ import { BeforePasteEvent, IEditor, PluginEvent, PluginEventType } from 'rooster
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
+import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 import { mergePasteContent } from '../../lib/coreApi/paste';
 import {
     ClipboardData,
@@ -22,7 +24,6 @@ import {
     FormatWithContentModelOptions,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
-import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 
 let clipboardData: ClipboardData;
 
@@ -42,11 +43,13 @@ describe('Paste ', () => {
     let context: FormatWithContentModelContext | undefined;
 
     const mockedPos = 'POS' as any;
+    const mockedCloneModel = 'CloneModel' as any;
 
     let div: HTMLDivElement;
 
     beforeEach(() => {
         spyOn(domToContentModel, 'domToContentModel').and.callThrough();
+        spyOn(cloneModel, 'cloneModel').and.returnValue(mockedCloneModel);
         clipboardData = {
             types: ['image/png', 'text/html'],
             text: '',

@@ -54,8 +54,11 @@ const mockedLifecyclePlugin = {
     getState: () => mockedLifecycleState,
 } as any;
 const mockedEventTranslatePlugin = 'EventTranslate' as any;
-const mockedDefaultSettings = {
-    settings: 'SETTINGS',
+const mockedDefaultDomToModelSettings = {
+    settings: 'DOMTOMODELSETTINGS',
+} as any;
+const mockedDefaultModelToDomSettings = {
+    settings: 'MODELTODOMSETTINGS',
 } as any;
 
 describe('createEditorCore', () => {
@@ -87,10 +90,12 @@ describe('createEditorCore', () => {
         spyOn(EventTranslate, 'createEventTypeTranslatePlugin').and.returnValue(
             mockedEventTranslatePlugin
         );
-        spyOn(
-            createStandaloneEditorDefaultSettings,
-            'createStandaloneEditorDefaultSettings'
-        ).and.returnValue(mockedDefaultSettings);
+        spyOn(createStandaloneEditorDefaultSettings, 'createDomToModelSettings').and.returnValue(
+            mockedDefaultDomToModelSettings
+        );
+        spyOn(createStandaloneEditorDefaultSettings, 'createModelToDomSettings').and.returnValue(
+            mockedDefaultModelToDomSettings
+        );
     });
 
     it('No additional option', () => {
@@ -126,7 +131,8 @@ describe('createEditorCore', () => {
             sizeTransformer: jasmine.anything(),
             darkColorHandler: jasmine.anything(),
             disposeErrorHandler: undefined,
-            ...mockedDefaultSettings,
+            domToModelSettings: mockedDefaultDomToModelSettings,
+            modelToDomSettings: mockedDefaultModelToDomSettings,
             environment: {
                 isMac: false,
                 isAndroid: false,
@@ -147,9 +153,12 @@ describe('createEditorCore', () => {
         };
         const core = createEditorCore(contentDiv, options);
 
-        expect(
-            createStandaloneEditorDefaultSettings.createStandaloneEditorDefaultSettings
-        ).toHaveBeenCalledWith(options);
+        expect(createStandaloneEditorDefaultSettings.createDomToModelSettings).toHaveBeenCalledWith(
+            options
+        );
+        expect(createStandaloneEditorDefaultSettings.createModelToDomSettings).toHaveBeenCalledWith(
+            options
+        );
 
         expect(core).toEqual({
             contentDiv,
@@ -182,7 +191,8 @@ describe('createEditorCore', () => {
             sizeTransformer: jasmine.anything(),
             darkColorHandler: jasmine.anything(),
             disposeErrorHandler: undefined,
-            ...mockedDefaultSettings,
+            domToModelSettings: mockedDefaultDomToModelSettings,
+            modelToDomSettings: mockedDefaultModelToDomSettings,
             environment: {
                 isMac: false,
                 isAndroid: false,

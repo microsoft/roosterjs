@@ -1,7 +1,7 @@
 import { ChangeSource } from '../constants/ChangeSource';
+import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { getSelectedSegments } from '../publicApi/selection/collectSelections';
 import { mergeModel } from '../publicApi/model/mergeModel';
-import { GetContentMode, PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import type { BeforePasteEvent } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
@@ -21,7 +21,6 @@ import {
     createDomToModelContext,
     domToContentModel,
     moveChildNodes,
-    tableProcessor,
 } from 'roosterjs-content-model-dom';
 import {
     createDefaultHtmlSanitizerOptions,
@@ -191,17 +190,7 @@ function createBeforePasteEventData(
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
-        domToModelOption: Object.assign(
-            {},
-            ...[
-                core.defaultDomToModelOptions,
-                {
-                    processorOverride: {
-                        table: tableProcessor,
-                    },
-                },
-            ]
-        ),
+        domToModelOption: Object.assign({}, core.domToModelSettings.customized),
         pasteType: PasteTypeMap[pasteType],
     };
 }

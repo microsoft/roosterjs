@@ -205,7 +205,7 @@ export {
     FormatContentModel,
     StandaloneCoreApiMap,
     StandaloneEditorCore,
-    StandaloneEditorDefaultSettings,
+    ContentModelSettings,
     SwitchShadowEdit,
     TriggerEvent,
     AddUndoSnapshot,
