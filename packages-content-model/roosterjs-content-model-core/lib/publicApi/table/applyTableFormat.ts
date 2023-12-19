@@ -10,6 +10,9 @@ import type {
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
 
+/**
+ * Keys of BorderFormat that are used to format table borders
+ */
 export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderTop',
     'borderInlineEnd',
