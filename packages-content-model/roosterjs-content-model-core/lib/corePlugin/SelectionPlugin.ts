@@ -10,6 +10,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const MouseMiddleButton = 1;
+const MouseRightButton = 2;
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: (IStandaloneEditor & IEditor) | null = null;
@@ -106,7 +107,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             case PluginEventType.MouseDown:
                 selection = this.editor.getDOMSelection();
                 if (
-                    event.rawEvent.button === 2 &&
+                    event.rawEvent.button === MouseRightButton &&
                     (image = this.getClickingImage(event.rawEvent)) &&
                     image.isContentEditable
                 ) {
