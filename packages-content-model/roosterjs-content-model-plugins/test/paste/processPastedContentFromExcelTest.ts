@@ -258,7 +258,7 @@ describe('processPastedContentFromExcelTest', () => {
     it('Table, handle borderStyle: none', () => {
         runTest(
             '<table><tr><td style="border-style:none">a</td><td style="border-style:none">b</td></tr></table>',
-            '<table><tbody><tr><td style="border-top: 1px solid rgb(212, 212, 212); border-bottom: 1px solid rgb(212, 212, 212); border-inline: 1px solid rgb(212, 212, 212);">a</td><td style="border-top: 1px solid rgb(212, 212, 212); border-bottom: 1px solid rgb(212, 212, 212); border-inline: 1px solid rgb(212, 212, 212);">b</td></tr></tbody></table>',
+            '<table><tbody><tr><td style="border-top: 1px solid rgb(212, 212, 212); border-bottom: 1px solid rgb(212, 212, 212);">a</td><td style="border-top: 1px solid rgb(212, 212, 212); border-bottom: 1px solid rgb(212, 212, 212);">b</td></tr></tbody></table>',
             {
                 blockGroupType: 'Document',
                 blocks: [

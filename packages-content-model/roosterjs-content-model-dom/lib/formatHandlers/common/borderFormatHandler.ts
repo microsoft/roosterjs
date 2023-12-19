@@ -6,18 +6,18 @@ import type { FormatHandler } from '../FormatHandler';
  */
 export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderTop',
-    'borderInlineEnd',
+    'borderRight',
     'borderBottom',
-    'borderInlineStart',
+    'borderLeft',
     'borderRadius',
 ];
 
 // This array needs to match BorderKeys array
 const BorderWidthKeys: (keyof CSSStyleDeclaration)[] = [
     'borderTopWidth',
-    'borderInlineEndWidth',
+    'borderRightWidth',
     'borderBottomWidth',
-    'borderInlineStartWidth',
+    'borderLeftWidth',
 ];
 
 /**
