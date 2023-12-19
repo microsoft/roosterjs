@@ -264,15 +264,16 @@ export function adjustSelectionForCopyCut(pasteModel: ContentModelDocument) {
     let selectionMarker: ContentModelSelectionMarker | undefined;
     let firstBlock: ContentModelBlock | undefined;
 
-    iterateSelections(pasteModel, (_, tableCont, block, segments) => {
+    iterateSelections(pasteModel, (_, tableContext, block, segments) => {
         if (selectionMarker) {
             if (
-                tableCont &&
+                tableContext &&
                 block &&
                 firstBlock?.blockType == 'Paragraph' &&
-                firstBlock.segments.includes(selectionMarker)
+                firstBlock.segments.includes(selectionMarker) &&
+                block.blockType == 'Paragraph'
             ) {
-                segments?.unshift(selectionMarker);
+                block.segments?.unshift(selectionMarker);
                 firstBlock.segments.splice(firstBlock.segments.indexOf(selectionMarker), 1);
             }
             return true;
@@ -280,10 +281,12 @@ export function adjustSelectionForCopyCut(pasteModel: ContentModelDocument) {
 
         if (
             !selectionMarker &&
-            segments &&
-            segments.length == 1 &&
+            segments?.length == 1 &&
             segments[0].segmentType == 'SelectionMarker'
         ) {
+            if (tableContext) {
+                return true;
+            }
             firstBlock = block;
             selectionMarker = segments[0];
         }

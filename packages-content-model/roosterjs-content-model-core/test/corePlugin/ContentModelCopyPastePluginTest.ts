@@ -746,11 +746,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                                 ],
                             },
                         ],
-                        format: {
-                            width: '120.8px',
-                            useBorderBox: true,
-                            borderCollapse: true,
-                        },
+                        format: {},
                         widths: [120],
                         dataset: {},
                     },
@@ -793,6 +789,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                                                 blockType: 'Paragraph',
                                                 segments: [
                                                     {
+                                                        segmentType: 'SelectionMarker',
+                                                        isSelected: true,
+                                                        format: {},
+                                                    },
+                                                    {
                                                         segmentType: 'Text',
                                                         text: 'asd',
                                                         format: {},
@@ -811,11 +812,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                                 ],
                             },
                         ],
-                        format: {
-                            width: '120.8px',
-                            useBorderBox: true,
-                            borderCollapse: true,
-                        },
+                        format: {},
                         widths: [120],
                         dataset: {},
                     },
