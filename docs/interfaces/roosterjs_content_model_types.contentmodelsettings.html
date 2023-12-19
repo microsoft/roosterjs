@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>StandaloneEditorDefaultSettings | RoosterJs API Reference</title>
+	<title>ContentModelSettings | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html">StandaloneEditorDefaultSettings</a>
+					<a href="roosterjs_content_model_types.contentmodelsettings.html">ContentModelSettings</a>
 				</li>
 			</ul>
-			<h1>Interface StandaloneEditorDefaultSettings</h1>
+			<h1>Interface ContentModelSettings&lt;OptionType, ConfigType&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -73,16 +73,22 @@
 					</div>
 				</div>
 			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>OptionType</h4>
+					</li>
+					<li>
+						<h4>ConfigType</h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">StandaloneEditorDefaultSettings</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="roosterjs_content_model_types.standaloneeditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">StandaloneEditorCore</a>
-							</li>
-						</ul>
+						<span class="target">ContentModelSettings</span>
 					</li>
 				</ul>
 			</section>
@@ -93,10 +99,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html#defaultdomtomodelconfig" class="tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Config</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html#defaultdomtomodeloptions" class="tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Options</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html#defaultmodeltodomconfig" class="tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Config</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html#defaultmodeltodomoptions" class="tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Options</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelsettings.html#builtin" class="tsd-kind-icon">built<wbr>In</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelsettings.html#calculated" class="tsd-kind-icon">calculated</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelsettings.html#customized" class="tsd-kind-icon">customized</a></li>
 							</ul>
 						</section>
 					</div>
@@ -105,64 +110,49 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="defaultdomtomodelconfig" class="tsd-anchor"></a>
-					<h3>default<wbr>Dom<wbr>ToModel<wbr>Config</h3>
-					<div class="tsd-signature tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Config<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.domtomodelsettings.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelSettings</a></div>
+					<a name="builtin" class="tsd-anchor"></a>
+					<h3>built<wbr>In</h3>
+					<div class="tsd-signature tsd-kind-icon">built<wbr>In<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OptionType</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/64417f9/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts#L476">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts:476</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9aafcb6/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts#L474">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts:474</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Default DOM to Content Model config, calculated from defaultDomToModelOptions,
-							will be used for creating content model if there is no other customized options</p>
+							<p>Built in options used by editor</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="defaultdomtomodeloptions" class="tsd-anchor"></a>
-					<h3>default<wbr>Dom<wbr>ToModel<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Options<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="calculated" class="tsd-anchor"></a>
+					<h3>calculated</h3>
+					<div class="tsd-signature tsd-kind-icon">calculated<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ConfigType</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/64417f9/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts#L465">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts:465</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9aafcb6/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts#L486">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts:486</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Default DOM to Content Model options</p>
+							<p>Configuration calculated from default and customized options.
+							This is a cached object so that we don&#39;t need to cache it every time when we use Content Model</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="defaultmodeltodomconfig" class="tsd-anchor"></a>
-					<h3>default<wbr>Model<wbr>ToDom<wbr>Config</h3>
-					<div class="tsd-signature tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Config<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.modeltodomsettings.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomSettings</a></div>
+					<a name="customized" class="tsd-anchor"></a>
+					<h3>customized</h3>
+					<div class="tsd-signature tsd-kind-icon">customized<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OptionType</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/64417f9/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts#L482">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts:482</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9aafcb6/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts#L480">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts:480</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Default Content Model to DOM config, calculated from defaultModelToDomOptions,
-							will be used for setting content model if there is no other customized options</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="defaultmodeltodomoptions" class="tsd-anchor"></a>
-					<h3>default<wbr>Model<wbr>ToDom<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Options<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.modeltodomoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomOption</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/64417f9/packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts#L470">packages-content-model/roosterjs-content-model-types/lib/editor/StandaloneEditorCore.ts:470</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Default Content Model to DOM options</p>
+							<p>Customize options passed in from Editor Options, used for overwrite default option.
+							This will also be used by copy/paste</p>
 						</div>
 					</div>
 				</section>
@@ -219,20 +209,17 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html" class="tsd-kind-icon">Standalone<wbr>Editor<wbr>Default<wbr>Settings</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="roosterjs_content_model_types.contentmodelsettings.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Settings</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html#defaultdomtomodelconfig" class="tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Config</a>
+								<a href="roosterjs_content_model_types.contentmodelsettings.html#builtin" class="tsd-kind-icon">built<wbr>In</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html#defaultdomtomodeloptions" class="tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Options</a>
+								<a href="roosterjs_content_model_types.contentmodelsettings.html#calculated" class="tsd-kind-icon">calculated</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html#defaultmodeltodomconfig" class="tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Config</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.standaloneeditordefaultsettings.html#defaultmodeltodomoptions" class="tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Options</a>
+								<a href="roosterjs_content_model_types.contentmodelsettings.html#customized" class="tsd-kind-icon">customized</a>
 							</li>
 						</ul>
 					</li>

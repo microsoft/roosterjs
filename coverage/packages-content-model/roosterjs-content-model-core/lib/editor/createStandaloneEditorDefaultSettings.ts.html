@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -100,9 +100,24 @@
 <a name='L41'></a><a href='#L41'>41</a>
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -123,8 +138,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,8 +150,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -147,43 +173,56 @@
 import { listItemMetadataApplier, listLevelMetadataApplier } from '../metadata/updateListMetadata';
 import { tablePreProcessor } from '../override/tablePreProcessor';
 import type {
+    ContentModelSettings,
     DomToModelOption,
+    DomToModelSettings,
     ModelToDomOption,
-    StandaloneEditorDefaultSettings,
+    ModelToDomSettings,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
- * Create default DOM and Content Model conversion settings for a standalone editor
+ * Create default DOM to Content Model conversion settings for a standalone editor
  * @param options The editor options
  */
-export function createStandaloneEditorDefaultSettings(
+export function createDomToModelSettings(
     options: StandaloneEditorOptions
-): StandaloneEditorDefaultSettings {
-    const defaultDomToModelOptions: (DomToModelOption | undefined)[] = [
-        {
-            processorOverride: {
-                table: tablePreProcessor,
-            },
+): ContentModelSettings&lt;DomToModelOption, DomToModelSettings&gt; {
+    const builtIn: DomToModelOption = {
+        processorOverride: {
+            table: tablePreProcessor,
         },
-        options.defaultDomToModelOptions,
-    ];
-    const defaultModelToDomOptions: (ModelToDomOption | undefined)[] = [
-        {
-            metadataAppliers: {
-                listItem: listItemMetadataApplier,
-                listLevel: listLevelMetadataApplier,
-            },
-        },
-        options.defaultModelToDomOptions,
-    ];
+    };
+    const customized: DomToModelOption = options.defaultDomToModelOptions<span class="branch-0 cbranch-no" title="branch not covered" > ?? {</span>};
 &nbsp;
     return {
-        defaultDomToModelOptions,
-        defaultModelToDomOptions,
-        defaultDomToModelConfig: createDomToModelConfig(defaultDomToModelOptions),
-        defaultModelToDomConfig: createModelToDomConfig(defaultModelToDomOptions),
+        builtIn,
+        customized,
+        calculated: createDomToModelConfig([builtIn, customized]),
+    };
+}
+&nbsp;
+/**
+ * @internal
+ * Create default Content Model to DOM conversion settings for a standalone editor
+ * @param options The editor options
+ */
+export function createModelToDomSettings(
+    options: StandaloneEditorOptions
+): ContentModelSettings&lt;ModelToDomOption, ModelToDomSettings&gt; {
+    const builtIn: ModelToDomOption = {
+        metadataAppliers: {
+            listItem: listItemMetadataApplier,
+            listLevel: listLevelMetadataApplier,
+        },
+    };
+    const customized: ModelToDomOption = options.defaultModelToDomOptions<span class="branch-0 cbranch-no" title="branch not covered" > ?? {</span>};
+&nbsp;
+    return {
+        builtIn,
+        customized,
+        calculated: createModelToDomConfig([builtIn, customized]),
     };
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -193,7 +232,7 @@ export function createStandaloneEditorDefaultSettings(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Dec 19 2023 18:45:46 GMT+0000 (Coordinated Universal Time)
+                at Tue Dec 19 2023 23:32:46 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
