@@ -63,7 +63,6 @@ describe(ID, () => {
                                                     segmentType: 'Text',
                                                     text: 'No.',
                                                     format: {
-                                                        letterSpacing: 'normal',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
@@ -113,7 +112,6 @@ describe(ID, () => {
                                                     segmentType: 'Text',
                                                     text: 'ID',
                                                     format: {
-                                                        letterSpacing: 'normal',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
@@ -161,7 +159,6 @@ describe(ID, () => {
                                                     segmentType: 'Text',
                                                     text: 'Work Item Type',
                                                     format: {
-                                                        letterSpacing: 'normal',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
@@ -171,7 +168,6 @@ describe(ID, () => {
                                             ],
                                             format: {
                                                 textAlign: 'center',
-                                                whiteSpace: 'normal',
                                                 marginTop: '0px',
                                                 marginRight: '0px',
                                                 marginBottom: '0px',
@@ -181,7 +177,6 @@ describe(ID, () => {
                                     ],
                                     format: {
                                         textAlign: 'center',
-                                        whiteSpace: 'normal',
                                         borderTop: '0.5pt solid',
                                         borderRight: '0.5pt solid',
                                         borderBottom: '0.5pt solid',
@@ -204,7 +199,6 @@ describe(ID, () => {
                     ],
                     format: <any>{
                         textAlign: 'start',
-                        whiteSpace: 'normal',
                         backgroundColor: 'rgb(255, 255, 255)',
                         width: '170pt',
                         useBorderBox: true,

@@ -37,6 +37,13 @@ describe('backgroundColorFormatHandler.parse', () => {
         div.style.backgroundColor = 'transparent';
         backgroundColorFormatHandler.parse(format, div, context, {});
 
+        expect(format.backgroundColor).toBeUndefined();
+    });
+
+    it('Transparent, different with default value', () => {
+        div.style.backgroundColor = 'transparent';
+        backgroundColorFormatHandler.parse(format, div, context, { backgroundColor: 'red' });
+
         expect(format.backgroundColor).toBe('transparent');
     });
 
