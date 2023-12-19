@@ -1,8 +1,11 @@
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
+import * as createPasteEntityProcessor from '../../../lib/override/pasteEntityProcessor';
+import * as createPasteGeneralProcessor from '../../../lib/override/pasteGeneralProcessor';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
+import { pasteDisplayFormatParser } from '../../../lib/override/pasteDisplayFormatParser';
 import { PasteType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
@@ -308,6 +311,8 @@ describe('mergePasteContent', () => {
             paragraph: null!,
             path: [],
         };
+        const mockedPasteGeneralProcessor = 'GENERALPROCESSOR' as any;
+        const mockedPasteEntityProcessor = 'ENTITYPROCESSOR' as any;
         const mockedDomToModelContext = {
             name: 'DOMTOMODELCONTEXT',
         } as any;
@@ -316,6 +321,14 @@ describe('mergePasteContent', () => {
             pasteModel
         );
         const mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.returnValue(insertPoint);
+        const createPasteGeneralProcessorSpy = spyOn(
+            createPasteGeneralProcessor,
+            'createPasteGeneralProcessor'
+        ).and.returnValue(mockedPasteGeneralProcessor);
+        const createPasteEntityProcessorSpy = spyOn(
+            createPasteEntityProcessor,
+            'createPasteEntityProcessor'
+        ).and.returnValue(mockedPasteEntityProcessor);
         const createDomToModelContextSpy = spyOn(
             createDomToModelContext,
             'createDomToModelContext'
@@ -363,9 +376,20 @@ describe('mergePasteContent', () => {
             mergeFormat: 'none',
             mergeTable: false,
         });
+        expect(createPasteGeneralProcessorSpy).toHaveBeenCalledWith(mockedDefaultDomToModelOptions);
+        expect(createPasteEntityProcessorSpy).toHaveBeenCalledWith(mockedDefaultDomToModelOptions);
         expect(createDomToModelContextSpy).toHaveBeenCalledWith(
             undefined,
             mockedDomToModelOptions,
+            {
+                processorOverride: {
+                    entity: mockedPasteEntityProcessor,
+                    '*': mockedPasteGeneralProcessor,
+                },
+                formatParserOverride: {
+                    display: pasteDisplayFormatParser,
+                },
+            },
             mockedDefaultDomToModelOptions
         );
         expect(mockedDomToModelContext.segmentFormat).toEqual({ lineHeight: '1pt' });
