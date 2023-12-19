@@ -8,29 +8,21 @@ import type {
 } from 'roosterjs-editor-types';
 
 /**
- * A function type used by merging pasted content into current Content Model
- * @param target Target Content Model to merge into
- * @param source Source Content Model to merge from
- * @returns Insert point after merge
- */
-export type MergePastedContentFunc = (
-    target: ContentModelDocument,
-    source: ContentModelDocument
-) => InsertPoint | null;
-
-/**
  * Data of ContentModelBeforePasteEvent
  */
 export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
     /**
      * domToModel Options to use when creating the content model from the paste fragment
      */
-    domToModelOption: DomToModelOption;
+    domToModelOption: Partial<DomToModelOption>;
 
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
-    customizedMerge?: MergePastedContentFunc;
+    customizedMerge?: (
+        target: ContentModelDocument,
+        source: ContentModelDocument
+    ) => InsertPoint | null;
 }
 
 /**
