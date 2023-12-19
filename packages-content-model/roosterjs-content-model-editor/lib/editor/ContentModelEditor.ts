@@ -2,7 +2,7 @@ import { buildRangeEx } from './utils/buildRangeEx';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import { isBold, paste, redo, transformColor, undo } from 'roosterjs-content-model-core';
+import { isBold, redo, transformColor, undo } from 'roosterjs-content-model-core';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -448,8 +448,9 @@ export class ContentModelEditor implements IContentModelEditor {
         applyCurrentFormat: boolean = false,
         pasteAsImage: boolean = false
     ) {
-        paste(
-            this,
+        const core = this.getCore();
+        core.api.paste(
+            core,
             clipboardData,
             pasteAsText
                 ? 'asPlainText'
