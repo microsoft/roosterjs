@@ -115,7 +115,7 @@ describe('mergePasteContent', () => {
 
         const eventResult = {
             pasteType: PasteType.Normal,
-            domToModelOption: { additionalAllowedTags: [] },
+            domToModelOption: {},
         } as any;
 
         const context: FormatWithContentModelContext = {
@@ -222,7 +222,7 @@ describe('mergePasteContent', () => {
 
         const eventResult = {
             pasteType: PasteType.Normal,
-            domToModelOption: { additionalAllowedTags: [] },
+            domToModelOption: {},
             customizedMerge,
         } as any;
 
@@ -246,7 +246,7 @@ describe('mergePasteContent', () => {
 
         const eventResult = {
             pasteType: PasteType.MergeFormat,
-            domToModelOption: { additionalAllowedTags: [] },
+            domToModelOption: {},
         } as any;
 
         mergePasteContent(

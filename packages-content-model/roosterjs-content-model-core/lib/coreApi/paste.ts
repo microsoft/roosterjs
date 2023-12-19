@@ -60,7 +60,6 @@ export const paste: Paste = (
             );
 
             // 4. Trigger BeforePaste event to allow plugins modify the fragment
-            // const { domToModelOption, customizedMerge, fragment } =
             const eventResult = generatePasteOptionFromPlugins(
                 core,
                 clipboardData,
@@ -72,7 +71,8 @@ export const paste: Paste = (
             // 5. Convert global CSS to inline CSS
             convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
 
-            // Step 5. Sanitize the fragment before paste to make sure the content is safe
+            // Sanitize the fragment before paste to make sure the content is safe
+            // TODO: remove this part
             sanitizePasteContent(eventResult, null /*position*/);
 
             // 6. Merge pasted content into main Content Model
