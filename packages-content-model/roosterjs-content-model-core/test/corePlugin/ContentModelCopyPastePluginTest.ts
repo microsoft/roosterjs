@@ -21,6 +21,7 @@ import {
     CopyPastePluginState,
 } from 'roosterjs-content-model-types';
 import {
+    adjustSelectionForCopyCut,
     createContentModelCopyPastePlugin,
     onNodeCreated,
     preprocessTable,
@@ -185,7 +186,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(iterateSelectionsFile.iterateSelections).not.toHaveBeenCalled();
+            expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
             expect(focusSpy).toHaveBeenCalled();
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
@@ -356,7 +357,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             // On Cut Spy
             expect(formatContentModelSpy).not.toHaveBeenCalled();
             expect(formatResult).toBeFalsy();
-            expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalledTimes(0);
+            expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -402,6 +403,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     };
                 }
             );
+            spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
             spyOn(contentModelToDomFile, 'contentModelToDom').and.returnValue(selectionValue);
 
             triggerPluginEventSpy.and.callThrough();
@@ -690,6 +692,197 @@ describe('ContentModelCopyPastePlugin |', () => {
                 format: {},
                 widths: [20, 30],
                 dataset: {},
+            });
+        });
+    });
+
+    describe('adjustSelectionForCopyCut', () => {
+        it('adjust the selection when selecting first cell of table', () => {
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                height: 22,
+                                format: {},
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Text',
+                                                        text: 'asd',
+                                                        format: {},
+                                                        isSelected: true,
+                                                    },
+                                                ],
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: {
+                            width: '120.8px',
+                            useBorderBox: true,
+                            borderCollapse: true,
+                        },
+                        widths: [120],
+                        dataset: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            };
+            adjustSelectionForCopyCut(model);
+
+            expect(model).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                        segmentFormat: {},
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                height: 22,
+                                format: {},
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Text',
+                                                        text: 'asd',
+                                                        format: {},
+                                                        isSelected: true,
+                                                    },
+                                                ],
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: {
+                            width: '120.8px',
+                            useBorderBox: true,
+                            borderCollapse: true,
+                        },
+                        widths: [120],
+                        dataset: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            });
+        });
+
+        it('Do not adjust when it is not needed', () => {
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'asdsadsada',
+                                format: {},
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'sdsad',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            };
+
+            adjustSelectionForCopyCut(model);
+
+            expect(model).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'asdsadsada',
+                                format: {},
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'sdsad',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
             });
         });
     });

@@ -26,6 +26,9 @@ import type {
     IStandaloneEditor,
     OnNodeCreated,
     StandaloneEditorOptions,
+    ContentModelDocument,
+    ContentModelSelectionMarker,
+    ContentModelBlock,
 } from 'roosterjs-content-model-types';
 import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
 
@@ -122,7 +125,10 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                     }
                     return false;
                 });
+            } else if (selection.type === 'range') {
+                adjustSelectionForCopyCut(pasteModel);
             }
+
             const tempDiv = this.getTempDiv(this.editor.getDocument());
             const selectionForCopy = contentModelToDom(
                 tempDiv.ownerDocument,
@@ -248,6 +254,42 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
 
         return result;
     };
+}
+
+/**
+ * @internal
+ * Exported only for unit testing
+ */
+export function adjustSelectionForCopyCut(pasteModel: ContentModelDocument) {
+    let selectionMarker: ContentModelSelectionMarker | undefined;
+    let firstBlock: ContentModelBlock | undefined;
+
+    iterateSelections(pasteModel, (_, tableCont, block, segments) => {
+        if (selectionMarker) {
+            if (
+                tableCont &&
+                block &&
+                firstBlock?.blockType == 'Paragraph' &&
+                firstBlock.segments.includes(selectionMarker)
+            ) {
+                segments?.unshift(selectionMarker);
+                firstBlock.segments.splice(firstBlock.segments.indexOf(selectionMarker), 1);
+            }
+            return true;
+        }
+
+        if (
+            !selectionMarker &&
+            segments &&
+            segments.length == 1 &&
+            segments[0].segmentType == 'SelectionMarker'
+        ) {
+            firstBlock = block;
+            selectionMarker = segments[0];
+        }
+
+        return false;
+    });
 }
 
 function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {
