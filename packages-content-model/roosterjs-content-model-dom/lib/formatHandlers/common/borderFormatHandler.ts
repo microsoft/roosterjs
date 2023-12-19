@@ -6,26 +6,44 @@ import type { FormatHandler } from '../FormatHandler';
  */
 export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderTop',
-    'borderRight',
-    'borderBottom',
-    'borderLeft',
-    'borderRadius',
-    'borderInlineStart',
     'borderInlineEnd',
+    'borderBottom',
+    'borderInlineStart',
+    'borderRadius',
+];
+
+// This array needs to match BorderKeys array
+const BorderWidthKeys: (keyof CSSStyleDeclaration)[] = [
+    'borderTopWidth',
+    'borderInlineEndWidth',
+    'borderBottomWidth',
+    'borderInlineStartWidth',
 ];
 
 /**
  * @internal
  */
 export const borderFormatHandler: FormatHandler<BorderFormat> = {
-    parse: (format, element) => {
-        BorderKeys.forEach(key => {
+    parse: (format, element, _, defaultStyle) => {
+        BorderKeys.forEach((key, i) => {
             const value = element.style[key];
+            const defaultWidth = defaultStyle[BorderWidthKeys[i]] ?? '0px';
+            let width = element.style[BorderWidthKeys[i]];
 
-            if (value) {
+            if (width == '0') {
+                width = '0px';
+            }
+
+            if (value && width != defaultWidth) {
                 format[key] = value == 'none' ? '' : value;
             }
         });
+
+        const borderRadius = element.style.borderRadius;
+
+        if (borderRadius) {
+            format.borderRadius = borderRadius;
+        }
     },
     apply: (format, element) => {
         BorderKeys.forEach(key => {

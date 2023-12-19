@@ -1,16 +1,16 @@
-import * as addParserF from '../../../roosterjs-content-model-plugins/lib/paste/utils/addParser';
+import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import * as ExcelF from '../../../roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
-import * as getPasteSourceF from '../../../roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
+import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
+import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
 import * as getSelectedSegmentsF from '../../lib/publicApi/selection/collectSelections';
 import * as mergeModelFile from '../../lib/publicApi/model/mergeModel';
-import * as PPT from '../../../roosterjs-content-model-plugins/lib/paste/PowerPoint/processPastedContentFromPowerPoint';
-import * as setProcessorF from '../../../roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
-import * as WacComponents from '../../../roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
-import * as WordDesktopFile from '../../../roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
+import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/processPastedContentFromPowerPoint';
+import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
+import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
+import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { BeforePasteEvent, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
-import { ContentModelPastePlugin } from '../../../roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
+import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../lib/coreApi/paste';
 import {
@@ -22,10 +22,7 @@ import {
     FormatWithContentModelOptions,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
-import {
-    expectEqual,
-    initEditor,
-} from '../../../roosterjs-content-model-plugins/test/paste/e2e/testUtils';
+import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 
 let clipboardData: ClipboardData;
 
