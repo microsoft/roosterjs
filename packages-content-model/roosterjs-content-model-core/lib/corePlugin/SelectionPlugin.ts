@@ -105,15 +105,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             case PluginEventType.MouseDown:
                 selection = this.editor.getDOMSelection();
-                const env = this.editor.getEnvironment();
                 if (
-                    env.isMac &&
                     event.rawEvent.button === 2 &&
                     (image = this.getClickingImage(event.rawEvent))
                 ) {
                     this.selectImage(this.editor, image);
                 } else if (
-                    !env.isMac &&
                     selection?.type == 'image' &&
                     selection.image !== event.rawEvent.target
                 ) {
