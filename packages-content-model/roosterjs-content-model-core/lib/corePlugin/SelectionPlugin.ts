@@ -107,7 +107,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 selection = this.editor.getDOMSelection();
                 if (
                     event.rawEvent.button === 2 &&
-                    (image = this.getClickingImage(event.rawEvent))
+                    (image = this.getClickingImage(event.rawEvent)) &&
+                    image.isContentEditable
                 ) {
                     this.selectImage(this.editor, image);
                 } else if (
