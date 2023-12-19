@@ -5,15 +5,12 @@ import {
     createDomToModelSettings,
     createModelToDomSettings,
 } from './createStandaloneEditorDefaultSettings';
-import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     EditorEnvironment,
     StandaloneEditorCore,
     StandaloneEditorCorePluginState,
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
-    UnportedCoreApiMap,
-    UnportedCorePluginState,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -23,17 +20,14 @@ import type {
  */
 export function createStandaloneEditorCore(
     contentDiv: HTMLDivElement,
-    options: StandaloneEditorOptions,
-    unportedCoreApiMap: UnportedCoreApiMap,
-    unportedCorePluginState: UnportedCorePluginState,
-    tempPlugins: EditorPlugin[]
+    options: StandaloneEditorOptions
 ): StandaloneEditorCore {
     const corePlugins = createStandaloneEditorCorePlugins(options, contentDiv);
 
     return {
         contentDiv,
-        api: { ...standaloneCoreApiMap, ...unportedCoreApiMap, ...options.coreApiOverride },
-        originalApi: { ...standaloneCoreApiMap, ...unportedCoreApiMap },
+        api: { ...standaloneCoreApiMap, ...options.coreApiOverride },
+        originalApi: { ...standaloneCoreApiMap },
         plugins: [
             corePlugins.cache,
             corePlugins.format,
@@ -41,7 +35,7 @@ export function createStandaloneEditorCore(
             corePlugins.domEvent,
             corePlugins.selection,
             corePlugins.entity,
-            ...tempPlugins,
+            ...(options.plugins ?? []),
             corePlugins.undo,
             corePlugins.lifecycle,
         ],
@@ -54,7 +48,6 @@ export function createStandaloneEditorCore(
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),
         ...getPluginState(corePlugins),
-        ...unportedCorePluginState,
     };
 }
 

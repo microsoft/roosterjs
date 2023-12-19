@@ -1,0 +1,257 @@
+import { createStandaloneEditorCore } from './createStandaloneEditorCore';
+import type { PluginEventData, PluginEventFromType, PluginEventType } from 'roosterjs-editor-types';
+import type {
+    ContentModelDocument,
+    ContentModelFormatter,
+    ContentModelSegmentFormat,
+    DOMEventRecord,
+    DOMSelection,
+    DomToModelOption,
+    EditorEnvironment,
+    FormatWithContentModelOptions,
+    IStandaloneEditor,
+    ModelToDomOption,
+    OnNodeCreated,
+    Snapshot,
+    SnapshotsManager,
+    StandaloneEditorCore,
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
+
+export class StandaloneEditor implements IStandaloneEditor {
+    private core: StandaloneEditorCore | null = null;
+
+    /**
+     * Creates an instance of Editor
+     * @param contentDiv The DIV HTML element which will be the container element of editor
+     * @param options An optional options object to customize the editor
+     */
+    constructor(contentDiv: HTMLDivElement, options: StandaloneEditorOptions = {}) {
+        this.core = createStandaloneEditorCore(contentDiv, options);
+        this.core.plugins.forEach(plugin => plugin.initialize(this));
+    }
+
+    /**
+     * Create Content Model from DOM tree in this editor
+     * @param option The option to customize the behavior of DOM to Content Model conversion
+     */
+    createContentModel(
+        option?: DomToModelOption,
+        selectionOverride?: DOMSelection
+    ): ContentModelDocument {
+        const core = this.getCore();
+
+        return core.api.createContentModel(core, option, selectionOverride);
+    }
+
+    /**
+     * Set content with content model
+     * @param model The content model to set
+     * @param option Additional options to customize the behavior of Content Model to DOM conversion
+     * @param onNodeCreated An optional callback that will be called when a DOM node is created
+     */
+    setContentModel(
+        model: ContentModelDocument,
+        option?: ModelToDomOption,
+        onNodeCreated?: OnNodeCreated
+    ): DOMSelection | null {
+        const core = this.getCore();
+
+        return core.api.setContentModel(core, model, option, onNodeCreated);
+    }
+
+    /**
+     * Get current running environment, such as if editor is running on Mac
+     */
+    getEnvironment(): EditorEnvironment {
+        return this.getCore().environment;
+    }
+
+    /**
+     * Get current DOM selection
+     */
+    getDOMSelection(): DOMSelection | null {
+        const core = this.getCore();
+
+        return core.api.getDOMSelection(core);
+    }
+
+    /**
+     * Set DOMSelection into editor content.
+     * This is the replacement of IEditor.select.
+     * @param selection The selection to set
+     */
+    setDOMSelection(selection: DOMSelection | null) {
+        const core = this.getCore();
+
+        core.api.setDOMSelection(core, selection);
+    }
+
+    /**
+     * The general API to do format change with Content Model
+     * It will grab a Content Model for current editor content, and invoke a callback function
+     * to do format change. Then according to the return value, write back the modified content model into editor.
+     * If there is cached model, it will be used and updated.
+     * @param formatter Formatter function, see ContentModelFormatter
+     * @param options More options, see FormatWithContentModelOptions
+     */
+    formatContentModel(
+        formatter: ContentModelFormatter,
+        options?: FormatWithContentModelOptions
+    ): void {
+        const core = this.getCore();
+
+        core.api.formatContentModel(core, formatter, options);
+    }
+
+    /**
+     * Get pending format of editor if any, or return null
+     */
+    getPendingFormat(): ContentModelSegmentFormat | null {
+        return this.getCore().format.pendingFormat?.format ?? null;
+    }
+
+    /**
+     * Dispose this editor, dispose all plugins and custom data
+     */
+    dispose(): void {
+        const core = this.getCore();
+
+        for (let i = core.plugins.length - 1; i >= 0; i--) {
+            const plugin = core.plugins[i];
+
+            try {
+                plugin.dispose();
+            } catch (e) {
+                // Cache the error and pass it out, then keep going since dispose should always succeed
+                core.disposeErrorHandler?.(plugin, e as Error);
+            }
+        }
+
+        core.darkColorHandler.reset();
+
+        this.core = null;
+    }
+
+    /**
+     * Get whether this editor is disposed
+     * @returns True if editor is disposed, otherwise false
+     */
+    isDisposed(): boolean {
+        return !this.core;
+    }
+
+    /**
+     * Get document which contains this editor
+     * @returns The HTML document which contains this editor
+     */
+    getDocument(): Document {
+        return this.getCore().contentDiv.ownerDocument;
+    }
+
+    /**
+     * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
+     */
+    focus() {
+        const core = this.getCore();
+        core.api.focus(core);
+    }
+
+    /**
+     * Trigger an event to be dispatched to all plugins
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
+     * @param broadcast indicates if the event needs to be dispatched to all plugins
+     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    triggerPluginEvent<T extends PluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast: boolean = false
+    ): PluginEventFromType<T> {
+        const core = this.getCore();
+        const event = ({
+            eventType,
+            ...data,
+        } as any) as PluginEventFromType<T>;
+        core.api.triggerEvent(core, event, broadcast);
+
+        return event;
+    }
+
+    /**
+     * Get undo snapshots manager
+     */
+    getSnapshotsManager(): SnapshotsManager {
+        const core = this.getCore();
+
+        return core.undo.snapshotsManager;
+    }
+
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    isDarkMode(): boolean {
+        return this.getCore().lifecycle.isDarkMode;
+    }
+
+    /**
+     * Get current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @returns current zoom scale number
+     */
+    getZoomScale(): number {
+        return this.getCore().zoomScale;
+    }
+
+    /**
+     * Add a single undo snapshot to undo stack
+     */
+    takeSnapshot(): void {
+        const core = this.getCore();
+
+        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+    }
+
+    /**
+     * Restore an undo snapshot into editor
+     * @param snapshot The snapshot to restore
+     */
+    restoreSnapshot(snapshot: Snapshot): void {
+        const core = this.getCore();
+
+        core.api.restoreUndoSnapshot(core, snapshot);
+    }
+
+    /**
+     * Check if editor is in IME input sequence
+     * @returns True if editor is in IME input sequence, otherwise false
+     */
+    isInIME(): boolean {
+        return this.getCore().domEvent.isInIME;
+    }
+
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void {
+        const core = this.getCore();
+        return core.api.attachDomEvent(core, eventMap);
+    }
+
+    /**
+     * @returns the current ContentModelEditorCore object
+     * @throws a standard Error if there's no core object
+     */
+    private getCore(): StandaloneEditorCore {
+        if (!this.core) {
+            throw new Error('Editor is already disposed');
+        }
+        return this.core;
+    }
+}
