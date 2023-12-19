@@ -293,6 +293,56 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
     });
 
+    it('Image selection, mouse down to same image right click', () => {
+        const mockedImage = document.createElement('img');
+
+        mockedImage.contentEditable = 'true';
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseDown,
+            rawEvent: {
+                target: mockedImage,
+                button: 2,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Image selection, mouse down to image right click', () => {
+        const mockedImage = document.createElement('img');
+
+        mockedImage.contentEditable = 'true';
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseDown,
+            rawEvent: {
+                target: mockedImage,
+                button: 2,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Image selection, mouse down to div right click', () => {
+        const node = document.createElement('div');
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseDown,
+            rawEvent: {
+                target: node,
+                button: 2,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
     it('no selection, mouse up to image, is clicking, isEditable', () => {
         const mockedImage = document.createElement('img');
 
@@ -513,72 +563,5 @@ describe('SelectionPlugin handle image selection', () => {
 
         expect(stopPropagationSpy).not.toHaveBeenCalled();
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
-    });
-
-    it('context menu, no selection, click on image', () => {
-        const mockedImage1 = document.createElement('img');
-
-        const rawEvent = {
-            target: mockedImage1,
-        } as any;
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContextMenu,
-            rawEvent: rawEvent,
-        } as any);
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage1,
-        });
-    });
-
-    it('context menu, image selection, click on same image', () => {
-        const mockedImage1 = document.createElement('img');
-
-        const rawEvent = {
-            target: mockedImage1,
-        } as any;
-
-        getDOMSelectionSpy.and.returnValue({
-            type: 'image',
-            image: mockedImage1,
-        });
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContextMenu,
-            rawEvent: rawEvent,
-        } as any);
-
-        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
-    });
-
-    it('context menu, image selection, click on different image', () => {
-        const mockedImage1 = document.createElement('img');
-        const mockedImage2 = document.createElement('img');
-
-        mockedImage1.id = 'image1';
-        mockedImage2.id = 'image2';
-
-        const rawEvent = {
-            target: mockedImage1,
-        } as any;
-
-        getDOMSelectionSpy.and.returnValue({
-            type: 'image',
-            image: mockedImage2,
-        });
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContextMenu,
-            rawEvent: rawEvent,
-        } as any);
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage1,
-        });
     });
 });
