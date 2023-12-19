@@ -1,6 +1,5 @@
 import addParser from './utils/addParser';
 import { BorderKeys } from 'roosterjs-content-model-dom';
-import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { parseLink } from './utils/linkParser';
@@ -19,12 +18,7 @@ import type {
     FormatParser,
     PasteType,
 } from 'roosterjs-content-model-types';
-import type {
-    EditorPlugin,
-    HtmlSanitizerOptions,
-    IEditor,
-    PluginEvent,
-} from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 // Map old PasteType to new PasteType
 // TODO: We can remove this once we have standalone editor
@@ -51,10 +45,7 @@ export class ContentModelPastePlugin implements EditorPlugin {
      * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
      * @param allowExcelNoBorderTable Allow table copied from Excel without border
      */
-    constructor(
-        private unknownTagReplacement: string = 'SPAN',
-        private allowExcelNoBorderTable?: boolean
-    ) {}
+    constructor(private allowExcelNoBorderTable?: boolean) {}
 
     /**
      * Get name of this plugin
@@ -122,9 +113,9 @@ export class ContentModelPastePlugin implements EditorPlugin {
                 }
                 break;
             case 'googleSheets':
-                ev.sanitizingOption.additionalTagReplacements[
+                ev.domToModelOption.additionalAllowedTags.push(
                     PastePropertyNames.GOOGLE_SHEET_NODE_NAME
-                ] = '*';
+                );
                 break;
             case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
@@ -135,14 +126,11 @@ export class ContentModelPastePlugin implements EditorPlugin {
         addParser(ev.domToModelOption, 'tableCell', deprecatedBorderColorParser);
         addParser(ev.domToModelOption, 'tableCell', tableBorderParser);
         addParser(ev.domToModelOption, 'table', deprecatedBorderColorParser);
-        sanitizeBlockStyles(ev.sanitizingOption);
 
         if (pasteType === 'mergeFormat') {
             addParser(ev.domToModelOption, 'block', blockElementParser);
             addParser(ev.domToModelOption, 'listLevel', blockElementParser);
         }
-
-        ev.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
 }
 
@@ -158,12 +146,6 @@ const blockElementParser: FormatParser<ContentModelBlockFormat> = (
         delete format.backgroundColor;
     }
 };
-
-function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
-    chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, 'display', (value: string) => {
-        return value != 'flex'; // return whether we keep the style
-    });
-}
 
 const ElementBorderKeys = new Map<
     keyof BorderFormat,

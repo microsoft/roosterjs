@@ -13,7 +13,7 @@ describe('transform to dark mode', () => {
         element: HTMLElement,
         expectedHtml: string,
         expectedParseValueCalls: string[],
-        expectedRegisterColorCalls: [string, boolean, string][]
+        expectedRegisterColorCalls: [string, boolean][]
     ) {
         const handler = new DarkColorHandlerImpl(div, getDarkColor);
 
@@ -54,8 +54,8 @@ describe('transform to dark mode', () => {
             '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
-                ['blue', true, undefined!],
-                ['yellow', true, undefined!],
+                ['blue', true],
+                ['yellow', true],
             ]
         );
     });
@@ -70,8 +70,8 @@ describe('transform to dark mode', () => {
             '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
-                ['blue', true, undefined!],
-                ['yellow', true, undefined!],
+                ['blue', true],
+                ['yellow', true],
             ]
         );
     });
@@ -88,8 +88,8 @@ describe('transform to dark mode', () => {
             '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
-                ['blue', true, undefined!],
-                ['yellow', true, undefined!],
+                ['blue', true],
+                ['yellow', true],
             ]
         );
     });
@@ -106,7 +106,7 @@ describe('transform to light mode', () => {
         element: HTMLElement,
         expectedHtml: string,
         expectedParseValueCalls: string[],
-        expectedRegisterColorCalls: [string, boolean, string][]
+        expectedRegisterColorCalls: [string, boolean][]
     ) {
         const handler = new DarkColorHandlerImpl(div, getDarkColor);
         const parseColorValue = spyOn(handler, 'parseColorValue').and.callFake((color: string) => ({
@@ -146,8 +146,8 @@ describe('transform to light mode', () => {
             '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
-                ['blue', false, undefined!],
-                ['yellow', false, undefined!],
+                ['blue', false],
+                ['yellow', false],
             ]
         );
     });
@@ -162,8 +162,8 @@ describe('transform to light mode', () => {
             '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
-                ['blue', false, undefined!],
-                ['yellow', false, undefined!],
+                ['blue', false],
+                ['yellow', false],
             ]
         );
     });
@@ -180,8 +180,8 @@ describe('transform to light mode', () => {
             '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
-                ['blue', false, undefined!],
-                ['yellow', false, undefined!],
+                ['blue', false],
+                ['yellow', false],
             ]
         );
     });

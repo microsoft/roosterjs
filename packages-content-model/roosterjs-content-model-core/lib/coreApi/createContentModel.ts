@@ -48,8 +48,13 @@ function internalCreateContentModel(
 ) {
     const editorContext = core.api.createEditorContext(core);
     const domToModelContext = option
-        ? createDomToModelContext(editorContext, ...(core.defaultDomToModelOptions || []), option)
-        : createDomToModelContextWithConfig(core.defaultDomToModelConfig, editorContext);
+        ? createDomToModelContext(
+              editorContext,
+              core.domToModelSettings.builtIn,
+              core.domToModelSettings.customized,
+              option
+          )
+        : createDomToModelContextWithConfig(core.domToModelSettings.calculated, editorContext);
 
     return domToContentModel(core.contentDiv, domToModelContext, selection);
 }

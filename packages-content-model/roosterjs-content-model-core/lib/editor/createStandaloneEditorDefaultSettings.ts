@@ -2,42 +2,55 @@ import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-conten
 import { listItemMetadataApplier, listLevelMetadataApplier } from '../metadata/updateListMetadata';
 import { tablePreProcessor } from '../override/tablePreProcessor';
 import type {
+    ContentModelSettings,
     DomToModelOption,
+    DomToModelSettings,
     ModelToDomOption,
-    StandaloneEditorDefaultSettings,
+    ModelToDomSettings,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
- * Create default DOM and Content Model conversion settings for a standalone editor
+ * Create default DOM to Content Model conversion settings for a standalone editor
  * @param options The editor options
  */
-export function createStandaloneEditorDefaultSettings(
+export function createDomToModelSettings(
     options: StandaloneEditorOptions
-): StandaloneEditorDefaultSettings {
-    const defaultDomToModelOptions: (DomToModelOption | undefined)[] = [
-        {
-            processorOverride: {
-                table: tablePreProcessor,
-            },
+): ContentModelSettings<DomToModelOption, DomToModelSettings> {
+    const builtIn: DomToModelOption = {
+        processorOverride: {
+            table: tablePreProcessor,
         },
-        options.defaultDomToModelOptions,
-    ];
-    const defaultModelToDomOptions: (ModelToDomOption | undefined)[] = [
-        {
-            metadataAppliers: {
-                listItem: listItemMetadataApplier,
-                listLevel: listLevelMetadataApplier,
-            },
-        },
-        options.defaultModelToDomOptions,
-    ];
+    };
+    const customized: DomToModelOption = options.defaultDomToModelOptions ?? {};
 
     return {
-        defaultDomToModelOptions,
-        defaultModelToDomOptions,
-        defaultDomToModelConfig: createDomToModelConfig(defaultDomToModelOptions),
-        defaultModelToDomConfig: createModelToDomConfig(defaultModelToDomOptions),
+        builtIn,
+        customized,
+        calculated: createDomToModelConfig([builtIn, customized]),
+    };
+}
+
+/**
+ * @internal
+ * Create default Content Model to DOM conversion settings for a standalone editor
+ * @param options The editor options
+ */
+export function createModelToDomSettings(
+    options: StandaloneEditorOptions
+): ContentModelSettings<ModelToDomOption, ModelToDomSettings> {
+    const builtIn: ModelToDomOption = {
+        metadataAppliers: {
+            listItem: listItemMetadataApplier,
+            listLevel: listLevelMetadataApplier,
+        },
+    };
+    const customized: ModelToDomOption = options.defaultModelToDomOptions ?? {};
+
+    return {
+        builtIn,
+        customized,
+        calculated: createModelToDomConfig([builtIn, customized]),
     };
 }
