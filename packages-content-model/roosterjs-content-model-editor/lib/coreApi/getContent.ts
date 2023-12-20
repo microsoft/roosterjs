@@ -7,7 +7,7 @@ import {
     getTextContent,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import type { GetContent } from 'roosterjs-content-model-types';
+import type { GetContent } from '../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
@@ -20,10 +20,12 @@ export const getContent: GetContent = (core, mode): string => {
     let content: string | null = '';
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
+    const { standaloneEditorCore } = core;
+    const { lifecycle, contentDiv, api, darkColorHandler } = standaloneEditorCore;
 
     // When there is fragment for shadow edit, always use the cached fragment as document since HTML node in editor
     // has been changed by uncommitted shadow edit which should be ignored.
-    const root = core.lifecycle.shadowEditFragment || core.contentDiv;
+    const root = lifecycle.shadowEditFragment || contentDiv;
 
     if (mode == GetContentMode.PlainTextFast) {
         content = root.textContent;
@@ -33,22 +35,22 @@ export const getContent: GetContent = (core, mode): string => {
         const clonedRoot = cloneNode(root);
         clonedRoot.normalize();
 
-        const originalRange = core.api.getDOMSelection(core);
+        const originalRange = api.getDOMSelection(standaloneEditorCore);
         const path =
-            !includeSelectionMarker || core.lifecycle.shadowEditFragment
+            !includeSelectionMarker || lifecycle.shadowEditFragment
                 ? null
                 : originalRange?.type == 'range'
-                ? getSelectionPath(core.contentDiv, originalRange.range)
+                ? getSelectionPath(contentDiv, originalRange.range)
                 : null;
         const range = path && createRange(clonedRoot, path.start, path.end);
 
-        if (core.lifecycle.isDarkMode) {
-            transformColor(clonedRoot, false /*includeSelf*/, 'darkToLight', core.darkColorHandler);
+        if (lifecycle.isDarkMode) {
+            transformColor(clonedRoot, false /*includeSelf*/, 'darkToLight', darkColorHandler);
         }
 
         if (triggerExtractContentEvent) {
-            core.api.triggerEvent(
-                core,
+            api.triggerEvent(
+                standaloneEditorCore,
                 {
                     eventType: PluginEventType.ExtractContentWithDom,
                     clonedRoot,

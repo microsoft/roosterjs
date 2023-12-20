@@ -1,6 +1,8 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { createCorePlugins, getPluginState } from '../corePlugins/createCorePlugins';
+import { createEditPlugin } from '../corePlugins/EditPlugin';
+import { createEventTypeTranslatePlugin } from '../corePlugins/EventTypeTranslatePlugin';
 import { createModelFromHtml, createStandaloneEditorCore } from 'roosterjs-content-model-core';
+import { createNormalizeTablePlugin } from '../corePlugins/NormalizeTablePlugin';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import type { EditorPlugin } from 'roosterjs-editor-types';
@@ -15,13 +17,12 @@ export function createEditorCore(
     contentDiv: HTMLDivElement,
     options: ContentModelEditorOptions
 ): ContentModelEditorCore {
-    const corePlugins = createCorePlugins(options);
-    const pluginState = getPluginState(corePlugins);
+    const editPlugin = createEditPlugin();
     const additionalPlugins: EditorPlugin[] = [
-        corePlugins.eventTranslate,
-        corePlugins.edit,
+        createEventTypeTranslatePlugin(),
+        editPlugin,
         ...(options.plugins ?? []),
-        corePlugins.normalizeTable,
+        createNormalizeTablePlugin(),
     ].filter(x => !!x);
 
     const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
@@ -36,22 +37,18 @@ export function createEditorCore(
         );
     }
 
-    const standaloneEditorCore = createStandaloneEditorCore(
-        contentDiv,
-        options,
-        coreApiMap,
-        pluginState,
-        additionalPlugins
-    );
-
+    const standaloneEditorCore = createStandaloneEditorCore(contentDiv, options);
     const core: ContentModelEditorCore = {
-        ...standaloneEditorCore,
-        ...pluginState,
+        standaloneEditorCore,
+        api: { ...coreApiMap, ...options.coreApiOverride },
+        originalApi: coreApiMap,
+        plugins: additionalPlugins,
         zoomScale: zoomScale,
         sizeTransformer: (size: number) => size / zoomScale,
         disposeErrorHandler: options.disposeErrorHandler,
         customData: {},
         experimentalFeatures: options.experimentalFeatures ?? [],
+        edit: editPlugin.getState(),
     };
 
     return core;

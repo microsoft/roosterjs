@@ -1,6 +1,6 @@
 import { contains, getComputedStyles } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
-import type { GetStyleBasedFormatState } from 'roosterjs-content-model-types';
+import type { GetStyleBasedFormatState } from '../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
@@ -27,7 +27,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, node) =
               'font-weight',
           ])
         : [];
-    const { contentDiv, darkColorHandler } = core;
+    const { contentDiv, darkColorHandler, lifecycle } = core.standaloneEditorCore;
 
     let styleTextColor: string | undefined;
     let styleBackColor: string | undefined;
@@ -46,7 +46,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, node) =
         node = node.parentNode;
     }
 
-    if (!core.lifecycle.isDarkMode && node == core.contentDiv) {
+    if (!lifecycle.isDarkMode && node == contentDiv) {
         styleTextColor = styleTextColor || styles[2];
         styleBackColor = styleBackColor || styles[3];
     }

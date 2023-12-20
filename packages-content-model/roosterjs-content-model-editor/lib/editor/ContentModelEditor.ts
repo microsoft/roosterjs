@@ -91,6 +91,7 @@ import type {
     Snapshot,
     SnapshotsManager,
     DOMEventRecord,
+    StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -108,6 +109,7 @@ export class ContentModelEditor implements IContentModelEditor {
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         this.core = createEditorCore(contentDiv, options);
         this.core.plugins.forEach(plugin => plugin.initialize(this));
+        this.core.standaloneEditorCore.plugins.forEach(plugin => plugin.initialize(this));
     }
 
     /**
@@ -118,7 +120,7 @@ export class ContentModelEditor implements IContentModelEditor {
         option?: DomToModelOption,
         selectionOverride?: DOMSelection
     ): ContentModelDocument {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         return core.api.createContentModel(core, option, selectionOverride);
     }
@@ -134,7 +136,7 @@ export class ContentModelEditor implements IContentModelEditor {
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
     ): DOMSelection | null {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         return core.api.setContentModel(core, model, option, onNodeCreated);
     }
@@ -143,14 +145,14 @@ export class ContentModelEditor implements IContentModelEditor {
      * Get current running environment, such as if editor is running on Mac
      */
     getEnvironment(): EditorEnvironment {
-        return this.getCore().environment;
+        return this.getStandaloneEditorCore().environment;
     }
 
     /**
      * Get current DOM selection
      */
     getDOMSelection(): DOMSelection | null {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         return core.api.getDOMSelection(core);
     }
@@ -161,7 +163,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection | null) {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         core.api.setDOMSelection(core, selection);
     }
@@ -178,7 +180,7 @@ export class ContentModelEditor implements IContentModelEditor {
         formatter: ContentModelFormatter,
         options?: FormatWithContentModelOptions
     ): void {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         core.api.formatContentModel(core, formatter, options);
     }
@@ -187,14 +189,14 @@ export class ContentModelEditor implements IContentModelEditor {
      * Get pending format of editor if any, or return null
      */
     getPendingFormat(): ContentModelSegmentFormat | null {
-        return this.getCore().format.pendingFormat?.format ?? null;
+        return this.getStandaloneEditorCore().format.pendingFormat?.format ?? null;
     }
 
     /**
      * Add a single undo snapshot to undo stack
      */
     takeSnapshot(): void {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
     }
@@ -204,7 +206,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param snapshot The snapshot to restore
      */
     restoreSnapshot(snapshot: Snapshot): void {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         core.api.restoreUndoSnapshot(core, snapshot);
     }
@@ -214,9 +216,10 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     dispose(): void {
         const core = this.getCore();
+        const plugins = [...core.standaloneEditorCore.plugins, ...core.plugins];
 
-        for (let i = core.plugins.length - 1; i >= 0; i--) {
-            const plugin = core.plugins[i];
+        for (let i = plugins.length - 1; i >= 0; i--) {
+            const plugin = plugins[i];
 
             try {
                 plugin.dispose();
@@ -236,7 +239,7 @@ export class ContentModelEditor implements IContentModelEditor {
             delete core.customData[key];
         });
 
-        core.darkColorHandler.reset();
+        core.standaloneEditorCore.darkColorHandler.reset();
 
         this.core = null;
     }
@@ -287,7 +290,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns true if node is replaced. Otherwise false
      */
     replaceNode(existingNode: Node, toNode: Node, transformColorForDarkMode?: boolean): boolean {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         // Only replace the node when it falls within editor
         if (this.contains(existingNode) && toNode) {
             if (core.lifecycle.isDarkMode && transformColorForDarkMode) {
@@ -308,14 +311,14 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns The BlockElement result
      */
     getBlockElementAtNode(node: Node): BlockElement | null {
-        return getBlockElementAtNode(this.getCore().contentDiv, node);
+        return getBlockElementAtNode(this.getStandaloneEditorCore().contentDiv, node);
     }
 
     contains(arg: Node | Range | null): boolean {
         if (!arg) {
             return false;
         }
-        return contains(this.getCore().contentDiv, <Node>arg);
+        return contains(this.getStandaloneEditorCore().contentDiv, <Node>arg);
     }
 
     queryElements(
@@ -326,7 +329,7 @@ export class ContentModelEditor implements IContentModelEditor {
             | ((node: Node) => any) = QueryScope.Body,
         callback?: (node: Node) => any
     ) {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         const result: HTMLElement[] = [];
         const scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
         callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
@@ -355,7 +358,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * otherwise just return start and end
      */
     collapseNodes(start: Node, end: Node, canSplitParent: boolean): Node[] {
-        return collapseNodes(this.getCore().contentDiv, start, end, canSplitParent);
+        return collapseNodes(this.getStandaloneEditorCore().contentDiv, start, end, canSplitParent);
     }
 
     //#endregion
@@ -368,7 +371,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns True if there's no visible content, otherwise false
      */
     isEmpty(trim?: boolean): boolean {
-        return isNodeEmpty(this.getCore().contentDiv, trim);
+        return isNodeEmpty(this.getStandaloneEditorCore().contentDiv, trim);
     }
 
     /**
@@ -404,7 +407,7 @@ export class ContentModelEditor implements IContentModelEditor {
         if (content) {
             const doc = this.getDocument();
             const body = new DOMParser().parseFromString(
-                this.getCore().trustedHTMLHandler(content),
+                this.getStandaloneEditorCore().trustedHTMLHandler(content),
                 'text/html'
             )?.body;
             let allNodes = body?.childNodes ? toArray(body.childNodes) : [];
@@ -429,7 +432,7 @@ export class ContentModelEditor implements IContentModelEditor {
     deleteSelectedContent(): NodePosition | null {
         const range = this.getSelectionRange();
         if (range && !range.collapsed) {
-            return deleteSelectedContent(this.getCore().contentDiv, range);
+            return deleteSelectedContent(this.getStandaloneEditorCore().contentDiv, range);
         }
         return null;
     }
@@ -448,7 +451,7 @@ export class ContentModelEditor implements IContentModelEditor {
         applyCurrentFormat: boolean = false,
         pasteAsImage: boolean = false
     ) {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         core.api.paste(
             core,
             clipboardData,
@@ -499,7 +502,7 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     getSelectionPath(): SelectionPath | null {
         const range = this.getSelectionRange();
-        return range && getSelectionPath(this.getCore().contentDiv, range);
+        return range && getSelectionPath(this.getStandaloneEditorCore().contentDiv, range);
     }
 
     /**
@@ -507,7 +510,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns true if focus is in editor, otherwise false
      */
     hasFocus(): boolean {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         return core.api.hasFocus(core);
     }
 
@@ -515,7 +518,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
     focus() {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         core.api.focus(core);
     }
 
@@ -577,7 +580,11 @@ export class ContentModelEditor implements IContentModelEditor {
                 }
                 return (
                     startFrom &&
-                    findClosestElementAncestor(startFrom, this.getCore().contentDiv, selector)
+                    findClosestElementAncestor(
+                        startFrom,
+                        this.getStandaloneEditorCore().contentDiv,
+                        selector
+                    )
                 );
             }) ?? null
         );
@@ -590,7 +597,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns True if position is at beginning of the editor, otherwise false
      */
     isPositionAtBeginning(position: NodePosition): boolean {
-        return isPositionAtBeginningOf(position, this.getCore().contentDiv);
+        return isPositionAtBeginningOf(position, this.getStandaloneEditorCore().contentDiv);
     }
 
     /**
@@ -599,7 +606,7 @@ export class ContentModelEditor implements IContentModelEditor {
     getSelectedRegions(type: RegionType | CompatibleRegionType = RegionType.Table): Region[] {
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
-        const contentDiv = this.getCore().contentDiv;
+        const contentDiv = this.getStandaloneEditorCore().contentDiv;
         selection.ranges.forEach(range => {
             result.push(...(range ? getRegionsFromRange(contentDiv, range, type) : []));
         });
@@ -617,7 +624,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param eventMap A map from event name to its handler
      */
     attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         return core.api.attachDomEvent(core, eventMap);
     }
 
@@ -663,7 +670,7 @@ export class ContentModelEditor implements IContentModelEditor {
         data: PluginEventData<T>,
         broadcast: boolean = false
     ): PluginEventFromType<T> {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         const event = ({
             eventType,
             ...data,
@@ -696,7 +703,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * Get undo snapshots manager
      */
     getSnapshotsManager(): SnapshotsManager {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         return core.undo.snapshotsManager;
     }
@@ -731,7 +738,7 @@ export class ContentModelEditor implements IContentModelEditor {
         canUndoByBackspace?: boolean,
         additionalData?: ContentChangedData
     ) {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         const undoState = core.undo;
         const isNested = undoState.isNested;
         let data: any;
@@ -800,7 +807,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * Whether there is an available undo/redo snapshot
      */
     getUndoState(): EditorUndoState {
-        const { snapshotsManager } = this.getCore().undo;
+        const { snapshotsManager } = this.getStandaloneEditorCore().undo;
         return {
             canUndo:
                 snapshotsManager.hasNewContent || snapshotsManager.canMove(-1 /*previousSnapshot*/),
@@ -817,14 +824,14 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns The HTML document which contains this editor
      */
     getDocument(): Document {
-        return this.getCore().contentDiv.ownerDocument;
+        return this.getStandaloneEditorCore().contentDiv.ownerDocument;
     }
 
     /**
      * Get the scroll container of the editor
      */
     getScrollContainer(): HTMLElement {
-        return this.getCore().domEvent.scrollContainer;
+        return this.getStandaloneEditorCore().domEvent.scrollContainer;
     }
 
     /**
@@ -848,7 +855,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     isInIME(): boolean {
-        return this.getCore().domEvent.isInIME;
+        return this.getStandaloneEditorCore().domEvent.isInIME;
     }
 
     /**
@@ -856,7 +863,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns Default format object of this editor
      */
     getDefaultFormat(): DefaultFormat {
-        const format = this.getCore().format.defaultFormat;
+        const format = this.getStandaloneEditorCore().format.defaultFormat;
 
         return {
             bold: isBold(format.fontWeight),
@@ -874,7 +881,10 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
     getBodyTraverser(startNode?: Node): IContentTraverser {
-        return ContentTraverser.createBodyTraverser(this.getCore().contentDiv, startNode);
+        return ContentTraverser.createBodyTraverser(
+            this.getStandaloneEditorCore().contentDiv,
+            startNode
+        );
     }
 
     /**
@@ -884,7 +894,10 @@ export class ContentModelEditor implements IContentModelEditor {
     getSelectionTraverser(range?: Range): IContentTraverser | null {
         range = range ?? this.getSelectionRange() ?? undefined;
         return range
-            ? ContentTraverser.createSelectionTraverser(this.getCore().contentDiv, range)
+            ? ContentTraverser.createSelectionTraverser(
+                  this.getStandaloneEditorCore().contentDiv,
+                  range
+              )
             : null;
     }
 
@@ -898,7 +911,11 @@ export class ContentModelEditor implements IContentModelEditor {
     ): IContentTraverser | null {
         const range = this.getSelectionRange();
         return range
-            ? ContentTraverser.createBlockTraverser(this.getCore().contentDiv, range, startFrom)
+            ? ContentTraverser.createBlockTraverser(
+                  this.getStandaloneEditorCore().contentDiv,
+                  range,
+                  startFrom
+              )
             : null;
     }
 
@@ -913,7 +930,10 @@ export class ContentModelEditor implements IContentModelEditor {
             const range = this.getSelectionRange();
             return (
                 range &&
-                new PositionContentSearcher(this.getCore().contentDiv, Position.getStart(range))
+                new PositionContentSearcher(
+                    this.getStandaloneEditorCore().contentDiv,
+                    Position.getStart(range)
+                )
             );
         });
     }
@@ -924,7 +944,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns a function to cancel this async run
      */
     runAsync(callback: (editor: IContentModelEditor) => void) {
-        const win = this.getCore().contentDiv.ownerDocument.defaultView || window;
+        const win = this.getStandaloneEditorCore().contentDiv.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
                 callback(this);
@@ -943,9 +963,9 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     setEditorDomAttribute(name: string, value: string | null) {
         if (value === null) {
-            this.getCore().contentDiv.removeAttribute(name);
+            this.getStandaloneEditorCore().contentDiv.removeAttribute(name);
         } else {
-            this.getCore().contentDiv.setAttribute(name, value);
+            this.getStandaloneEditorCore().contentDiv.setAttribute(name, value);
         }
     }
 
@@ -954,7 +974,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param name Name of the attribute
      */
     getEditorDomAttribute(name: string): string | null {
-        return this.getCore().contentDiv.getAttribute(name);
+        return this.getStandaloneEditorCore().contentDiv.getAttribute(name);
     }
 
     /**
@@ -968,7 +988,7 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[] | null {
         if (this.contains(element)) {
-            const contentDiv = this.getCore().contentDiv;
+            const contentDiv = this.getStandaloneEditorCore().contentDiv;
             const editorRect = contentDiv.getBoundingClientRect();
             const elementRect = element.getBoundingClientRect();
 
@@ -1037,7 +1057,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns The pending format state
      */
     getPendableFormatState(forceGetStateFromDOM: boolean = false): PendableFormatState {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         return getPendableFormatState(core);
     }
 
@@ -1065,7 +1085,7 @@ export class ContentModelEditor implements IContentModelEditor {
         if (isDarkMode == !!nextDarkMode) {
             return;
         }
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         transformColor(
             core.contentDiv,
@@ -1084,7 +1104,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns True if the editor is in dark mode, otherwise false
      */
     isDarkMode(): boolean {
-        return this.getCore().lifecycle.isDarkMode;
+        return this.getStandaloneEditorCore().lifecycle.isDarkMode;
     }
 
     /**
@@ -1098,7 +1118,7 @@ export class ContentModelEditor implements IContentModelEditor {
             | ColorTransformDirection
             | CompatibleColorTransformDirection = ColorTransformDirection.LightToDark
     ) {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         transformColor(
             node,
@@ -1112,7 +1132,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * Get a darkColorHandler object for this editor.
      */
     getDarkColorHandler(): DarkColorHandler {
-        return this.getCore().darkColorHandler;
+        return this.getStandaloneEditorCore().darkColorHandler;
     }
 
     /**
@@ -1124,7 +1144,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * use this function to do more shadow edit operation.
      */
     startShadowEdit() {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         core.api.switchShadowEdit(core, true /*isOn*/);
     }
 
@@ -1132,7 +1152,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
      */
     stopShadowEdit() {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
         core.api.switchShadowEdit(core, false /*isOn*/);
     }
 
@@ -1140,7 +1160,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * Check if editor is in Shadow Edit mode
      */
     isInShadowEdit() {
-        return !!this.getCore().lifecycle.shadowEditFragment;
+        return !!this.getStandaloneEditorCore().lifecycle.shadowEditFragment;
     }
 
     /**
@@ -1158,7 +1178,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler {
-        return this.getCore().trustedHTMLHandler;
+        return this.getStandaloneEditorCore().trustedHTMLHandler;
     }
 
     /**
@@ -1207,7 +1227,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * Retrieves the rect of the visible viewport of the editor.
      */
     getVisibleViewport(): Rect | null {
-        const core = this.getCore();
+        const core = this.getStandaloneEditorCore();
 
         return core.api.getVisibleViewport(core);
     }
@@ -1221,5 +1241,13 @@ export class ContentModelEditor implements IContentModelEditor {
             throw new Error('Editor is already disposed');
         }
         return this.core;
+    }
+
+    /**
+     * @returns the current ContentModelEditorCore object
+     * @throws a standard Error if there's no core object
+     */
+    private getStandaloneEditorCore(): StandaloneEditorCore {
+        return this.getCore().standaloneEditorCore;
     }
 }

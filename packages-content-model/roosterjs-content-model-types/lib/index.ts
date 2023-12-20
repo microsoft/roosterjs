@@ -209,27 +209,17 @@ export {
     SwitchShadowEdit,
     TriggerEvent,
     AddUndoSnapshot,
-    PortedCoreApiMap,
-    UnportedCoreApiMap,
-    SetContent,
     HasFocus,
     Focus,
-    InsertNode,
     AttachDomEvent,
-    GetContent,
-    GetStyleBasedFormatState,
     RestoreUndoSnapshot,
-    EnsureTypeInContainer,
     GetVisibleViewport,
     Paste,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export {
-    StandaloneEditorCorePluginState,
-    UnportedCorePluginState,
-} from './pluginState/StandaloneEditorPluginState';
+export { StandaloneEditorCorePluginState } from './pluginState/StandaloneEditorPluginState';
 export {
     ContentModelFormatPluginState,
     PendingFormat,

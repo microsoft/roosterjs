@@ -44,7 +44,7 @@ export function buildRangeEx(
             : safeInstanceOf(arg1, 'Range')
             ? arg1
             : isSelectionPath(arg1)
-            ? createRange(core.contentDiv, arg1.start, arg1.end)
+            ? createRange(core.standaloneEditorCore.contentDiv, arg1.start, arg1.end)
             : isNodePosition(arg1) || safeInstanceOf(arg1, 'Node')
             ? createRange(
                   <Node>arg1,

@@ -16,7 +16,8 @@ import {
     splitTextNode,
     splitParentNode,
 } from 'roosterjs-editor-dom';
-import type { InsertNode, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { InsertNode } from '../publicTypes/ContentModelEditorCore';
 
 function getInitialRange(
     core: StandaloneEditorCore,
@@ -29,6 +30,7 @@ function getInitialRange(
     const selection = core.api.getDOMSelection(core);
     let range = selection?.type == 'range' ? selection.range : null;
     let rangeToRestore = null;
+
     if (option.position == ContentPosition.Range) {
         rangeToRestore = range;
         range = option.range;
@@ -42,14 +44,10 @@ function getInitialRange(
 /**
  * @internal
  * Insert a DOM node into editor content
- * @param core The StandaloneEditorCore object. No op if null.
+ * @param core The ContentModelEditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-export const insertNode: InsertNode = (
-    core: StandaloneEditorCore,
-    node: Node,
-    option: InsertOption | null
-) => {
+export const insertNode: InsertNode = (core, node, option) => {
     option = option || {
         position: ContentPosition.SelectionStart,
         insertOnNewLine: false,
@@ -57,10 +55,11 @@ export const insertNode: InsertNode = (
         replaceSelection: true,
         insertToRegionRoot: false,
     };
-    const contentDiv = core.contentDiv;
+    const { standaloneEditorCore } = core;
+    const { contentDiv, api, lifecycle, darkColorHandler } = standaloneEditorCore;
 
     if (option.updateCursor) {
-        core.api.focus(core);
+        api.focus(standaloneEditorCore);
     }
 
     if (option.position == ContentPosition.Outside) {
@@ -68,8 +67,8 @@ export const insertNode: InsertNode = (
         return true;
     }
 
-    if (core.lifecycle.isDarkMode) {
-        transformColor(node, true /*includeSelf*/, 'lightToDark', core.darkColorHandler);
+    if (lifecycle.isDarkMode) {
+        transformColor(node, true /*includeSelf*/, 'lightToDark', darkColorHandler);
     }
 
     switch (option.position) {
@@ -134,7 +133,7 @@ export const insertNode: InsertNode = (
             break;
         case ContentPosition.Range:
         case ContentPosition.SelectionStart:
-            let { range, rangeToRestore } = getInitialRange(core, option);
+            let { range, rangeToRestore } = getInitialRange(standaloneEditorCore, option);
             if (!range) {
                 break;
             }
@@ -148,12 +147,12 @@ export const insertNode: InsertNode = (
             let blockElement: BlockElement | null;
 
             if (option.insertOnNewLine && option.insertToRegionRoot) {
-                pos = adjustInsertPositionRegionRoot(core, range, pos);
+                pos = adjustInsertPositionRegionRoot(standaloneEditorCore, range, pos);
             } else if (
                 option.insertOnNewLine &&
                 (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
             ) {
-                pos = adjustInsertPositionNewLine(blockElement, core, pos);
+                pos = adjustInsertPositionNewLine(blockElement, standaloneEditorCore, pos);
             } else {
                 pos = adjustInsertPosition(contentDiv, node, pos, range);
             }
@@ -171,7 +170,7 @@ export const insertNode: InsertNode = (
             }
 
             if (rangeToRestore) {
-                core.api.setDOMSelection(core, {
+                api.setDOMSelection(standaloneEditorCore, {
                     type: 'range',
                     range: rangeToRestore,
                 });
