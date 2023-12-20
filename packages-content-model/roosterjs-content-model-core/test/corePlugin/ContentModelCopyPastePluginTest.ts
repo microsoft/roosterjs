@@ -789,11 +789,6 @@ describe('ContentModelCopyPastePlugin |', () => {
                                                 blockType: 'Paragraph',
                                                 segments: [
                                                     {
-                                                        segmentType: 'SelectionMarker',
-                                                        isSelected: true,
-                                                        format: {},
-                                                    },
-                                                    {
                                                         segmentType: 'Text',
                                                         text: 'asd',
                                                         format: {},
@@ -824,6 +819,210 @@ describe('ContentModelCopyPastePlugin |', () => {
                                 format: {},
                             },
                         ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            });
+        });
+
+        it('adjust the selection when selecting first cell of a table nested in another table', () => {
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        isImplicit: true,
+                        segments: [
+                            {
+                                isSelected: true,
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                            },
+                        ],
+                        segmentFormat: {},
+                        blockType: 'Paragraph',
+                        format: {},
+                    },
+                    {
+                        widths: [120],
+                        rows: [
+                            {
+                                height: 44,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: false,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                widths: [116.4000015258789],
+                                                rows: [
+                                                    {
+                                                        height: 22,
+                                                        cells: [
+                                                            {
+                                                                spanAbove: false,
+                                                                spanLeft: false,
+                                                                isHeader: false,
+                                                                blockGroupType: 'TableCell',
+                                                                blocks: [
+                                                                    {
+                                                                        segments: [
+                                                                            {
+                                                                                text: 'Test',
+                                                                                segmentType: 'Text',
+                                                                                isSelected: true,
+                                                                                format: {},
+                                                                            },
+                                                                        ],
+                                                                        blockType: 'Paragraph',
+                                                                        format: {},
+                                                                    },
+                                                                ],
+                                                                format: {},
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                        format: {},
+                                                    },
+                                                ],
+                                                blockType: 'Table',
+                                                format: {},
+                                                dataset: {},
+                                            },
+                                            {
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Br',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Table',
+                        format: {
+                            useBorderBox: true,
+                            borderCollapse: true,
+                        },
+                        dataset: {},
+                    },
+                    {
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Paragraph',
+                        format: {},
+                    },
+                ],
+                format: {},
+            };
+
+            adjustSelectionForCopyCut(model);
+
+            expect(model).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        isImplicit: true,
+                        segments: [],
+                        segmentFormat: {},
+                        blockType: 'Paragraph',
+                        format: {},
+                    },
+                    {
+                        widths: [120],
+                        rows: [
+                            {
+                                height: 44,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: false,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                widths: jasmine.anything() as any,
+                                                rows: [
+                                                    {
+                                                        height: 22,
+                                                        cells: [
+                                                            {
+                                                                spanAbove: false,
+                                                                spanLeft: false,
+                                                                isHeader: false,
+                                                                blockGroupType: 'TableCell',
+                                                                blocks: [
+                                                                    {
+                                                                        segments: [
+                                                                            {
+                                                                                text: 'Test',
+                                                                                segmentType: 'Text',
+                                                                                isSelected: true,
+                                                                                format: {},
+                                                                            },
+                                                                        ],
+                                                                        blockType: 'Paragraph',
+                                                                        format: {},
+                                                                    },
+                                                                ],
+                                                                format: {},
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                        format: {},
+                                                    },
+                                                ],
+                                                blockType: 'Table',
+                                                format: {},
+                                                dataset: {},
+                                            },
+                                            {
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Br',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Table',
+                        format: {
+                            useBorderBox: true,
+                            borderCollapse: true,
+                        },
+                        dataset: {},
+                    },
+                    {
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Paragraph',
                         format: {},
                     },
                 ],

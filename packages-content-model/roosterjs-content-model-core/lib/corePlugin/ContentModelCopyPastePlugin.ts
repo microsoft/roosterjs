@@ -273,7 +273,6 @@ export function adjustSelectionForCopyCut(pasteModel: ContentModelDocument) {
                 firstBlock.segments.includes(selectionMarker) &&
                 block.blockType == 'Paragraph'
             ) {
-                block.segments?.unshift(selectionMarker);
                 firstBlock.segments.splice(firstBlock.segments.indexOf(selectionMarker), 1);
             }
             return true;
@@ -284,9 +283,6 @@ export function adjustSelectionForCopyCut(pasteModel: ContentModelDocument) {
             segments?.length == 1 &&
             segments[0].segmentType == 'SelectionMarker'
         ) {
-            if (tableContext) {
-                return true;
-            }
             firstBlock = block;
             selectionMarker = segments[0];
         }
