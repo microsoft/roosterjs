@@ -26,6 +26,10 @@ import type {
     IStandaloneEditor,
     OnNodeCreated,
     StandaloneEditorOptions,
+    ContentModelDocument,
+    ContentModelParagraph,
+    TableSelectionContext,
+    ContentModelSegment,
 } from 'roosterjs-content-model-types';
 import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
 
@@ -106,7 +110,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
         const selection = this.editor.getDOMSelection();
 
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
-            const model = this.editor.createContentModel();
+            const model = this.editor.createContentModel(undefined /* option */, selection);
             const cacheProcessor = this.editor.isDarkMode() ? this.processEntityColor : false;
 
             const pasteModel = cloneModel(model, {
@@ -122,7 +126,10 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                     }
                     return false;
                 });
+            } else if (selection.type === 'range') {
+                adjustSelectionForCopyCut(pasteModel);
             }
+
             const tempDiv = this.getTempDiv(this.editor.getDocument());
             const selectionForCopy = contentModelToDom(
                 tempDiv.ownerDocument,
@@ -248,6 +255,34 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
 
         return result;
     };
+}
+
+/**
+ * @internal
+ * Exported only for unit testing
+ */
+export function adjustSelectionForCopyCut(pasteModel: ContentModelDocument) {
+    let selectionMarker: ContentModelSegment | undefined;
+    let firstBlock: ContentModelParagraph | undefined;
+    let tableContext: TableSelectionContext | undefined;
+
+    iterateSelections(pasteModel, (_, tableCtxt, block, segments) => {
+        if (selectionMarker) {
+            if (tableCtxt != tableContext && firstBlock?.segments.includes(selectionMarker)) {
+                firstBlock.segments.splice(firstBlock.segments.indexOf(selectionMarker), 1);
+            }
+            return true;
+        }
+
+        const marker = segments?.find(segment => segment.segmentType == 'SelectionMarker');
+        if (!selectionMarker && marker) {
+            tableContext = tableCtxt;
+            firstBlock = block?.blockType == 'Paragraph' ? block : undefined;
+            selectionMarker = marker;
+        }
+
+        return false;
+    });
 }
 
 function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {
