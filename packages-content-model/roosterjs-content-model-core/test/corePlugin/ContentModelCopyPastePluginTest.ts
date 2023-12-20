@@ -1030,6 +1030,123 @@ describe('ContentModelCopyPastePlugin |', () => {
             });
         });
 
+        it('Adjust selection starting at last cell with no text and finishing on text after table', () => {
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        widths: [120.00000762939453],
+                        rows: [
+                            {
+                                height: 22.000001907348633,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: false,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                segments: [
+                                                    {
+                                                        text: 'asd',
+                                                        segmentType: 'Text',
+                                                        format: {},
+                                                    },
+                                                    {
+                                                        isSelected: true,
+                                                        segmentType: 'SelectionMarker',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Table',
+                        format: {},
+                        dataset: {},
+                    },
+                    {
+                        segments: [
+                            {
+                                text: 'asd',
+                                segmentType: 'Text',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        blockType: 'Paragraph',
+                        format: {},
+                    },
+                ],
+                format: {},
+            };
+
+            adjustSelectionForCopyCut(model);
+
+            expect(model).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        widths: [120.00000762939453],
+                        rows: [
+                            {
+                                height: 22.000001907348633,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: false,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                segments: [
+                                                    {
+                                                        text: 'asd',
+                                                        segmentType: 'Text',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Table',
+                        format: {},
+                        dataset: {},
+                    },
+                    {
+                        segments: [
+                            {
+                                text: 'asd',
+                                segmentType: 'Text',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        blockType: 'Paragraph',
+                        format: {},
+                    },
+                ],
+                format: {},
+            });
+        });
+
         it('Do not adjust when it is not needed', () => {
             const model: ContentModelDocument = {
                 blockGroupType: 'Document',
