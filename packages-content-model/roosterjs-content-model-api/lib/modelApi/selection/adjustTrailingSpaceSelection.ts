@@ -22,7 +22,8 @@ export function adjustTrailingSpaceSelection(model: ContentModelDocument) {
                 splitTextSegment(block.segments, segment);
             }
         }
-        return true;
+
+        return false;
     });
 }
 
