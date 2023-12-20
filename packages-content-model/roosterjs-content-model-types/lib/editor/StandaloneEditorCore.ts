@@ -414,8 +414,7 @@ export interface StandaloneCoreApiMap extends PortedCoreApiMap, UnportedCoreApiM
  */
 export interface StandaloneEditorCore
     extends StandaloneEditorCorePluginState,
-        UnportedCorePluginState,
-        StandaloneEditorDefaultSettings {
+        UnportedCorePluginState {
     /**
      * The content DIV element of this editor
      */
@@ -435,6 +434,16 @@ export interface StandaloneEditorCore
      * An array of editor plugins.
      */
     readonly plugins: EditorPlugin[];
+
+    /**
+     * Settings used by DOM to Content Model conversion
+     */
+    readonly domToModelSettings: ContentModelSettings<DomToModelOption, DomToModelSettings>;
+
+    /**
+     * Settings used by Content Model to DOM conversion
+     */
+    readonly modelToDomSettings: ContentModelSettings<ModelToDomOption, ModelToDomSettings>;
 
     /**
      * Editor running environment
@@ -458,26 +467,21 @@ export interface StandaloneEditorCore
 /**
  * Default DOM and Content Model conversion settings for an editor
  */
-export interface StandaloneEditorDefaultSettings {
+export interface ContentModelSettings<OptionType, ConfigType> {
     /**
-     * Default DOM to Content Model options
+     * Built in options used by editor
      */
-    defaultDomToModelOptions: (DomToModelOption | undefined)[];
+    builtIn: OptionType;
 
     /**
-     * Default Content Model to DOM options
+     * Customize options passed in from Editor Options, used for overwrite default option.
+     * This will also be used by copy/paste
      */
-    defaultModelToDomOptions: (ModelToDomOption | undefined)[];
+    customized: OptionType;
 
     /**
-     * Default DOM to Content Model config, calculated from defaultDomToModelOptions,
-     * will be used for creating content model if there is no other customized options
+     * Configuration calculated from default and customized options.
+     * This is a cached object so that we don't need to cache it every time when we use Content Model
      */
-    defaultDomToModelConfig: DomToModelSettings;
-
-    /**
-     * Default Content Model to DOM config, calculated from defaultModelToDomOptions,
-     * will be used for setting content model if there is no other customized options
-     */
-    defaultModelToDomConfig: ModelToDomSettings;
+    calculated: ConfigType;
 }
