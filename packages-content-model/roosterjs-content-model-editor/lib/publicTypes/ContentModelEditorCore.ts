@@ -1,4 +1,4 @@
-import { StandaloneEditorCore } from 'roosterjs-content-model-types/lib';
+import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
     CompatibleGetContentMode,
     CompatibleExperimentalFeatures,
