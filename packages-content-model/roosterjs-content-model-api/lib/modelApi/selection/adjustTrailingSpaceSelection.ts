@@ -57,5 +57,6 @@ function splitTextSegment(
         trailingSpaceLink,
         textSegment.code
     );
+    trailingSpaceSegment.isSelected = true;
     segments.splice(0, 1, newText, trailingSpaceSegment);
 }
