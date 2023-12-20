@@ -34,8 +34,32 @@ const deleteResultValue = 'deleteResult' as any;
 
 const allowedCustomPasteType = ['Test'];
 
+describe('ContentModelCopyPastePlugin.Ctor', () => {
+    it('Ctor without options', () => {
+        const plugin = createContentModelCopyPastePlugin({});
+        const state = plugin.getState();
+
+        expect(state).toEqual({
+            allowedCustomPasteType: [],
+            tempDiv: null,
+        });
+    });
+
+    it('Ctor with options', () => {
+        const plugin = createContentModelCopyPastePlugin({
+            allowedCustomPasteType,
+        });
+        const state = plugin.getState();
+
+        expect(state).toEqual({
+            allowedCustomPasteType: allowedCustomPasteType,
+            tempDiv: null,
+        });
+    });
+});
+
 describe('ContentModelCopyPastePlugin |', () => {
-    let editor: IEditor = null!;
+    let editor: IEditor & IStandaloneEditor = null!;
     let plugin: PluginWithState<CopyPastePluginState>;
     let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
@@ -540,6 +564,35 @@ describe('ContentModelCopyPastePlugin |', () => {
         let clipboardData = <ClipboardData>{};
 
         it('Handle', () => {
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
+                then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
+                    cb(clipboardData);
+                },
+            });
+            isDisposed.and.returnValue(false);
+
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
+
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData);
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
+                Array.from(clipboardEvent.clipboardData!.items),
+                allowedCustomPasteType
+            );
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('Handle with domToModelOptions', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
