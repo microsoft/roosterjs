@@ -10,19 +10,17 @@ import type {
  * @internal
  */
 export function adjustTrailingSpaceSelection(model: ContentModelDocument) {
-    iterateSelections(model, (_, __, block, segments) => {
-        if (block?.blockType == 'Paragraph') {
-            const tempSegments = [...block.segments];
-            tempSegments?.forEach((segment, index) => {
-                if (
-                    segment.isSelected &&
-                    segment.segmentType == 'Text' &&
-                    hasTrailingSpace(segment.text) &&
-                    !isTrailingSpace(segment.text)
-                ) {
-                    splitTextSegment(block.segments, segment, index);
-                }
-            });
+    iterateSelections(model, (_, __, block) => {
+        if (block?.blockType == 'Paragraph' && block.segments.length == 1) {
+            const segment = block.segments[0];
+            if (
+                segment.isSelected &&
+                segment.segmentType == 'Text' &&
+                hasTrailingSpace(segment.text) &&
+                !isTrailingSpace(segment.text)
+            ) {
+                splitTextSegment(block.segments, segment);
+            }
         }
         return true;
     });
@@ -33,13 +31,12 @@ function hasTrailingSpace(text: string) {
 }
 
 function isTrailingSpace(text: string) {
-    return text.length > 0 && text.trimRight().length == 0;
+    return text.trimRight().length == 0;
 }
 
 function splitTextSegment(
     segments: ContentModelSegment[],
-    textSegment: Readonly<ContentModelText>,
-    index: number
+    textSegment: Readonly<ContentModelText>
 ) {
     const text = textSegment.text.trimRight();
     const trailingSpace = textSegment.text.substring(text.length);
@@ -60,6 +57,5 @@ function splitTextSegment(
         trailingSpaceLink,
         textSegment.code
     );
-    trailingSpaceSegment.isSelected = true;
-    segments.splice(index, 1, newText, trailingSpaceSegment);
+    segments.splice(0, 1, newText, trailingSpaceSegment);
 }
