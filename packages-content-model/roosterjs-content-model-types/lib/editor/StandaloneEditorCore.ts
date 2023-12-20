@@ -339,6 +339,13 @@ export interface StandaloneEditorCore extends StandaloneEditorCorePluginState {
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 }
 
 /**

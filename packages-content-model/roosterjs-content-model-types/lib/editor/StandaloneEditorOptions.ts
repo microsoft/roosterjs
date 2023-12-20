@@ -31,7 +31,7 @@ export interface StandaloneEditorOptions {
      * Plugins not appear in this list will not be added to editor, including built-in plugins.
      * Default value is empty array.
      */
-    plugins?: EditorPlugin[];
+    standaloneEditorPlugins?: EditorPlugin[];
 
     /**
      * Default format of editor content. This will be applied to empty content.
@@ -69,7 +69,7 @@ export interface StandaloneEditorOptions {
      * A function map to override default core API implementation
      * Default value is null
      */
-    coreApiOverride?: Partial<StandaloneCoreApiMap>;
+    standaloneEditorCoreApiOverride?: Partial<StandaloneCoreApiMap>;
 
     /**
      * Color of the border of a selectedImage. Default color: '#DB626C'
@@ -96,4 +96,11 @@ export interface StandaloneEditorOptions {
      * When this property is set, value of undoSnapshotService will be ignored.
      */
     snapshotsManager?: SnapshotsManager;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 }

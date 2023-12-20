@@ -5,7 +5,6 @@ import { createModelFromHtml, createStandaloneEditorCore } from 'roosterjs-conte
 import { createNormalizeTablePlugin } from '../corePlugins/NormalizeTablePlugin';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
-import type { EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -18,12 +17,16 @@ export function createEditorCore(
     options: ContentModelEditorOptions
 ): ContentModelEditorCore {
     const editPlugin = createEditPlugin();
-    const additionalPlugins: EditorPlugin[] = [
-        createEventTypeTranslatePlugin(),
-        editPlugin,
-        ...(options.plugins ?? []),
-        createNormalizeTablePlugin(),
-    ].filter(x => !!x);
+    const bridgePlugin = createEventTypeTranslatePlugin(
+        [editPlugin, ...(options.plugins ?? []), createNormalizeTablePlugin()].filter(x => !!x),
+        options.disposeErrorHandler
+    );
+
+    if (!options.standaloneEditorPlugins) {
+        options.standaloneEditorPlugins = [];
+    }
+
+    options.standaloneEditorPlugins.push(bridgePlugin);
 
     const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
     const initContent = options.initialContent ?? contentDiv.innerHTML;
@@ -37,15 +40,13 @@ export function createEditorCore(
         );
     }
 
-    const standaloneEditorCore = createStandaloneEditorCore(contentDiv, options);
     const core: ContentModelEditorCore = {
-        standaloneEditorCore,
+        standaloneEditorCore: createStandaloneEditorCore(contentDiv, options),
         api: { ...coreApiMap, ...options.coreApiOverride },
         originalApi: coreApiMap,
-        plugins: additionalPlugins,
+        bridgePlugin,
         zoomScale: zoomScale,
         sizeTransformer: (size: number) => size / zoomScale,
-        disposeErrorHandler: options.disposeErrorHandler,
         customData: {},
         experimentalFeatures: options.experimentalFeatures ?? [],
         edit: editPlugin.getState(),

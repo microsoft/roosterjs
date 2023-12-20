@@ -141,9 +141,9 @@ export interface ContentModelEditorCore {
     readonly originalApi: ContentModelCoreApiMap;
 
     /**
-     * Editor plugins
+     * Bridge plugin to connect standalone editor plugins
      */
-    readonly plugins: EditorPlugin[];
+    readonly bridgePlugin: EditorPlugin;
 
     /*
      * Current zoom scale, default value is 1
@@ -156,13 +156,6 @@ export interface ContentModelEditorCore {
      * @deprecated Use zoomScale instead
      */
     sizeTransformer: SizeTransformer;
-
-    /**
-     * A callback to be invoked when any exception is thrown during disposing editor
-     * @param plugin The plugin that causes exception
-     * @param error The error object we got
-     */
-    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 
     /**
      * Custom data of this editor

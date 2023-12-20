@@ -26,7 +26,7 @@ export function createStandaloneEditorCore(
 
     return {
         contentDiv,
-        api: { ...standaloneCoreApiMap, ...options.coreApiOverride },
+        api: { ...standaloneCoreApiMap, ...options.standaloneEditorCoreApiOverride },
         originalApi: { ...standaloneCoreApiMap },
         plugins: [
             corePlugins.cache,
@@ -35,6 +35,7 @@ export function createStandaloneEditorCore(
             corePlugins.domEvent,
             corePlugins.selection,
             corePlugins.entity,
+            ...(options.standaloneEditorPlugins ?? []),
             corePlugins.undo,
             corePlugins.lifecycle,
         ],
@@ -47,6 +48,7 @@ export function createStandaloneEditorCore(
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),
         ...getPluginState(corePlugins),
+        disposeErrorHandler: options.disposeErrorHandler,
     };
 }
 

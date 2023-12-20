@@ -40,7 +40,9 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
             contextMenuProviders:
-                options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
+                options.standaloneEditorPlugins?.filter<ContextMenuProvider<any>>(
+                    isContextMenuProvider
+                ) || [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
