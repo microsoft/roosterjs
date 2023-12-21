@@ -1,7 +1,6 @@
 import addParser from '../utils/addParser';
 import { setProcessor } from '../utils/setProcessor';
 import {
-    CLASSES_TO_KEEP,
     COMMENT_HIGHLIGHT_CLASS,
     COMMENT_HIGHLIGHT_CLICKED_CLASS,
     LIST_CONTAINER_ELEMENT_CLASS_NAME,
@@ -202,7 +201,6 @@ export function processPastedContentWacComponents(ev: ContentModelBeforePasteEve
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
     setProcessor(ev.domToModelOption, 'ol', wacListProcessor);
     setProcessor(ev.domToModelOption, 'ul', wacListProcessor);
-    ev.sanitizingOption.additionalAllowedCssClasses.push(...CLASSES_TO_KEEP);
 }
 
 /**

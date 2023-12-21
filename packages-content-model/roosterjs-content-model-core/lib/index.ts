@@ -1,5 +1,4 @@
 export { CachedElementHandler, CloneModelOptions, cloneModel } from './publicApi/model/cloneModel';
-export { paste } from './publicApi/model/paste';
 export { mergeModel, MergeModelOption } from './publicApi/model/mergeModel';
 export { isBlockGroupOfType } from './publicApi/model/isBlockGroupOfType';
 export {

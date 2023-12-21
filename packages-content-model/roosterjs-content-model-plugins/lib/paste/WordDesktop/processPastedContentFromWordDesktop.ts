@@ -1,8 +1,6 @@
 import addParser from '../utils/addParser';
 import getStyleMetadata from './getStyleMetadata';
-import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { getStyles } from '../utils/getStyles';
-import { moveChildNodes } from 'roosterjs-content-model-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
@@ -38,22 +36,6 @@ export function processPastedContentFromWordDesktop(
     addParser(ev.domToModelOption, 'listItemElement', listItemElementParser);
     addParser(ev.domToModelOption, 'container', wordTableParser);
     addParser(ev.domToModelOption, 'table', wordTableParser);
-
-    // Remove "border:none" for image to fix image resize behavior
-    // We found a problem that when paste an image with "border:none" then the resize border will be
-    // displayed incorrectly when resize it. So we need to drop this style
-    chainSanitizerCallback(
-        ev.sanitizingOption.cssStyleCallbacks,
-        'border',
-        (value, element) => element.tagName != 'IMG' || value != 'none'
-    );
-
-    // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
-    chainSanitizerCallback(ev.sanitizingOption.elementCallbacks, 'O:P', element => {
-        moveChildNodes(element);
-        element.appendChild(element.ownerDocument.createTextNode('\u00A0')); // &nbsp;
-        return true;
-    });
 }
 
 const wordDesktopElementProcessor = (

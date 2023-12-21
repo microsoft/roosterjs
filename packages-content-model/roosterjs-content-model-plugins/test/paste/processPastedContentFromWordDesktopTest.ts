@@ -3874,7 +3874,7 @@ export function createBeforePasteEventMock(fragment: DocumentFragment, htmlBefor
         htmlBefore,
         htmlAfter: '',
         htmlAttributes: {},
-        domToModelOption: {},
+        domToModelOption: { additionalAllowedTags: [], additionalDisallowedTags: [] },
     } as any) as ContentModelBeforePasteEvent;
 }
 

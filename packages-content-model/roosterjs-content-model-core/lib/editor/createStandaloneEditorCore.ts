@@ -1,7 +1,10 @@
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
-import { createStandaloneEditorDefaultSettings } from './createStandaloneEditorDefaultSettings';
 import { DarkColorHandlerImpl } from './DarkColorHandlerImpl';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
+import {
+    createDomToModelSettings,
+    createModelToDomSettings,
+} from './createStandaloneEditorDefaultSettings';
 import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     EditorEnvironment,
@@ -48,7 +51,8 @@ export function createStandaloneEditorCore(
             options.getDarkColor ?? getDarkColorFallback
         ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
-        ...createStandaloneEditorDefaultSettings(options),
+        domToModelSettings: createDomToModelSettings(options),
+        modelToDomSettings: createModelToDomSettings(options),
         ...getPluginState(corePlugins),
         ...unportedCorePluginState,
     };

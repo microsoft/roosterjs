@@ -205,7 +205,7 @@ export {
     FormatContentModel,
     StandaloneCoreApiMap,
     StandaloneEditorCore,
-    StandaloneEditorDefaultSettings,
+    ContentModelSettings,
     SwitchShadowEdit,
     TriggerEvent,
     AddUndoSnapshot,
@@ -221,6 +221,7 @@ export {
     RestoreUndoSnapshot,
     EnsureTypeInContainer,
     GetVisibleViewport,
+    Paste,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
@@ -233,12 +234,12 @@ export {
     ContentModelFormatPluginState,
     PendingFormat,
 } from './pluginState/ContentModelFormatPluginState';
+export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
 export { UndoPluginState } from './pluginState/UndoPluginState';
-export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -275,6 +276,8 @@ export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 
 export {
+    MergePastedContentFunc,
+    DomToModelOptionForPaste,
     ContentModelBeforePasteEvent,
     ContentModelBeforePasteEventData,
     CompatibleContentModelBeforePasteEvent,
