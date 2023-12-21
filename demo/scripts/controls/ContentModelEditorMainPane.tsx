@@ -244,7 +244,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                     {this.state.editorCreator && (
                         <ContentModelRooster
                             className={styles.editor}
-                            plugins={allPlugins}
+                            wrapperPlugins={allPlugins}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}

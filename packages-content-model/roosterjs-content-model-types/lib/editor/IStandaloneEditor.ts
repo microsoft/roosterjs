@@ -88,11 +88,6 @@ export interface IStandaloneEditor {
     getPendingFormat(): ContentModelSegmentFormat | null;
 
     /**
-     * Dispose this editor, dispose all plugins and custom data
-     */
-    dispose(): void;
-
-    /**
      * Get whether this editor is disposed
      * @returns True if editor is disposed, otherwise false
      */
@@ -110,19 +105,6 @@ export interface IStandaloneEditor {
     focus(): void;
 
     /**
-     * Check if focus is in editor now
-     * @returns true if focus is in editor, otherwise false
-     */
-    hasFocus(): boolean;
-
-    /**
-     * Attach a DOM event to the editor content DIV
-     * @param eventMap A map from event name to its handler
-     */
-    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void;
-
-    /**
-     * @deprecated Will be replaced with a new API
      * Trigger an event to be dispatched to all plugins
      * @param eventType Type of the event
      * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
@@ -149,6 +131,14 @@ export interface IStandaloneEditor {
     isDarkMode(): boolean;
 
     /**
+     * Get current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @returns current zoom scale number
+     */
+    getZoomScale(): number;
+
+    /**
      * Add a single undo snapshot to undo stack
      */
     takeSnapshot(): void;
@@ -164,6 +154,12 @@ export interface IStandaloneEditor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     isInIME(): boolean;
+
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void;
 
     /**
      * Check if editor is in Shadow Edit mode
@@ -189,11 +185,12 @@ export interface IStandaloneEditor {
     getDarkColorHandler(): DarkColorHandler;
 
     /**
-     * @deprecated
-     * Get current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @returns current zoom scale number
+     * Dispose this editor, dispose all plugins and custom data
      */
-    getZoomScale(): number;
+    dispose(): void;
+    /**
+     * Check if focus is in editor now
+     * @returns true if focus is in editor, otherwise false
+     */
+    hasFocus(): boolean;
 }

@@ -20,17 +20,17 @@ export function createEditorCore(
 ): ContentModelEditorCore {
     const editPlugin = createEditPlugin();
 
-    bridgePlugin.addInnerPlugins(
+    bridgePlugin.addWrapperPlugin(
         [
             editPlugin,
-            ...(options.plugins ?? []),
+            ...(options.wrapperPlugins ?? []),
             createContextMenuPlugin(options),
             createNormalizeTablePlugin(),
         ].filter(x => !!x)
     );
 
     const core: ContentModelEditorCore = {
-        api: { ...coreApiMap, ...options.coreApiOverride },
+        api: { ...coreApiMap, ...options.wrapperCoreApiOverride },
         originalApi: coreApiMap,
         bridgePlugin,
         customData: {},

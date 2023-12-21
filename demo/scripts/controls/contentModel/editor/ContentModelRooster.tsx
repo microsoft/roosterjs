@@ -41,13 +41,13 @@ export default function ContentModelRooster(props: ContentModelRoosterProps) {
     const editor = React.useRef<IContentModelEditor | null>(null);
     const theme = useTheme();
 
-    const { focusOnInit, editorCreator, zoomScale, inDarkMode, plugins } = props;
+    const { focusOnInit, editorCreator, zoomScale, inDarkMode, wrapperPlugins } = props;
 
     React.useEffect(() => {
-        if (plugins && editorDiv.current) {
+        if (wrapperPlugins && editorDiv.current) {
             const uiUtilities = createUIUtilities(editorDiv.current, theme);
 
-            plugins.forEach(plugin => {
+            wrapperPlugins.forEach(plugin => {
                 if (isReactEditorPlugin(plugin)) {
                     plugin.setUIUtilities(uiUtilities);
                 }

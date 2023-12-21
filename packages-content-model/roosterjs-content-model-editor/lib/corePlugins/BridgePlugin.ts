@@ -18,7 +18,7 @@ const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
  * Act as a bridge between Standalone editor and Content Model editor, translate Standalone editor event type to legacy event type
  */
 export class BridgePlugin implements EditorPlugin {
-    private innerPlugins: LegacyEditorPlugin[] = [];
+    private wrapperPlugins: LegacyEditorPlugin[] = [];
 
     /**
      * Get a friendly name of  this plugin
@@ -34,20 +34,19 @@ export class BridgePlugin implements EditorPlugin {
     initialize() {}
 
     /**
-     * Add inner plugins
+     * Add plugins for wrapper editor
      */
-    addInnerPlugins(innerPlugins: LegacyEditorPlugin[]) {
-        this.innerPlugins.push(...innerPlugins);
+    addWrapperPlugin(wrapperPlugins: LegacyEditorPlugin[]) {
+        this.wrapperPlugins.push(...wrapperPlugins);
     }
 
     /**
      * Initialize all inner plugins with Content Model Editor
-     * @param editor
      */
-    initializeInnerPlugins(editor: IContentModelEditor) {
-        this.innerPlugins.forEach(plugin => plugin.initialize(editor));
+    setOuterEditor(editor: IContentModelEditor) {
+        this.wrapperPlugins.forEach(plugin => plugin.initialize(editor));
 
-        this.innerPlugins.forEach(plugin =>
+        this.wrapperPlugins.forEach(plugin =>
             plugin.onPluginEvent?.({
                 eventType: PluginEventType.EditorReady,
             })
@@ -58,16 +57,16 @@ export class BridgePlugin implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
-        for (let i = this.innerPlugins.length - 1; i >= 0; i--) {
-            const plugin = this.innerPlugins[i];
+        for (let i = this.wrapperPlugins.length - 1; i >= 0; i--) {
+            const plugin = this.wrapperPlugins[i];
 
             plugin.dispose();
         }
     }
 
     willHandleEventExclusively(event: PluginEvent) {
-        for (let i = 0; i < this.innerPlugins.length; i++) {
-            const plugin = this.innerPlugins[i];
+        for (let i = 0; i < this.wrapperPlugins.length; i++) {
+            const plugin = this.wrapperPlugins[i];
 
             if (plugin.willHandleEventExclusively?.(event)) {
                 if (!event.eventDataCache) {
@@ -102,7 +101,7 @@ export class BridgePlugin implements EditorPlugin {
         if (exclusivelyHandleEventPlugin) {
             exclusivelyHandleEventPlugin.onPluginEvent?.(event);
         } else {
-            this.innerPlugins.forEach(plugin => plugin.onPluginEvent?.(event));
+            this.wrapperPlugins.forEach(plugin => plugin.onPluginEvent?.(event));
         }
     }
 }

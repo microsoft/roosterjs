@@ -31,7 +31,7 @@ export function createContentModelEditor(
     );
 
     const options: ContentModelEditorOptions = {
-        plugins: plugins,
+        wrapperPlugins: plugins,
         initialContent: initialContent,
         defaultSegmentFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',

@@ -1,4 +1,4 @@
-import { createStandaloneEditorCore } from './createStandaloneEditorCore';
+import { createEditorCore } from './createEditorCore';
 import type {
     DarkColorHandler,
     PluginEventType,
@@ -38,7 +38,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: StandaloneEditorOptions = {}) {
-        this.core = createStandaloneEditorCore(contentDiv, options);
+        this.core = createEditorCore(contentDiv, options);
         this.core.plugins.forEach(plugin => plugin.initialize(this));
     }
 

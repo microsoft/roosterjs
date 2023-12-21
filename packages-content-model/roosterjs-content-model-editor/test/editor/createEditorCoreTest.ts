@@ -17,13 +17,13 @@ describe('createEditorCore', () => {
     let mockedEditPlugin: PluginWithState<EditPluginState>;
 
     beforeEach(() => {
-        addInnerPluginsSpy = jasmine.createSpy('addInnerPlugins');
+        addInnerPluginsSpy = jasmine.createSpy('addWrapperPlugin');
 
         mockedEditPlugin = {
             getState: () => mockedEditPluginState,
         } as any;
         mockedBridgePlugin = {
-            addInnerPlugins: addInnerPluginsSpy,
+            addWrapperPlugin: addInnerPluginsSpy,
         } as any;
 
         spyOn(EditPlugin, 'createEditPlugin').and.returnValue(mockedEditPlugin);
@@ -64,9 +64,9 @@ describe('createEditorCore', () => {
 
         const core = createEditorCore(
             {
-                plugins: [mockedPlugin1, mockedPlugin2],
+                wrapperPlugins: [mockedPlugin1, mockedPlugin2],
                 experimentalFeatures: mockedFeatures,
-                coreApiOverride: mockedCoreApi,
+                wrapperCoreApiOverride: mockedCoreApi,
             },
             mockedBridgePlugin,
             mockedSizeTransformer

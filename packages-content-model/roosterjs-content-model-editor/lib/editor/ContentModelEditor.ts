@@ -99,7 +99,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         // Build bridge plugin
         const bridgePlugin = new BridgePlugin();
-        const plugins = [...(options.standaloneEditorPlugins ?? []), bridgePlugin];
+        const plugins = [...(options.plugins ?? []), bridgePlugin];
         const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
             initContent && !options.initialModel
@@ -112,7 +112,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 : options.initialModel;
         const standaloneEditorOptions: StandaloneEditorOptions = {
             ...options,
-            standaloneEditorPlugins: plugins,
+            plugins: plugins,
             initialModel,
         };
 
@@ -124,7 +124,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             size => size / this.getCore().zoomScale
         );
 
-        bridgePlugin.initializeInnerPlugins(this);
+        bridgePlugin.setOuterEditor(this);
     }
 
     /**

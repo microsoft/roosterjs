@@ -21,13 +21,13 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     /**
      * Plugins for ContentModelEditor
      */
-    plugins?: EditorPlugin[];
+    wrapperPlugins?: EditorPlugin[];
 
     /**
      * A function map to override default core API implementation
      * Default value is null
      */
-    coreApiOverride?: Partial<ContentModelCoreApiMap>;
+    wrapperCoreApiOverride?: Partial<ContentModelCoreApiMap>;
 
     /**
      * Specify the enabled experimental features

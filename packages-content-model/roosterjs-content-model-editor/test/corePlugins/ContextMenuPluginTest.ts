@@ -20,8 +20,6 @@ describe('ContextMenu handle other event', () => {
         getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
         triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEvent');
 
-        plugin = createContextMenuPlugin({});
-
         editor = <IEditor & IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
@@ -39,14 +37,34 @@ describe('ContextMenu handle other event', () => {
             getElementAtCursor: getElementAtCursorSpy,
             triggerContentChangedEvent: triggerContentChangedEventSpy,
         });
-        plugin.initialize(editor);
     });
 
     afterEach(() => {
         plugin.dispose();
     });
 
+    it('Ctor with parameter', () => {
+        const mockedPlugin1 = {} as any;
+        const mockedPlugin2 = {
+            getContextMenuItems: () => {},
+        } as any;
+
+        plugin = createContextMenuPlugin({
+            wrapperPlugins: [mockedPlugin1, mockedPlugin2],
+        });
+        plugin.initialize(editor);
+
+        const state = plugin.getState();
+
+        expect(state).toEqual({
+            contextMenuProviders: [mockedPlugin2],
+        });
+    });
+
     it('Trigger contextmenu event, skip reselect', () => {
+        plugin = createContextMenuPlugin({});
+        plugin.initialize(editor);
+
         editor.getContentSearcherOfCursor = () => null!;
         const state = plugin.getState();
         const mockedItems1 = ['Item1', 'Item2'];

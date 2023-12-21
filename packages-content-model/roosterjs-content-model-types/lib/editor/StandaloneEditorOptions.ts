@@ -32,7 +32,7 @@ export interface StandaloneEditorOptions {
      * Plugins not appear in this list will not be added to editor, including built-in plugins.
      * Default value is empty array.
      */
-    standaloneEditorPlugins?: EditorPlugin[];
+    plugins?: EditorPlugin[];
 
     /**
      * Default format of editor content. This will be applied to empty content.
@@ -70,7 +70,7 @@ export interface StandaloneEditorOptions {
      * A function map to override default core API implementation
      * Default value is null
      */
-    standaloneEditorCoreApiOverride?: Partial<StandaloneCoreApiMap>;
+    coreApiOverride?: Partial<StandaloneCoreApiMap>;
 
     /**
      * Color of the border of a selectedImage. Default color: '#DB626C'

@@ -31,7 +31,7 @@ describe('ContentModelEditor', () => {
 
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {
-            standaloneEditorCoreApiOverride: {
+            coreApiOverride: {
                 createEditorContext: jasmine
                     .createSpy('createEditorContext')
                     .and.returnValue(editorContext),
@@ -68,7 +68,7 @@ describe('ContentModelEditor', () => {
 
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {
-            standaloneEditorCoreApiOverride: {
+            coreApiOverride: {
                 createEditorContext: jasmine
                     .createSpy('createEditorContext')
                     .and.returnValue(editorContext),
@@ -185,7 +185,7 @@ describe('ContentModelEditor', () => {
             },
         };
         const editor = new ContentModelEditor(div, {
-            plugins: [plugin],
+            wrapperPlugins: [plugin],
         });
         editor.dispose();
 
