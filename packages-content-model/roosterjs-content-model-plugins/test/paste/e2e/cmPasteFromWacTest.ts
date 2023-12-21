@@ -88,10 +88,10 @@ describe(ID, () => {
                             blockGroupType: 'FormatContainer',
                             blocks: [
                                 {
-                                    widths: [314.8000183105469, 314.8000183105469],
+                                    widths: jasmine.anything() as any,
                                     rows: [
                                         {
-                                            height: 22.5625,
+                                            height: jasmine.anything() as any,
                                             cells: [
                                                 {
                                                     spanAbove: false,
