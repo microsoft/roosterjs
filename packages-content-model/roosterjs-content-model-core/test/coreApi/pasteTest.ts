@@ -126,11 +126,7 @@ describe('Paste ', () => {
     });
 
     it('Execute', () => {
-        try {
-            editor.pasteFromClipboard(clipboardData);
-        } catch (e) {
-            console.log(e);
-        }
+        editor.pasteFromClipboard(clipboardData);
 
         expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);

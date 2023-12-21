@@ -106,11 +106,6 @@ export interface StandaloneEditorOptions {
     disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 
     /**
-     * A callback to be invoked before initialize all plugins
-     */
-    onBeforeInitializePlugins?: () => void;
-
-    /**
      * @deprecated
      * Current zoom scale, @default value is 1
      * When editor is put under a zoomed container, need to pass the zoom scale number using this property

@@ -1,5 +1,5 @@
 import * as selectionConvert from '../../lib/editor/utils/selectionConverter';
-import { createBridgePlugin } from '../../lib/corePlugins/BridgePlugin';
+import { BridgePlugin } from '../../lib/corePlugins/BridgePlugin';
 import { PluginEventType } from 'roosterjs-editor-types';
 
 describe('EventTypeTranslatePlugin', () => {
@@ -15,9 +15,9 @@ describe('EventTypeTranslatePlugin', () => {
     });
 
     it('translate a SelectionChanged event without selection', () => {
-        const plugin = createBridgePlugin([]);
+        const plugin = new BridgePlugin();
 
-        plugin.initialize({} as any);
+        plugin.initialize();
 
         const event = {
             eventType: PluginEventType.SelectionChanged,
@@ -34,9 +34,9 @@ describe('EventTypeTranslatePlugin', () => {
     });
 
     it('translate a SelectionChanged event', () => {
-        const plugin = createBridgePlugin([]);
+        const plugin = new BridgePlugin();
 
-        plugin.initialize({} as any);
+        plugin.initialize();
 
         const event = {
             eventType: PluginEventType.SelectionChanged,

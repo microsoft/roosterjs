@@ -17,22 +17,14 @@ const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
  * @internal
  * Act as a bridge between Standalone editor and Content Model editor, translate Standalone editor event type to legacy event type
  */
-export interface BridgePlugin extends EditorPlugin {
-    /**
-     * Initialize all inner plugins with Content Model Editor
-     * @param editor
-     */
-    initializeInnerPlugins(editor: IContentModelEditor): void;
-}
-
-class BridgePluginImpl implements BridgePlugin {
-    constructor(private innerPlugins: LegacyEditorPlugin[]) {}
+export class BridgePlugin implements EditorPlugin {
+    private innerPlugins: LegacyEditorPlugin[] = [];
 
     /**
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'EventTypeTranslate';
+        return 'Bridge';
     }
 
     /**
@@ -42,11 +34,24 @@ class BridgePluginImpl implements BridgePlugin {
     initialize() {}
 
     /**
+     * Add inner plugins
+     */
+    addInnerPlugins(innerPlugins: LegacyEditorPlugin[]) {
+        this.innerPlugins.push(...innerPlugins);
+    }
+
+    /**
      * Initialize all inner plugins with Content Model Editor
      * @param editor
      */
     initializeInnerPlugins(editor: IContentModelEditor) {
         this.innerPlugins.forEach(plugin => plugin.initialize(editor));
+
+        this.innerPlugins.forEach(plugin =>
+            plugin.onPluginEvent?.({
+                eventType: PluginEventType.EditorReady,
+            })
+        );
     }
 
     /**
@@ -84,6 +89,10 @@ class BridgePluginImpl implements BridgePlugin {
                     event.selectionRangeEx = convertDomSelectionToRangeEx(event.newSelection);
                 }
                 break;
+
+            case PluginEventType.EditorReady:
+                // Do not dispatch EditorReady event since when inner editor is ready, outer editor is not ready yet
+                return;
         }
 
         const exclusivelyHandleEventPlugin = event.eventDataCache?.[
@@ -102,12 +111,4 @@ function isContentModelSelectionChangedEvent(
     event: SelectionChangedEvent
 ): event is ContentModelSelectionChangedEvent {
     return !!(event as ContentModelSelectionChangedEvent).newSelection;
-}
-
-/**
- * @internal
- * Create a new instance of EventTypeTranslatePlugin.
- */
-export function createBridgePlugin(innerPlugins: LegacyEditorPlugin[]): BridgePlugin {
-    return new BridgePluginImpl(innerPlugins);
 }

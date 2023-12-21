@@ -12,6 +12,7 @@ import type {
     NodePosition,
     StyleBasedFormatState,
     EditPluginState,
+    SizeTransformer,
 } from 'roosterjs-editor-types';
 
 /**
@@ -156,15 +157,20 @@ export interface ContentModelEditorCore {
     /**
      * Custom data of this editor
      */
-    customData: Record<string, CustomData>;
+    readonly customData: Record<string, CustomData>;
 
     /**
      * Enabled experimental features
      */
-    experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
+    readonly experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
 
     /**
      * Plugin state of EditPlugin
      */
-    edit: EditPluginState;
+    readonly edit: EditPluginState;
+
+    /**
+     * @deprecated Use zoomScale instead
+     */
+    readonly sizeTransformer: SizeTransformer;
 }

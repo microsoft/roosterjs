@@ -1,9 +1,6 @@
+import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { createBridgePlugin } from '../corePlugins/BridgePlugin';
-import { createContextMenuPlugin } from '../corePlugins/ContextMenuPlugin';
 import { createEditorCore } from './createEditorCore';
-import { createEditPlugin } from '../corePlugins/EditPlugin';
-import { createNormalizeTablePlugin } from '../corePlugins/NormalizeTablePlugin';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
 import {
@@ -85,7 +82,7 @@ import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type { DOMEventRecord } from 'roosterjs-content-model-types';
+import type { DOMEventRecord, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 
 /**
  * Editor for Content Model.
@@ -93,7 +90,6 @@ import type { DOMEventRecord } from 'roosterjs-content-model-types';
  */
 export class ContentModelEditor extends StandaloneEditor implements IContentModelEditor {
     private contentModelEditorCore: ContentModelEditorCore | undefined;
-    private sizeTransformer: (size: number) => number;
 
     /**
      * Creates an instance of Editor
@@ -102,58 +98,33 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         // Build bridge plugin
-        const editPlugin = createEditPlugin();
-        const innerPlugins = [
-            editPlugin,
-            ...(options.plugins ?? []),
-            createContextMenuPlugin(options),
-            createNormalizeTablePlugin(),
-        ].filter(x => !!x);
-        const bridgePlugin = createBridgePlugin(innerPlugins);
-
-        if (!options.standaloneEditorPlugins) {
-            options.standaloneEditorPlugins = [];
-        }
-
-        options.standaloneEditorPlugins.push(bridgePlugin);
-
-        // Build initial Content Model
+        const bridgePlugin = new BridgePlugin();
+        const plugins = [...(options.standaloneEditorPlugins ?? []), bridgePlugin];
         const initContent = options.initialContent ?? contentDiv.innerHTML;
-
-        if (initContent && !options.initialModel) {
-            options.initialModel = createModelFromHtml(
-                initContent,
-                options.defaultDomToModelOptions,
-                options.trustedHTMLHandler,
-                options.defaultSegmentFormat
-            );
-        }
-
-        // Build beforeInitialize callback
-        const onBeforeInitializePlugins = () => {
-            this.contentModelEditorCore = createEditorCore(
-                options,
-                bridgePlugin,
-                editPlugin.getState()
-            );
-
-            bridgePlugin.initializeInnerPlugins(this);
+        const initialModel =
+            initContent && !options.initialModel
+                ? createModelFromHtml(
+                      initContent,
+                      options.defaultDomToModelOptions,
+                      options.trustedHTMLHandler,
+                      options.defaultSegmentFormat
+                  )
+                : options.initialModel;
+        const standaloneEditorOptions: StandaloneEditorOptions = {
+            ...options,
+            standaloneEditorPlugins: plugins,
+            initialModel,
         };
-        const originalOnBeforeInitializePlugins = options.onBeforeInitializePlugins;
 
-        options.onBeforeInitializePlugins = originalOnBeforeInitializePlugins
-            ? () => {
-                  originalOnBeforeInitializePlugins();
-                  onBeforeInitializePlugins();
-              }
-            : onBeforeInitializePlugins;
+        super(contentDiv, standaloneEditorOptions);
 
-        super(contentDiv, options);
+        this.contentModelEditorCore = createEditorCore(
+            options,
+            bridgePlugin,
+            size => size / this.getCore().zoomScale
+        );
 
-        this.sizeTransformer = (size: number) => {
-            const core = this.getCore();
-            return size / core.zoomScale;
-        };
+        bridgePlugin.initializeInnerPlugins(this);
     }
 
     /**
@@ -1011,7 +982,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @deprecated Use getZoomScale() instead
      */
     getSizeTransformer(): SizeTransformer {
-        return this.sizeTransformer;
+        return this.getContentModelEditorCore().sizeTransformer;
     }
 
     /**

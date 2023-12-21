@@ -1,8 +1,11 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
+import { createContextMenuPlugin } from '../corePlugins/ContextMenuPlugin';
+import { createEditPlugin } from '../corePlugins/EditPlugin';
+import { createNormalizeTablePlugin } from '../corePlugins/NormalizeTablePlugin';
+import type { BridgePlugin } from '../corePlugins/BridgePlugin';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
-import type { EditPluginState } from 'roosterjs-editor-types';
-import type { EditorPlugin } from 'roosterjs-content-model-types';
+import type { SizeTransformer } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -12,16 +15,28 @@ import type { EditorPlugin } from 'roosterjs-content-model-types';
  */
 export function createEditorCore(
     options: ContentModelEditorOptions,
-    bridgePlugin: EditorPlugin,
-    editPluginState: EditPluginState
+    bridgePlugin: BridgePlugin,
+    sizeTransformer: SizeTransformer
 ): ContentModelEditorCore {
+    const editPlugin = createEditPlugin();
+
+    bridgePlugin.addInnerPlugins(
+        [
+            editPlugin,
+            ...(options.plugins ?? []),
+            createContextMenuPlugin(options),
+            createNormalizeTablePlugin(),
+        ].filter(x => !!x)
+    );
+
     const core: ContentModelEditorCore = {
         api: { ...coreApiMap, ...options.coreApiOverride },
         originalApi: coreApiMap,
         bridgePlugin,
         customData: {},
         experimentalFeatures: options.experimentalFeatures ?? [],
-        edit: editPluginState,
+        edit: editPlugin.getState(),
+        sizeTransformer,
     };
 
     return core;

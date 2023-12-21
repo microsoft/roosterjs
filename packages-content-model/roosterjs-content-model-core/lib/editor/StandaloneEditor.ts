@@ -39,9 +39,6 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     constructor(contentDiv: HTMLDivElement, options: StandaloneEditorOptions = {}) {
         this.core = createStandaloneEditorCore(contentDiv, options);
-
-        options.onBeforeInitializePlugins?.();
-
         this.core.plugins.forEach(plugin => plugin.initialize(this));
     }
 
