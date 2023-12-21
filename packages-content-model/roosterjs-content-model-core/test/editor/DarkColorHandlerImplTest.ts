@@ -418,7 +418,7 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         expect(parseColorSpy).toHaveBeenCalledWith('red', false);
         expect(parseColorSpy).toHaveBeenCalledWith(null, false);
         expect(registerColorSpy).toHaveBeenCalledTimes(1);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', true, undefined);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', true);
     });
 
     it('Has simple color in CSS, light to dark', () => {
@@ -433,7 +433,7 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         expect(parseColorSpy).toHaveBeenCalledWith('red', false);
         expect(parseColorSpy).toHaveBeenCalledWith(null, false);
         expect(registerColorSpy).toHaveBeenCalledTimes(1);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', true, undefined);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', true);
     });
 
     it('Has color in both text and background, light to dark', () => {
@@ -453,8 +453,8 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         expect(parseColorSpy).toHaveBeenCalledWith('red');
         expect(parseColorSpy).toHaveBeenCalledWith('green');
         expect(registerColorSpy).toHaveBeenCalledTimes(2);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', true, undefined);
-        expect(registerColorSpy).toHaveBeenCalledWith('green', true, undefined);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', true);
+        expect(registerColorSpy).toHaveBeenCalledWith('green', true);
     });
 
     it('Has var-based color, light to dark', () => {
@@ -470,7 +470,7 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         expect(parseColorSpy).toHaveBeenCalledWith('red');
         expect(parseColorSpy).toHaveBeenCalledWith(null, false);
         expect(registerColorSpy).toHaveBeenCalledTimes(1);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', true, undefined);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', true);
     });
 
     it('No color, dark to light', () => {
@@ -539,6 +539,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         expect(parseColorSpy).toHaveBeenCalledWith('red');
         expect(parseColorSpy).toHaveBeenCalledWith(null, true);
         expect(registerColorSpy).toHaveBeenCalledTimes(1);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', false, undefined);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', false);
     });
 });
