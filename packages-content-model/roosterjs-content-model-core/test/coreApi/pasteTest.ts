@@ -11,6 +11,7 @@ import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/Word
 import { BeforePasteEvent, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
+import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 import {
     ClipboardData,
@@ -21,7 +22,6 @@ import {
     FormatWithContentModelOptions,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
-import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 
 let clipboardData: ClipboardData;
 
@@ -386,7 +386,7 @@ describe('Paste with clipboardData', () => {
         document.getElementById(ID)?.remove();
     });
 
-    it('Remove windowtext from clipboardContent', () => {
+    it('Replace windowtext with set black font color from clipboardContent', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><p style="color: windowtext;">Test</p></body></html>';
 
@@ -407,12 +407,16 @@ describe('Paste with clipboardData', () => {
                         {
                             segmentType: 'Text',
                             text: 'Test',
-                            format: {},
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
                         },
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
                         },
                     ],
                     format: {

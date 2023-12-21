@@ -120,22 +120,20 @@ describe(ID, () => {
                     rows: [
                         {
                             height: jasmine.anything() as any,
+                            format: {},
                             cells: [
                                 {
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
+                                            blockType: 'Paragraph',
                                             segments: [
                                                 {
-                                                    text: 'Asdasdsad ',
                                                     segmentType: 'Text',
+                                                    text: 'Asdasdsad ',
                                                     format: {},
                                                 },
                                             ],
-                                            blockType: 'Paragraph',
                                             format: {
                                                 lineHeight: 'normal',
                                                 marginTop: '1em',
@@ -159,23 +157,23 @@ describe(ID, () => {
                                         verticalAlign: 'top',
                                         width: '233.75pt',
                                     },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
                                     dataset: {},
                                 },
                                 {
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
+                                            blockType: 'Paragraph',
                                             segments: [
                                                 {
-                                                    text: 'asdadasd ',
                                                     segmentType: 'Text',
+                                                    text: 'asdadasd ',
                                                     format: {},
                                                 },
                                             ],
-                                            blockType: 'Paragraph',
                                             format: {
                                                 lineHeight: 'normal',
                                                 marginTop: '1em',
@@ -198,28 +196,30 @@ describe(ID, () => {
                                         verticalAlign: 'top',
                                         width: '233.75pt',
                                     },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
                                     dataset: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
                     blockType: 'Table',
                     format: {
-                        borderCollapse: true,
                         useBorderBox: true,
+                        borderCollapse: true,
                     },
                     dataset: {},
                 },
                 {
+                    blockType: 'Paragraph',
                     segments: [
                         {
-                            text: ' ',
                             segmentType: 'Text',
+                            text: ' ',
                             format: {},
                         },
                     ],
-                    blockType: 'Paragraph',
                     format: {
                         marginTop: '1em',
                         marginBottom: '1em',
@@ -230,14 +230,16 @@ describe(ID, () => {
                     },
                 },
                 {
+                    blockType: 'Paragraph',
                     segments: [
                         {
+                            segmentType: 'Text',
                             text: 'asdsadasdasdsadasdsadsad ',
-                            segmentType: 'Text',
-                            format: {},
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
                         },
                     ],
-                    blockType: 'Paragraph',
                     format: {
                         marginTop: '1em',
                         marginBottom: '1em',
@@ -248,19 +250,19 @@ describe(ID, () => {
                     },
                 },
                 {
+                    blockType: 'Paragraph',
                     segments: [
                         {
-                            text: ' ',
                             segmentType: 'Text',
+                            text: ' ',
                             format: {},
                         },
                         {
-                            isSelected: true,
                             segmentType: 'SelectionMarker',
+                            isSelected: true,
                             format: {},
                         },
                     ],
-                    blockType: 'Paragraph',
                     format: {
                         marginTop: '1em',
                         marginBottom: '1em',
