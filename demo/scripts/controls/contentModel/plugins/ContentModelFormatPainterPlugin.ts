@@ -1,5 +1,5 @@
 import { applySegmentFormat, getFormatState } from 'roosterjs-content-model-api';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 
@@ -7,9 +7,7 @@ const FORMATPAINTERCURSOR_SVG = require('./formatpaintercursor.svg');
 const FORMATPAINTERCURSOR_STYLE = `;cursor: url("${FORMATPAINTERCURSOR_SVG}") 8.5 16, auto`;
 const CURSOR_REGEX = /;?\s*cursor:\s*url\(\".*?\"\)[^;]*/gi;
 
-interface FormatPainterFormatHolder {
-    format: ContentModelSegmentFormat | null;
-}
+let painterFormat: ContentModelSegmentFormat | null = null;
 
 export default class ContentModelFormatPainterPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
@@ -28,46 +26,39 @@ export default class ContentModelFormatPainterPlugin implements EditorPlugin {
 
     onPluginEvent(event: PluginEvent) {
         if (this.editor && event.eventType == PluginEventType.MouseUp) {
-            const formatHolder = getFormatHolder(this.editor);
-
-            if (formatHolder.format) {
-                applySegmentFormat(this.editor, formatHolder.format);
-                formatHolder.format = null;
+            if (painterFormat) {
+                applySegmentFormat(this.editor, painterFormat);
+                painterFormat = null;
 
                 setFormatPainterCursor(this.editor, false /*isOn*/);
             }
         }
     }
 
-    static startFormatPainter(editor: IContentModelEditor) {
-        const formatHolder = getFormatHolder(editor);
+    static startFormatPainter(editor: IStandaloneEditor) {
         const format = getSegmentFormat(editor);
 
         if (format) {
-            formatHolder.format = { ...format };
+            painterFormat = { ...format };
             setFormatPainterCursor(editor, true /*isOn*/);
         }
     }
 }
 
-function getFormatHolder(editor: IContentModelEditor): FormatPainterFormatHolder {
-    return editor.getCustomData('__FormatPainterFormat', () => {
-        return {} as FormatPainterFormatHolder;
-    });
-}
-
-function setFormatPainterCursor(editor: IContentModelEditor, isOn: boolean) {
-    let styles = editor.getEditorDomAttribute('style') || '';
+function setFormatPainterCursor(editor: IStandaloneEditor, isOn: boolean) {
+    const attributes = editor.getEnvironment().domAttributes;
+    const styleAttr = attributes.getNamedItem('style');
+    let styles = styleAttr?.value || '';
     styles = styles.replace(CURSOR_REGEX, '');
 
     if (isOn) {
         styles += FORMATPAINTERCURSOR_STYLE;
     }
 
-    editor.setEditorDomAttribute('style', styles);
+    styleAttr.value = styles;
 }
 
-function getSegmentFormat(editor: IContentModelEditor): ContentModelSegmentFormat {
+function getSegmentFormat(editor: IStandaloneEditor): ContentModelSegmentFormat {
     const formatState = getFormatState(editor);
 
     return {

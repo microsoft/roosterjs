@@ -79,6 +79,7 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: false,
+                domAttributes: contentDiv.attributes,
             },
             darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: defaultTrustHtmlHandler,
@@ -107,6 +108,9 @@ describe('createEditorCore', () => {
     it('No options', () => {
         const mockedDiv = {
             ownerDocument: {},
+            attributes: {
+                a: 'b',
+            },
         } as any;
         runTest(
             mockedDiv,
@@ -125,6 +129,9 @@ describe('createEditorCore', () => {
     it('With options', () => {
         const mockedDiv = {
             ownerDocument: {},
+            attributes: {
+                a: 'b',
+            },
         } as any;
         const mockedPlugin1 = 'P1' as any;
         const mockedPlugin2 = 'P2' as any;
@@ -172,6 +179,9 @@ describe('createEditorCore', () => {
     it('Invalid zoom scale', () => {
         const mockedDiv = {
             ownerDocument: {},
+            attributes: {
+                a: 'b',
+            },
         } as any;
         const mockedOptions = {
             zoomScale: -1,
@@ -194,6 +204,9 @@ describe('createEditorCore', () => {
                     },
                 },
             },
+            attributes: {
+                a: 'b',
+            },
         } as any;
         const mockedOptions = {
             zoomScale: -1,
@@ -204,6 +217,9 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: true,
                 isSafari: false,
+                domAttributes: {
+                    a: 'b',
+                } as any,
             },
         });
 
@@ -222,6 +238,9 @@ describe('createEditorCore', () => {
                     },
                 },
             },
+            attributes: {
+                a: 'b',
+            },
         } as any;
         const mockedOptions = {
             zoomScale: -1,
@@ -232,6 +251,9 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: true,
                 isSafari: false,
+                domAttributes: {
+                    a: 'b',
+                } as any,
             },
         });
 
@@ -250,6 +272,9 @@ describe('createEditorCore', () => {
                     },
                 },
             },
+            attributes: {
+                a: 'b',
+            },
         } as any;
         const mockedOptions = {
             zoomScale: -1,
@@ -260,6 +285,9 @@ describe('createEditorCore', () => {
                 isMac: true,
                 isAndroid: false,
                 isSafari: false,
+                domAttributes: {
+                    a: 'b',
+                } as any,
             },
         });
 
@@ -278,6 +306,9 @@ describe('createEditorCore', () => {
                     },
                 },
             },
+            attributes: {
+                a: 'b',
+            },
         } as any;
         const mockedOptions = {
             zoomScale: -1,
@@ -288,6 +319,9 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: true,
+                domAttributes: {
+                    a: 'b',
+                } as any,
             },
         });
 
@@ -306,6 +340,9 @@ describe('createEditorCore', () => {
                     },
                 },
             },
+            attributes: {
+                a: 'b',
+            },
         } as any;
         const mockedOptions = {
             zoomScale: -1,
@@ -316,6 +353,9 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: false,
+                domAttributes: {
+                    a: 'b',
+                } as any,
             },
         });
 

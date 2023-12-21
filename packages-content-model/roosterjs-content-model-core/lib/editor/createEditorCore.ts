@@ -1,7 +1,7 @@
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
+import { createDomToModelSettings, createModelToDomSettings } from './createDefaultSettings';
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
-import { createDomToModelSettings, createModelToDomSettings } from './createDefaultSettings';
 import type {
     EditorEnvironment,
     StandaloneEditorCore,
@@ -37,7 +37,7 @@ export function createEditorCore(
             corePlugins.undo,
             corePlugins.lifecycle,
         ],
-        environment: createEditorEnvironment(contentDiv.ownerDocument.defaultView),
+        environment: createEditorEnvironment(contentDiv),
         darkColorHandler: createDarkColorHandler(
             contentDiv,
             options.getDarkColor ?? getDarkColorFallback
@@ -51,8 +51,8 @@ export function createEditorCore(
     };
 }
 
-function createEditorEnvironment(window: Window | null): EditorEnvironment {
-    const navigator = window?.navigator;
+function createEditorEnvironment(contentDiv: HTMLElement): EditorEnvironment {
+    const navigator = contentDiv.ownerDocument.defaultView?.navigator;
     const userAgent = navigator?.userAgent ?? '';
     const appVersion = navigator?.appVersion ?? '';
 
@@ -63,6 +63,7 @@ function createEditorEnvironment(window: Window | null): EditorEnvironment {
             userAgent.indexOf('Safari') >= 0 &&
             userAgent.indexOf('Chrome') < 0 &&
             userAgent.indexOf('Android') < 0,
+        domAttributes: contentDiv.attributes,
     };
 }
 

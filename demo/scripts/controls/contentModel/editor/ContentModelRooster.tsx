@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { createUIUtilities, ReactEditorPlugin } from 'roosterjs-react';
+import { createUIUtilities, ReactEditorPlugin, UIUtilities } from 'roosterjs-react';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
+import { EditorPlugin } from 'roosterjs-content-model-types';
 import { useTheme } from '@fluentui/react/lib/Theme';
 import {
     ContentModelEditor,
     ContentModelEditorOptions,
     IContentModelEditor,
 } from 'roosterjs-content-model-editor';
-import type { EditorPlugin } from 'roosterjs-editor-types';
+import type { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * Properties for Rooster react component
@@ -41,17 +42,14 @@ export default function ContentModelRooster(props: ContentModelRoosterProps) {
     const editor = React.useRef<IContentModelEditor | null>(null);
     const theme = useTheme();
 
-    const { focusOnInit, editorCreator, zoomScale, inDarkMode, wrapperPlugins } = props;
+    const { focusOnInit, editorCreator, zoomScale, inDarkMode, plugins, wrapperPlugins } = props;
 
     React.useEffect(() => {
-        if (wrapperPlugins && editorDiv.current) {
+        if (editorDiv.current) {
             const uiUtilities = createUIUtilities(editorDiv.current, theme);
 
-            wrapperPlugins.forEach(plugin => {
-                if (isReactEditorPlugin(plugin)) {
-                    plugin.setUIUtilities(uiUtilities);
-                }
-            });
+            setUIUtilities(uiUtilities, plugins);
+            setUIUtilities(uiUtilities, wrapperPlugins);
         }
     }, [theme, editorCreator]);
 
@@ -86,10 +84,23 @@ export default function ContentModelRooster(props: ContentModelRoosterProps) {
     return <div ref={editorDiv} tabIndex={0} {...(divProps || {})}></div>;
 }
 
+function setUIUtilities(
+    uiUtilities: UIUtilities,
+    plugins: (LegacyEditorPlugin | EditorPlugin)[] | undefined
+) {
+    plugins?.forEach(plugin => {
+        if (isReactEditorPlugin(plugin)) {
+            plugin.setUIUtilities(uiUtilities);
+        }
+    });
+}
+
 function defaultEditorCreator(div: HTMLDivElement, options: ContentModelEditorOptions) {
     return new ContentModelEditor(div, options);
 }
 
-function isReactEditorPlugin(plugin: EditorPlugin): plugin is ReactEditorPlugin {
+function isReactEditorPlugin(
+    plugin: LegacyEditorPlugin | EditorPlugin
+): plugin is ReactEditorPlugin {
     return !!(plugin as ReactEditorPlugin)?.setUIUtilities;
 }

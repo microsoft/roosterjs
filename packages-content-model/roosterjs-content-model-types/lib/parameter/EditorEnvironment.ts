@@ -16,4 +16,9 @@ export interface EditorEnvironment {
      * Whether editor is running on Safari browser
      */
     isSafari?: boolean;
+
+    /**
+     * DOM attributes of editor content DIV
+     */
+    domAttributes: NamedNodeMap;
 }

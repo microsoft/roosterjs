@@ -131,6 +131,12 @@ export interface IStandaloneEditor {
     isDarkMode(): boolean;
 
     /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param isDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    setDarkModeState(isDarkMode?: boolean): void;
+
+    /**
      * Get current zoom scale, default value is 1
      * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
      * to let editor behave correctly especially for those mouse drag/drop behaviors

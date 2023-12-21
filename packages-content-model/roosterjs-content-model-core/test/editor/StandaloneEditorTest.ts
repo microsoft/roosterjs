@@ -1,4 +1,7 @@
 import * as createEditorCore from '../../lib/editor/createEditorCore';
+import * as transformColor from '../../lib/publicApi/color/transformColor';
+import { ChangeSource } from '../../lib/constants/ChangeSource';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 
 describe('StandaloneEditor', () => {
@@ -643,5 +646,84 @@ describe('StandaloneEditor', () => {
         editor.dispose();
 
         expect(() => editor.isNodeInEditor(mockedNode)).toThrow();
+    });
+
+    it('dark mode', () => {
+        const transformColorSpy = spyOn(transformColor, 'transformColor');
+        const triggerEventSpy = jasmine.createSpy('triggerEvent').and.callFake((core, event) => {
+            mockedCore.lifecycle.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
+        });
+        const div = document.createElement('div');
+        const mockedColorHandler = {
+            reset: () => {},
+        } as any;
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: mockedColorHandler,
+            contentDiv: div,
+            lifecycle: {
+                isDarkMode: false,
+            },
+            api: {
+                triggerEvent: triggerEventSpy,
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new StandaloneEditor(div);
+
+        expect(editor.isDarkMode()).toBeFalse();
+
+        editor.setDarkModeState(false);
+
+        expect(editor.isDarkMode()).toBeFalse();
+        expect(transformColorSpy).not.toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
+
+        editor.setDarkModeState(true);
+
+        expect(editor.isDarkMode()).toBeTrue();
+        expect(transformColorSpy).toHaveBeenCalledTimes(1);
+        expect(transformColorSpy).toHaveBeenCalledWith(
+            div,
+            true,
+            'lightToDark',
+            mockedColorHandler
+        );
+        expect(triggerEventSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            mockedCore,
+            {
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SwitchToDarkMode,
+            },
+            true
+        );
+
+        editor.setDarkModeState(false);
+
+        expect(editor.isDarkMode()).toBeFalse();
+        expect(transformColorSpy).toHaveBeenCalledTimes(2);
+        expect(transformColorSpy).toHaveBeenCalledWith(
+            div,
+            true,
+            'darkToLight',
+            mockedColorHandler
+        );
+        expect(triggerEventSpy).toHaveBeenCalledTimes(2);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            mockedCore,
+            {
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SwitchToLightMode,
+            },
+            true
+        );
+
+        editor.dispose();
+
+        expect(() => editor.isDarkMode()).toThrow();
+        expect(() => editor.setDarkModeState()).toThrow();
     });
 });

@@ -1,7 +1,9 @@
+import { ChangeSource } from '../constants/ChangeSource';
 import { createEditorCore } from './createEditorCore';
+import { PluginEventType } from 'roosterjs-editor-types';
+import { transformColor } from '../publicApi/color/transformColor';
 import type {
     DarkColorHandler,
-    PluginEventType,
     PluginEventData,
     PluginEventFromType,
 } from 'roosterjs-editor-types';
@@ -242,6 +244,34 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     isDarkMode(): boolean {
         return this.getCore().lifecycle.isDarkMode;
+    }
+
+    /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param isDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    setDarkModeState(isDarkMode?: boolean) {
+        const core = this.getCore();
+
+        if (!!isDarkMode != core.lifecycle.isDarkMode) {
+            transformColor(
+                core.contentDiv,
+                true /*includeSelf*/,
+                isDarkMode ? 'lightToDark' : 'darkToLight',
+                core.darkColorHandler
+            );
+
+            core.api.triggerEvent(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    source: isDarkMode
+                        ? ChangeSource.SwitchToDarkMode
+                        : ChangeSource.SwitchToLightMode,
+                },
+                true
+            );
+        }
     }
 
     /**
