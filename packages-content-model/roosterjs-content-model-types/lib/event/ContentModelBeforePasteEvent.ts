@@ -15,6 +15,7 @@ export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
      * domToModel Options to use when creating the content model from the paste fragment
      */
     domToModelOption: Partial<DomToModelOption>;
+
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
