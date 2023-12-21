@@ -260,6 +260,27 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
+     * Make the editor in "Shadow Edit" mode.
+     * In Shadow Edit mode, all format change will finally be ignored.
+     * This can be used for building a live preview feature for format button, to allow user
+     * see format result without really apply it.
+     * This function can be called repeated. If editor is already in shadow edit mode, we can still
+     * use this function to do more shadow edit operation.
+     */
+    startShadowEdit() {
+        const core = this.getCore();
+        core.api.switchShadowEdit(core, true /*isOn*/);
+    }
+
+    /**
+     * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
+     */
+    stopShadowEdit() {
+        const core = this.getCore();
+        core.api.switchShadowEdit(core, false /*isOn*/);
+    }
+
+    /**
      * Paste into editor using a clipboardData object
      * @param clipboardData Clipboard data retrieved from clipboard
      * @param pasteType Type of paste

@@ -1,5 +1,5 @@
+import * as createDefaultSettings from '../../lib/editor/createDefaultSettings';
 import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
-import * as createStandaloneEditorDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
 import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
 import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
 import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
@@ -46,10 +46,10 @@ describe('createEditorCore', () => {
         spyOn(DarkColorHandlerImpl, 'createDarkColorHandler').and.returnValue(
             mockedDarkColorHandler
         );
-        spyOn(createStandaloneEditorDefaultSettings, 'createDomToModelSettings').and.returnValue(
+        spyOn(createDefaultSettings, 'createDomToModelSettings').and.returnValue(
             mockedDomToModelSettings
         );
-        spyOn(createStandaloneEditorDefaultSettings, 'createModelToDomSettings').and.returnValue(
+        spyOn(createDefaultSettings, 'createModelToDomSettings').and.returnValue(
             mockedModelToDomSettings
         );
     });
@@ -100,12 +100,8 @@ describe('createEditorCore', () => {
         expect(
             createStandaloneEditorCorePlugins.createStandaloneEditorCorePlugins
         ).toHaveBeenCalledWith(options, contentDiv);
-        expect(createStandaloneEditorDefaultSettings.createDomToModelSettings).toHaveBeenCalledWith(
-            options
-        );
-        expect(createStandaloneEditorDefaultSettings.createModelToDomSettings).toHaveBeenCalledWith(
-            options
-        );
+        expect(createDefaultSettings.createDomToModelSettings).toHaveBeenCalledWith(options);
+        expect(createDefaultSettings.createModelToDomSettings).toHaveBeenCalledWith(options);
     }
 
     it('No options', () => {

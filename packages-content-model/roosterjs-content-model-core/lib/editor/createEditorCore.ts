@@ -1,10 +1,7 @@
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
-import {
-    createDomToModelSettings,
-    createModelToDomSettings,
-} from './createStandaloneEditorDefaultSettings';
+import { createDomToModelSettings, createModelToDomSettings } from './createDefaultSettings';
 import type {
     EditorEnvironment,
     StandaloneEditorCore,
