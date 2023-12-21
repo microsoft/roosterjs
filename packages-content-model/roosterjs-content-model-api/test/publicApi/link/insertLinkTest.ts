@@ -357,4 +357,54 @@ describe('insertLink', () => {
 
         document.body.removeChild(div);
     });
+
+    it('Valid url with trailing space', () => {
+        const doc = createContentModelDocument();
+        const text = createText('test     ');
+        text.isSelected = true;
+        addSegment(doc, text);
+
+        runTest(doc, 'http://test.com', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'http://test.com',
+                                    anchorTitle: undefined,
+                                    target: undefined,
+                                    underline: true,
+                                },
+                            },
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: '     ',
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'http://test.com',
+                                    anchorTitle: undefined,
+                                    target: undefined,
+                                    underline: false,
+                                },
+                            },
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });
