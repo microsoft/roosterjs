@@ -18,76 +18,77 @@ import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { ContentModelSegmentFormat, Snapshot } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
+import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import {
-    ContentModelEditor,
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
+    ContentModelSegmentFormat,
+    IStandaloneEditor,
+    Snapshot,
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
 
-const styles = require('./ContentModelEditorMainPane.scss');
+const styles = require('./StandaloneEditorMainPane.scss');
 
 const LightTheme: PartialTheme = {
     palette: {
-        themePrimary: '#cc6688',
-        themeLighterAlt: '#080405',
-        themeLighter: '#211016',
-        themeLight: '#3d1f29',
-        themeTertiary: '#7a3d52',
-        themeSecondary: '#b45a78',
-        themeDarkAlt: '#d17392',
-        themeDark: '#d886a1',
-        themeDarker: '#e2a3b8',
-        neutralLighterAlt: '#f8f8f8',
-        neutralLighter: '#f4f4f4',
-        neutralLight: '#eaeaea',
-        neutralQuaternaryAlt: '#dadada',
+        themePrimary: '#4466aa',
+        themeLighterAlt: '#f6f8fc',
+        themeLighter: '#dae2f2',
+        themeLight: '#bccae6',
+        themeTertiary: '#839bcd',
+        themeSecondary: '#5575b5',
+        themeDarkAlt: '#3e5c9a',
+        themeDark: '#344e82',
+        themeDarker: '#263960',
+        neutralLighterAlt: '#faf9f8',
+        neutralLighter: '#f3f2f1',
+        neutralLight: '#edebe9',
+        neutralQuaternaryAlt: '#e1dfdd',
         neutralQuaternary: '#d0d0d0',
-        neutralTertiaryAlt: '#c8c8c8',
-        neutralTertiary: '#595959',
-        neutralSecondary: '#373737',
-        neutralPrimaryAlt: '#2f2f2f',
-        neutralPrimary: '#000000',
-        neutralDark: '#151515',
-        black: '#0b0b0b',
+        neutralTertiaryAlt: '#c8c6c4',
+        neutralTertiary: '#c2c2c2',
+        neutralSecondary: '#858585',
+        neutralPrimaryAlt: '#4b4b4b',
+        neutralPrimary: '#333333',
+        neutralDark: '#272727',
+        black: '#1d1d1d',
         white: '#ffffff',
     },
 };
 
 const DarkTheme: PartialTheme = {
     palette: {
-        themePrimary: '#cb6587',
-        themeLighterAlt: '#fdf8fa',
-        themeLighter: '#f7e3ea',
-        themeLight: '#f0ccd8',
-        themeTertiary: '#e09db4',
-        themeSecondary: '#d27694',
-        themeDarkAlt: '#b85c7a',
-        themeDark: '#9b4e67',
-        themeDarker: '#72394c',
-        neutralLighterAlt: '#3c3c3c',
-        neutralLighter: '#444444',
-        neutralLight: '#515151',
-        neutralQuaternaryAlt: '#595959',
-        neutralQuaternary: '#5f5f5f',
-        neutralTertiaryAlt: '#7a7a7a',
-        neutralTertiary: '#c8c8c8',
-        neutralSecondary: '#d0d0d0',
-        neutralPrimaryAlt: '#dadada',
-        neutralPrimary: '#ffffff',
-        neutralDark: '#f4f4f4',
-        black: '#f8f8f8',
-        white: '#333333',
+        themePrimary: '#335599',
+        themeLighterAlt: '#f4f6fb',
+        themeLighter: '#d5deef',
+        themeLight: '#b3c2e0',
+        themeTertiary: '#748ec2',
+        themeSecondary: '#4464a5',
+        themeDarkAlt: '#2d4c8a',
+        themeDark: '#264074',
+        themeDarker: '#1c2f56',
+        neutralLighterAlt: '#faf9f8',
+        neutralLighter: '#f3f2f1',
+        neutralLight: '#edebe9',
+        neutralQuaternaryAlt: '#e1dfdd',
+        neutralQuaternary: '#d0d0d0',
+        neutralTertiaryAlt: '#c8c6c4',
+        neutralTertiary: '#c2c2c2',
+        neutralSecondary: '#858585',
+        neutralPrimaryAlt: '#4b4b4b',
+        neutralPrimary: '#333333',
+        neutralDark: '#272727',
+        black: '#1d1d1d',
+        white: '#ffffff',
     },
 };
 
 interface ContentModelMainPaneState extends MainPaneBaseState {
-    editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) => IContentModelEditor;
+    editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) => IStandaloneEditor;
 }
 
 class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {
@@ -152,7 +153,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     }
 
     renderTitleBar() {
-        return <TitleBar className={styles.noGrow} mode="contentModel" />;
+        return <TitleBar className={styles.noGrow} mode="standalone" />;
     }
 
     renderRibbon(isPopout: boolean) {
@@ -172,7 +173,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             <SidePane
                 ref={this.sidePane}
                 plugins={this.getSidePanePlugins()}
-                mode="contentModel"
+                mode="standalone"
                 className={`main-pane ${styles.sidePane} ${
                     fullWidth ? styles.sidePaneFullWidth : ''
                 }`}
@@ -207,8 +208,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     resetEditor() {
         this.toggleablePlugins = null;
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) =>
-                new ContentModelEditor(div, {
+            editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) =>
+                new StandaloneEditor(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
                 }),
