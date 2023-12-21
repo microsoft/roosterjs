@@ -1,7 +1,11 @@
 import * as eventUtils from '../../lib/publicApi/domUtils/eventUtils';
-import { ChangeSource, IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { createDOMEventPlugin } from '../../lib/corePlugin/DOMEventPlugin';
-import { DOMEventPluginState, IStandaloneEditor } from 'roosterjs-content-model-types';
+import {
+    DOMEventPluginState,
+    IStandaloneEditor,
+    PluginWithState,
+} from 'roosterjs-content-model-types';
 
 const getDocument = () => document;
 
@@ -21,7 +25,7 @@ describe('DOMEventPlugin', () => {
             getDocument,
             attachDomEvent,
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         plugin.initialize(editor);
 
@@ -31,7 +35,6 @@ describe('DOMEventPlugin', () => {
         expect(state).toEqual({
             isInIME: false,
             scrollContainer: div,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -67,7 +70,7 @@ describe('DOMEventPlugin', () => {
         const attachDomEvent = jasmine
             .createSpy('attachDomEvent')
             .and.returnValue(jasmine.createSpy('disposer'));
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument,
             attachDomEvent,
             getEnvironment: () => ({}),
@@ -80,7 +83,6 @@ describe('DOMEventPlugin', () => {
         expect(state).toEqual({
             isInIME: false,
             scrollContainer: divScrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -103,7 +105,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         };
 
         plugin = createDOMEventPlugin({}, div);
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument,
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
@@ -129,7 +131,6 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         expect(eventMap.keyup.beforeDispatch).toBeDefined();
         expect(eventMap.input.beforeDispatch).toBeDefined();
         expect(eventMap.mousedown).toBeDefined();
-        expect(eventMap.contextmenu).toBeDefined();
         expect(eventMap.compositionstart).toBeDefined();
         expect(eventMap.compositionend).toBeDefined();
         expect(eventMap.dragstart).toBeDefined();
@@ -204,7 +205,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
             },
             null!
         );
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
@@ -234,7 +235,6 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -253,7 +253,6 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -270,7 +269,6 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: false,
@@ -293,7 +291,6 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -310,7 +307,6 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: false,
@@ -325,16 +321,14 @@ describe('DOMEventPlugin handle other event', () => {
     let triggerPluginEvent: jasmine.Spy;
     let eventMap: Record<string, any>;
     let scrollContainer: HTMLElement;
-    let getElementAtCursorSpy: jasmine.Spy;
-    let triggerContentChangedEventSpy: jasmine.Spy;
-    let editor: IEditor & IStandaloneEditor;
+    let addEventListenerSpy: jasmine.Spy;
+    let editor: IStandaloneEditor;
 
     beforeEach(() => {
         addEventListener = jasmine.createSpy('addEventListener');
         removeEventListener = jasmine.createSpy('.removeEventListener');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
-        triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEvent');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
 
         scrollContainer = {
             addEventListener: () => {},
@@ -347,10 +341,17 @@ describe('DOMEventPlugin handle other event', () => {
             null!
         );
 
-        editor = <IEditor & IStandaloneEditor>(<any>{
+        editor = <IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
+                defaultView: {
+                    requestAnimationFrame: (callback: Function) => {
+                        callback();
+                    },
+                    addEventListener: addEventListenerSpy,
+                    removeEventListener: () => {},
+                },
             }),
             triggerPluginEvent,
             getEnvironment: () => ({}),
@@ -358,8 +359,6 @@ describe('DOMEventPlugin handle other event', () => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');
             },
-            getElementAtCursor: getElementAtCursorSpy,
-            triggerContentChangedEvent: triggerContentChangedEventSpy,
         });
         plugin.initialize(editor);
     });
@@ -373,7 +372,6 @@ describe('DOMEventPlugin handle other event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: true,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -386,7 +384,6 @@ describe('DOMEventPlugin handle other event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -394,22 +391,23 @@ describe('DOMEventPlugin handle other event', () => {
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.CompositionEnd, {
             rawEvent: mockedEvent,
         });
+        expect(addEventListenerSpy).toHaveBeenCalledTimes(2);
     });
 
     it('Trigger onDragStart event', () => {
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
         const mockedEvent = {
             preventDefault: preventDefaultSpy,
+            target: {
+                nodeType: Node.ELEMENT_NODE,
+                isContentEditable: true,
+            },
         } as any;
 
-        getElementAtCursorSpy.and.returnValue({
-            isContentEditable: true,
-        });
         eventMap.dragstart.beforeDispatch(mockedEvent);
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -423,16 +421,16 @@ describe('DOMEventPlugin handle other event', () => {
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
         const mockedEvent = {
             preventDefault: preventDefaultSpy,
+            target: {
+                nodeType: Node.ELEMENT_NODE,
+                isContentEditable: false,
+            },
         } as any;
 
-        getElementAtCursorSpy.and.returnValue({
-            isContentEditable: false,
-        });
         eventMap.dragstart.beforeDispatch(mockedEvent);
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -444,46 +442,19 @@ describe('DOMEventPlugin handle other event', () => {
 
     it('Trigger onDrop event', () => {
         const takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
-        editor.runAsync = (callback: Function) => callback(editor);
         editor.takeSnapshot = takeSnapshotSpy;
 
         eventMap.drop.beforeDispatch();
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
         expect(takeSnapshotSpy).toHaveBeenCalledWith();
-        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(ChangeSource.Drop);
-    });
-
-    it('Trigger contextmenu event, skip reselect', () => {
-        editor.getContentSearcherOfCursor = () => null!;
-        const state = plugin.getState();
-        const mockedItems1 = ['Item1', 'Item2'];
-        const mockedItems2 = ['Item3', 'Item4'];
-
-        state.contextMenuProviders = [
-            {
-                getContextMenuItems: () => mockedItems1,
-            } as any,
-            {
-                getContextMenuItems: () => mockedItems2,
-            } as any,
-        ];
-
-        const mockedEvent = {
-            target: {},
-        };
-
-        eventMap.contextmenu.beforeDispatch(mockedEvent);
-
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContextMenu, {
-            rawEvent: mockedEvent,
-            items: ['Item1', 'Item2', null, 'Item3', 'Item4'],
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+            source: ChangeSource.Drop,
         });
     });
 });

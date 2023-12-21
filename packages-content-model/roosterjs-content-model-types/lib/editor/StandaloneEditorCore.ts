@@ -1,3 +1,4 @@
+import type { EditorPlugin } from './EditorPlugin';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
@@ -5,7 +6,6 @@ import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
     DarkColorHandler,
-    EditorPlugin,
     PluginEvent,
     Rect,
     TrustedHTMLHandler,
@@ -346,6 +346,14 @@ export interface StandaloneEditorCore extends StandaloneEditorCorePluginState {
      * @param error The error object we got
      */
     readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * @deprecated Will be removed soon.
+     * Current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    zoomScale: number;
 }
 
 /**

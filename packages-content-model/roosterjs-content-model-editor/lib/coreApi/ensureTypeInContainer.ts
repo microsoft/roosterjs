@@ -15,9 +15,13 @@ import type { EnsureTypeInContainer } from '../publicTypes/ContentModelEditorCor
  * When typing goes directly under content div, many things can go wrong
  * We fix it by wrapping it with a div and reposition cursor within the div
  */
-export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, keyboardEvent) => {
-    const { standaloneEditorCore } = core;
-    const { contentDiv, api } = standaloneEditorCore;
+export const ensureTypeInContainer: EnsureTypeInContainer = (
+    core,
+    innerCore,
+    position,
+    keyboardEvent
+) => {
+    const { contentDiv, api } = innerCore;
     const table = findClosestElementAncestor(position.node, contentDiv, 'table');
     let td: HTMLElement | null;
 
@@ -50,7 +54,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, key
             KnownCreateElementDataIndex.EmptyLine,
             contentDiv.ownerDocument
         ) as HTMLElement;
-        core.api.insertNode(core, formatNode, {
+        core.api.insertNode(core, innerCore, formatNode, {
             position: ContentPosition.End,
             updateCursor: false,
             replaceSelection: false,
@@ -63,7 +67,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, key
 
     // If this is triggered by a keyboard event, let's select the new position
     if (keyboardEvent) {
-        api.setDOMSelection(standaloneEditorCore, {
+        api.setDOMSelection(innerCore, {
             type: 'range',
             range: createRange(new Position(position)),
         });

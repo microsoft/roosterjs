@@ -8,7 +8,7 @@ import type { GetStyleBasedFormatState } from '../publicTypes/ContentModelEditor
  * @param core The StandaloneEditorCore objects
  * @param node The node to get style from
  */
-export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, node) => {
+export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, innerCore, node) => {
     if (!node) {
         return {};
     }
@@ -27,7 +27,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, node) =
               'font-weight',
           ])
         : [];
-    const { contentDiv, darkColorHandler, lifecycle } = core.standaloneEditorCore;
+    const { contentDiv, darkColorHandler, lifecycle } = innerCore;
 
     let styleTextColor: string | undefined;
     let styleBackColor: string | undefined;

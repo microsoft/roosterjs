@@ -1,8 +1,19 @@
 import { buildRangeEx } from './utils/buildRangeEx';
+import { createBridgePlugin } from '../corePlugins/BridgePlugin';
+import { createContextMenuPlugin } from '../corePlugins/ContextMenuPlugin';
 import { createEditorCore } from './createEditorCore';
+import { createEditPlugin } from '../corePlugins/EditPlugin';
+import { createNormalizeTablePlugin } from '../corePlugins/NormalizeTablePlugin';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import { isBold, redo, transformColor, undo } from 'roosterjs-content-model-core';
+import {
+    createModelFromHtml,
+    isBold,
+    redo,
+    StandaloneEditor,
+    transformColor,
+    undo,
+} from 'roosterjs-content-model-core';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -18,7 +29,6 @@ import type {
     ContentChangedData,
     ContentChangedEvent,
     DOMEventHandler,
-    DarkColorHandler,
     DefaultFormat,
     EditorUndoState,
     ExperimentalFeatures,
@@ -29,8 +39,6 @@ import type {
     NodePosition,
     PendableFormatState,
     PluginEvent,
-    PluginEventData,
-    PluginEventFromType,
     PositionType,
     Rect,
     Region,
@@ -51,7 +59,6 @@ import type {
     CompatibleContentPosition,
     CompatibleExperimentalFeatures,
     CompatibleGetContentMode,
-    CompatiblePluginEventType,
     CompatibleQueryScope,
     CompatibleRegionType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -78,28 +85,15 @@ import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type {
-    ContentModelDocument,
-    ContentModelSegmentFormat,
-    DOMSelection,
-    DomToModelOption,
-    ModelToDomOption,
-    OnNodeCreated,
-    ContentModelFormatter,
-    FormatWithContentModelOptions,
-    EditorEnvironment,
-    Snapshot,
-    SnapshotsManager,
-    DOMEventRecord,
-    StandaloneEditorCore,
-} from 'roosterjs-content-model-types';
+import type { DOMEventRecord } from 'roosterjs-content-model-types';
 
 /**
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export class ContentModelEditor implements IContentModelEditor {
-    private core: ContentModelEditorCore | null = null;
+export class ContentModelEditor extends StandaloneEditor implements IContentModelEditor {
+    private contentModelEditorCore: ContentModelEditorCore | undefined;
+    private sizeTransformer: (size: number) => number;
 
     /**
      * Creates an instance of Editor
@@ -107,125 +101,68 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        this.core = createEditorCore(contentDiv, options);
-        this.core.standaloneEditorCore.plugins.forEach(plugin => plugin.initialize(this));
-    }
+        // Build bridge plugin
+        const editPlugin = createEditPlugin();
+        const innerPlugins = [
+            editPlugin,
+            ...(options.plugins ?? []),
+            createContextMenuPlugin(options),
+            createNormalizeTablePlugin(),
+        ].filter(x => !!x);
+        const bridgePlugin = createBridgePlugin(innerPlugins);
 
-    /**
-     * Create Content Model from DOM tree in this editor
-     * @param option The option to customize the behavior of DOM to Content Model conversion
-     */
-    createContentModel(
-        option?: DomToModelOption,
-        selectionOverride?: DOMSelection
-    ): ContentModelDocument {
-        const core = this.getCore();
+        if (!options.standaloneEditorPlugins) {
+            options.standaloneEditorPlugins = [];
+        }
 
-        return core.api.createContentModel(core, option, selectionOverride);
-    }
+        options.standaloneEditorPlugins.push(bridgePlugin);
 
-    /**
-     * Set content with content model
-     * @param model The content model to set
-     * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
-     */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ): DOMSelection | null {
-        const core = this.getCore();
+        // Build initial Content Model
+        const initContent = options.initialContent ?? contentDiv.innerHTML;
 
-        return core.api.setContentModel(core, model, option, onNodeCreated);
-    }
+        if (initContent && !options.initialModel) {
+            options.initialModel = createModelFromHtml(
+                initContent,
+                options.defaultDomToModelOptions,
+                options.trustedHTMLHandler,
+                options.defaultSegmentFormat
+            );
+        }
 
-    /**
-     * Get current running environment, such as if editor is running on Mac
-     */
-    getEnvironment(): EditorEnvironment {
-        return this.getCore().environment;
-    }
+        // Build beforeInitialize callback
+        const onBeforeInitializePlugins = () => {
+            this.contentModelEditorCore = createEditorCore(
+                options,
+                bridgePlugin,
+                editPlugin.getState()
+            );
 
-    /**
-     * Get current DOM selection
-     */
-    getDOMSelection(): DOMSelection | null {
-        const core = this.getCore();
+            bridgePlugin.initializeInnerPlugins(this);
+        };
+        const originalOnBeforeInitializePlugins = options.onBeforeInitializePlugins;
 
-        return core.api.getDOMSelection(core);
-    }
+        options.onBeforeInitializePlugins = originalOnBeforeInitializePlugins
+            ? () => {
+                  originalOnBeforeInitializePlugins();
+                  onBeforeInitializePlugins();
+              }
+            : onBeforeInitializePlugins;
 
-    /**
-     * Set DOMSelection into editor content.
-     * This is the replacement of IEditor.select.
-     * @param selection The selection to set
-     */
-    setDOMSelection(selection: DOMSelection | null) {
-        const core = this.getCore();
+        super(contentDiv, options);
 
-        core.api.setDOMSelection(core, selection);
-    }
-
-    /**
-     * The general API to do format change with Content Model
-     * It will grab a Content Model for current editor content, and invoke a callback function
-     * to do format change. Then according to the return value, write back the modified content model into editor.
-     * If there is cached model, it will be used and updated.
-     * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
-     */
-    formatContentModel(
-        formatter: ContentModelFormatter,
-        options?: FormatWithContentModelOptions
-    ): void {
-        const core = this.getCore();
-
-        core.api.formatContentModel(core, formatter, options);
-    }
-
-    /**
-     * Get pending format of editor if any, or return null
-     */
-    getPendingFormat(): ContentModelSegmentFormat | null {
-        return this.getCore().format.pendingFormat?.format ?? null;
-    }
-
-    /**
-     * Add a single undo snapshot to undo stack
-     */
-    takeSnapshot(): void {
-        const core = this.getCore();
-
-        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
-    }
-
-    /**
-     * Restore an undo snapshot into editor
-     * @param snapshot The snapshot to restore
-     */
-    restoreSnapshot(snapshot: Snapshot): void {
-        const core = this.getCore();
-
-        core.api.restoreUndoSnapshot(core, snapshot);
+        this.sizeTransformer = (size: number) => {
+            const core = this.getCore();
+            return size / core.zoomScale;
+        };
     }
 
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
     dispose(): void {
+        super.dispose();
+
         const core = this.getContentModelEditorCore();
-
-        for (let i = core.standaloneEditorCore.plugins.length - 1; i >= 0; i--) {
-            const plugin = core.standaloneEditorCore.plugins[i];
-
-            try {
-                plugin.dispose();
-            } catch (e) {
-                // Cache the error and pass it out, then keep going since dispose should always succeed
-                core.standaloneEditorCore.disposeErrorHandler?.(plugin, e as Error);
-            }
-        }
 
         getObjectKeys(core.customData).forEach(key => {
             const data = core.customData[key];
@@ -237,9 +174,7 @@ export class ContentModelEditor implements IContentModelEditor {
             delete core.customData[key];
         });
 
-        core.standaloneEditorCore.darkColorHandler.reset();
-
-        this.core = null;
+        this.contentModelEditorCore = undefined;
     }
 
     /**
@@ -247,7 +182,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns True if editor is disposed, otherwise false
      */
     isDisposed(): boolean {
-        return !this.core;
+        return super.isDisposed() || !this.contentModelEditorCore;
     }
 
     /**
@@ -262,7 +197,9 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     insertNode(node: Node, option?: InsertOption): boolean {
         const core = this.getContentModelEditorCore();
-        return node ? core.api.insertNode(core, node, option ?? null) : false;
+        const innerCore = this.getCore();
+
+        return node ? core.api.insertNode(core, innerCore, node, option ?? null) : false;
     }
 
     /**
@@ -379,7 +316,9 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     getContent(mode: GetContentMode | CompatibleGetContentMode = GetContentMode.CleanHTML): string {
         const core = this.getContentModelEditorCore();
-        return core.api.getContent(core, mode);
+        const innerCore = this.getCore();
+
+        return core.api.getContent(core, innerCore, mode);
     }
 
     /**
@@ -389,7 +328,9 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     setContent(content: string, triggerContentChangedEvent: boolean = true) {
         const core = this.getContentModelEditorCore();
-        core.api.setContent(core, content, triggerContentChangedEvent);
+        const innerCore = this.getCore();
+
+        core.api.setContent(core, innerCore, content, triggerContentChangedEvent);
     }
 
     /**
@@ -449,9 +390,7 @@ export class ContentModelEditor implements IContentModelEditor {
         applyCurrentFormat: boolean = false,
         pasteAsImage: boolean = false
     ) {
-        const core = this.getCore();
-        core.api.paste(
-            core,
+        this.pasteFromClipboard(
             clipboardData,
             pasteAsText
                 ? 'asPlainText'
@@ -503,31 +442,14 @@ export class ContentModelEditor implements IContentModelEditor {
         return range && getSelectionPath(this.getCore().contentDiv, range);
     }
 
-    /**
-     * Check if focus is in editor now
-     * @returns true if focus is in editor, otherwise false
-     */
-    hasFocus(): boolean {
-        const core = this.getCore();
-        return core.api.hasFocus(core);
-    }
-
-    /**
-     * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
-     */
-    focus() {
-        const core = this.getCore();
-        core.api.focus(core);
-    }
-
     select(
         arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
         arg2?: NodePosition | number | PositionType | TableSelection | null,
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
-        const core = this.getContentModelEditorCore();
-        const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+        const core = this.getCore();
+        const rangeEx = buildRangeEx(core.contentDiv, arg1, arg2, arg3, arg4);
         const selection = convertRangeExToDomSelection(rangeEx);
 
         this.setDOMSelection(selection);
@@ -613,15 +535,6 @@ export class ContentModelEditor implements IContentModelEditor {
 
     //#region EVENT API
 
-    /**
-     * Attach a DOM event to the editor content DIV
-     * @param eventMap A map from event name to its handler
-     */
-    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void {
-        const core = this.getCore();
-        return core.api.attachDomEvent(core, eventMap);
-    }
-
     addDomEventHandler(
         nameOrMap: string | Record<string, DOMEventHandler>,
         handler?: DOMEventHandler
@@ -651,30 +564,6 @@ export class ContentModelEditor implements IContentModelEditor {
     }
 
     /**
-     * Trigger an event to be dispatched to all plugins
-     * @param eventType Type of the event
-     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
-     * @param broadcast indicates if the event needs to be dispatched to all plugins
-     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
-     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
-     * the result of this function provides a chance to read the modified result
-     */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
-        eventType: T,
-        data: PluginEventData<T>,
-        broadcast: boolean = false
-    ): PluginEventFromType<T> {
-        const core = this.getCore();
-        const event = ({
-            eventType,
-            ...data,
-        } as any) as PluginEventFromType<T>;
-        core.api.triggerEvent(core, event, broadcast);
-
-        return event;
-    }
-
-    /**
      * Trigger a ContentChangedEvent
      * @param source Source of this event, by default is 'SetContent'
      * @param data additional data for this event
@@ -692,15 +581,6 @@ export class ContentModelEditor implements IContentModelEditor {
     //#endregion
 
     //#region Undo API
-
-    /**
-     * Get undo snapshots manager
-     */
-    getSnapshotsManager(): SnapshotsManager {
-        const core = this.getCore();
-
-        return core.undo.snapshotsManager;
-    }
 
     /**
      * Undo last edit operation
@@ -814,14 +694,6 @@ export class ContentModelEditor implements IContentModelEditor {
     //#region Misc
 
     /**
-     * Get document which contains this editor
-     * @returns The HTML document which contains this editor
-     */
-    getDocument(): Document {
-        return this.getCore().contentDiv.ownerDocument;
-    }
-
-    /**
      * Get the scroll container of the editor
      */
     getScrollContainer(): HTMLElement {
@@ -842,14 +714,6 @@ export class ContentModelEditor implements IContentModelEditor {
             value: getter ? getter() : undefined,
             disposer,
         }).value as T;
-    }
-
-    /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    isInIME(): boolean {
-        return this.getCore().domEvent.isInIME;
     }
 
     /**
@@ -1029,7 +893,9 @@ export class ContentModelEditor implements IContentModelEditor {
             node = (range && Position.getStart(range).normalize().node) ?? undefined;
         }
         const core = this.getContentModelEditorCore();
-        return core.api.getStyleBasedFormatState(core, node ?? null);
+        const innerCore = this.getCore();
+
+        return core.api.getStyleBasedFormatState(core, innerCore, node ?? null);
     }
 
     /**
@@ -1049,7 +915,8 @@ export class ContentModelEditor implements IContentModelEditor {
      */
     ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
         const core = this.getContentModelEditorCore();
-        core.api.ensureTypeInContainer(core, position, keyboardEvent);
+        const innerCore = this.getCore();
+        core.api.ensureTypeInContainer(core, innerCore, position, keyboardEvent);
     }
 
     //#endregion
@@ -1081,14 +948,6 @@ export class ContentModelEditor implements IContentModelEditor {
     }
 
     /**
-     * Check if the editor is in dark mode
-     * @returns True if the editor is in dark mode, otherwise false
-     */
-    isDarkMode(): boolean {
-        return this.getCore().lifecycle.isDarkMode;
-    }
-
-    /**
      * Transform the given node and all its child nodes to dark mode color if editor is in dark mode
      * @param node The node to transform
      * @param direction The transform direction. @default ColorTransformDirection.LightToDark
@@ -1107,13 +966,6 @@ export class ContentModelEditor implements IContentModelEditor {
             direction == ColorTransformDirection.DarkToLight ? 'darkToLight' : 'lightToDark',
             core.darkColorHandler
         );
-    }
-
-    /**
-     * Get a darkColorHandler object for this editor.
-     */
-    getDarkColorHandler(): DarkColorHandler {
-        return this.getCore().darkColorHandler;
     }
 
     /**
@@ -1138,13 +990,6 @@ export class ContentModelEditor implements IContentModelEditor {
     }
 
     /**
-     * Check if editor is in Shadow Edit mode
-     */
-    isInShadowEdit() {
-        return !!this.getCore().lifecycle.shadowEditFragment;
-    }
-
-    /**
      * Check if the given experimental feature is enabled
      * @param feature The feature to check
      */
@@ -1166,17 +1011,7 @@ export class ContentModelEditor implements IContentModelEditor {
      * @deprecated Use getZoomScale() instead
      */
     getSizeTransformer(): SizeTransformer {
-        return this.getContentModelEditorCore().sizeTransformer;
-    }
-
-    /**
-     * Get current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @returns current zoom scale number
-     */
-    getZoomScale(): number {
-        return this.getContentModelEditorCore().zoomScale;
+        return this.sizeTransformer;
     }
 
     /**
@@ -1186,7 +1021,8 @@ export class ContentModelEditor implements IContentModelEditor {
      * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
      */
     setZoomScale(scale: number): void {
-        const core = this.getContentModelEditorCore();
+        const core = this.getCore();
+
         if (scale > 0 && scale <= 10) {
             const oldValue = core.zoomScale;
             core.zoomScale = scale;
@@ -1217,18 +1053,11 @@ export class ContentModelEditor implements IContentModelEditor {
      * @returns the current ContentModelEditorCore object
      * @throws a standard Error if there's no core object
      */
-    private getCore(): StandaloneEditorCore {
-        return this.getContentModelEditorCore().standaloneEditorCore;
-    }
-
-    /**
-     * @returns the current ContentModelEditorCore object
-     * @throws a standard Error if there's no core object
-     */
     private getContentModelEditorCore(): ContentModelEditorCore {
-        if (!this.core) {
+        if (!this.contentModelEditorCore) {
             throw new Error('Editor is already disposed');
         }
-        return this.core;
+
+        return this.contentModelEditorCore;
     }
 }

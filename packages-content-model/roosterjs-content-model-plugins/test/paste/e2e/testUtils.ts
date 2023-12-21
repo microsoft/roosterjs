@@ -14,7 +14,7 @@ export function initEditor(id: string): IContentModelEditor {
 
     let options: ContentModelEditorOptions = {
         plugins: [new ContentModelPastePlugin()],
-        coreApiOverride: {
+        standaloneEditorCoreApiOverride: {
             getVisibleViewport: () => {
                 return {
                     top: 100,
@@ -26,9 +26,15 @@ export function initEditor(id: string): IContentModelEditor {
         },
     };
 
-    let editor = new ContentModelEditor(node as HTMLDivElement, options);
+    try {
+        let editor = new ContentModelEditor(node as HTMLDivElement, options);
 
-    return editor;
+        return editor;
+    } catch (e) {
+        console.log(e);
+
+        throw e;
+    }
 }
 
 export function expectEqual(model1: ContentModelDocument, model2: ContentModelDocument) {

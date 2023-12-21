@@ -5,15 +5,11 @@ import { PluginEventType } from 'roosterjs-editor-types';
 import { undo } from '../publicApi/undo/undo';
 import type {
     IStandaloneEditor,
+    PluginWithState,
     StandaloneEditorOptions,
     UndoPluginState,
 } from 'roosterjs-content-model-types';
-import type {
-    ContentChangedEvent,
-    IEditor,
-    PluginEvent,
-    PluginWithState,
-} from 'roosterjs-editor-types';
+import type { ContentChangedEvent, PluginEvent } from 'roosterjs-editor-types';
 
 const Backspace = 'Backspace';
 const Delete = 'Delete';
@@ -23,7 +19,7 @@ const Enter = 'Enter';
  * Provides snapshot based undo service for Editor
  */
 class UndoPlugin implements PluginWithState<UndoPluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: UndoPluginState;
 
     /**
@@ -52,8 +48,8 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor): void {
-        this.editor = editor as IEditor & IStandaloneEditor;
+    initialize(editor: IStandaloneEditor): void {
+        this.editor = editor;
     }
 
     /**

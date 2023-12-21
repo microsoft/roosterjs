@@ -33,11 +33,4 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
      * Specify the enabled experimental features
      */
     experimentalFeatures?: ExperimentalFeatures[];
-
-    /**
-     * Current zoom scale, @default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     */
-    zoomScale?: number;
 }

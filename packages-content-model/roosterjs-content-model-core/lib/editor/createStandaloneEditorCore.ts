@@ -14,6 +14,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * A temporary function to create Standalone Editor core
  * @param contentDiv Editor content DIV
  * @param options Editor options
@@ -23,6 +24,7 @@ export function createStandaloneEditorCore(
     options: StandaloneEditorOptions
 ): StandaloneEditorCore {
     const corePlugins = createStandaloneEditorCorePlugins(options, contentDiv);
+    const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
 
     return {
         contentDiv,
@@ -49,6 +51,7 @@ export function createStandaloneEditorCore(
         modelToDomSettings: createModelToDomSettings(options),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
+        zoomScale: zoomScale,
     };
 }
 

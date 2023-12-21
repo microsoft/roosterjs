@@ -16,22 +16,20 @@ import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
  * @param metadata @optional Metadata of the content that helps editor know the selection and color mode.
  * If not passed, we will treat content as in light mode without selection
  */
-export const setContent: SetContent = (core, content, triggerContentChangedEvent, metadata) => {
-    const { standaloneEditorCore } = core;
-    const {
-        contentDiv,
-        api,
-        entity,
-        trustedHTMLHandler,
-        lifecycle,
-        darkColorHandler,
-    } = standaloneEditorCore;
+export const setContent: SetContent = (
+    core,
+    innerCore,
+    content,
+    triggerContentChangedEvent,
+    metadata
+) => {
+    const { contentDiv, api, entity, trustedHTMLHandler, lifecycle, darkColorHandler } = innerCore;
 
     let contentChanged = false;
 
-    if (standaloneEditorCore.contentDiv.innerHTML != content) {
+    if (innerCore.contentDiv.innerHTML != content) {
         api.triggerEvent(
-            standaloneEditorCore,
+            innerCore,
             {
                 eventType: PluginEventType.BeforeSetContent,
                 newContent: content,
@@ -50,7 +48,7 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 
         const metadataFromContent = extractContentMetadata(contentDiv);
         metadata = metadata || metadataFromContent;
-        selectContentMetadata(standaloneEditorCore, metadata);
+        selectContentMetadata(innerCore, metadata);
         contentChanged = true;
     }
 
@@ -68,7 +66,7 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
 
     if (triggerContentChangedEvent && contentChanged) {
         api.triggerEvent(
-            standaloneEditorCore,
+            innerCore,
             {
                 eventType: PluginEventType.ContentChanged,
                 source: ChangeSource.SetContent,

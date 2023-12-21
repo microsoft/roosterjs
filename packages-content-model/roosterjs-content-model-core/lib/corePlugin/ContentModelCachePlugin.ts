@@ -6,20 +6,16 @@ import type {
     ContentModelCachePluginState,
     ContentModelContentChangedEvent,
     IStandaloneEditor,
+    PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
-import type {
-    IEditor,
-    PluginEvent,
-    PluginKeyDownEvent,
-    PluginWithState,
-} from 'roosterjs-editor-types';
+import type { PluginEvent, PluginKeyDownEvent } from 'roosterjs-editor-types';
 
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
 class ContentModelCachePlugin implements PluginWithState<ContentModelCachePluginState> {
-    private editor: (IEditor & IStandaloneEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: ContentModelCachePluginState;
 
     /**
@@ -45,9 +41,9 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
+    initialize(editor: IStandaloneEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IEditor & IStandaloneEditor;
+        this.editor = editor;
         this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
     }
 

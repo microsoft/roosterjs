@@ -1,6 +1,7 @@
+import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
-import type { EditorPlugin, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
@@ -103,4 +104,17 @@ export interface StandaloneEditorOptions {
      * @param error The error object we got
      */
     disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * A callback to be invoked before initialize all plugins
+     */
+    onBeforeInitializePlugins?: () => void;
+
+    /**
+     * @deprecated
+     * Current zoom scale, @default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    zoomScale?: number;
 }

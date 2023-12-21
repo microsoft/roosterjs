@@ -16,12 +16,11 @@ import type { GetContent } from '../publicTypes/ContentModelEditorCore';
  * @param mode specify what kind of HTML content to retrieve
  * @returns HTML string representing current editor content
  */
-export const getContent: GetContent = (core, mode): string => {
+export const getContent: GetContent = (core, innerCore, mode): string => {
     let content: string | null = '';
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
-    const { standaloneEditorCore } = core;
-    const { lifecycle, contentDiv, api, darkColorHandler } = standaloneEditorCore;
+    const { lifecycle, contentDiv, api, darkColorHandler } = innerCore;
 
     // When there is fragment for shadow edit, always use the cached fragment as document since HTML node in editor
     // has been changed by uncommitted shadow edit which should be ignored.
@@ -35,7 +34,7 @@ export const getContent: GetContent = (core, mode): string => {
         const clonedRoot = cloneNode(root);
         clonedRoot.normalize();
 
-        const originalRange = api.getDOMSelection(standaloneEditorCore);
+        const originalRange = api.getDOMSelection(innerCore);
         const path =
             !includeSelectionMarker || lifecycle.shadowEditFragment
                 ? null
@@ -50,7 +49,7 @@ export const getContent: GetContent = (core, mode): string => {
 
         if (triggerExtractContentEvent) {
             api.triggerEvent(
-                standaloneEditorCore,
+                innerCore,
                 {
                     eventType: PluginEventType.ExtractContentWithDom,
                     clonedRoot,

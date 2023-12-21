@@ -12,9 +12,10 @@ import type {
     ContentModelSegmentFormat,
     IStandaloneEditor,
     LifecyclePluginState,
+    PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
-import type { IEditor, PluginWithState, PluginEvent } from 'roosterjs-editor-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 
 const ContentEditableAttributeName = 'contenteditable';
 const DefaultTextColor = '#000000';
@@ -24,7 +25,7 @@ const DefaultBackColor = '#ffffff';
  * Lifecycle plugin handles editor initialization and disposing
  */
 class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: LifecyclePluginState;
     private initialModel: ContentModelDocument;
     private initializer: (() => void) | null = null;
@@ -75,8 +76,8 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IEditor & IStandaloneEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         this.editor.setContentModel(this.initialModel, { ignoreSelection: true });
 

@@ -3,10 +3,13 @@ import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToM
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/utils/findAllEntities';
-import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
 import { ContentModelEditor } from '../../lib/editor/ContentModelEditor';
-import { ContentModelEditorCore } from '../../lib/publicTypes/ContentModelEditorCore';
 import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ContentModelDocument,
+    EditorContext,
+    StandaloneEditorCore,
+} from 'roosterjs-content-model-types';
 
 const editorContext: EditorContext = {
     isDarkMode: false,
@@ -28,7 +31,7 @@ describe('ContentModelEditor', () => {
 
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {
-            coreApiOverride: {
+            standaloneEditorCoreApiOverride: {
                 createEditorContext: jasmine
                     .createSpy('createEditorContext')
                     .and.returnValue(editorContext),
@@ -65,7 +68,7 @@ describe('ContentModelEditor', () => {
 
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {
-            coreApiOverride: {
+            standaloneEditorCoreApiOverride: {
                 createEditorContext: jasmine
                     .createSpy('createEditorContext')
                     .and.returnValue(editorContext),
@@ -267,7 +270,7 @@ describe('ContentModelEditor', () => {
     it('getPendingFormat', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
-        const core: ContentModelEditorCore = (editor as any).core;
+        const core: StandaloneEditorCore = (editor as any).core;
         const mockedFormat = 'FORMAT' as any;
 
         expect(editor.getPendingFormat()).toBeNull();

@@ -47,7 +47,7 @@ function getInitialRange(
  * @param core The ContentModelEditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-export const insertNode: InsertNode = (core, node, option) => {
+export const insertNode: InsertNode = (core, innerCore, node, option) => {
     option = option || {
         position: ContentPosition.SelectionStart,
         insertOnNewLine: false,
@@ -55,11 +55,10 @@ export const insertNode: InsertNode = (core, node, option) => {
         replaceSelection: true,
         insertToRegionRoot: false,
     };
-    const { standaloneEditorCore } = core;
-    const { contentDiv, api, lifecycle, darkColorHandler } = standaloneEditorCore;
+    const { contentDiv, api, lifecycle, darkColorHandler } = innerCore;
 
     if (option.updateCursor) {
-        api.focus(standaloneEditorCore);
+        api.focus(innerCore);
     }
 
     if (option.position == ContentPosition.Outside) {
@@ -133,7 +132,7 @@ export const insertNode: InsertNode = (core, node, option) => {
             break;
         case ContentPosition.Range:
         case ContentPosition.SelectionStart:
-            let { range, rangeToRestore } = getInitialRange(standaloneEditorCore, option);
+            let { range, rangeToRestore } = getInitialRange(innerCore, option);
             if (!range) {
                 break;
             }
@@ -147,12 +146,12 @@ export const insertNode: InsertNode = (core, node, option) => {
             let blockElement: BlockElement | null;
 
             if (option.insertOnNewLine && option.insertToRegionRoot) {
-                pos = adjustInsertPositionRegionRoot(standaloneEditorCore, range, pos);
+                pos = adjustInsertPositionRegionRoot(innerCore, range, pos);
             } else if (
                 option.insertOnNewLine &&
                 (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
             ) {
-                pos = adjustInsertPositionNewLine(blockElement, standaloneEditorCore, pos);
+                pos = adjustInsertPositionNewLine(blockElement, innerCore, pos);
             } else {
                 pos = adjustInsertPosition(contentDiv, node, pos, range);
             }
@@ -170,7 +169,7 @@ export const insertNode: InsertNode = (core, node, option) => {
             }
 
             if (rangeToRestore) {
-                api.setDOMSelection(standaloneEditorCore, {
+                api.setDOMSelection(innerCore, {
                     type: 'range',
                     range: rangeToRestore,
                 });

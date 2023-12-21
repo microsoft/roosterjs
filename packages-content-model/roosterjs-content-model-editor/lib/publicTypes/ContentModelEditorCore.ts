@@ -1,13 +1,11 @@
-import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { EditorPlugin, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
     CompatibleGetContentMode,
     CompatibleExperimentalFeatures,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     CustomData,
-    EditorPlugin,
     ExperimentalFeatures,
-    SizeTransformer,
     ContentMetadata,
     GetContentMode,
     InsertOption,
@@ -20,11 +18,13 @@ import type {
  * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
  * if triggerContentChangedEvent is set to true
  * @param core The ContentModelEditorCore object
+ * @param innerCore The StandaloneEditorCore object
  * @param content HTML content to set in
  * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
  */
 export type SetContent = (
     core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
     content: string,
     triggerContentChangedEvent: boolean,
     metadata?: ContentMetadata
@@ -33,21 +33,25 @@ export type SetContent = (
 /**
  * Get current editor content as HTML string
  * @param core The ContentModelEditorCore object
+ * @param innerCore The StandaloneEditorCore object
  * @param mode specify what kind of HTML content to retrieve
  * @returns HTML string representing current editor content
  */
 export type GetContent = (
     core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
     mode: GetContentMode | CompatibleGetContentMode
 ) => string;
 
 /**
  * Insert a DOM node into editor content
  * @param core The ContentModelEditorCore object. No op if null.
+ * @param innerCore The StandaloneEditorCore object
  * @param option An insert option object to specify how to insert the node
  */
 export type InsertNode = (
     core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
     node: Node,
     option: InsertOption | null
 ) => boolean;
@@ -55,22 +59,26 @@ export type InsertNode = (
 /**
  * Get style based format state from current selection, including font name/size and colors
  * @param core The ContentModelEditorCore objects
+ * @param innerCore The StandaloneEditorCore object
  * @param node The node to get style from
  */
 export type GetStyleBasedFormatState = (
     core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
     node: Node | null
 ) => StyleBasedFormatState;
 
 /**
  * Ensure user will type into a container element rather than into the editor content DIV directly
  * @param core The ContentModelEditorCore object.
+ * @param innerCore The StandaloneEditorCore object
  * @param position The position that user is about to type to
  * @param keyboardEvent Optional keyboard event object
  * @param deprecated Deprecated parameter, not used
  */
 export type EnsureTypeInContainer = (
     core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
     position: NodePosition,
     keyboardEvent?: KeyboardEvent,
     deprecated?: boolean
@@ -84,6 +92,7 @@ export interface ContentModelCoreApiMap {
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * if triggerContentChangedEvent is set to true
      * @param core The ContentModelEditorCore object
+     * @param innerCore The StandaloneEditorCore object
      * @param content HTML content to set in
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
@@ -92,6 +101,7 @@ export interface ContentModelCoreApiMap {
     /**
      * Insert a DOM node into editor content
      * @param core The ContentModelEditorCore object. No op if null.
+     * @param innerCore The StandaloneEditorCore object
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
@@ -99,6 +109,7 @@ export interface ContentModelCoreApiMap {
     /**
      * Get current editor content as HTML string
      * @param core The ContentModelEditorCore object
+     * @param innerCore The StandaloneEditorCore object
      * @param mode specify what kind of HTML content to retrieve
      * @returns HTML string representing current editor content
      */
@@ -107,6 +118,7 @@ export interface ContentModelCoreApiMap {
     /**
      * Get style based format state from current selection, including font name/size and colors
      * @param core The ContentModelEditorCore objects
+     * @param innerCore The StandaloneEditorCore object
      * @param node The node to get style from
      */
     getStyleBasedFormatState: GetStyleBasedFormatState;
@@ -114,6 +126,7 @@ export interface ContentModelCoreApiMap {
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly
      * @param core The EditorCore object.
+     * @param innerCore The StandaloneEditorCore object
      * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
      * @param deprecated Deprecated parameter, not used
@@ -125,11 +138,6 @@ export interface ContentModelCoreApiMap {
  * Represents the core data structure of a Content Model editor
  */
 export interface ContentModelEditorCore {
-    /**
-     * Standalone editor core
-     */
-    standaloneEditorCore: StandaloneEditorCore;
-
     /**
      * Core API map of this editor
      */
@@ -144,18 +152,6 @@ export interface ContentModelEditorCore {
      * Bridge plugin to connect standalone editor plugins
      */
     readonly bridgePlugin: EditorPlugin;
-
-    /*
-     * Current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     */
-    zoomScale: number;
-
-    /**
-     * @deprecated Use zoomScale instead
-     */
-    sizeTransformer: SizeTransformer;
 
     /**
      * Custom data of this editor

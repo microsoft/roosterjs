@@ -1,5 +1,5 @@
-import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { EditorPlugin, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { triggerEvent } from '../../lib/coreApi/triggerEvent';
 
 describe('triggerEvent', () => {

@@ -1,3 +1,5 @@
+import type { PasteType } from '../enum/PasteType';
+import type { ClipboardData } from '../parameter/ClipboardData';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
@@ -13,7 +15,12 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type { PluginEventData, PluginEventFromType, PluginEventType } from 'roosterjs-editor-types';
+import type {
+    DarkColorHandler,
+    PluginEventData,
+    PluginEventFromType,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 /**
  * An interface of standalone Content Model editor.
@@ -80,7 +87,10 @@ export interface IStandaloneEditor {
      */
     getPendingFormat(): ContentModelSegmentFormat | null;
 
-    //#region Editor API copied from legacy editor, will be ported to use Content Model instead
+    /**
+     * Dispose this editor, dispose all plugins and custom data
+     */
+    dispose(): void;
 
     /**
      * Get whether this editor is disposed
@@ -100,6 +110,19 @@ export interface IStandaloneEditor {
     focus(): void;
 
     /**
+     * Check if focus is in editor now
+     * @returns true if focus is in editor, otherwise false
+     */
+    hasFocus(): boolean;
+
+    /**
+     * Attach a DOM event to the editor content DIV
+     * @param eventMap A map from event name to its handler
+     */
+    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void;
+
+    /**
+     * @deprecated Will be replaced with a new API
      * Trigger an event to be dispatched to all plugins
      * @param eventType Type of the event
      * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
@@ -126,14 +149,6 @@ export interface IStandaloneEditor {
     isDarkMode(): boolean;
 
     /**
-     * Get current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @returns current zoom scale number
-     */
-    getZoomScale(): number;
-
-    /**
      * Add a single undo snapshot to undo stack
      */
     takeSnapshot(): void;
@@ -151,10 +166,34 @@ export interface IStandaloneEditor {
     isInIME(): boolean;
 
     /**
-     * Attach a DOM event to the editor content DIV
-     * @param eventMap A map from event name to its handler
+     * Check if editor is in Shadow Edit mode
      */
-    attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void;
+    isInShadowEdit(): boolean;
 
-    //#endregion
+    /**
+     * Check if the given DOM node is in editor
+     * @param node The node to check
+     */
+    isNodeInEditor(node: Node): boolean;
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteType Type of paste
+     */
+    pasteFromClipboard(clipboardData: ClipboardData, pasteType?: PasteType): void;
+
+    /**
+     * Get a darkColorHandler object for this editor.
+     */
+    getDarkColorHandler(): DarkColorHandler;
+
+    /**
+     * @deprecated
+     * Get current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @returns current zoom scale number
+     */
+    getZoomScale(): number;
 }
