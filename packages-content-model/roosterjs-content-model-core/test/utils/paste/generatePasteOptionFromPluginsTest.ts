@@ -81,6 +81,8 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAttributes: mockedMetadata,
             pasteType: PasteType.Normal,
             domToModelOption: {
+                additionalAllowedTags: [],
+                additionalDisallowedTags: [],
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},
@@ -212,6 +214,8 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAttributes: mockedMetadata,
             pasteType: PasteType.MergeFormat,
             domToModelOption: {
+                additionalAllowedTags: [],
+                additionalDisallowedTags: [],
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},
@@ -240,6 +244,8 @@ describe('generatePasteOptionFromPlugins', () => {
         expect(result).toEqual({
             fragment: mockedFragment,
             domToModelOption: {
+                additionalAllowedTags: [],
+                additionalDisallowedTags: [],
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},

@@ -57,7 +57,7 @@ describe(ID, () => {
                     isImplicit: undefined,
                     segments: [
                         {
-                            text: 'Test ',
+                            text: 'Test',
                             segmentType: 'Text',
                             isSelected: undefined,
                             format: { fontFamily: 'Calibri, sans-serif', fontSize: '11pt' },
@@ -129,8 +129,8 @@ describe(ID, () => {
                                             blockType: 'Paragraph',
                                             segments: [
                                                 {
+                                                    text: 'Asdasdsad',
                                                     segmentType: 'Text',
-                                                    text: 'Asdasdsad ',
                                                     format: {},
                                                 },
                                             ],
@@ -169,8 +169,8 @@ describe(ID, () => {
                                             blockType: 'Paragraph',
                                             segments: [
                                                 {
+                                                    text: 'asdadasd',
                                                     segmentType: 'Text',
-                                                    text: 'asdadasd ',
                                                     format: {},
                                                 },
                                             ],
@@ -233,8 +233,8 @@ describe(ID, () => {
                     blockType: 'Paragraph',
                     segments: [
                         {
+                            text: 'asdsadasdasdsadasdsadsad',
                             segmentType: 'Text',
-                            text: 'asdsadasdasdsadasdsadsad ',
                             format: {
                                 textColor: 'rgb(0, 0, 0)',
                             },
