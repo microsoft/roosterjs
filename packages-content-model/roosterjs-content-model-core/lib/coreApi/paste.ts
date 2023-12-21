@@ -59,7 +59,6 @@ export const paste: Paste = (
             );
 
             // 4. Trigger BeforePaste event to allow plugins modify the fragment
-            // const { domToModelOption, customizedMerge, fragment } =
             const eventResult = generatePasteOptionFromPlugins(
                 core,
                 clipboardData,

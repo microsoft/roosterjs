@@ -10,6 +10,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const MouseMiddleButton = 1;
+const MouseRightButton = 2;
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: (IStandaloneEditor & IEditor) | null = null;
@@ -105,8 +106,16 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             case PluginEventType.MouseDown:
                 selection = this.editor.getDOMSelection();
-
-                if (selection?.type == 'image' && selection.image !== event.rawEvent.target) {
+                if (
+                    event.rawEvent.button === MouseRightButton &&
+                    (image = this.getClickingImage(event.rawEvent)) &&
+                    image.isContentEditable
+                ) {
+                    this.selectImage(this.editor, image);
+                } else if (
+                    selection?.type == 'image' &&
+                    selection.image !== event.rawEvent.target
+                ) {
                     this.selectBeforeImage(this.editor, selection.image);
                 }
                 break;
@@ -130,16 +139,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     }
                 }
                 break;
-
-            case PluginEventType.ContextMenu:
-                selection = this.editor.getDOMSelection();
-
-                if (
-                    (image = this.getClickingImage(event.rawEvent)) &&
-                    (selection?.type != 'image' || selection.image != image)
-                ) {
-                    this.selectImage(this.editor, image);
-                }
         }
     }
 

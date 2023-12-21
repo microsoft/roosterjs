@@ -56,6 +56,17 @@ describe('sizeFormatHandler.parse', () => {
         expect(format).toEqual({ width: '10px', height: '20px' });
     });
 
+    it('Element with width and height attributes equal to 0', () => {
+        const element = document.createElement('div');
+
+        element.setAttribute('width', '0');
+        element.setAttribute('height', '0');
+
+        sizeFormatHandler.parse(format, element, context, {});
+
+        expect(format).toEqual({});
+    });
+
     it('Element with width and height in attribute in percentage', () => {
         const element = document.createElement('div');
 
