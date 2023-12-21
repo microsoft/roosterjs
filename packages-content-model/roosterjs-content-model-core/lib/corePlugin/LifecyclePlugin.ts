@@ -1,5 +1,4 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { PluginEventType } from 'roosterjs-editor-types';
 import {
     createBr,
     createContentModelDocument,
@@ -12,9 +11,10 @@ import type {
     ContentModelSegmentFormat,
     IStandaloneEditor,
     LifecyclePluginState,
+    PluginEvent,
+    PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
-import type { IEditor, PluginWithState, PluginEvent } from 'roosterjs-editor-types';
 
 const ContentEditableAttributeName = 'contenteditable';
 const DefaultTextColor = '#000000';
@@ -24,7 +24,7 @@ const DefaultBackColor = '#ffffff';
  * Lifecycle plugin handles editor initialization and disposing
  */
 class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: LifecyclePluginState;
     private initialModel: ContentModelDocument;
     private initializer: (() => void) | null = null;
@@ -75,8 +75,8 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IEditor & IStandaloneEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         this.editor.setContentModel(this.initialModel, { ignoreSelection: true });
 
@@ -91,14 +91,14 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         this.adjustColor();
 
         // Let other plugins know that we are ready
-        this.editor.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
+        this.editor.triggerPluginEvent('editorReady', {}, true /*broadcast*/);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.editor?.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
+        this.editor?.triggerPluginEvent('beforeDispose', {}, true /*broadcast*/);
 
         if (this.disposer) {
             this.disposer();
@@ -122,7 +122,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      */
     onPluginEvent(event: PluginEvent) {
         if (
-            event.eventType == PluginEventType.ContentChanged &&
+            event.eventType == 'contentChanged' &&
             (event.source == ChangeSource.SwitchToDarkMode ||
                 event.source == ChangeSource.SwitchToLightMode)
         ) {

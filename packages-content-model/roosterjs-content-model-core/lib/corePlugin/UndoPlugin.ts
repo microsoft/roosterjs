@@ -1,19 +1,15 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createSnapshotsManager } from '../editor/SnapshotsManagerImpl';
 import { isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { undo } from '../publicApi/undo/undo';
 import type {
+    ContentChangedEvent,
     IStandaloneEditor,
+    PluginEvent,
+    PluginWithState,
     StandaloneEditorOptions,
     UndoPluginState,
 } from 'roosterjs-content-model-types';
-import type {
-    ContentChangedEvent,
-    IEditor,
-    PluginEvent,
-    PluginWithState,
-} from 'roosterjs-editor-types';
 
 const Backspace = 'Backspace';
 const Delete = 'Delete';
@@ -23,7 +19,7 @@ const Enter = 'Enter';
  * Provides snapshot based undo service for Editor
  */
 class UndoPlugin implements PluginWithState<UndoPluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: UndoPluginState;
 
     /**
@@ -52,8 +48,8 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor): void {
-        this.editor = editor as IEditor & IStandaloneEditor;
+    initialize(editor: IStandaloneEditor): void {
+        this.editor = editor;
     }
 
     /**
@@ -77,7 +73,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
     willHandleEventExclusively(event: PluginEvent) {
         return (
             !!this.editor &&
-            event.eventType == PluginEventType.KeyDown &&
+            event.eventType == 'keyDown' &&
             event.rawEvent.key == Backspace &&
             !event.rawEvent.ctrlKey &&
             this.canUndoAutoComplete(this.editor)
@@ -95,7 +91,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
         }
 
         switch (event.eventType) {
-            case PluginEventType.EditorReady:
+            case 'editorReady':
                 const manager = this.state.snapshotsManager;
                 const canUndo = manager.hasNewContent || manager.canMove(-1);
                 const canRedo = manager.canMove(1);
@@ -106,20 +102,20 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
                     this.addUndoSnapshot();
                 }
                 break;
-            case PluginEventType.KeyDown:
+            case 'keyDown':
                 this.onKeyDown(this.editor, event.rawEvent);
                 break;
-            case PluginEventType.KeyPress:
+            case 'keyPress':
                 this.onKeyPress(this.editor, event.rawEvent);
                 break;
-            case PluginEventType.CompositionEnd:
+            case 'compositionEnd':
                 this.clearRedoForInput();
                 this.addUndoSnapshot();
                 break;
-            case PluginEventType.ContentChanged:
+            case 'contentChanged':
                 this.onContentChanged(event);
                 break;
-            case PluginEventType.BeforeKeyboardEditing:
+            case 'beforeKeyboardEditing':
                 this.onBeforeKeyboardEditing(event.rawEvent);
                 break;
         }

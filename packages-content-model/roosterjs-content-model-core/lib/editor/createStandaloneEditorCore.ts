@@ -5,9 +5,9 @@ import {
     createDomToModelSettings,
     createModelToDomSettings,
 } from './createStandaloneEditorDefaultSettings';
-import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     EditorEnvironment,
+    EditorPlugin,
     StandaloneEditorCore,
     StandaloneEditorCorePluginState,
     StandaloneEditorCorePlugins,

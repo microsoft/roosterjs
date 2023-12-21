@@ -1,3 +1,4 @@
+import type { PluginWithState } from './PluginWithState';
 import type { CopyPastePluginState } from '../pluginState/CopyPastePluginState';
 import type { UndoPluginState } from '../pluginState/UndoPluginState';
 import type { SelectionPluginState } from '../pluginState/SelectionPluginState';
@@ -6,7 +7,6 @@ import type { LifecyclePluginState } from '../pluginState/LifecyclePluginState';
 import type { DOMEventPluginState } from '../pluginState/DOMEventPluginState';
 import type { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
 import type { ContentModelFormatPluginState } from '../pluginState/ContentModelFormatPluginState';
-import type { PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * Core plugins for standalone editor

@@ -1,10 +1,10 @@
 import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { isModifierKey } from '../publicApi/domUtils/eventUtils';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type {
     DOMSelection,
     IStandaloneEditor,
+    PluginEvent,
+    PluginWithState,
     SelectionPluginState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
@@ -13,7 +13,7 @@ const MouseMiddleButton = 1;
 const MouseRightButton = 2;
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
 
@@ -29,8 +29,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         return 'Selection';
     }
 
-    initialize(editor: IEditor) {
-        this.editor = editor as IEditor & IStandaloneEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         const doc = this.editor.getDocument();
         const styleNode = doc.createElement('style');
@@ -93,7 +93,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let selection: DOMSelection | null;
 
         switch (event.eventType) {
-            case PluginEventType.MouseUp:
+            case 'mouseUp':
                 if (
                     (image = this.getClickingImage(event.rawEvent)) &&
                     image.isContentEditable &&
@@ -104,7 +104,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
                 break;
 
-            case PluginEventType.MouseDown:
+            case 'mouseDown':
                 selection = this.editor.getDOMSelection();
                 if (
                     event.rawEvent.button === MouseRightButton &&
@@ -120,7 +120,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
                 break;
 
-            case PluginEventType.KeyDown:
+            case 'keyDown':
                 const rawEvent = event.rawEvent;
                 const key = rawEvent.key;
                 selection = this.editor.getDOMSelection();

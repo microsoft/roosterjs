@@ -1,3 +1,4 @@
+import type { PluginEvent } from '../event/PluginEvent';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
@@ -11,7 +12,6 @@ import type {
     GetContentMode,
     InsertOption,
     NodePosition,
-    PluginEvent,
     Rect,
     StyleBasedFormatState,
     TrustedHTMLHandler,

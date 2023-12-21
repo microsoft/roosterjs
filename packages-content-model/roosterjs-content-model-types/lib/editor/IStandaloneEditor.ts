@@ -1,7 +1,8 @@
+import { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
+import { PluginEventType } from '../event/PluginEventType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -13,7 +14,6 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type { PluginEventData, PluginEventFromType, PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * An interface of standalone Content Model editor.
@@ -108,7 +108,7 @@ export interface IStandaloneEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+    triggerPluginEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast?: boolean
