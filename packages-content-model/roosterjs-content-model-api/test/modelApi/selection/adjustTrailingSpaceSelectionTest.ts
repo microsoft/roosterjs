@@ -4,6 +4,7 @@ import {
     addSegment,
     createContentModelDocument,
     createParagraph,
+    createSelectionMarker,
     createText,
 } from 'roosterjs-content-model-dom';
 
@@ -99,6 +100,96 @@ describe('adjustTrailingSpaceSelection', () => {
                             segmentType: 'Text',
                             format: {},
                             text: '  ',
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('trailing space multiple segments', () => {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        const text = createText('text    ');
+        text.isSelected = true;
+        const text2 = createText('text2  ');
+        text2.isSelected = true;
+        paragraph.segments.push(text, text2);
+        model.blocks.push(paragraph);
+
+        runTest(model, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'text    ',
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'text2',
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: '  ',
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('trailing space multiple segments and selection marker', () => {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        const text = createText('text    ');
+        text.isSelected = true;
+        const text2 = createText('text2  ');
+        text2.isSelected = true;
+        const marker = createSelectionMarker();
+        marker.isSelected = true;
+        paragraph.segments.push(text, text2, marker);
+        model.blocks.push(paragraph);
+
+        runTest(model, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'text    ',
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'text2',
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: '  ',
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+
                             isSelected: true,
                         },
                     ],
