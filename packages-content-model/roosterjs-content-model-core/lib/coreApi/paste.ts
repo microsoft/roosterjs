@@ -5,7 +5,6 @@ import { createPasteFragment } from '../utils/paste/createPasteFragment';
 import { generatePasteOptionFromPlugins } from '../utils/paste/generatePasteOptionFromPlugins';
 import { mergePasteContent } from '../utils/paste/mergePasteContent';
 import { retrieveHtmlInfo } from '../utils/paste/retrieveHtmlInfo';
-import { sanitizePasteContent } from 'roosterjs-editor-dom';
 import type { CloneModelOptions } from '../publicApi/model/cloneModel';
 import type {
     PasteType,
@@ -70,10 +69,6 @@ export const paste: Paste = (
 
             // 5. Convert global CSS to inline CSS
             convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
-
-            // Sanitize the fragment before paste to make sure the content is safe
-            // TODO: remove this part
-            sanitizePasteContent(eventResult, null /*position*/);
 
             // 6. Merge pasted content into main Content Model
             mergePasteContent(model, context, eventResult, core.domToModelSettings.customized);

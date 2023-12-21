@@ -1,7 +1,10 @@
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
+import { createPasteEntityProcessor } from '../../override/pasteEntityProcessor';
+import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
+import { pasteDisplayFormatParser } from '../../override/pasteDisplayFormatParser';
 import { PasteType } from 'roosterjs-editor-types';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
@@ -40,6 +43,15 @@ export function mergePasteContent(
     const domToModelContext = createDomToModelContext(
         undefined /*editorContext*/,
         defaultDomToModelOptions,
+        {
+            processorOverride: {
+                entity: createPasteEntityProcessor(domToModelOption),
+                '*': createPasteGeneralProcessor(domToModelOption),
+            },
+            formatParserOverride: {
+                display: pasteDisplayFormatParser,
+            },
+        },
         domToModelOption
     );
 

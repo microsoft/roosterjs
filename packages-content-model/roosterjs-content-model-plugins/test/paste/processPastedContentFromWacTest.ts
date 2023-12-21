@@ -2,6 +2,7 @@ import { Browser } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { pasteDisplayFormatParser } from 'roosterjs-content-model-core/lib/override/pasteDisplayFormatParser';
 import { processPastedContentWacComponents } from '../../lib/paste/WacComponents/processPastedContentWacComponents';
 import {
     listItemMetadataApplier,
@@ -151,7 +152,15 @@ describe('wordOnlineHandler', () => {
 
         const model = domToContentModel(
             fragment,
-            createDomToModelContext(undefined, event.domToModelOption)
+            createDomToModelContext(
+                undefined,
+                {
+                    formatParserOverride: {
+                        display: pasteDisplayFormatParser,
+                    },
+                },
+                event.domToModelOption
+            )
         );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
@@ -2688,7 +2697,6 @@ describe('wordOnlineHandler', () => {
                                 marginTop: '2px',
                                 marginRight: '0px',
                                 marginBottom: '2px',
-                                display: 'flex',
                             },
                         },
                     ],
