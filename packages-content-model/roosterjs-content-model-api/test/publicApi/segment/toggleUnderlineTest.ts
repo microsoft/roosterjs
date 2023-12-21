@@ -470,4 +470,54 @@ describe('toggleUnderline', () => {
             1
         );
     });
+
+    it('Turn on underline with trailing space', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Test    ',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Test',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '    ',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            },
+            1
+        );
+    });
 });
