@@ -1,9 +1,8 @@
+import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { createCorePlugins } from '../corePlugins/createCorePlugins';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
 import {
     createModelFromHtml,
     isBold,
@@ -98,14 +97,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        const corePlugins = createCorePlugins(options);
-        const plugins = [
-            corePlugins.eventTranslate,
-            corePlugins.edit,
-            ...(options.plugins ?? []),
-            corePlugins.contextMenu,
-            corePlugins.normalizeTable,
-        ];
+        const bridgePlugin = new BridgePlugin(options);
         const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
             initContent && !options.initialModel
@@ -118,13 +110,10 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 : options.initialModel;
         const standaloneEditorOptions: ContentModelEditorOptions = {
             ...options,
-            plugins: plugins,
+            plugins: [bridgePlugin],
             initialModel,
         };
-        const corePluginState: ContentModelCorePluginState = {
-            edit: corePlugins.edit.getState(),
-            contextMenu: corePlugins.contextMenu.getState(),
-        };
+        const corePluginState = bridgePlugin.getCorePluginState();
 
         super(contentDiv, standaloneEditorOptions, () => {
             // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
@@ -133,6 +122,8 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 corePluginState,
                 size => size / this.getCore().zoomScale
             );
+
+            bridgePlugin.setOuterEditor(this);
         });
     }
 

@@ -4,7 +4,6 @@ import { PluginEventType } from 'roosterjs-editor-types';
 import { transformColor } from '../publicApi/color/transformColor';
 import type {
     DarkColorHandler,
-    IEditor,
     PluginEventData,
     PluginEventFromType,
 } from 'roosterjs-editor-types';
@@ -49,11 +48,7 @@ export class StandaloneEditor implements IStandaloneEditor {
 
         onBeforeInitializePlugins?.();
 
-        // TODO: Remove this type cast
-        const editor: IStandaloneEditor = this;
-        this.getCore().plugins.forEach(plugin =>
-            plugin.initialize(editor as IStandaloneEditor & IEditor)
-        );
+        this.getCore().plugins.forEach(plugin => plugin.initialize(this));
     }
 
     /**

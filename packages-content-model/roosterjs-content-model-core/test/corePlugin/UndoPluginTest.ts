@@ -2,15 +2,16 @@ import * as SnapshotsManagerImpl from '../../lib/editor/SnapshotsManagerImpl';
 import * as undo from '../../lib/publicApi/undo/undo';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createUndoPlugin } from '../../lib/corePlugin/UndoPlugin';
-import { IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import {
     IStandaloneEditor,
+    PluginWithState,
     SnapshotsManager,
     UndoPluginState,
 } from 'roosterjs-content-model-types';
 
 describe('UndoPlugin', () => {
-    let editor: IEditor & IStandaloneEditor;
+    let editor: IStandaloneEditor;
     let createSnapshotsManagerSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let canUndoAutoCompleteSpy: jasmine.Spy;
