@@ -1,4 +1,4 @@
-import { ContextMenuPluginState } from './ContextMenuPluginState';
+import type { ContextMenuPluginState } from './ContextMenuPluginState';
 import type { EditorPlugin, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
     CompatibleGetContentMode,
