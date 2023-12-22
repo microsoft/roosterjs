@@ -98,6 +98,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         const bridgePlugin = new BridgePlugin(options);
+        const plugins = [bridgePlugin, ...(options.plugins ?? [])];
         const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
             initContent && !options.initialModel
@@ -110,7 +111,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 : options.initialModel;
         const standaloneEditorOptions: ContentModelEditorOptions = {
             ...options,
-            plugins: [bridgePlugin],
+            plugins,
             initialModel,
         };
         const corePluginState = bridgePlugin.getCorePluginState();
