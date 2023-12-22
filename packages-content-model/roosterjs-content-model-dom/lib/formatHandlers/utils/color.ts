@@ -29,6 +29,8 @@ export const DeprecatedColors: string[] = [
     'window',
 ];
 
+const BlackColor = 'rgb(0, 0, 0)';
+
 /**
  * Get color from given HTML element
  * @param element The element to get color from
@@ -48,7 +50,7 @@ export function getColor(
         undefined;
 
     if (color && DeprecatedColors.indexOf(color) > -1) {
-        color = undefined;
+        color = isBackground ? undefined : BlackColor;
     }
 
     if (darkColorHandler) {
