@@ -66,62 +66,42 @@ describe(ID, () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
                     tagName: 'div',
+                    blockType: 'BlockGroup',
+                    format: {
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        marginTop: '0px',
+                        marginRight: '0px',
+                        marginBottom: '0px',
+                        marginLeft: '0px',
+                    },
+                    blockGroupType: 'FormatContainer',
                     blocks: [
                         {
-                            blockType: 'BlockGroup',
-                            blockGroupType: 'FormatContainer',
                             tagName: 'div',
+                            blockType: 'BlockGroup',
+                            format: {
+                                marginTop: '2px',
+                                marginRight: '0px',
+                                marginBottom: '2px',
+                            },
+                            blockGroupType: 'FormatContainer',
                             blocks: [
                                 {
-                                    blockType: 'Table',
+                                    widths: jasmine.anything() as any,
                                     rows: [
                                         {
                                             height: jasmine.anything() as any,
-                                            format: {},
                                             cells: [
                                                 {
+                                                    spanAbove: false,
+                                                    spanLeft: false,
+                                                    isHeader: false,
                                                     blockGroupType: 'TableCell',
                                                     blocks: [
                                                         {
-                                                            blockType: 'BlockGroup',
-                                                            blockGroupType: 'FormatContainer',
                                                             tagName: 'div',
-                                                            blocks: [
-                                                                {
-                                                                    blockType: 'Paragraph',
-                                                                    segments: [
-                                                                        {
-                                                                            segmentType: 'Text',
-                                                                            text: 'Test TableÂ ',
-                                                                            format: {
-                                                                                fontFamily:
-                                                                                    'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
-                                                                                fontSize: '11pt',
-                                                                                textColor:
-                                                                                    'rgb(0, 0, 0)',
-                                                                                lineHeight:
-                                                                                    '19.7625px',
-                                                                            },
-                                                                        },
-                                                                    ],
-                                                                    format: {
-                                                                        direction: 'ltr',
-                                                                        textAlign: 'start',
-                                                                        whiteSpace: 'pre-wrap',
-                                                                        marginLeft: '0px',
-                                                                        marginRight: '0px',
-                                                                        marginTop: '0px',
-                                                                        marginBottom: '0px',
-                                                                    },
-                                                                    decorator: {
-                                                                        tagName: 'p',
-                                                                        format: {},
-                                                                    },
-                                                                },
-                                                            ],
+                                                            blockType: 'BlockGroup',
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
@@ -132,6 +112,43 @@ describe(ID, () => {
                                                                 paddingRight: '7px',
                                                                 paddingLeft: '7px',
                                                             },
+                                                            blockGroupType: 'FormatContainer',
+                                                            blocks: [
+                                                                {
+                                                                    segments: [
+                                                                        {
+                                                                            text: 'Test TableÂ ',
+                                                                            segmentType: 'Text',
+                                                                            format: {
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                fontFamily:
+                                                                                    'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
+                                                                                fontSize: '11pt',
+                                                                                lineHeight:
+                                                                                    '19.7625px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    segmentFormat: {
+                                                                        textColor: 'rgb(0, 0, 0)',
+                                                                    },
+                                                                    blockType: 'Paragraph',
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginTop: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginBottom: '0px',
+                                                                        marginLeft: '0px',
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                            ],
                                                         },
                                                     ],
                                                     format: {
@@ -144,53 +161,19 @@ describe(ID, () => {
                                                         verticalAlign: 'top',
                                                         width: '312px',
                                                     },
-                                                    spanLeft: false,
-                                                    spanAbove: false,
-                                                    isHeader: false,
                                                     dataset: {
                                                         celllook: '0',
                                                     },
                                                 },
                                                 {
+                                                    spanAbove: false,
+                                                    spanLeft: false,
+                                                    isHeader: false,
                                                     blockGroupType: 'TableCell',
                                                     blocks: [
                                                         {
-                                                            blockType: 'BlockGroup',
-                                                            blockGroupType: 'FormatContainer',
                                                             tagName: 'div',
-                                                            blocks: [
-                                                                {
-                                                                    blockType: 'Paragraph',
-                                                                    segments: [
-                                                                        {
-                                                                            segmentType: 'Text',
-                                                                            text: 'Test TableÂ ',
-                                                                            format: {
-                                                                                fontFamily:
-                                                                                    'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
-                                                                                fontSize: '11pt',
-                                                                                textColor:
-                                                                                    'rgb(0, 0, 0)',
-                                                                                lineHeight:
-                                                                                    '19.7625px',
-                                                                            },
-                                                                        },
-                                                                    ],
-                                                                    format: {
-                                                                        direction: 'ltr',
-                                                                        textAlign: 'start',
-                                                                        whiteSpace: 'pre-wrap',
-                                                                        marginLeft: '0px',
-                                                                        marginRight: '0px',
-                                                                        marginTop: '0px',
-                                                                        marginBottom: '0px',
-                                                                    },
-                                                                    decorator: {
-                                                                        tagName: 'p',
-                                                                        format: {},
-                                                                    },
-                                                                },
-                                                            ],
+                                                            blockType: 'BlockGroup',
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
@@ -201,6 +184,43 @@ describe(ID, () => {
                                                                 paddingRight: '7px',
                                                                 paddingLeft: '7px',
                                                             },
+                                                            blockGroupType: 'FormatContainer',
+                                                            blocks: [
+                                                                {
+                                                                    segments: [
+                                                                        {
+                                                                            text: 'Test TableÂ ',
+                                                                            segmentType: 'Text',
+                                                                            format: {
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                fontFamily:
+                                                                                    'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
+                                                                                fontSize: '11pt',
+                                                                                lineHeight:
+                                                                                    '19.7625px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    segmentFormat: {
+                                                                        textColor: 'rgb(0, 0, 0)',
+                                                                    },
+                                                                    blockType: 'Paragraph',
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginTop: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginBottom: '0px',
+                                                                        marginLeft: '0px',
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                            ],
                                                         },
                                                     ],
                                                     format: {
@@ -213,18 +233,16 @@ describe(ID, () => {
                                                         verticalAlign: 'top',
                                                         width: '312px',
                                                     },
-                                                    spanLeft: false,
-                                                    spanAbove: false,
-                                                    isHeader: false,
                                                     dataset: {
                                                         celllook: '0',
                                                     },
                                                 },
                                             ],
+                                            format: {},
                                         },
                                     ],
-                                    format: <any>{
-                                        useBorderBox: true,
+                                    blockType: 'Table',
+                                    format: {
                                         direction: 'ltr',
                                         textAlign: 'start',
                                         marginTop: '0px',
@@ -233,22 +251,21 @@ describe(ID, () => {
                                         marginLeft: '0px',
                                         width: '0px',
                                         tableLayout: 'fixed',
+                                        useBorderBox: true,
                                         borderCollapse: true,
                                     },
-                                    widths: [jasmine.anything() as any, jasmine.anything() as any],
                                     dataset: {
                                         tablestyle: 'MsoTableGrid',
                                         tablelook: '1696',
                                     },
                                 },
                             ],
-                            format: {
-                                marginTop: '2px',
-                                marginRight: '0px',
-                                marginBottom: '2px',
-                            },
                         },
                     ],
+                },
+                {
+                    tagName: 'div',
+                    blockType: 'BlockGroup',
                     format: {
                         backgroundColor: 'rgb(255, 255, 255)',
                         marginTop: '0px',
@@ -256,27 +273,26 @@ describe(ID, () => {
                         marginBottom: '0px',
                         marginLeft: '0px',
                     },
-                },
-                {
-                    blockType: 'BlockGroup',
                     blockGroupType: 'FormatContainer',
-                    tagName: 'div',
                     blocks: [
                         {
-                            blockType: 'Paragraph',
                             segments: [
                                 {
-                                    segmentType: 'Text',
                                     text: 'Â ',
+                                    segmentType: 'Text',
                                     format: {
+                                        textColor: 'rgb(0, 0, 0)',
                                         fontFamily:
                                             'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
                                         fontSize: '12pt',
-                                        textColor: 'rgb(0, 0, 0)',
                                         lineHeight: '20.925px',
                                     },
                                 },
                             ],
+                            segmentFormat: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                            blockType: 'Paragraph',
                             format: {
                                 direction: 'ltr',
                                 textAlign: 'start',
@@ -292,20 +308,12 @@ describe(ID, () => {
                             },
                         },
                     ],
-                    format: {
-                        backgroundColor: 'rgb(255, 255, 255)',
-                        marginTop: '0px',
-                        marginRight: '0px',
-                        marginBottom: '0px',
-                        marginLeft: '0px',
-                    },
                 },
                 {
-                    blockType: 'Paragraph',
                     segments: [
                         {
-                            segmentType: 'SelectionMarker',
                             isSelected: true,
+                            segmentType: 'SelectionMarker',
                             format: {},
                         },
                         {
@@ -313,6 +321,7 @@ describe(ID, () => {
                             format: {},
                         },
                     ],
+                    blockType: 'Paragraph',
                     format: {},
                 },
             ],

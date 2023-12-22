@@ -220,7 +220,7 @@ describe('paste with content model & paste plugin', () => {
         editor?.paste(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -231,7 +231,7 @@ describe('paste with content model & paste plugin', () => {
         editor?.paste(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
-        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
 
@@ -385,7 +385,7 @@ describe('Paste with clipboardData', () => {
         document.getElementById(ID)?.remove();
     });
 
-    it('Remove windowtext from clipboardContent', () => {
+    it('Replace windowtext with set black font color from clipboardContent', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><p style="color: windowtext;">Test</p></body></html>';
 
@@ -406,12 +406,16 @@ describe('Paste with clipboardData', () => {
                         {
                             segmentType: 'Text',
                             text: 'Test',
-                            format: {},
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
                         },
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
                         },
                     ],
                     format: {
