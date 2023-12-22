@@ -1,6 +1,5 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { BulletListType } from 'roosterjs-content-model-core';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
 import { setListStyle } from 'roosterjs-content-model-api';
 const dropDownMenuItems = {
     [BulletListType.Disc]: 'Disc',
@@ -14,7 +13,7 @@ const dropDownMenuItems = {
     [BulletListType.Circle]: 'Circle',
 };
 
-export const setBulletedListStyleButton: RibbonButton<'ribbonButtonBulletedListStyle'> = {
+export const setBulletedListStyleButton: ContentModelRibbonButton<'ribbonButtonBulletedListStyle'> = {
     key: 'ribbonButtonBulletedListStyle',
     dropDownMenu: { items: dropDownMenuItems },
     unlocalizedText: 'Set unordered list style',
@@ -23,10 +22,8 @@ export const setBulletedListStyleButton: RibbonButton<'ribbonButtonBulletedListS
     onClick: (editor, key) => {
         const value = parseInt(key);
 
-        if (isContentModelEditor(editor)) {
-            setListStyle(editor, {
-                unorderedStyleType: value,
-            });
-        }
+        setListStyle(editor, {
+            unorderedStyleType: value,
+        });
     },
 };

@@ -1,13 +1,13 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import showInputDialog from 'roosterjs-react/lib/inputDialog/utils/showInputDialog';
-import { CancelButtonStringKey, OkButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { setListStartNumber } from 'roosterjs-content-model-api';
+import { CancelButtonStringKey, OkButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Bulleted list" button on the format ribbon
  */
-export const listStartNumberButton: RibbonButton<
+export const listStartNumberButton: ContentModelRibbonButton<
     | 'ribbonButtonSetStartNumber'
     | 'ribbonButtonSetStartNumberTo1'
     | 'ribbonButtonSetStartNumberCustomize'
@@ -25,30 +25,28 @@ export const listStartNumberButton: RibbonButton<
     iconName: 'NumberSymbol',
     isDisabled: formatState => !formatState.isNumbering,
     onClick: (editor, key, strings, uiUtility) => {
-        if (isContentModelEditor(editor)) {
-            if (key == 'ribbonButtonSetStartNumberCustomize') {
-                showInputDialog(
-                    uiUtility,
-                    'ribbonButtonSetStartNumberCustomize',
-                    'Start numbering value',
-                    {
-                        startNumber: {
-                            labelKey: null,
-                            unlocalizedLabel: null,
-                            initValue: '1',
-                        },
+        if (key == 'ribbonButtonSetStartNumberCustomize') {
+            showInputDialog(
+                uiUtility,
+                'ribbonButtonSetStartNumberCustomize',
+                'Start numbering value',
+                {
+                    startNumber: {
+                        labelKey: null,
+                        unlocalizedLabel: null,
+                        initValue: '1',
                     },
-                    strings
-                ).then(values => {
-                    const newValue = parseInt(values.startNumber);
+                },
+                strings
+            ).then(values => {
+                const newValue = parseInt(values.startNumber);
 
-                    if (newValue > 0) {
-                        setListStartNumber(editor, newValue);
-                    }
-                });
-            } else {
-                setListStartNumber(editor, 1);
-            }
+                if (newValue > 0) {
+                    setListStartNumber(editor, newValue);
+                }
+            });
+        } else {
+            setListStartNumber(editor, 1);
         }
 
         return true;

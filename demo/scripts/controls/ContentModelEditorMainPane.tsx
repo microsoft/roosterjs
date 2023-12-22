@@ -11,6 +11,7 @@ import ContentModelRooster from './contentModel/editor/ContentModelRooster';
 import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
+import RibbonPlugin from './ribbonButtons/contentModel/RibbonPlugin';
 import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
@@ -18,7 +19,7 @@ import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { ContentModelSegmentFormat, Snapshot } from 'roosterjs-content-model-types';
-import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
+import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
@@ -185,13 +186,11 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
 
         const plugins = [
             ...this.toggleablePlugins,
-            this.contentModelRibbonPlugin,
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.contentModelEditPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.entityDelimiterPlugin,
-            this.formatPainterPlugin,
             this.sampleEntityPlugin,
         ];
 
@@ -243,8 +242,10 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                 <div style={editorStyles}>
                     {this.state.editorCreator && (
                         <ContentModelRooster
+                            id={MainPaneBase.editorDivId}
                             className={styles.editor}
                             legacyPlugins={allPlugins}
+                            plugins={[this.contentModelRibbonPlugin, this.formatPainterPlugin]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}

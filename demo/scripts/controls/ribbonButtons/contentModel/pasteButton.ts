@@ -1,30 +1,28 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
 
 /**
  * @internal
  * "Paste" button on the format ribbon
  */
-export const pasteButton: RibbonButton<'buttonNamePaste'> = {
+export const pasteButton: ContentModelRibbonButton<'buttonNamePaste'> = {
     key: 'buttonNamePaste',
     unlocalizedText: 'Paste',
     iconName: 'Paste',
     onClick: async editor => {
-        if (isContentModelEditor(editor)) {
-            const doc = editor.getDocument();
-            const clipboard = doc.defaultView.navigator.clipboard;
-            if (clipboard && clipboard.read) {
-                try {
-                    const clipboardItems = await clipboard.read();
-                    const dataTransferItems = await Promise.all(
-                        createDataTransferItems(clipboardItems)
-                    );
-                    const clipboardData = await extractClipboardItems(dataTransferItems);
-                    editor.paste(clipboardData);
-                } catch {}
-            }
+        const doc = editor.getDocument();
+        const clipboard = doc.defaultView.navigator.clipboard;
+        if (clipboard && clipboard.read) {
+            try {
+                const clipboardItems = await clipboard.read();
+                const dataTransferItems = await Promise.all(
+                    createDataTransferItems(clipboardItems)
+                );
+                const clipboardData = await extractClipboardItems(dataTransferItems);
+                editor.pasteFromClipboard(clipboardData);
+            } catch {}
         }
+
         return true;
     },
 };
