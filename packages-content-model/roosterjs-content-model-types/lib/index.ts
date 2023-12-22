@@ -226,10 +226,7 @@ export {
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export {
-    StandaloneEditorCorePluginState,
-    UnportedCorePluginState,
-} from './pluginState/StandaloneEditorPluginState';
+export { StandaloneEditorCorePluginState } from './pluginState/StandaloneEditorPluginState';
 export {
     ContentModelFormatPluginState,
     PendingFormat,

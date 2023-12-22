@@ -141,12 +141,19 @@ describe('ContentModelCopyPastePlugin |', () => {
             getDOMSelection: getDOMSelectionSpy,
             setDOMSelection: setDOMSelectionSpy,
             getDocument() {
-                return document;
+                return {
+                    createRange: () => document.createRange(),
+                    defaultView: {
+                        requestAnimationFrame: (func: Function) => {
+                            func();
+                        },
+                    },
+                };
             },
             isDarkMode: () => {
                 return false;
             },
-            paste: (ar1: any) => {
+            pasteFromClipboard: (ar1: any) => {
                 pasteSpy(ar1);
             },
             getDarkColorHandler: () => mockedDarkColorHandler,

@@ -13,7 +13,6 @@ import type {
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
     UnportedCoreApiMap,
-    UnportedCorePluginState,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -25,7 +24,6 @@ export function createStandaloneEditorCore(
     contentDiv: HTMLDivElement,
     options: StandaloneEditorOptions,
     unportedCoreApiMap: UnportedCoreApiMap,
-    unportedCorePluginState: UnportedCorePluginState,
     tempPlugins: EditorPlugin[]
 ): StandaloneEditorCore {
     const corePlugins = createStandaloneEditorCorePlugins(options, contentDiv);
@@ -54,7 +52,6 @@ export function createStandaloneEditorCore(
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),
         ...getPluginState(corePlugins),
-        ...unportedCorePluginState,
     };
 }
 

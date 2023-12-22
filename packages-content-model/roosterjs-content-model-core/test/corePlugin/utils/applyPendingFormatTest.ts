@@ -1,7 +1,6 @@
 import * as iterateSelections from '../../../lib/publicApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyPendingFormat } from '../../../lib/corePlugin/utils/applyPendingFormat';
-import { IEditor } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelParagraph,
@@ -55,7 +54,7 @@ describe('applyPendingFormat', () => {
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -129,7 +128,7 @@ describe('applyPendingFormat', () => {
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -188,7 +187,7 @@ describe('applyPendingFormat', () => {
         const formatContentModelSpy = jasmine.createSpy('formatContentModel');
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -248,7 +247,7 @@ describe('applyPendingFormat', () => {
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [text]);
@@ -299,7 +298,7 @@ describe('applyPendingFormat', () => {
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
