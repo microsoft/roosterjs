@@ -10,6 +10,7 @@ import type {
     ContentModelBlockFormat,
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
+    ContentModelTableFormat,
     DomToModelContext,
     ElementProcessor,
     FormatParser,
@@ -33,6 +34,8 @@ export function processPastedContentFromWordDesktop(
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'listItemElement', listItemElementParser);
+    addParser(ev.domToModelOption, 'container', wordTableParser);
+    addParser(ev.domToModelOption, 'table', wordTableParser);
 }
 
 const wordDesktopElementProcessor = (
@@ -91,5 +94,11 @@ const listItemElementParser: FormatParser<ContentModelListItemFormat> = (
     }
     if (element.style.marginRight) {
         format.marginRight = undefined;
+    }
+};
+
+const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
+    if (format.marginLeft?.startsWith('-')) {
+        delete format.marginLeft;
     }
 };
