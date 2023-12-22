@@ -63,7 +63,6 @@ function createEditorEnvironment(contentDiv: HTMLElement): EditorEnvironment {
             userAgent.indexOf('Safari') >= 0 &&
             userAgent.indexOf('Chrome') < 0 &&
             userAgent.indexOf('Android') < 0,
-        domAttributes: contentDiv.attributes,
     };
 }
 

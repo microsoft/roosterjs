@@ -79,7 +79,6 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: false,
-                domAttributes: contentDiv.attributes,
             },
             darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: defaultTrustHtmlHandler,
@@ -217,9 +216,6 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: true,
                 isSafari: false,
-                domAttributes: {
-                    a: 'b',
-                } as any,
             },
         });
 
@@ -251,9 +247,6 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: true,
                 isSafari: false,
-                domAttributes: {
-                    a: 'b',
-                } as any,
             },
         });
 
@@ -285,9 +278,6 @@ describe('createEditorCore', () => {
                 isMac: true,
                 isAndroid: false,
                 isSafari: false,
-                domAttributes: {
-                    a: 'b',
-                } as any,
             },
         });
 
@@ -319,9 +309,6 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: true,
-                domAttributes: {
-                    a: 'b',
-                } as any,
             },
         });
 
@@ -353,9 +340,6 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: false,
-                domAttributes: {
-                    a: 'b',
-                } as any,
             },
         });
 

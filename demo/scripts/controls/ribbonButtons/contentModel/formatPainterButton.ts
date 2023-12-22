@@ -10,7 +10,7 @@ export const formatPainterButton: ContentModelRibbonButton<'formatPainter'> = {
     unlocalizedText: 'Format painter',
     iconName: 'Brush',
     onClick: editor => {
-        ContentModelFormatPainterPlugin.startFormatPainter(editor);
+        ContentModelFormatPainterPlugin.startFormatPainter();
         return true;
     },
 };

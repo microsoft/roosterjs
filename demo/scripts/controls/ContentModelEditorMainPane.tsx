@@ -191,7 +191,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.entityDelimiterPlugin,
-            this.formatPainterPlugin,
             this.sampleEntityPlugin,
         ];
 
@@ -243,9 +242,10 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                 <div style={editorStyles}>
                     {this.state.editorCreator && (
                         <ContentModelRooster
+                            id={MainPaneBase.editorDivId}
                             className={styles.editor}
                             legacyPlugins={allPlugins}
-                            plugins={[this.contentModelRibbonPlugin]}
+                            plugins={[this.contentModelRibbonPlugin, this.formatPainterPlugin]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
