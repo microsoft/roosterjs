@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>UnportedCorePluginState | RoosterJs API Reference</title>
+	<title>ContextMenuPluginState | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -53,13 +53,13 @@
 					<a href="../modules.html">RoosterJs API Reference</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
+					<a href="../modules/roosterjs_content_model_editor.html">roosterjs-content-model-editor</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.unportedcorepluginstate.html">UnportedCorePluginState</a>
+					<a href="roosterjs_content_model_editor.contextmenupluginstate.html">ContextMenuPluginState</a>
 				</li>
 			</ul>
-			<h1>Interface UnportedCorePluginState</h1>
+			<h1>Interface ContextMenuPluginState</h1>
 		</div>
 	</div>
 </header>
@@ -69,8 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Temporary core plugin state for Content Model editor (unported part)
-						TODO: Port these plugins</p>
+						<p>The state object for DOMEventPlugin</p>
 					</div>
 				</div>
 			</section>
@@ -78,12 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">UnportedCorePluginState</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="roosterjs_content_model_types.standaloneeditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">StandaloneEditorCore</a>
-							</li>
-						</ul>
+						<span class="target">ContextMenuPluginState</span>
 					</li>
 				</ul>
 			</section>
@@ -94,7 +88,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.unportedcorepluginstate.html#edit" class="tsd-kind-icon">edit</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_editor.contextmenupluginstate.html#contextmenuproviders" class="tsd-kind-icon">context<wbr>Menu<wbr>Providers</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,14 +97,19 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="edit" class="tsd-anchor"></a>
-					<h3>edit</h3>
-					<div class="tsd-signature tsd-kind-icon">edit<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.editpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">EditPluginState</a></div>
+					<a name="contextmenuproviders" class="tsd-anchor"></a>
+					<h3>context<wbr>Menu<wbr>Providers</h3>
+					<div class="tsd-signature tsd-kind-icon">context<wbr>Menu<wbr>Providers<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.contextmenuprovider.html" class="tsd-signature-type" data-tsd-kind="Interface">ContextMenuProvider</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/bf6767f/packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts#L62">packages-content-model/roosterjs-content-model-types/lib/pluginState/StandaloneEditorPluginState.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ef5da80/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContextMenuPluginState.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContextMenuPluginState.ts:10</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Context menu providers, that can provide context menu items</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -132,10 +131,10 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_dom.html">roosterjs-<wbr>content-<wbr>model-<wbr>dom</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_editor.html">roosterjs-<wbr>content-<wbr>model-<wbr>editor</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_types.html">roosterjs-<wbr>content-<wbr>model-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -163,18 +162,39 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/roosterjs_content_model_editor.contentmodeleditor.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Editor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_editor.contentmodelcoreplugins.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Core<wbr>Plugins</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Editor<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_editor.contentmodeleditoroptions.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Editor<wbr>Options</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.unportedcorepluginstate.html" class="tsd-kind-icon">Unported<wbr>Core<wbr>Plugin<wbr>State</a>
+						<a href="roosterjs_content_model_editor.contextmenupluginstate.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Plugin<wbr>State</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.unportedcorepluginstate.html#edit" class="tsd-kind-icon">edit</a>
+								<a href="roosterjs_content_model_editor.contextmenupluginstate.html#contextmenuproviders" class="tsd-kind-icon">context<wbr>Menu<wbr>Providers</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_editor.icontentmodeleditor.html" class="tsd-kind-icon">IContent<wbr>Model<wbr>Editor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_editor.unportedcoreplugins.html" class="tsd-kind-icon">Unported<wbr>Core<wbr>Plugins</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/roosterjs_content_model_editor.html#iscontentmodeleditor" class="tsd-kind-icon">is<wbr>Content<wbr>Model<wbr>Editor</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
