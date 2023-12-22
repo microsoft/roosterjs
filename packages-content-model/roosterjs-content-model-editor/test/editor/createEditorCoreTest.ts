@@ -2,6 +2,7 @@ import * as ContextMenuPlugin from '../../lib/corePlugins/ContextMenuPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
 import { BridgePlugin } from '../../lib/corePlugins/BridgePlugin';
+import { ContextMenuPluginState } from '../../lib/publicTypes/ContextMenuPluginState';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { createEditorCore } from '../../lib/editor/createEditorCore';
 import { EditPluginState, PluginWithState } from 'roosterjs-editor-types';
@@ -9,18 +10,22 @@ import { EditPluginState, PluginWithState } from 'roosterjs-editor-types';
 describe('createEditorCore', () => {
     const mockedSizeTransformer = 'TRANSFORMER' as any;
     const mockedEditPluginState = 'EDITSTATE' as any;
-    const mockedContextMenuPlugin = 'CONTEXTMENU' as any;
+    const mockedContextMenuPluginState = 'CONTEXTMENUSTATE' as any;
     const mockedNormalizeTablePlugin = 'NORMALIZETABLE' as any;
 
     let addInnerPluginsSpy: jasmine.Spy;
     let mockedBridgePlugin: BridgePlugin;
     let mockedEditPlugin: PluginWithState<EditPluginState>;
+    let mockedContextMenuPlugin: PluginWithState<ContextMenuPluginState>;
 
     beforeEach(() => {
         addInnerPluginsSpy = jasmine.createSpy('addLegacyPlugin');
 
         mockedEditPlugin = {
             getState: () => mockedEditPluginState,
+        } as any;
+        mockedContextMenuPlugin = {
+            getState: () => mockedContextMenuPluginState,
         } as any;
         mockedBridgePlugin = {
             addLegacyPlugin: addInnerPluginsSpy,
@@ -45,6 +50,7 @@ describe('createEditorCore', () => {
             experimentalFeatures: [],
             bridgePlugin: mockedBridgePlugin,
             edit: mockedEditPluginState,
+            contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
         });
         expect(addInnerPluginsSpy).toHaveBeenCalledWith([
@@ -79,6 +85,7 @@ describe('createEditorCore', () => {
             experimentalFeatures: mockedFeatures,
             bridgePlugin: mockedBridgePlugin,
             edit: mockedEditPluginState,
+            contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
         });
         expect(addInnerPluginsSpy).toHaveBeenCalledWith([

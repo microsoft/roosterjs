@@ -19,12 +19,13 @@ export function createEditorCore(
     sizeTransformer: SizeTransformer
 ): ContentModelEditorCore {
     const editPlugin = createEditPlugin();
+    const contextMenuPlugin = createContextMenuPlugin(options);
 
     bridgePlugin.addLegacyPlugin(
         [
             editPlugin,
             ...(options.legacyPlugins ?? []),
-            createContextMenuPlugin(options),
+            contextMenuPlugin,
             createNormalizeTablePlugin(),
         ].filter(x => !!x)
     );
@@ -36,6 +37,7 @@ export function createEditorCore(
         customData: {},
         experimentalFeatures: options.experimentalFeatures ?? [],
         edit: editPlugin.getState(),
+        contextMenu: contextMenuPlugin.getState(),
         sizeTransformer,
     };
 

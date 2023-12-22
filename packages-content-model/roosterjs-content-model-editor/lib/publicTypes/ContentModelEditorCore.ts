@@ -1,3 +1,4 @@
+import { ContextMenuPluginState } from './ContextMenuPluginState';
 import type { EditorPlugin, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
     CompatibleGetContentMode,
@@ -168,6 +169,11 @@ export interface ContentModelEditorCore {
      * Plugin state of EditPlugin
      */
     readonly edit: EditPluginState;
+
+    /**
+     * Plugin state of ContextMenuPlugin
+     */
+    readonly contextMenu: ContextMenuPluginState;
 
     /**
      * @deprecated Use zoomScale instead
