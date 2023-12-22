@@ -104,14 +104,14 @@ describe('Paste ', () => {
         context = undefined;
 
         editor = new ContentModelEditor(div, {
-            wrapperPlugins: [new ContentModelPastePlugin()],
+            legacyPlugins: [new ContentModelPastePlugin()],
             coreApiOverride: {
                 focus,
                 createContentModel,
                 getVisibleViewport,
                 formatContentModel,
             },
-            wrapperCoreApiOverride: {
+            legacyCoreApiOverride: {
                 getContent,
             },
         });
@@ -194,7 +194,7 @@ describe('paste with content model & paste plugin', () => {
         div = document.createElement('div');
         document.body.appendChild(div);
         editor = new ContentModelEditor(div, {
-            wrapperPlugins: [new ContentModelPastePlugin()],
+            legacyPlugins: [new ContentModelPastePlugin()],
         });
         spyOn(addParserF, 'default').and.callThrough();
         spyOn(setProcessorF, 'setProcessor').and.callThrough();
@@ -341,7 +341,7 @@ describe('paste with content model & paste plugin', () => {
 
         let eventChecker: BeforePasteEvent = <any>{};
         editor = new ContentModelEditor(div!, {
-            wrapperPlugins: [
+            legacyPlugins: [
                 {
                     initialize: () => {},
                     dispose: () => {},

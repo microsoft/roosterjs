@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ContentModelEditor, ContentModelEditorOptions } from 'roosterjs-content-model-editor';
 import { createUIUtilities, ReactEditorPlugin, UIUtilities } from 'roosterjs-react';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
 import { useTheme } from '@fluentui/react/lib/Theme';
@@ -7,7 +8,6 @@ import {
     IStandaloneEditor,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
-import { ContentModelEditor, ContentModelEditorOptions } from 'roosterjs-content-model-editor';
 import type { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types';
 
 /**
@@ -39,14 +39,14 @@ export default function ContentModelRooster(props: ContentModelRoosterProps) {
     const editor = React.useRef<IStandaloneEditor | null>(null);
     const theme = useTheme();
 
-    const { focusOnInit, editorCreator, inDarkMode, plugins, wrapperPlugins } = props;
+    const { focusOnInit, editorCreator, inDarkMode, plugins, legacyPlugins } = props;
 
     React.useEffect(() => {
         if (editorDiv.current) {
             const uiUtilities = createUIUtilities(editorDiv.current, theme);
 
             setUIUtilities(uiUtilities, plugins);
-            setUIUtilities(uiUtilities, wrapperPlugins);
+            setUIUtilities(uiUtilities, legacyPlugins);
         }
     }, [theme, editorCreator]);
 

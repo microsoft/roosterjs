@@ -331,7 +331,7 @@ describe('insertLink', () => {
             onPluginEvent: onPluginEvent,
         };
         const editor = new ContentModelEditor(div, {
-            wrapperPlugins: [mockedPlugin],
+            legacyPlugins: [mockedPlugin],
         });
 
         editor.focus();

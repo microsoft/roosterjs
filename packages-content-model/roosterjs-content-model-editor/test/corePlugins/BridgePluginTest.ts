@@ -33,7 +33,7 @@ describe('EventTypeTranslatePlugin', () => {
         } as any;
         const mockedEditor = 'EDITOR' as any;
 
-        plugin.addWrapperPlugin([mockedPlugin1, mockedPlugin2]);
+        plugin.addLegacyPlugin([mockedPlugin1, mockedPlugin2]);
 
         expect(initializeSpy).not.toHaveBeenCalled();
         expect(onPluginEventSpy1).not.toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe('EventTypeTranslatePlugin', () => {
         } as any;
         const mockedEditor = 'EDITOR' as any;
 
-        plugin.addWrapperPlugin([mockedPlugin1, mockedPlugin2]);
+        plugin.addLegacyPlugin([mockedPlugin1, mockedPlugin2]);
         plugin.setOuterEditor(mockedEditor);
 
         const mockedEvent = {} as any;

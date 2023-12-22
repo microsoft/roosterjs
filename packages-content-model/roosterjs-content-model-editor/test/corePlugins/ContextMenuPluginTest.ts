@@ -50,7 +50,7 @@ describe('ContextMenu handle other event', () => {
         } as any;
 
         plugin = createContextMenuPlugin({
-            wrapperPlugins: [mockedPlugin1, mockedPlugin2],
+            legacyPlugins: [mockedPlugin1, mockedPlugin2],
         });
         plugin.initialize(editor);
 

@@ -19,15 +19,15 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     initialContent?: string;
 
     /**
-     * Plugins for ContentModelEditor
+     * Legacy plugins using IEditor interface
      */
-    wrapperPlugins?: EditorPlugin[];
+    legacyPlugins?: EditorPlugin[];
 
     /**
      * A function map to override default core API implementation
      * Default value is null
      */
-    wrapperCoreApiOverride?: Partial<ContentModelCoreApiMap>;
+    legacyCoreApiOverride?: Partial<ContentModelCoreApiMap>;
 
     /**
      * Specify the enabled experimental features
