@@ -1,4 +1,4 @@
-import type { ContextMenuPluginState } from './ContextMenuPluginState';
+import type { ContentModelCorePluginState } from './ContentModelCorePlugins';
 import type { EditorPlugin, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
     CompatibleGetContentMode,
@@ -12,7 +12,6 @@ import type {
     InsertOption,
     NodePosition,
     StyleBasedFormatState,
-    EditPluginState,
     SizeTransformer,
 } from 'roosterjs-editor-types';
 
@@ -139,7 +138,7 @@ export interface ContentModelCoreApiMap {
 /**
  * Represents the core data structure of a Content Model editor
  */
-export interface ContentModelEditorCore {
+export interface ContentModelEditorCore extends ContentModelCorePluginState {
     /**
      * Core API map of this editor
      */
@@ -164,16 +163,6 @@ export interface ContentModelEditorCore {
      * Enabled experimental features
      */
     readonly experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
-
-    /**
-     * Plugin state of EditPlugin
-     */
-    readonly edit: EditPluginState;
-
-    /**
-     * Plugin state of ContextMenuPlugin
-     */
-    readonly contextMenu: ContextMenuPluginState;
 
     /**
      * @deprecated Use zoomScale instead

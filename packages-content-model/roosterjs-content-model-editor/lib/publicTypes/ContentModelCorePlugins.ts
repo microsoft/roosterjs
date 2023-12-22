@@ -20,3 +20,18 @@ export interface ContentModelCorePlugins {
      */
     readonly contextMenu: PluginWithState<ContextMenuPluginState>;
 }
+
+/**
+ * Core plugin state for Content Model Editor
+ */
+export interface ContentModelCorePluginState {
+    /**
+     * Plugin state of EditPlugin
+     */
+    readonly edit: EditPluginState;
+
+    /**
+     * Plugin state of ContextMenuPlugin
+     */
+    readonly contextMenu: ContextMenuPluginState;
+}
