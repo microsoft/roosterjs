@@ -2,7 +2,7 @@ import { createContextMenuPlugin } from './ContextMenuPlugin';
 import { createEditPlugin } from './EditPlugin';
 import { createEventTypeTranslatePlugin } from './EventTypeTranslatePlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
-import type { UnportedCorePlugins } from '../publicTypes/ContentModelCorePlugins';
+import type { ContentModelCorePlugins } from '../publicTypes/ContentModelCorePlugins';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 
 /**
@@ -10,7 +10,7 @@ import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEdit
  * Create Core Plugins
  * @param options Editor options
  */
-export function createCorePlugins(options: ContentModelEditorOptions): UnportedCorePlugins {
+export function createCorePlugins(options: ContentModelEditorOptions): ContentModelCorePlugins {
     const map = options.corePluginOverride || {};
 
     // The order matters, some plugin needs to be put before/after others to make sure event

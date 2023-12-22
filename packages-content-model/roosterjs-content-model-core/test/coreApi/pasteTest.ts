@@ -108,9 +108,11 @@ describe('Paste ', () => {
             coreApiOverride: {
                 focus,
                 createContentModel,
-                getContent,
                 getVisibleViewport,
                 formatContentModel,
+            },
+            legacyCoreApiOverride: {
+                getContent,
             },
         });
 
