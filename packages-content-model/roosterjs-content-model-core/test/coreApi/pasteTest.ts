@@ -9,7 +9,7 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { BeforePasteEvent, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { BeforePasteEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
@@ -29,7 +29,7 @@ let clipboardData: ClipboardData;
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Paste ', () => {
-    let editor: IStandaloneEditor & IEditor;
+    let editor: IStandaloneEditor;
     let createContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
@@ -124,18 +124,14 @@ describe('Paste ', () => {
     });
 
     it('Execute', () => {
-        try {
-            editor.paste(clipboardData);
-        } catch (e) {
-            console.log(e);
-        }
+        editor.pasteFromClipboard(clipboardData);
 
         expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);
     });
 
     it('Execute | As plain text', () => {
-        editor.paste(clipboardData, true /* asText */);
+        editor.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);
@@ -159,7 +155,7 @@ describe('Paste ', () => {
             },
         });
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         editor.createContentModel(<DomToModelOption>{
             processorOverride: {
@@ -367,7 +363,7 @@ describe('paste with content model & paste plugin', () => {
 });
 
 describe('Paste with clipboardData', () => {
-    let editor: IEditor & IStandaloneEditor = undefined!;
+    let editor: IStandaloneEditor = undefined!;
     const ID = 'EDITOR_ID';
 
     beforeEach(() => {
@@ -393,7 +389,7 @@ describe('Paste with clipboardData', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><p style="color: windowtext;">Test</p></body></html>';
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {
@@ -440,7 +436,7 @@ describe('Paste with clipboardData', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><a href="file://mylocalfile">Link</a></body></html>';
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {
@@ -472,7 +468,7 @@ describe('Paste with clipboardData', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><a href="https://github.com/microsoft/roosterjs">Link</a></body></html>';
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {

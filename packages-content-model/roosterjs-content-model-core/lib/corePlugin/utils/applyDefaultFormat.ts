@@ -1,6 +1,5 @@
 import { deleteSelection } from '../../publicApi/selection/deleteSelection';
 import { isBlockElement, isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
-import type { IEditor } from 'roosterjs-editor-types';
 import type { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -10,7 +9,7 @@ import type { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-con
  * @param defaultFormat The default segment format to apply
  */
 export function applyDefaultFormat(
-    editor: IStandaloneEditor & IEditor,
+    editor: IStandaloneEditor,
     defaultFormat: ContentModelSegmentFormat
 ) {
     const selection = editor.getDOMSelection();
@@ -21,7 +20,7 @@ export function applyDefaultFormat(
     if (posContainer) {
         let node: Node | null = posContainer;
 
-        while (node && editor.contains(node)) {
+        while (node && editor.isNodeInEditor(node)) {
             if (isNodeOfType(node, 'ELEMENT_NODE')) {
                 if (node.getAttribute?.('style')) {
                     return;

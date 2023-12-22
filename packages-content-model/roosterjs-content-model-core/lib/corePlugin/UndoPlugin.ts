@@ -23,7 +23,7 @@ const Enter = 'Enter';
  * Provides snapshot based undo service for Editor
  */
 class UndoPlugin implements PluginWithState<UndoPluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: UndoPluginState;
 
     /**

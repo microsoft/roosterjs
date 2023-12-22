@@ -1,5 +1,6 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { createCorePlugins, getPluginState } from '../corePlugins/createCorePlugins';
+import { createContextMenuPlugin } from '../corePlugins/ContextMenuPlugin';
+import { createCorePlugins } from '../corePlugins/createCorePlugins';
 import { createModelFromHtml, createStandaloneEditorCore } from 'roosterjs-content-model-core';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
@@ -16,11 +17,11 @@ export function createEditorCore(
     options: ContentModelEditorOptions
 ): ContentModelEditorCore {
     const corePlugins = createCorePlugins(options);
-    const pluginState = getPluginState(corePlugins);
     const additionalPlugins: EditorPlugin[] = [
         corePlugins.eventTranslate,
         corePlugins.edit,
         ...(options.plugins ?? []),
+        createContextMenuPlugin(options),
         corePlugins.normalizeTable,
     ].filter(x => !!x);
 
@@ -40,13 +41,13 @@ export function createEditorCore(
         contentDiv,
         options,
         coreApiMap,
-        pluginState,
         additionalPlugins
     );
 
     const core: ContentModelEditorCore = {
         ...standaloneEditorCore,
-        ...pluginState,
+        edit: corePlugins.edit.getState(),
+        contextMenu: corePlugins.contextMenu.getState(),
         zoomScale: zoomScale,
         sizeTransformer: (size: number) => size / zoomScale,
         disposeErrorHandler: options.disposeErrorHandler,

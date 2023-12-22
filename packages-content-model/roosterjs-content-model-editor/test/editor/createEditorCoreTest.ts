@@ -1,6 +1,7 @@
 import * as ContentModelCachePlugin from 'roosterjs-content-model-core/lib/corePlugin/ContentModelCachePlugin';
 import * as ContentModelCopyPastePlugin from 'roosterjs-content-model-core/lib/corePlugin/ContentModelCopyPastePlugin';
 import * as ContentModelFormatPlugin from 'roosterjs-content-model-core/lib/corePlugin/ContentModelFormatPlugin';
+import * as ContextMenuPlugin from '../../lib/corePlugins/ContextMenuPlugin';
 import * as createStandaloneEditorDefaultSettings from 'roosterjs-content-model-core/lib/editor/createStandaloneEditorDefaultSettings';
 import * as DOMEventPlugin from 'roosterjs-content-model-core/lib/corePlugin/DOMEventPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
@@ -21,6 +22,7 @@ const mockedLifecycleState = 'LIFECYCLESTATE' as any;
 const mockedUndoState = 'UNDOSTATE' as any;
 const mockedEntityState = 'ENTITYSTATE' as any;
 const mockedCopyPasteState = 'COPYPASTESTATE' as any;
+const mockedContextMenuState = 'CONTEXTMENU' as any;
 const mockedCacheState = 'CACHESTATE' as any;
 const mockedFormatState = 'FORMATSTATE' as any;
 const mockedSelectionState = 'SELECTION' as any;
@@ -33,6 +35,9 @@ const mockedCachePlugin = {
 } as any;
 const mockedCopyPastePlugin = {
     getState: () => mockedCopyPasteState,
+} as any;
+const mockedContextMenuPlugin = {
+    getState: () => mockedContextMenuState,
 } as any;
 const mockedEditPlugin = {
     getState: () => mockedEditState,
@@ -79,6 +84,9 @@ describe('createEditorCore', () => {
             mockedCopyPastePlugin
         );
         spyOn(EditPlugin, 'createEditPlugin').and.returnValue(mockedEditPlugin);
+        spyOn(ContextMenuPlugin, 'createContextMenuPlugin').and.returnValue(
+            mockedContextMenuPlugin
+        );
         spyOn(UndoPlugin, 'createUndoPlugin').and.returnValue(mockedUndoPlugin);
         spyOn(DOMEventPlugin, 'createDOMEventPlugin').and.returnValue(mockedDOMEventPlugin);
         spyOn(SelectionPlugin, 'createSelectionPlugin').and.returnValue(mockedSelectionPlugin);
@@ -113,6 +121,7 @@ describe('createEditorCore', () => {
                 mockedEntityPlugin,
                 mockedEventTranslatePlugin,
                 mockedEditPlugin,
+                mockedContextMenuPlugin,
                 mockedNormalizeTablePlugin,
                 mockedUndoPlugin,
                 mockedLifecyclePlugin,
@@ -126,6 +135,7 @@ describe('createEditorCore', () => {
             cache: mockedCacheState,
             format: mockedFormatState,
             selection: mockedSelectionState,
+            contextMenu: mockedContextMenuState,
             trustedHTMLHandler: defaultTrustHtmlHandler,
             zoomScale: 1,
             sizeTransformer: jasmine.anything(),
@@ -173,6 +183,7 @@ describe('createEditorCore', () => {
                 mockedEntityPlugin,
                 mockedEventTranslatePlugin,
                 mockedEditPlugin,
+                mockedContextMenuPlugin,
                 mockedNormalizeTablePlugin,
                 mockedUndoPlugin,
                 mockedLifecyclePlugin,
@@ -186,6 +197,7 @@ describe('createEditorCore', () => {
             cache: mockedCacheState,
             format: mockedFormatState,
             selection: mockedSelectionState,
+            contextMenu: mockedContextMenuState,
             trustedHTMLHandler: defaultTrustHtmlHandler,
             zoomScale: 1,
             sizeTransformer: jasmine.anything(),

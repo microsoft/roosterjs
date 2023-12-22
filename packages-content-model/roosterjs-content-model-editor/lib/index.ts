@@ -4,6 +4,7 @@ export {
     ContentModelCorePlugins,
     UnportedCorePlugins,
 } from './publicTypes/ContentModelCorePlugins';
+export { ContextMenuPluginState } from './publicTypes/ContextMenuPluginState';
 
 export { ContentModelEditor } from './editor/ContentModelEditor';
 export { isContentModelEditor } from './editor/isContentModelEditor';

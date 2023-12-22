@@ -19,7 +19,7 @@ const ProcessKey = 'Process';
  * 1. Handle pending format changes when selection is collapsed
  */
 class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private hasDefaultFormat = false;
     private state: ContentModelFormatPluginState;
 

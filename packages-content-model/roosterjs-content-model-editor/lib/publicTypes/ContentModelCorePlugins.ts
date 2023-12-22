@@ -1,3 +1,4 @@
+import type { ContextMenuPluginState } from './ContextMenuPluginState';
 import type { StandaloneEditorCorePlugins } from 'roosterjs-content-model-types';
 import type { EditPluginState, EditorPlugin, PluginWithState } from 'roosterjs-editor-types';
 
@@ -20,6 +21,11 @@ export interface UnportedCorePlugins {
      * NormalizeTable plugin makes sure each table in editor has TBODY/THEAD/TFOOT tag around TR tags
      */
     readonly normalizeTable: EditorPlugin;
+
+    /**
+     * ContextMenu plugin handles Context Menu
+     */
+    readonly contextMenu: PluginWithState<ContextMenuPluginState>;
 }
 
 /**

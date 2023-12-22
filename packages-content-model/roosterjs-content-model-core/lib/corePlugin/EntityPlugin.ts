@@ -1,3 +1,4 @@
+import { EntityOperation as LegacyEntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { findAllEntities } from './utils/findAllEntities';
 import { transformColor } from '../publicApi/color/transformColor';
 import {
@@ -8,7 +9,6 @@ import {
     isEntityElement,
     parseEntityClassName,
 } from 'roosterjs-content-model-dom';
-import { EntityOperation as LegacyEntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import type {
     ChangedEntity,
     ContentModelContentChangedEvent,
@@ -43,7 +43,7 @@ const EntityOperationMap: Record<EntityOperation, LegacyEntityOperation> = {
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
  */
 class EntityPlugin implements PluginWithState<EntityPluginState> {
-    private editor: (IEditor & IStandaloneEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: EntityPluginState;
 
     /**
@@ -109,12 +109,12 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         }
     }
 
-    private handleMouseUpEvent(editor: IEditor & IStandaloneEditor, event: PluginMouseUpEvent) {
+    private handleMouseUpEvent(editor: IStandaloneEditor, event: PluginMouseUpEvent) {
         const { rawEvent, isClicking } = event;
         let node: Node | null = rawEvent.target as Node;
 
         if (isClicking && this.editor) {
-            while (node && this.editor.contains(node)) {
+            while (node && this.editor.isNodeInEditor(node)) {
                 if (isEntityElement(node)) {
                     this.triggerEvent(editor, node as HTMLElement, 'click', rawEvent);
                     break;
@@ -125,10 +125,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         }
     }
 
-    private handleContentChangedEvent(
-        editor: IStandaloneEditor & IEditor,
-        event?: ContentChangedEvent
-    ) {
+    private handleContentChangedEvent(editor: IStandaloneEditor, event?: ContentChangedEvent) {
         const cmEvent = event as ContentModelContentChangedEvent | undefined;
         const modifiedEntities: ChangedEntity[] =
             cmEvent?.changedEntities ?? this.getChangedEntities(editor);
@@ -235,10 +232,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         return result;
     }
 
-    private handleExtractContentWithDomEvent(
-        editor: IEditor & IStandaloneEditor,
-        root: HTMLElement
-    ) {
+    private handleExtractContentWithDomEvent(editor: IStandaloneEditor, root: HTMLElement) {
         getAllEntityWrappers(root).forEach(element => {
             element.removeAttribute('contentEditable');
 
@@ -247,7 +241,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
     }
 
     private triggerEvent(
-        editor: IEditor & IStandaloneEditor,
+        editor: IStandaloneEditor,
         wrapper: HTMLElement,
         operation: EntityOperation,
         rawEvent?: Event,

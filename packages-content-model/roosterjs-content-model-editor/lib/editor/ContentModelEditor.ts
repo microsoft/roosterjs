@@ -91,6 +91,7 @@ import type {
     Snapshot,
     SnapshotsManager,
     DOMEventRecord,
+    PasteType,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -448,9 +449,7 @@ export class ContentModelEditor implements IContentModelEditor {
         applyCurrentFormat: boolean = false,
         pasteAsImage: boolean = false
     ) {
-        const core = this.getCore();
-        core.api.paste(
-            core,
+        this.pasteFromClipboard(
             clipboardData,
             pasteAsText
                 ? 'asPlainText'
@@ -1210,6 +1209,27 @@ export class ContentModelEditor implements IContentModelEditor {
         const core = this.getCore();
 
         return core.api.getVisibleViewport(core);
+    }
+
+    /**
+     * Check if the given DOM node is in editor
+     * @param node The node to check
+     */
+    isNodeInEditor(node: Node): boolean {
+        const core = this.getCore();
+
+        return core.contentDiv.contains(node);
+    }
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteType Type of paste
+     */
+    pasteFromClipboard(clipboardData: ClipboardData, pasteType: PasteType = 'normal') {
+        const core = this.getCore();
+
+        core.api.paste(core, clipboardData, pasteType);
     }
 
     /**
