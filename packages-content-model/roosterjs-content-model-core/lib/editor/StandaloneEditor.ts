@@ -1,5 +1,5 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { createEditorCore } from './createEditorCore';
+import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { transformColor } from '../publicApi/color/transformColor';
 import type {
@@ -40,7 +40,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: StandaloneEditorOptions = {}) {
-        this.core = createEditorCore(contentDiv, options);
+        this.core = createStandaloneEditorCore(contentDiv, options);
         this.core.plugins.forEach(plugin => plugin.initialize(this));
     }
 

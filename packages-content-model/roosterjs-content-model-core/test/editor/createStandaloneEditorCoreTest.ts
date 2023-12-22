@@ -1,13 +1,13 @@
-import * as createDefaultSettings from '../../lib/editor/createDefaultSettings';
+import * as createDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
 import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
 import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
 import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
 import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 import {
-    createEditorCore,
+    createStandaloneEditorCore,
     defaultTrustHtmlHandler,
     getDarkColorFallback,
-} from '../../lib/editor/createEditorCore';
+} from '../../lib/editor/createStandaloneEditorCore';
 
 describe('createEditorCore', () => {
     function createMockedPlugin(stateName: string): any {
@@ -59,7 +59,7 @@ describe('createEditorCore', () => {
         options: StandaloneEditorOptions,
         additionalResult: Partial<StandaloneEditorCore>
     ) {
-        const core = createEditorCore(contentDiv, options);
+        const core = createStandaloneEditorCore(contentDiv, options);
 
         expect(core).toEqual({
             contentDiv: contentDiv,

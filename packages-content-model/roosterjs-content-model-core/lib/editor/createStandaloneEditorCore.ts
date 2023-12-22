@@ -1,5 +1,8 @@
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
-import { createDomToModelSettings, createModelToDomSettings } from './createDefaultSettings';
+import {
+    createDomToModelSettings,
+    createModelToDomSettings,
+} from './createStandaloneEditorDefaultSettings';
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
 import type {
@@ -16,7 +19,7 @@ import type {
  * @param contentDiv Editor content DIV
  * @param options Editor options
  */
-export function createEditorCore(
+export function createStandaloneEditorCore(
     contentDiv: HTMLDivElement,
     options: StandaloneEditorOptions
 ): StandaloneEditorCore {

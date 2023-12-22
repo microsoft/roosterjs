@@ -1,4 +1,4 @@
-import * as createEditorCore from '../../lib/editor/createEditorCore';
+import * as createStandaloneEditorCore from '../../lib/editor/createStandaloneEditorCore';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { PluginEventType } from 'roosterjs-editor-types';
@@ -8,7 +8,10 @@ describe('StandaloneEditor', () => {
     let createEditorCoreSpy: jasmine.Spy;
 
     beforeEach(() => {
-        createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.callThrough();
+        createEditorCoreSpy = spyOn(
+            createStandaloneEditorCore,
+            'createStandaloneEditorCore'
+        ).and.callThrough();
     });
 
     it('ctor and dispose, no options', () => {
