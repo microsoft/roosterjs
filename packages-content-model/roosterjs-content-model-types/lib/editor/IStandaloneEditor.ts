@@ -80,8 +80,6 @@ export interface IStandaloneEditor {
      */
     getPendingFormat(): ContentModelSegmentFormat | null;
 
-    //#region Editor API copied from legacy editor, will be ported to use Content Model instead
-
     /**
      * Get whether this editor is disposed
      * @returns True if editor is disposed, otherwise false
@@ -126,6 +124,12 @@ export interface IStandaloneEditor {
     isDarkMode(): boolean;
 
     /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param isDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    setDarkModeState(isDarkMode?: boolean): void;
+
+    /**
      * Get current zoom scale, default value is 1
      * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
      * to let editor behave correctly especially for those mouse drag/drop behaviors
@@ -156,5 +160,51 @@ export interface IStandaloneEditor {
      */
     attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void;
 
-    //#endregion
+    /**
+     * Check if editor is in Shadow Edit mode
+     */
+    isInShadowEdit(): boolean;
+
+    /**
+     * Make the editor in "Shadow Edit" mode.
+     * In Shadow Edit mode, all format change will finally be ignored.
+     * This can be used for building a live preview feature for format button, to allow user
+     * see format result without really apply it.
+     * This function can be called repeated. If editor is already in shadow edit mode, we can still
+     * use this function to do more shadow edit operation.
+     */
+    startShadowEdit(): void;
+
+    /**
+     * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
+     */
+    stopShadowEdit(): void;
+
+    /**
+     * Check if the given DOM node is in editor
+     * @param node The node to check
+     */
+    isNodeInEditor(node: Node): boolean;
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteType Type of paste
+     */
+    pasteFromClipboard(clipboardData: ClipboardData, pasteType?: PasteType): void;
+
+    /**
+     * Get a darkColorHandler object for this editor.
+     */
+    getDarkColorHandler(): DarkColorHandler;
+
+    /**
+     * Dispose this editor, dispose all plugins and custom data
+     */
+    dispose(): void;
+    /**
+     * Check if focus is in editor now
+     * @returns true if focus is in editor, otherwise false
+     */
+    hasFocus(): boolean;
 }

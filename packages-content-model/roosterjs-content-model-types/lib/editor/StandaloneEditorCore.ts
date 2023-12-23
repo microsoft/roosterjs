@@ -17,10 +17,7 @@ import type {
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
-import type {
-    StandaloneEditorCorePluginState,
-    UnportedCorePluginState,
-} from '../pluginState/StandaloneEditorPluginState';
+import type { StandaloneEditorCorePluginState } from '../pluginState/StandaloneEditorPluginState';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { DomToModelSettings } from '../context/DomToModelSettings';
@@ -412,9 +409,7 @@ export interface StandaloneCoreApiMap extends PortedCoreApiMap, UnportedCoreApiM
 /**
  * Represents the core data structure of a Content Model editor
  */
-export interface StandaloneEditorCore
-    extends StandaloneEditorCorePluginState,
-        UnportedCorePluginState {
+export interface StandaloneEditorCore extends StandaloneEditorCorePluginState {
     /**
      * The content DIV element of this editor
      */

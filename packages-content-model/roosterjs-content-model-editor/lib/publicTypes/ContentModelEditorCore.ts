@@ -1,6 +1,8 @@
+import type { ContextMenuPluginState } from './ContextMenuPluginState';
 import type { CompatibleExperimentalFeatures } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     CustomData,
+    EditPluginState,
     EditorPlugin,
     ExperimentalFeatures,
     SizeTransformer,
@@ -49,4 +51,14 @@ export interface ContentModelEditorCore extends StandaloneEditorCore {
      * Enabled experimental features
      */
     experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
+
+    /**
+     * Unported core plugin state: EditPlugin
+     */
+    edit: EditPluginState;
+
+    /**
+     * Unported core plugin state: ContextMenuPlugin
+     */
+    contextMenu: ContextMenuPluginState;
 }

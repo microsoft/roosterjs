@@ -1,3 +1,4 @@
+import { EntityOperation as LegacyEntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { findAllEntities } from './utils/findAllEntities';
 import { transformColor } from '../publicApi/color/transformColor';
 import {
@@ -97,7 +98,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         let node: Node | null = rawEvent.target as Node;
 
         if (isClicking && this.editor) {
-            while (node && this.editor.contains(node)) {
+            while (node && this.editor.isNodeInEditor(node)) {
                 if (isEntityElement(node)) {
                     this.triggerEvent(editor, node as HTMLElement, 'click', rawEvent);
                     break;
@@ -214,10 +215,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         return result;
     }
 
-    private handleExtractContentWithDomEvent(
-        editor: IEditor & IStandaloneEditor,
-        root: HTMLElement
-    ) {
+    private handleExtractContentWithDomEvent(editor: IStandaloneEditor, root: HTMLElement) {
         getAllEntityWrappers(root).forEach(element => {
             element.removeAttribute('contentEditable');
 
@@ -226,7 +224,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
     }
 
     private triggerEvent(
-        editor: IEditor & IStandaloneEditor,
+        editor: IStandaloneEditor,
         wrapper: HTMLElement,
         operation: EntityOperation,
         rawEvent?: Event,

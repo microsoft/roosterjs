@@ -40,10 +40,6 @@ export const LIST_CONTAINER_ELEMENT_CLASS_NAME: string = 'ListContainerWrapper';
 /**
  * @internal
  **/
-export const TABLE_CONTAINER: string = 'TableContainer';
-/**
- * @internal
- **/
 export const COMMENT_HIGHLIGHT_CLASS: string = 'CommentHighlightRest';
 /**
  * @internal

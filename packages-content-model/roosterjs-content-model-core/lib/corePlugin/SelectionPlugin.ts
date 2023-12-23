@@ -198,7 +198,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     };
 
     private onMouseDownDocument = (event: MouseEvent) => {
-        if (this.editor && !this.editor.contains(event.target as Node)) {
+        if (this.editor && !this.editor.isNodeInEditor(event.target as Node)) {
             this.onBlur();
         }
     };

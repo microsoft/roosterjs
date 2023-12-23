@@ -1,15 +1,14 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     DOMEventPluginState,
     IStandaloneEditor,
     DOMEventRecord,
     StandaloneEditorOptions,
-    PluginWithState,
-    PluginEventType,
-    EditorPlugin,
-    ContextMenuProvider,
 } from 'roosterjs-content-model-types';
+import type { PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -36,8 +35,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
-            contextMenuProviders:
-                options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -69,7 +66,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
             // 2. Mouse event
             mousedown: { beforeDispatch: this.onMouseDown },
-            contextmenu: { beforeDispatch: this.onContextMenuEvent },
 
             // 3. IME state management
             compositionstart: { beforeDispatch: this.onCompositionStart },
@@ -116,17 +112,23 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
     private onDragStart = (e: Event) => {
         const dragEvent = e as DragEvent;
-        const element = this.editor?.getElementAtCursor('*', dragEvent.target as Node);
+        const node = dragEvent.target as Node;
+        const element = isNodeOfType(node, 'ELEMENT_NODE') ? node : node.parentElement;
 
         if (element && !element.isContentEditable) {
             dragEvent.preventDefault();
         }
     };
+
     private onDrop = () => {
-        this.editor?.runAsync(() => {
+        const doc = this.editor?.getDocument();
+
+        doc?.defaultView?.requestAnimationFrame(() => {
             if (this.editor) {
                 this.editor.takeSnapshot();
-                this.editor.triggerContentChangedEvent(ChangeSource.Drop);
+                this.editor.triggerPluginEvent(PluginEventType.ContentChanged, {
+                    source: ChangeSource.Drop,
+                });
             }
         });
     };
@@ -191,33 +193,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         }
     };
 
-    private onContextMenuEvent = (event: MouseEvent) => {
-        const allItems: any[] = [];
-
-        // TODO: Remove dependency to ContentSearcher
-        const searcher = this.editor?.getContentSearcherOfCursor();
-        const elementBeforeCursor = searcher?.getInlineElementBefore();
-
-        let eventTargetNode = event.target as Node;
-        if (event.button != 2 && elementBeforeCursor) {
-            eventTargetNode = elementBeforeCursor.getContainerNode();
-        }
-        this.state.contextMenuProviders.forEach(provider => {
-            const items = provider.getContextMenuItems(eventTargetNode) ?? [];
-            if (items?.length > 0) {
-                if (allItems.length > 0) {
-                    allItems.push(null);
-                }
-
-                allItems.push(...items);
-            }
-        });
-        this.editor?.triggerPluginEvent('contextMenu', {
-            rawEvent: event,
-            items: allItems,
-        });
-    };
-
     private onCompositionStart = () => {
         this.state.isInIME = true;
     };
@@ -235,10 +210,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
         }
     }
-}
-
-function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvider<any> {
-    return !!(<ContextMenuProvider<any>>source)?.getContextMenuItems;
 }
 
 /**

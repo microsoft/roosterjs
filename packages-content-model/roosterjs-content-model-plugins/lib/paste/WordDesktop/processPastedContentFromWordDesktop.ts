@@ -10,6 +10,7 @@ import type {
     ContentModelBlockFormat,
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
+    ContentModelTableFormat,
     DomToModelContext,
     ElementProcessor,
     FormatParser,
@@ -91,5 +92,11 @@ const listItemElementParser: FormatParser<ContentModelListItemFormat> = (
     }
     if (element.style.marginRight) {
         format.marginRight = undefined;
+    }
+};
+
+const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
+    if (format.marginLeft?.startsWith('-')) {
+        delete format.marginLeft;
     }
 };

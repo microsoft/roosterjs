@@ -237,10 +237,7 @@ export {
 export { ContextMenuProvider } from './editor/ContextMenuProvider';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export {
-    StandaloneEditorCorePluginState,
-    UnportedCorePluginState,
-} from './pluginState/StandaloneEditorPluginState';
+export { StandaloneEditorCorePluginState } from './pluginState/StandaloneEditorPluginState';
 export {
     ContentModelFormatPluginState,
     PendingFormat,

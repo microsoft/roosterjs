@@ -154,13 +154,17 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                     addRangeToSelection(doc, newRange);
                 }
 
-                this.editor.runAsync(editor => {
+                doc.defaultView?.requestAnimationFrame(() => {
+                    if (!this.editor) {
+                        return;
+                    }
+
                     cleanUpAndRestoreSelection(tempDiv);
-                    editor.focus();
-                    editor.setDOMSelection(selection);
+                    this.editor.focus();
+                    this.editor.setDOMSelection(selection);
 
                     if (isCut) {
-                        editor.formatContentModel(
+                        this.editor.formatContentModel(
                             (model, context) => {
                                 if (
                                     deleteSelection(model, [deleteEmptyList], context)
@@ -197,7 +201,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                     this.state.allowedCustomPasteType
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
-                        editor.paste(clipboardData);
+                        editor.pasteFromClipboard(clipboardData);
                     }
                 });
             }
