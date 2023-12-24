@@ -1,4 +1,4 @@
-import type { IContentModelEditor } from '../publicTypes/IContentModelEditor';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type { IEditor } from 'roosterjs-editor-types';
 
 /**

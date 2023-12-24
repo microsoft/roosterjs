@@ -2,7 +2,7 @@ import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { createRibbonPlugin, RibbonPlugin } from 'roosterjs-react';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import { isContentModelEditor } from '../../../utils/isContentModelEditor';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 

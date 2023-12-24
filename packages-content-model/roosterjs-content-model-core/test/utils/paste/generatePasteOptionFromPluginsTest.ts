@@ -32,7 +32,7 @@ describe('generatePasteOptionFromPlugins', () => {
     };
 
     beforeEach(() => {
-        triggerPluginEventSpy = jasmine.createSpy('triggerPluginEvent');
+        triggerPluginEventSpy = jasmine.createSpy('triggerEvent');
         core = {
             api: {
                 triggerEvent: triggerPluginEventSpy,

@@ -1,7 +1,7 @@
 import ContentModelRibbonButton from './ContentModelRibbonButton';
-import showInputDialog from 'roosterjs-react/lib/inputDialog/utils/showInputDialog';
-import { setListStartNumber } from 'roosterjs-content-model-api';
 import { CancelButtonStringKey, OkButtonStringKey } from 'roosterjs-react';
+import { setListStartNumber } from 'roosterjs-content-model-api';
+import { showInputDialog } from 'roosterjs-react/lib/inputDialog';
 
 /**
  * @internal
