@@ -15,3 +15,4 @@ export {
 } from './publicTypes/ContentModelCorePlugins';
 
 export { ContentModelEditor } from './editor/ContentModelEditor';
+export { isContentModelEditor } from './editor/isContentModelEditor';
