@@ -1,5 +1,5 @@
 import { createLifecyclePlugin } from '../../lib/corePlugin/LifecyclePlugin';
-import { DarkColorHandler, PluginEventType } from 'roosterjs-editor-types';
+import { DarkColorHandler } from 'roosterjs-editor-types';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 describe('LifecyclePlugin', () => {
@@ -29,7 +29,7 @@ describe('LifecyclePlugin', () => {
         expect(div.style.userSelect).toBe('text');
         expect(div.innerHTML).toBe('');
         expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
         expect(setContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setContentModelSpy).toHaveBeenCalledWith(
             {
@@ -89,7 +89,7 @@ describe('LifecyclePlugin', () => {
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
         expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();
@@ -114,7 +114,7 @@ describe('LifecyclePlugin', () => {
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('');
         expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
 
         expect(setContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setContentModelSpy).toHaveBeenCalledWith(
@@ -174,7 +174,7 @@ describe('LifecyclePlugin', () => {
         expect(div.isContentEditable).toBeFalse();
         expect(div.style.userSelect).toBe('');
         expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();

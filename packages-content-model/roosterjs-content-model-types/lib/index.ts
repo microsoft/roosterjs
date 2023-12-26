@@ -276,21 +276,6 @@ export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
 
-export {
-    ContentModelBeforePasteEvent,
-    ContentModelBeforePasteEventData,
-    CompatibleContentModelBeforePasteEvent,
-} from './event/ContentModelBeforePasteEvent';
-export {
-    ContentModelContentChangedEvent,
-    CompatibleContentModelContentChangedEvent,
-    ContentModelContentChangedEventData,
-} from './event/ContentModelContentChangedEvent';
-export {
-    CompatibleContentModelSelectionChangedEvent,
-    ContentModelSelectionChangedEvent,
-    ContentModelSelectionChangedEventData,
-} from './event/ContentModelSelectionChangedEvent';
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
 export { BeforeDisposeEvent } from './event/BeforeDisposeEvent';

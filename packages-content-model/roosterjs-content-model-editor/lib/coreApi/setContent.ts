@@ -1,7 +1,6 @@
 import { ChangeSource, transformColor } from 'roosterjs-content-model-core';
 import { convertMetadataToDOMSelection } from '../editor/utils/selectionConverter';
 import { extractContentMetadata, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
-import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentMetadata } from 'roosterjs-editor-types';
 import type { SetContent } from '../publicTypes/ContentModelEditorCore';
 import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
@@ -31,7 +30,7 @@ export const setContent: SetContent = (
         api.triggerEvent(
             innerCore,
             {
-                eventType: PluginEventType.BeforeSetContent,
+                eventType: 'beforeSetContent',
                 newContent: content,
             },
             true /*broadcast*/
@@ -68,7 +67,7 @@ export const setContent: SetContent = (
         api.triggerEvent(
             innerCore,
             {
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: ChangeSource.SetContent,
             },
             false /*broadcast*/
