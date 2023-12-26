@@ -1,4 +1,4 @@
-import { parseValueWithUnit } from 'roosterjs-content-model-dom/lib';
+import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import {
     extractBorderValues,
     getClosestAncestorBlockGroupIndex,
