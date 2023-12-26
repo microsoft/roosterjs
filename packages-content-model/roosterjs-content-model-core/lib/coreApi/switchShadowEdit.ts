@@ -1,5 +1,6 @@
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
 
 /**
@@ -26,7 +27,9 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: 'enteredShadowEdit',
+                    eventType: PluginEventType.EnteredShadowEdit,
+                    fragment,
+                    selectionPath: null,
                 },
                 false /*broadcast*/
             );
@@ -44,7 +47,7 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: 'leavingShadowEdit',
+                    eventType: PluginEventType.LeavingShadowEdit,
                 },
                 false /*broadcast*/
             );

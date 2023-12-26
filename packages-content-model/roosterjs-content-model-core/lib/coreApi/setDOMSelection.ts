@@ -1,8 +1,9 @@
 import { addRangeToSelection } from '../corePlugin/utils/addRangeToSelection';
 import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { parseTableCells } from '../publicApi/domUtils/tableCellUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type {
-    SelectionChangedEvent,
+    ContentModelSelectionChangedEvent,
     SetDOMSelection,
     TableSelection,
 } from 'roosterjs-content-model-types';
@@ -84,9 +85,10 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 
     if (!skipSelectionChangedEvent) {
-        const eventData: SelectionChangedEvent = {
-            eventType: 'selectionChanged',
+        const eventData: ContentModelSelectionChangedEvent = {
+            eventType: PluginEventType.SelectionChanged,
             newSelection: selection,
+            selectionRangeEx: null,
         };
 
         core.api.triggerEvent(core, eventData, true /*broadcast*/);

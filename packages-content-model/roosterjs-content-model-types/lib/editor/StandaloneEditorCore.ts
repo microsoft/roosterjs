@@ -1,4 +1,3 @@
-import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from '../pluginState/PluginState';
 import type { EditorPlugin } from './EditorPlugin';
 import type { ClipboardData } from '../parameter/ClipboardData';
@@ -6,7 +5,12 @@ import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
-import type { DarkColorHandler, Rect, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type {
+    DarkColorHandler,
+    PluginEvent,
+    Rect,
+    TrustedHTMLHandler,
+} from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';

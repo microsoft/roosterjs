@@ -1,4 +1,4 @@
-import type { PluginEventType } from '../event/PluginEventType';
+import type { PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * Handler function type of DOM event

@@ -1,6 +1,7 @@
 import * as applyPendingFormat from '../../lib/corePlugin/utils/applyPendingFormat';
 import { createContentModelFormatPlugin } from '../../lib/corePlugin/ContentModelFormatPlugin';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import {
     addSegment,
     createContentModelDocument,
@@ -25,7 +26,7 @@ describe('ContentModelFormatPlugin', () => {
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
-            eventType: 'keyDown',
+            eventType: PluginEventType.KeyDown,
             rawEvent: ({ key: 'PageUp' } as any) as KeyboardEvent,
         });
 
@@ -54,7 +55,7 @@ describe('ContentModelFormatPlugin', () => {
             plugin.initialize(editor);
 
         plugin.onPluginEvent({
-            eventType: 'input',
+            eventType: PluginEventType.Input,
             rawEvent: ({ data: 'a' } as any) as InputEvent,
         });
 
@@ -89,7 +90,7 @@ describe('ContentModelFormatPlugin', () => {
             format: mockedFormat,
         } as any;
         plugin.onPluginEvent({
-            eventType: 'input',
+            eventType: PluginEventType.Input,
             rawEvent: ({ data: 'a', isComposing: true } as any) as InputEvent,
         });
         plugin.dispose();
@@ -123,7 +124,7 @@ describe('ContentModelFormatPlugin', () => {
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
-            eventType: 'compositionEnd',
+            eventType: PluginEventType.CompositionEnd,
             rawEvent: ({ data: 'test' } as any) as CompositionEvent,
         });
         plugin.dispose();
@@ -154,7 +155,7 @@ describe('ContentModelFormatPlugin', () => {
         } as any;
 
         plugin.onPluginEvent({
-            eventType: 'keyDown',
+            eventType: PluginEventType.KeyDown,
             rawEvent: ({ which: 17 } as any) as KeyboardEvent,
         });
         plugin.dispose();
@@ -187,7 +188,7 @@ describe('ContentModelFormatPlugin', () => {
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
-            eventType: 'contentChanged',
+            eventType: PluginEventType.ContentChanged,
             source: '',
         });
         plugin.dispose();
@@ -216,7 +217,7 @@ describe('ContentModelFormatPlugin', () => {
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
-            eventType: 'mouseUp',
+            eventType: PluginEventType.MouseUp,
             rawEvent: ({} as any) as MouseEvent,
         });
         plugin.dispose();
@@ -245,7 +246,7 @@ describe('ContentModelFormatPlugin', () => {
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
-            eventType: 'mouseUp',
+            eventType: PluginEventType.MouseUp,
             rawEvent: ({} as any) as MouseEvent,
         });
         plugin.dispose();
@@ -331,7 +332,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
-            eventType: 'keyDown',
+            eventType: PluginEventType.KeyDown,
             rawEvent,
         });
 
@@ -387,7 +388,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
-            eventType: 'keyDown',
+            eventType: PluginEventType.KeyDown,
             rawEvent,
         });
 
@@ -439,7 +440,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
-            eventType: 'keyDown',
+            eventType: PluginEventType.KeyDown,
             rawEvent,
         });
 
@@ -494,7 +495,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
-            eventType: 'keyDown',
+            eventType: PluginEventType.KeyDown,
             rawEvent,
         });
 
@@ -547,7 +548,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
-            eventType: 'keyDown',
+            eventType: PluginEventType.KeyDown,
             rawEvent,
         });
 
@@ -608,7 +609,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
-            eventType: 'keyDown',
+            eventType: PluginEventType.KeyDown,
             rawEvent,
         });
 

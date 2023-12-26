@@ -1,5 +1,6 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import type { AttachDomEvent, PluginEvent } from 'roosterjs-content-model-types';
+import type { AttachDomEvent } from 'roosterjs-content-model-types';
+import type { PluginDomEvent } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -21,7 +22,7 @@ export const attachDomEvent: AttachDomEvent = (core, eventMap) => {
             if (pluginEventType != null) {
                 core.api.triggerEvent(
                     core,
-                    <PluginEvent>{
+                    <PluginDomEvent>{
                         eventType: pluginEventType,
                         rawEvent: event,
                     },

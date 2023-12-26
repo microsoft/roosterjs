@@ -6,6 +6,7 @@ import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from '../utils/extractClipboardItems';
 import { getSelectedCells } from '../publicApi/table/getSelectedCells';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { transformColor } from '../publicApi/color/transformColor';
 import {
     contentModelToDom,
@@ -143,7 +144,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                 : null;
 
             if (newRange) {
-                newRange = this.editor.triggerEvent('beforeCutCopy', {
+                newRange = this.editor.triggerEvent(PluginEventType.BeforeCutCopy, {
                     clonedRoot: tempDiv,
                     range: newRange,
                     rawEvent: event as ClipboardEvent,

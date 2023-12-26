@@ -1,3 +1,4 @@
+import { EntityOperation as LegacyEntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { findAllEntities } from './utils/findAllEntities';
 import { transformColor } from '../publicApi/color/transformColor';
 import {
@@ -10,17 +11,28 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     ChangedEntity,
-    ContentChangedEvent,
+    ContentModelContentChangedEvent,
     ContentModelEntityFormat,
     EntityOperation,
     EntityPluginState,
     IStandaloneEditor,
-    MouseUpEvent,
-    PluginEvent,
     PluginWithState,
 } from 'roosterjs-content-model-types';
+import type { ContentChangedEvent, PluginEvent, PluginMouseUpEvent } from 'roosterjs-editor-types';
 
 const ENTITY_ID_REGEX = /_(\d{1,8})$/;
+
+// This is only used for compatibility with old editor
+// TODO: Remove this map once we have standalone editor
+const EntityOperationMap: Record<EntityOperation, LegacyEntityOperation> = {
+    newEntity: LegacyEntityOperation.NewEntity,
+    overwrite: LegacyEntityOperation.Overwrite,
+    removeFromEnd: LegacyEntityOperation.RemoveFromEnd,
+    removeFromStart: LegacyEntityOperation.RemoveFromStart,
+    replaceTemporaryContent: LegacyEntityOperation.ReplaceTemporaryContent,
+    updateEntityState: LegacyEntityOperation.UpdateEntityState,
+    click: LegacyEntityOperation.Click,
+};
 
 /**
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
@@ -75,24 +87,24 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case 'mouseUp':
+                case PluginEventType.MouseUp:
                     this.handleMouseUpEvent(this.editor, event);
                     break;
-                case 'contentChanged':
+                case PluginEventType.ContentChanged:
                     this.handleContentChangedEvent(this.editor, event);
                     break;
 
-                case 'editorReady':
+                case PluginEventType.EditorReady:
                     this.handleContentChangedEvent(this.editor);
                     break;
-                case 'extractContentWithDom':
+                case PluginEventType.ExtractContentWithDom:
                     this.handleExtractContentWithDomEvent(this.editor, event.clonedRoot);
                     break;
             }
         }
     }
 
-    private handleMouseUpEvent(editor: IStandaloneEditor, event: MouseUpEvent) {
+    private handleMouseUpEvent(editor: IStandaloneEditor, event: PluginMouseUpEvent) {
         const { rawEvent, isClicking } = event;
         let node: Node | null = rawEvent.target as Node;
 
@@ -109,9 +121,10 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
     }
 
     private handleContentChangedEvent(editor: IStandaloneEditor, event?: ContentChangedEvent) {
+        const cmEvent = event as ContentModelContentChangedEvent | undefined;
         const modifiedEntities: ChangedEntity[] =
-            event?.changedEntities ?? this.getChangedEntities(editor);
-        const entityStates = event?.entityStates;
+            cmEvent?.changedEntities ?? this.getChangedEntities(editor);
+        const entityStates = cmEvent?.entityStates;
 
         modifiedEntities.forEach(entry => {
             const { entity, operation, rawEvent } = entry;
@@ -235,8 +248,8 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         });
 
         return format.id && format.entityType && !format.isFakeEntity
-            ? editor.triggerEvent('entityOperation', {
-                  operation: operation,
+            ? editor.triggerEvent(PluginEventType.EntityOperation, {
+                  operation: EntityOperationMap[operation],
                   rawEvent,
                   entity: {
                       id: format.id,

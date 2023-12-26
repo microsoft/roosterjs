@@ -1,24 +1,24 @@
 import * as moveChildNodes from 'roosterjs-content-model-dom/lib/domUtils/moveChildNodes';
+import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
 import { processPastedContentFromPowerPoint } from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
-import { TrustedHTMLHandler } from 'roosterjs-editor-types';
-import type { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
+import {
+    BeforePasteEvent,
+    PasteType,
+    PluginEventType,
+    TrustedHTMLHandler,
+} from 'roosterjs-editor-types';
+import type { ClipboardData } from 'roosterjs-content-model-types';
 
 const getPasteEvent = (): BeforePasteEvent => {
     return {
-        eventType: 'beforePaste',
+        eventType: PluginEventType.BeforePaste,
         clipboardData: <ClipboardData>{},
         fragment: document.createDocumentFragment(),
+        sanitizingOption: createDefaultHtmlSanitizerOptions(),
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
-        pasteType: 'normal',
-        domToModelOption: {
-            additionalAllowedTags: [],
-            additionalDisallowedTags: [],
-            additionalFormatParsers: {},
-            formatParserOverride: {},
-            processorOverride: {},
-        },
+        pasteType: PasteType.Normal,
     };
 };
 

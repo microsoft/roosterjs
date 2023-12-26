@@ -70,6 +70,7 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                         'Show customized context menu for special cases'
                     )}
                     {this.renderPluginItem('tableCellSelection', 'Table Cell Selection')}
+                    {this.renderPluginItem('contentModelPaste', 'Paste Plugin using content model')}
                 </tbody>
             </table>
         );

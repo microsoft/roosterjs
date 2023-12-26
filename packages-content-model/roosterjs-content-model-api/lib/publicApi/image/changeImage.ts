@@ -1,4 +1,5 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { readFile, updateImageMetadata } from 'roosterjs-content-model-core';
 import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -23,7 +24,7 @@ export default function changeImage(editor: IStandaloneEditor, file: File) {
                 image.format.height = '';
                 image.alt = '';
 
-                editor.triggerEvent('editImage', {
+                editor.triggerEvent(PluginEventType.EditImage, {
                     image: selection.image,
                     previousSrc,
                     newSrc: dataUrl,

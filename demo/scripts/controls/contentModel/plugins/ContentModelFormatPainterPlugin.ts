@@ -1,10 +1,10 @@
 import MainPaneBase from '../../MainPaneBase';
 import { applySegmentFormat, getFormatState } from 'roosterjs-content-model-api';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     ContentModelSegmentFormat,
     EditorPlugin,
     IStandaloneEditor,
-    PluginEvent,
 } from 'roosterjs-content-model-types';
 
 const FORMATPAINTERCURSOR_SVG = require('./formatpaintercursor.svg');
@@ -43,7 +43,7 @@ export default class ContentModelFormatPainterPlugin implements EditorPlugin {
     }
 
     onPluginEvent(event: PluginEvent) {
-        if (this.editor && event.eventType == 'mouseUp') {
+        if (this.editor && event.eventType == PluginEventType.MouseUp) {
             if (this.painterFormat) {
                 applySegmentFormat(this.editor, this.painterFormat);
 

@@ -1,6 +1,7 @@
 import * as createStandaloneEditorCore from '../../lib/editor/createStandaloneEditorCore';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 
 describe('StandaloneEditor', () => {
@@ -697,7 +698,7 @@ describe('StandaloneEditor', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             mockedCore,
             {
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
                 source: ChangeSource.SwitchToDarkMode,
             },
             true
@@ -717,7 +718,7 @@ describe('StandaloneEditor', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             mockedCore,
             {
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
                 source: ChangeSource.SwitchToLightMode,
             },
             true

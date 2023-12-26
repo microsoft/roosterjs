@@ -1,15 +1,15 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createSnapshotsManager } from '../editor/SnapshotsManagerImpl';
 import { isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { undo } from '../publicApi/undo/undo';
 import type {
-    ContentChangedEvent,
     IStandaloneEditor,
-    PluginEvent,
     PluginWithState,
     StandaloneEditorOptions,
     UndoPluginState,
 } from 'roosterjs-content-model-types';
+import type { ContentChangedEvent, PluginEvent } from 'roosterjs-editor-types';
 
 const Backspace = 'Backspace';
 const Delete = 'Delete';
@@ -73,7 +73,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
     willHandleEventExclusively(event: PluginEvent) {
         return (
             !!this.editor &&
-            event.eventType == 'keyDown' &&
+            event.eventType == PluginEventType.KeyDown &&
             event.rawEvent.key == Backspace &&
             !event.rawEvent.ctrlKey &&
             this.canUndoAutoComplete(this.editor)
@@ -91,7 +91,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
         }
 
         switch (event.eventType) {
-            case 'editorReady':
+            case PluginEventType.EditorReady:
                 const manager = this.state.snapshotsManager;
                 const canUndo = manager.hasNewContent || manager.canMove(-1);
                 const canRedo = manager.canMove(1);
@@ -102,20 +102,20 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
                     this.addUndoSnapshot();
                 }
                 break;
-            case 'keyDown':
+            case PluginEventType.KeyDown:
                 this.onKeyDown(this.editor, event.rawEvent);
                 break;
-            case 'keyPress':
+            case PluginEventType.KeyPress:
                 this.onKeyPress(this.editor, event.rawEvent);
                 break;
-            case 'compositionEnd':
+            case PluginEventType.CompositionEnd:
                 this.clearRedoForInput();
                 this.addUndoSnapshot();
                 break;
-            case 'contentChanged':
+            case PluginEventType.ContentChanged:
                 this.onContentChanged(event);
                 break;
-            case 'beforeKeyboardEditing':
+            case PluginEventType.BeforeKeyboardEditing:
                 this.onBeforeKeyboardEditing(event.rawEvent);
                 break;
         }

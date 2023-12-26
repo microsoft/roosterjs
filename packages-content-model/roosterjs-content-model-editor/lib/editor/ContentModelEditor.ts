@@ -4,11 +4,6 @@ import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
 import {
-    newEventToOldEvent,
-    oldEventToNewEvent,
-    OldEventTypeToNewEventType,
-} from './utils/eventConverter';
-import {
     createModelFromHtml,
     isBold,
     redo,
@@ -51,7 +46,7 @@ import type {
     SizeTransformer,
     StyleBasedFormatState,
     TableSelection,
-    DOMEventHandlerObject,
+    TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -530,18 +525,11 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             };
 
             if (typeof handlerObj === 'number') {
-                result.pluginEventType = OldEventTypeToNewEventType[handlerObj as PluginEventType];
+                result.pluginEventType = handlerObj as PluginEventType;
             } else if (typeof handlerObj === 'function') {
                 result.beforeDispatch = handlerObj;
             } else if (typeof handlerObj === 'object') {
-                const record = handlerObj as DOMEventHandlerObject;
-                result = {
-                    beforeDispatch: record.beforeDispatch,
-                    pluginEventType:
-                        typeof record.pluginEventType == 'number'
-                            ? OldEventTypeToNewEventType[record.pluginEventType]
-                            : undefined,
-                };
+                result = handlerObj as DOMEventRecord;
             }
 
             eventsMapResult[key] = result;
@@ -564,19 +552,11 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         data: PluginEventData<T>,
         broadcast: boolean = false
     ): PluginEventFromType<T> {
-        const oldEvent = {
-            eventType,
-            ...data,
-        } as PluginEvent;
-        const newEvent = oldEventToNewEvent(oldEvent);
-        const core = this.getCore();
-
-        if (newEvent) {
-            core.api.triggerEvent(core, newEvent, broadcast);
-            return (newEventToOldEvent(newEvent, oldEvent) ?? oldEvent) as PluginEventFromType<T>;
-        } else {
-            return oldEvent as PluginEventFromType<T>;
-        }
+        return this.triggerEvent(
+            eventType as PluginEventType,
+            data,
+            broadcast
+        ) as PluginEventFromType<T>;
     }
 
     /**
@@ -679,7 +659,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 data: data,
                 additionalData,
             };
-            this.triggerPluginEvent(PluginEventType.ContentChanged, event, true /*broadcast*/);
+            core.api.triggerEvent(core, event, true /*broadcast*/);
         }
 
         if (canUndoByBackspace) {
@@ -994,6 +974,16 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 feature as ExperimentalFeatures
             ) >= 0
         );
+    }
+
+    /**
+     * Get a function to convert HTML string to trusted HTML string.
+     * By default it will just return the input HTML directly. To override this behavior,
+     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getTrustedHTMLHandler(): TrustedHTMLHandler {
+        return this.getCore().trustedHTMLHandler;
     }
 
     /**

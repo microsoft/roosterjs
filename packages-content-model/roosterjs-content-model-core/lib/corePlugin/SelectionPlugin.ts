@@ -1,9 +1,10 @@
 import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { isModifierKey } from '../publicApi/domUtils/eventUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 import type {
     DOMSelection,
     IStandaloneEditor,
-    PluginEvent,
     PluginWithState,
     SelectionPluginState,
     StandaloneEditorOptions,
@@ -93,7 +94,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let selection: DOMSelection | null;
 
         switch (event.eventType) {
-            case 'mouseUp':
+            case PluginEventType.MouseUp:
                 if (
                     (image = this.getClickingImage(event.rawEvent)) &&
                     image.isContentEditable &&
@@ -104,7 +105,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
                 break;
 
-            case 'mouseDown':
+            case PluginEventType.MouseDown:
                 selection = this.editor.getDOMSelection();
                 if (
                     event.rawEvent.button === MouseRightButton &&
@@ -120,7 +121,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
                 break;
 
-            case 'keyDown':
+            case PluginEventType.KeyDown:
                 const rawEvent = event.rawEvent;
                 const key = rawEvent.key;
                 selection = this.editor.getDOMSelection();

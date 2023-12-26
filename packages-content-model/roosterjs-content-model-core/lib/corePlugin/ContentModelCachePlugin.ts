@@ -1,14 +1,15 @@
 import { areSameSelection } from './utils/areSameSelection';
 import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
 import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     ContentModelCachePluginState,
+    ContentModelContentChangedEvent,
     IStandaloneEditor,
-    KeyDownEvent,
-    PluginEvent,
     PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
+import type { PluginEvent, PluginKeyDownEvent } from 'roosterjs-editor-types';
 
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
@@ -79,25 +80,25 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
         }
 
         switch (event.eventType) {
-            case 'keyDown':
+            case PluginEventType.KeyDown:
                 if (this.shouldClearCache(event)) {
                     this.invalidateCache();
                 }
                 break;
 
-            case 'input':
+            case PluginEventType.Input:
                 {
                     this.updateCachedModel(this.editor, true /*forceUpdate*/);
                 }
                 break;
 
-            case 'selectionChanged':
+            case PluginEventType.SelectionChanged:
                 this.updateCachedModel(this.editor);
                 break;
 
-            case 'contentChanged':
+            case PluginEventType.ContentChanged:
                 {
-                    const { contentModel, selection } = event;
+                    const { contentModel, selection } = event as ContentModelContentChangedEvent;
 
                     if (contentModel && this.state.domIndexer) {
                         this.state.cachedModel = contentModel;
@@ -151,7 +152,7 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
         }
     }
 
-    private shouldClearCache(event: KeyDownEvent) {
+    private shouldClearCache(event: PluginKeyDownEvent) {
         const { rawEvent, handledByEditFeature } = event;
 
         // In these cases we can't update the model, so clear cache:

@@ -1,6 +1,6 @@
 import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
 import { createElement } from 'roosterjs-editor-dom';
-import { CreateElementData } from 'roosterjs-editor-types';
+import { CreateElementData, PluginEventType } from 'roosterjs-editor-types';
 import { DOMSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../lib/coreApi/setDOMSelection';
 
@@ -77,7 +77,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: null,
                 },
                 true
@@ -142,7 +143,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -174,7 +176,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -227,7 +230,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -258,7 +262,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -291,7 +296,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -324,7 +330,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -372,7 +379,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -420,7 +428,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -468,7 +477,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -525,7 +535,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true
@@ -578,7 +589,8 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'selectionChanged',
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: null,
                     newSelection: mockedSelection,
                 },
                 true

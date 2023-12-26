@@ -1,7 +1,12 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { transformColor } from '../publicApi/color/transformColor';
-import type { DarkColorHandler, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type {
+    DarkColorHandler,
+    PluginEventData,
+    PluginEventFromType,
+} from 'roosterjs-editor-types';
 import type {
     ClipboardData,
     ContentModelDocument,
@@ -16,9 +21,6 @@ import type {
     ModelToDomOption,
     OnNodeCreated,
     PasteType,
-    PluginEventData,
-    PluginEventFromType,
-    PluginEventType,
     Snapshot,
     SnapshotsManager,
     StandaloneEditorCore,
@@ -268,7 +270,7 @@ export class StandaloneEditor implements IStandaloneEditor {
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     source: isDarkMode
                         ? ChangeSource.SwitchToDarkMode
                         : ChangeSource.SwitchToLightMode,
@@ -367,7 +369,7 @@ export class StandaloneEditor implements IStandaloneEditor {
 
             if (oldValue != scale) {
                 this.triggerEvent(
-                    'zoomChanged',
+                    PluginEventType.ZoomChanged,
                     {
                         oldZoomScale: oldValue,
                         newZoomScale: scale,
@@ -376,16 +378,6 @@ export class StandaloneEditor implements IStandaloneEditor {
                 );
             }
         }
-    }
-
-    /**
-     * Get a function to convert HTML string to trusted HTML string.
-     * By default it will just return the input HTML directly. To override this behavior,
-     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
-     */
-    getTrustedHTMLHandler(): TrustedHTMLHandler {
-        return this.getCore().trustedHTMLHandler;
     }
 
     /**

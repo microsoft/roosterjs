@@ -1,5 +1,5 @@
 import * as eventUtils from '../../lib/publicApi/domUtils/eventUtils';
-import { ChangeSource } from '../../lib/constants/ChangeSource';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { createDOMEventPlugin } from '../../lib/corePlugin/DOMEventPlugin';
 import {
     DOMEventPluginState,
@@ -122,10 +122,10 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
 
     it('check events are mapped', () => {
         expect(eventMap).toBeDefined();
-        expect(eventMap.keypress.pluginEventType).toBe('keyPress');
-        expect(eventMap.keydown.pluginEventType).toBe('keyDown');
-        expect(eventMap.keyup.pluginEventType).toBe('keyUp');
-        expect(eventMap.input.pluginEventType).toBe('input');
+        expect(eventMap.keypress.pluginEventType).toBe(PluginEventType.KeyPress);
+        expect(eventMap.keydown.pluginEventType).toBe(PluginEventType.KeyDown);
+        expect(eventMap.keyup.pluginEventType).toBe(PluginEventType.KeyUp);
+        expect(eventMap.input.pluginEventType).toBe(PluginEventType.Input);
         expect(eventMap.keypress.beforeDispatch).toBeDefined();
         expect(eventMap.keydown.beforeDispatch).toBeDefined();
         expect(eventMap.keyup.beforeDispatch).toBeDefined();
@@ -262,7 +262,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         onMouseUp(mockedEvent);
 
         expect(removeEventListener).toHaveBeenCalled();
-        expect(triggerEvent).toHaveBeenCalledWith('mouseUp', {
+        expect(triggerEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, {
             rawEvent: mockedEvent,
             isClicking: true,
         });
@@ -300,7 +300,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         onMouseUp(mockedEvent2);
 
         expect(removeEventListener).toHaveBeenCalled();
-        expect(triggerEvent).toHaveBeenCalledWith('mouseUp', {
+        expect(triggerEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, {
             rawEvent: mockedEvent2,
             isClicking: false,
         });
@@ -388,7 +388,7 @@ describe('DOMEventPlugin handle other event', () => {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
-        expect(triggerEvent).toHaveBeenCalledWith('compositionEnd', {
+        expect(triggerEvent).toHaveBeenCalledWith(PluginEventType.CompositionEnd, {
             rawEvent: mockedEvent,
         });
         expect(addEventListenerSpy).toHaveBeenCalledTimes(2);
@@ -453,7 +453,7 @@ describe('DOMEventPlugin handle other event', () => {
             mouseUpEventListerAdded: false,
         });
         expect(takeSnapshotSpy).toHaveBeenCalledWith();
-        expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+        expect(triggerEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
             source: ChangeSource.Drop,
         });
     });

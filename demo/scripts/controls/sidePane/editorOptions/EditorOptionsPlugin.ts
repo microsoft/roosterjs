@@ -20,6 +20,7 @@ const initialState: BuildInPluginState = {
         tableEditMenu: true,
         contextMenu: true,
         autoFormat: true,
+        contentModelPaste: false,
         announce: true,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),

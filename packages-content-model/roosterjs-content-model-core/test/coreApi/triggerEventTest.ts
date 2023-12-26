@@ -1,4 +1,5 @@
-import { EditorPlugin, PluginEvent, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { EditorPlugin, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { triggerEvent } from '../../lib/coreApi/triggerEvent';
 
 describe('triggerEvent', () => {
@@ -90,7 +91,7 @@ describe('triggerEvent', () => {
         const onPluginEvent = jasmine.createSpy();
 
         core.plugins.push(createPlugin(onPluginEvent));
-        const event = createDefaultEvent('keyDown');
+        const event = createDefaultEvent(PluginEventType.KeyDown);
 
         core.lifecycle.shadowEditFragment = document.createDocumentFragment();
 
@@ -103,7 +104,7 @@ describe('triggerEvent', () => {
 
         core.plugins.push(createPlugin(onPluginEvent));
 
-        const event = createDefaultEvent('beforeDispose');
+        const event = createDefaultEvent(PluginEventType.BeforeDispose);
         core.lifecycle.shadowEditFragment = document.createDocumentFragment();
         triggerEvent(core, event, false);
         expect(onPluginEvent).toHaveBeenCalled();
@@ -111,7 +112,10 @@ describe('triggerEvent', () => {
 });
 
 function createDefaultEvent(
-    type: 'editorReady' | 'beforeDispose' | 'keyDown' = 'beforeDispose'
+    type:
+        | PluginEventType.EditorReady
+        | PluginEventType.BeforeDispose
+        | PluginEventType.KeyDown = PluginEventType.BeforeDispose
 ): PluginEvent {
     return <PluginEvent>(<any>{ eventType: type });
 }

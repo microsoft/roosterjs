@@ -1,4 +1,5 @@
 import * as iterateSelections from '../../lib/publicApi/selection/iterateSelections';
+import { EditorCore, PluginEventType } from 'roosterjs-editor-types';
 import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { switchShadowEdit } from '../../lib/coreApi/switchShadowEdit';
 
@@ -6,7 +7,7 @@ const mockedModel = 'MODEL' as any;
 const mockedCachedModel = 'CACHEMODEL' as any;
 
 describe('switchShadowEdit', () => {
-    let core: StandaloneEditorCore;
+    let core: StandaloneEditorCore & EditorCore;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
     let getSelectionRange: jasmine.Spy;
@@ -28,7 +29,7 @@ describe('switchShadowEdit', () => {
             lifecycle: {},
             contentDiv: document.createElement('div'),
             cache: {},
-        } as any) as StandaloneEditorCore;
+        } as any) as StandaloneEditorCore & EditorCore;
     });
 
     describe('was off', () => {
@@ -43,7 +44,9 @@ describe('switchShadowEdit', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'enteredShadowEdit',
+                    eventType: PluginEventType.EnteredShadowEdit,
+                    fragment: document.createDocumentFragment(),
+                    selectionPath: null,
                 },
                 false
             );
@@ -62,7 +65,9 @@ describe('switchShadowEdit', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'enteredShadowEdit',
+                    eventType: PluginEventType.EnteredShadowEdit,
+                    fragment: document.createDocumentFragment(),
+                    selectionPath: null,
                 },
                 false
             );
@@ -129,7 +134,7 @@ describe('switchShadowEdit', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'leavingShadowEdit',
+                    eventType: PluginEventType.LeavingShadowEdit,
                 },
                 false
             );
@@ -152,7 +157,7 @@ describe('switchShadowEdit', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'leavingShadowEdit',
+                    eventType: PluginEventType.LeavingShadowEdit,
                 },
                 false
             );

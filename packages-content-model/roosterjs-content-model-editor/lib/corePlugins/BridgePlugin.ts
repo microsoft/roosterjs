@@ -1,18 +1,15 @@
 import { createContextMenuPlugin } from './ContextMenuPlugin';
 import { createEditPlugin } from './EditPlugin';
+import { createEventTypeTranslatePlugin } from './EventTypeTranslatePlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
-import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
 import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type {
-    EditorPlugin as LegacyEditorPlugin,
-    PluginEvent as LegacyPluginEvent,
-} from 'roosterjs-editor-types';
-import type { EditorPlugin, PluginEvent } from 'roosterjs-content-model-types';
+import type { EditorPlugin as LegacyEditorPlugin, PluginEvent } from 'roosterjs-editor-types';
+import type { EditorPlugin } from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 
@@ -24,14 +21,15 @@ export class BridgePlugin implements EditorPlugin {
     private legacyPlugins: LegacyEditorPlugin[];
     private corePluginState: ContentModelCorePluginState;
     private outerEditor: IContentModelEditor | null = null;
-    private checkExclusivelyHandling: boolean;
 
     constructor(options: ContentModelEditorOptions) {
+        const translatePlugin = createEventTypeTranslatePlugin();
         const editPlugin = createEditPlugin();
         const contextMenuPlugin = createContextMenuPlugin(options);
         const normalizeTablePlugin = createNormalizeTablePlugin();
 
         this.legacyPlugins = [
+            translatePlugin,
             editPlugin,
             ...(options.legacyPlugins ?? []).filter(x => !!x),
             contextMenuPlugin,
@@ -41,9 +39,6 @@ export class BridgePlugin implements EditorPlugin {
             edit: editPlugin.getState(),
             contextMenu: contextMenuPlugin.getState(),
         };
-        this.checkExclusivelyHandling = this.legacyPlugins.some(
-            plugin => plugin.willHandleEventExclusively
-        );
     }
 
     /**
@@ -97,20 +92,16 @@ export class BridgePlugin implements EditorPlugin {
     }
 
     willHandleEventExclusively(event: PluginEvent) {
-        let oldEvent: LegacyPluginEvent | undefined;
+        for (let i = 0; i < this.legacyPlugins.length; i++) {
+            const plugin = this.legacyPlugins[i];
 
-        if (this.checkExclusivelyHandling && (oldEvent = newEventToOldEvent(event))) {
-            for (let i = 0; i < this.legacyPlugins.length; i++) {
-                const plugin = this.legacyPlugins[i];
-
-                if (plugin.willHandleEventExclusively?.(oldEvent)) {
-                    if (!event.eventDataCache) {
-                        event.eventDataCache = {};
-                    }
-
-                    event.eventDataCache[ExclusivelyHandleEventPluginKey] = plugin;
-                    return true;
+            if (plugin.willHandleEventExclusively?.(event)) {
+                if (!event.eventDataCache) {
+                    event.eventDataCache = {};
                 }
+
+                event.eventDataCache[ExclusivelyHandleEventPluginKey] = plugin;
+                return true;
             }
         }
 
@@ -118,20 +109,14 @@ export class BridgePlugin implements EditorPlugin {
     }
 
     onPluginEvent(event: PluginEvent) {
-        const oldEvent = newEventToOldEvent(event);
+        const exclusivelyHandleEventPlugin = event.eventDataCache?.[
+            ExclusivelyHandleEventPluginKey
+        ] as EditorPlugin | undefined;
 
-        if (oldEvent) {
-            const exclusivelyHandleEventPlugin = event.eventDataCache?.[
-                ExclusivelyHandleEventPluginKey
-            ] as LegacyEditorPlugin | undefined;
-
-            if (exclusivelyHandleEventPlugin) {
-                exclusivelyHandleEventPlugin.onPluginEvent?.(oldEvent);
-            } else {
-                this.legacyPlugins.forEach(plugin => plugin.onPluginEvent?.(oldEvent));
-            }
-
-            Object.assign(event, oldEventToNewEvent(oldEvent, event));
+        if (exclusivelyHandleEventPlugin) {
+            exclusivelyHandleEventPlugin.onPluginEvent?.(event);
+        } else {
+            this.legacyPlugins.forEach(plugin => plugin.onPluginEvent?.(event));
         }
     }
 }

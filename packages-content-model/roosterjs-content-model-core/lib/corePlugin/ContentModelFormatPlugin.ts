@@ -2,10 +2,11 @@ import { applyDefaultFormat } from './utils/applyDefaultFormat';
 import { applyPendingFormat } from './utils/applyPendingFormat';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 import type {
     ContentModelFormatPluginState,
     IStandaloneEditor,
-    PluginEvent,
     PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
@@ -84,7 +85,7 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
         }
 
         switch (event.eventType) {
-            case 'input':
+            case PluginEventType.Input:
                 const env = this.editor.getEnvironment();
 
                 // In Safari, isComposing will be undefined but isInIME() works
@@ -96,11 +97,11 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
 
                 break;
 
-            case 'compositionEnd':
+            case PluginEventType.CompositionEnd:
                 this.checkAndApplyPendingFormat(event.rawEvent.data);
                 break;
 
-            case 'keyDown':
+            case PluginEventType.KeyDown:
                 if (isCursorMovingKey(event.rawEvent)) {
                     this.clearPendingFormat();
                 } else if (
@@ -112,8 +113,8 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
 
                 break;
 
-            case 'mouseUp':
-            case 'contentChanged':
+            case PluginEventType.MouseUp:
+            case PluginEventType.ContentChanged:
                 if (!this.canApplyPendingFormat()) {
                     this.clearPendingFormat();
                 }

@@ -5,9 +5,10 @@ import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFor
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
 import { pasteDisplayFormatParser } from '../../override/pasteDisplayFormatParser';
+import { PasteType } from 'roosterjs-editor-types';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
-    BeforePasteEvent,
+    ContentModelBeforePasteEvent,
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
@@ -34,7 +35,7 @@ const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
 export function mergePasteContent(
     model: ContentModelDocument,
     context: FormatWithContentModelContext,
-    eventResult: BeforePasteEvent,
+    eventResult: ContentModelBeforePasteEvent,
     defaultDomToModelOptions: DomToModelOption
 ) {
     const { fragment, domToModelOption, customizedMerge, pasteType } = eventResult;
@@ -58,7 +59,7 @@ export function mergePasteContent(
 
     const pasteModel = domToContentModel(fragment, domToModelContext);
     const mergeOption: MergeModelOption = {
-        mergeFormat: pasteType == 'mergeFormat' ? 'keepSourceEmphasisFormat' : 'none',
+        mergeFormat: pasteType == PasteType.MergeFormat ? 'keepSourceEmphasisFormat' : 'none',
         mergeTable: shouldMergeTable(pasteModel),
     };
 

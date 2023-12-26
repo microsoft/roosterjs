@@ -1,7 +1,8 @@
 import { ChangeSource } from '../constants/ChangeSource';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     ChangedEntity,
-    ContentChangedEvent,
+    ContentModelContentChangedEvent,
     DOMSelection,
     FormatContentModel,
     FormatWithContentModelContext,
@@ -70,13 +71,15 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             }
         }
 
-        const eventData: ContentChangedEvent = {
-            eventType: 'contentChanged',
+        const eventData: ContentModelContentChangedEvent = {
+            eventType: PluginEventType.ContentChanged,
             contentModel: clearModelCache ? undefined : model,
             selection: clearModelCache ? undefined : selection,
             source: changeSource || ChangeSource.Format,
             data: getChangeData?.(),
-            formatApiName: apiName,
+            additionalData: {
+                formatApiName: apiName,
+            },
             changedEntities: getChangedEntities(context, rawEvent),
         };
 

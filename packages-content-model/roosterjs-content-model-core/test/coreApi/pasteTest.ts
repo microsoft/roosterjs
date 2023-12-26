@@ -9,6 +9,7 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
+import { BeforePasteEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
@@ -21,8 +22,6 @@ import {
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
     IStandaloneEditor,
-    BeforePasteEvent,
-    PluginEvent,
 } from 'roosterjs-content-model-types';
 
 let clipboardData: ClipboardData;
@@ -105,7 +104,7 @@ describe('Paste ', () => {
         context = undefined;
 
         editor = new ContentModelEditor(div, {
-            plugins: [new ContentModelPastePlugin()],
+            legacyPlugins: [new ContentModelPastePlugin()],
             coreApiOverride: {
                 focus,
                 createContentModel,
@@ -195,7 +194,7 @@ describe('paste with content model & paste plugin', () => {
         div = document.createElement('div');
         document.body.appendChild(div);
         editor = new ContentModelEditor(div, {
-            plugins: [new ContentModelPastePlugin()],
+            legacyPlugins: [new ContentModelPastePlugin()],
         });
         spyOn(addParserF, 'default').and.callThrough();
         spyOn(setProcessorF, 'setProcessor').and.callThrough();
@@ -342,13 +341,13 @@ describe('paste with content model & paste plugin', () => {
 
         let eventChecker: BeforePasteEvent = <any>{};
         editor = new ContentModelEditor(div!, {
-            plugins: [
+            legacyPlugins: [
                 {
                     initialize: () => {},
                     dispose: () => {},
                     getName: () => 'test',
                     onPluginEvent(event: PluginEvent) {
-                        if (event.eventType === 'beforePaste') {
+                        if (event.eventType === PluginEventType.BeforePaste) {
                             eventChecker = event;
                         }
                     },
@@ -361,7 +360,7 @@ describe('paste with content model & paste plugin', () => {
         expect(eventChecker?.clipboardData).toEqual(clipboardData);
         expect(eventChecker?.htmlBefore).toBeTruthy();
         expect(eventChecker?.htmlAfter).toBeTruthy();
-        expect(eventChecker?.pasteType).toEqual('normal');
+        expect(eventChecker?.pasteType).toEqual(0);
     });
 });
 

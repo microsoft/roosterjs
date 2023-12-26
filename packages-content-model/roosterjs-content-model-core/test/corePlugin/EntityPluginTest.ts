@@ -2,12 +2,13 @@ import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUti
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createContentModelDocument, createEntity } from '../../../roosterjs-content-model-dom/lib';
 import { createEntityPlugin } from '../../lib/corePlugin/EntityPlugin';
-import { DarkColorHandler } from 'roosterjs-editor-types';
+import { IStandaloneEditor, PluginWithState } from 'roosterjs-content-model-types';
 import {
+    DarkColorHandler,
+    EntityOperation,
     EntityPluginState,
-    IStandaloneEditor,
-    PluginWithState,
-} from 'roosterjs-content-model-types';
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 describe('EntityPlugin', () => {
     let editor: IStandaloneEditor;
@@ -51,7 +52,7 @@ describe('EntityPlugin', () => {
             createContentModelSpy.and.returnValue(createContentModelDocument());
 
             plugin.onPluginEvent({
-                eventType: 'editorReady',
+                eventType: PluginEventType.EditorReady,
             });
 
             const state = plugin.getState();
@@ -71,7 +72,7 @@ describe('EntityPlugin', () => {
             createContentModelSpy.and.returnValue(doc);
 
             plugin.onPluginEvent({
-                eventType: 'editorReady',
+                eventType: PluginEventType.EditorReady,
             });
 
             const state = plugin.getState();
@@ -87,8 +88,8 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'newEntity',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
                 rawEvent: undefined,
                 entity: {
                     id: 'Entity1',
@@ -114,7 +115,7 @@ describe('EntityPlugin', () => {
             });
 
             plugin.onPluginEvent({
-                eventType: 'editorReady',
+                eventType: PluginEventType.EditorReady,
             });
 
             const state = plugin.getState();
@@ -130,8 +131,8 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'newEntity',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
                 rawEvent: undefined,
                 entity: {
                     id: 'Entity1',
@@ -156,7 +157,7 @@ describe('EntityPlugin', () => {
             createContentModelSpy.and.returnValue(doc);
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
             } as any);
 
             const state = plugin.getState();
@@ -172,8 +173,8 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'newEntity',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
                 rawEvent: undefined,
                 entity: {
                     id: 'Entity1',
@@ -197,7 +198,7 @@ describe('EntityPlugin', () => {
             isDarkModeSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
             } as any);
 
             const state = plugin.getState();
@@ -213,8 +214,8 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'newEntity',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
                 rawEvent: undefined,
                 entity: {
                     id: 'Entity1',
@@ -251,7 +252,7 @@ describe('EntityPlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
             } as any);
 
             expect(state).toEqual({
@@ -270,8 +271,8 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'newEntity',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
                 rawEvent: undefined,
                 entity: {
                     id: 'Entity1',
@@ -281,8 +282,8 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'overwrite',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.Overwrite,
                 rawEvent: undefined,
                 entity: {
                     id: 'T2',
@@ -310,7 +311,7 @@ describe('EntityPlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
             } as any);
 
             expect(state).toEqual({
@@ -341,7 +342,7 @@ describe('EntityPlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
             } as any);
 
             expect(state).toEqual({
@@ -356,8 +357,8 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_Entity1 _EId_Entity1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'newEntity',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
                 rawEvent: undefined,
                 entity: {
                     id: 'Entity1',
@@ -387,7 +388,7 @@ describe('EntityPlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
                 changedEntities: [
                     {
                         entity: entity1,
@@ -421,8 +422,8 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_E2 _EId_E2 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'newEntity',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
                 rawEvent: mockedEvent,
                 entity: {
                     id: 'E2',
@@ -432,8 +433,8 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'removeFromStart',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.RemoveFromStart,
                 rawEvent: mockedEvent,
                 entity: {
                     id: 'E1',
@@ -462,7 +463,7 @@ describe('EntityPlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
                 changedEntities: [
                     {
                         entity: entity2,
@@ -490,8 +491,8 @@ describe('EntityPlugin', () => {
                 '<div class="_Entity _EType_E2 _EId_E1_1 _EReadonly_1" contenteditable="false"></div>'
             );
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'newEntity',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
                 rawEvent: mockedEvent,
                 entity: {
                     id: 'E1_1',
@@ -526,7 +527,7 @@ describe('EntityPlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
+                eventType: PluginEventType.ContentChanged,
                 entityStates: [
                     {
                         id,
@@ -536,8 +537,8 @@ describe('EntityPlugin', () => {
             } as any);
 
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'updateEntityState',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.UpdateEntityState,
                 rawEvent: undefined,
                 entity: {
                     id,
@@ -562,7 +563,7 @@ describe('EntityPlugin', () => {
             isNodeInEditorSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: 'mouseUp',
+                eventType: PluginEventType.MouseUp,
                 rawEvent: mockedEvent,
                 isClicking: true,
             } as any);
@@ -583,14 +584,14 @@ describe('EntityPlugin', () => {
             spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: 'mouseUp',
+                eventType: PluginEventType.MouseUp,
                 rawEvent: mockedEvent,
                 isClicking: true,
             } as any);
 
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'click',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.Click,
                 rawEvent: mockedEvent,
                 entity: {
                     id: 'A',
@@ -619,14 +620,14 @@ describe('EntityPlugin', () => {
             spyOn(entityUtils, 'isEntityElement').and.callFake(node => node == mockedNode1);
 
             plugin.onPluginEvent({
-                eventType: 'mouseUp',
+                eventType: PluginEventType.MouseUp,
                 rawEvent: mockedEvent,
                 isClicking: true,
             } as any);
 
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'click',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.Click,
                 rawEvent: mockedEvent,
                 entity: {
                     id: 'A',
@@ -651,7 +652,7 @@ describe('EntityPlugin', () => {
             spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: 'mouseUp',
+                eventType: PluginEventType.MouseUp,
                 rawEvent: mockedEvent,
                 isClicking: false,
             } as any);
@@ -665,7 +666,7 @@ describe('EntityPlugin', () => {
             spyOn(entityUtils, 'getAllEntityWrappers').and.returnValue([]);
 
             plugin.onPluginEvent({
-                eventType: 'extractContentWithDom',
+                eventType: PluginEventType.ExtractContentWithDom,
             } as any);
 
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(0);
@@ -681,12 +682,12 @@ describe('EntityPlugin', () => {
             spyOn(entityUtils, 'getAllEntityWrappers').and.returnValue([wrapper1, wrapper2]);
 
             plugin.onPluginEvent({
-                eventType: 'extractContentWithDom',
+                eventType: PluginEventType.ExtractContentWithDom,
             } as any);
 
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'replaceTemporaryContent',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.ReplaceTemporaryContent,
                 rawEvent: undefined,
                 entity: {
                     id: 'E1',
@@ -696,8 +697,8 @@ describe('EntityPlugin', () => {
                 },
                 state: undefined,
             });
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
-                operation: 'replaceTemporaryContent',
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.ReplaceTemporaryContent,
                 rawEvent: undefined,
                 entity: {
                     id: 'E2',

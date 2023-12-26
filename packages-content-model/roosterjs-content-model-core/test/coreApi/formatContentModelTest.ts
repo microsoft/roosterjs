@@ -1,6 +1,7 @@
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createImage } from 'roosterjs-content-model-dom';
+import { EditorCore, PluginEventType } from 'roosterjs-editor-types';
 import { formatContentModel } from '../../lib/coreApi/formatContentModel';
 import {
     ContentModelDocument,
@@ -10,7 +11,7 @@ import {
 } from 'roosterjs-content-model-types';
 
 describe('formatContentModel', () => {
-    let core: StandaloneEditorCore;
+    let core: StandaloneEditorCore & EditorCore;
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
@@ -56,7 +57,7 @@ describe('formatContentModel', () => {
             undo: {
                 snapshotsManager: {},
             },
-        } as any) as StandaloneEditorCore;
+        } as any) as StandaloneEditorCore & EditorCore;
     });
 
     describe('Editor has focus', () => {
@@ -101,12 +102,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
                     data: undefined,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [],
                 },
                 true
@@ -136,12 +139,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
                     data: undefined,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [],
                 },
                 true
@@ -167,12 +172,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: 'TEST',
                     data: undefined,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [],
                 },
                 true
@@ -207,12 +214,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: 'TEST',
                     data: returnData,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [],
                 },
                 true
@@ -244,12 +253,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
                     data: undefined,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [],
                 },
                 true
@@ -295,12 +306,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
                     data: undefined,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [
                         {
                             entity: entity1,
@@ -355,12 +368,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
                     data: mockedData,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [
                         {
                             entity: entity1,
@@ -395,12 +410,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
                     data: undefined,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [],
                 },
                 true
@@ -435,12 +452,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
                     data: undefined,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [],
                 },
                 true
@@ -466,12 +485,14 @@ describe('formatContentModel', () => {
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'contentChanged',
+                    eventType: PluginEventType.ContentChanged,
                     contentModel: undefined,
                     selection: undefined,
                     source: ChangeSource.Format,
                     data: undefined,
-                    formatApiName: apiName,
+                    additionalData: {
+                        formatApiName: apiName,
+                    },
                     changedEntities: [],
                 },
                 true

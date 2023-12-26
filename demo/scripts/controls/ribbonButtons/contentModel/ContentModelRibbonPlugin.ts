@@ -1,14 +1,10 @@
 import ContentModelRibbonButton from './ContentModelRibbonButton';
 import RibbonPlugin from './RibbonPlugin';
-import { FormatState } from 'roosterjs-editor-types';
+import { FormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getFormatState } from 'roosterjs-content-model-api';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { LocalizedStrings, UIUtilities } from 'roosterjs-react';
-import {
-    ContentModelFormatState,
-    IStandaloneEditor,
-    PluginEvent,
-} from 'roosterjs-content-model-types';
+import { ContentModelFormatState, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 export class ContentModelRibbonPlugin implements RibbonPlugin {
     private editor: IStandaloneEditor | null = null;
@@ -51,14 +47,14 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
-            case 'editorReady':
-            case 'contentChanged':
-            case 'zoomChanged':
+            case PluginEventType.EditorReady:
+            case PluginEventType.ContentChanged:
+            case PluginEventType.ZoomChanged:
                 this.updateFormat();
                 break;
 
-            case 'keyDown':
-            case 'mouseUp':
+            case PluginEventType.KeyDown:
+            case PluginEventType.MouseUp:
                 this.delayUpdate();
                 break;
         }

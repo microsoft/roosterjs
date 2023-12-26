@@ -23,13 +23,15 @@ export function createContentModelEditor(
     additionalPlugins?: EditorPlugin[],
     initialContent?: string
 ): IContentModelEditor {
-    const legacyPlugins = additionalPlugins ? [...additionalPlugins] : [];
-    legacyPlugins.push(new ContentModelEditPlugin(), new EntityDelimiterPlugin());
-    const plugins = [new ContentModelPastePlugin()];
+    const plugins = additionalPlugins ? [...additionalPlugins] : [];
+    plugins.push(
+        new ContentModelPastePlugin(),
+        new ContentModelEditPlugin(),
+        new EntityDelimiterPlugin()
+    );
 
     const options: ContentModelEditorOptions = {
-        legacyPlugins: legacyPlugins,
-        plugins: plugins,
+        legacyPlugins: plugins,
         initialContent: initialContent,
         defaultSegmentFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',

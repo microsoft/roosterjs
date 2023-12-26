@@ -1,6 +1,7 @@
 import * as readFile from 'roosterjs-content-model-core/lib/publicApi/domUtils/readFile';
 import changeImage from '../../../lib/publicApi/image/changeImage';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -194,7 +195,7 @@ describe('changeImage', () => {
         );
 
         expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent).toHaveBeenCalledWith('editImage', {
+        expect(triggerEvent).toHaveBeenCalledWith(PluginEventType.EditImage, {
             image: imageNode,
             newSrc: testUrl,
             previousSrc: 'test',

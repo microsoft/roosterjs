@@ -1,4 +1,5 @@
 import { ChangeSource } from '../constants/ChangeSource';
+import { PluginEventType } from 'roosterjs-editor-types';
 import {
     createBr,
     createContentModelDocument,
@@ -11,10 +12,10 @@ import type {
     ContentModelSegmentFormat,
     IStandaloneEditor,
     LifecyclePluginState,
-    PluginEvent,
     PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 
 const ContentEditableAttributeName = 'contenteditable';
 const DefaultTextColor = '#000000';
@@ -91,14 +92,14 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         this.adjustColor();
 
         // Let other plugins know that we are ready
-        this.editor.triggerEvent('editorReady', {}, true /*broadcast*/);
+        this.editor.triggerEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.editor?.triggerEvent('beforeDispose', {}, true /*broadcast*/);
+        this.editor?.triggerEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
 
         if (this.disposer) {
             this.disposer();
@@ -122,7 +123,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      */
     onPluginEvent(event: PluginEvent) {
         if (
-            event.eventType == 'contentChanged' &&
+            event.eventType == PluginEventType.ContentChanged &&
             (event.source == ChangeSource.SwitchToDarkMode ||
                 event.source == ChangeSource.SwitchToLightMode)
         ) {

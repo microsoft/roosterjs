@@ -8,7 +8,7 @@ import {
     WAC_IDENTIFY_SELECTOR,
 } from './constants';
 import type {
-    BeforePasteEvent,
+    ContentModelBeforePasteEvent,
     ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,
@@ -189,7 +189,7 @@ const wacCommentParser: FormatParser<ContentModelSegmentFormat> = (
  * We need to remove the display property and margin from all the list item
  * @param ev ContentModelBeforePasteEvent
  */
-export function processPastedContentWacComponents(ev: BeforePasteEvent) {
+export function processPastedContentWacComponents(ev: ContentModelBeforePasteEvent) {
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItemThread', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);

@@ -1,15 +1,12 @@
-import type {
-    EditorPlugin,
-    PluginEvent,
-    PluginEventType,
-    TriggerEvent,
-} from 'roosterjs-content-model-types';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { EditorPlugin, TriggerEvent } from 'roosterjs-content-model-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 
 const allowedEventsInShadowEdit: PluginEventType[] = [
-    'editorReady',
-    'beforeDispose',
-    'extractContentWithDom',
-    'zoomChanged',
+    PluginEventType.EditorReady,
+    PluginEventType.BeforeDispose,
+    PluginEventType.ExtractContentWithDom,
+    PluginEventType.ZoomChanged,
 ];
 
 /**
