@@ -1,3 +1,4 @@
+import { parseValueWithUnit } from 'roosterjs-content-model-dom/lib';
 import {
     extractBorderValues,
     getClosestAncestorBlockGroupIndex,
@@ -150,7 +151,13 @@ function retrieveSegmentFormat(
     mergeValue(result, 'letterSpacing', mergedFormat.letterSpacing, isFirst);
 
     mergeValue(result, 'fontName', mergedFormat.fontFamily, isFirst);
-    mergeValue(result, 'fontSize', mergedFormat.fontSize, isFirst);
+    mergeValue(
+        result,
+        'fontSize',
+        mergedFormat.fontSize,
+        isFirst,
+        val => parseValueWithUnit(val, undefined, 'pt') + 'pt'
+    );
     mergeValue(result, 'backgroundColor', mergedFormat.backgroundColor, isFirst);
     mergeValue(result, 'textColor', mergedFormat.textColor, isFirst);
     mergeValue(result, 'fontWeight', mergedFormat.fontWeight, isFirst);
@@ -232,13 +239,14 @@ function mergeValue<K extends keyof ContentModelFormatState>(
     format: ContentModelFormatState,
     key: K,
     newValue: ContentModelFormatState[K] | undefined,
-    isFirst: boolean
+    isFirst: boolean,
+    parseFn: (val: ContentModelFormatState[K]) => ContentModelFormatState[K] = val => val
 ) {
     if (isFirst) {
         if (newValue !== undefined) {
             format[key] = newValue;
         }
-    } else if (newValue !== format[key]) {
+    } else if (parseFn(newValue) !== parseFn(format[key])) {
         delete format[key];
     }
 }
