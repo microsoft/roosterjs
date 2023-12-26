@@ -4,11 +4,10 @@ import * as getPasteSource from '../../lib/paste/pasteSourceValidations/getPaste
 import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
-import { ContentModelBeforePasteEvent } from 'roosterjs-content-model-types';
+import { BeforePasteEvent } from 'roosterjs-content-model-types';
 import { ContentModelPastePlugin } from '../../lib/paste/ContentModelPastePlugin';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
-import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 
 const trustedHTMLHandler = (val: string) => val;
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
@@ -24,27 +23,7 @@ describe('Content Model Paste Plugin Test', () => {
         spyOn(setProcessor, 'setProcessor').and.callThrough();
     });
 
-    let event: ContentModelBeforePasteEvent = <ContentModelBeforePasteEvent>(<any>{
-        clipboardData: {},
-        fragment: document.createDocumentFragment(),
-        sanitizingOption: {
-            elementCallbacks: {},
-            attributeCallbacks: {},
-            cssStyleCallbacks: {},
-            additionalTagReplacements: {},
-            additionalAllowedAttributes: [],
-            additionalAllowedCssClasses: [],
-            additionalDefaultStyleValues: {},
-            additionalGlobalStyleNodes: [],
-            additionalPredefinedCssForElement: {},
-            preserveHtmlComments: false,
-            unknownTagReplacement: null,
-        },
-        htmlBefore: '',
-        htmlAfter: '',
-        htmlAttributes: {},
-        domToModelOption: { additionalAllowedTags: [], additionalDisallowedTags: [] },
-    });
+    let event: BeforePasteEvent;
 
     describe('onPluginEvent', () => {
         let plugin = new ContentModelPastePlugin();
@@ -52,28 +31,21 @@ describe('Content Model Paste Plugin Test', () => {
         beforeEach(() => {
             plugin = new ContentModelPastePlugin();
 
-            event = <ContentModelBeforePasteEvent>(<any>{
-                eventType: PluginEventType.BeforePaste,
-                domToModelOption: { additionalAllowedTags: [], additionalDisallowedTags: [] },
-                sanitizingOption: {
-                    elementCallbacks: {},
-                    attributeCallbacks: {},
-                    cssStyleCallbacks: {},
-                    additionalTagReplacements: {},
-                    additionalAllowedAttributes: [],
-                    additionalAllowedCssClasses: [],
-                    additionalDefaultStyleValues: {},
-                    additionalGlobalStyleNodes: [],
-                    additionalPredefinedCssForElement: {},
-                    preserveHtmlComments: false,
-                    unknownTagReplacement: null,
-                },
-                pasteType: PasteType.Normal,
+            event = {
+                eventType: 'beforePaste',
                 clipboardData: <any>{
                     html: '',
                 },
                 fragment: document.createDocumentFragment(),
-            });
+                htmlBefore: '',
+                htmlAfter: '',
+                htmlAttributes: {},
+                pasteType: 'normal',
+                domToModelOption: {
+                    additionalAllowedTags: [],
+                    additionalDisallowedTags: [],
+                } as any,
+            };
         });
 
         it('WordDesktop', () => {
@@ -90,7 +62,7 @@ describe('Content Model Paste Plugin Test', () => {
             spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelDesktop');
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
-            (<any>event).pasteType = PasteType.MergeFormat;
+            (<any>event).pasteType = 'mergeFormat';
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
@@ -107,7 +79,7 @@ describe('Content Model Paste Plugin Test', () => {
             spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelDesktop');
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
-            (<any>event).pasteType = PasteType.AsImage;
+            (<any>event).pasteType = 'asImage';
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
@@ -198,7 +170,7 @@ describe('Content Model Paste Plugin Test', () => {
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(event.domToModelOption.additionalAllowedTags).toEqual([
-                PastePropertyNames.GOOGLE_SHEET_NODE_NAME,
+                PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>,
             ]);
         });
     });

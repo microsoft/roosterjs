@@ -6,7 +6,7 @@ import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type {
-    ContentModelBeforePasteEvent,
+    BeforePasteEvent,
     ContentModelBlockFormat,
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
@@ -25,7 +25,7 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
  * @param ev ContentModelBeforePasteEvent
  */
 export function processPastedContentFromWordDesktop(
-    ev: ContentModelBeforePasteEvent,
+    ev: BeforePasteEvent,
     trustedHTMLHandler: (text: string) => string
 ) {
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev, trustedHTMLHandler);

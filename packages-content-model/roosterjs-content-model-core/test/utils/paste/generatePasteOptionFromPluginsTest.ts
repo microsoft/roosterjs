@@ -1,5 +1,4 @@
 import { generatePasteOptionFromPlugins } from '../../../lib/utils/paste/generatePasteOptionFromPlugins';
-import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('generatePasteOptionFromPlugins', () => {
@@ -17,19 +16,6 @@ describe('generatePasteOptionFromPlugins', () => {
         domToModelOption: 'OptionResult',
         pasteType: 'TypeResult',
     } as any;
-    const sanitizingOption: any = {
-        elementCallbacks: {},
-        attributeCallbacks: {},
-        cssStyleCallbacks: {},
-        additionalTagReplacements: {},
-        additionalAllowedAttributes: [],
-        additionalAllowedCssClasses: [],
-        additionalDefaultStyleValues: {},
-        additionalGlobalStyleNodes: [],
-        additionalPredefinedCssForElement: {},
-        preserveHtmlComments: false,
-        unknownTagReplacement: null,
-    };
 
     beforeEach(() => {
         triggerPluginEventSpy = jasmine.createSpy('triggerEvent');
@@ -64,22 +50,21 @@ describe('generatePasteOptionFromPlugins', () => {
             fragment: 'FragmentResult',
             domToModelOption: 'OptionResult',
             pasteType: 'TypeResult',
-            eventType: PluginEventType.BeforePaste,
+            eventType: 'beforePaste',
             clipboardData: mockedClipboardData,
             htmlBefore,
             htmlAfter,
             htmlAttributes: mockedMetadata,
-            sanitizingOption,
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(originalEvent).toEqual({
-            eventType: PluginEventType.BeforePaste,
+            eventType: 'beforePaste',
             clipboardData: mockedClipboardData,
             fragment: mockedFragment,
             htmlBefore: htmlBefore,
             htmlAfter: htmlAfter,
             htmlAttributes: mockedMetadata,
-            pasteType: PasteType.Normal,
+            pasteType: 'normal',
             domToModelOption: {
                 additionalAllowedTags: [],
                 additionalDisallowedTags: [],
@@ -87,12 +72,11 @@ describe('generatePasteOptionFromPlugins', () => {
                 formatParserOverride: {},
                 processorOverride: {},
             },
-            sanitizingOption,
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.BeforePaste,
+                eventType: 'beforePaste',
                 clipboardData: mockedClipboardData,
                 fragment: 'FragmentResult',
                 htmlBefore: htmlBefore,
@@ -100,7 +84,6 @@ describe('generatePasteOptionFromPlugins', () => {
                 htmlAttributes: mockedMetadata,
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
-                sanitizingOption,
             },
             true
         );
@@ -134,18 +117,17 @@ describe('generatePasteOptionFromPlugins', () => {
             domToModelOption: 'OptionResult',
             pasteType: 'TypeResult',
             customizedMerge: mockedCustomizedMerge,
-            eventType: PluginEventType.BeforePaste,
+            eventType: 'beforePaste',
             clipboardData: mockedClipboardData,
             htmlBefore,
             htmlAfter,
             htmlAttributes: mockedMetadata,
-            sanitizingOption,
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.BeforePaste,
+                eventType: 'beforePaste',
                 clipboardData: mockedClipboardData,
                 fragment: 'FragmentResult',
                 htmlBefore: htmlBefore,
@@ -153,7 +135,6 @@ describe('generatePasteOptionFromPlugins', () => {
                 htmlAttributes: mockedMetadata,
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
-                sanitizingOption,
                 customizedMerge: mockedCustomizedMerge,
             },
             true
@@ -182,18 +163,17 @@ describe('generatePasteOptionFromPlugins', () => {
             fragment: 'FragmentResult',
             domToModelOption: 'OptionResult',
             pasteType: 'TypeResult',
-            eventType: PluginEventType.BeforePaste,
+            eventType: 'beforePaste',
             clipboardData: mockedClipboardData,
             htmlBefore: '',
             htmlAfter: '',
             htmlAttributes: mockedMetadata,
-            sanitizingOption,
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.BeforePaste,
+                eventType: 'beforePaste',
                 clipboardData: mockedClipboardData,
                 fragment: 'FragmentResult',
                 htmlBefore: '',
@@ -201,18 +181,17 @@ describe('generatePasteOptionFromPlugins', () => {
                 htmlAttributes: mockedMetadata,
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
-                sanitizingOption,
             },
             true
         );
         expect(originalEvent).toEqual({
-            eventType: PluginEventType.BeforePaste,
+            eventType: 'beforePaste',
             clipboardData: mockedClipboardData,
             fragment: mockedFragment,
             htmlBefore: '',
             htmlAfter: '',
             htmlAttributes: mockedMetadata,
-            pasteType: PasteType.MergeFormat,
+            pasteType: 'mergeFormat',
             domToModelOption: {
                 additionalAllowedTags: [],
                 additionalDisallowedTags: [],
@@ -220,7 +199,6 @@ describe('generatePasteOptionFromPlugins', () => {
                 formatParserOverride: {},
                 processorOverride: {},
             },
-            sanitizingOption,
         });
     });
 
@@ -250,13 +228,12 @@ describe('generatePasteOptionFromPlugins', () => {
                 formatParserOverride: {},
                 processorOverride: {},
             },
-            pasteType: PasteType.AsPlainText,
-            eventType: PluginEventType.BeforePaste,
+            pasteType: 'asPlainText',
+            eventType: 'beforePaste',
             clipboardData: mockedClipboardData,
             htmlBefore,
             htmlAfter,
             htmlAttributes: mockedMetadata,
-            sanitizingOption,
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(0);
     });

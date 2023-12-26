@@ -1,21 +1,11 @@
-import { PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import type { HtmlFromClipboard } from './retrieveHtmlInfo';
 import type {
+    BeforePasteEvent,
     ClipboardData,
-    ContentModelBeforePasteEvent,
     DomToModelOptionForPaste,
     PasteType,
     StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
-
-// Map new PasteType to old PasteType
-// TODO: We can remove this once we have standalone editor
-const PasteTypeMap: Record<PasteType, OldPasteType> = {
-    asImage: OldPasteType.AsImage,
-    asPlainText: OldPasteType.AsPlainText,
-    mergeFormat: OldPasteType.MergeFormat,
-    normal: OldPasteType.Normal,
-};
 
 /**
  * @internal
@@ -26,7 +16,7 @@ export function generatePasteOptionFromPlugins(
     fragment: DocumentFragment,
     htmlFromClipboard: HtmlFromClipboard,
     pasteType: PasteType
-): ContentModelBeforePasteEvent {
+): BeforePasteEvent {
     const domToModelOption: DomToModelOptionForPaste = {
         additionalAllowedTags: [],
         additionalDisallowedTags: [],
@@ -35,30 +25,15 @@ export function generatePasteOptionFromPlugins(
         processorOverride: {},
     };
 
-    const event: ContentModelBeforePasteEvent = {
-        eventType: PluginEventType.BeforePaste,
+    const event: BeforePasteEvent = {
+        eventType: 'beforePaste',
         clipboardData,
         fragment,
         htmlBefore: htmlFromClipboard.htmlBefore ?? '',
         htmlAfter: htmlFromClipboard.htmlAfter ?? '',
         htmlAttributes: htmlFromClipboard.metadata,
-        pasteType: PasteTypeMap[pasteType],
+        pasteType: pasteType,
         domToModelOption,
-
-        // Deprecated
-        sanitizingOption: {
-            elementCallbacks: {},
-            attributeCallbacks: {},
-            cssStyleCallbacks: {},
-            additionalTagReplacements: {},
-            additionalAllowedAttributes: [],
-            additionalAllowedCssClasses: [],
-            additionalDefaultStyleValues: {},
-            additionalGlobalStyleNodes: [],
-            additionalPredefinedCssForElement: {},
-            preserveHtmlComments: false,
-            unknownTagReplacement: null,
-        },
     };
 
     if (pasteType !== 'asPlainText') {

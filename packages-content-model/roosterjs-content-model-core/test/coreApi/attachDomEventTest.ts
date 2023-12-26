@@ -1,5 +1,4 @@
 import { attachDomEvent } from '../../lib/coreApi/attachDomEvent';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('attachDomEvent', () => {
@@ -57,7 +56,7 @@ describe('attachDomEvent', () => {
         core.api.triggerEvent = triggerEventSpy;
 
         const disposer = attachDomEvent(core, {
-            keydown: { pluginEventType: PluginEventType.KeyDown },
+            keydown: { pluginEventType: 'keyDown' },
         });
         const event = document.createEvent('KeyboardEvent');
         event.initEvent('keydown');
@@ -66,7 +65,7 @@ describe('attachDomEvent', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: event,
             },
             false
@@ -81,7 +80,7 @@ describe('attachDomEvent', () => {
         core.api.triggerEvent = triggerEventSpy;
         const disposer = attachDomEvent(core, {
             keydown: {
-                pluginEventType: PluginEventType.KeyDown,
+                pluginEventType: 'keyDown',
                 beforeDispatch: callback,
             },
         });
@@ -93,7 +92,7 @@ describe('attachDomEvent', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: event,
             },
             false
@@ -109,7 +108,7 @@ describe('attachDomEvent', () => {
 
         const disposer = attachDomEvent(core, {
             keydown: {
-                pluginEventType: PluginEventType.KeyDown,
+                pluginEventType: 'keyDown',
                 beforeDispatch: callback,
             },
         });

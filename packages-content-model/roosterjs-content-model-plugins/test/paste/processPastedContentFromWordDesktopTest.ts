@@ -5,8 +5,8 @@ import { PluginEventType } from 'roosterjs-editor-types';
 import { processPastedContentFromWordDesktop } from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { WordMetadata } from '../../lib/paste/WordDesktop/WordMetadata';
 import {
+    BeforePasteEvent,
     ClipboardData,
-    ContentModelBeforePasteEvent,
     ContentModelDocument,
 } from 'roosterjs-content-model-types';
 import {
@@ -3875,7 +3875,7 @@ export function createBeforePasteEventMock(fragment: DocumentFragment, htmlBefor
         htmlAfter: '',
         htmlAttributes: {},
         domToModelOption: { additionalAllowedTags: [], additionalDisallowedTags: [] },
-    } as any) as ContentModelBeforePasteEvent;
+    } as any) as BeforePasteEvent;
 }
 
 function createListElementFromWord(

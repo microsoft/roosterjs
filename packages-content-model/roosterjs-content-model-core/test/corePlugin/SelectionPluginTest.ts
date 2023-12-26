@@ -1,5 +1,4 @@
 import { createSelectionPlugin } from '../../lib/corePlugin/SelectionPlugin';
-import { PluginEventType } from 'roosterjs-editor-types';
 import {
     EditorPlugin,
     IStandaloneEditor,
@@ -209,7 +208,7 @@ describe('SelectionPlugin handle image selection', () => {
     it('No selection, mouse down to div', () => {
         const node = document.createElement('div');
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: node,
             } as any,
@@ -239,7 +238,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         const node = document.createElement('div');
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: node,
             } as any,
@@ -270,7 +269,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         const node = document.createElement('div');
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: node,
             } as any,
@@ -289,7 +288,7 @@ describe('SelectionPlugin handle image selection', () => {
         });
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
             } as any,
@@ -309,7 +308,7 @@ describe('SelectionPlugin handle image selection', () => {
         });
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
                 button: 2,
@@ -324,7 +323,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         mockedImage.contentEditable = 'true';
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
                 button: 2,
@@ -338,7 +337,7 @@ describe('SelectionPlugin handle image selection', () => {
         const node = document.createElement('div');
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: node,
                 button: 2,
@@ -354,7 +353,7 @@ describe('SelectionPlugin handle image selection', () => {
         mockedImage.contentEditable = 'true';
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseUp,
+            eventType: 'mouseUp',
             isClicking: true,
             rawEvent: {
                 target: mockedImage,
@@ -374,7 +373,7 @@ describe('SelectionPlugin handle image selection', () => {
         mockedImage.contentEditable = 'false';
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseUp,
+            eventType: 'mouseUp',
             isClicking: true,
             rawEvent: {
                 target: mockedImage,
@@ -390,7 +389,7 @@ describe('SelectionPlugin handle image selection', () => {
         mockedImage.contentEditable = 'true';
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseUp,
+            eventType: 'mouseUp',
             isClicking: false,
             rawEvent: {
                 target: mockedImage,
@@ -407,7 +406,7 @@ describe('SelectionPlugin handle image selection', () => {
         getDOMSelectionSpy.and.returnValue(null);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -423,7 +422,7 @@ describe('SelectionPlugin handle image selection', () => {
         });
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -455,7 +454,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -492,7 +491,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -530,7 +529,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -562,7 +561,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
