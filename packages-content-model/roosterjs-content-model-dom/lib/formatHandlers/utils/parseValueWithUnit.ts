@@ -34,6 +34,9 @@ export function parseValueWithUnit(
             case '%':
                 result = (getFontSize(currentSizePxOrElement) * num) / 100;
                 break;
+            case 'rem':
+                result = getFontSize(currentSizePxOrElement) * num;
+                break;
             default:
                 // TODO: Support more unit if need
                 break;
