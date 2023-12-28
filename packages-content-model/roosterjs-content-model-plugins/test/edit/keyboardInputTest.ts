@@ -14,7 +14,7 @@ describe('keyboardInput', () => {
     let formatContentModelSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let deleteSelectionSpy: jasmine.Spy;
-    let getEnvironmentSpy: jasmine.Spy;
+    let isInIMESpy: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let normalizeContentModelSpy: jasmine.Spy;
     let mockedContext: FormatWithContentModelContext;
@@ -38,15 +38,13 @@ describe('keyboardInput', () => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         deleteSelectionSpy = spyOn(deleteSelection, 'deleteSelection');
         normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
-        getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValue({
-            isMac: false,
-        });
+        isInIMESpy = jasmine.createSpy('isInIME').and.returnValue(false);
 
         editor = {
             getDOMSelection: getDOMSelectionSpy,
             takeSnapshot: takeSnapshotSpy,
             formatContentModel: formatContentModelSpy,
-            getEnvironment: getEnvironmentSpy,
+            isInIME: isInIMESpy,
         } as any;
     });
 
