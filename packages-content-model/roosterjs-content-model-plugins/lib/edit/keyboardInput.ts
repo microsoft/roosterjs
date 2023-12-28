@@ -55,7 +55,10 @@ function shouldInputWithContentModel(
         !isModifierKey(rawEvent) &&
         (rawEvent.key == 'Enter' || rawEvent.key == 'Space' || rawEvent.key.length == 1)
     ) {
-        return selection.type != 'range' || (!selection.range.collapsed && !isInIME); // TODO: Also handle Enter key even selection is collapsed
+        return (
+            selection.type != 'range' ||
+            (!selection.range.collapsed && !rawEvent.isComposing && !isInIME)
+        ); // TODO: Also handle Enter key even selection is collapsed
     } else {
         return false;
     }

@@ -91,6 +91,7 @@ describe('keyboardInput', () => {
 
         const rawEvent = {
             key: 'A',
+            isComposing: false,
         } as any;
 
         keyboardInput(editor, rawEvent);
