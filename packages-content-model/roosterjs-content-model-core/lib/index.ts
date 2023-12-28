@@ -57,5 +57,5 @@ export { BulletListType } from './constants/BulletListType';
 export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
-export { createStandaloneEditorCore } from './editor/createStandaloneEditorCore';
+export { StandaloneEditor } from './editor/StandaloneEditor';
 export { createSnapshotsManager } from './editor/SnapshotsManagerImpl';

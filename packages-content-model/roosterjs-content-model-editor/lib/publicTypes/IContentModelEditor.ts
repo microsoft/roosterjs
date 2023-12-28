@@ -1,5 +1,6 @@
 import type { ContentModelCorePlugins } from './ContentModelCorePlugins';
-import type { EditorPlugin, ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
+import type { ContentModelCoreApiMap } from './ContentModelEditorCore';
+import type { ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
 import type { StandaloneEditorOptions, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -28,18 +29,9 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
      * Specify the enabled experimental features
      */
     experimentalFeatures?: ExperimentalFeatures[];
-
     /**
-     * Current zoom scale, @default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * A function map to override default core API implementation
+     * Default value is null
      */
-    zoomScale?: number;
-
-    /**
-     * A callback to be invoked when any exception is thrown during disposing editor
-     * @param plugin The plugin that causes exception
-     * @param error The error object we got
-     */
-    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+    legacyCoreApiOverride?: Partial<ContentModelCoreApiMap>;
 }

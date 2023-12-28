@@ -1,12 +1,10 @@
 import type { ContextMenuPluginState } from './ContextMenuPluginState';
-import type { StandaloneEditorCorePlugins } from 'roosterjs-content-model-types';
-import type { EditPluginState, EditorPlugin, PluginWithState } from 'roosterjs-editor-types';
+import type { EditorPlugin, EditPluginState, PluginWithState } from 'roosterjs-editor-types';
 
 /**
- * An interface for unported core plugins
- * TODO: Port these plugins
+ * An interface for Content Model editor core plugins
  */
-export interface UnportedCorePlugins {
+export interface ContentModelCorePlugins {
     /**
      * Translate Standalone editor event type to legacy event type
      */
@@ -29,6 +27,16 @@ export interface UnportedCorePlugins {
 }
 
 /**
- * An interface for Content Model editor core plugins.
+ * Core plugin state for Content Model Editor
  */
-export interface ContentModelCorePlugins extends StandaloneEditorCorePlugins, UnportedCorePlugins {}
+export interface ContentModelCorePluginState {
+    /**
+     * Plugin state of EditPlugin
+     */
+    readonly edit: EditPluginState;
+
+    /**
+     * Plugin state of ContextMenuPlugin
+     */
+    readonly contextMenu: ContextMenuPluginState;
+}

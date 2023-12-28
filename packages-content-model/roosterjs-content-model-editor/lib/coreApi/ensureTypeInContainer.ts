@@ -8,15 +8,21 @@ import {
     Position,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import type { EnsureTypeInContainer } from 'roosterjs-content-model-types';
+import type { EnsureTypeInContainer } from '../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
  * When typing goes directly under content div, many things can go wrong
  * We fix it by wrapping it with a div and reposition cursor within the div
  */
-export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, keyboardEvent) => {
-    const table = findClosestElementAncestor(position.node, core.contentDiv, 'table');
+export const ensureTypeInContainer: EnsureTypeInContainer = (
+    core,
+    innerCore,
+    position,
+    keyboardEvent
+) => {
+    const { contentDiv, api } = innerCore;
+    const table = findClosestElementAncestor(position.node, contentDiv, 'table');
     let td: HTMLElement | null;
 
     if (table && (td = table.querySelector('td,th'))) {
@@ -24,7 +30,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, key
     }
     position = position.normalize();
 
-    const block = getBlockElementAtNode(core.contentDiv, position.node);
+    const block = getBlockElementAtNode(contentDiv, position.node);
     let formatNode: HTMLElement | null;
 
     if (block) {
@@ -46,9 +52,9 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, key
         // The fix is to add a DIV wrapping, apply default format and move cursor over
         formatNode = createElement(
             KnownCreateElementDataIndex.EmptyLine,
-            core.contentDiv.ownerDocument
+            contentDiv.ownerDocument
         ) as HTMLElement;
-        core.api.insertNode(core, formatNode, {
+        core.api.insertNode(core, innerCore, formatNode, {
             position: ContentPosition.End,
             updateCursor: false,
             replaceSelection: false,
@@ -61,7 +67,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (core, position, key
 
     // If this is triggered by a keyboard event, let's select the new position
     if (keyboardEvent) {
-        core.api.setDOMSelection(core, {
+        api.setDOMSelection(innerCore, {
             type: 'range',
             range: createRange(new Position(position)),
         });

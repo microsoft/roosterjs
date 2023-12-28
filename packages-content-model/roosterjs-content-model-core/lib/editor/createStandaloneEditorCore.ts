@@ -1,37 +1,34 @@
+import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
-import { DarkColorHandlerImpl } from './DarkColorHandlerImpl';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
 import {
     createDomToModelSettings,
     createModelToDomSettings,
 } from './createStandaloneEditorDefaultSettings';
-import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     EditorEnvironment,
     StandaloneEditorCore,
     StandaloneEditorCorePluginState,
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
-    UnportedCoreApiMap,
 } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * A temporary function to create Standalone Editor core
  * @param contentDiv Editor content DIV
  * @param options Editor options
  */
 export function createStandaloneEditorCore(
     contentDiv: HTMLDivElement,
-    options: StandaloneEditorOptions,
-    unportedCoreApiMap: UnportedCoreApiMap,
-    tempPlugins: EditorPlugin[]
+    options: StandaloneEditorOptions
 ): StandaloneEditorCore {
     const corePlugins = createStandaloneEditorCorePlugins(options, contentDiv);
 
     return {
         contentDiv,
-        api: { ...standaloneCoreApiMap, ...unportedCoreApiMap, ...options.coreApiOverride },
-        originalApi: { ...standaloneCoreApiMap, ...unportedCoreApiMap },
+        api: { ...standaloneCoreApiMap, ...options.coreApiOverride },
+        originalApi: { ...standaloneCoreApiMap },
         plugins: [
             corePlugins.cache,
             corePlugins.format,
@@ -39,12 +36,12 @@ export function createStandaloneEditorCore(
             corePlugins.domEvent,
             corePlugins.selection,
             corePlugins.entity,
-            ...tempPlugins,
+            ...(options.plugins ?? []).filter(x => !!x),
             corePlugins.undo,
             corePlugins.lifecycle,
         ],
-        environment: createEditorEnvironment(),
-        darkColorHandler: new DarkColorHandlerImpl(
+        environment: createEditorEnvironment(contentDiv),
+        darkColorHandler: createDarkColorHandler(
             contentDiv,
             options.getDarkColor ?? getDarkColorFallback
         ),
@@ -52,15 +49,18 @@ export function createStandaloneEditorCore(
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),
         ...getPluginState(corePlugins),
+        disposeErrorHandler: options.disposeErrorHandler,
+        zoomScale: (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1,
     };
 }
 
-function createEditorEnvironment(): EditorEnvironment {
-    // It is ok to use global window here since the environment should always be the same for all windows in one session
-    const userAgent = window.navigator.userAgent;
+function createEditorEnvironment(contentDiv: HTMLElement): EditorEnvironment {
+    const navigator = contentDiv.ownerDocument.defaultView?.navigator;
+    const userAgent = navigator?.userAgent ?? '';
+    const appVersion = navigator?.appVersion ?? '';
 
     return {
-        isMac: window.navigator.appVersion.indexOf('Mac') != -1,
+        isMac: appVersion.indexOf('Mac') != -1,
         isAndroid: /android/i.test(userAgent),
         isSafari:
             userAgent.indexOf('Safari') >= 0 &&
@@ -89,7 +89,10 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins): StandaloneEdi
     };
 }
 
-// A fallback function, always return original color
-function getDarkColorFallback(color: string) {
+/**
+ * @internal Export for test only
+ * A fallback function, always return original color
+ */
+export function getDarkColorFallback(color: string) {
     return color;
 }
