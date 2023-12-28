@@ -282,9 +282,7 @@
 <a name='L223'></a><a href='#L223'>223</a>
 <a name='L224'></a><a href='#L224'>224</a>
 <a name='L225'></a><a href='#L225'>225</a>
-<a name='L226'></a><a href='#L226'>226</a>
-<a name='L227'></a><a href='#L227'>227</a>
-<a name='L228'></a><a href='#L228'>228</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L226'></a><a href='#L226'>226</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -312,9 +310,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -332,10 +332,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -529,7 +525,8 @@ import {
     splitTextNode,
     splitParentNode,
 } from 'roosterjs-editor-dom';
-import type { InsertNode, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { InsertNode } from '../publicTypes/ContentModelEditorCore';
 &nbsp;
 function <span class="fstat-no" title="function not covered" >getInitialRange(</span>
     core: StandaloneEditorCore,
@@ -542,6 +539,7 @@ function <span class="fstat-no" title="function not covered" >getInitialRange(</
     const selection = <span class="cstat-no" title="statement not covered" >core.api.getDOMSelection(core);</span>
     let range = <span class="cstat-no" title="statement not covered" >selection?.type == 'range' ? selection.range : null;</span>
     let rangeToRestore = <span class="cstat-no" title="statement not covered" >null;</span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >    if (option.position == ContentPosition.Range) {</span>
 <span class="cstat-no" title="statement not covered" >        rangeToRestore = range;</span>
 <span class="cstat-no" title="statement not covered" >        range = option.range;</span>
@@ -555,14 +553,10 @@ function <span class="fstat-no" title="function not covered" >getInitialRange(</
 /**
  * @internal
  * Insert a DOM node into editor content
- * @param core The StandaloneEditorCore object. No op if null.
+ * @param core The ContentModelEditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-export const insertNode: InsertNode = <span class="fstat-no" title="function not covered" >(</span>
-    core: StandaloneEditorCore,
-    node: Node,
-    option: InsertOption | null
-) =&gt; {
+export const insertNode: InsertNode = <span class="fstat-no" title="function not covered" >(c</span>ore, innerCore, node, option) =&gt; {
 <span class="cstat-no" title="statement not covered" >    option = option || {</span>
         position: ContentPosition.SelectionStart,
         insertOnNewLine: false,
@@ -570,10 +564,10 @@ export const insertNode: InsertNode = <span class="fstat-no" title="function not
         replaceSelection: true,
         insertToRegionRoot: false,
     };
-    const contentDiv = <span class="cstat-no" title="statement not covered" >core.contentDiv;</span>
+    const { contentDiv, api, lifecycle, darkColorHandler } = <span class="cstat-no" title="statement not covered" >innerCore;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (option.updateCursor) {</span>
-<span class="cstat-no" title="statement not covered" >        core.api.focus(core);</span>
+<span class="cstat-no" title="statement not covered" >        api.focus(innerCore);</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (option.position == ContentPosition.Outside) {</span>
@@ -581,8 +575,8 @@ export const insertNode: InsertNode = <span class="fstat-no" title="function not
 <span class="cstat-no" title="statement not covered" >        return true;</span>
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (core.lifecycle.isDarkMode) {</span>
-<span class="cstat-no" title="statement not covered" >        transformColor(node, true /*includeSelf*/, 'lightToDark', core.darkColorHandler);</span>
+<span class="cstat-no" title="statement not covered" >    if (lifecycle.isDarkMode) {</span>
+<span class="cstat-no" title="statement not covered" >        transformColor(node, true /*includeSelf*/, 'lightToDark', darkColorHandler);</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    switch (option.position) {</span>
@@ -647,7 +641,7 @@ export const insertNode: InsertNode = <span class="fstat-no" title="function not
 <span class="cstat-no" title="statement not covered" >            break;</span>
         case ContentPosition.Range:
         case ContentPosition.SelectionStart:
-            let { range<span class="cstat-no" title="statement not covered" >, r</span>angeToRestore<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >g</span>etInitialRange(core, option);</span>
+            let { range<span class="cstat-no" title="statement not covered" >, r</span>angeToRestore<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >g</span>etInitialRange(innerCore, option);</span>
 <span class="cstat-no" title="statement not covered" >            if (!range) {</span>
 <span class="cstat-no" title="statement not covered" >                break;</span>
             }
@@ -661,12 +655,12 @@ export const insertNode: InsertNode = <span class="fstat-no" title="function not
             let blockElement<span class="cstat-no" title="statement not covered" >: BlockElement | null;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (option.insertOnNewLine &amp;&amp; option.insertToRegionRoot) {</span>
-<span class="cstat-no" title="statement not covered" >                pos = adjustInsertPositionRegionRoot(core, range, pos);</span>
+<span class="cstat-no" title="statement not covered" >                pos = adjustInsertPositionRegionRoot(innerCore, range, pos);</span>
             } else <span class="cstat-no" title="statement not covered" >if (</span>
                 option.insertOnNewLine &amp;&amp;
                 (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
             ) {
-<span class="cstat-no" title="statement not covered" >                pos = adjustInsertPositionNewLine(blockElement, core, pos);</span>
+<span class="cstat-no" title="statement not covered" >                pos = adjustInsertPositionNewLine(blockElement, innerCore, pos);</span>
             } else {
 <span class="cstat-no" title="statement not covered" >                pos = adjustInsertPosition(contentDiv, node, pos, range);</span>
             }
@@ -684,7 +678,7 @@ export const insertNode: InsertNode = <span class="fstat-no" title="function not
             }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (rangeToRestore) {</span>
-<span class="cstat-no" title="statement not covered" >                core.api.setDOMSelection(core, {</span>
+<span class="cstat-no" title="statement not covered" >                api.setDOMSelection(innerCore, {</span>
                     type: 'range',
                     range: rangeToRestore,
                 });
@@ -745,7 +739,7 @@ function <span class="fstat-no" title="function not covered" >adjustInsertPositi
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Dec 26 2023 23:38:57 GMT+0000 (Coordinated Universal Time)
+                at Thu Dec 28 2023 00:19:29 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

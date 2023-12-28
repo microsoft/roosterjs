@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.9% </span>
+                <span class="strong">12.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/31</span>
+                <span class='fraction'>4/32</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">10% </span>
+                <span class="strong">9.68% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/30</span>
+                <span class='fraction'>3/31</span>
             </div>
         
             
@@ -138,7 +138,8 @@
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,6 +158,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -228,7 +230,7 @@ import {
     getTextContent,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import type { GetContent } from 'roosterjs-content-model-types';
+import type { GetContent } from '../publicTypes/ContentModelEditorCore';
 &nbsp;
 /**
  * @internal
@@ -237,14 +239,15 @@ import type { GetContent } from 'roosterjs-content-model-types';
  * @param mode specify what kind of HTML content to retrieve
  * @returns HTML string representing current editor content
  */
-export const getContent: GetContent = <span class="fstat-no" title="function not covered" >(c</span>ore, mode): string =&gt; {
+export const getContent: GetContent = <span class="fstat-no" title="function not covered" >(c</span>ore, innerCore, mode): string =&gt; {
     let content: string | null = <span class="cstat-no" title="statement not covered" >'';</span>
     const triggerExtractContentEvent = <span class="cstat-no" title="statement not covered" >mode == GetContentMode.CleanHTML;</span>
     const includeSelectionMarker = <span class="cstat-no" title="statement not covered" >mode == GetContentMode.RawHTMLWithSelection;</span>
+    const { lifecycle, contentDiv, api, darkColorHandler } = <span class="cstat-no" title="statement not covered" >innerCore;</span>
 &nbsp;
     // When there is fragment for shadow edit, always use the cached fragment as document since HTML node in editor
     // has been changed by uncommitted shadow edit which should be ignored.
-    const root = <span class="cstat-no" title="statement not covered" >core.lifecycle.shadowEditFragment || core.contentDiv;</span>
+    const root = <span class="cstat-no" title="statement not covered" >lifecycle.shadowEditFragment || contentDiv;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (mode == GetContentMode.PlainTextFast) {</span>
 <span class="cstat-no" title="statement not covered" >        content = root.textContent;</span>
@@ -254,22 +257,22 @@ export const getContent: GetContent = <span class="fstat-no" title="function not
         const clonedRoot = <span class="cstat-no" title="statement not covered" >cloneNode(root);</span>
 <span class="cstat-no" title="statement not covered" >        clonedRoot.normalize();</span>
 &nbsp;
-        const originalRange = <span class="cstat-no" title="statement not covered" >core.api.getDOMSelection(core);</span>
+        const originalRange = <span class="cstat-no" title="statement not covered" >api.getDOMSelection(innerCore);</span>
         const path =
-<span class="cstat-no" title="statement not covered" >            !includeSelectionMarker || core.lifecycle.shadowEditFragment</span>
+<span class="cstat-no" title="statement not covered" >            !includeSelectionMarker || lifecycle.shadowEditFragment</span>
                 ? null
                 : originalRange?.type == 'range'
-                ? getSelectionPath(core.contentDiv, originalRange.range)
+                ? getSelectionPath(contentDiv, originalRange.range)
                 : null;
         const range = <span class="cstat-no" title="statement not covered" >path &amp;&amp; createRange(clonedRoot, path.start, path.end);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (core.lifecycle.isDarkMode) {</span>
-<span class="cstat-no" title="statement not covered" >            transformColor(clonedRoot, false /*includeSelf*/, 'darkToLight', core.darkColorHandler);</span>
+<span class="cstat-no" title="statement not covered" >        if (lifecycle.isDarkMode) {</span>
+<span class="cstat-no" title="statement not covered" >            transformColor(clonedRoot, false /*includeSelf*/, 'darkToLight', darkColorHandler);</span>
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (triggerExtractContentEvent) {</span>
-<span class="cstat-no" title="statement not covered" >            core.api.triggerEvent(</span>
-                core,
+<span class="cstat-no" title="statement not covered" >            api.triggerEvent(</span>
+                innerCore,
                 {
                     eventType: PluginEventType.ExtractContentWithDom,
                     clonedRoot,
@@ -307,7 +310,7 @@ function <span class="fstat-no" title="function not covered" >cloneNode(</span>n
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Dec 26 2023 23:38:57 GMT+0000 (Coordinated Universal Time)
+                at Thu Dec 28 2023 00:19:29 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

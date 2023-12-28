@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.29% </span>
+                <span class="strong">13.64% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/21</span>
+                <span class='fraction'>3/22</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">10% </span>
+                <span class="strong">9.52% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/20</span>
+                <span class='fraction'>2/21</span>
             </div>
         
             
@@ -134,7 +134,13 @@
 <a name='L75'></a><a href='#L75'>75</a>
 <a name='L76'></a><a href='#L76'>76</a>
 <a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,6 +158,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -221,15 +233,21 @@ import {
     Position,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import type { EnsureTypeInContainer } from 'roosterjs-content-model-types';
+import type { EnsureTypeInContainer } from '../publicTypes/ContentModelEditorCore';
 &nbsp;
 /**
  * @internal
  * When typing goes directly under content div, many things can go wrong
  * We fix it by wrapping it with a div and reposition cursor within the div
  */
-export const ensureTypeInContainer: EnsureTypeInContainer = <span class="fstat-no" title="function not covered" >(c</span>ore, position, keyboardEvent) =&gt; {
-    const table = <span class="cstat-no" title="statement not covered" >findClosestElementAncestor(position.node, core.contentDiv, 'table');</span>
+export const ensureTypeInContainer: EnsureTypeInContainer = <span class="fstat-no" title="function not covered" >(</span>
+    core,
+    innerCore,
+    position,
+    keyboardEvent
+) =&gt; {
+    const { contentDiv, api } = <span class="cstat-no" title="statement not covered" >innerCore;</span>
+    const table = <span class="cstat-no" title="statement not covered" >findClosestElementAncestor(position.node, contentDiv, 'table');</span>
     let td: HTMLElement | null;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (table &amp;&amp; (td = table.querySelector('td,th'))) {</span>
@@ -237,7 +255,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = <span class="fstat-n
     }
 <span class="cstat-no" title="statement not covered" >    position = position.normalize();</span>
 &nbsp;
-    const block = <span class="cstat-no" title="statement not covered" >getBlockElementAtNode(core.contentDiv, position.node);</span>
+    const block = <span class="cstat-no" title="statement not covered" >getBlockElementAtNode(contentDiv, position.node);</span>
     let formatNode: HTMLElement | null;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (block) {</span>
@@ -259,9 +277,9 @@ export const ensureTypeInContainer: EnsureTypeInContainer = <span class="fstat-n
         // The fix is to add a DIV wrapping, apply default format and move cursor over
 <span class="cstat-no" title="statement not covered" >        formatNode = createElement(</span>
             KnownCreateElementDataIndex.EmptyLine,
-            core.contentDiv.ownerDocument
+            contentDiv.ownerDocument
         ) as HTMLElement;
-<span class="cstat-no" title="statement not covered" >        core.api.insertNode(core, formatNode, {</span>
+<span class="cstat-no" title="statement not covered" >        core.api.insertNode(core, innerCore, formatNode, {</span>
             position: ContentPosition.End,
             updateCursor: false,
             replaceSelection: false,
@@ -274,7 +292,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = <span class="fstat-n
 &nbsp;
     // If this is triggered by a keyboard event, let's select the new position
 <span class="cstat-no" title="statement not covered" >    if (keyboardEvent) {</span>
-<span class="cstat-no" title="statement not covered" >        core.api.setDOMSelection(core, {</span>
+<span class="cstat-no" title="statement not covered" >        api.setDOMSelection(innerCore, {</span>
             type: 'range',
             range: createRange(new Position(position)),
         });
@@ -295,7 +313,7 @@ function <span class="fstat-no" title="function not covered" >wasNodeJustCreated
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Dec 26 2023 23:38:57 GMT+0000 (Coordinated Universal Time)
+                at Thu Dec 28 2023 00:19:29 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">19.23% </span>
+                <span class="strong">18.52% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/26</span>
+                <span class='fraction'>5/27</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16% </span>
+                <span class="strong">15.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/25</span>
+                <span class='fraction'>4/26</span>
             </div>
         
             
@@ -134,7 +134,17 @@
 <a name='L75'></a><a href='#L75'>75</a>
 <a name='L76'></a><a href='#L76'>76</a>
 <a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -151,8 +161,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -216,23 +236,33 @@ import { convertMetadataToDOMSelection } from '../editor/utils/selectionConverte
 import { extractContentMetadata, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentMetadata } from 'roosterjs-editor-types';
-import type { SetContent, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { SetContent } from '../publicTypes/ContentModelEditorCore';
+import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
  * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
  * if triggerContentChangedEvent is set to true
- * @param core The StandaloneEditorCore object
+ * @param core The ContentModelEditorCore object
  * @param content HTML content to set in
  * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
  * @param metadata @optional Metadata of the content that helps editor know the selection and color mode.
  * If not passed, we will treat content as in light mode without selection
  */
-export const setContent: SetContent = <span class="fstat-no" title="function not covered" >(c</span>ore, content, triggerContentChangedEvent, metadata) =&gt; {
+export const setContent: SetContent = <span class="fstat-no" title="function not covered" >(</span>
+    core,
+    innerCore,
+    content,
+    triggerContentChangedEvent,
+    metadata
+) =&gt; {
+    const { contentDiv, api, entity, trustedHTMLHandler, lifecycle, darkColorHandler } = <span class="cstat-no" title="statement not covered" >innerCore;</span>
+&nbsp;
     let contentChanged = <span class="cstat-no" title="statement not covered" >false;</span>
-<span class="cstat-no" title="statement not covered" >    if (core.contentDiv.innerHTML != content) {</span>
-<span class="cstat-no" title="statement not covered" >        core.api.triggerEvent(</span>
-            core,
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (innerCore.contentDiv.innerHTML != content) {</span>
+<span class="cstat-no" title="statement not covered" >        api.triggerEvent(</span>
+            innerCore,
             {
                 eventType: PluginEventType.BeforeSetContent,
                 newContent: content,
@@ -240,36 +270,36 @@ export const setContent: SetContent = <span class="fstat-no" title="function not
             true /*broadcast*/
         );
 &nbsp;
-        const entities = <span class="cstat-no" title="statement not covered" >core.entity.entityMap;</span>
+        const entities = <span class="cstat-no" title="statement not covered" >entity.entityMap;</span>
         const html = <span class="cstat-no" title="statement not covered" >content || '';</span>
         const body = <span class="cstat-no" title="statement not covered" >new DOMParser().parseFromString(</span>
-            core.trustedHTMLHandler?.(html) ?? html,
+            trustedHTMLHandler?.(html) ?? html,
             'text/html'
         ).body;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        restoreContentWithEntityPlaceholder(body, core.contentDiv, entities);</span>
+<span class="cstat-no" title="statement not covered" >        restoreContentWithEntityPlaceholder(body, contentDiv, entities);</span>
 &nbsp;
-        const metadataFromContent = <span class="cstat-no" title="statement not covered" >extractContentMetadata(core.contentDiv);</span>
+        const metadataFromContent = <span class="cstat-no" title="statement not covered" >extractContentMetadata(contentDiv);</span>
 <span class="cstat-no" title="statement not covered" >        metadata = metadata || metadataFromContent;</span>
-<span class="cstat-no" title="statement not covered" >        selectContentMetadata(core, metadata);</span>
+<span class="cstat-no" title="statement not covered" >        selectContentMetadata(innerCore, metadata);</span>
 <span class="cstat-no" title="statement not covered" >        contentChanged = true;</span>
     }
 &nbsp;
-    const isDarkMode = <span class="cstat-no" title="statement not covered" >core.lifecycle.isDarkMode;</span>
+    const isDarkMode = <span class="cstat-no" title="statement not covered" >lifecycle.isDarkMode;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if ((!metadata &amp;&amp; isDarkMode) || (metadata &amp;&amp; !!metadata.isDarkMode != !!isDarkMode)) {</span>
 <span class="cstat-no" title="statement not covered" >        transformColor(</span>
-            core.contentDiv,
+            contentDiv,
             false /*includeSelf*/,
             isDarkMode ? 'lightToDark' : 'darkToLight',
-            core.darkColorHandler
+            darkColorHandler
         );
 <span class="cstat-no" title="statement not covered" >        contentChanged = true;</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (triggerContentChangedEvent &amp;&amp; contentChanged) {</span>
-<span class="cstat-no" title="statement not covered" >        core.api.triggerEvent(</span>
-            core,
+<span class="cstat-no" title="statement not covered" >        api.triggerEvent(</span>
+            innerCore,
             {
                 eventType: PluginEventType.ContentChanged,
                 source: ChangeSource.SetContent,
@@ -295,7 +325,7 @@ function <span class="fstat-no" title="function not covered" >selectContentMetad
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Dec 26 2023 23:38:57 GMT+0000 (Coordinated Universal Time)
+                at Thu Dec 28 2023 00:19:29 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
