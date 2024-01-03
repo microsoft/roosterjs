@@ -258,7 +258,7 @@ describe('processPastedContentFromExcelTest', () => {
     it('Table, handle borderStyle: none', () => {
         runTest(
             '<table><tr><td style="border-style:none">a</td><td style="border-style:none">b</td></tr></table>',
-            '<table><tbody><tr><td style="border-top: 1px solid rgb(212, 212, 212); border-bottom: 1px solid rgb(212, 212, 212);">a</td><td style="border-top: 1px solid rgb(212, 212, 212); border-bottom: 1px solid rgb(212, 212, 212);">b</td></tr></tbody></table>',
+            '<table><tbody><tr><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">a</td><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">b</td></tr></tbody></table>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -287,8 +287,8 @@ describe('processPastedContentFromExcelTest', () => {
                                         ],
                                         format: {
                                             borderBottom: 'solid 1px #d4d4d4',
-                                            borderInlineStart: 'solid 1px #d4d4d4',
-                                            borderInlineEnd: 'solid 1px #d4d4d4',
+                                            borderLeft: 'solid 1px #d4d4d4',
+                                            borderRight: 'solid 1px #d4d4d4',
                                             borderTop: 'solid 1px #d4d4d4',
                                         },
                                         spanLeft: false,
@@ -314,8 +314,8 @@ describe('processPastedContentFromExcelTest', () => {
                                         ],
                                         format: {
                                             borderBottom: 'solid 1px #d4d4d4',
-                                            borderInlineStart: 'solid 1px #d4d4d4',
-                                            borderInlineEnd: 'solid 1px #d4d4d4',
+                                            borderLeft: 'solid 1px #d4d4d4',
+                                            borderRight: 'solid 1px #d4d4d4',
                                             borderTop: 'solid 1px #d4d4d4',
                                         },
                                         spanLeft: false,

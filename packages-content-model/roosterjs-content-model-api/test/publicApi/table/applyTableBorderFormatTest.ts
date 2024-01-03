@@ -147,7 +147,7 @@ describe('applyTableBorderFormat', () => {
                                     editingInfo: '{"borderOverride":true}',
                                 },
                                 format: {
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 isHeader: false,
                                 spanAbove: false,
@@ -161,8 +161,8 @@ describe('applyTableBorderFormat', () => {
                                 },
                                 format: {
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                     borderTop: testBorderString,
                                 },
                                 isHeader: false,
@@ -178,8 +178,8 @@ describe('applyTableBorderFormat', () => {
                                 },
                                 format: {
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                     borderTop: testBorderString,
                                 },
                                 isHeader: false,
@@ -194,7 +194,7 @@ describe('applyTableBorderFormat', () => {
                                     editingInfo: '{"borderOverride":true}',
                                 },
                                 format: {
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                 },
                                 isHeader: false,
                                 spanAbove: false,
@@ -213,7 +213,7 @@ describe('applyTableBorderFormat', () => {
                                     editingInfo: '{"borderOverride":true}',
                                 },
                                 format: {
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 isHeader: false,
                                 spanAbove: false,
@@ -227,8 +227,8 @@ describe('applyTableBorderFormat', () => {
                                 },
                                 format: {
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                     borderTop: testBorderString,
                                 },
                                 isHeader: false,
@@ -244,8 +244,8 @@ describe('applyTableBorderFormat', () => {
                                 },
                                 format: {
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                     borderTop: testBorderString,
                                 },
                                 isHeader: false,
@@ -260,7 +260,7 @@ describe('applyTableBorderFormat', () => {
                                     editingInfo: '{"borderOverride":true}',
                                 },
                                 format: {
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                 },
                                 isHeader: false,
                                 spanAbove: false,
@@ -332,8 +332,8 @@ describe('applyTableBorderFormat', () => {
             createTestTable(4, 4, {
                 borderTop: testBorderString,
                 borderBottom: testBorderString,
-                borderInlineStart: testBorderString,
-                borderInlineEnd: testBorderString,
+                borderLeft: testBorderString,
+                borderRight: testBorderString,
             }),
             {
                 blockType: 'Table',
@@ -348,8 +348,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: testBorderString,
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -362,8 +362,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: testBorderString,
                                     borderBottom: '',
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -378,8 +378,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: testBorderString,
                                     borderBottom: '',
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -394,8 +394,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: testBorderString,
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -414,8 +414,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: testBorderString,
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: '',
+                                    borderLeft: testBorderString,
+                                    borderRight: '',
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -430,8 +430,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: '',
                                     borderBottom: '',
-                                    borderInlineStart: '',
-                                    borderInlineEnd: '',
+                                    borderLeft: '',
+                                    borderRight: '',
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -447,80 +447,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: '',
                                     borderBottom: '',
-                                    borderInlineStart: '',
-                                    borderInlineEnd: '',
-                                },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {
-                                    editingInfo: '{"borderOverride":true}',
-                                },
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    borderTop: testBorderString,
-                                    borderBottom: testBorderString,
-                                    borderInlineStart: '',
-                                    borderInlineEnd: testBorderString,
-                                },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {
-                                    editingInfo: '{"borderOverride":true}',
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        height: 0,
-                        format: {},
-                        cells: [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    borderTop: testBorderString,
-                                    borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: '',
-                                },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {
-                                    editingInfo: '{"borderOverride":true}',
-                                },
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    borderTop: '',
-                                    borderBottom: '',
-                                    borderInlineStart: '',
-                                    borderInlineEnd: '',
-                                },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {
-                                    editingInfo: '{"borderOverride":true}',
-                                },
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    borderTop: '',
-                                    borderBottom: '',
-                                    borderInlineStart: '',
-                                    borderInlineEnd: '',
+                                    borderLeft: '',
+                                    borderRight: '',
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -536,8 +464,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: testBorderString,
                                     borderBottom: testBorderString,
-                                    borderInlineStart: '',
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: '',
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -558,8 +486,80 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: testBorderString,
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: '',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {
+                                    editingInfo: '{"borderOverride":true}',
+                                },
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    borderTop: '',
+                                    borderBottom: '',
+                                    borderLeft: '',
+                                    borderRight: '',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {
+                                    editingInfo: '{"borderOverride":true}',
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    borderTop: '',
+                                    borderBottom: '',
+                                    borderLeft: '',
+                                    borderRight: '',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {
+                                    editingInfo: '{"borderOverride":true}',
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    borderTop: testBorderString,
+                                    borderBottom: testBorderString,
+                                    borderLeft: '',
+                                    borderRight: testBorderString,
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {
+                                    editingInfo: '{"borderOverride":true}',
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    borderTop: testBorderString,
+                                    borderBottom: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -572,8 +572,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: '',
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -588,8 +588,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: '',
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -604,8 +604,8 @@ describe('applyTableBorderFormat', () => {
                                 format: {
                                     borderTop: testBorderString,
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderLeft: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -916,7 +916,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -929,7 +929,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1048,7 +1048,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1062,7 +1062,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1179,7 +1179,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1192,7 +1192,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                     borderTop: testBorderString,
                                 },
                                 spanLeft: false,
@@ -1207,7 +1207,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                     borderTop: testBorderString,
                                 },
                                 spanLeft: false,
@@ -1222,7 +1222,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1241,7 +1241,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1254,7 +1254,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                     borderBottom: testBorderString,
                                 },
                                 spanLeft: false,
@@ -1269,7 +1269,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                     borderBottom: testBorderString,
                                 },
                                 spanLeft: false,
@@ -1284,7 +1284,7 @@ describe('applyTableBorderFormat', () => {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
                                 format: {
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1420,7 +1420,7 @@ describe('applyTableBorderFormat', () => {
                                 blocks: [],
                                 format: {
                                     borderBottom: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1435,7 +1435,7 @@ describe('applyTableBorderFormat', () => {
                                 blocks: [],
                                 format: {
                                     borderBottom: testBorderString,
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1474,7 +1474,7 @@ describe('applyTableBorderFormat', () => {
                                 blocks: [],
                                 format: {
                                     borderTop: testBorderString,
-                                    borderInlineEnd: testBorderString,
+                                    borderRight: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,
@@ -1489,7 +1489,7 @@ describe('applyTableBorderFormat', () => {
                                 blocks: [],
                                 format: {
                                     borderTop: testBorderString,
-                                    borderInlineStart: testBorderString,
+                                    borderLeft: testBorderString,
                                 },
                                 spanLeft: false,
                                 spanAbove: false,

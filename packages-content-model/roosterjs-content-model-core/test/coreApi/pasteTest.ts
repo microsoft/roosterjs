@@ -12,6 +12,7 @@ import { BeforePasteEvent, IEditor, PluginEvent, PluginEventType } from 'rooster
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
+import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 import { mergePasteContent } from '../../lib/coreApi/paste';
 import {
     ClipboardData,
@@ -22,7 +23,6 @@ import {
     FormatWithContentModelOptions,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
-import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 
 let clipboardData: ClipboardData;
 
@@ -516,9 +516,9 @@ describe('mergePasteContent', () => {
                                     format: {
                                         useBorderBox: true,
                                         borderTop: '1px solid #ABABAB',
-                                        borderInlineEnd: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
                                         borderBottom: '1px solid #ABABAB',
-                                        borderInlineStart: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
                                     },
                                     spanLeft: false,
                                     spanAbove: false,

@@ -71,13 +71,13 @@ describe('applyTableFormat', () => {
                     `BackgroundColor Row=${row} Col=${col}`
                 );
 
-                const { borderTop, borderInlineEnd, borderInlineStart, borderBottom } = cell.format;
+                const { borderTop, borderRight, borderLeft, borderBottom } = cell.format;
                 const borders = expectedBorders[row][col];
 
                 expect(borderTop).toBe(borders[0]);
-                expect(borderInlineEnd).toBe(borders[1]);
+                expect(borderRight).toBe(borders[1]);
                 expect(borderBottom).toBe(borders[2]);
-                expect(borderInlineStart).toBe(borders[3]);
+                expect(borderLeft).toBe(borders[3]);
 
                 expect(cell.cachedElement).toBeUndefined();
             }
@@ -489,7 +489,7 @@ describe('applyTableFormat', () => {
 
     it('Has borderOverride', () => {
         const table = createTable(1, 1);
-        table.rows[0].cells[0].format.borderInlineStart = '1px solid red';
+        table.rows[0].cells[0].format.borderLeft = '1px solid red';
 
         // Try to apply green
         applyTableFormat(table, {

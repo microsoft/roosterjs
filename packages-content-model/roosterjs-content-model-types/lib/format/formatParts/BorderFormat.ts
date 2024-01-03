@@ -26,16 +26,4 @@ export type BorderFormat = {
      * Radius to be applied in all borders corners
      */
     borderRadius?: string;
-
-    /**
-     * Inline Start border in format 'width style color'
-     * Left border in Left to right languages, right border in right to left languages
-     */
-    borderInlineStart?: string;
-
-    /**
-     * Inline End border in format 'width style color'
-     * Right border in Left to right languages, left border in right to left languages
-     */
-    borderInlineEnd?: string;
 };

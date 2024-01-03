@@ -148,8 +148,8 @@ function setCellFormat(
  */
 function setBorderColors(td: HTMLTableCellElement, format: Partial<TableFormat>) {
     td.style.borderTop = getBorderStyle(format.topBorderColor);
-    td.style.borderInlineStart = getBorderStyle(format.verticalBorderColor);
-    td.style.borderInlineEnd = getBorderStyle(format.verticalBorderColor);
+    td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
+    td.style.borderRight = getBorderStyle(format.verticalBorderColor);
     td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
 }
 
@@ -171,10 +171,10 @@ function formatBorders(
             return;
         case TableBorderFormat.LIST_WITH_SIDE_BORDERS:
             if (!isFirstColumn) {
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
             }
             if (!isLastColumn) {
-                td.style.borderInlineEndColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
             }
 
             break;
@@ -187,90 +187,90 @@ function formatBorders(
                 td.style.borderBottomColor = TRANSPARENT;
             }
             if (!isFirstColumn) {
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
             }
             if (!isLastColumn && !isFirstColumn) {
-                td.style.borderInlineEndColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
             }
             if (isFirstColumn && isFirstRow) {
-                td.style.borderInlineEndColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
             }
 
             break;
         case TableBorderFormat.NO_HEADER_BORDERS:
             if (isFirstRow) {
                 td.style.borderTopColor = TRANSPARENT;
-                td.style.borderInlineEndColor = TRANSPARENT;
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
             }
             if (isFirstColumn) {
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
             }
             if (isLastColumn) {
-                td.style.borderInlineEndColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
             }
             break;
         case TableBorderFormat.NO_SIDE_BORDERS:
             if (isFirstColumn) {
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
             }
             if (isLastColumn) {
-                td.style.borderInlineEndColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
             }
             break;
         case TableBorderFormat.ESPECIAL_TYPE_1:
             if (isFirstRow) {
-                td.style.borderInlineEndColor = TRANSPARENT;
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
             }
             if (isFirstColumn) {
                 td.style.borderBottomColor = TRANSPARENT;
                 td.style.borderTopColor = TRANSPARENT;
             }
             if (isFirstRow && isFirstColumn) {
-                td.style.borderInlineStartColor = format.verticalBorderColor || TRANSPARENT;
+                td.style.borderLeftColor = format.verticalBorderColor || TRANSPARENT;
                 td.style.borderBottomColor = format.bottomBorderColor || TRANSPARENT;
                 td.style.borderTopColor = format.topBorderColor || TRANSPARENT;
             }
             break;
         case TableBorderFormat.ESPECIAL_TYPE_2:
             if (isFirstRow) {
-                td.style.borderInlineEndColor = TRANSPARENT;
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
             }
             if (isFirstColumn) {
                 td.style.borderBottomColor = TRANSPARENT;
                 td.style.borderTopColor = TRANSPARENT;
             }
             if (isFirstRow && isFirstColumn) {
-                td.style.borderInlineStartColor = format.verticalBorderColor || TRANSPARENT;
+                td.style.borderLeftColor = format.verticalBorderColor || TRANSPARENT;
                 td.style.borderBottomColor = format.bottomBorderColor || TRANSPARENT;
                 td.style.borderTopColor = format.topBorderColor || TRANSPARENT;
             }
             if (!isFirstRow && !isFirstColumn) {
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
                 td.style.borderBottomColor = TRANSPARENT;
                 td.style.borderTopColor = TRANSPARENT;
-                td.style.borderInlineEndColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
             }
 
             break;
         case TableBorderFormat.ESPECIAL_TYPE_3:
             if (isFirstRow) {
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
                 td.style.borderTopColor = TRANSPARENT;
-                td.style.borderInlineEndColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
             }
             if (isFirstColumn) {
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
                 td.style.borderTopColor = TRANSPARENT;
                 td.style.borderBottomColor = TRANSPARENT;
             }
             if (!isFirstRow && !isFirstColumn) {
-                td.style.borderInlineStartColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
                 td.style.borderBottomColor = TRANSPARENT;
                 td.style.borderTopColor = TRANSPARENT;
-                td.style.borderInlineEndColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
             }
             if (isFirstRow && isFirstColumn) {
                 td.style.borderBottomColor = format.bottomBorderColor || TRANSPARENT;
@@ -376,8 +376,8 @@ function setHeaderRowFormat(
                     darkColorHandler
                 );
             }
-            cell.td.style.borderInlineEndColor = format.headerRowColor;
-            cell.td.style.borderInlineStartColor = format.headerRowColor;
+            cell.td.style.borderRightColor = format.headerRowColor;
+            cell.td.style.borderLeftColor = format.headerRowColor;
             cell.td.style.borderTopColor = format.headerRowColor;
             cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
             cell.td.scope = 'row';
