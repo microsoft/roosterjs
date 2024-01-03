@@ -904,4 +904,73 @@ describe('align left', () => {
         });
         expect(result).toBeTrue();
     });
+
+    it('align justify paragraph', () => {
+        const group = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText('test');
+        text.isSelected = true;
+        para.segments.push(text);
+
+        group.blocks.push(para);
+
+        const result = setModelAlignment(group, 'justify');
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        textAlign: 'justify',
+                    },
+                    segments: [text],
+                },
+            ],
+        });
+        expect(result).toBeTruthy();
+    });
+
+    it('align justify list item', () => {
+        const group = createContentModelDocument();
+        const listLevel = createListLevel('OL');
+        const listItem = createListItem([listLevel]);
+        const para = createParagraph();
+        const para2 = createParagraph();
+        const text = createText('test');
+        const text2 = createText('test2');
+        text.isSelected = true;
+        text2.isSelected = true;
+        para.segments.push(text);
+        para2.segments.push(text2);
+
+        listItem.blocks.push(para, para2);
+
+        group.blocks.push(listItem);
+
+        const result = setModelAlignment(group, 'justify');
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockGroupType: 'ListItem',
+                    blockType: 'BlockGroup',
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {},
+                        },
+                    ],
+                    blocks: [para, para2],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: { textAlign: 'justify' },
+                },
+            ],
+        });
+        expect(result).toBeTruthy();
+    });
 });

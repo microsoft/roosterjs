@@ -47,7 +47,7 @@ const TableAlignMap: Record<
  */
 export function setModelAlignment(
     model: ContentModelDocument,
-    alignment: 'left' | 'center' | 'right'
+    alignment: 'left' | 'center' | 'right' | 'justify'
 ) {
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
         model,
@@ -56,8 +56,11 @@ export function setModelAlignment(
     );
 
     paragraphOrListItemOrTable.forEach(({ block }) => {
-        const newAligment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
-        if (block.blockType === 'Table') {
+        const newAligment =
+            alignment === 'justify'
+                ? 'justify'
+                : ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
+        if (block.blockType === 'Table' && alignment !== 'justify') {
             alignTable(
                 block,
                 TableAlignMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr']
