@@ -198,3 +198,13 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
         }
     }
 }
+
+/**
+ * @internal
+ */
+export function createDarkColorHandler(
+    contentDiv: HTMLElement,
+    getDarkColor: (color: string) => string
+): DarkColorHandler {
+    return new DarkColorHandlerImpl(contentDiv, getDarkColor);
+}

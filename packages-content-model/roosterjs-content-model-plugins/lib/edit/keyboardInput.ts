@@ -9,7 +9,7 @@ import type { DOMSelection } from 'roosterjs-content-model-types';
 export function keyboardInput(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
 
-    if (shouldInputWithContentModel(selection, rawEvent)) {
+    if (shouldInputWithContentModel(selection, rawEvent, editor.isInIME())) {
         editor.takeSnapshot();
 
         editor.formatContentModel(
@@ -44,14 +44,21 @@ export function keyboardInput(editor: IContentModelEditor, rawEvent: KeyboardEve
     }
 }
 
-function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
+function shouldInputWithContentModel(
+    selection: DOMSelection | null,
+    rawEvent: KeyboardEvent,
+    isInIME: boolean
+) {
     if (!selection) {
         return false; // Nothing to delete
     } else if (
         !isModifierKey(rawEvent) &&
         (rawEvent.key == 'Enter' || rawEvent.key == 'Space' || rawEvent.key.length == 1)
     ) {
-        return selection.type != 'range' || !selection.range.collapsed; // TODO: Also handle Enter key even selection is collapsed
+        return (
+            selection.type != 'range' ||
+            (!selection.range.collapsed && !rawEvent.isComposing && !isInIME)
+        ); // TODO: Also handle Enter key even selection is collapsed
     } else {
         return false;
     }

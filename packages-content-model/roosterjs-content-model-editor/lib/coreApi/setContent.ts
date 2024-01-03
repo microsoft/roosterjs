@@ -3,23 +3,33 @@ import { convertMetadataToDOMSelection } from '../editor/utils/selectionConverte
 import { extractContentMetadata, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentMetadata } from 'roosterjs-editor-types';
-import type { SetContent, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { SetContent } from '../publicTypes/ContentModelEditorCore';
+import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
  * if triggerContentChangedEvent is set to true
- * @param core The StandaloneEditorCore object
+ * @param core The ContentModelEditorCore object
  * @param content HTML content to set in
  * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
  * @param metadata @optional Metadata of the content that helps editor know the selection and color mode.
  * If not passed, we will treat content as in light mode without selection
  */
-export const setContent: SetContent = (core, content, triggerContentChangedEvent, metadata) => {
+export const setContent: SetContent = (
+    core,
+    innerCore,
+    content,
+    triggerContentChangedEvent,
+    metadata
+) => {
+    const { contentDiv, api, entity, trustedHTMLHandler, lifecycle, darkColorHandler } = innerCore;
+
     let contentChanged = false;
-    if (core.contentDiv.innerHTML != content) {
-        core.api.triggerEvent(
-            core,
+
+    if (innerCore.contentDiv.innerHTML != content) {
+        api.triggerEvent(
+            innerCore,
             {
                 eventType: PluginEventType.BeforeSetContent,
                 newContent: content,
@@ -27,36 +37,36 @@ export const setContent: SetContent = (core, content, triggerContentChangedEvent
             true /*broadcast*/
         );
 
-        const entities = core.entity.entityMap;
+        const entities = entity.entityMap;
         const html = content || '';
         const body = new DOMParser().parseFromString(
-            core.trustedHTMLHandler?.(html) ?? html,
+            trustedHTMLHandler?.(html) ?? html,
             'text/html'
         ).body;
 
-        restoreContentWithEntityPlaceholder(body, core.contentDiv, entities);
+        restoreContentWithEntityPlaceholder(body, contentDiv, entities);
 
-        const metadataFromContent = extractContentMetadata(core.contentDiv);
+        const metadataFromContent = extractContentMetadata(contentDiv);
         metadata = metadata || metadataFromContent;
-        selectContentMetadata(core, metadata);
+        selectContentMetadata(innerCore, metadata);
         contentChanged = true;
     }
 
-    const isDarkMode = core.lifecycle.isDarkMode;
+    const isDarkMode = lifecycle.isDarkMode;
 
     if ((!metadata && isDarkMode) || (metadata && !!metadata.isDarkMode != !!isDarkMode)) {
         transformColor(
-            core.contentDiv,
+            contentDiv,
             false /*includeSelf*/,
             isDarkMode ? 'lightToDark' : 'darkToLight',
-            core.darkColorHandler
+            darkColorHandler
         );
         contentChanged = true;
     }
 
     if (triggerContentChangedEvent && contentChanged) {
-        core.api.triggerEvent(
-            core,
+        api.triggerEvent(
+            innerCore,
             {
                 eventType: PluginEventType.ContentChanged,
                 source: ChangeSource.SetContent,
