@@ -29,7 +29,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
     function runTest(
         source?: string,
         expected?: string | string[],
-        expectedModel?: ContentModelDocument,
+        expectedModel?: any,
         removeUndefinedValues?: boolean
     ) {
         //Act
