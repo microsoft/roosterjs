@@ -2,6 +2,7 @@ import * as React from 'react';
 import ContentModelRibbonButton from './ContentModelRibbonButton';
 import RibbonPlugin from './RibbonPlugin';
 import { alignCenterButton } from './alignCenterButton';
+import { alignJustifyButton } from './alignJustifyButton';
 import { alignLeftButton } from './alignLeftButton';
 import { alignRightButton } from './alignRightButton';
 import { backgroundColorButton } from './backgroundColorButton';
@@ -93,6 +94,7 @@ const buttons: ContentModelRibbonButton<any>[] = [
     alignLeftButton,
     alignCenterButton,
     alignRightButton,
+    alignJustifyButton,
     insertLinkButton,
     removeLinkButton,
     insertTableButton,
