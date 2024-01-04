@@ -1,19 +1,8 @@
-import { ContentModelParagraph } from 'roosterjs-content-model-types';
-import { isWhiteSpacePreserved } from '../../../lib/modelApi/common/isWhiteSpacePreserved';
+import { isWhiteSpacePreserved } from '../../lib/domUtils/isWhiteSpacePreserved';
 
 describe('isWhiteSpacePreserved', () => {
     function runTest(style: string | undefined, expected: boolean) {
-        const paragraph: ContentModelParagraph = {
-            blockType: 'Paragraph',
-            format: {},
-            segments: [],
-        };
-
-        if (style) {
-            paragraph.format.whiteSpace = style;
-        }
-
-        const result = isWhiteSpacePreserved(paragraph);
+        const result = isWhiteSpacePreserved(style);
         expect(result).toBe(expected);
     }
 

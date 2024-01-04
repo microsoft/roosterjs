@@ -1,7 +1,7 @@
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
-import { isWhiteSpacePreserved } from './isWhiteSpacePreserved';
+import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
 import { normalizeAllSegments } from './normalizeSegment';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
 /**
@@ -33,7 +33,7 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
         }
     }
 
-    if (!isWhiteSpacePreserved(paragraph)) {
+    if (!isWhiteSpacePreserved(paragraph.format.whiteSpace)) {
         normalizeAllSegments(paragraph);
     }
 
