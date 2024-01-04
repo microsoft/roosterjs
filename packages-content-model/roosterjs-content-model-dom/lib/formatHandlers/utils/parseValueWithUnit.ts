@@ -26,6 +26,7 @@ export function parseValueWithUnit(
                 result = ptToPx(num);
                 break;
             case 'em':
+            case 'rem':
                 result = getFontSize(currentSizePxOrElement) * num;
                 break;
             case 'ex':
