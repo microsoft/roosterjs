@@ -49,8 +49,10 @@ describe('setContentModel', () => {
                 getDOMSelection: getDOMSelectionSpy,
             },
             lifecycle: {},
-            defaultModelToDomConfig: mockedConfig,
             cache: {},
+            modelToDomSettings: {
+                calculated: mockedConfig,
+            },
         } as any) as StandaloneEditorCore & EditorCore;
     });
 
@@ -95,12 +97,13 @@ describe('setContentModel', () => {
         const defaultOption = { o: 'OPTION' } as any;
         const additionalOption = { o: 'OPTION1', o2: 'OPTION2' } as any;
 
-        core.defaultModelToDomOptions = [defaultOption];
+        core.modelToDomSettings.builtIn = defaultOption;
         setContentModel(core, mockedModel, additionalOption);
 
         expect(createModelToDomContextSpy).toHaveBeenCalledWith(
             mockedEditorContext,
             defaultOption,
+            undefined,
             additionalOption
         );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
@@ -141,9 +144,14 @@ describe('setContentModel', () => {
             ignoreSelection: true,
         });
 
-        expect(createModelToDomContextSpy).toHaveBeenCalledWith(mockedEditorContext, {
-            ignoreSelection: true,
-        });
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(
+            mockedEditorContext,
+            undefined,
+            undefined,
+            {
+                ignoreSelection: true,
+            }
+        );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,

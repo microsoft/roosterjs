@@ -3,24 +3,15 @@ import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
-import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
-    ContentMetadata,
     DarkColorHandler,
     EditorPlugin,
-    GetContentMode,
-    InsertOption,
-    NodePosition,
     PluginEvent,
     Rect,
-    StyleBasedFormatState,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
-import type {
-    StandaloneEditorCorePluginState,
-    UnportedCorePluginState,
-} from '../pluginState/StandaloneEditorPluginState';
+import type { StandaloneEditorCorePluginState } from '../pluginState/StandaloneEditorPluginState';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { DomToModelSettings } from '../context/DomToModelSettings';
@@ -138,20 +129,6 @@ export type AddUndoSnapshot = (
 export type GetVisibleViewport = (core: StandaloneEditorCore) => Rect | null;
 
 /**
- * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
- * if triggerContentChangedEvent is set to true
- * @param core The StandaloneEditorCore object
- * @param content HTML content to set in
- * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
- */
-export type SetContent = (
-    core: StandaloneEditorCore,
-    content: string,
-    triggerContentChangedEvent: boolean,
-    metadata?: ContentMetadata
-) => void;
-
-/**
  * Check if the editor has focus now
  * @param core The StandaloneEditorCore object
  * @returns True if the editor has focus, otherwise false
@@ -165,17 +142,6 @@ export type HasFocus = (core: StandaloneEditorCore) => boolean;
 export type Focus = (core: StandaloneEditorCore) => void;
 
 /**
- * Insert a DOM node into editor content
- * @param core The StandaloneEditorCore object. No op if null.
- * @param option An insert option object to specify how to insert the node
- */
-export type InsertNode = (
-    core: StandaloneEditorCore,
-    node: Node,
-    option: InsertOption | null
-) => boolean;
-
-/**
  * Attach a DOM event to the editor content DIV
  * @param core The StandaloneEditorCore object
  * @param eventMap A map from event name to its handler
@@ -186,46 +152,11 @@ export type AttachDomEvent = (
 ) => () => void;
 
 /**
- * Get current editor content as HTML string
- * @param core The StandaloneEditorCore object
- * @param mode specify what kind of HTML content to retrieve
- * @returns HTML string representing current editor content
- */
-export type GetContent = (
-    core: StandaloneEditorCore,
-    mode: GetContentMode | CompatibleGetContentMode
-) => string;
-
-/**
- * Get style based format state from current selection, including font name/size and colors
- * @param core The StandaloneEditorCore objects
- * @param node The node to get style from
- */
-export type GetStyleBasedFormatState = (
-    core: StandaloneEditorCore,
-    node: Node | null
-) => StyleBasedFormatState;
-
-/**
  * Restore an undo snapshot into editor
  * @param core The StandaloneEditorCore object
  * @param step Steps to move, can be 0, positive or negative
  */
 export type RestoreUndoSnapshot = (core: StandaloneEditorCore, snapshot: Snapshot) => void;
-
-/**
- * Ensure user will type into a container element rather than into the editor content DIV directly
- * @param core The StandaloneEditorCore object.
- * @param position The position that user is about to type to
- * @param keyboardEvent Optional keyboard event object
- * @param deprecated Deprecated parameter, not used
- */
-export type EnsureTypeInContainer = (
-    core: StandaloneEditorCore,
-    position: NodePosition,
-    keyboardEvent?: KeyboardEvent,
-    deprecated?: boolean
-) => void;
 
 /**
  * Paste into editor using a clipboardData object
@@ -240,10 +171,10 @@ export type Paste = (
 ) => void;
 
 /**
- * Temp interface
- * TODO: Port other core API
+ * The interface for the map of core API for Content Model editor.
+ * Editor can call call API from this map under StandaloneEditorCore object
  */
-export interface PortedCoreApiMap {
+export interface StandaloneCoreApiMap {
     /**
      * Create a EditorContext object used by ContentModel API
      * @param core The StandaloneEditorCore object
@@ -358,64 +289,9 @@ export interface PortedCoreApiMap {
 }
 
 /**
- * Temp interface
- * TODO: Port these core API
- */
-export interface UnportedCoreApiMap {
-    /**
-     * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
-     * if triggerContentChangedEvent is set to true
-     * @param core The StandaloneEditorCore object
-     * @param content HTML content to set in
-     * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
-     */
-    setContent: SetContent;
-
-    /**
-     * Insert a DOM node into editor content
-     * @param core The StandaloneEditorCore object. No op if null.
-     * @param option An insert option object to specify how to insert the node
-     */
-    insertNode: InsertNode;
-
-    /**
-     * Get current editor content as HTML string
-     * @param core The StandaloneEditorCore object
-     * @param mode specify what kind of HTML content to retrieve
-     * @returns HTML string representing current editor content
-     */
-    getContent: GetContent;
-
-    /**
-     * Get style based format state from current selection, including font name/size and colors
-     * @param core The StandaloneEditorCore objects
-     * @param node The node to get style from
-     */
-    getStyleBasedFormatState: GetStyleBasedFormatState;
-
-    /**
-     * Ensure user will type into a container element rather than into the editor content DIV directly
-     * @param core The EditorCore object.
-     * @param position The position that user is about to type to
-     * @param keyboardEvent Optional keyboard event object
-     * @param deprecated Deprecated parameter, not used
-     */
-    ensureTypeInContainer: EnsureTypeInContainer;
-}
-
-/**
- * The interface for the map of core API for Content Model editor.
- * Editor can call call API from this map under StandaloneEditorCore object
- */
-export interface StandaloneCoreApiMap extends PortedCoreApiMap, UnportedCoreApiMap {}
-
-/**
  * Represents the core data structure of a Content Model editor
  */
-export interface StandaloneEditorCore
-    extends StandaloneEditorCorePluginState,
-        UnportedCorePluginState,
-        StandaloneEditorDefaultSettings {
+export interface StandaloneEditorCore extends StandaloneEditorCorePluginState {
     /**
      * The content DIV element of this editor
      */
@@ -437,6 +313,16 @@ export interface StandaloneEditorCore
     readonly plugins: EditorPlugin[];
 
     /**
+     * Settings used by DOM to Content Model conversion
+     */
+    readonly domToModelSettings: ContentModelSettings<DomToModelOption, DomToModelSettings>;
+
+    /**
+     * Settings used by Content Model to DOM conversion
+     */
+    readonly modelToDomSettings: ContentModelSettings<ModelToDomOption, ModelToDomSettings>;
+
+    /**
      * Editor running environment
      */
     readonly environment: EditorEnvironment;
@@ -453,31 +339,41 @@ export interface StandaloneEditorCore
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * @deprecated Will be removed soon.
+     * Current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    zoomScale: number;
 }
 
 /**
  * Default DOM and Content Model conversion settings for an editor
  */
-export interface StandaloneEditorDefaultSettings {
+export interface ContentModelSettings<OptionType, ConfigType> {
     /**
-     * Default DOM to Content Model options
+     * Built in options used by editor
      */
-    defaultDomToModelOptions: (DomToModelOption | undefined)[];
+    builtIn: OptionType;
 
     /**
-     * Default Content Model to DOM options
+     * Customize options passed in from Editor Options, used for overwrite default option.
+     * This will also be used by copy/paste
      */
-    defaultModelToDomOptions: (ModelToDomOption | undefined)[];
+    customized: OptionType;
 
     /**
-     * Default DOM to Content Model config, calculated from defaultDomToModelOptions,
-     * will be used for creating content model if there is no other customized options
+     * Configuration calculated from default and customized options.
+     * This is a cached object so that we don't need to cache it every time when we use Content Model
      */
-    defaultDomToModelConfig: DomToModelSettings;
-
-    /**
-     * Default Content Model to DOM config, calculated from defaultModelToDomOptions,
-     * will be used for setting content model if there is no other customized options
-     */
-    defaultModelToDomConfig: ModelToDomSettings;
+    calculated: ConfigType;
 }

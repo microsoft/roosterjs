@@ -19,7 +19,7 @@ import type {
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
 class ContentModelCachePlugin implements PluginWithState<ContentModelCachePluginState> {
-    private editor: (IEditor & IStandaloneEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: ContentModelCachePluginState;
 
     /**

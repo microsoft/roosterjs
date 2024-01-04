@@ -1,4 +1,5 @@
 import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
+import * as cloneModel from '../../lib/publicApi/model/cloneModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
 import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
@@ -8,12 +9,11 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { BeforePasteEvent, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { BeforePasteEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
-import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
-import { mergePasteContent } from '../../lib/coreApi/paste';
+import { tableProcessor } from 'roosterjs-content-model-dom';
 import {
     ClipboardData,
     ContentModelDocument,
@@ -29,7 +29,7 @@ let clipboardData: ClipboardData;
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Paste ', () => {
-    let editor: IStandaloneEditor & IEditor;
+    let editor: IStandaloneEditor;
     let createContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
@@ -42,11 +42,13 @@ describe('Paste ', () => {
     let context: FormatWithContentModelContext | undefined;
 
     const mockedPos = 'POS' as any;
+    const mockedCloneModel = 'CloneModel' as any;
 
     let div: HTMLDivElement;
 
     beforeEach(() => {
         spyOn(domToContentModel, 'domToContentModel').and.callThrough();
+        spyOn(cloneModel, 'cloneModel').and.returnValue(mockedCloneModel);
         clipboardData = {
             types: ['image/png', 'text/html'],
             text: '',
@@ -106,9 +108,11 @@ describe('Paste ', () => {
             coreApiOverride: {
                 focus,
                 createContentModel,
-                getContent,
                 getVisibleViewport,
                 formatContentModel,
+            },
+            legacyCoreApiOverride: {
+                getContent,
             },
         });
 
@@ -122,18 +126,14 @@ describe('Paste ', () => {
     });
 
     it('Execute', () => {
-        try {
-            editor.paste(clipboardData);
-        } catch (e) {
-            console.log(e);
-        }
+        editor.pasteFromClipboard(clipboardData);
 
         expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);
     });
 
     it('Execute | As plain text', () => {
-        editor.paste(clipboardData, true /* asText */);
+        editor.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);
@@ -157,7 +157,7 @@ describe('Paste ', () => {
             },
         });
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         editor.createContentModel(<DomToModelOption>{
             processorOverride: {
@@ -222,7 +222,7 @@ describe('paste with content model & paste plugin', () => {
         editor?.paste(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -233,7 +233,7 @@ describe('paste with content model & paste plugin', () => {
         editor?.paste(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
-        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
 
@@ -364,235 +364,8 @@ describe('paste with content model & paste plugin', () => {
     });
 });
 
-describe('mergePasteContent', () => {
-    it('merge table', () => {
-        // A doc with only one table in content
-        const pasteModel: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    rows: [
-                        {
-                            height: 0,
-                            format: {},
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Text',
-                                                    text: 'FromPaste',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                            isImplicit: true,
-                                        },
-                                    ],
-                                    format: {},
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                    ],
-                    format: { useBorderBox: true, borderCollapse: true },
-                    widths: [],
-                    dataset: {
-                        editingInfo: '',
-                    },
-                },
-            ],
-        };
-
-        // A doc with a table, and selection marker inside of it.
-        const sourceModel: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    rows: [
-                        {
-                            height: 22,
-                            format: {},
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'SelectionMarker',
-                                                    isSelected: true,
-                                                    format: {},
-                                                },
-                                                { segmentType: 'Br', format: {} },
-                                            ],
-                                            format: {},
-                                            isImplicit: true,
-                                        },
-                                    ],
-                                    format: {},
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                    ],
-                    format: { useBorderBox: true, borderCollapse: true },
-                    widths: [120, 120],
-                    dataset: {
-                        editingInfo: '',
-                    },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [{ segmentType: 'Br', format: {} }],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
-
-        spyOn(mergeModelFile, 'mergeModel').and.callThrough();
-
-        mergePasteContent(
-            sourceModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            pasteModel,
-            false /* applyCurrentFormat */,
-            undefined /* customizedMerge */
-        );
-
-        expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
-            sourceModel,
-            pasteModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            {
-                mergeFormat: 'none',
-                mergeTable: true,
-            }
-        );
-        expect(sourceModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    rows: [
-                        {
-                            height: 22,
-                            format: {},
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Text',
-                                                    text: 'FromPaste',
-                                                    format: {},
-                                                },
-                                                {
-                                                    segmentType: 'SelectionMarker',
-                                                    isSelected: true,
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                            isImplicit: true,
-                                        },
-                                    ],
-                                    format: {
-                                        useBorderBox: true,
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                    },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                    ],
-                    format: { useBorderBox: true, borderCollapse: true },
-                    widths: [120, 120],
-                    dataset: {
-                        editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
-                    },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [{ segmentType: 'Br', format: {} }],
-                    format: {},
-                },
-            ],
-            format: {},
-        });
-    });
-
-    it('customized merge', () => {
-        const pasteModel: ContentModelDocument = createContentModelDocument();
-        const sourceModel: ContentModelDocument = createContentModelDocument();
-
-        const customizedMerge = jasmine.createSpy('customizedMerge');
-
-        spyOn(mergeModelFile, 'mergeModel').and.callThrough();
-
-        mergePasteContent(
-            sourceModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            pasteModel,
-            false /* applyCurrentFormat */,
-            customizedMerge /* customizedMerge */
-        );
-
-        expect(mergeModelFile.mergeModel).not.toHaveBeenCalled();
-        expect(customizedMerge).toHaveBeenCalledWith(sourceModel, pasteModel);
-    });
-
-    it('Apply current format', () => {
-        const pasteModel: ContentModelDocument = createContentModelDocument();
-        const sourceModel: ContentModelDocument = createContentModelDocument();
-
-        spyOn(mergeModelFile, 'mergeModel').and.callThrough();
-
-        mergePasteContent(
-            sourceModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            pasteModel,
-            true /* applyCurrentFormat */,
-            undefined /* customizedMerge */
-        );
-
-        expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
-            sourceModel,
-            pasteModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            {
-                mergeFormat: 'keepSourceEmphasisFormat',
-                mergeTable: false,
-            }
-        );
-    });
-});
-
 describe('Paste with clipboardData', () => {
-    let editor: IEditor & IStandaloneEditor = undefined!;
+    let editor: IStandaloneEditor = undefined!;
     const ID = 'EDITOR_ID';
 
     beforeEach(() => {
@@ -614,11 +387,11 @@ describe('Paste with clipboardData', () => {
         document.getElementById(ID)?.remove();
     });
 
-    it('Remove windowtext from clipboardContent', () => {
+    it('Replace windowtext with set black font color from clipboardContent', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><p style="color: windowtext;">Test</p></body></html>';
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {
@@ -635,12 +408,16 @@ describe('Paste with clipboardData', () => {
                         {
                             segmentType: 'Text',
                             text: 'Test',
-                            format: {},
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
                         },
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
                         },
                     ],
                     format: {
@@ -661,7 +438,7 @@ describe('Paste with clipboardData', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><a href="file://mylocalfile">Link</a></body></html>';
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {
@@ -693,7 +470,7 @@ describe('Paste with clipboardData', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><a href="https://github.com/microsoft/roosterjs">Link</a></body></html>';
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {

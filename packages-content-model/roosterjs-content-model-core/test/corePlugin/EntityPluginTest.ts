@@ -17,7 +17,7 @@ describe('EntityPlugin', () => {
     let createContentModelSpy: jasmine.Spy;
     let triggerPluginEventSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
-    let containsSpy: jasmine.Spy;
+    let isNodeInEditorSpy: jasmine.Spy;
     let transformColorSpy: jasmine.Spy;
     let mockedDarkColorHandler: DarkColorHandler;
 
@@ -25,7 +25,7 @@ describe('EntityPlugin', () => {
         createContentModelSpy = jasmine.createSpy('createContentModel');
         triggerPluginEventSpy = jasmine.createSpy('triggerPluginEvent');
         isDarkModeSpy = jasmine.createSpy('isDarkMode');
-        containsSpy = jasmine.createSpy('contains');
+        isNodeInEditorSpy = jasmine.createSpy('isNodeInEditor');
         transformColorSpy = spyOn(transformColor, 'transformColor');
         mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
 
@@ -33,7 +33,7 @@ describe('EntityPlugin', () => {
             createContentModel: createContentModelSpy,
             triggerPluginEvent: triggerPluginEventSpy,
             isDarkMode: isDarkModeSpy,
-            contains: containsSpy,
+            isNodeInEditor: isNodeInEditorSpy,
             getDarkColorHandler: () => mockedDarkColorHandler,
         } as any;
         plugin = createEntityPlugin();
@@ -561,7 +561,7 @@ describe('EntityPlugin', () => {
                 target: mockedNode,
             } as any;
 
-            containsSpy.and.returnValue(true);
+            isNodeInEditorSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.MouseUp,
@@ -581,7 +581,7 @@ describe('EntityPlugin', () => {
                 target: mockedNode,
             } as any;
 
-            containsSpy.and.returnValue(true);
+            isNodeInEditorSpy.and.returnValue(true);
             spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
 
             plugin.onPluginEvent({
@@ -617,7 +617,7 @@ describe('EntityPlugin', () => {
                 target: mockedNode2,
             } as any;
 
-            containsSpy.and.returnValue(true);
+            isNodeInEditorSpy.and.returnValue(true);
             spyOn(entityUtils, 'isEntityElement').and.callFake(node => node == mockedNode1);
 
             plugin.onPluginEvent({
@@ -649,7 +649,7 @@ describe('EntityPlugin', () => {
                 target: mockedNode,
             } as any;
 
-            containsSpy.and.returnValue(true);
+            isNodeInEditorSpy.and.returnValue(true);
             spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
 
             plugin.onPluginEvent({

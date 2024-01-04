@@ -13,13 +13,13 @@ import { setContentModel } from '../coreApi/setContentModel';
 import { setDOMSelection } from '../coreApi/setDOMSelection';
 import { switchShadowEdit } from '../coreApi/switchShadowEdit';
 import { triggerEvent } from '../coreApi/triggerEvent';
-import type { PortedCoreApiMap } from 'roosterjs-content-model-types';
+import type { StandaloneCoreApiMap } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Core API map for Standalone Content Model Editor
  */
-export const standaloneCoreApiMap: PortedCoreApiMap = {
+export const standaloneCoreApiMap: StandaloneCoreApiMap = {
     createContentModel: createContentModel,
     createEditorContext: createEditorContext,
     formatContentModel: formatContentModel,

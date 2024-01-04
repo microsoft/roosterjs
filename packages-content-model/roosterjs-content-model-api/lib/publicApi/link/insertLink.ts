@@ -1,3 +1,4 @@
+import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
 import { ChangeSource, getSelectedSegments, mergeModel } from 'roosterjs-content-model-core';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 import type { ContentModelLink, IStandaloneEditor } from 'roosterjs-content-model-types';
@@ -91,6 +92,7 @@ export default function insertLink(
                     });
                 }
 
+                adjustTrailingSpaceSelection(model);
                 return segments.length > 0;
             },
             {
