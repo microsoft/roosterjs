@@ -56,7 +56,7 @@ export function setModelAlignment(
     );
 
     paragraphOrListItemOrTable.forEach(({ block }) => {
-        const newAligment =
+        const newAlignment =
             alignment === 'justify'
                 ? 'justify'
                 : ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
@@ -66,8 +66,14 @@ export function setModelAlignment(
                 TableAlignMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr']
             );
         } else if (block) {
+            if (block.blockType === 'BlockGroup' && block.blockGroupType === 'ListItem') {
+                block.blocks.forEach(b => {
+                    const { format } = b;
+                    format.textAlign = newAlignment;
+                });
+            }
             const { format } = block;
-            format.textAlign = newAligment;
+            format.textAlign = newAlignment;
         }
     });
 

@@ -845,7 +845,7 @@ describe('setAlignment in list', () => {
 
     function runTest(
         list: ContentModelListItem,
-        alignment: 'left' | 'right' | 'center',
+        alignment: 'left' | 'right' | 'center' | 'justify',
         expectedList: ContentModelListItem | null
     ) {
         const model = createContentModelDocument();
@@ -916,7 +916,9 @@ describe('setAlignment in list', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {},
+                        format: {
+                            textAlign: 'start',
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -948,7 +950,9 @@ describe('setAlignment in list', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {},
+                        format: {
+                            textAlign: 'start',
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -1022,7 +1026,9 @@ describe('setAlignment in list', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {},
+                        format: {
+                            textAlign: 'center',
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -1098,7 +1104,9 @@ describe('setAlignment in list', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {},
+                        format: {
+                            textAlign: 'end',
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -1120,6 +1128,86 @@ describe('setAlignment in list', () => {
                 },
                 format: {
                     textAlign: 'end',
+                },
+            }
+        );
+    });
+
+    it('List - apply justify', () => {
+        runTest(
+            {
+                blockGroupType: 'ListItem',
+                blockType: 'BlockGroup',
+                levels: [
+                    {
+                        listType: 'OL',
+                        dataset: {},
+                        format: {},
+                    },
+                ],
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            textAlign: 'end',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+                formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                format: {
+                    textAlign: 'end',
+                },
+            },
+            'justify',
+            {
+                blockGroupType: 'ListItem',
+                blockType: 'BlockGroup',
+                levels: [
+                    {
+                        listType: 'OL',
+                        dataset: {},
+                        format: {},
+                    },
+                ],
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            textAlign: 'justify',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+                formatHolder: {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                format: {
+                    textAlign: 'justify',
                 },
             }
         );
