@@ -5,6 +5,7 @@ import { createText } from '../../modelApi/creators/createText';
 import { ensureParagraph } from '../../modelApi/common/ensureParagraph';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { hasSpacesOnly } from '../../modelApi/common/hasSpacesOnly';
+import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
 import type {
     ContentModelBlockGroup,
     ContentModelParagraph,
@@ -62,9 +63,6 @@ export const textProcessor: ElementProcessor<Text> = (
     );
 };
 
-// When we see these values of white-space style, need to preserve spaces and line-breaks and let browser handle it for us.
-const WhiteSpaceValuesNeedToHandle = ['pre', 'pre-wrap', 'pre-line', 'break-spaces'];
-
 function addTextSegment(
     group: ContentModelBlockGroup,
     text: string,
@@ -77,7 +75,7 @@ function addTextSegment(
         if (
             !hasSpacesOnly(text) ||
             (paragraph?.segments.length ?? 0) > 0 ||
-            WhiteSpaceValuesNeedToHandle.indexOf(paragraph?.format.whiteSpace || '') >= 0
+            isWhiteSpacePreserved(paragraph?.format.whiteSpace)
         ) {
             textModel = createText(text, context.segmentFormat);
 

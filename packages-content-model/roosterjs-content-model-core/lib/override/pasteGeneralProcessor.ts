@@ -1,12 +1,22 @@
+import { AllowedTags, createSanitizedElement, DisallowedTags } from '../utils/sanitizeElement';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
-import {
-    AllowedTags,
-    createSanitizedElement,
-    DisallowedTags,
-    removeDisplayFlex,
-    removeStyle,
-} from '../utils/sanitizeElement';
-import type { DomToModelOptionForPaste, ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    DomToModelOptionForPaste,
+    ElementProcessor,
+    ValueSanitizer,
+} from 'roosterjs-content-model-types';
+
+/**
+ * @internal Export for test only
+ */
+export const removeDisplayFlex: ValueSanitizer = value => {
+    return value == 'flex' ? null : value;
+};
+
+const DefaultStyleSanitizers: Readonly<Record<string, ValueSanitizer>> = {
+    position: false,
+    display: removeDisplayFlex,
+};
 
 /**
  * @internal
@@ -16,12 +26,25 @@ export function createPasteGeneralProcessor(
 ): ElementProcessor<HTMLElement> {
     const allowedTags = AllowedTags.concat(options.additionalAllowedTags);
     const disallowedTags = DisallowedTags.concat(options.additionalDisallowedTags);
+    const styleSanitizers = Object.assign({}, DefaultStyleSanitizers, options.styleSanitizers);
+    const attrSanitizers = options.attributeSanitizers;
 
     return (group, element, context) => {
         const tag = element.tagName.toLowerCase();
-        const processor =
+        const processor: ElementProcessor<HTMLElement> | undefined =
             allowedTags.indexOf(tag) >= 0
-                ? internalGeneralProcessor
+                ? (group, element, context) => {
+                      const sanitizedElement = createSanitizedElement(
+                          element.ownerDocument,
+                          element.tagName,
+                          element.attributes,
+                          styleSanitizers,
+                          attrSanitizers
+                      );
+
+                      moveChildNodes(sanitizedElement, element);
+                      context.defaultElementProcessors['*']?.(group, sanitizedElement, context);
+                  }
                 : disallowedTags.indexOf(tag) >= 0
                 ? undefined // Ignore those disallowed tags
                 : context.defaultElementProcessors.span; // For other unknown tags, treat them as SPAN
@@ -29,18 +52,3 @@ export function createPasteGeneralProcessor(
         processor?.(group, element, context);
     };
 }
-
-const internalGeneralProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const sanitizedElement = createSanitizedElement(
-        element.ownerDocument,
-        element.tagName,
-        element.attributes,
-        {
-            position: removeStyle,
-            display: removeDisplayFlex,
-        }
-    );
-
-    moveChildNodes(sanitizedElement, element);
-    context.defaultElementProcessors['*']?.(group, sanitizedElement, context);
-};
