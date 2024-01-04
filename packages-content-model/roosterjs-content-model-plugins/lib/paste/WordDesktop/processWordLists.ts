@@ -1,11 +1,10 @@
 import { getListStyleTypeFromString, updateListMetadata } from 'roosterjs-content-model-core';
-import { isEmpty } from 'roosterjs-content-model-dom/lib/modelApi/common/isEmpty';
-
 import type { WordMetadata } from './WordMetadata';
 import {
     addBlock,
     createListItem,
     createListLevel,
+    isEmpty,
     parseFormat,
 } from 'roosterjs-content-model-dom';
 import type {
