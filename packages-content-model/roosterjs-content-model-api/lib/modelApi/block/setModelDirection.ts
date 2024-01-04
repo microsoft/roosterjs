@@ -1,6 +1,12 @@
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
-import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-core';
+import {
+    applyTableFormat,
+    getOperationalBlocks,
+    isBlockGroupOfType,
+    updateTableCellMetadata,
+} from 'roosterjs-content-model-core';
 import type {
+    ContentModelBlock,
     ContentModelBlockFormat,
     ContentModelDocument,
     ContentModelListItem,
@@ -30,14 +36,18 @@ export function setModelDirection(model: ContentModelDocument, direction: 'ltr' 
                 item.blocks.forEach(block => internalSetDirection(block.format, direction));
             });
         } else if (block) {
-            internalSetDirection(block.format, direction);
+            internalSetDirection(block.format, direction, block);
         }
     });
 
     return paragraphOrListItemOrTable.length > 0;
 }
 
-function internalSetDirection(format: ContentModelBlockFormat, direction: 'ltr' | 'rtl') {
+function internalSetDirection(
+    format: ContentModelBlockFormat,
+    direction: 'ltr' | 'rtl',
+    block?: ContentModelBlock
+) {
     const wasRtl = format.direction == 'rtl';
     const isRtl = direction == 'rtl';
 
@@ -54,6 +64,26 @@ function internalSetDirection(format: ContentModelBlockFormat, direction: 'ltr' 
         setProperty(format, 'marginRight', marginLeft);
         setProperty(format, 'paddingLeft', format.paddingRight);
         setProperty(format, 'paddingRight', paddingLeft);
+
+        // If whole Table direction changed, flip cell side borders
+        if (block && block.blockType == 'Table') {
+            block.rows.forEach(row => {
+                row.cells.forEach(cell => {
+                    // Optimise by skipping cells with unchaged borders
+                    updateTableCellMetadata(cell, metadaata => {
+                        if (metadaata?.borderOverride) {
+                            const swapper = cell.format.borderLeft;
+                            cell.format.borderLeft = cell.format.borderRight;
+                            cell.format.borderRight = swapper;
+                        }
+                        return metadaata;
+                    });
+                });
+            });
+
+            // Apply changed borders
+            applyTableFormat(block, undefined, true);
+        }
     }
 }
 
