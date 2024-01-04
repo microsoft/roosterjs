@@ -96,8 +96,10 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#additionalallowedtags" class="tsd-kind-icon">additional<wbr>Allowed<wbr>Tags</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#additionaldisallowedtags" class="tsd-kind-icon">additional<wbr>Disallowed<wbr>Tags</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#additionalformatparsers" class="tsd-kind-icon">additional<wbr>Format<wbr>Parsers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#attributesanitizers" class="tsd-kind-icon">attribute<wbr>Sanitizers</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#formatparseroverride" class="tsd-kind-icon">format<wbr>Parser<wbr>Override</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#processoroverride" class="tsd-kind-icon">processor<wbr>Override</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#stylesanitizers" class="tsd-kind-icon">style<wbr>Sanitizers</a></li>
 							</ul>
 						</section>
 					</div>
@@ -111,7 +113,7 @@
 					<div class="tsd-signature tsd-kind-icon">additional<wbr>Allowed<wbr>Tags<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3611530/packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts#L17">packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ccdb5e6/packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts#L18">packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -126,7 +128,7 @@
 					<div class="tsd-signature tsd-kind-icon">additional<wbr>Disallowed<wbr>Tags<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3611530/packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts#L22">packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ccdb5e6/packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts#L23">packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -142,12 +144,27 @@
 					<aside class="tsd-sources">
 						<p>Inherited from Required.additionalFormatParsers</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3611530/packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts#L24">packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ccdb5e6/packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts#L24">packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Provide additional format parsers for each format type</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="attributesanitizers" class="tsd-anchor"></a>
+					<h3>attribute<wbr>Sanitizers</h3>
+					<div class="tsd-signature tsd-kind-icon">attribute<wbr>Sanitizers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../modules/roosterjs_content_model_types.html#valuesanitizer" class="tsd-signature-type" data-tsd-kind="Type alias">ValueSanitizer</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ccdb5e6/packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts#L33">packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts:33</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Additional sanitizers for CSS styles</p>
 						</div>
 					</div>
 				</section>
@@ -158,7 +175,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from Required.formatParserOverride</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3611530/packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts#L19">packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ccdb5e6/packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts#L19">packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -174,12 +191,27 @@
 					<aside class="tsd-sources">
 						<p>Inherited from Required.processorOverride</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3611530/packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts#L14">packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ccdb5e6/packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts#L14">packages-content-model/roosterjs-content-model-types/lib/context/DomToModelOption.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Overrides default element processors</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="stylesanitizers" class="tsd-anchor"></a>
+					<h3>style<wbr>Sanitizers</h3>
+					<div class="tsd-signature tsd-kind-icon">style<wbr>Sanitizers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../modules/roosterjs_content_model_types.html#valuesanitizer" class="tsd-signature-type" data-tsd-kind="Type alias">ValueSanitizer</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ccdb5e6/packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts#L28">packages-content-model/roosterjs-content-model-types/lib/event/ContentModelBeforePasteEvent.ts:28</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Additional sanitizers for CSS styles</p>
 						</div>
 					</div>
 				</section>
@@ -248,11 +280,17 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#additionalformatparsers" class="tsd-kind-icon">additional<wbr>Format<wbr>Parsers</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#attributesanitizers" class="tsd-kind-icon">attribute<wbr>Sanitizers</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#formatparseroverride" class="tsd-kind-icon">format<wbr>Parser<wbr>Override</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#processoroverride" class="tsd-kind-icon">processor<wbr>Override</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.domtomodeloptionforpaste.html#stylesanitizers" class="tsd-kind-icon">style<wbr>Sanitizers</a>
 							</li>
 						</ul>
 					</li>
