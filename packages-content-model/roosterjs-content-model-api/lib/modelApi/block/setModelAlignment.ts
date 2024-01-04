@@ -7,8 +7,8 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const ResultMap: Record<
-    'left' | 'center' | 'right',
-    Record<'ltr' | 'rtl', 'start' | 'center' | 'end'>
+    'left' | 'center' | 'right' | 'justify',
+    Record<'ltr' | 'rtl', 'start' | 'center' | 'end' | 'justify'>
 > = {
     left: {
         ltr: 'start',
@@ -21,6 +21,10 @@ const ResultMap: Record<
     right: {
         ltr: 'end',
         rtl: 'start',
+    },
+    justify: {
+        ltr: 'justify',
+        rtl: 'justify',
     },
 };
 
@@ -56,10 +60,7 @@ export function setModelAlignment(
     );
 
     paragraphOrListItemOrTable.forEach(({ block }) => {
-        const newAlignment =
-            alignment === 'justify'
-                ? 'justify'
-                : ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
+        const newAlignment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
         if (block.blockType === 'Table' && alignment !== 'justify') {
             alignTable(
                 block,
