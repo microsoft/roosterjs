@@ -30,7 +30,6 @@ interface WordDesktopListFormat extends DomToModelListFormat {
 }
 
 interface WordListFormat extends ContentModelListItemFormat {
-    wordLevel?: number | '';
     wordList?: string;
 }
 

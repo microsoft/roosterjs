@@ -4,11 +4,7 @@ import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { processPastedContentFromWordDesktop } from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { WordMetadata } from '../../lib/paste/WordDesktop/WordMetadata';
-import {
-    ClipboardData,
-    ContentModelBeforePasteEvent,
-    ContentModelDocument,
-} from 'roosterjs-content-model-types';
+import { ClipboardData, ContentModelBeforePasteEvent } from 'roosterjs-content-model-types';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
