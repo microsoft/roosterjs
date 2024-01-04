@@ -1,9 +1,14 @@
 import { ChangeSource, transformColor } from 'roosterjs-content-model-core';
-import { convertMetadataToDOMSelection } from '../editor/utils/selectionConverter';
-import { extractContentMetadata, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import {
+    createRange,
+    extractContentMetadata,
+    queryElements,
+    restoreContentWithEntityPlaceholder,
+} from 'roosterjs-editor-dom';
 import type { ContentMetadata } from 'roosterjs-editor-types';
 import type { SetContent } from '../publicTypes/ContentModelEditorCore';
-import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { DOMSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -82,5 +87,43 @@ function selectContentMetadata(core: StandaloneEditorCore, metadata: ContentMeta
         if (selection) {
             core.api.setDOMSelection(core, selection);
         }
+    }
+}
+
+function convertMetadataToDOMSelection(
+    contentDiv: HTMLElement,
+    metadata: ContentMetadata | undefined
+): DOMSelection | null {
+    switch (metadata?.type) {
+        case SelectionRangeTypes.Normal:
+            return {
+                type: 'range',
+                range: createRange(contentDiv, metadata.start, metadata.end),
+            };
+        case SelectionRangeTypes.TableSelection:
+            const table = queryElements(contentDiv, '#' + metadata.tableId)[0] as HTMLTableElement;
+
+            return table
+                ? {
+                      type: 'table',
+                      table: table,
+                      firstColumn: metadata.firstCell.x,
+                      firstRow: metadata.firstCell.y,
+                      lastColumn: metadata.lastCell.x,
+                      lastRow: metadata.lastCell.y,
+                  }
+                : null;
+        case SelectionRangeTypes.ImageSelection:
+            const image = queryElements(contentDiv, '#' + metadata.imageId)[0] as HTMLImageElement;
+
+            return image
+                ? {
+                      type: 'image',
+                      image: image,
+                  }
+                : null;
+
+        default:
+            return null;
     }
 }
