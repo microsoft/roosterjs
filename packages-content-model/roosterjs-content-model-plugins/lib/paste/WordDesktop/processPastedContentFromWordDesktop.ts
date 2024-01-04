@@ -8,7 +8,6 @@ import type { WordMetadata } from './WordMetadata';
 import type {
     ContentModelBeforePasteEvent,
     ContentModelBlockFormat,
-    ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
     ContentModelTableFormat,
     DomToModelContext,
@@ -33,7 +32,6 @@ export function processPastedContentFromWordDesktop(
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
-    addParser(ev.domToModelOption, 'listItemElement', listItemElementParser);
     addParser(ev.domToModelOption, 'container', wordTableParser);
     addParser(ev.domToModelOption, 'table', wordTableParser);
 }
@@ -84,18 +82,6 @@ function listLevelParser(
 
     format.marginBottom = undefined;
 }
-
-const listItemElementParser: FormatParser<ContentModelListItemFormat> = (
-    format: ContentModelListItemFormat,
-    element: HTMLElement
-): void => {
-    if (element.style.marginLeft) {
-        format.marginLeft = undefined;
-    }
-    if (element.style.marginRight) {
-        format.marginRight = undefined;
-    }
-};
 
 const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
     if (format.marginLeft?.startsWith('-')) {
