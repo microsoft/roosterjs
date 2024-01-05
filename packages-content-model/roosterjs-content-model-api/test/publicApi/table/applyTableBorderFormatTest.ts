@@ -79,7 +79,6 @@ describe('applyTableBorderFormat', () => {
             blockGroupType: 'Document',
             blocks: [expectedTable],
         });
-        console.log('FAILED', model);
     }
     it('All Borders', () => {
         runTest(
