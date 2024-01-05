@@ -269,6 +269,7 @@ export {
     SnapshotSelection,
     Snapshot,
     Snapshots,
+    ColorPair,
 } from './parameter/Snapshot';
 export { SnapshotsManager } from './parameter/SnapshotsManager';
 export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';

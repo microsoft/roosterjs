@@ -14,6 +14,7 @@ class SnapshotsManagerImpl implements SnapshotsManager {
             totalSize: 0,
             currentIndex: -1,
             autoCompleteIndex: -1,
+            knownColors: {},
             maxSize: MAX_SIZE_LIMIT,
         };
     }

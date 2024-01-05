@@ -88,6 +88,21 @@ export interface Snapshot {
 }
 
 /**
+ * A pair of light color and dark color
+ */
+export interface ColorPair {
+    /**
+     * Light mode color value
+     */
+    readonly lightColor: string;
+
+    /**
+     * Dark mode color value
+     */
+    readonly darkColor: string;
+}
+
+/**
  * Represents a data structure of snapshots, this is usually used for undo snapshots
  */
 export interface Snapshots {
@@ -115,6 +130,11 @@ export interface Snapshots {
      * An optional callback to be invoked when snapshots are changed
      */
     onChanged?: (type: 'add' | 'move' | 'clear') => void;
+
+    /**
+     * Known color pairs for dark mode
+     */
+    knownColors: Record<string, ColorPair>;
 
     /**
      * Max size of all snapshots
