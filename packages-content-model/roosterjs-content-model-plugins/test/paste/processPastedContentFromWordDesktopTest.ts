@@ -41,9 +41,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 expect(model).toEqual(expectedModel);
             }
         }
-
-        document.body.appendChild(div);
-        div.parentElement?.removeChild(div);
     }
 
     it('Remove Comment | mso-element:comment-list', () => {
@@ -124,19 +121,47 @@ describe('processPastedContentFromWordDesktopTest', () => {
         });
     });
 
-    xit('Remove Comment | mso-comment-done, remove style', () => {
+    it('Remove Comment | mso-comment-done, remove style', () => {
         let source = '<span style="mso-comment-done:yes">Test</span>';
-        runTest(source, 'Test');
+        runTest(
+            source,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        isImplicit: true,
+                        segments: [{ text: 'Test', segmentType: 'Text', format: {} }],
+                        blockType: 'Paragraph',
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
     });
 
-    xit('Remove Comment | mso-special-character:comment', () => {
+    it('Remove Comment | mso-special-character:comment', () => {
         let source = '<span><span style="mso-special-character:comment">Test</span></span>';
-        runTest(source, '');
+        runTest(source, { blockGroupType: 'Document', blocks: [] }, true);
     });
 
-    xit('Remove Line height less than default', () => {
+    it('Remove Line height less than default', () => {
         let source = '<p style="line-height:102%">Test</p>';
-        runTest(source, '<p>Test</p>');
+        runTest(
+            source,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        segments: [{ text: 'Test', segmentType: 'Text', format: {} }],
+                        blockType: 'Paragraph',
+                        format: { marginTop: '1em', marginBottom: '1em' },
+                        decorator: { tagName: 'p', format: {} },
+                    },
+                ],
+            },
+            true
+        );
     });
 
     it(' Line height, not percentage do not remove', () => {
