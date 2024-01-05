@@ -7,7 +7,7 @@ describe('linkSegmentParser |', () => {
 
         linkSegmentParser(format, a, <any>{}, <any>{});
 
-        expect(format).toEqual({ textColor: 'rgb(0, 0, 238)' });
+        expect(format).toEqual({ textColor: 'rgb(186, 124, 255)' });
     });
 
     it('set text color 2', () => {
@@ -17,10 +17,10 @@ describe('linkSegmentParser |', () => {
 
         linkSegmentParser(format, a, <any>{}, <any>{});
 
-        expect(format).toEqual({ textColor: 'rgb(0, 0, 238)' });
+        expect(format).toEqual({ textColor: 'rgb(186, 124, 255)' });
     });
 
-    it('dont set text color 1', () => {
+    it('dont set text color, but set1', () => {
         const a = document.createElement('a');
         const format: any = { textColor: 'white' };
 

@@ -1,7 +1,7 @@
 import type { ContentModelSegmentFormat, FormatParser } from 'roosterjs-content-model-types';
 
 const VARIABLE_PREFIX = 'var(';
-const WEBLINK_COLOR = 'rgb(0, 0, 238)';
+const FALLBACK_ANCHOR_COLOR = 'rgb(186, 124, 255)';
 
 /**
  * @internal
@@ -11,15 +11,15 @@ const WEBLINK_COLOR = 'rgb(0, 0, 238)';
  * So also default to the default link color.
  */
 export const linkSegmentParser: FormatParser<ContentModelSegmentFormat> = (
-    format: ContentModelSegmentFormat,
-    element: HTMLElement
+    format,
+    element
 ): void => {
     if (
-        !format.textColor &&
         element.tagName.toLowerCase() == 'a' &&
         !element.getAttribute('href') &&
+        (!format.textColor || format.textColor == element.style.color) &&
         (!element.style.color || element.style.color.startsWith(VARIABLE_PREFIX))
     ) {
-        format.textColor = WEBLINK_COLOR;
+        format.textColor = FALLBACK_ANCHOR_COLOR;
     }
 };

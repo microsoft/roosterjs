@@ -454,12 +454,12 @@ describe('Paste with clipboardData', () => {
                         {
                             text: 'Link',
                             segmentType: 'Text',
-                            format: { textColor: 'rgb(0, 0, 238)' },
+                            format: { textColor: 'rgb(186, 124, 255)' },
                         },
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: { textColor: 'rgb(0, 0, 238)' },
+                            format: { textColor: 'rgb(186, 124, 255)' },
                         },
                     ],
                     blockType: 'Paragraph',
