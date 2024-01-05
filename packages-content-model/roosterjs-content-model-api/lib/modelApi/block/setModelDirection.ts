@@ -6,6 +6,7 @@ import {
     updateTableCellMetadata,
 } from 'roosterjs-content-model-core';
 import type {
+    BorderFormat,
     ContentModelBlock,
     ContentModelBlockFormat,
     ContentModelDocument,
@@ -72,9 +73,9 @@ function internalSetDirection(
                     // Optimise by skipping cells with unchaged borders
                     updateTableCellMetadata(cell, metadaata => {
                         if (metadaata?.borderOverride) {
-                            const swapper = cell.format.borderLeft;
-                            cell.format.borderLeft = cell.format.borderRight;
-                            cell.format.borderRight = swapper;
+                            const storeBorderLeft = cell.format.borderLeft;
+                            setProperty(cell.format, 'borderLeft', cell.format.borderRight);
+                            setProperty(cell.format, 'borderRight', storeBorderLeft);
                         }
                         return metadaata;
                     });
@@ -88,8 +89,8 @@ function internalSetDirection(
 }
 
 function setProperty(
-    format: MarginFormat & PaddingFormat,
-    key: keyof (MarginFormat & PaddingFormat),
+    format: MarginFormat & PaddingFormat & BorderFormat,
+    key: keyof (MarginFormat & PaddingFormat & BorderFormat),
     value: string | undefined
 ) {
     if (value) {
