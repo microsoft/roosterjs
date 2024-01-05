@@ -57,7 +57,6 @@ function internalSetDirection(
 
         // Adjust margin when change direction
         // TODO: make margin and padding direction-aware, like what we did for textAlign. So no need to adjust them here
-        // TODO: Do we also need to handle border here?
         const marginLeft = format.marginLeft;
         const paddingLeft = format.paddingLeft;
 
@@ -70,20 +69,20 @@ function internalSetDirection(
         if (block && block.blockType == 'Table') {
             block.rows.forEach(row => {
                 row.cells.forEach(cell => {
-                    // Optimise by skipping cells with unchaged borders
-                    updateTableCellMetadata(cell, metadaata => {
-                        if (metadaata?.borderOverride) {
+                    // Optimise by skipping cells with unchanged borders
+                    updateTableCellMetadata(cell, metadata => {
+                        if (metadata?.borderOverride) {
                             const storeBorderLeft = cell.format.borderLeft;
                             setProperty(cell.format, 'borderLeft', cell.format.borderRight);
                             setProperty(cell.format, 'borderRight', storeBorderLeft);
                         }
-                        return metadaata;
+                        return metadata;
                     });
                 });
             });
 
             // Apply changed borders
-            applyTableFormat(block, undefined, true);
+            applyTableFormat(block, undefined /* newFormat */, true /* keepCellShade*/);
         }
     }
 }

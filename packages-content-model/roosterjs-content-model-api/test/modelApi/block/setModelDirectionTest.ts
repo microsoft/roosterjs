@@ -18,8 +18,8 @@ describe('setModelDirection', () => {
 
         expect(result).toBe(expectedResult);
 
-        if (tableTest) {
-            model.blocks[0]['dataset'] = {};
+        if (tableTest && model.blocks[0].blockType == 'Table') {
+            model.blocks[0].dataset = {};
         }
         expect(model).toEqual(expectedModel);
     }
