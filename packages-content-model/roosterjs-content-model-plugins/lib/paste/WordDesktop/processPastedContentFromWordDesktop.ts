@@ -1,8 +1,6 @@
 import addParser from '../utils/addParser';
 import getStyleMetadata from './getStyleMetadata';
-import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { getStyles } from '../utils/getStyles';
-import { moveChildNodes } from 'roosterjs-content-model-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
@@ -10,8 +8,8 @@ import type { WordMetadata } from './WordMetadata';
 import type {
     ContentModelBeforePasteEvent,
     ContentModelBlockFormat,
-    ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
+    ContentModelTableFormat,
     DomToModelContext,
     ElementProcessor,
     FormatParser,
@@ -34,23 +32,8 @@ export function processPastedContentFromWordDesktop(
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
-    addParser(ev.domToModelOption, 'listItemElement', listItemElementParser);
-
-    // Remove "border:none" for image to fix image resize behavior
-    // We found a problem that when paste an image with "border:none" then the resize border will be
-    // displayed incorrectly when resize it. So we need to drop this style
-    chainSanitizerCallback(
-        ev.sanitizingOption.cssStyleCallbacks,
-        'border',
-        (value, element) => element.tagName != 'IMG' || value != 'none'
-    );
-
-    // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
-    chainSanitizerCallback(ev.sanitizingOption.elementCallbacks, 'O:P', element => {
-        moveChildNodes(element);
-        element.appendChild(element.ownerDocument.createTextNode('\u00A0')); // &nbsp;
-        return true;
-    });
+    addParser(ev.domToModelOption, 'container', wordTableParser);
+    addParser(ev.domToModelOption, 'table', wordTableParser);
 }
 
 const wordDesktopElementProcessor = (
@@ -100,14 +83,8 @@ function listLevelParser(
     format.marginBottom = undefined;
 }
 
-const listItemElementParser: FormatParser<ContentModelListItemFormat> = (
-    format: ContentModelListItemFormat,
-    element: HTMLElement
-): void => {
-    if (element.style.marginLeft) {
-        format.marginLeft = undefined;
-    }
-    if (element.style.marginRight) {
-        format.marginRight = undefined;
+const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
+    if (format.marginLeft?.startsWith('-')) {
+        delete format.marginLeft;
     }
 };

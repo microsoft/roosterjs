@@ -278,7 +278,7 @@ describe('ContentModelFormatPlugin for default format', () => {
         contentDiv = document.createElement('div');
 
         editor = ({
-            contains: (e: Node) => contentDiv != e && contentDiv.contains(e),
+            isNodeInEditor: (e: Node) => contentDiv != e && contentDiv.contains(e),
             getDOMSelection,
             getPendingFormat: getPendingFormatSpy,
             cacheContentModel: cacheContentModelSpy,

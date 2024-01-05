@@ -12,7 +12,8 @@ const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
 const CONTENT_DIV_ID = 'contentDiv';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
-const TABLE_CSS_RULE = '{background-color: rgb(198,198,198) !important; caret-color: transparent}';
+const TABLE_CSS_RULE = '{background-color: rgb(198,198,198) !important;}';
+const CARET_CSS_RULE = '{caret-color: transparent}';
 const MAX_RULE_SELECTOR_LENGTH = 9000;
 
 /**
@@ -37,7 +38,8 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 const image = selection.image;
 
                 selectionRules = buildImageCSS(
-                    rootSelector + ' #' + addUniqueId(image, IMAGE_ID),
+                    rootSelector,
+                    addUniqueId(image, IMAGE_ID),
                     core.selection.imageSelectionBorderColor
                 );
                 core.selection.selection = selection;
@@ -48,7 +50,8 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 const { table, firstColumn, firstRow } = selection;
 
                 selectionRules = buildTableCss(
-                    rootSelector + ' #' + addUniqueId(table, TABLE_ID),
+                    rootSelector,
+                    addUniqueId(table, TABLE_ID),
                     selection
                 );
                 core.selection.selection = selection;
@@ -92,15 +95,20 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 };
 
-function buildImageCSS(rootSelector: string, borderColor?: string): string[] {
+function buildImageCSS(editorSelector: string, imageId: string, borderColor?: string): string[] {
     const color = borderColor || DEFAULT_SELECTION_BORDER_COLOR;
 
     return [
-        `${rootSelector} {outline-style:auto!important;outline-color:${color}!important;caret-color:transparent;}`,
+        `${editorSelector} #${imageId} {outline-style:auto!important;outline-color:${color}!important;}`,
+        `${editorSelector} ${CARET_CSS_RULE}`,
     ];
 }
 
-function buildTableCss(rootSelector: string, selection: TableSelection): string[] {
+function buildTableCss(
+    editorSelector: string,
+    tableId: string,
+    selection: TableSelection
+): string[] {
     const { firstColumn, firstRow, lastColumn, lastRow } = selection;
     const cells = parseTableCells(selection.table);
     const isAllTableSelected =
@@ -108,11 +116,12 @@ function buildTableCss(rootSelector: string, selection: TableSelection): string[
         firstColumn == 0 &&
         lastRow == cells.length - 1 &&
         lastColumn == (cells[lastRow]?.length ?? 0) - 1;
+    const rootSelector = editorSelector + ' #' + tableId;
     const selectors = isAllTableSelected
         ? [rootSelector, `${rootSelector} *`]
         : handleTableSelected(rootSelector, selection, cells);
 
-    const cssRules: string[] = [];
+    const cssRules: string[] = [`${editorSelector} ${CARET_CSS_RULE}`];
     let currentRules: string = '';
 
     for (let i = 0; i < selectors.length; i++) {

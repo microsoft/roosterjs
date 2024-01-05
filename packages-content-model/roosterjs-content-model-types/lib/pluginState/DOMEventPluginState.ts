@@ -1,5 +1,3 @@
-import type { ContextMenuProvider } from 'roosterjs-editor-types';
-
 /**
  * The state object for DOMEventPlugin
  */
@@ -13,11 +11,6 @@ export interface DOMEventPluginState {
      * Scroll container of editor
      */
     scrollContainer: HTMLElement;
-
-    /**
-     * Context menu providers, that can provide context menu items
-     */
-    contextMenuProviders: ContextMenuProvider<any>[];
 
     /**
      * Whether mouse up event handler is added

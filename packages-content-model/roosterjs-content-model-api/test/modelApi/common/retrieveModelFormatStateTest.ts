@@ -781,4 +781,34 @@ describe('retrieveModelFormatState', () => {
             canAddImageAltText: false,
         });
     });
+
+    it('With same format but using px and pt', () => {
+        const model = createContentModelDocument({});
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const text1 = createText('test1', { fontSize: '16pt' });
+        const text2 = createText('test2', { fontSize: '21.3333px' });
+        para.segments.push(text1, text2);
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback([path], undefined, para, [text1, text2]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontSize: '16pt',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+        });
+    });
 });

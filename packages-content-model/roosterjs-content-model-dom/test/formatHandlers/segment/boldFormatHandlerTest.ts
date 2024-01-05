@@ -45,6 +45,21 @@ describe('boldFormatHandler.parse', () => {
         expect(format.fontWeight).toBe('600');
     });
 
+    it('bold 400', () => {
+        div.style.fontWeight = '400';
+        boldFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontWeight).toBeUndefined();
+    });
+
+    it('bold 400 when it is already in 600', () => {
+        div.style.fontWeight = '400';
+        format.fontWeight = '600';
+        boldFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontWeight).toBe('400');
+    });
+
     it('default style to bold', () => {
         ['bold', 'bolder', '600', '700'].forEach(value => {
             boldFormatHandler.parse(format, div, context, { fontWeight: value });

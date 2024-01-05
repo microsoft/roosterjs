@@ -96,4 +96,19 @@ export interface StandaloneEditorOptions {
      * When this property is set, value of undoSnapshotService will be ignored.
      */
     snapshotsManager?: SnapshotsManager;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * @deprecated
+     * Current zoom scale, @default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    zoomScale?: number;
 }

@@ -49,6 +49,12 @@ describe('whiteSpaceFormatHandler.parse', () => {
             whiteSpace: 'pre',
         });
     });
+
+    it('White space = normal', () => {
+        div.style.whiteSpace = 'normal';
+        whiteSpaceFormatHandler.parse(format, div, context, {});
+        expect(format).toEqual({});
+    });
 });
 
 describe('whiteSpaceFormatHandler.apply', () => {

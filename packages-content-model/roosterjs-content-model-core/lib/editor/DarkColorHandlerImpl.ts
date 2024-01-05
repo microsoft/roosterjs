@@ -1,4 +1,4 @@
-import { getObjectKeys, parseColor, setColor } from 'roosterjs-editor-dom';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type {
     ColorKeyAndValue,
     DarkColorHandler,
@@ -22,6 +22,10 @@ const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
         [ColorAttributeEnum.HtmlColor]: 'bgcolor',
     },
 ];
+const HEX3_REGEX = /^#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])$/;
+const HEX6_REGEX = /^#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$/;
+const RGB_REGEX = /^rgb\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)$/;
+const RGBA_REGEX = /^rgba\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)$/;
 
 /**
  * @internal
@@ -126,11 +130,11 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
      * @param darkColor The existing dark color
      */
     findLightColorFromDarkColor(darkColor: string): string | null {
-        const rgbSearch = parseColor(darkColor);
+        const rgbSearch = this.parseColor(darkColor);
 
         if (rgbSearch) {
             const key = getObjectKeys(this.knownColors).find(key => {
-                const rgbCurrent = parseColor(this.knownColors[key].darkModeColor);
+                const rgbCurrent = this.parseColor(this.knownColors[key].darkModeColor);
 
                 return (
                     rgbCurrent &&
@@ -161,13 +165,46 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
                     element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
                 !!fromDarkMode
             ).lightModeColor;
+            const transformedColor =
+                color && color != 'inherit' ? this.registerColor(color, !!toDarkMode) : null;
 
-            element.style.setProperty(names[ColorAttributeEnum.CssColor], null);
+            element.style.setProperty(names[ColorAttributeEnum.CssColor], transformedColor);
             element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
-
-            if (color && color != 'inherit') {
-                setColor(element, color, i != 0, toDarkMode, false /*shouldAdaptFontColor*/, this);
-            }
         });
     }
+
+    /**
+     * Parse color string to r/g/b value.
+     * If the given color is not in a recognized format, return null
+     */
+    private parseColor(color: string): [number, number, number] | null {
+        color = (color || '').trim();
+
+        let match: RegExpMatchArray | null;
+        if ((match = color.match(HEX3_REGEX))) {
+            return [
+                parseInt(match[1] + match[1], 16),
+                parseInt(match[2] + match[2], 16),
+                parseInt(match[3] + match[3], 16),
+            ];
+        } else if ((match = color.match(HEX6_REGEX))) {
+            return [parseInt(match[1], 16), parseInt(match[2], 16), parseInt(match[3], 16)];
+        } else if ((match = color.match(RGB_REGEX) || color.match(RGBA_REGEX))) {
+            return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
+        } else {
+            // CSS color names such as red, green is not included for now.
+            // If need, we can add those colors from https://www.w3.org/wiki/CSS/Properties/color/keywords
+            return null;
+        }
+    }
+}
+
+/**
+ * @internal
+ */
+export function createDarkColorHandler(
+    contentDiv: HTMLElement,
+    getDarkColor: (color: string) => string
+): DarkColorHandler {
+    return new DarkColorHandlerImpl(contentDiv, getDarkColor);
 }
