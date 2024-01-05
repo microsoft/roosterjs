@@ -59,6 +59,15 @@ export function formatSegmentWithContentModel(
                 ? [[pendingFormat, null, null]]
                 : segmentAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
 
+            //  If there is a pending format and the selection is collapsed, we need to apply the format to the selection marker either
+           if (pendingFormat && isCollapsedSelection) {
+                formatsAndSegments.push([
+                    segmentAndParagraphs[0][0].format,
+                    segmentAndParagraphs[0][0],
+                    segmentAndParagraphs[0][1],
+                ]);
+            }
+
             const isTurningOff = segmentHasStyleCallback
                 ? formatsAndSegments.every(([format, segment, paragraph]) =>
                       segmentHasStyleCallback(format, segment, paragraph)
