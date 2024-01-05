@@ -87,6 +87,9 @@ export default function applyTableBorderFormat(
                     borderFormat = `${borderFormat} ${borderColor}`;
                 }
 
+                // undefined is treated as Left to Right
+                const isRtl = tableModel.format.direction == 'rtl';
+
                 if (sel) {
                     const operations: BorderOperations[] = [operation];
                     while (operations.length) {
@@ -132,13 +135,16 @@ export default function applyTableBorderFormat(
                                     rowIndex <= sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = tableModel.rows[rowIndex].cells[sel.firstColumn];
+                                    const cell =
+                                        tableModel.rows[rowIndex].cells[
+                                            isRtl ? sel.lastColumn : sel.firstColumn
+                                        ];
                                     // Format cells - Left border
                                     applyBorderFormat(cell, borderFormat, leftBorder);
                                 }
 
                                 // Format perimeter
-                                perimeter.Left = true;
+                                isRtl ? (perimeter.Right = true) : (perimeter.Left = true);
                                 break;
                             case 'rightBorders':
                                 const rightBorder: BorderPositions[] = ['borderRight'];
@@ -147,13 +153,16 @@ export default function applyTableBorderFormat(
                                     rowIndex <= sel.lastRow;
                                     rowIndex++
                                 ) {
-                                    const cell = tableModel.rows[rowIndex].cells[sel.lastColumn];
+                                    const cell =
+                                        tableModel.rows[rowIndex].cells[
+                                            isRtl ? sel.firstColumn : sel.lastColumn
+                                        ];
                                     // Format cells - Right border
                                     applyBorderFormat(cell, borderFormat, rightBorder);
                                 }
 
                                 // Format perimeter
-                                perimeter.Right = true;
+                                isRtl ? (perimeter.Left = true) : (perimeter.Right = true);
                                 break;
                             case 'topBorders':
                                 const topBorder: BorderPositions[] = ['borderTop'];
@@ -222,7 +231,9 @@ export default function applyTableBorderFormat(
                                 // Single row selection
                                 if (singleRow) {
                                     applyBorderFormat(
-                                        tableModel.rows[sel.firstRow].cells[sel.firstColumn],
+                                        tableModel.rows[sel.firstRow].cells[
+                                            isRtl ? sel.lastColumn : sel.firstColumn
+                                        ],
                                         borderFormat,
                                         ['borderRight']
                                     );
@@ -238,7 +249,9 @@ export default function applyTableBorderFormat(
                                         ]);
                                     }
                                     applyBorderFormat(
-                                        tableModel.rows[sel.firstRow].cells[sel.lastColumn],
+                                        tableModel.rows[sel.firstRow].cells[
+                                            isRtl ? sel.firstColumn : sel.lastColumn
+                                        ],
                                         borderFormat,
                                         ['borderLeft']
                                     );
@@ -248,25 +261,33 @@ export default function applyTableBorderFormat(
                                 // For multiple rows and columns selections
                                 // Top left cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.firstRow].cells[sel.firstColumn],
+                                    tableModel.rows[sel.firstRow].cells[
+                                        isRtl ? sel.lastColumn : sel.firstColumn
+                                    ],
                                     borderFormat,
                                     ['borderBottom', 'borderRight']
                                 );
                                 // Top right cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.firstRow].cells[sel.lastColumn],
+                                    tableModel.rows[sel.firstRow].cells[
+                                        isRtl ? sel.firstColumn : sel.lastColumn
+                                    ],
                                     borderFormat,
                                     ['borderBottom', 'borderLeft']
                                 );
                                 // Bottom left cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.lastRow].cells[sel.firstColumn],
+                                    tableModel.rows[sel.lastRow].cells[
+                                        isRtl ? sel.lastColumn : sel.firstColumn
+                                    ],
                                     borderFormat,
                                     ['borderTop', 'borderRight']
                                 );
                                 // Bottom right cell
                                 applyBorderFormat(
-                                    tableModel.rows[sel.lastRow].cells[sel.lastColumn],
+                                    tableModel.rows[sel.lastRow].cells[
+                                        isRtl ? sel.firstColumn : sel.lastColumn
+                                    ],
                                     borderFormat,
                                     ['borderTop', 'borderLeft']
                                 );
@@ -306,7 +327,7 @@ export default function applyTableBorderFormat(
                                     applyBorderFormat(cell, borderFormat, [
                                         'borderTop',
                                         'borderBottom',
-                                        'borderRight',
+                                        isRtl ? 'borderLeft' : 'borderRight',
                                     ]);
                                 }
                                 // Last column
@@ -319,7 +340,7 @@ export default function applyTableBorderFormat(
                                     applyBorderFormat(cell, borderFormat, [
                                         'borderTop',
                                         'borderBottom',
-                                        'borderLeft',
+                                        isRtl ? 'borderRight' : 'borderLeft',
                                     ]);
                                 }
                                 // Inner cells
@@ -342,7 +363,7 @@ export default function applyTableBorderFormat(
                     }
 
                     //Format perimeter if necessary or possible
-                    modifyPerimeter(tableModel, sel, borderFormat, perimeter);
+                    modifyPerimeter(tableModel, sel, borderFormat, perimeter, isRtl);
                 }
 
                 return true;
@@ -395,7 +416,8 @@ function modifyPerimeter(
     tableModel: ContentModelTable,
     sel: TableSelectionCoordinates,
     borderFormat: string,
-    perimeter: Perimeter
+    perimeter: Perimeter,
+    isRtl: boolean
 ) {
     // Top of selection
     if (perimeter.Top && sel.firstRow - 1 >= 0) {
@@ -415,14 +437,14 @@ function modifyPerimeter(
     if (perimeter.Left && sel.firstColumn - 1 >= 0) {
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
             const cell = tableModel.rows[rowIndex].cells[sel.firstColumn - 1];
-            applyBorderFormat(cell, borderFormat, ['borderRight']);
+            applyBorderFormat(cell, borderFormat, [isRtl ? 'borderLeft' : 'borderRight']);
         }
     }
     // Right of selection
     if (perimeter.Right && sel.lastColumn + 1 < tableModel.rows[0].cells.length) {
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
             const cell = tableModel.rows[rowIndex].cells[sel.lastColumn + 1];
-            applyBorderFormat(cell, borderFormat, ['borderLeft']);
+            applyBorderFormat(cell, borderFormat, [isRtl ? 'borderRight' : 'borderLeft']);
         }
     }
 }

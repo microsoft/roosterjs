@@ -40,5 +40,6 @@ export function expectEqual(model1: ContentModelDocument, model2: ContentModelDo
             })
         )
     );
+
     expect(newModel).toEqual(model2);
 }
