@@ -14,12 +14,31 @@ const enum ColorAttributeEnum {
 }
 const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
     {
+        // Used for text color
         [ColorAttributeEnum.CssColor]: 'color',
         [ColorAttributeEnum.HtmlColor]: 'color',
     },
     {
+        // Used for background color: cell shading and text highlight
         [ColorAttributeEnum.CssColor]: 'background-color',
         [ColorAttributeEnum.HtmlColor]: 'bgcolor',
+    },
+    {
+        // Used for Table border color
+        [ColorAttributeEnum.CssColor]: 'border-top-color',
+        [ColorAttributeEnum.HtmlColor]: 'borderTopColor',
+    },
+    {
+        [ColorAttributeEnum.CssColor]: 'border-bottom-color',
+        [ColorAttributeEnum.HtmlColor]: 'borderBottomColor',
+    },
+    {
+        [ColorAttributeEnum.CssColor]: 'border-left-color',
+        [ColorAttributeEnum.HtmlColor]: 'borderLeftColor',
+    },
+    {
+        [ColorAttributeEnum.CssColor]: 'border-right-color',
+        [ColorAttributeEnum.HtmlColor]: 'borderRightColor',
     },
 ];
 const HEX3_REGEX = /^#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])$/;
@@ -159,6 +178,11 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
      * @param toDarkMode Whether this is transforming color to dark mode
      */
     transformElementColor(element: HTMLElement, fromDarkMode: boolean, toDarkMode: boolean): void {
+        // Skip image element to not change its border colors
+        if (element.tagName == 'IMG') {
+            return;
+        }
+
         ColorAttributeName.forEach((names, i) => {
             const color = this.parseColorValue(
                 element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
