@@ -104,7 +104,7 @@ function* iterateSegments(
 ): Generator<CharInfo, null, boolean> {
     const step = forward ? 1 : -1;
     const segments = paragraph.segments;
-    const preserveWhiteSpace = isWhiteSpacePreserved(paragraph);
+    const preserveWhiteSpace = isWhiteSpacePreserved(paragraph.format.whiteSpace);
 
     for (let i = markerIndex + step; i >= 0 && i < segments.length; i += step) {
         const segment = segments[i];

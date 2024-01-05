@@ -266,6 +266,7 @@ export { SnapshotsManager } from './parameter/SnapshotsManager';
 export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
+export { ValueSanitizer } from './parameter/ValueSanitizer';
 
 export {
     MergePastedContentFunc,
