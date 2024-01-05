@@ -1,6 +1,6 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
-import { parseLink } from '../../lib/paste/utils/linkParser';
+import { createBeforePasteEventMock } from '../processPastedContentFromWordDesktopTest';
+import { parseLink } from '../../../lib/paste/utils/parsers/linkParser';
 import {
     contentModelToDom,
     createDomToModelContext,

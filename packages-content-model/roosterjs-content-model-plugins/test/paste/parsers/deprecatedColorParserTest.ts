@@ -1,4 +1,4 @@
-import { deprecatedBorderColorParser } from '../../lib/paste/utils/deprecatedColorParser';
+import { deprecatedBorderColorParser } from '../../../lib/paste/utils/parsers/deprecatedColorParser';
 
 const DeprecatedColors: string[] = [
     'activeborder',

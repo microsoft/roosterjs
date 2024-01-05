@@ -1,23 +1,18 @@
 import addParser from './utils/addParser';
-import { BorderKeys } from 'roosterjs-content-model-dom';
-import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
+import { blockElementParser } from './utils/parsers/blockElementParser';
+import { deprecatedBorderColorParser } from './utils/parsers/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
-import { parseLink } from './utils/linkParser';
+import { linkSegmentParser } from './utils/parsers/linkSegmentParser';
+import { parseLink } from './utils/parsers/linkParser';
 import { PastePropertyNames } from './pasteSourceValidations/constants';
 import { PasteType as OldPasteType, PluginEventType } from 'roosterjs-editor-types';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
+import { tableBorderParser } from './utils/parsers/tableBorderParser';
 import type { IContentModelEditor } from 'roosterjs-content-model-editor';
-import type {
-    BorderFormat,
-    ContentModelBeforePasteEvent,
-    ContentModelBlockFormat,
-    ContentModelTableCellFormat,
-    FormatParser,
-    PasteType,
-} from 'roosterjs-content-model-types';
+import type { ContentModelBeforePasteEvent, PasteType } from 'roosterjs-content-model-types';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 // Map old PasteType to new PasteType
@@ -126,53 +121,11 @@ export class ContentModelPastePlugin implements EditorPlugin {
         addParser(ev.domToModelOption, 'tableCell', deprecatedBorderColorParser);
         addParser(ev.domToModelOption, 'tableCell', tableBorderParser);
         addParser(ev.domToModelOption, 'table', deprecatedBorderColorParser);
+        addParser(ev.domToModelOption, 'segment', linkSegmentParser);
 
         if (pasteType === 'mergeFormat') {
             addParser(ev.domToModelOption, 'block', blockElementParser);
             addParser(ev.domToModelOption, 'listLevel', blockElementParser);
         }
     }
-}
-
-/**
- * For block elements that have background color style, remove the background color when user selects the merge current format
- * paste option
- */
-const blockElementParser: FormatParser<ContentModelBlockFormat> = (
-    format: ContentModelBlockFormat,
-    element: HTMLElement
-) => {
-    if (element.style.backgroundColor) {
-        delete format.backgroundColor;
-    }
-};
-
-const ElementBorderKeys = new Map<
-    keyof BorderFormat,
-    {
-        c: keyof CSSStyleDeclaration;
-        s: keyof CSSStyleDeclaration;
-        w: keyof CSSStyleDeclaration;
-    }
->([
-    ['borderTop', { w: 'borderTopWidth', s: 'borderTopStyle', c: 'borderTopColor' }],
-    ['borderRight', { w: 'borderRightWidth', s: 'borderRightStyle', c: 'borderRightColor' }],
-    ['borderBottom', { w: 'borderBottomWidth', s: 'borderBottomStyle', c: 'borderBottomColor' }],
-    ['borderLeft', { w: 'borderLeftWidth', s: 'borderLeftStyle', c: 'borderLeftColor' }],
-]);
-
-function tableBorderParser(format: ContentModelTableCellFormat, element: HTMLElement): void {
-    BorderKeys.forEach(key => {
-        if (!format[key]) {
-            const styleSet = ElementBorderKeys.get(key);
-            if (
-                styleSet &&
-                element.style[styleSet.w] &&
-                element.style[styleSet.s] &&
-                !element.style[styleSet.c]
-            ) {
-                format[key] = `${element.style[styleSet.w]} ${element.style[styleSet.s]}`;
-            }
-        }
-    });
 }

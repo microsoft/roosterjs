@@ -26,7 +26,7 @@ import {
 
 let clipboardData: ClipboardData;
 
-const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
+const DEFAULT_TIMES_ADD_PARSER_CALLED = 5;
 
 describe('Paste ', () => {
     let editor: IStandaloneEditor;
@@ -451,11 +451,15 @@ describe('Paste with clipboardData', () => {
             blocks: [
                 {
                     segments: [
-                        { text: 'Link', segmentType: 'Text', format: {} },
+                        {
+                            text: 'Link',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 238)' },
+                        },
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: { textColor: 'rgb(0, 0, 238)' },
                         },
                     ],
                     blockType: 'Paragraph',
