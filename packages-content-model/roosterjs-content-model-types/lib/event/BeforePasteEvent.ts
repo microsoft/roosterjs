@@ -1,6 +1,7 @@
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { BasePluginEvent } from './BasePluginEvent';
+import type { ValueSanitizer } from '../parameter/ValueSanitizer';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
@@ -18,6 +19,16 @@ export interface DomToModelOptionForPaste extends Required<DomToModelOption> {
      * Additional disallowed HTML tags in lower case. Elements with these tags will be dropped
      */
     readonly additionalDisallowedTags: Lowercase<string>[];
+
+    /**
+     * Additional sanitizers for CSS styles
+     */
+    styleSanitizers: Record<string, ValueSanitizer>;
+
+    /**
+     * Additional sanitizers for CSS styles
+     */
+    attributeSanitizers: Record<string, ValueSanitizer>;
 }
 
 /**
