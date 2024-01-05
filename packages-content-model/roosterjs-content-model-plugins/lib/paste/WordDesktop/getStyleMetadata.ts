@@ -72,7 +72,7 @@ export default function getStyleMetadata(
 
             const data: WordMetadata = {
                 'mso-level-number-format': record['mso-level-number-format'],
-                'mso-level-start-at': record['mso-level-start-at'],
+                'mso-level-start-at': record['mso-level-start-at'] || '1',
                 'mso-level-text': record['mso-level-text'],
             };
             if (getObjectKeys(data).some(key => !!data[key])) {
