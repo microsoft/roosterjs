@@ -87,7 +87,7 @@ export default function applyTableBorderFormat(
                     borderFormat = `${borderFormat} ${borderColor}`;
                 }
 
-                // undefined is treted as Left to Right
+                // undefined is treated as Left to Right
                 const isRtl = tableModel.format.direction == 'rtl';
 
                 if (sel) {
