@@ -70,7 +70,7 @@ describe('setModelDirection', () => {
         );
     });
 
-    xit('set direction for divider', () => {
+    it('set direction for divider', () => {
         runTest(
             {
                 blockGroupType: 'Document',
