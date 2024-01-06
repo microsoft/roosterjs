@@ -1,6 +1,6 @@
 import type { ContentModelCorePlugins } from './ContentModelCorePlugins';
 import type { ContentModelCoreApiMap } from './ContentModelEditorCore';
-import type { ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
+import type { EditorPlugin, ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
 import type { StandaloneEditorOptions, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -26,12 +26,17 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
     corePluginOverride?: Partial<ContentModelCorePlugins>;
 
     /**
-     * Specify the enabled experimental features
-     */
-    experimentalFeatures?: ExperimentalFeatures[];
-    /**
      * A function map to override default core API implementation
      * Default value is null
      */
     legacyCoreApiOverride?: Partial<ContentModelCoreApiMap>;
+
+    /**
+     * Specify the enabled experimental features
+     */
+    experimentalFeatures?: ExperimentalFeatures[];
+    /**
+     * Legacy plugins using IEditor interface
+     */
+    legacyPlugins?: EditorPlugin[];
 }

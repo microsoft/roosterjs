@@ -185,7 +185,7 @@ describe('ContentModelEditor', () => {
             },
         };
         const editor = new ContentModelEditor(div, {
-            plugins: [plugin],
+            legacyPlugins: [plugin],
         });
         editor.dispose();
 

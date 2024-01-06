@@ -1,3 +1,4 @@
+import type { EditorPlugin } from './EditorPlugin';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
@@ -5,7 +6,6 @@ import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type {
     DarkColorHandler,
-    EditorPlugin,
     PluginEvent,
     Rect,
     TrustedHTMLHandler,

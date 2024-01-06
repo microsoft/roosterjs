@@ -1,14 +1,15 @@
 import { createContentModelCachePlugin } from '../../lib/corePlugin/ContentModelCachePlugin';
-import { IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import {
     ContentModelCachePluginState,
     ContentModelDomIndexer,
     IStandaloneEditor,
+    PluginWithState,
 } from 'roosterjs-content-model-types';
 
 describe('ContentModelCachePlugin', () => {
     let plugin: PluginWithState<ContentModelCachePluginState>;
-    let editor: IStandaloneEditor & IEditor;
+    let editor: IStandaloneEditor;
 
     let addEventListenerSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
@@ -37,7 +38,7 @@ describe('ContentModelCachePlugin', () => {
                     removeEventListener: removeEventListenerSpy,
                 };
             },
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         plugin = createContentModelCachePlugin({});
         plugin.initialize(editor);

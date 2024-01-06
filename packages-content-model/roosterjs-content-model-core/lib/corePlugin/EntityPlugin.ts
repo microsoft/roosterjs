@@ -16,14 +16,9 @@ import type {
     EntityOperation,
     EntityPluginState,
     IStandaloneEditor,
-} from 'roosterjs-content-model-types';
-import type {
-    ContentChangedEvent,
-    IEditor,
-    PluginEvent,
-    PluginMouseUpEvent,
     PluginWithState,
-} from 'roosterjs-editor-types';
+} from 'roosterjs-content-model-types';
+import type { ContentChangedEvent, PluginEvent, PluginMouseUpEvent } from 'roosterjs-editor-types';
 
 const ENTITY_ID_REGEX = /_(\d{1,8})$/;
 
@@ -66,8 +61,8 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IStandaloneEditor & IEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
     }
 
     /**
