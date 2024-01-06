@@ -1,6 +1,6 @@
+import showInputDialog from '../../../inputDialog/utils/showInputDialog';
 import { createLink } from 'roosterjs-editor-api';
 import { QueryScope } from 'roosterjs-editor-types';
-import { showInputDialog } from 'roosterjs-react/lib/inputDialog';
 import type RibbonButton from '../../type/RibbonButton';
 import type { InsertLinkButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
