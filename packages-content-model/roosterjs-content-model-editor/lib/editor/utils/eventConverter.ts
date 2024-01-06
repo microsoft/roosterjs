@@ -113,6 +113,8 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
                     additionalFormatParsers: {},
                     formatParserOverride: {},
                     processorOverride: {},
+                    styleSanitizers: {},
+                    attributeSanitizers: {},
                 },
                 eventDataCache: input.eventDataCache,
                 fragment: input.fragment,
