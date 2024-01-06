@@ -101,9 +101,9 @@ export function setColor(
         color = match[2] || '';
     }
 
-    let darkColor = key ? snapshots?.getKnownColors()[key]?.darkColor : undefined;
-
     if (snapshots && color && !key) {
+        const darkColor = key ? snapshots?.getKnownColors()[key]?.darkColor : undefined;
+
         key = `${COLOR_VAR_PREFIX}_${color.replace(/[^\d\w]/g, '_')}`;
 
         snapshots.updateKnownColor(isDarkMode, key, {
