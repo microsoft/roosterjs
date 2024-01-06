@@ -4,6 +4,7 @@ import type { BasePluginEvent } from './BasePluginEvent';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
+import type { ValueSanitizer } from '../parameter/ValueSanitizer';
 
 /**
  * Options for DOM to Content Model conversion for paste only
@@ -18,6 +19,16 @@ export interface DomToModelOptionForPaste extends Required<DomToModelOption> {
      * Additional disallowed HTML tags in lower case. Elements with these tags will be dropped
      */
     readonly additionalDisallowedTags: Lowercase<string>[];
+
+    /**
+     * Additional sanitizers for CSS styles
+     */
+    readonly styleSanitizers: Record<string, ValueSanitizer>;
+
+    /**
+     * Additional sanitizers for CSS styles
+     */
+    readonly attributeSanitizers: Record<string, ValueSanitizer>;
 }
 
 /**

@@ -71,6 +71,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},
+                styleSanitizers: {},
+                attributeSanitizers: {},
             },
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
@@ -198,6 +200,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},
+                styleSanitizers: {},
+                attributeSanitizers: {},
             },
         });
     });
@@ -227,6 +231,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},
+                styleSanitizers: {},
+                attributeSanitizers: {},
             },
             pasteType: 'asPlainText',
             eventType: 'beforePaste',

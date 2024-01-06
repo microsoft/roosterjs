@@ -18,6 +18,8 @@ const getPasteEvent = (): BeforePasteEvent => {
             additionalFormatParsers: {},
             formatParserOverride: {},
             processorOverride: {},
+            styleSanitizers: {},
+            attributeSanitizers: {},
         },
     };
 };
