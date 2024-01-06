@@ -8,7 +8,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
  */
 export default function setAlignment(
     editor: IStandaloneEditor,
-    alignment: 'left' | 'center' | 'right'
+    alignment: 'left' | 'center' | 'right' | 'justify'
 ) {
     editor.focus();
 

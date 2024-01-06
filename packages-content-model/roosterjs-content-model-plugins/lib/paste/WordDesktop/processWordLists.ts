@@ -4,28 +4,33 @@ import {
     addBlock,
     createListItem,
     createListLevel,
+    isEmpty,
     parseFormat,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockGroup,
+    ContentModelListItem,
+    ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
     ContentModelListLevel,
     DomToModelContext,
     DomToModelListFormat,
-    FormatParser,
 } from 'roosterjs-content-model-types';
 
 /** Word list metadata style name */
 const MSO_LIST = 'mso-list';
 const MSO_LIST_IGNORE = 'ignore';
 const WORD_FIRST_LIST = 'l0';
-
 const TEMPLATE_VALUE_REGEX = /%[0-9a-zA-Z]+/g;
 
 interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel?: number | '';
     wordList?: string;
     wordKnownLevels?: Map<string, ContentModelListLevel[]>;
+}
+
+interface WordListFormat extends ContentModelListItemFormat {
+    wordList?: string;
 }
 
 const BULLET_METADATA = 'bullet';
@@ -78,7 +83,12 @@ export function processWordList(
 
         // Create the new level of the list item and parse the format
         const newLevel: ContentModelListLevel = createListLevel(listType);
-        parseFormat(element, context.formatParsers.listLevel, newLevel.format, context);
+        parseFormat(
+            element,
+            [...context.formatParsers.listLevel, wordListPaddingParser],
+            newLevel.format,
+            context
+        );
 
         // If the list format is in a different level, update the array so we get the new item
         // To be in the same level as the provided level metadata.
@@ -90,6 +100,8 @@ export function processWordList(
             listFormat.levels.splice(wordLevel, listFormat.levels.length - 1);
             listFormat.levels[wordLevel - 1] = newLevel;
         }
+        (listFormat.levels[listFormat.levels.length - 1]
+            .format as WordListFormat).wordList = wordList;
 
         listFormat.listParent = group;
 
@@ -132,12 +144,7 @@ function processAsListItem(
     parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
 
     if (listType == 'OL') {
-        parseFormat(
-            element,
-            [startNumberOverrideParser(listMetadata)],
-            listItem.levels[listItem.levels.length - 1].format,
-            context
-        );
+        setStartNumber(listItem, context, listMetadata);
     }
 
     context.elementProcessors.child(listItem, element, context);
@@ -193,23 +200,57 @@ function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType:
     return getListStyleTypeFromString(listType, templateFinal);
 }
 
-function startNumberOverrideParser(
-    listMetadata: WordMetadata | undefined
-): FormatParser<ContentModelListItemLevelFormat> | null {
-    return (format, _, context) => {
-        const {
-            wordKnownLevels,
-            wordLevel,
-            wordList,
-            levels,
-        } = context.listFormat as WordDesktopListFormat;
-        if (typeof wordLevel === 'number' && wordList) {
-            const start = parseInt(listMetadata?.['mso-level-start-at'] || '1');
-            const knownLevel = wordKnownLevels?.get(wordList) || [];
+function wordListPaddingParser(
+    format: ContentModelListItemLevelFormat,
+    element: HTMLElement
+): void {
+    if (element.style.marginLeft && element.style.marginLeft != '0in') {
+        format.paddingLeft = '0px';
+    }
+    if (element.style.marginRight && element.style.marginRight != '0in') {
+        format.paddingRight = '0px';
+    }
+}
 
-            if (start != undefined && !isNaN(start) && knownLevel.length != levels.length) {
-                format.startNumberOverride = start;
-            }
+function setStartNumber(
+    listItem: ContentModelListItem,
+    context: DomToModelContext,
+    listMetadata: WordMetadata | undefined
+) {
+    const {
+        listParent,
+        wordList,
+        wordKnownLevels,
+        wordLevel,
+        levels,
+    } = context.listFormat as WordDesktopListFormat;
+
+    const block = getLastNotEmptyBlock(listParent);
+    if (
+        (block?.blockType != 'BlockGroup' ||
+            block.blockGroupType != 'ListItem' ||
+            (wordLevel &&
+                (block.levels[wordLevel]?.format as WordListFormat)?.wordList != wordList)) &&
+        wordList
+    ) {
+        const start = listMetadata?.['mso-level-start-at']
+            ? parseInt(listMetadata['mso-level-start-at'])
+            : NaN;
+        const knownLevel = wordKnownLevels?.get(wordList) || [];
+
+        if (start != undefined && !isNaN(start) && knownLevel.length != levels.length) {
+            listItem.levels[listItem.levels.length - 1].format.startNumberOverride = start;
         }
-    };
+    }
+}
+
+function getLastNotEmptyBlock(listParent: ContentModelBlockGroup | undefined) {
+    for (let index = (listParent?.blocks.length || 0) - 1; index > 0; index--) {
+        const result = listParent?.blocks[index];
+        if (result && !isEmpty(result)) {
+            return result;
+        }
+    }
+
+    return undefined;
 }

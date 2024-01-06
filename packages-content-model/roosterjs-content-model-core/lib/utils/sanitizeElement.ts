@@ -1,4 +1,5 @@
 import { isNodeOfType } from 'roosterjs-content-model-dom';
+import type { ValueSanitizer } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -269,7 +270,8 @@ export function sanitizeElement(
     element: HTMLElement,
     allowedTags: ReadonlyArray<string>,
     disallowedTags: ReadonlyArray<string>,
-    styleCallbacks?: Record<string, (value: string, tagName: string) => string | null>
+    styleSanitizers?: Readonly<Record<string, ValueSanitizer>>,
+    attributeSanitizers?: Readonly<Record<string, ValueSanitizer>>
 ): HTMLElement | null {
     const tag = element.tagName.toLowerCase();
     const sanitizedElement =
@@ -279,13 +281,14 @@ export function sanitizeElement(
                   element.ownerDocument,
                   allowedTags.indexOf(tag) >= 0 ? tag : 'span',
                   element.attributes,
-                  styleCallbacks
+                  styleSanitizers,
+                  attributeSanitizers
               );
 
     if (sanitizedElement) {
         for (let child = element.firstChild; child; child = child.nextSibling) {
             const newChild = isNodeOfType(child, 'ELEMENT_NODE')
-                ? sanitizeElement(child, allowedTags, disallowedTags, styleCallbacks)
+                ? sanitizeElement(child, allowedTags, disallowedTags, styleSanitizers)
                 : isNodeOfType(child, 'TEXT_NODE')
                 ? child.cloneNode()
                 : null;
@@ -306,7 +309,8 @@ export function createSanitizedElement(
     doc: Document,
     tag: string,
     attributes: NamedNodeMap,
-    styleCallbacks?: Record<string, (value: string, tagName: string) => string | null>
+    styleSanitizers?: Readonly<Record<string, ValueSanitizer>>,
+    attributeSanitizers?: Readonly<Record<string, ValueSanitizer>>
 ): HTMLElement {
     const element = doc.createElement(tag);
 
@@ -315,9 +319,16 @@ export function createSanitizedElement(
         const name = attribute.name.toLowerCase().trim();
         const value = attribute.value;
 
+        const sanitizer = attributeSanitizers?.[name];
         const newValue =
             name == 'style'
-                ? processStyles(tag, value, styleCallbacks)
+                ? processStyles(tag, value, styleSanitizers)
+                : typeof sanitizer == 'function'
+                ? sanitizer(value, tag)
+                : typeof sanitizer === 'boolean'
+                ? sanitizer
+                    ? value
+                    : null
                 : AllowedAttributes.indexOf(name) >= 0 || name.indexOf('data-') == 0
                 ? value
                 : null;
@@ -334,24 +345,10 @@ export function createSanitizedElement(
     return element;
 }
 
-/**
- * @internal
- */
-export function removeStyle(): string | null {
-    return null;
-}
-
-/**
- * @internal
- */
-export function removeDisplayFlex(value: string) {
-    return value == 'flex' ? null : value;
-}
-
 function processStyles(
     tagName: string,
     value: string,
-    styleCallbacks?: Record<string, (value: string, tagName: string) => string | null>
+    styleSanitizers?: Readonly<Record<string, ValueSanitizer>>
 ) {
     const pairs = value.split(';');
     const result: string[] = [];
@@ -359,28 +356,30 @@ function processStyles(
     pairs.forEach(pair => {
         const valueIndex = pair.indexOf(':');
         const name = pair.slice(0, valueIndex).trim();
-        let value: string | null = pair.slice(valueIndex + 1).trim();
+        let value: string = pair.slice(valueIndex + 1).trim();
 
         if (name && value) {
             if (isCssVariable(value)) {
                 value = processCssVariable(value);
             }
 
-            const callback = styleCallbacks?.[name];
-
-            if (callback) {
-                value = callback(value, tagName);
-            }
+            const sanitizer = styleSanitizers?.[name];
+            const sanitizedValue =
+                typeof sanitizer == 'function'
+                    ? sanitizer(value, tagName)
+                    : sanitizer === false
+                    ? null
+                    : value;
 
             if (
-                !!value &&
-                value != 'inherit' &&
-                value != 'initial' &&
-                value.indexOf('expression') < 0 &&
+                !!sanitizedValue &&
+                sanitizedValue != 'inherit' &&
+                sanitizedValue != 'initial' &&
+                sanitizedValue.indexOf('expression') < 0 &&
                 !name.startsWith('-') &&
-                DefaultStyleValue[name] != value
+                DefaultStyleValue[name] != sanitizedValue
             ) {
-                result.push(`${name}:${value}`);
+                result.push(`${name}:${sanitizedValue}`);
             }
         }
     });

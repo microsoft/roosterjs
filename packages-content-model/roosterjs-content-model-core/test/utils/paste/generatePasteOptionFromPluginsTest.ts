@@ -86,6 +86,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},
+                styleSanitizers: {},
+                attributeSanitizers: {},
             },
             sanitizingOption,
         });
@@ -219,6 +221,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},
+                styleSanitizers: {},
+                attributeSanitizers: {},
             },
             sanitizingOption,
         });
@@ -249,6 +253,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 additionalFormatParsers: {},
                 formatParserOverride: {},
                 processorOverride: {},
+                styleSanitizers: {},
+                attributeSanitizers: {},
             },
             pasteType: PasteType.AsPlainText,
             eventType: PluginEventType.BeforePaste,

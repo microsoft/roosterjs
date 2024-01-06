@@ -43,6 +43,10 @@ describe('parseValueWithUnit with element', () => {
         runTest('ex', [0, 10, 11, -11]);
     });
 
+    it('rem', () => {
+        runTest('rem', [0, 20, 22, -22]);
+    });
+
     it('no unit', () => {
         runTest('', [0, 0, 0, 0]);
     });
