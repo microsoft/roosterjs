@@ -1,10 +1,13 @@
-import {
-    AllowedTags,
-    DisallowedTags,
-    removeStyle,
-    sanitizeElement,
-} from '../utils/sanitizeElement';
-import type { DomToModelOptionForPaste, ElementProcessor } from 'roosterjs-content-model-types';
+import { AllowedTags, DisallowedTags, sanitizeElement } from '../utils/sanitizeElement';
+import type {
+    DomToModelOptionForPaste,
+    ElementProcessor,
+    ValueSanitizer,
+} from 'roosterjs-content-model-types';
+
+const DefaultStyleSanitizers: Readonly<Record<string, ValueSanitizer>> = {
+    position: false,
+};
 
 /**
  * @internal
@@ -14,11 +17,17 @@ export function createPasteEntityProcessor(
 ): ElementProcessor<HTMLElement> {
     const allowedTags = AllowedTags.concat(options.additionalAllowedTags);
     const disallowedTags = DisallowedTags.concat(options.additionalDisallowedTags);
+    const styleSanitizers = Object.assign({}, DefaultStyleSanitizers, options.styleSanitizers);
+    const attrSanitizers = options.attributeSanitizers;
 
     return (group, element, context) => {
-        const sanitizedElement = sanitizeElement(element, allowedTags, disallowedTags, {
-            position: removeStyle,
-        });
+        const sanitizedElement = sanitizeElement(
+            element,
+            allowedTags,
+            disallowedTags,
+            styleSanitizers,
+            attrSanitizers
+        );
 
         if (sanitizedElement) {
             context.defaultElementProcessors.entity(group, sanitizedElement, context);

@@ -33,6 +33,8 @@ export function generatePasteOptionFromPlugins(
         additionalFormatParsers: {},
         formatParserOverride: {},
         processorOverride: {},
+        styleSanitizers: {},
+        attributeSanitizers: {},
     };
 
     const event: ContentModelBeforePasteEvent = {

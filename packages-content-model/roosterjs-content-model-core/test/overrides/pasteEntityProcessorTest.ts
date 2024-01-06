@@ -32,6 +32,8 @@ describe('pasteEntityProcessor', () => {
         const pasteEntityProcessor = createPasteEntityProcessor({
             additionalAllowedTags: [],
             additionalDisallowedTags: [],
+            styleSanitizers: {},
+            attributeSanitizers: {},
         } as any);
 
         sanitizeElementSpy.and.returnValue(element);
@@ -45,8 +47,9 @@ describe('pasteEntityProcessor', () => {
             sanitizeElement.AllowedTags,
             sanitizeElement.DisallowedTags,
             {
-                position: sanitizeElement.removeStyle,
-            }
+                position: false,
+            },
+            {}
         );
         expect(entityProcessorSpy).toHaveBeenCalledTimes(1);
         expect(entityProcessorSpy).toHaveBeenCalledWith(group, sanitizedElement, context);
@@ -58,6 +61,12 @@ describe('pasteEntityProcessor', () => {
         const pasteEntityProcessor = createPasteEntityProcessor({
             additionalAllowedTags: ['allowed'],
             additionalDisallowedTags: ['disallowed'],
+            styleSanitizers: {
+                color: true,
+            },
+            attributeSanitizers: {
+                id: true,
+            },
         } as any);
 
         sanitizeElementSpy.and.returnValue(element);
@@ -71,8 +80,10 @@ describe('pasteEntityProcessor', () => {
             sanitizeElement.AllowedTags.concat('allowed'),
             sanitizeElement.DisallowedTags.concat('disallowed'),
             {
-                position: sanitizeElement.removeStyle,
-            }
+                position: false,
+                color: true,
+            },
+            { id: true }
         );
         expect(entityProcessorSpy).toHaveBeenCalledTimes(1);
         expect(entityProcessorSpy).toHaveBeenCalledWith(group, sanitizedElement, context);

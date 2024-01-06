@@ -7,8 +7,8 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const ResultMap: Record<
-    'left' | 'center' | 'right',
-    Record<'ltr' | 'rtl', 'start' | 'center' | 'end'>
+    'left' | 'center' | 'right' | 'justify',
+    Record<'ltr' | 'rtl', 'start' | 'center' | 'end' | 'justify'>
 > = {
     left: {
         ltr: 'start',
@@ -21,6 +21,10 @@ const ResultMap: Record<
     right: {
         ltr: 'end',
         rtl: 'start',
+    },
+    justify: {
+        ltr: 'justify',
+        rtl: 'justify',
     },
 };
 
@@ -47,7 +51,7 @@ const TableAlignMap: Record<
  */
 export function setModelAlignment(
     model: ContentModelDocument,
-    alignment: 'left' | 'center' | 'right'
+    alignment: 'left' | 'center' | 'right' | 'justify'
 ) {
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
         model,
@@ -56,15 +60,21 @@ export function setModelAlignment(
     );
 
     paragraphOrListItemOrTable.forEach(({ block }) => {
-        const newAligment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
-        if (block.blockType === 'Table') {
+        const newAlignment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
+        if (block.blockType === 'Table' && alignment !== 'justify') {
             alignTable(
                 block,
                 TableAlignMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr']
             );
         } else if (block) {
+            if (block.blockType === 'BlockGroup' && block.blockGroupType === 'ListItem') {
+                block.blocks.forEach(b => {
+                    const { format } = b;
+                    format.textAlign = newAlignment;
+                });
+            }
             const { format } = block;
-            format.textAlign = newAligment;
+            format.textAlign = newAlignment;
         }
     });
 
