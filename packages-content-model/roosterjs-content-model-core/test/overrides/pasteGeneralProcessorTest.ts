@@ -1,7 +1,10 @@
 import * as sanitizeElement from '../../lib/utils/sanitizeElement';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
-import { createPasteGeneralProcessor } from '../../lib/override/pasteGeneralProcessor';
 import { DomToModelContext } from 'roosterjs-content-model-types';
+import {
+    createPasteGeneralProcessor,
+    removeDisplayFlex,
+} from '../../lib/override/pasteGeneralProcessor';
 
 describe('pasteGeneralProcessor', () => {
     let createSanitizedElementSpy: jasmine.Spy;
@@ -11,7 +14,7 @@ describe('pasteGeneralProcessor', () => {
 
     beforeEach(() => {
         createSanitizedElementSpy = spyOn(sanitizeElement, 'createSanitizedElement');
-        generalProcessorSpy = jasmine.createSpy('entityProcessor');
+        generalProcessorSpy = jasmine.createSpy('generalProcessor');
         spanProcessorSpy = jasmine.createSpy('spanProcessorSpy');
 
         context = {
@@ -28,6 +31,8 @@ describe('pasteGeneralProcessor', () => {
         const pasteGeneralProcessor = createPasteGeneralProcessor({
             additionalAllowedTags: [],
             additionalDisallowedTags: [],
+            styleSanitizers: {},
+            attributeSanitizers: {},
         } as any);
 
         createSanitizedElementSpy.and.returnValue(element);
@@ -40,9 +45,10 @@ describe('pasteGeneralProcessor', () => {
             'DIV',
             element.attributes,
             {
-                position: sanitizeElement.removeStyle,
-                display: sanitizeElement.removeDisplayFlex,
-            }
+                position: false,
+                display: removeDisplayFlex,
+            },
+            {}
         );
         expect(generalProcessorSpy).toHaveBeenCalledTimes(1);
         expect(generalProcessorSpy).toHaveBeenCalledWith(group, element, context);
@@ -73,6 +79,8 @@ describe('pasteGeneralProcessor', () => {
         const pasteGeneralProcessor = createPasteGeneralProcessor({
             additionalAllowedTags: ['test'],
             additionalDisallowedTags: [],
+            styleSanitizers: {},
+            attributeSanitizers: {},
         } as any);
 
         createSanitizedElementSpy.and.returnValue(element);
@@ -85,9 +93,10 @@ describe('pasteGeneralProcessor', () => {
             'TEST',
             element.attributes,
             {
-                position: sanitizeElement.removeStyle,
-                display: sanitizeElement.removeDisplayFlex,
-            }
+                position: false,
+                display: removeDisplayFlex,
+            },
+            {}
         );
         expect(generalProcessorSpy).toHaveBeenCalledTimes(1);
         expect(generalProcessorSpy).toHaveBeenCalledWith(group, element, context);
@@ -111,6 +120,39 @@ describe('pasteGeneralProcessor', () => {
         expect(spanProcessorSpy).toHaveBeenCalledTimes(0);
     });
 
+    it('Empty element with sanitizers', () => {
+        const element = document.createElement('div');
+        const group = createContentModelDocument();
+        const pasteGeneralProcessor = createPasteGeneralProcessor({
+            additionalAllowedTags: [],
+            styleSanitizers: {
+                color: true,
+            },
+            attributeSanitizers: {
+                id: true,
+            },
+        } as any);
+
+        createSanitizedElementSpy.and.returnValue(element);
+
+        pasteGeneralProcessor(group, element, context);
+
+        expect(createSanitizedElementSpy).toHaveBeenCalledTimes(1);
+        expect(createSanitizedElementSpy).toHaveBeenCalledWith(
+            document,
+            'DIV',
+            element.attributes,
+            {
+                position: false,
+                display: removeDisplayFlex,
+                color: true,
+            },
+            { id: true }
+        );
+        expect(generalProcessorSpy).toHaveBeenCalledTimes(1);
+        expect(spanProcessorSpy).toHaveBeenCalledTimes(0);
+    });
+
     it('Element with display:flex', () => {
         const element = document.createElement('div');
 
@@ -120,6 +162,8 @@ describe('pasteGeneralProcessor', () => {
         const pasteGeneralProcessor = createPasteGeneralProcessor({
             additionalAllowedTags: [],
             additionalDisallowedTags: ['test'],
+            styleSanitizers: {},
+            attributeSanitizers: {},
         } as any);
 
         createSanitizedElementSpy.and.callThrough();
@@ -132,9 +176,10 @@ describe('pasteGeneralProcessor', () => {
             'DIV',
             element.attributes,
             {
-                position: sanitizeElement.removeStyle,
-                display: sanitizeElement.removeDisplayFlex,
-            }
+                position: false,
+                display: removeDisplayFlex,
+            },
+            {}
         );
         expect(generalProcessorSpy).toHaveBeenCalledTimes(1);
         expect((generalProcessorSpy.calls.argsFor(0)[1] as any).outerHTML).toEqual(
