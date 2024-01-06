@@ -105,6 +105,58 @@ describe('sanitizeElement', () => {
         expect(element.outerHTML).toBe('<div style="color: red; position: absolute;"></div>');
         expect(result!.outerHTML).toBe('<div style="color:red;position:relative"></div>');
     });
+
+    it('styleCallbacks', () => {
+        const element = document.createElement('div');
+        const sanitizerSpy = jasmine.createSpy('sanitizer').and.returnValue('green');
+
+        element.style.color = 'red';
+
+        const result = sanitizeElement(element, AllowedTags, DisallowedTags, {
+            color: sanitizerSpy,
+        });
+
+        expect(result!.outerHTML).toBe('<div style="color:green"></div>');
+        expect(sanitizerSpy).toHaveBeenCalledWith('red', 'div');
+    });
+
+    it('styleCallbacks with boolean', () => {
+        const element = document.createElement('div');
+
+        element.style.color = 'red';
+
+        const result = sanitizeElement(element, AllowedTags, DisallowedTags, {
+            color: false,
+        });
+
+        expect(result!.outerHTML).toBe('<div style=""></div>');
+    });
+
+    it('attributeCallbacks', () => {
+        const element = document.createElement('div');
+        const sanitizerSpy = jasmine.createSpy('sanitizer').and.returnValue('b');
+
+        element.id = 'a';
+
+        const result = sanitizeElement(element, AllowedTags, DisallowedTags, undefined, {
+            id: sanitizerSpy,
+        });
+
+        expect(result!.outerHTML).toBe('<div id="b"></div>');
+        expect(sanitizerSpy).toHaveBeenCalledWith('a', 'div');
+    });
+
+    it('attributeCallbacks with boolean', () => {
+        const element = document.createElement('div');
+
+        element.id = 'a';
+
+        const result = sanitizeElement(element, AllowedTags, DisallowedTags, undefined, {
+            id: false,
+        });
+
+        expect(result!.outerHTML).toBe('<div></div>');
+    });
 });
 
 describe('sanitizeHtml', () => {

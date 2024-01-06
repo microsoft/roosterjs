@@ -3,9 +3,11 @@ import * as createPasteEntityProcessor from '../../../lib/override/pasteEntityPr
 import * as createPasteGeneralProcessor from '../../../lib/override/pasteGeneralProcessor';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
+import { containerWidthFormatParser } from '../../../lib/override/containerWidthFormatParser';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
 import { pasteDisplayFormatParser } from '../../../lib/override/pasteDisplayFormatParser';
+import { pasteTextProcessor } from '../../../lib/override/pasteTextProcessor';
 import { PasteType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
@@ -383,11 +385,15 @@ describe('mergePasteContent', () => {
             mockedDomToModelOptions,
             {
                 processorOverride: {
+                    '#text': pasteTextProcessor,
                     entity: mockedPasteEntityProcessor,
                     '*': mockedPasteGeneralProcessor,
                 },
                 formatParserOverride: {
                     display: pasteDisplayFormatParser,
+                },
+                additionalFormatParsers: {
+                    container: [containerWidthFormatParser],
                 },
             },
             mockedDefaultDomToModelOptions
