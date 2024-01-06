@@ -21,7 +21,6 @@ export { default as toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
 export {
-    AllowedEntityClasses,
     isEntityElement,
     getAllEntityWrappers,
     parseEntityClassName,
@@ -29,6 +28,7 @@ export {
     addDelimiters,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
+export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
@@ -55,9 +55,8 @@ export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';
 export { unwrapBlock } from './modelApi/common/unwrapBlock';
 export { addSegment } from './modelApi/common/addSegment';
-export { isWhiteSpacePreserved } from './modelApi/common/isWhiteSpacePreserved';
+export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
-export { applySegmentFormatToElement } from './modelApi/common/applySegmentFormatToElement';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 

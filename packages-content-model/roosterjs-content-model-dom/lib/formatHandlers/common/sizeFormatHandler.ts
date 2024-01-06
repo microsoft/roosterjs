@@ -62,7 +62,7 @@ function tryParseSize(element: HTMLElement, attrName: 'width' | 'height'): strin
 
     return attrValue && PercentageRegex.test(attrValue)
         ? attrValue
-        : Number.isNaN(value)
+        : Number.isNaN(value) || value == 0
         ? undefined
         : value + 'px';
 }

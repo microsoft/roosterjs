@@ -3,7 +3,6 @@ import { ClipboardData, DomToModelOption } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
-import { paste } from 'roosterjs-content-model-core';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_E2E';
@@ -36,7 +35,7 @@ describe(ID, () => {
                 '<table style="text-align: left; white-space: normal; width: 170pt; box-sizing: border-box; border-collapse: collapse; border-spacing: 0px; background-color: rgb(255, 255, 255);"><tbody><tr><td data-ogsb="white" style="text-align: center; white-space: nowrap; border-width: 0.5pt; border-style: solid; border-color: initial; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 52pt; height: 28.5pt; background-color: white;"><div style="text-align: center; white-space: nowrap; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">No.</span></div></td><td data-ogsb="white" style="text-align: center; white-space: nowrap; border-top: 0.5pt solid; border-right: 0.5pt solid; border-bottom: 0.5pt solid; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 56pt; background-color: white;"><div style="text-align: center; white-space: nowrap; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">ID</span></div></td><td data-ogsb="white" style="text-align: center; white-space: normal; border-top: 0.5pt solid; border-right: 0.5pt solid; border-bottom: 0.5pt solid; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 62pt; background-color: white;"><div style="text-align: center; white-space: normal; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">Work Item Type</span></div></td></tr></tbody></table><div><br></div><!--{"start":[0],"end":[1,0]}-->',
         });
 
-        paste(editor, clipboardData);
+        editor.paste(clipboardData);
 
         const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {
@@ -64,7 +63,6 @@ describe(ID, () => {
                                                     segmentType: 'Text',
                                                     text: 'No.',
                                                     format: {
-                                                        letterSpacing: 'normal',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
@@ -114,7 +112,6 @@ describe(ID, () => {
                                                     segmentType: 'Text',
                                                     text: 'ID',
                                                     format: {
-                                                        letterSpacing: 'normal',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
@@ -162,7 +159,6 @@ describe(ID, () => {
                                                     segmentType: 'Text',
                                                     text: 'Work Item Type',
                                                     format: {
-                                                        letterSpacing: 'normal',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
@@ -172,7 +168,6 @@ describe(ID, () => {
                                             ],
                                             format: {
                                                 textAlign: 'center',
-                                                whiteSpace: 'normal',
                                                 marginTop: '0px',
                                                 marginRight: '0px',
                                                 marginBottom: '0px',
@@ -182,7 +177,6 @@ describe(ID, () => {
                                     ],
                                     format: {
                                         textAlign: 'center',
-                                        whiteSpace: 'normal',
                                         borderTop: '0.5pt solid',
                                         borderRight: '0.5pt solid',
                                         borderBottom: '0.5pt solid',
@@ -205,7 +199,6 @@ describe(ID, () => {
                     ],
                     format: <any>{
                         textAlign: 'start',
-                        whiteSpace: 'normal',
                         backgroundColor: 'rgb(255, 255, 255)',
                         width: '170pt',
                         useBorderBox: true,

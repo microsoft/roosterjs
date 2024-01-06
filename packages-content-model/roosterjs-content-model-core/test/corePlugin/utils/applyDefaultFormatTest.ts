@@ -1,7 +1,6 @@
 import * as deleteSelection from '../../../lib/publicApi/selection/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyDefaultFormat } from '../../../lib/corePlugin/utils/applyDefaultFormat';
-import { IEditor } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -21,7 +20,7 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('applyDefaultFormat', () => {
-    let editor: IStandaloneEditor & IEditor;
+    let editor: IStandaloneEditor;
     let getDOMSelectionSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let deleteSelectionSpy: jasmine.Spy;
@@ -65,7 +64,7 @@ describe('applyDefaultFormat', () => {
             );
 
         editor = {
-            contains: () => true,
+            isNodeInEditor: () => true,
             getDOMSelection: getDOMSelectionSpy,
             formatContentModel: formatContentModelSpy,
             takeSnapshot: takeSnapshotSpy,

@@ -391,8 +391,10 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedImage.id).toBe('image_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
             expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;caret-color:transparent;}'
+                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
         });
 
@@ -438,8 +440,10 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedImage.id).toBe('image_0_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
             expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0_0 {outline-style:auto!important;outline-color:#DB626C!important;caret-color:transparent;}'
+                '#contentDiv_0 #image_0_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
         });
 
@@ -485,8 +489,10 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedImage.id).toBe('image_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
             expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:red!important;caret-color:transparent;}'
+                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:red!important;}'
             );
         });
     });
@@ -541,7 +547,8 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedTable.id).toBe('table_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(1);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
         });
 
         function runTest(
@@ -550,7 +557,7 @@ describe('setDOMSelection', () => {
             firstRow: number,
             lastColumn: number,
             lastRow: number,
-            result: string
+            ...result: string[]
         ) {
             const mockedSelection = {
                 type: 'table',
@@ -591,7 +598,11 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedTable.id).toBe('table_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).toHaveBeenCalledWith(result);
+            expect(insertRuleSpy).toHaveBeenCalledTimes(result.length);
+
+            result.forEach(rule => {
+                expect(insertRuleSpy).toHaveBeenCalledWith(rule);
+            });
         }
 
         it('Select Table Cells TR under Table Tag', () => {
@@ -601,7 +612,8 @@ describe('setDOMSelection', () => {
                 0,
                 1,
                 1,
-                '#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -612,7 +624,8 @@ describe('setDOMSelection', () => {
                 0,
                 0,
                 1,
-                '#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -656,7 +669,8 @@ describe('setDOMSelection', () => {
                 0,
                 0,
                 1,
-                '#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -667,7 +681,8 @@ describe('setDOMSelection', () => {
                 1,
                 2,
                 2,
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -678,7 +693,8 @@ describe('setDOMSelection', () => {
                 1,
                 2,
                 2,
-                '#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -689,7 +705,8 @@ describe('setDOMSelection', () => {
                 1,
                 1,
                 4,
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -700,7 +717,8 @@ describe('setDOMSelection', () => {
                 1,
                 1,
                 2,
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -711,7 +729,8 @@ describe('setDOMSelection', () => {
                 0,
                 1,
                 1,
-                '#contentDiv_0 #table_0,#contentDiv_0 #table_0 * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0,#contentDiv_0 #table_0 * {background-color: rgb(198,198,198) !important;}'
             );
         });
     });

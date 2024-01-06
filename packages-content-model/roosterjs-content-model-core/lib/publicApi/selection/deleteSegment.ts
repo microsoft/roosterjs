@@ -24,7 +24,7 @@ export function deleteSegment(
 ): boolean {
     const segments = paragraph.segments;
     const index = segments.indexOf(segmentToDelete);
-    const preserveWhiteSpace = isWhiteSpacePreserved(paragraph);
+    const preserveWhiteSpace = isWhiteSpacePreserved(paragraph.format.whiteSpace);
     const isForward = direction == 'forward';
     const isBackward = direction == 'backward';
 

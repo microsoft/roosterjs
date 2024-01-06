@@ -1,11 +1,9 @@
 import addParser from '../utils/addParser';
 import { setProcessor } from '../utils/setProcessor';
 import {
-    CLASSES_TO_KEEP,
     COMMENT_HIGHLIGHT_CLASS,
     COMMENT_HIGHLIGHT_CLICKED_CLASS,
     LIST_CONTAINER_ELEMENT_CLASS_NAME,
-    TABLE_CONTAINER,
     TEMP_ELEMENTS_CLASSES,
     WAC_IDENTIFY_SELECTOR,
 } from './constants';
@@ -195,14 +193,14 @@ export function processPastedContentWacComponents(ev: ContentModelBeforePasteEve
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItemThread', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
-    addParser(ev.domToModelOption, 'container', wacBlockParser);
+    addParser(ev.domToModelOption, 'container', wacContainerParser);
+    addParser(ev.domToModelOption, 'table', wacContainerParser);
     addParser(ev.domToModelOption, 'segment', wacCommentParser);
 
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
     setProcessor(ev.domToModelOption, 'ol', wacListProcessor);
     setProcessor(ev.domToModelOption, 'ul', wacListProcessor);
-    ev.sanitizingOption.additionalAllowedCssClasses.push(...CLASSES_TO_KEEP);
 }
 
 /**
@@ -247,11 +245,11 @@ const wacListProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement> = 
     }
 };
 
-const wacBlockParser: FormatParser<ContentModelBlockFormat> = (
+const wacContainerParser: FormatParser<ContentModelBlockFormat> = (
     format: ContentModelBlockFormat,
     element: HTMLElement
 ) => {
-    if (element.classList.contains(TABLE_CONTAINER) && element.style.marginLeft.startsWith('-')) {
+    if (element.style.marginLeft.startsWith('-')) {
         delete format.marginLeft;
     }
 };

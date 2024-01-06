@@ -205,40 +205,31 @@ export {
     FormatContentModel,
     StandaloneCoreApiMap,
     StandaloneEditorCore,
-    StandaloneEditorDefaultSettings,
+    ContentModelSettings,
     SwitchShadowEdit,
     TriggerEvent,
     AddUndoSnapshot,
-    PortedCoreApiMap,
-    UnportedCoreApiMap,
-    SetContent,
     HasFocus,
     Focus,
-    InsertNode,
     AttachDomEvent,
-    GetContent,
-    GetStyleBasedFormatState,
     RestoreUndoSnapshot,
-    EnsureTypeInContainer,
     GetVisibleViewport,
+    Paste,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export {
-    StandaloneEditorCorePluginState,
-    UnportedCorePluginState,
-} from './pluginState/StandaloneEditorPluginState';
+export { StandaloneEditorCorePluginState } from './pluginState/StandaloneEditorPluginState';
 export {
     ContentModelFormatPluginState,
     PendingFormat,
 } from './pluginState/ContentModelFormatPluginState';
+export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
 export { UndoPluginState } from './pluginState/UndoPluginState';
-export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -273,8 +264,11 @@ export { SnapshotsManager } from './parameter/SnapshotsManager';
 export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
+export { ValueSanitizer } from './parameter/ValueSanitizer';
 
 export {
+    MergePastedContentFunc,
+    DomToModelOptionForPaste,
     ContentModelBeforePasteEvent,
     ContentModelBeforePasteEventData,
     CompatibleContentModelBeforePasteEvent,

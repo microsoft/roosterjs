@@ -24,7 +24,7 @@ const DefaultBackColor = '#ffffff';
  * Lifecycle plugin handles editor initialization and disposing
  */
 class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private state: LifecyclePluginState;
     private initialModel: ContentModelDocument;
     private initializer: (() => void) | null = null;
