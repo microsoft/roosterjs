@@ -1,10 +1,10 @@
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { BasePluginEvent } from './BasePluginEvent';
-import type { ValueSanitizer } from '../parameter/ValueSanitizer';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
+import type { ValueSanitizer } from '../parameter/ValueSanitizer';
 
 /**
  * Options for DOM to Content Model conversion for paste only
@@ -23,12 +23,12 @@ export interface DomToModelOptionForPaste extends Required<DomToModelOption> {
     /**
      * Additional sanitizers for CSS styles
      */
-    styleSanitizers: Record<string, ValueSanitizer>;
+    readonly styleSanitizers: Record<string, ValueSanitizer>;
 
     /**
      * Additional sanitizers for CSS styles
      */
-    attributeSanitizers: Record<string, ValueSanitizer>;
+    readonly attributeSanitizers: Record<string, ValueSanitizer>;
 }
 
 /**
