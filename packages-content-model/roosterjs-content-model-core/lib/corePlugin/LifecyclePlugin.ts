@@ -59,7 +59,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
 
         this.state = {
             isDarkMode: !!options.inDarkMode,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         };
     }
@@ -134,22 +133,10 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     private adjustContainerColor(contentDiv: HTMLElement) {
         if (this.editor) {
             const { isDarkMode } = this.state;
-            const darkColorHandler = this.editor.getDarkColorHandler();
+            const snapshots = this.editor.getSnapshotsManager();
 
-            setColor(
-                contentDiv,
-                DefaultTextColor,
-                false /*isBackground*/,
-                darkColorHandler,
-                isDarkMode
-            );
-            setColor(
-                contentDiv,
-                DefaultBackColor,
-                true /*isBackground*/,
-                darkColorHandler,
-                isDarkMode
-            );
+            setColor(contentDiv, DefaultTextColor, false /*isBackground*/, isDarkMode, snapshots);
+            setColor(contentDiv, DefaultBackColor, true /*isBackground*/, isDarkMode, snapshots);
         }
     }
 

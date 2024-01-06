@@ -6,18 +6,16 @@ import type { StandaloneEditorCore, Snapshot } from 'roosterjs-content-model-typ
  */
 export function restoreSnapshotColors(core: StandaloneEditorCore, snapshot: Snapshot) {
     const isDarkMode = core.lifecycle.isDarkMode;
-    const darkColorHandler = core.darkColorHandler;
+    const snapshots = core.undo.snapshotsManager;
 
-    snapshot.knownColors.forEach(color => {
-        darkColorHandler.registerColor(color.lightModeColor, isDarkMode, color.darkModeColor);
-    });
+    snapshots.updateKnownColor(isDarkMode); // Pass no parameter to force update all colors
 
     if (!!snapshot.isDarkMode != !!isDarkMode) {
         transformColor(
             core.contentDiv,
             false /*includeSelf*/,
             isDarkMode ? 'lightToDark' : 'darkToLight',
-            darkColorHandler
+            snapshots
         );
     }
 }

@@ -21,7 +21,6 @@ describe('LifecyclePlugin', () => {
 
         expect(state).toEqual({
             isDarkMode: false,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         });
 
@@ -79,7 +78,6 @@ describe('LifecyclePlugin', () => {
 
         expect(state).toEqual({
             isDarkMode: false,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         });
 

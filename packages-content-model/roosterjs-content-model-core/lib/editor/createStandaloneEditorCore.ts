@@ -1,4 +1,3 @@
-import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
 import {
@@ -41,10 +40,6 @@ export function createStandaloneEditorCore(
             corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(contentDiv),
-        darkColorHandler: createDarkColorHandler(
-            contentDiv,
-            options.getDarkColor ?? getDarkColorFallback
-        ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),

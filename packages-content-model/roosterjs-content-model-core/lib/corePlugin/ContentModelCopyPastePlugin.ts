@@ -247,9 +247,9 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
         }
 
         const result = node.cloneNode(true /*deep*/) as HTMLElement;
-        const colorHandler = this.editor.getDarkColorHandler();
+        const snapshots = this.editor.getSnapshotsManager();
 
-        transformColor(result, true /*includeSelf*/, 'darkToLight', colorHandler);
+        transformColor(result, true /*includeSelf*/, 'darkToLight', snapshots);
 
         result.style.color = result.style.color || 'inherit';
         result.style.backgroundColor = result.style.backgroundColor || 'inherit';

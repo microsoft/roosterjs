@@ -239,7 +239,7 @@ describe('handleTable', () => {
         const datasetApplier = jasmine.createSpy('datasetApplier');
         context = createModelToDomContext(
             {
-                darkColorHandler: context.darkColorHandler,
+                snapshots: context.snapshots,
             },
             {
                 formatApplierOverride: {

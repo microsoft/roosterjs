@@ -9,6 +9,7 @@ import type {
     NodePosition,
     StyleBasedFormatState,
     SizeTransformer,
+    DarkColorHandler,
 } from 'roosterjs-editor-types';
 
 /**
@@ -154,6 +155,12 @@ export interface ContentModelEditorCore extends ContentModelCorePluginState {
      * Enabled experimental features
      */
     readonly experimentalFeatures: ExperimentalFeatures[];
+
+    /**
+     * Dark model handler for the editor, used for variable-based solution.
+     * If keep it null, editor will still use original dataset-based dark mode solution.
+     */
+    readonly darkColorHandler: DarkColorHandler;
 
     /**
      * @deprecated Use zoomScale instead

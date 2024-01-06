@@ -1,3 +1,4 @@
+import * as darkColorHandler from '../../lib/editor/DarkColorHandlerImpl';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { createEditorCore } from '../../lib/editor/createEditorCore';
 
@@ -5,9 +6,16 @@ describe('createEditorCore', () => {
     const mockedSizeTransformer = 'TRANSFORMER' as any;
     const mockedEditPluginState = 'EDITSTATE' as any;
     const mockedContextMenuPluginState = 'CONTEXTMENUSTATE' as any;
+    const mockedDarkHandler = 'DARK' as any;
+
+    beforeEach(() => {
+        spyOn(darkColorHandler, 'createDarkColorHandler').and.returnValue(mockedDarkHandler);
+    });
 
     it('No additional option', () => {
+        const div = document.createElement('div');
         const core = createEditorCore(
+            div,
             {},
             {
                 edit: mockedEditPluginState,
@@ -24,6 +32,7 @@ describe('createEditorCore', () => {
             edit: mockedEditPluginState,
             contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
+            darkColorHandler: mockedDarkHandler,
         });
     });
 
@@ -34,8 +43,10 @@ describe('createEditorCore', () => {
         const mockedCoreApi = {
             a: 'b',
         } as any;
+        const div = document.createElement('div');
 
         const core = createEditorCore(
+            div,
             {
                 plugins: [mockedPlugin1, mockedPlugin2],
                 experimentalFeatures: mockedFeatures,
@@ -56,6 +67,7 @@ describe('createEditorCore', () => {
             edit: mockedEditPluginState,
             contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
+            darkColorHandler: mockedDarkHandler,
         });
     });
 });

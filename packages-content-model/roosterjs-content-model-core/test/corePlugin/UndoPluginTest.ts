@@ -51,7 +51,8 @@ describe('UndoPlugin', () => {
 
     describe('Ctor', () => {
         it('ctor without option', () => {
-            const plugin = createUndoPlugin({});
+            const div = document.createElement('div');
+            const plugin = createUndoPlugin({}, div);
             const state = plugin.getState();
 
             expect(state).toEqual({
@@ -67,14 +68,18 @@ describe('UndoPlugin', () => {
         });
 
         it('ctor with option', () => {
+            const div = document.createElement('div');
             const mockedSnapshots = 'SNAPSHOTS' as any;
             const mockedManager = 'MANAGER' as any;
 
             createSnapshotsManagerSpy.and.returnValue(mockedManager);
 
-            const plugin = createUndoPlugin({
-                snapshots: mockedSnapshots,
-            });
+            const plugin = createUndoPlugin(
+                {
+                    snapshots: mockedSnapshots,
+                },
+                div
+            );
             const state = plugin.getState();
 
             expect(state).toEqual({
@@ -85,7 +90,7 @@ describe('UndoPlugin', () => {
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(mockedSnapshots);
+            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(div, mockedSnapshots);
             expect(undoSpy).not.toHaveBeenCalled();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
@@ -95,7 +100,9 @@ describe('UndoPlugin', () => {
         let plugin: PluginWithState<UndoPluginState>;
 
         beforeEach(() => {
-            plugin = createUndoPlugin({});
+            const div = document.createElement('div');
+
+            plugin = createUndoPlugin({}, div);
             plugin.initialize(editor);
         });
 
@@ -275,7 +282,9 @@ describe('UndoPlugin', () => {
         let plugin: PluginWithState<UndoPluginState>;
 
         beforeEach(() => {
-            plugin = createUndoPlugin({});
+            const div = document.createElement('div');
+
+            plugin = createUndoPlugin({}, div);
             plugin.initialize(editor);
         });
 

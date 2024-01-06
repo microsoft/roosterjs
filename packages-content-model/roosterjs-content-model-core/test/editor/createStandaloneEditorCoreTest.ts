@@ -1,13 +1,11 @@
 import * as createDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
 import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
-import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
+import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
+import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 import {
     createStandaloneEditorCore,
     defaultTrustHtmlHandler,
-    getDarkColorFallback,
 } from '../../lib/editor/createStandaloneEditorCore';
-import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
-import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 
 describe('createEditorCore', () => {
     function createMockedPlugin(stateName: string): any {
@@ -34,7 +32,6 @@ describe('createEditorCore', () => {
         selection: mockedSelectionPlugin,
         undo: mockedUndoPlugin,
     };
-    const mockedDarkColorHandler = 'DARKCOLOR' as any;
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
     const mockedModelToDomSettings = 'MODELTODOM' as any;
 
@@ -43,9 +40,6 @@ describe('createEditorCore', () => {
             createStandaloneEditorCorePlugins,
             'createStandaloneEditorCorePlugins'
         ).and.returnValue(mockedPlugins);
-        spyOn(DarkColorHandlerImpl, 'createDarkColorHandler').and.returnValue(
-            mockedDarkColorHandler
-        );
         spyOn(createDefaultSettings, 'createDomToModelSettings').and.returnValue(
             mockedDomToModelSettings
         );
@@ -80,7 +74,6 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: false,
             },
-            darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: defaultTrustHtmlHandler,
             domToModelSettings: mockedDomToModelSettings,
             modelToDomSettings: mockedModelToDomSettings,
@@ -117,11 +110,6 @@ describe('createEditorCore', () => {
                 name: 'Options',
             } as any,
             {}
-        );
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback
         );
     });
 
@@ -163,16 +151,10 @@ describe('createEditorCore', () => {
                 mockedUndoPlugin,
                 mockedLifeCyclePlugin,
             ],
-            darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: mockedTrustHtmlHandler,
             disposeErrorHandler: mockedDisposeErrorHandler,
             zoomScale: 2,
         });
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            mockedGetDarkColor
-        );
     });
 
     it('Invalid zoom scale', () => {
@@ -187,11 +169,6 @@ describe('createEditorCore', () => {
         } as any;
 
         runTest(mockedDiv, mockedOptions, {});
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback
-        );
     });
 
     it('Android', () => {
@@ -218,11 +195,6 @@ describe('createEditorCore', () => {
                 isSafari: false,
             },
         });
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback
-        );
     });
 
     it('Android+Safari', () => {
@@ -249,11 +221,6 @@ describe('createEditorCore', () => {
                 isSafari: false,
             },
         });
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback
-        );
     });
 
     it('Mac', () => {
@@ -280,11 +247,6 @@ describe('createEditorCore', () => {
                 isSafari: false,
             },
         });
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback
-        );
     });
 
     it('Safari', () => {
@@ -311,11 +273,6 @@ describe('createEditorCore', () => {
                 isSafari: true,
             },
         });
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback
-        );
     });
 
     it('Chrome', () => {
@@ -342,10 +299,5 @@ describe('createEditorCore', () => {
                 isSafari: false,
             },
         });
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback
-        );
     });
 });

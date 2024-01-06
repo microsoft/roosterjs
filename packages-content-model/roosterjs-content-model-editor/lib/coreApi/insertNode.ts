@@ -55,7 +55,12 @@ export const insertNode: InsertNode = (core, innerCore, node, option) => {
         replaceSelection: true,
         insertToRegionRoot: false,
     };
-    const { contentDiv, api, lifecycle, darkColorHandler } = innerCore;
+    const {
+        contentDiv,
+        api,
+        lifecycle,
+        undo: { snapshotsManager },
+    } = innerCore;
 
     if (option.updateCursor) {
         api.focus(innerCore);
@@ -67,7 +72,7 @@ export const insertNode: InsertNode = (core, innerCore, node, option) => {
     }
 
     if (lifecycle.isDarkMode) {
-        transformColor(node, true /*includeSelf*/, 'lightToDark', darkColorHandler);
+        transformColor(node, true /*includeSelf*/, 'lightToDark', snapshotsManager);
     }
 
     switch (option.position) {

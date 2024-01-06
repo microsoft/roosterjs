@@ -28,6 +28,6 @@ export function createStandaloneEditorCorePlugins(
         lifecycle: createLifecyclePlugin(options, contentDiv),
         entity: createEntityPlugin(),
         selection: createSelectionPlugin(options),
-        undo: createUndoPlugin(options),
+        undo: createUndoPlugin(options, contentDiv),
     };
 }

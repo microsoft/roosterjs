@@ -20,7 +20,12 @@ export const getContent: GetContent = (core, innerCore, mode): string => {
     let content: string | null = '';
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
-    const { lifecycle, contentDiv, api, darkColorHandler } = innerCore;
+    const {
+        lifecycle,
+        contentDiv,
+        api,
+        undo: { snapshotsManager },
+    } = innerCore;
 
     // When there is fragment for shadow edit, always use the cached fragment as document since HTML node in editor
     // has been changed by uncommitted shadow edit which should be ignored.
@@ -44,7 +49,7 @@ export const getContent: GetContent = (core, innerCore, mode): string => {
         const range = path && createRange(clonedRoot, path.start, path.end);
 
         if (lifecycle.isDarkMode) {
-            transformColor(clonedRoot, false /*includeSelf*/, 'darkToLight', darkColorHandler);
+            transformColor(clonedRoot, false /*includeSelf*/, 'darkToLight', snapshotsManager);
         }
 
         if (triggerExtractContentEvent) {

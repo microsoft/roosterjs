@@ -27,7 +27,14 @@ export const setContent: SetContent = (
     triggerContentChangedEvent,
     metadata
 ) => {
-    const { contentDiv, api, entity, trustedHTMLHandler, lifecycle, darkColorHandler } = innerCore;
+    const {
+        contentDiv,
+        api,
+        entity,
+        trustedHTMLHandler,
+        lifecycle,
+        undo: { snapshotsManager },
+    } = innerCore;
 
     let contentChanged = false;
 
@@ -63,7 +70,7 @@ export const setContent: SetContent = (
             contentDiv,
             false /*includeSelf*/,
             isDarkMode ? 'lightToDark' : 'darkToLight',
-            darkColorHandler
+            snapshotsManager
         );
         contentChanged = true;
     }

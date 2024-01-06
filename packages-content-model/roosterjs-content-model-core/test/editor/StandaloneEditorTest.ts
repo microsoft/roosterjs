@@ -599,32 +599,6 @@ describe('StandaloneEditor', () => {
         expect(() => editor.pasteFromClipboard(mockedClipboardData)).toThrow();
     });
 
-    it('getDarkColorHandler', () => {
-        const div = document.createElement('div');
-        const resetSpy = jasmine.createSpy('reset');
-        const mockedColorHandler = {
-            reset: resetSpy,
-        } as any;
-        const mockedCore = {
-            plugins: [],
-            darkColorHandler: mockedColorHandler,
-        } as any;
-
-        createEditorCoreSpy.and.returnValue(mockedCore);
-
-        const editor = new StandaloneEditor(div);
-
-        const result = editor.getDarkColorHandler();
-
-        expect(resetSpy).not.toHaveBeenCalled();
-        expect(result).toBe(mockedColorHandler);
-
-        editor.dispose();
-
-        expect(resetSpy).toHaveBeenCalledWith();
-        expect(() => editor.getDarkColorHandler()).toThrow();
-    });
-
     it('isNodeInEditor', () => {
         const mockedResult = 'RESULT' as any;
         const containsSpy = jasmine.createSpy('contains').and.returnValue(mockedResult);

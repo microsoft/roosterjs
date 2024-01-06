@@ -51,6 +51,7 @@ import type {
     StyleBasedFormatState,
     TableSelection,
     DOMEventHandlerObject,
+    DarkColorHandler,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -126,6 +127,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         super(contentDiv, standaloneEditorOptions, () => {
             // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
             this.contentModelEditorCore = createEditorCore(
+                contentDiv,
                 options,
                 corePluginState,
                 size => size / this.getCore().zoomScale
@@ -954,7 +956,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             core.contentDiv,
             true /*includeSelf*/,
             nextDarkMode ? 'lightToDark' : 'darkToLight',
-            core.darkColorHandler
+            core.undo.snapshotsManager
         );
 
         this.triggerContentChangedEvent(
@@ -979,7 +981,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             node,
             true /*includeSelf*/,
             direction == ColorTransformDirection.DarkToLight ? 'darkToLight' : 'lightToDark',
-            core.darkColorHandler
+            core.undo.snapshotsManager
         );
     }
 
@@ -1009,6 +1011,13 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         const core = this.getCore();
 
         return core.api.getVisibleViewport(core);
+    }
+
+    /**
+     * Get a darkColorHandler object for this editor.
+     */
+    getDarkColorHandler(): DarkColorHandler {
+        return null!; // TODO
     }
 
     /**

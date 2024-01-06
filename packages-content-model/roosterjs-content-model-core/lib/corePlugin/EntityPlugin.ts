@@ -141,7 +141,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                             wrapper,
                             true /*includeSelf*/,
                             'lightToDark',
-                            editor.getDarkColorHandler()
+                            editor.getSnapshotsManager()
                         );
                     }
                 } else if (id) {

@@ -1,4 +1,5 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
+import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
@@ -12,6 +13,7 @@ import type { SizeTransformer } from 'roosterjs-editor-types';
  * @param sizeTransformer @deprecated A size transformer function to calculate size when editor is zoomed
  */
 export function createEditorCore(
+    contentDiv: HTMLDivElement,
     options: ContentModelEditorOptions,
     corePluginState: ContentModelCorePluginState,
     sizeTransformer: SizeTransformer
@@ -22,8 +24,16 @@ export function createEditorCore(
         customData: {},
         experimentalFeatures: options.experimentalFeatures ?? [],
         sizeTransformer,
+        darkColorHandler: createDarkColorHandler(
+            contentDiv,
+            options.getDarkColor ?? defaultGetDarkColor
+        ),
         ...corePluginState,
     };
 
     return core;
+}
+
+function defaultGetDarkColor(color: string) {
+    return color;
 }

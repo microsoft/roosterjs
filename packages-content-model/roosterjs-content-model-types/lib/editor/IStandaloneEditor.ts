@@ -16,7 +16,6 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type { DarkColorHandler } from 'roosterjs-editor-types';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
 /**
@@ -203,11 +202,6 @@ export interface IStandaloneEditor {
      * @param pasteType Type of paste
      */
     pasteFromClipboard(clipboardData: ClipboardData, pasteType?: PasteType): void;
-
-    /**
-     * Get a darkColorHandler object for this editor.
-     */
-    getDarkColorHandler(): DarkColorHandler;
 
     /**
      * Dispose this editor, dispose all plugins and custom data
