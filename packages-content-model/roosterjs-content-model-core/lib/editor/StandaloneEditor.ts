@@ -54,6 +54,8 @@ export class StandaloneEditor implements IStandaloneEditor {
     dispose() {
         const core = this.getCore();
 
+        core.undo.snapshotsManager.updateKnownColor(false /*isDarkMode*/); // Force clear color variables
+
         for (let i = core.plugins.length - 1; i >= 0; i--) {
             const plugin = core.plugins[i];
 
@@ -65,7 +67,6 @@ export class StandaloneEditor implements IStandaloneEditor {
             }
         }
 
-        core.undo.snapshotsManager.updateKnownColor(false /*isDarkMode*/); // Force clear color variables
         this.core = null;
     }
 

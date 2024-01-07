@@ -80,7 +80,7 @@ describe('ContentModelCopyPastePlugin |', () => {
     let getVisibleViewportSpy: jasmine.Spy;
     let formatResult: boolean | undefined;
     let modelResult: ContentModelDocument | undefined;
-    let mockedDarkColorHandler: DarkColorHandler;
+    let mockedSnapshotsManager: DarkColorHandler;
 
     beforeEach(() => {
         modelResult = undefined;
@@ -104,7 +104,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             (model: any) => pasteModelValue
         );
         transformColorSpy = spyOn(transformColor, 'transformColor');
-        mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
+        mockedSnapshotsManager = 'SNAPSHOTS' as any;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -157,7 +157,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             pasteFromClipboard: (ar1: any) => {
                 pasteSpy(ar1);
             },
-            getDarkColorHandler: () => mockedDarkColorHandler,
+            getSnapshotsManager: () => mockedSnapshotsManager,
             isDisposed,
             getVisibleViewport: getVisibleViewportSpy,
             formatContentModel: formatContentModelSpy,
@@ -361,7 +361,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     cloneEntity,
                     true,
                     'darkToLight',
-                    mockedDarkColorHandler
+                    mockedSnapshotsManager
                 );
 
                 return pasteModelValue;

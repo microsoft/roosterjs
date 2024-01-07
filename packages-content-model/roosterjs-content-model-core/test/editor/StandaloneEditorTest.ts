@@ -5,8 +5,10 @@ import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 
 describe('StandaloneEditor', () => {
     let createEditorCoreSpy: jasmine.Spy;
+    let updateKnownColorSpy: jasmine.Spy;
 
     beforeEach(() => {
+        updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
         createEditorCoreSpy = spyOn(
             createStandaloneEditorCore,
             'createStandaloneEditorCore'
@@ -96,6 +98,11 @@ describe('StandaloneEditor', () => {
             api: {
                 createContentModel: createContentModelSpy,
             },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -121,6 +128,7 @@ describe('StandaloneEditor', () => {
 
         editor.dispose();
         expect(() => editor.createContentModel()).toThrow();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
     });
 
     it('setContentModel', () => {
@@ -133,6 +141,11 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 setContentModel: setContentModelSpy,
+            },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
             },
         } as any;
 
@@ -163,6 +176,7 @@ describe('StandaloneEditor', () => {
         );
 
         editor.dispose();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.setContentModel(mockedModel)).toThrow();
     });
 
@@ -175,6 +189,11 @@ describe('StandaloneEditor', () => {
                 reset: () => {},
             },
             environment: mockedEnvironment,
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -186,6 +205,7 @@ describe('StandaloneEditor', () => {
         expect(result).toBe(mockedEnvironment);
 
         editor.dispose();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.getEnvironment()).toThrow();
     });
 
@@ -203,6 +223,11 @@ describe('StandaloneEditor', () => {
             api: {
                 getDOMSelection: getDOMSelectionSpy,
             },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -215,6 +240,7 @@ describe('StandaloneEditor', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalledWith(mockedCore);
 
         editor.dispose();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.getDOMSelection()).toThrow();
     });
 
@@ -229,6 +255,11 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 setDOMSelection: setDOMSelectionSpy,
+            },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
             },
         } as any;
 
@@ -245,6 +276,7 @@ describe('StandaloneEditor', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(mockedCore, mockedSelection);
 
         editor.dispose();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.setDOMSelection(null)).toThrow();
     });
 
@@ -260,6 +292,11 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 formatContentModel: formatContentModelSpy,
+            },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
             },
         } as any;
 
@@ -280,6 +317,7 @@ describe('StandaloneEditor', () => {
         );
 
         editor.dispose();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.formatContentModel(mockedFormatter)).toThrow();
     });
 
@@ -292,6 +330,11 @@ describe('StandaloneEditor', () => {
                 reset: () => {},
             },
             format: {},
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -310,6 +353,7 @@ describe('StandaloneEditor', () => {
         expect(result2).toBe(mockedFormat);
 
         editor.dispose();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.getPendingFormat()).toThrow();
     });
 
@@ -327,6 +371,11 @@ describe('StandaloneEditor', () => {
             api: {
                 addUndoSnapshot: addUndoSnapshotSpy,
             },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -339,6 +388,7 @@ describe('StandaloneEditor', () => {
         expect(snapshot).toBe(mockedSnapshot);
 
         editor.dispose();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.takeSnapshot()).toThrow();
     });
 
@@ -354,6 +404,11 @@ describe('StandaloneEditor', () => {
             api: {
                 restoreUndoSnapshot: restoreUndoSnapshotSpy,
             },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -365,6 +420,7 @@ describe('StandaloneEditor', () => {
         expect(restoreUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, mockedSnapshot);
 
         editor.dispose();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.restoreSnapshot(mockedSnapshot)).toThrow();
     });
 
@@ -379,6 +435,11 @@ describe('StandaloneEditor', () => {
             api: {
                 focus: focusSpy,
             },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -389,7 +450,7 @@ describe('StandaloneEditor', () => {
         expect(focusSpy).toHaveBeenCalledWith(mockedCore);
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.focus()).toThrow();
     });
 
@@ -405,6 +466,11 @@ describe('StandaloneEditor', () => {
             api: {
                 hasFocus: hasFocusSpy,
             },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -417,7 +483,7 @@ describe('StandaloneEditor', () => {
         expect(hasFocusSpy).toHaveBeenCalledWith(mockedCore);
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.hasFocus()).toThrow();
     });
 
@@ -436,6 +502,11 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 triggerEvent: triggerEventSpy,
+            },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
             },
         } as any;
 
@@ -462,7 +533,7 @@ describe('StandaloneEditor', () => {
         );
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.triggerEvent(mockedEventType, mockedEventData, true)).toThrow();
     });
 
@@ -480,6 +551,11 @@ describe('StandaloneEditor', () => {
             api: {
                 attachDomEvent: attachDomEventSpy,
             },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -493,13 +569,15 @@ describe('StandaloneEditor', () => {
         expect(attachDomEventSpy).toHaveBeenCalledWith(mockedCore, mockedEventMap);
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.attachDomEvent(mockedEventMap)).toThrow();
     });
 
     it('getSnapshotsManager', () => {
         const div = document.createElement('div');
-        const mockedSnapshotManager = 'MANAGER' as any;
+        const mockedSnapshotManager = {
+            updateKnownColor: updateKnownColorSpy,
+        } as any;
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
@@ -519,7 +597,7 @@ describe('StandaloneEditor', () => {
         expect(result).toBe(mockedSnapshotManager);
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.getSnapshotsManager()).toThrow();
     });
 
@@ -538,6 +616,11 @@ describe('StandaloneEditor', () => {
             lifecycle: {},
             api: {
                 switchShadowEdit: switchShadowEditSpy,
+            },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
             },
         } as any;
 
@@ -560,7 +643,7 @@ describe('StandaloneEditor', () => {
         expect(switchShadowEditSpy).toHaveBeenCalledWith(mockedCore, false);
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.isInShadowEdit()).toThrow();
         expect(() => editor.startShadowEdit()).toThrow();
         expect(() => editor.stopShadowEdit()).toThrow();
@@ -576,6 +659,11 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 paste: pasteSpy,
+            },
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
             },
         } as any;
 
@@ -595,7 +683,7 @@ describe('StandaloneEditor', () => {
         expect(pasteSpy).toHaveBeenCalledWith(mockedCore, mockedClipboardData, mockedPasteType);
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.pasteFromClipboard(mockedClipboardData)).toThrow();
     });
 
@@ -611,6 +699,11 @@ describe('StandaloneEditor', () => {
                 reset: () => {},
             },
             contentDiv: div,
+            undo: {
+                snapshotsManager: {
+                    updateKnownColor: updateKnownColorSpy,
+                },
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -624,7 +717,7 @@ describe('StandaloneEditor', () => {
         expect(containsSpy).toHaveBeenCalledWith(mockedNode);
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.isNodeInEditor(mockedNode)).toThrow();
     });
 
@@ -634,18 +727,20 @@ describe('StandaloneEditor', () => {
             mockedCore.lifecycle.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
         });
         const div = document.createElement('div');
-        const mockedColorHandler = {
-            reset: () => {},
+        const mockedSnapshotsManager = {
+            updateKnownColor: updateKnownColorSpy,
         } as any;
         const mockedCore = {
             plugins: [],
-            darkColorHandler: mockedColorHandler,
             contentDiv: div,
             lifecycle: {
                 isDarkMode: false,
             },
             api: {
                 triggerEvent: triggerEventSpy,
+            },
+            undo: {
+                snapshotsManager: mockedSnapshotsManager,
             },
         } as any;
 
@@ -669,7 +764,7 @@ describe('StandaloneEditor', () => {
             div,
             true,
             'lightToDark',
-            mockedColorHandler
+            mockedSnapshotsManager
         );
         expect(triggerEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerEventSpy).toHaveBeenCalledWith(
@@ -689,7 +784,7 @@ describe('StandaloneEditor', () => {
             div,
             true,
             'darkToLight',
-            mockedColorHandler
+            mockedSnapshotsManager
         );
         expect(triggerEventSpy).toHaveBeenCalledTimes(2);
         expect(triggerEventSpy).toHaveBeenCalledWith(
@@ -702,7 +797,7 @@ describe('StandaloneEditor', () => {
         );
 
         editor.dispose();
-
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
         expect(() => editor.isDarkMode()).toThrow();
         expect(() => editor.setDarkModeState()).toThrow();
     });

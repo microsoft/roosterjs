@@ -11,14 +11,19 @@ describe('SnapshotsManagerImpl.ctor', () => {
             currentIndex: -1,
             autoCompleteIndex: -1,
             maxSize: 1e7,
+            knownColors: {},
         });
     });
 
     it('Has param', () => {
         const mockedSnapshots = 'SNAPSHOTS' as any;
-        const service = createSnapshotsManager(mockedSnapshots);
+        const mockedRoot = 'ROOT' as any;
+        const mockedGetDarkColor = 'GETDARKCOLOR' as any;
+        const service = createSnapshotsManager(mockedRoot, mockedGetDarkColor, mockedSnapshots);
 
+        expect((service as any).root).toEqual(mockedRoot);
         expect((service as any).snapshots).toEqual(mockedSnapshots);
+        expect((service as any).getDarkColor).toEqual(mockedGetDarkColor);
     });
 });
 

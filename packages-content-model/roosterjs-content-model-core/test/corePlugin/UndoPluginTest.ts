@@ -63,7 +63,7 @@ describe('UndoPlugin', () => {
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(undefined);
+            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(div, undefined, undefined);
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
@@ -71,12 +71,14 @@ describe('UndoPlugin', () => {
             const div = document.createElement('div');
             const mockedSnapshots = 'SNAPSHOTS' as any;
             const mockedManager = 'MANAGER' as any;
+            const mockedGetDarkColor = 'GETDARKCOLOR' as any;
 
             createSnapshotsManagerSpy.and.returnValue(mockedManager);
 
             const plugin = createUndoPlugin(
                 {
                     snapshots: mockedSnapshots,
+                    getDarkColor: mockedGetDarkColor,
                 },
                 div
             );
@@ -90,7 +92,11 @@ describe('UndoPlugin', () => {
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(div, mockedSnapshots);
+            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(
+                div,
+                mockedGetDarkColor,
+                mockedSnapshots
+            );
             expect(undoSpy).not.toHaveBeenCalled();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });

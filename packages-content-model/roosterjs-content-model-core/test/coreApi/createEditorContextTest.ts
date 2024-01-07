@@ -7,6 +7,7 @@ describe('createEditorContext', () => {
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+        const mockedSnapshotsManager = 'SNAPSHOTS' as any;
 
         const div = {
             ownerDocument: {
@@ -26,6 +27,9 @@ describe('createEditorContext', () => {
                 defaultFormat,
             },
             cache: {},
+            undo: {
+                snapshotsManager: mockedSnapshotsManager,
+            },
         } as any) as StandaloneEditorCore;
 
         const context = createEditorContext(core);
@@ -36,6 +40,7 @@ describe('createEditorContext', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            snapshots: mockedSnapshotsManager,
         });
     });
 
@@ -45,6 +50,7 @@ describe('createEditorContext', () => {
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
         const domIndexer = 'DOMINDEXER' as any;
+        const mockedSnapshotsManager = 'SNAPSHOTS' as any;
 
         const div = {
             ownerDocument: {
@@ -66,6 +72,9 @@ describe('createEditorContext', () => {
             cache: {
                 domIndexer,
             },
+            undo: {
+                snapshotsManager: mockedSnapshotsManager,
+            },
         } as any) as StandaloneEditorCore;
 
         const context = createEditorContext(core);
@@ -76,6 +85,7 @@ describe('createEditorContext', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer,
+            snapshots: mockedSnapshotsManager,
         });
     });
 });
@@ -87,6 +97,7 @@ describe('createEditorContext - checkZoomScale', () => {
     let getBoundingClientRectSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
+    const mockedSnapshotsManager = 'SNAPSHOTS' as any;
 
     beforeEach(() => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
@@ -109,6 +120,9 @@ describe('createEditorContext - checkZoomScale', () => {
                 defaultFormat,
             },
             cache: {},
+            undo: {
+                snapshotsManager: mockedSnapshotsManager,
+            },
         } as any) as StandaloneEditorCore;
     });
 
@@ -127,6 +141,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 1,
             allowCacheElement: true,
             domIndexer: undefined,
+            snapshots: mockedSnapshotsManager,
         });
     });
 
@@ -145,6 +160,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 2,
             allowCacheElement: true,
             domIndexer: undefined,
+            snapshots: mockedSnapshotsManager,
         });
     });
 
@@ -163,6 +179,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 0.5,
             allowCacheElement: true,
             domIndexer: undefined,
+            snapshots: mockedSnapshotsManager,
         });
     });
 });
@@ -174,6 +191,7 @@ describe('createEditorContext - checkRootDir', () => {
     let getBoundingClientRectSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
+    const mockedSnapshotsManager = 'SNAPSHOTS' as any;
 
     beforeEach(() => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
@@ -196,6 +214,9 @@ describe('createEditorContext - checkRootDir', () => {
                 defaultFormat,
             },
             cache: {},
+            undo: {
+                snapshotsManager: mockedSnapshotsManager,
+            },
         } as any) as StandaloneEditorCore;
     });
 
@@ -212,6 +233,7 @@ describe('createEditorContext - checkRootDir', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            snapshots: mockedSnapshotsManager,
         });
     });
 
@@ -229,6 +251,7 @@ describe('createEditorContext - checkRootDir', () => {
             isRootRtl: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            snapshots: mockedSnapshotsManager,
         });
     });
 });

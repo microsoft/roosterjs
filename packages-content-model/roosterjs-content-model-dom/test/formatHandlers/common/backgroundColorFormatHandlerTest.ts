@@ -5,7 +5,6 @@ import { DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import {
     BackgroundColorFormat,
-    ColorPair,
     DomToModelContext,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
@@ -112,10 +111,8 @@ describe('backgroundColorFormatHandler.apply', () => {
         format.backgroundColor = 'red';
         context.isDarkMode = true;
         context.snapshots = {
-            updateKnownColors: (isDarkMode: boolean, key: string, colors: ColorPair) =>
-                isDarkMode
-                    ? `var(--darkColor_${colors.lightColor}, ${colors.lightColor})`
-                    : colors.lightColor,
+            updateKnownColor: () => {},
+            getDarkColor: (lightColor: string) => `var(--darkColor_${lightColor}, ${lightColor})`,
         } as any;
 
         backgroundColorFormatHandler.apply(format, div, context);

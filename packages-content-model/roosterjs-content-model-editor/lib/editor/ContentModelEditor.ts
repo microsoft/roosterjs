@@ -1017,7 +1017,8 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * Get a darkColorHandler object for this editor.
      */
     getDarkColorHandler(): DarkColorHandler {
-        return null!; // TODO
+        const core = this.getContentModelEditorCore();
+        return core.darkColorHandler;
     }
 
     /**

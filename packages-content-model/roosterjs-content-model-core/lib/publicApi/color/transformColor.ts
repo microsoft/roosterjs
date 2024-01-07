@@ -20,10 +20,12 @@ export function transformColor(
         const backColor = getColor(element, true /*isBackground*/, !toDarkMode, snapshots);
 
         if (textColor) {
+            element.removeAttribute('color');
             setColor(element, textColor, false /*isBackground*/, toDarkMode, snapshots);
         }
 
         if (backColor) {
+            element.removeAttribute('bgcolor');
             setColor(element, backColor, true /*isBackground*/, toDarkMode, snapshots);
         }
     };

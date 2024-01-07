@@ -1,6 +1,5 @@
 import { createLifecyclePlugin } from '../../lib/corePlugin/LifecyclePlugin';
-import { DarkColorHandler } from 'roosterjs-editor-types';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IStandaloneEditor, SnapshotsManager } from 'roosterjs-content-model-types';
 
 describe('LifecyclePlugin', () => {
     it('init', () => {
@@ -14,7 +13,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
-            getDarkColorHandler: () => <DarkColorHandler | null>null,
+            getSnapshotsManager: () => <SnapshotsManager | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
@@ -71,7 +70,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
-            getDarkColorHandler: () => <DarkColorHandler | null>null,
+            getSnapshotsManager: () => <SnapshotsManager | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
@@ -104,7 +103,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
-            getDarkColorHandler: () => <DarkColorHandler | null>null,
+            getSnapshotsManager: () => <SnapshotsManager | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
@@ -147,7 +146,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
-            getDarkColorHandler: () => <DarkColorHandler | null>null,
+            getSnapshotsManager: () => <SnapshotsManager | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
