@@ -104,7 +104,7 @@ describe('Paste ', () => {
         context = undefined;
 
         editor = new ContentModelEditor(div, {
-            plugins: [new ContentModelPastePlugin()],
+            legacyPlugins: [new ContentModelPastePlugin()],
             coreApiOverride: {
                 focus,
                 createContentModel,
@@ -194,7 +194,7 @@ describe('paste with content model & paste plugin', () => {
         div = document.createElement('div');
         document.body.appendChild(div);
         editor = new ContentModelEditor(div, {
-            plugins: [new ContentModelPastePlugin()],
+            legacyPlugins: [new ContentModelPastePlugin()],
         });
         spyOn(addParserF, 'default').and.callThrough();
         spyOn(setProcessorF, 'setProcessor').and.callThrough();
@@ -222,7 +222,7 @@ describe('paste with content model & paste plugin', () => {
         editor?.paste(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -341,7 +341,7 @@ describe('paste with content model & paste plugin', () => {
 
         let eventChecker: BeforePasteEvent = <any>{};
         editor = new ContentModelEditor(div!, {
-            plugins: [
+            legacyPlugins: [
                 {
                     initialize: () => {},
                     dispose: () => {},

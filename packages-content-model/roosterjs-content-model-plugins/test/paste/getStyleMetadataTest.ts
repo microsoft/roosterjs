@@ -11,39 +11,47 @@ describe('getStyleMetadata', () => {
 
         expect(result.get('l0:level1')).toEqual({
             'mso-level-number-format': 'roman-upper',
-            'mso-level-start-at': undefined,
+            'mso-level-start-at': '1',
             'mso-level-text': '%1)',
         });
         expect(result.get('l0:level2')).toEqual({
             'mso-level-number-format': 'alpha-lower',
-            'mso-level-start-at': undefined,
+            'mso-level-start-at': '1',
             'mso-level-text': undefined,
         });
         expect(result.get('l0:level3')).toEqual({
             'mso-level-number-format': 'roman-lower',
-            'mso-level-start-at': undefined,
+            'mso-level-start-at': '1',
             'mso-level-text': undefined,
         });
-        expect(result.get('l0:level4')).toEqual(undefined);
+        expect(result.get('l0:level4')).toEqual({
+            'mso-level-number-format': undefined,
+            'mso-level-start-at': '1',
+            'mso-level-text': undefined,
+        });
         expect(result.get('l0:level5')).toEqual({
             'mso-level-number-format': 'alpha-lower',
-            'mso-level-start-at': undefined,
+            'mso-level-start-at': '1',
             'mso-level-text': undefined,
         });
         expect(result.get('l0:level6')).toEqual({
             'mso-level-number-format': 'roman-lower',
-            'mso-level-start-at': undefined,
+            'mso-level-start-at': '1',
             'mso-level-text': undefined,
         });
-        expect(result.get('l0:level7')).toEqual(undefined);
+        expect(result.get('l0:level7')).toEqual({
+            'mso-level-number-format': undefined,
+            'mso-level-start-at': '1',
+            'mso-level-text': undefined,
+        });
         expect(result.get('l0:level8')).toEqual({
             'mso-level-number-format': 'alpha-lower',
-            'mso-level-start-at': undefined,
+            'mso-level-start-at': '1',
             'mso-level-text': undefined,
         });
         expect(result.get('l0:level9')).toEqual({
             'mso-level-number-format': 'roman-lower',
-            'mso-level-start-at': undefined,
+            'mso-level-start-at': '1',
             'mso-level-text': undefined,
         });
         expect(result.get('l0:level10')).toEqual(undefined);

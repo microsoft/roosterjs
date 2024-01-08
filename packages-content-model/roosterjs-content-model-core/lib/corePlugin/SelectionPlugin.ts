@@ -1,10 +1,11 @@
 import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { isModifierKey } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
-import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 import type {
     DOMSelection,
     IStandaloneEditor,
+    PluginWithState,
     SelectionPluginState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
@@ -29,8 +30,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         return 'Selection';
     }
 
-    initialize(editor: IEditor) {
-        this.editor = editor as IEditor & IStandaloneEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         const doc = this.editor.getDocument();
         const styleNode = doc.createElement('style');
