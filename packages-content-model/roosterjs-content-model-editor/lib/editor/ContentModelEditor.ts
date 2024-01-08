@@ -966,32 +966,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     }
 
     /**
-     * Set current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
-     */
-    setZoomScale(scale: number): void {
-        const core = this.getCore();
-
-        if (scale > 0 && scale <= 10) {
-            const oldValue = core.zoomScale;
-            core.zoomScale = scale;
-
-            if (oldValue != scale) {
-                this.triggerPluginEvent(
-                    PluginEventType.ZoomChanged,
-                    {
-                        oldZoomScale: oldValue,
-                        newZoomScale: scale,
-                    },
-                    true /*broadcast*/
-                );
-            }
-        }
-    }
-
-    /**
      * Retrieves the rect of the visible viewport of the editor.
      */
     getVisibleViewport(): Rect | null {

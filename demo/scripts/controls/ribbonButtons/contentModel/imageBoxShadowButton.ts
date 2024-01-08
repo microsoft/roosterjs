@@ -1,5 +1,4 @@
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { setImageBoxShadow } from 'roosterjs-content-model-api';
 
 const STYLES_NAMES: Record<string, string> = {
@@ -32,7 +31,7 @@ const STYLES: Record<string, string> = {
  * @internal
  * "Image Shadow" button on the format ribbon
  */
-export const imageBoxShadowButton: RibbonButton<'buttonNameImageBoxSHadow'> = {
+export const imageBoxShadowButton: ContentModelRibbonButton<'buttonNameImageBoxSHadow'> = {
     key: 'buttonNameImageBoxSHadow',
     unlocalizedText: 'Image Shadow',
     iconName: 'Photo2',
@@ -42,9 +41,7 @@ export const imageBoxShadowButton: RibbonButton<'buttonNameImageBoxSHadow'> = {
         allowLivePreview: true,
     },
     onClick: (editor, size) => {
-        if (isContentModelEditor(editor)) {
-            setImageBoxShadow(editor, STYLES[size], STYLES[size].length ? '4px' : null);
-        }
+        setImageBoxShadow(editor, STYLES[size], STYLES[size].length ? '4px' : null);
         return true;
     },
 };

@@ -1,12 +1,13 @@
-import { ContentModelFormatState } from 'roosterjs-content-model-types';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import RibbonPlugin from './RibbonPlugin';
 import { FormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getFormatState } from 'roosterjs-content-model-api';
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
-import { LocalizedStrings, RibbonButton, RibbonPlugin, UIUtilities } from 'roosterjs-react';
+import { LocalizedStrings, UIUtilities } from 'roosterjs-react';
+import { ContentModelFormatState, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 export class ContentModelRibbonPlugin implements RibbonPlugin {
-    private editor: IContentModelEditor | null = null;
+    private editor: IStandaloneEditor | null = null;
     private onFormatChanged: ((formatState: FormatState) => void) | null = null;
     private timer = 0;
     private formatState: ContentModelFormatState | null = null;
@@ -29,7 +30,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
      * Initialize this plugin
      * @param editor The editor instance
      */
-    initialize(editor: IContentModelEditor) {
+    initialize(editor: IStandaloneEditor) {
         this.editor = editor;
     }
 
@@ -85,7 +86,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
      * @param strings The localized string map for this button
      */
     onButtonClick<T extends string>(
-        button: RibbonButton<T>,
+        button: ContentModelRibbonButton<T>,
         key: T,
         strings?: LocalizedStrings<T>
     ) {
@@ -107,7 +108,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
      * @param strings The localized string map for this button
      */
     startLivePreview<T extends string>(
-        button: RibbonButton<T>,
+        button: ContentModelRibbonButton<T>,
         key: T,
         strings?: LocalizedStrings<T>
     ) {
@@ -116,9 +117,9 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
 
             // If editor is already in shadow edit, no need to check again.
             // And the check result may be incorrect because the content is changed from last shadow edit and the cached selection path won't apply
-            const range = !isInShadowEdit && this.editor.getSelectionRangeEx();
+            const range = !isInShadowEdit && this.editor.getDOMSelection();
 
-            if (isInShadowEdit || (range && !range.areAllCollapsed)) {
+            if (isInShadowEdit || (range && (range.type != 'range' || !range.range.collapsed))) {
                 this.editor.startShadowEdit();
                 button.onClick(this.editor, key, strings, this.uiUtilities);
             }
@@ -160,7 +161,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
                 )
             ) {
                 this.formatState = newFormatState;
-                this.onFormatChanged((newFormatState as any) as FormatState);
+                this.onFormatChanged(newFormatState);
             }
         }
     }
