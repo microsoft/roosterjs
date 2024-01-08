@@ -6,6 +6,7 @@ import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFor
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
 import { pasteDisplayFormatParser } from '../../override/pasteDisplayFormatParser';
+import { pasteTextColorFormatParser } from '../../override/pasteTextColorFormatParser';
 import { pasteTextProcessor } from '../../override/pasteTextProcessor';
 import { PasteType } from 'roosterjs-editor-types';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
@@ -53,6 +54,7 @@ export function mergePasteContent(
             },
             formatParserOverride: {
                 display: pasteDisplayFormatParser,
+                textColor: pasteTextColorFormatParser,
             },
             additionalFormatParsers: {
                 container: [containerWidthFormatParser],

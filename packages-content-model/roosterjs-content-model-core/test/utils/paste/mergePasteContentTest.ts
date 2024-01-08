@@ -7,6 +7,7 @@ import { containerWidthFormatParser } from '../../../lib/override/containerWidth
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
 import { pasteDisplayFormatParser } from '../../../lib/override/pasteDisplayFormatParser';
+import { pasteTextColorFormatParser } from '../../../lib/override/pasteTextColorFormatParser';
 import { pasteTextProcessor } from '../../../lib/override/pasteTextProcessor';
 import { PasteType } from 'roosterjs-editor-types';
 import {
@@ -391,6 +392,7 @@ describe('mergePasteContent', () => {
                 },
                 formatParserOverride: {
                     display: pasteDisplayFormatParser,
+                    textColor: pasteTextColorFormatParser,
                 },
                 additionalFormatParsers: {
                     container: [containerWidthFormatParser],
