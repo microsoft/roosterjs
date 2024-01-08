@@ -217,6 +217,8 @@ export {
     Paste,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
+export { EditorPlugin } from './editor/EditorPlugin';
+export { PluginWithState } from './editor/PluginWithState';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
 export { StandaloneEditorCorePluginState } from './pluginState/StandaloneEditorPluginState';

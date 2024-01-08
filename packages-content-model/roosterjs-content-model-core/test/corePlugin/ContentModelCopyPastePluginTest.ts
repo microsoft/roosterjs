@@ -8,7 +8,7 @@ import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
-import { DarkColorHandler, IEditor, PluginWithState } from 'roosterjs-editor-types';
+import { DarkColorHandler } from 'roosterjs-editor-types';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,
@@ -19,6 +19,7 @@ import {
     DOMEventRecord,
     ClipboardData,
     CopyPastePluginState,
+    PluginWithState,
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
@@ -59,7 +60,7 @@ describe('ContentModelCopyPastePlugin.Ctor', () => {
 });
 
 describe('ContentModelCopyPastePlugin |', () => {
-    let editor: IEditor & IStandaloneEditor = null!;
+    let editor: IStandaloneEditor = null!;
     let plugin: PluginWithState<CopyPastePluginState>;
     let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
@@ -123,7 +124,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             allowedCustomPasteType,
         });
         plugin.getState().tempDiv = div;
-        editor = <IStandaloneEditor & IEditor>(<any>{
+        editor = <IStandaloneEditor>(<any>{
             attachDomEvent: (eventMap: Record<string, DOMEventRecord>) => {
                 domEvents = eventMap;
             },
