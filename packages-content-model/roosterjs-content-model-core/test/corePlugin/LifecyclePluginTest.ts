@@ -1,5 +1,6 @@
 import { createLifecyclePlugin } from '../../lib/corePlugin/LifecyclePlugin';
-import { DarkColorHandler, IEditor, PluginEventType } from 'roosterjs-editor-types';
+import { DarkColorHandler, PluginEventType } from 'roosterjs-editor-types';
+import { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 describe('LifecyclePlugin', () => {
     it('init', () => {
@@ -9,7 +10,7 @@ describe('LifecyclePlugin', () => {
         const state = plugin.getState();
         const setContentModelSpy = jasmine.createSpy('setContentModel');
 
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
@@ -67,7 +68,7 @@ describe('LifecyclePlugin', () => {
         const state = plugin.getState();
         const setContentModelSpy = jasmine.createSpy('setContentModel');
 
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
@@ -101,7 +102,7 @@ describe('LifecyclePlugin', () => {
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const setContentModelSpy = jasmine.createSpy('setContentModel');
 
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
@@ -144,7 +145,7 @@ describe('LifecyclePlugin', () => {
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const setContentModelSpy = jasmine.createSpy('setContentModel');
 
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,

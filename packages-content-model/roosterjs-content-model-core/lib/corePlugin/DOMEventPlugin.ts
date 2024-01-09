@@ -7,8 +7,8 @@ import type {
     IStandaloneEditor,
     DOMEventRecord,
     StandaloneEditorOptions,
+    PluginWithState,
 } from 'roosterjs-content-model-types';
-import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -52,8 +52,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IStandaloneEditor & IEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         const document = this.editor.getDocument();
         const eventHandlers: Partial<

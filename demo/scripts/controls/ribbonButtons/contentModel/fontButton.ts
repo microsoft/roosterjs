@@ -1,6 +1,6 @@
-import { FontButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { setFontName } from 'roosterjs-content-model-api';
+import { FontButtonStringKey } from 'roosterjs-react';
 
 interface FontName {
     name: string;
@@ -150,7 +150,7 @@ const FirstFontRegex = /^['"]?([^'",]+)/i;
  * @internal
  * "Font" button on the format ribbon
  */
-export const fontButton: RibbonButton<FontButtonStringKey> = {
+export const fontButton: ContentModelRibbonButton<FontButtonStringKey> = {
     key: 'buttonNameFont',
     unlocalizedText: 'Font',
     iconName: 'Font',
@@ -166,8 +166,6 @@ export const fontButton: RibbonButton<FontButtonStringKey> = {
         allowLivePreview: true,
     },
     onClick: (editor, font) => {
-        if (isContentModelEditor(editor)) {
-            setFontName(editor, font);
-        }
+        setFontName(editor, font);
     },
 };
