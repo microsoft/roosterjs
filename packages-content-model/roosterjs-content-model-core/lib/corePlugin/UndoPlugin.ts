@@ -25,15 +25,10 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
     /**
      * Construct a new instance of UndoPlugin
      * @param options The wrapper of the state object
-     * @param contentDiv The root editor container DIV element
      */
-    constructor(options: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
+    constructor(options: StandaloneEditorOptions) {
         this.state = {
-            snapshotsManager: createSnapshotsManager(
-                contentDiv,
-                options.getDarkColor,
-                options.snapshots
-            ),
+            snapshotsManager: createSnapshotsManager(options.snapshots),
             isRestoring: false,
             isNested: false,
             posContainer: null,
@@ -261,11 +256,9 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
  * @internal
  * Create a new instance of UndoPlugin.
  * @param option The editor option
- * @param contentDiv The root editor container DIV element
  */
 export function createUndoPlugin(
-    option: StandaloneEditorOptions,
-    contentDiv: HTMLDivElement
+    option: StandaloneEditorOptions
 ): PluginWithState<UndoPluginState> {
-    return new UndoPlugin(option, contentDiv);
+    return new UndoPlugin(option);
 }

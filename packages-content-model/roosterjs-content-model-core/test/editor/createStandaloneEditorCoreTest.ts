@@ -1,3 +1,4 @@
+import * as ColorManagerImpl from '../../lib/editor/ColorManagerImpl';
 import * as createDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
 import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
 import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
@@ -32,6 +33,7 @@ describe('createEditorCore', () => {
         selection: mockedSelectionPlugin,
         undo: mockedUndoPlugin,
     };
+    const mockedColorManager = 'DARKCOLOR' as any;
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
     const mockedModelToDomSettings = 'MODELTODOM' as any;
 
@@ -40,6 +42,7 @@ describe('createEditorCore', () => {
             createStandaloneEditorCorePlugins,
             'createStandaloneEditorCorePlugins'
         ).and.returnValue(mockedPlugins);
+        spyOn(ColorManagerImpl, 'createColorManager').and.returnValue(mockedColorManager);
         spyOn(createDefaultSettings, 'createDomToModelSettings').and.returnValue(
             mockedDomToModelSettings
         );
@@ -74,6 +77,7 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: false,
             },
+            colorManager: mockedColorManager,
             trustedHTMLHandler: defaultTrustHtmlHandler,
             domToModelSettings: mockedDomToModelSettings,
             modelToDomSettings: mockedModelToDomSettings,
@@ -110,6 +114,12 @@ describe('createEditorCore', () => {
                 name: 'Options',
             } as any,
             {}
+        );
+
+        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+            mockedDiv,
+            undefined,
+            undefined
         );
     });
 
@@ -151,10 +161,17 @@ describe('createEditorCore', () => {
                 mockedUndoPlugin,
                 mockedLifeCyclePlugin,
             ],
+            colorManager: mockedColorManager,
             trustedHTMLHandler: mockedTrustHtmlHandler,
             disposeErrorHandler: mockedDisposeErrorHandler,
             zoomScale: 2,
         });
+
+        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+            mockedDiv,
+            undefined,
+            mockedGetDarkColor
+        );
     });
 
     it('Invalid zoom scale', () => {
@@ -169,6 +186,12 @@ describe('createEditorCore', () => {
         } as any;
 
         runTest(mockedDiv, mockedOptions, {});
+
+        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+            mockedDiv,
+            undefined,
+            undefined
+        );
     });
 
     it('Android', () => {
@@ -195,6 +218,12 @@ describe('createEditorCore', () => {
                 isSafari: false,
             },
         });
+
+        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+            mockedDiv,
+            undefined,
+            undefined
+        );
     });
 
     it('Android+Safari', () => {
@@ -221,6 +250,12 @@ describe('createEditorCore', () => {
                 isSafari: false,
             },
         });
+
+        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+            mockedDiv,
+            undefined,
+            undefined
+        );
     });
 
     it('Mac', () => {
@@ -247,6 +282,12 @@ describe('createEditorCore', () => {
                 isSafari: false,
             },
         });
+
+        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+            mockedDiv,
+            undefined,
+            undefined
+        );
     });
 
     it('Safari', () => {
@@ -273,6 +314,12 @@ describe('createEditorCore', () => {
                 isSafari: true,
             },
         });
+
+        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+            mockedDiv,
+            undefined,
+            undefined
+        );
     });
 
     it('Chrome', () => {
@@ -299,5 +346,11 @@ describe('createEditorCore', () => {
                 isSafari: false,
             },
         });
+
+        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+            mockedDiv,
+            undefined,
+            undefined
+        );
     });
 });

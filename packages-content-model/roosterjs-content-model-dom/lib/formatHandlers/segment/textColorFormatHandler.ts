@@ -8,7 +8,7 @@ import type { TextColorFormat } from 'roosterjs-content-model-types';
 export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const textColor =
-            getColor(element, false /*isBackground*/, !!context.isDarkMode, context.snapshots) ||
+            getColor(element, false /*isBackground*/, !!context.isDarkMode, context.colorManager) ||
             defaultStyle.color;
 
         if (textColor && textColor != 'inherit') {
@@ -24,7 +24,7 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
                 format.textColor,
                 false /*isBackground*/,
                 !!context.isDarkMode,
-                context.snapshots
+                context.colorManager
             );
         }
     },

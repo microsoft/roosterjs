@@ -1,33 +1,26 @@
 import { getColor, setColor } from 'roosterjs-content-model-dom';
-import type { SnapshotsManager } from 'roosterjs-content-model-types';
+import type { ColorManager } from 'roosterjs-content-model-types';
 
 /**
  * Edit and transform color of elements between light mode and dark mode
  * @param rootNode The root DOM node to transform
  * @param includeSelf True to transform the root node as well, otherwise false
  * @param direction To specify the transform direction, light to dark, or dark to light
- * @param snapshots The snapshots manager object to help manager dark mode color
+ * @param colorManager @optional The color manager object to help manager dark mode color
  */
 export function transformColor(
     rootNode: Node,
     includeSelf: boolean,
     direction: 'lightToDark' | 'darkToLight',
-    snapshots: SnapshotsManager
+    colorManager?: ColorManager
 ) {
     const toDarkMode = direction == 'lightToDark';
     const transformer = (element: HTMLElement) => {
-        const textColor = getColor(element, false /*isBackground*/, !toDarkMode, snapshots);
-        const backColor = getColor(element, true /*isBackground*/, !toDarkMode, snapshots);
+        const textColor = getColor(element, false /*isBackground*/, !toDarkMode, colorManager);
+        const backColor = getColor(element, true /*isBackground*/, !toDarkMode, colorManager);
 
-        if (textColor) {
-            element.removeAttribute('color');
-            setColor(element, textColor, false /*isBackground*/, toDarkMode, snapshots);
-        }
-
-        if (backColor) {
-            element.removeAttribute('bgcolor');
-            setColor(element, backColor, true /*isBackground*/, toDarkMode, snapshots);
-        }
+        setColor(element, textColor, false /*isBackground*/, toDarkMode, colorManager);
+        setColor(element, backColor, true /*isBackground*/, toDarkMode, colorManager);
     };
 
     iterateElements(rootNode, transformer, includeSelf);

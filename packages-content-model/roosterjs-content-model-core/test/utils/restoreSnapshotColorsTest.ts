@@ -1,18 +1,18 @@
 import * as transformColor from '../../lib/publicApi/color/transformColor';
+import { ColorManager, Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { restoreSnapshotColors } from '../../lib/utils/restoreSnapshotColors';
-import { Snapshot, SnapshotsManager, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('restoreSnapshotColors', () => {
     let core: StandaloneEditorCore;
     let transformColorSpy: jasmine.Spy;
     let updateKnownColorSpy: jasmine.Spy;
-    let mockedSnapshotsManager: SnapshotsManager;
+    let mockedColorManager: ColorManager;
     const mockedDiv = 'DIV' as any;
 
     beforeEach(() => {
         transformColorSpy = spyOn(transformColor, 'transformColor');
         updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
-        mockedSnapshotsManager = {
+        mockedColorManager = {
             updateKnownColor: updateKnownColorSpy,
         } as any;
 
@@ -21,9 +21,7 @@ describe('restoreSnapshotColors', () => {
                 isDarkMode: false,
             },
             contentDiv: mockedDiv,
-            undo: {
-                snapshotsManager: mockedSnapshotsManager,
-            },
+            colorManager: mockedColorManager,
         } as any;
     });
 
@@ -54,7 +52,7 @@ describe('restoreSnapshotColors', () => {
             mockedDiv,
             false,
             'lightToDark',
-            mockedSnapshotsManager
+            mockedColorManager
         );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true);
     });
@@ -86,7 +84,7 @@ describe('restoreSnapshotColors', () => {
             mockedDiv,
             false,
             'darkToLight',
-            mockedSnapshotsManager
+            mockedColorManager
         );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
     });

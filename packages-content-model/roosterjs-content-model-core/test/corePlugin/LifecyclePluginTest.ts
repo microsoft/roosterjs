@@ -1,5 +1,5 @@
+import { ColorManager, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { createLifecyclePlugin } from '../../lib/corePlugin/LifecyclePlugin';
-import { IStandaloneEditor, SnapshotsManager } from 'roosterjs-content-model-types';
 
 describe('LifecyclePlugin', () => {
     it('init', () => {
@@ -13,7 +13,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
-            getSnapshotsManager: () => <SnapshotsManager | null>null,
+            getColorManager: () => <ColorManager | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
@@ -70,7 +70,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
-            getSnapshotsManager: () => <SnapshotsManager | null>null,
+            getColorManager: () => <ColorManager | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
@@ -103,7 +103,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
-            getSnapshotsManager: () => <SnapshotsManager | null>null,
+            getColorManager: () => <ColorManager | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
@@ -146,7 +146,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
-            getSnapshotsManager: () => <SnapshotsManager | null>null,
+            getColorManager: () => <ColorManager | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));

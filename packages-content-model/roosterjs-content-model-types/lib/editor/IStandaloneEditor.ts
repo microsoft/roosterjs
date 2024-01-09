@@ -16,6 +16,7 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
+import type { ColorManager } from '../context/ColorManager';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
 /**
@@ -202,6 +203,11 @@ export interface IStandaloneEditor {
      * @param pasteType Type of paste
      */
     pasteFromClipboard(clipboardData: ClipboardData, pasteType?: PasteType): void;
+
+    /**
+     * Get a darkColorHandler object for this editor.
+     */
+    getColorManager(): ColorManager;
 
     /**
      * Dispose this editor, dispose all plugins and custom data

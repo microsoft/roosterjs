@@ -121,7 +121,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             currentIndex: -1,
             autoCompleteIndex: -1,
             maxSize: 1e7,
-            knownColors: {},
         };
 
         this.formatStatePlugin = new ContentModelFormatStatePlugin();

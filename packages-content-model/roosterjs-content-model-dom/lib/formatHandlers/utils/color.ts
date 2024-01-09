@@ -1,5 +1,5 @@
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
-import type { ColorPair, SnapshotsManager } from 'roosterjs-content-model-types';
+import type { ColorManager, Colors } from 'roosterjs-content-model-types';
 
 /**
  * List of deprecated colors
@@ -45,13 +45,13 @@ const COLOR_VAR_PREFIX = '--darkColor';
  * @param element The element to get color from
  * @param isBackground True to get background color, false to get text color
  * @param isDarkMode Whether element is in dark mode now
- * @param snapshots The snapshots manager object to help manager dark mode color
+ * @param colorManager @optional The color manager object to help manager dark mode color
  */
 export function getColor(
     element: HTMLElement,
     isBackground: boolean,
     isDarkMode: boolean,
-    snapshots?: SnapshotsManager
+    colorManager?: ColorManager
 ): string | undefined {
     let color =
         (isBackground ? element.style.backgroundColor : element.style.color) ||
@@ -62,7 +62,7 @@ export function getColor(
         color = isBackground ? undefined : BlackColor;
     }
 
-    if (snapshots && color) {
+    if (colorManager && color) {
         const match = color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
 
         if (match) {
@@ -71,7 +71,7 @@ export function getColor(
             // If editor is in dark mode but the color is not in dark color format, it is possible the color was inserted from external code
             // without any light color info. So we first try to see if there is a known dark color can match this color, and use its related
             // light color as light mode color. Otherwise we need to drop this color to avoid show "white on white" content.
-            color = findLightColorFromDarkColor(color, snapshots.getKnownColors()) || '';
+            color = findLightColorFromDarkColor(color, colorManager.knownColors) || '';
         }
     }
 
@@ -84,48 +84,41 @@ export function getColor(
  * @param color The color to set, always pass in color in light mode
  * @param isBackground True to set background color, false to set text color
  * @param isDarkMode Whether element is in dark mode now
- * @param snapshots The snapshots manager object to help manager dark mode color
+ * @param colorManager @optional The color manager object to help manager dark mode color
  */
 export function setColor(
     element: HTMLElement,
-    color: string,
+    color: string | null | undefined,
     isBackground: boolean,
     isDarkMode: boolean,
-    snapshots?: SnapshotsManager
+    colorManager?: ColorManager
 ) {
-    const match = color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
-    let key: string | undefined;
+    const match = color && color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
+    const [_, existingKey, fallbackColor] = match ?? [];
 
-    if (match) {
-        key = match[1];
-        color = match[2] || '';
-    }
+    color = fallbackColor ?? color;
 
-    if (snapshots && color && !key) {
-        const darkColor = key ? snapshots?.getKnownColors()[key]?.darkColor : undefined;
+    if (colorManager && color) {
+        const key = existingKey || `${COLOR_VAR_PREFIX}_${color.replace(/[^\d\w]/g, '_')}`;
+        const darkModeColor =
+            colorManager.knownColors?.[key]?.darkModeColor ||
+            colorManager.getDarkColor(
+                color,
+                undefined /*baseLAValue*/,
+                isBackground ? 'background' : 'text',
+                element
+            );
 
-        key = `${COLOR_VAR_PREFIX}_${color.replace(/[^\d\w]/g, '_')}`;
-
-        snapshots.updateKnownColor(isDarkMode, key, {
-            lightColor: color,
-            darkColor:
-                darkColor ||
-                snapshots.getDarkColor(
-                    color,
-                    undefined /*baseLAValue*/,
-                    isBackground ? 'background' : 'text',
-                    element
-                ),
+        colorManager.updateKnownColor(isDarkMode, key, {
+            lightModeColor: color,
+            darkModeColor,
         });
 
         color = isDarkMode ? `${VARIABLE_PREFIX}${key}, ${color}${VARIABLE_POSTFIX}` : color;
     }
 
-    if (isBackground) {
-        element.style.backgroundColor = color;
-    } else {
-        element.style.color = color;
-    }
+    element.removeAttribute(isBackground ? 'bgcolor' : 'color');
+    element.style.setProperty(isBackground ? 'background-color' : 'color', color || null);
 }
 
 /**
@@ -157,13 +150,13 @@ export function parseColor(color: string): [number, number, number] | null {
 
 function findLightColorFromDarkColor(
     darkColor: string,
-    knownColors: Record<string, ColorPair>
+    knownColors?: Record<string, Colors>
 ): string | null {
     const rgbSearch = parseColor(darkColor);
 
-    if (rgbSearch) {
+    if (rgbSearch && knownColors) {
         const key = getObjectKeys(knownColors).find(key => {
-            const rgbCurrent = parseColor(knownColors[key].darkColor);
+            const rgbCurrent = parseColor(knownColors[key].darkModeColor);
 
             return (
                 rgbCurrent &&
@@ -174,7 +167,7 @@ function findLightColorFromDarkColor(
         });
 
         if (key) {
-            return knownColors[key].lightColor;
+            return knownColors[key].lightModeColor;
         }
     }
 

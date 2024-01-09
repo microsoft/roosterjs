@@ -192,6 +192,7 @@ export {
     ObjectDefinition,
     Definition,
 } from './metadata/Definition';
+export { ColorManager, Colors, ColorTransformFunction } from './context/ColorManager';
 
 export { IStandaloneEditor } from './editor/IStandaloneEditor';
 export { StandaloneEditorOptions } from './editor/StandaloneEditorOptions';
@@ -268,9 +269,8 @@ export {
     SnapshotSelection,
     Snapshot,
     Snapshots,
-    ColorPair,
 } from './parameter/Snapshot';
-export { SnapshotsManager, ColorTransformFunction } from './parameter/SnapshotsManager';
+export { SnapshotsManager } from './parameter/SnapshotsManager';
 export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';

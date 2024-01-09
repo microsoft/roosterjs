@@ -3,6 +3,7 @@ import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { transformColor } from '../publicApi/color/transformColor';
 import type {
     ClipboardData,
+    ColorManager,
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
@@ -54,8 +55,6 @@ export class StandaloneEditor implements IStandaloneEditor {
     dispose() {
         const core = this.getCore();
 
-        core.undo.snapshotsManager.updateKnownColor(false /*isDarkMode*/); // Force clear color variables
-
         for (let i = core.plugins.length - 1; i >= 0; i--) {
             const plugin = core.plugins[i];
 
@@ -66,6 +65,8 @@ export class StandaloneEditor implements IStandaloneEditor {
                 core.disposeErrorHandler?.(plugin, e as Error);
             }
         }
+
+        core.colorManager.updateKnownColor(false /*isDarkMode*/); // Force clear color variables
 
         this.core = null;
     }
@@ -263,7 +264,7 @@ export class StandaloneEditor implements IStandaloneEditor {
                 core.contentDiv,
                 true /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
-                core.undo.snapshotsManager
+                core.colorManager
             );
 
             core.api.triggerEvent(
@@ -324,6 +325,13 @@ export class StandaloneEditor implements IStandaloneEditor {
         const core = this.getCore();
 
         core.api.paste(core, clipboardData, pasteType);
+    }
+
+    /**
+     * Get a color manager object for this editor.
+     */
+    getColorManager(): ColorManager {
+        return this.getCore().colorManager;
     }
 
     /**

@@ -51,8 +51,7 @@ describe('UndoPlugin', () => {
 
     describe('Ctor', () => {
         it('ctor without option', () => {
-            const div = document.createElement('div');
-            const plugin = createUndoPlugin({}, div);
+            const plugin = createUndoPlugin({});
             const state = plugin.getState();
 
             expect(state).toEqual({
@@ -63,25 +62,19 @@ describe('UndoPlugin', () => {
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(div, undefined, undefined);
+            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(undefined);
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
         it('ctor with option', () => {
-            const div = document.createElement('div');
             const mockedSnapshots = 'SNAPSHOTS' as any;
             const mockedManager = 'MANAGER' as any;
-            const mockedGetDarkColor = 'GETDARKCOLOR' as any;
 
             createSnapshotsManagerSpy.and.returnValue(mockedManager);
 
-            const plugin = createUndoPlugin(
-                {
-                    snapshots: mockedSnapshots,
-                    getDarkColor: mockedGetDarkColor,
-                },
-                div
-            );
+            const plugin = createUndoPlugin({
+                snapshots: mockedSnapshots,
+            });
             const state = plugin.getState();
 
             expect(state).toEqual({
@@ -92,11 +85,7 @@ describe('UndoPlugin', () => {
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(
-                div,
-                mockedGetDarkColor,
-                mockedSnapshots
-            );
+            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(mockedSnapshots);
             expect(undoSpy).not.toHaveBeenCalled();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
@@ -106,9 +95,7 @@ describe('UndoPlugin', () => {
         let plugin: PluginWithState<UndoPluginState>;
 
         beforeEach(() => {
-            const div = document.createElement('div');
-
-            plugin = createUndoPlugin({}, div);
+            plugin = createUndoPlugin({});
             plugin.initialize(editor);
         });
 
@@ -288,9 +275,7 @@ describe('UndoPlugin', () => {
         let plugin: PluginWithState<UndoPluginState>;
 
         beforeEach(() => {
-            const div = document.createElement('div');
-
-            plugin = createUndoPlugin({}, div);
+            plugin = createUndoPlugin({});
             plugin.initialize(editor);
         });
 

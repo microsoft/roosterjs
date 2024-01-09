@@ -1,10 +1,4 @@
-import type {
-    ColorPair,
-    ColorTransformFunction,
-    Snapshot,
-    Snapshots,
-    SnapshotsManager,
-} from 'roosterjs-content-model-types';
+import type { Snapshot, Snapshots, SnapshotsManager } from 'roosterjs-content-model-types';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
@@ -13,22 +7,15 @@ const MAX_SIZE_LIMIT = 1e7;
 class SnapshotsManagerImpl implements SnapshotsManager {
     private snapshots: Snapshots;
     private hasNewContentValue: boolean = false;
-    public readonly getDarkColor: ColorTransformFunction;
 
-    constructor(
-        private root: HTMLElement,
-        getDarkColor?: ColorTransformFunction,
-        snapshots?: Snapshots
-    ) {
+    constructor(snapshots?: Snapshots) {
         this.snapshots = snapshots ?? {
             snapshots: [],
             totalSize: 0,
             currentIndex: -1,
             autoCompleteIndex: -1,
-            knownColors: {},
             maxSize: MAX_SIZE_LIMIT,
         };
-        this.getDarkColor = getDarkColor ?? defaultGetDarkColor;
     }
 
     get hasNewContent(): boolean {
@@ -129,61 +116,16 @@ class SnapshotsManagerImpl implements SnapshotsManager {
         );
     }
 
-    getKnownColors(): Record<string, ColorPair> {
-        return this.snapshots.knownColors;
-    }
-
-    updateKnownColor(isDarkMode: boolean, key?: string, colorPair?: ColorPair): void {
-        if (key && colorPair) {
-            this.updateColorInternal(isDarkMode, key, colorPair, false /*removeWhenLight*/);
-        } else {
-            Object.keys(this.snapshots.knownColors).forEach(key => {
-                this.updateColorInternal(
-                    isDarkMode,
-                    key,
-                    this.snapshots.knownColors[key],
-                    true /*removeWhenLight*/
-                );
-            });
-        }
-    }
-
-    private updateColorInternal(
-        isDarkMode: boolean,
-        key: string,
-        colorPair: ColorPair,
-        removeWhenLight: boolean
-    ) {
-        this.snapshots.knownColors[key] = colorPair;
-
-        if (isDarkMode) {
-            this.root.style.setProperty(key, colorPair.darkColor);
-        } else if (removeWhenLight) {
-            this.root.style.removeProperty(key);
-        }
-    }
-
     private getSnapshotLength(snapshot: Snapshot) {
         return snapshot.html?.length ?? 0;
     }
 }
 
-const defaultGetDarkColor: ColorTransformFunction = color => {
-    // TODO: Add an implementation for default light to dark conversion
-    return color;
-};
-
 /**
  * @internal
  * Create a new instance of Undo Snapshots Manager
- * @param root The root element that will hold color variable styles
- * @param getDarkColor A function to do light mode to dark mode color conversion
  * @param snapshots @optional Snapshots object for storing undo snapshots. If not passed, default implementation will be used
  */
-export function createSnapshotsManager(
-    root: HTMLElement,
-    getDarkColor?: ColorTransformFunction,
-    snapshots?: Snapshots
-): SnapshotsManager {
-    return new SnapshotsManagerImpl(root, getDarkColor, snapshots);
+export function createSnapshotsManager(snapshots?: Snapshots): SnapshotsManager {
+    return new SnapshotsManagerImpl(snapshots);
 }

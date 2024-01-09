@@ -1,3 +1,4 @@
+import { createColorManager } from './ColorManagerImpl';
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
 import {
@@ -40,6 +41,7 @@ export function createStandaloneEditorCore(
             corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(contentDiv),
+        colorManager: createColorManager(contentDiv, options.knownColors, options.getDarkColor),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),
@@ -82,12 +84,4 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins): PluginState {
         selection: corePlugins.selection.getState(),
         undo: corePlugins.undo.getState(),
     };
-}
-
-/**
- * @internal Export for test only
- * A fallback function, always return original color
- */
-export function getDarkColorFallback(color: string) {
-    return color;
 }

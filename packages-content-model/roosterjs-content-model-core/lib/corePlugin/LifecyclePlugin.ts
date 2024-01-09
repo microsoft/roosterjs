@@ -133,10 +133,16 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     private adjustContainerColor(contentDiv: HTMLElement) {
         if (this.editor) {
             const { isDarkMode } = this.state;
-            const snapshots = this.editor.getSnapshotsManager();
+            const colorManager = this.editor.getColorManager();
 
-            setColor(contentDiv, DefaultTextColor, false /*isBackground*/, isDarkMode, snapshots);
-            setColor(contentDiv, DefaultBackColor, true /*isBackground*/, isDarkMode, snapshots);
+            setColor(
+                contentDiv,
+                DefaultTextColor,
+                false /*isBackground*/,
+                isDarkMode,
+                colorManager
+            );
+            setColor(contentDiv, DefaultBackColor, true /*isBackground*/, isDarkMode, colorManager);
         }
     }
 

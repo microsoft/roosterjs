@@ -1,6 +1,6 @@
+import type { ColorManager } from './ColorManager';
 import type { ContentModelDomIndexer } from './ContentModelDomIndexer';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 
 /**
  * An editor context interface used by ContentModel PAI
@@ -19,7 +19,7 @@ export interface EditorContext {
     /**
      * Color manager, to help manager color in dark mode
      */
-    snapshots?: SnapshotsManager;
+    colorManager?: ColorManager;
 
     /**
      * Whether to handle delimiters in Content Model

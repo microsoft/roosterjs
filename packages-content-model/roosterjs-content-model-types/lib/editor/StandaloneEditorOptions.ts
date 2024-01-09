@@ -1,4 +1,4 @@
-import type { ColorTransformFunction } from '../parameter/SnapshotsManager';
+import type { Colors, ColorTransformFunction } from '../context/ColorManager';
 import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
@@ -59,6 +59,11 @@ export interface StandaloneEditorOptions {
      * Default value is to return the original light color
      */
     getDarkColor?: ColorTransformFunction;
+
+    /**
+     * Existing known color pairs
+     */
+    knownColors?: Record<string, Colors>;
 
     /**
      * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree

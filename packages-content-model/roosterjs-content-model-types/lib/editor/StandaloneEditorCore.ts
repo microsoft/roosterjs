@@ -6,6 +6,7 @@ import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
+import type { ColorManager } from '../context/ColorManager';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
@@ -323,6 +324,12 @@ export interface StandaloneEditorCore extends PluginState {
      * Editor running environment
      */
     readonly environment: EditorEnvironment;
+
+    /**
+     * Dark model handler for the editor, used for variable-based solution.
+     * If keep it null, editor will still use original dataset-based dark mode solution.
+     */
+    readonly colorManager: ColorManager;
 
     /**
      * A handler to convert HTML string to a trust HTML string.

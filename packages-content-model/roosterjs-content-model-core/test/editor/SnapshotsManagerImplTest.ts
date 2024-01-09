@@ -3,7 +3,7 @@ import { Snapshot, Snapshots, SnapshotsManager } from 'roosterjs-content-model-t
 
 describe('SnapshotsManagerImpl.ctor', () => {
     it('No param', () => {
-        const service = createSnapshotsManager(document.createElement('div'));
+        const service = createSnapshotsManager();
 
         expect((service as any).snapshots).toEqual({
             snapshots: [],
@@ -11,19 +11,14 @@ describe('SnapshotsManagerImpl.ctor', () => {
             currentIndex: -1,
             autoCompleteIndex: -1,
             maxSize: 1e7,
-            knownColors: {},
         });
     });
 
     it('Has param', () => {
         const mockedSnapshots = 'SNAPSHOTS' as any;
-        const mockedRoot = 'ROOT' as any;
-        const mockedGetDarkColor = 'GETDARKCOLOR' as any;
-        const service = createSnapshotsManager(mockedRoot, mockedGetDarkColor, mockedSnapshots);
+        const service = createSnapshotsManager(mockedSnapshots);
 
-        expect((service as any).root).toEqual(mockedRoot);
         expect((service as any).snapshots).toEqual(mockedSnapshots);
-        expect((service as any).getDarkColor).toEqual(mockedGetDarkColor);
     });
 });
 
@@ -38,9 +33,8 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             currentIndex: -1,
             autoCompleteIndex: -1,
             maxSize: 1e7,
-            knownColors: {},
         };
-        service = createSnapshotsManager(document.createElement('div'), undefined, snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -342,11 +336,8 @@ describe('SnapshotsManagerImpl.canMove', () => {
             currentIndex: -1,
             autoCompleteIndex: -1,
             maxSize: 100,
-            knownColors: {},
         };
-
-        const div = document.createElement('div');
-        service = createSnapshotsManager(div, undefined, snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -473,10 +464,8 @@ describe('SnapshotsManagerImpl.move', () => {
             currentIndex: -1,
             autoCompleteIndex: -1,
             maxSize: 100,
-            knownColors: {},
         };
-        const div = document.createElement('div');
-        service = createSnapshotsManager(div, undefined, snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -567,10 +556,8 @@ describe('SnapshotsManagerImpl.clearRedo', () => {
             currentIndex: -1,
             autoCompleteIndex: -1,
             maxSize: 100,
-            knownColors: {},
         };
-        const div = document.createElement('div');
-        service = createSnapshotsManager(div, undefined, snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     function runTest(
@@ -655,10 +642,8 @@ describe('SnapshotsManagerImpl.canUndoAutoComplete', () => {
             currentIndex: -1,
             autoCompleteIndex: -1,
             maxSize: 100,
-            knownColors: {},
         };
-        const div = document.createElement('div');
-        service = createSnapshotsManager(div, undefined, snapshots);
+        service = createSnapshotsManager(snapshots);
     });
 
     it('can undo', () => {

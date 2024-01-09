@@ -956,7 +956,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             core.contentDiv,
             true /*includeSelf*/,
             nextDarkMode ? 'lightToDark' : 'darkToLight',
-            core.undo.snapshotsManager
+            core.colorManager
         );
 
         this.triggerContentChangedEvent(
@@ -981,7 +981,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             node,
             true /*includeSelf*/,
             direction == ColorTransformDirection.DarkToLight ? 'darkToLight' : 'lightToDark',
-            core.undo.snapshotsManager
+            core.colorManager
         );
     }
 

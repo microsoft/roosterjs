@@ -1,4 +1,4 @@
-import { createSnapshotsManager } from '../../../lib/editor/SnapshotsManagerImpl';
+import { createColorManager } from '../../../lib/editor/ColorManagerImpl';
 import { transformColor } from '../../../lib/publicApi/color/transformColor';
 
 describe('transform to dark mode', () => {
@@ -9,11 +9,11 @@ describe('transform to dark mode', () => {
     });
 
     function runTest(element: HTMLElement, expectedHtml: string, expectedContainerHtml: string) {
-        const snapshots = createSnapshotsManager(div, color => {
+        const colorManager = createColorManager(div, {}, color => {
             return color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '';
         });
 
-        transformColor(element, true, 'lightToDark', snapshots);
+        transformColor(element, true, 'lightToDark', colorManager);
 
         expect(element.outerHTML).toBe(expectedHtml, 'element html');
         expect(div.outerHTML).toBe(expectedContainerHtml, 'container html');
@@ -72,20 +72,22 @@ describe('transform to light mode', () => {
     });
 
     function runTest(element: HTMLElement, expectedHtml: string, expectedContainerHtml: string) {
-        const snapshots = createSnapshotsManager(div, color => color, {
-            knownColors: {
+        const colorManager = createColorManager(
+            div,
+            {
                 red: {
-                    lightColor: '#0000ff',
-                    darkColor: '#ff0000',
+                    lightModeColor: '#0000ff',
+                    darkModeColor: '#ff0000',
                 },
                 green: {
-                    lightColor: '#ffff00',
-                    darkColor: '#00ff00',
+                    lightModeColor: '#ffff00',
+                    darkModeColor: '#00ff00',
                 },
             },
-        } as any);
+            color => color
+        );
 
-        transformColor(element, true /*includeSelf*/, 'darkToLight', snapshots);
+        transformColor(element, true /*includeSelf*/, 'darkToLight', colorManager);
 
         expect(element.outerHTML).toBe(expectedHtml, 'element html');
         expect(div.outerHTML).toBe(expectedContainerHtml, 'container html');

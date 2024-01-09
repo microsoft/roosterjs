@@ -5,9 +5,9 @@ describe('createEditorContext', () => {
     it('create a normal context', () => {
         const isDarkMode = 'DARKMODE' as any;
         const defaultFormat = 'DEFAULTFORMAT' as any;
+        const colorManager = 'COLOR' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
-        const mockedSnapshotsManager = 'SNAPSHOTS' as any;
 
         const div = {
             ownerDocument: {
@@ -26,31 +26,30 @@ describe('createEditorContext', () => {
             format: {
                 defaultFormat,
             },
+            colorManager: colorManager,
             cache: {},
-            undo: {
-                snapshotsManager: mockedSnapshotsManager,
-            },
         } as any) as StandaloneEditorCore;
 
         const context = createEditorContext(core);
 
         expect(context).toEqual({
             isDarkMode,
+            colorManager: colorManager,
+
             defaultFormat,
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
-            snapshots: mockedSnapshotsManager,
         });
     });
 
     it('create a normal context with domIndexer', () => {
         const isDarkMode = 'DARKMODE' as any;
         const defaultFormat = 'DEFAULTFORMAT' as any;
+        const colorManager = 'COLOR' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
         const domIndexer = 'DOMINDEXER' as any;
-        const mockedSnapshotsManager = 'SNAPSHOTS' as any;
 
         const div = {
             ownerDocument: {
@@ -69,11 +68,9 @@ describe('createEditorContext', () => {
             format: {
                 defaultFormat,
             },
+            colorManager,
             cache: {
                 domIndexer,
-            },
-            undo: {
-                snapshotsManager: mockedSnapshotsManager,
             },
         } as any) as StandaloneEditorCore;
 
@@ -81,11 +78,11 @@ describe('createEditorContext', () => {
 
         expect(context).toEqual({
             isDarkMode,
+            colorManager,
             defaultFormat,
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer,
-            snapshots: mockedSnapshotsManager,
         });
     });
 });
@@ -97,7 +94,7 @@ describe('createEditorContext - checkZoomScale', () => {
     let getBoundingClientRectSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
-    const mockedSnapshotsManager = 'SNAPSHOTS' as any;
+    const colorManager = 'COLOR' as any;
 
     beforeEach(() => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
@@ -119,10 +116,8 @@ describe('createEditorContext - checkZoomScale', () => {
             format: {
                 defaultFormat,
             },
+            colorManager,
             cache: {},
-            undo: {
-                snapshotsManager: mockedSnapshotsManager,
-            },
         } as any) as StandaloneEditorCore;
     });
 
@@ -137,11 +132,11 @@ describe('createEditorContext - checkZoomScale', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
+            colorManager,
             addDelimiterForEntity: true,
             zoomScale: 1,
             allowCacheElement: true,
             domIndexer: undefined,
-            snapshots: mockedSnapshotsManager,
         });
     });
 
@@ -156,11 +151,11 @@ describe('createEditorContext - checkZoomScale', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
+            colorManager,
             addDelimiterForEntity: true,
             zoomScale: 2,
             allowCacheElement: true,
             domIndexer: undefined,
-            snapshots: mockedSnapshotsManager,
         });
     });
 
@@ -175,11 +170,11 @@ describe('createEditorContext - checkZoomScale', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
+            colorManager,
             addDelimiterForEntity: true,
             zoomScale: 0.5,
             allowCacheElement: true,
             domIndexer: undefined,
-            snapshots: mockedSnapshotsManager,
         });
     });
 });
@@ -191,7 +186,7 @@ describe('createEditorContext - checkRootDir', () => {
     let getBoundingClientRectSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
-    const mockedSnapshotsManager = 'SNAPSHOTS' as any;
+    const colorManager = 'COLOR' as any;
 
     beforeEach(() => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
@@ -213,10 +208,8 @@ describe('createEditorContext - checkRootDir', () => {
             format: {
                 defaultFormat,
             },
+            colorManager,
             cache: {},
-            undo: {
-                snapshotsManager: mockedSnapshotsManager,
-            },
         } as any) as StandaloneEditorCore;
     });
 
@@ -230,10 +223,10 @@ describe('createEditorContext - checkRootDir', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
+            colorManager,
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
-            snapshots: mockedSnapshotsManager,
         });
     });
 
@@ -247,11 +240,11 @@ describe('createEditorContext - checkRootDir', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
+            colorManager,
             addDelimiterForEntity: true,
             isRootRtl: true,
             allowCacheElement: true,
             domIndexer: undefined,
-            snapshots: mockedSnapshotsManager,
         });
     });
 });

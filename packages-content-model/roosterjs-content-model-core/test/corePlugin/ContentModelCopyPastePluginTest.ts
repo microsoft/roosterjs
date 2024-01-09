@@ -8,7 +8,6 @@ import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
-import { DarkColorHandler } from 'roosterjs-editor-types';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,
@@ -20,6 +19,7 @@ import {
     ClipboardData,
     CopyPastePluginState,
     PluginWithState,
+    ColorManager,
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
@@ -80,7 +80,7 @@ describe('ContentModelCopyPastePlugin |', () => {
     let getVisibleViewportSpy: jasmine.Spy;
     let formatResult: boolean | undefined;
     let modelResult: ContentModelDocument | undefined;
-    let mockedSnapshotsManager: DarkColorHandler;
+    let mockedColorManager: ColorManager;
 
     beforeEach(() => {
         modelResult = undefined;
@@ -104,7 +104,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             (model: any) => pasteModelValue
         );
         transformColorSpy = spyOn(transformColor, 'transformColor');
-        mockedSnapshotsManager = 'SNAPSHOTS' as any;
+        mockedColorManager = 'COLOR' as any;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -157,7 +157,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             pasteFromClipboard: (ar1: any) => {
                 pasteSpy(ar1);
             },
-            getSnapshotsManager: () => mockedSnapshotsManager,
+            getColorManager: () => mockedColorManager,
             isDisposed,
             getVisibleViewport: getVisibleViewportSpy,
             formatContentModel: formatContentModelSpy,
@@ -361,7 +361,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     cloneEntity,
                     true,
                     'darkToLight',
-                    mockedSnapshotsManager
+                    mockedColorManager
                 );
 
                 return pasteModelValue;

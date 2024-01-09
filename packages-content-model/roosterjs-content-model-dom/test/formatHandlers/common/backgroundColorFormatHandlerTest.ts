@@ -110,7 +110,7 @@ describe('backgroundColorFormatHandler.apply', () => {
     it('Simple color in dark mode', () => {
         format.backgroundColor = 'red';
         context.isDarkMode = true;
-        context.snapshots = {
+        context.colorManager = {
             updateKnownColor: () => {},
             getDarkColor: (lightColor: string) => `var(--darkColor_${lightColor}, ${lightColor})`,
         } as any;
