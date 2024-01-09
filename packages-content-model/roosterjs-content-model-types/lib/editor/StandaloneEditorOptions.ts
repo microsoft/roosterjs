@@ -1,6 +1,7 @@
+import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
-import type { EditorPlugin, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';

@@ -3,10 +3,11 @@ import { applyPendingFormat } from './utils/applyPendingFormat';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import { PluginEventType } from 'roosterjs-editor-types';
-import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 import type {
     ContentModelFormatPluginState,
     IStandaloneEditor,
+    PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 
@@ -47,9 +48,9 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
+    initialize(editor: IStandaloneEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IStandaloneEditor & IEditor;
+        this.editor = editor;
         this.hasDefaultFormat =
             getObjectKeys(this.state.defaultFormat).filter(
                 x => typeof this.state.defaultFormat[x] !== 'undefined'

@@ -13,7 +13,7 @@ export function initEditor(id: string): IContentModelEditor {
     document.body.insertBefore(node, document.body.childNodes[0]);
 
     let options: ContentModelEditorOptions = {
-        plugins: [new ContentModelPastePlugin()],
+        legacyPlugins: [new ContentModelPastePlugin()],
         coreApiOverride: {
             getVisibleViewport: () => {
                 return {

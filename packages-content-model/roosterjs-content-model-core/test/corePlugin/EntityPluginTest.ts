@@ -2,17 +2,16 @@ import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUti
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createContentModelDocument, createEntity } from '../../../roosterjs-content-model-dom/lib';
 import { createEntityPlugin } from '../../lib/corePlugin/EntityPlugin';
+import { IStandaloneEditor, PluginWithState } from 'roosterjs-content-model-types';
 import {
     DarkColorHandler,
     EntityOperation,
     EntityPluginState,
-    IEditor,
     PluginEventType,
-    PluginWithState,
 } from 'roosterjs-editor-types';
 
 describe('EntityPlugin', () => {
-    let editor: IEditor;
+    let editor: IStandaloneEditor;
     let plugin: PluginWithState<EntityPluginState>;
     let createContentModelSpy: jasmine.Spy;
     let triggerPluginEventSpy: jasmine.Spy;
