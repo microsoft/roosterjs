@@ -30,6 +30,8 @@ export const tableSpacingFormatHandler: FormatHandler<SpacingFormat> = {
             element.style.boxSizing = 'border-box';
         } else if (format.borderSeparate) {
             element.style.borderCollapse = BorderSeparate;
+            element.style.borderSpacing = '0';
+            element.style.boxSizing = 'border-box';
         }
     },
 };
