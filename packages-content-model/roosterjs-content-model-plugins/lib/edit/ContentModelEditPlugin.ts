@@ -79,7 +79,6 @@ export class ContentModelEditPlugin implements EditorPlugin {
                     const listStyleType = getListStyleType(editor);
                     if (listStyleType) {
                         keyboardListTrigger(editor, listStyleType);
-                        break;
                     }
                 case 'Enter':
                 default:

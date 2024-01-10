@@ -1,12 +1,12 @@
 import getNumberingListStyle from './getNumberingListStyle';
 import { getIndex } from './getIndex';
-import { IStandaloneEditor } from 'roosterjs-content-model-types/lib/editor/IStandaloneEditor';
+import type { IStandaloneEditor } from 'roosterjs-content-model-types/lib/editor/IStandaloneEditor';
 import {
     BulletListType,
     isBlockGroupOfType,
     updateListMetadata,
 } from 'roosterjs-content-model-core';
-import {
+import type {
     ContentModelDocument,
     ContentModelListItem,
     ContentModelParagraph,
