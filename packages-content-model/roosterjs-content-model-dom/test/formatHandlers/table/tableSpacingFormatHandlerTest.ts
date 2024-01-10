@@ -65,6 +65,8 @@ describe('tableSpacingFormatHandler.apply', () => {
     it('Separated border', () => {
         format.borderSeparate = true;
         tableSpacingFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toEqual('<div style="border-collapse: separate;"></div>');
+        expect(div.outerHTML).toEqual(
+            '<div style="border-collapse: separate; border-spacing: 0px; box-sizing: border-box;"></div>'
+        );
     });
 });
