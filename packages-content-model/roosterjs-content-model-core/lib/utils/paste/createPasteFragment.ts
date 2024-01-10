@@ -27,11 +27,7 @@ export function createPasteFragment(
         img.src = imageDataUri;
         fragment.appendChild(img);
     } else if (pasteType != 'asPlainText' && root) {
-        // This is a temp workaround. We should remove this SPAN later and put pasted content under fragment directly
-        const span = document.createElement('span');
-
-        moveChildNodes(span, root);
-        fragment.appendChild(span);
+        moveChildNodes(fragment, root);
     } else if (text) {
         text.split('\n').forEach((line, index, lines) => {
             line = line
