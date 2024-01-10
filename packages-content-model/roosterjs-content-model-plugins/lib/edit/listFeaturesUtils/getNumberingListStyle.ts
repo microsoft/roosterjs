@@ -135,7 +135,7 @@ const identifyNumberingListType = (
  */
 export default function getNumberingListStyle(
     textBeforeCursor: string,
-    previousListStyleType?: string,
+    previousListIndex?: number,
     previousListStyle?: number
 ): number | undefined {
     const trigger = textBeforeCursor.trim();
@@ -148,10 +148,10 @@ export default function getNumberingListStyle(
     if (
         !index ||
         index < 1 ||
-        (!previousListStyleType && numberingTriggers.indexOf(listIndex) < 0) ||
-        (previousListStyleType &&
+        (!previousListIndex && numberingTriggers.indexOf(listIndex) < 0) ||
+        (previousListIndex &&
             numberingTriggers.indexOf(listIndex) < 0 &&
-            !canAppendList(index, previousListStyleType))
+            !canAppendList(index, previousListIndex))
     ) {
         return undefined;
     }
@@ -171,10 +171,6 @@ function isValidNumbering(index: string) {
     return Number(index) || /^[A-Za-z\s]*$/.test(index);
 }
 
-function canAppendList(index: number | null, listStyleType?: string) {
-    if (index && listStyleType) {
-        const previousIndex = getIndex(listStyleType);
-        return previousIndex && previousIndex + 1 === index;
-    }
-    return false;
+function canAppendList(index?: number, previousListIndex?: number) {
+    return previousListIndex && index && previousListIndex + 1 === index;
 }

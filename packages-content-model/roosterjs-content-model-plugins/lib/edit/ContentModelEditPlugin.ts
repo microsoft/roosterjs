@@ -1,4 +1,3 @@
-import { getListStyleType } from './listFeaturesUtils/getListType';
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
 import { keyboardListTrigger } from './keyboardListTrigger';
@@ -75,13 +74,10 @@ export class ContentModelEditPlugin implements EditorPlugin {
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     keyboardDelete(editor, rawEvent);
                     break;
-                case ' ':
-                    const listStyleType = getListStyleType(editor);
-                    if (listStyleType) {
-                        keyboardListTrigger(editor, listStyleType);
-                    }
+                case ' ': // Space
                 case 'Enter':
                 default:
+                    keyboardListTrigger(editor, rawEvent);
                     keyboardInput(editor, rawEvent);
                     break;
             }

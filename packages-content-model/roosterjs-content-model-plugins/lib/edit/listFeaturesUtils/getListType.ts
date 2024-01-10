@@ -40,14 +40,16 @@ export function getListStyleType(
             const previousListStyle = getPreviousListStyle(previousList);
             const numberingType = getNumberingListStyle(
                 listMarker,
-                previousList?.format?.listStyleType,
+                previousList?.format?.listStyleType
+                    ? getIndex(previousList.format.listStyleType)
+                    : undefined,
                 previousListStyle
             );
             if (numberingType) {
                 return {
                     listType: 'OL',
                     styleType: numberingType,
-                    index: previousList ? getIndex(listMarker) : undefined,
+                    index: getIndex(listMarker),
                 };
             }
         }
