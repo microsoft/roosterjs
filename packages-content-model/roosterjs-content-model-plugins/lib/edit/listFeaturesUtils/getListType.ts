@@ -1,6 +1,6 @@
 import getNumberingListStyle from './getNumberingListStyle';
 import { getIndex } from './getIndex';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types/lib/editor/IStandaloneEditor';
+import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     BulletListType,
     isBlockGroupOfType,
@@ -10,13 +10,13 @@ import type {
     ContentModelDocument,
     ContentModelListItem,
     ContentModelParagraph,
-} from 'roosterjs-content-model-types/lib';
+} from 'roosterjs-content-model-types';
 import {
     getOperationalBlocks,
     getSelectedSegmentsAndParagraphs,
-} from 'roosterjs-content-model-core/lib/publicApi/selection/collectSelections';
+} from 'roosterjs-content-model-core';
 
-export function getListStyleType(
+export function getListType(
     editor: IStandaloneEditor
 ): { listType: 'UL' | 'OL'; styleType: number; index?: number } | undefined {
     const model = editor.createContentModel();

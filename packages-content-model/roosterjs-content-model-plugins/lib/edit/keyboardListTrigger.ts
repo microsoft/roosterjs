@@ -1,5 +1,5 @@
-import { getListStyleType } from './listFeaturesUtils/getListType';
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core/lib/publicApi/selection/collectSelections';
+import { getListType } from './listFeaturesUtils/getListType';
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     setListStartNumber,
@@ -11,7 +11,7 @@ import {
 export const keyboardListTrigger = (editor: IStandaloneEditor, rawEvent: KeyboardEvent) => {
     if (rawEvent.key === ' ') {
         editor.formatContentModel((model, context) => {
-            const listStyleType = getListStyleType(editor);
+            const listStyleType = getListType(editor);
             if (listStyleType) {
                 if (listStyleType.listType === 'UL') {
                     toggleBullet(editor);
