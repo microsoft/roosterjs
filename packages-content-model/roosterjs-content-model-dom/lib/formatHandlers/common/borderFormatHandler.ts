@@ -19,6 +19,13 @@ const BorderWidthKeys: (keyof CSSStyleDeclaration)[] = [
     'borderLeftWidth',
 ];
 
+const BorderRadiusKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
+    'borderTopLeftRadius',
+    'borderTopRightRadius',
+    'borderBottomLeftRadius',
+    'borderBottomRightRadius',
+];
+
 /**
  * @internal
  */
@@ -42,15 +49,27 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
 
         if (borderRadius) {
             format.borderRadius = borderRadius;
+        } else {
+            BorderRadiusKeys.forEach(key => {
+                const value = element.style[key];
+
+                if (value) {
+                    format[key] = value;
+                }
+            });
         }
     },
     apply: (format, element) => {
-        BorderKeys.forEach(key => {
+        BorderKeys.concat(BorderRadiusKeys).forEach(key => {
             const value = format[key];
 
             if (value) {
                 element.style[key] = value;
             }
         });
+
+        if (format.borderRadius) {
+            element.style.borderRadius = format.borderRadius;
+        }
     },
 };

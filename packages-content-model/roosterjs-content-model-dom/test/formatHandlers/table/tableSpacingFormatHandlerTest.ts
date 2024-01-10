@@ -28,7 +28,7 @@ describe('tableSpacingFormatHandler.parse', () => {
     it('Non-collapsed border', () => {
         div.style.borderCollapse = 'separate';
         tableSpacingFormatHandler.parse(format, div, context, {});
-        expect(format).toEqual({});
+        expect(format).toEqual({ borderSeparate: true });
     });
 
     it('Set border collapsed if element contains cellpadding attribute', () => {
@@ -60,5 +60,11 @@ describe('tableSpacingFormatHandler.apply', () => {
         expect(div.outerHTML).toEqual(
             '<div style="border-collapse: collapse; border-spacing: 0px; box-sizing: border-box;"></div>'
         );
+    });
+
+    it('Separated border', () => {
+        format.borderSeparate = true;
+        tableSpacingFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toEqual('<div style="border-collapse: separate;"></div>');
     });
 });

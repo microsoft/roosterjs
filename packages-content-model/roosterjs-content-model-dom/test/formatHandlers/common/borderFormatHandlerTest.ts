@@ -91,6 +91,59 @@ describe('borderFormatHandler.parse', () => {
             borderRadius: '10px',
         });
     });
+
+    it('Has border radius and independant corner radius, but prefer shorthand css', () => {
+        div.style.borderTopRightRadius = '7px';
+        div.style.borderBottomLeftRadius = '7px';
+        div.style.borderBottomRightRadius = '7px';
+        div.style.borderRadius = '10px';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderRadius: '10px',
+        });
+    });
+
+    it('Has border borderTopLeftRadius', () => {
+        div.style.borderTopLeftRadius = '10px';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderTopLeftRadius: '10px',
+        });
+    });
+
+    it('Has border borderTopRightRadius', () => {
+        div.style.borderTopRightRadius = '10px';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderTopRightRadius: '10px',
+        });
+    });
+
+    it('Has border borderBottomLeftRadius', () => {
+        div.style.borderBottomLeftRadius = '10px';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderBottomLeftRadius: '10px',
+        });
+    });
+
+    it('Has border borderBottomRightRadius', () => {
+        div.style.borderBottomRightRadius = '10px';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderBottomRightRadius: '10px',
+        });
+    });
 });
 
 describe('borderFormatHandler.apply', () => {
@@ -124,5 +177,24 @@ describe('borderFormatHandler.apply', () => {
         borderFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toEqual('<div style="border-top: red;"></div>');
+    });
+
+    itChromeOnly('Has border color - empty values', () => {
+        format.borderTopRightRadius = '1px';
+        format.borderBottomLeftRadius = '2px';
+        format.borderBottomRightRadius = '3px';
+        format.borderTopLeftRadius = '4px';
+
+        borderFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div style="border-radius: 4px 1px 3px 2px;"></div>');
+    });
+
+    it('border radius', () => {
+        format.borderRadius = '50%';
+
+        borderFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div style="border-radius: 50%;"></div>');
     });
 });
