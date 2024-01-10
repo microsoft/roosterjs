@@ -126,7 +126,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         doc?.defaultView?.requestAnimationFrame(() => {
             if (this.editor) {
                 this.editor.takeSnapshot();
-                this.editor.triggerPluginEvent(PluginEventType.ContentChanged, {
+                this.editor.triggerEvent(PluginEventType.ContentChanged, {
                     source: ChangeSource.Drop,
                 });
             }
@@ -134,7 +134,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     };
 
     private onScroll = (e: Event) => {
-        this.editor?.triggerPluginEvent(PluginEventType.Scroll, {
+        this.editor?.triggerEvent(PluginEventType.Scroll, {
             rawEvent: e,
             scrollContainer: this.state.scrollContainer,
         });
@@ -175,7 +175,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 this.state.mouseDownY = event.pageY;
             }
 
-            this.editor.triggerPluginEvent(PluginEventType.MouseDown, {
+            this.editor.triggerEvent(PluginEventType.MouseDown, {
                 rawEvent: event,
             });
         }
@@ -184,7 +184,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private onMouseUp = (rawEvent: MouseEvent) => {
         if (this.editor) {
             this.removeMouseUpEventListener();
-            this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
+            this.editor.triggerEvent(PluginEventType.MouseUp, {
                 rawEvent,
                 isClicking:
                     this.state.mouseDownX == rawEvent.pageX &&
@@ -199,7 +199,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
     private onCompositionEnd = (rawEvent: CompositionEvent) => {
         this.state.isInIME = false;
-        this.editor?.triggerPluginEvent(PluginEventType.CompositionEnd, {
+        this.editor?.triggerEvent(PluginEventType.CompositionEnd, {
             rawEvent,
         });
     };

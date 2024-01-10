@@ -22,7 +22,7 @@ describe('EntityPlugin', () => {
 
     beforeEach(() => {
         createContentModelSpy = jasmine.createSpy('createContentModel');
-        triggerPluginEventSpy = jasmine.createSpy('triggerPluginEvent');
+        triggerPluginEventSpy = jasmine.createSpy('triggerEvent');
         isDarkModeSpy = jasmine.createSpy('isDarkMode');
         isNodeInEditorSpy = jasmine.createSpy('isNodeInEditor');
         transformColorSpy = spyOn(transformColor, 'transformColor');
@@ -30,7 +30,7 @@ describe('EntityPlugin', () => {
 
         editor = {
             createContentModel: createContentModelSpy,
-            triggerPluginEvent: triggerPluginEventSpy,
+            triggerEvent: triggerPluginEventSpy,
             isDarkMode: isDarkModeSpy,
             isNodeInEditor: isNodeInEditorSpy,
             getDarkColorHandler: () => mockedDarkColorHandler,

@@ -7,7 +7,6 @@ import type {
     PluginEventData,
     PluginEventFromType,
 } from 'roosterjs-editor-types';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     ClipboardData,
     ContentModelDocument,
@@ -212,7 +211,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+    triggerEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast: boolean = false
@@ -369,7 +368,7 @@ export class StandaloneEditor implements IStandaloneEditor {
             core.zoomScale = scale;
 
             if (oldValue != scale) {
-                this.triggerPluginEvent(
+                this.triggerEvent(
                     PluginEventType.ZoomChanged,
                     {
                         oldZoomScale: oldValue,

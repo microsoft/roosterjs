@@ -248,7 +248,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         });
 
         return format.id && format.entityType && !format.isFakeEntity
-            ? editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+            ? editor.triggerEvent(PluginEventType.EntityOperation, {
                   operation: EntityOperationMap[operation],
                   rawEvent,
                   entity: {
