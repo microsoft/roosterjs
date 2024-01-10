@@ -24,7 +24,7 @@ export default function changeImage(editor: IStandaloneEditor, file: File) {
                 image.format.height = '';
                 image.alt = '';
 
-                editor.triggerPluginEvent(PluginEventType.EditImage, {
+                editor.triggerEvent(PluginEventType.EditImage, {
                     image: selection.image,
                     previousSrc,
                     newSrc: dataUrl,

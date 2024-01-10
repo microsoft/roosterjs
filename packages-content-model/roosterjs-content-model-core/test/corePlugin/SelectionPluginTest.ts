@@ -92,7 +92,7 @@ describe('SelectionPlugin', () => {
 
 describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let plugin: PluginWithState<SelectionPluginState>;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let eventMap: Record<string, any>;
     let getElementAtCursorSpy: jasmine.Spy;
     let createElementSpy: jasmine.Spy;
@@ -104,7 +104,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let editor: IStandaloneEditor;
 
     beforeEach(() => {
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
         createElementSpy = jasmine.createSpy('createElement').and.returnValue(MockedStyleNode);
         appendChildSpy = jasmine.createSpy('appendChild');
@@ -122,7 +122,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
 
         editor = <IStandaloneEditor>(<any>{
             getDocument: getDocumentSpy,
-            triggerPluginEvent,
+            triggerEvent,
             getEnvironment: () => ({}),
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
