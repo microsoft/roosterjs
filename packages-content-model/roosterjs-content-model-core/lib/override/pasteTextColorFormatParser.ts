@@ -15,18 +15,20 @@ export const pasteTextColorFormatParser: FormatParser<ContentModelSegmentFormat>
     context,
     defaultStyle
 ): void => {
-    if (!isVariableBasedStyle(element)) {
+    if (!isVariableBasedStyle(element.style.color)) {
         context.defaultFormatParsers.textColor?.(format, element, context, defaultStyle);
     }
 };
 
-function isVariableBasedStyle(element: HTMLElement) {
-    const color = element.style.color;
+function isVariableBasedStyle(color: string) {
     return (
         color.startsWith(VAR_PREFIX) &&
         color
             .substring(color.indexOf(START_BRACKET) + 1, color.lastIndexOf(END_BRACKET))
             .split(COMMA)
-            .every(variable => variable.trim().startsWith(TWO_DASHES))
+            .every(
+                variable =>
+                    variable.trim().startsWith(TWO_DASHES) || variable.trim().startsWith(VAR_PREFIX)
+            )
     );
 }

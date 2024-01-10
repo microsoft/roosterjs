@@ -23,7 +23,7 @@ describe('pasteTextColorFormatParser', () => {
 
     it('Do not handle 2', () => {
         const element = document.createElement('div');
-        element.style.color = 'var(--variable, --customProp2)';
+        element.style.color = 'var(--variable, var(--customProp2))';
         const format = {};
         const textColorSpy = jasmine.createSpy('defaultTextColorParser');
 
@@ -44,6 +44,26 @@ describe('pasteTextColorFormatParser', () => {
     it('Handle, variable based with fallback not not variable', () => {
         const element = document.createElement('div');
         element.style.color = 'var(--variable, white)';
+        const format = {};
+        const textColorSpy = jasmine.createSpy('defaultTextColorParser');
+
+        pasteTextColorFormatParser(
+            format,
+            element,
+            <any>{
+                defaultFormatParsers: {
+                    textColor: textColorSpy,
+                },
+            },
+            <any>{}
+        );
+
+        expect(textColorSpy).toHaveBeenCalled();
+    });
+
+    it('Handle, variable based with fallback not not variable', () => {
+        const element = document.createElement('div');
+        element.style.color = 'var(--variable, var(--variable), white)';
         const format = {};
         const textColorSpy = jasmine.createSpy('defaultTextColorParser');
 
