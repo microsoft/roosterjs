@@ -179,15 +179,16 @@ describe('borderFormatHandler.apply', () => {
         expect(div.outerHTML).toEqual('<div style="border-top: red;"></div>');
     });
 
-    itChromeOnly('Has border color - empty values', () => {
-        format.borderTopRightRadius = '1px';
+    itChromeOnly('Use independant border radius 1', () => {
         format.borderBottomLeftRadius = '2px';
         format.borderBottomRightRadius = '3px';
-        format.borderTopLeftRadius = '4px';
+        format.borderTopRightRadius = '3px';
 
         borderFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual('<div style="border-radius: 4px 1px 3px 2px;"></div>');
+        expect(div.outerHTML).toEqual(
+            '<div style="border-top-right-radius: 3px; border-bottom-left-radius: 2px; border-bottom-right-radius: 3px;"></div>'
+        );
     });
 
     it('border radius', () => {
