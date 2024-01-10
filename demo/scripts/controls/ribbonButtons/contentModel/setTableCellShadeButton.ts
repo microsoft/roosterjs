@@ -1,4 +1,4 @@
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { setTableCellShade } from 'roosterjs-content-model-api';
 import {
     BackgroundColorKeys,
@@ -12,7 +12,7 @@ const originalBackgroundColorButton: RibbonButton<BackgroundColorKeys> = getButt
     KnownRibbonButtonKey.BackgroundColor,
 ])[0] as RibbonButton<BackgroundColorKeys>;
 
-export const setTableCellShadeButton: RibbonButton<
+export const setTableCellShadeButton: ContentModelRibbonButton<
     'ribbonButtonSetTableCellShade' | BackgroundColorKeys
 > = {
     dropDownMenu: {
@@ -24,7 +24,7 @@ export const setTableCellShadeButton: RibbonButton<
     iconName: 'BackgroundColor',
     isDisabled: formatState => !formatState.isInTable,
     onClick: (editor, key) => {
-        if (key != 'ribbonButtonSetTableCellShade' && isContentModelEditor(editor)) {
+        if (key != 'ribbonButtonSetTableCellShade') {
             const color = getBackgroundColorValue(key);
 
             // Content Model doesn't need dark mode color at this point, so always pass in light mode color

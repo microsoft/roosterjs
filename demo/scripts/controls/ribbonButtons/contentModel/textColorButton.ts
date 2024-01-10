@@ -1,4 +1,4 @@
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { setTextColor } from 'roosterjs-content-model-api';
 import {
     getButtons,
@@ -16,11 +16,11 @@ const originalButton = getButtons([KnownRibbonButtonKey.TextColor])[0] as Ribbon
  * @internal
  * "Text color" button on the format ribbon
  */
-export const textColorButton: RibbonButton<TextColorButtonStringKey> = {
+export const textColorButton: ContentModelRibbonButton<TextColorButtonStringKey> = {
     ...originalButton,
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
-        if (key != 'buttonNameTextColor' && isContentModelEditor(editor)) {
+        if (key != 'buttonNameTextColor') {
             setTextColor(editor, getTextColorValue(key).lightModeColor);
         }
     },
