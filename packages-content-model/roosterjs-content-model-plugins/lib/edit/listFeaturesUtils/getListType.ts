@@ -1,10 +1,5 @@
 import getNumberingListStyle from './getNumberingListStyle';
 import { getIndex } from './getIndex';
-import {
-    BulletListType,
-    isBlockGroupOfType,
-    updateListMetadata,
-} from 'roosterjs-content-model-core';
 import type {
     IStandaloneEditor,
     ContentModelDocument,
@@ -12,6 +7,9 @@ import type {
     ContentModelParagraph,
 } from 'roosterjs-content-model-types';
 import {
+    BulletListType,
+    isBlockGroupOfType,
+    updateListMetadata,
     getOperationalBlocks,
     getSelectedSegmentsAndParagraphs,
 } from 'roosterjs-content-model-core';
