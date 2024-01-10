@@ -28,7 +28,8 @@ function isVariableBasedStyle(color: string) {
             .split(COMMA)
             .every(
                 variable =>
-                    variable.trim().startsWith(TWO_DASHES) || variable.trim().startsWith(VAR_PREFIX)
+                    variable.trim().startsWith(TWO_DASHES) ||
+                    variable.trim().startsWith(VAR_PREFIX + TWO_DASHES)
             )
     );
 }

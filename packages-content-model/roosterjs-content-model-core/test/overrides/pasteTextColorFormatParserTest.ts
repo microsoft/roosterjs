@@ -41,7 +41,7 @@ describe('pasteTextColorFormatParser', () => {
         expect(textColorSpy).not.toHaveBeenCalled();
     });
 
-    it('Handle, variable based with fallback not not variable', () => {
+    it('Handle, variable based with fallback that is not a variable', () => {
         const element = document.createElement('div');
         element.style.color = 'var(--variable, white)';
         const format = {};
@@ -61,9 +61,29 @@ describe('pasteTextColorFormatParser', () => {
         expect(textColorSpy).toHaveBeenCalled();
     });
 
-    it('Handle, variable based with fallback not not variable', () => {
+    it('Handle, variable based with fallback that is not a variable 2', () => {
         const element = document.createElement('div');
         element.style.color = 'var(--variable, var(--variable), white)';
+        const format = {};
+        const textColorSpy = jasmine.createSpy('defaultTextColorParser');
+
+        pasteTextColorFormatParser(
+            format,
+            element,
+            <any>{
+                defaultFormatParsers: {
+                    textColor: textColorSpy,
+                },
+            },
+            <any>{}
+        );
+
+        expect(textColorSpy).toHaveBeenCalled();
+    });
+
+    it('Handle, variable based with fallback that is not a variable 3', () => {
+        const element = document.createElement('div');
+        element.style.color = 'var(--variable, var(--variable, white))';
         const format = {};
         const textColorSpy = jasmine.createSpy('defaultTextColorParser');
 
