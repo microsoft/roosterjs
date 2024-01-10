@@ -1,5 +1,7 @@
+import { getListStyleType } from './listFeaturesUtils/getListType';
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
+import { keyboardListTrigger } from './keyboardListTrigger';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type {
@@ -73,7 +75,12 @@ export class ContentModelEditPlugin implements EditorPlugin {
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     keyboardDelete(editor, rawEvent);
                     break;
-
+                case ' ':
+                    const listStyleType = getListStyleType(editor);
+                    if (listStyleType) {
+                        keyboardListTrigger(editor, listStyleType);
+                        break;
+                    }
                 case 'Enter':
                 default:
                     keyboardInput(editor, rawEvent);
