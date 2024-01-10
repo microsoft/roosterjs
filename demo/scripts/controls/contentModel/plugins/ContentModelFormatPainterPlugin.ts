@@ -1,73 +1,83 @@
+import MainPaneBase from '../../MainPaneBase';
 import { applySegmentFormat, getFormatState } from 'roosterjs-content-model-api';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ContentModelSegmentFormat,
+    EditorPlugin,
+    IStandaloneEditor,
+} from 'roosterjs-content-model-types';
 
 const FORMATPAINTERCURSOR_SVG = require('./formatpaintercursor.svg');
-const FORMATPAINTERCURSOR_STYLE = `;cursor: url("${FORMATPAINTERCURSOR_SVG}") 8.5 16, auto`;
-const CURSOR_REGEX = /;?\s*cursor:\s*url\(\".*?\"\)[^;]*/gi;
-
-interface FormatPainterFormatHolder {
-    format: ContentModelSegmentFormat | null;
-}
+const FORMATPAINTERCURSOR_STYLE = `cursor: url("${FORMATPAINTERCURSOR_SVG}") 8.5 16, auto`;
 
 export default class ContentModelFormatPainterPlugin implements EditorPlugin {
-    private editor: IContentModelEditor | null = null;
+    private editor: IStandaloneEditor | null = null;
+    private styleNode: HTMLStyleElement | null = null;
+    private painterFormat: ContentModelSegmentFormat | null = null;
+    private static instance: ContentModelFormatPainterPlugin | undefined;
+
+    constructor() {
+        ContentModelFormatPainterPlugin.instance = this;
+    }
 
     getName() {
         return 'FormatPainter';
     }
 
-    initialize(editor: IEditor) {
-        this.editor = editor as IContentModelEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
+
+        const doc = this.editor.getDocument();
+        this.styleNode = doc.createElement('style');
+
+        doc.head.appendChild(this.styleNode);
     }
 
     dispose() {
         this.editor = null;
+
+        if (this.styleNode) {
+            this.styleNode.parentNode?.removeChild(this.styleNode);
+            this.styleNode = null;
+        }
     }
 
     onPluginEvent(event: PluginEvent) {
         if (this.editor && event.eventType == PluginEventType.MouseUp) {
-            const formatHolder = getFormatHolder(this.editor);
+            if (this.painterFormat) {
+                applySegmentFormat(this.editor, this.painterFormat);
 
-            if (formatHolder.format) {
-                applySegmentFormat(this.editor, formatHolder.format);
-                formatHolder.format = null;
-
-                setFormatPainterCursor(this.editor, false /*isOn*/);
+                this.setFormatPainterCursor(null);
             }
         }
     }
 
-    static startFormatPainter(editor: IContentModelEditor) {
-        const formatHolder = getFormatHolder(editor);
-        const format = getSegmentFormat(editor);
+    private setFormatPainterCursor(format: ContentModelSegmentFormat | null) {
+        const sheet = this.styleNode.sheet;
+
+        if (this.painterFormat) {
+            for (let i = sheet.cssRules.length - 1; i >= 0; i--) {
+                sheet.deleteRule(i);
+            }
+        }
+
+        this.painterFormat = format;
+
+        if (this.painterFormat) {
+            sheet.insertRule(`#${MainPaneBase.editorDivId} {${FORMATPAINTERCURSOR_STYLE}}`);
+        }
+    }
+
+    static startFormatPainter() {
+        const format = getSegmentFormat(this.instance.editor);
 
         if (format) {
-            formatHolder.format = { ...format };
-            setFormatPainterCursor(editor, true /*isOn*/);
+            this.instance.setFormatPainterCursor(format);
         }
     }
 }
 
-function getFormatHolder(editor: IContentModelEditor): FormatPainterFormatHolder {
-    return editor.getCustomData('__FormatPainterFormat', () => {
-        return {} as FormatPainterFormatHolder;
-    });
-}
-
-function setFormatPainterCursor(editor: IContentModelEditor, isOn: boolean) {
-    let styles = editor.getEditorDomAttribute('style') || '';
-    styles = styles.replace(CURSOR_REGEX, '');
-
-    if (isOn) {
-        styles += FORMATPAINTERCURSOR_STYLE;
-    }
-
-    editor.setEditorDomAttribute('style', styles);
-}
-
-function getSegmentFormat(editor: IContentModelEditor): ContentModelSegmentFormat {
+function getSegmentFormat(editor: IStandaloneEditor): ContentModelSegmentFormat {
     const formatState = getFormatState(editor);
 
     return {

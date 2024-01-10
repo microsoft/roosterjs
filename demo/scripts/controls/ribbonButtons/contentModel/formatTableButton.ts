@@ -1,6 +1,5 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { formatTable } from 'roosterjs-content-model-api';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
 import { TableBorderFormat } from 'roosterjs-content-model-core';
 import { TableMetadataFormat } from 'roosterjs-content-model-types';
 
@@ -192,7 +191,7 @@ export function createTableFormat(
     };
 }
 
-export const formatTableButton: RibbonButton<'ribbonButtonTableFormat'> = {
+export const formatTableButton: ContentModelRibbonButton<'ribbonButtonTableFormat'> = {
     key: 'ribbonButtonTableFormat',
     iconName: 'TableComputed',
     unlocalizedText: 'Format Table',
@@ -215,7 +214,7 @@ export const formatTableButton: RibbonButton<'ribbonButtonTableFormat'> = {
     onClick: (editor, key) => {
         const format = PREDEFINED_STYLES[key]?.('#ABABAB', '#ABABAB20');
 
-        if (format && isContentModelEditor(editor)) {
+        if (format) {
             formatTable(editor, format);
         }
     },
