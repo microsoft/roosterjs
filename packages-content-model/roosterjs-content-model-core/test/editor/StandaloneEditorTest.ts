@@ -92,7 +92,7 @@ describe('StandaloneEditor', () => {
             .and.returnValue(mockedModel);
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -131,7 +131,7 @@ describe('StandaloneEditor', () => {
         const setContentModelSpy = jasmine.createSpy('setContentModel');
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -175,7 +175,7 @@ describe('StandaloneEditor', () => {
         const mockedEnvironment = 'ENVIRONMENT' as any;
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             environment: mockedEnvironment,
@@ -202,7 +202,7 @@ describe('StandaloneEditor', () => {
             .and.returnValue(mockedSelection);
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -230,7 +230,7 @@ describe('StandaloneEditor', () => {
         const setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -262,7 +262,7 @@ describe('StandaloneEditor', () => {
         const formatContentModelSpy = jasmine.createSpy('formatContentModel');
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -296,7 +296,7 @@ describe('StandaloneEditor', () => {
         const mockedFormat = 'FORMAT' as any;
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             format: {},
@@ -330,7 +330,7 @@ describe('StandaloneEditor', () => {
             .and.returnValue(mockedSnapshot);
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -358,7 +358,7 @@ describe('StandaloneEditor', () => {
         const restoreUndoSnapshotSpy = jasmine.createSpy('restoreUndoSnapshot');
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -384,7 +384,7 @@ describe('StandaloneEditor', () => {
         const focusSpy = jasmine.createSpy('focus');
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -410,7 +410,7 @@ describe('StandaloneEditor', () => {
         const hasFocusSpy = jasmine.createSpy('hasFocus').and.returnValue(mockedResult);
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -442,7 +442,7 @@ describe('StandaloneEditor', () => {
         });
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -485,7 +485,7 @@ describe('StandaloneEditor', () => {
             .and.returnValue(mockedDisposer);
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -513,7 +513,7 @@ describe('StandaloneEditor', () => {
         const mockedSnapshotManager = 'MANAGER' as any;
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             undo: {
@@ -543,7 +543,7 @@ describe('StandaloneEditor', () => {
             });
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             lifecycle: {},
@@ -582,7 +582,7 @@ describe('StandaloneEditor', () => {
         const pasteSpy = jasmine.createSpy('paste');
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             api: {
@@ -612,12 +612,12 @@ describe('StandaloneEditor', () => {
 
     it('getColorManager', () => {
         const div = document.createElement('div');
-        const mockedColorManager = {
+        const mockedColorHandler = {
             updateKnownColor: updateKnownColorSpy,
         } as any;
         const mockedCore = {
             plugins: [],
-            colorManager: mockedColorManager,
+            darkColorHandler: mockedColorHandler,
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -627,7 +627,7 @@ describe('StandaloneEditor', () => {
         const result = editor.getColorManager();
 
         expect(updateKnownColorSpy).not.toHaveBeenCalled();
-        expect(result).toBe(mockedColorManager);
+        expect(result).toBe(mockedColorHandler);
 
         editor.dispose();
 
@@ -643,7 +643,7 @@ describe('StandaloneEditor', () => {
         } as any;
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             contentDiv: div,
@@ -670,12 +670,12 @@ describe('StandaloneEditor', () => {
             mockedCore.lifecycle.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
         });
         const div = document.createElement('div');
-        const mockedSnapshotsManager = {
+        const mockedColorHandler = {
             updateKnownColor: updateKnownColorSpy,
         } as any;
         const mockedCore = {
             plugins: [],
-            colorManager: {
+            darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
             },
             contentDiv: div,
@@ -707,7 +707,7 @@ describe('StandaloneEditor', () => {
             div,
             true,
             'lightToDark',
-            mockedSnapshotsManager
+            mockedColorHandler
         );
         expect(triggerEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerEventSpy).toHaveBeenCalledWith(
@@ -727,7 +727,7 @@ describe('StandaloneEditor', () => {
             div,
             true,
             'darkToLight',
-            mockedSnapshotsManager
+            mockedColorHandler
         );
         expect(triggerEventSpy).toHaveBeenCalledTimes(2);
         expect(triggerEventSpy).toHaveBeenCalledWith(

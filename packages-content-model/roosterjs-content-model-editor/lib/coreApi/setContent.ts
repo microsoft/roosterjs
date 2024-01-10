@@ -27,7 +27,7 @@ export const setContent: SetContent = (
     triggerContentChangedEvent,
     metadata
 ) => {
-    const { contentDiv, api, entity, trustedHTMLHandler, lifecycle, colorManager } = innerCore;
+    const { contentDiv, api, entity, trustedHTMLHandler, lifecycle, darkColorHandler } = innerCore;
 
     let contentChanged = false;
 
@@ -63,7 +63,7 @@ export const setContent: SetContent = (
             contentDiv,
             false /*includeSelf*/,
             isDarkMode ? 'lightToDark' : 'darkToLight',
-            colorManager
+            darkColorHandler
         );
         contentChanged = true;
     }

@@ -1,4 +1,4 @@
-import type { ColorManager } from './ColorManager';
+import type { DarkColorHandler } from './DarkColorHandler';
 import type { ContentModelDomIndexer } from './ContentModelDomIndexer';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
@@ -19,7 +19,7 @@ export interface EditorContext {
     /**
      * Color manager, to help manager color in dark mode
      */
-    colorManager?: ColorManager;
+    darkColorHandler?: DarkColorHandler;
 
     /**
      * Whether to handle delimiters in Content Model

@@ -1,18 +1,18 @@
 import * as transformColor from '../../lib/publicApi/color/transformColor';
-import { ColorManager, Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { DarkColorHandler, Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { restoreSnapshotColors } from '../../lib/utils/restoreSnapshotColors';
 
 describe('restoreSnapshotColors', () => {
     let core: StandaloneEditorCore;
-    let transformColorSpy: jasmine.Spy;
     let updateKnownColorSpy: jasmine.Spy;
-    let mockedColorManager: ColorManager;
+    let transformColorSpy: jasmine.Spy;
+    let darkColorHandler: DarkColorHandler;
     const mockedDiv = 'DIV' as any;
 
     beforeEach(() => {
-        transformColorSpy = spyOn(transformColor, 'transformColor');
         updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
-        mockedColorManager = {
+        transformColorSpy = spyOn(transformColor, 'transformColor');
+        darkColorHandler = {
             updateKnownColor: updateKnownColorSpy,
         } as any;
 
@@ -21,7 +21,7 @@ describe('restoreSnapshotColors', () => {
                 isDarkMode: false,
             },
             contentDiv: mockedDiv,
-            colorManager: mockedColorManager,
+            darkColorHandler,
         } as any;
     });
 
@@ -33,8 +33,8 @@ describe('restoreSnapshotColors', () => {
 
         restoreSnapshotColors(core, snapshot);
 
-        expect(transformColorSpy).not.toHaveBeenCalled();
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(transformColorSpy).not.toHaveBeenCalled();
     });
 
     it('No known colors, from light mode to dark mode', () => {
@@ -47,14 +47,14 @@ describe('restoreSnapshotColors', () => {
 
         restoreSnapshotColors(core, snapshot);
 
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true);
         expect(transformColorSpy).toHaveBeenCalledTimes(1);
         expect(transformColorSpy).toHaveBeenCalledWith(
             mockedDiv,
             false,
             'lightToDark',
-            mockedColorManager
+            darkColorHandler
         );
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(true);
     });
 
     it('No known colors, from dark mode to dark mode', () => {
@@ -67,8 +67,8 @@ describe('restoreSnapshotColors', () => {
 
         restoreSnapshotColors(core, snapshot);
 
-        expect(transformColorSpy).not.toHaveBeenCalled();
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true);
+        expect(transformColorSpy).not.toHaveBeenCalled();
     });
 
     it('No known colors, from dark mode to dark mode', () => {
@@ -84,7 +84,7 @@ describe('restoreSnapshotColors', () => {
             mockedDiv,
             false,
             'darkToLight',
-            mockedColorManager
+            darkColorHandler
         );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
     });

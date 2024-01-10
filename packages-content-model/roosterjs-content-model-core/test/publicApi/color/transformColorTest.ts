@@ -1,4 +1,4 @@
-import { createColorManager } from '../../../lib/editor/ColorManagerImpl';
+import { createDarkColorHandler } from '../../../lib/editor/DarkColorHandlerImpl';
 import { transformColor } from '../../../lib/publicApi/color/transformColor';
 
 describe('transform to dark mode', () => {
@@ -9,7 +9,7 @@ describe('transform to dark mode', () => {
     });
 
     function runTest(element: HTMLElement, expectedHtml: string, expectedContainerHtml: string) {
-        const colorManager = createColorManager(div, {}, color => {
+        const colorManager = createDarkColorHandler(div, color => {
             return color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '';
         });
 
@@ -72,20 +72,16 @@ describe('transform to light mode', () => {
     });
 
     function runTest(element: HTMLElement, expectedHtml: string, expectedContainerHtml: string) {
-        const colorManager = createColorManager(
-            div,
-            {
-                red: {
-                    lightModeColor: '#0000ff',
-                    darkModeColor: '#ff0000',
-                },
-                green: {
-                    lightModeColor: '#ffff00',
-                    darkModeColor: '#00ff00',
-                },
+        const colorManager = createDarkColorHandler(div, color => color, {
+            red: {
+                lightModeColor: '#0000ff',
+                darkModeColor: '#ff0000',
             },
-            color => color
-        );
+            green: {
+                lightModeColor: '#ffff00',
+                darkModeColor: '#00ff00',
+            },
+        });
 
         transformColor(element, true /*includeSelf*/, 'darkToLight', colorManager);
 

@@ -5,7 +5,7 @@ describe('createEditorContext', () => {
     it('create a normal context', () => {
         const isDarkMode = 'DARKMODE' as any;
         const defaultFormat = 'DEFAULTFORMAT' as any;
-        const colorManager = 'COLOR' as any;
+        const darkColorHandler = 'DARKHANDLER' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
 
@@ -26,7 +26,7 @@ describe('createEditorContext', () => {
             format: {
                 defaultFormat,
             },
-            colorManager: colorManager,
+            darkColorHandler,
             cache: {},
         } as any) as StandaloneEditorCore;
 
@@ -34,8 +34,7 @@ describe('createEditorContext', () => {
 
         expect(context).toEqual({
             isDarkMode,
-            colorManager: colorManager,
-
+            darkColorHandler,
             defaultFormat,
             addDelimiterForEntity: true,
             allowCacheElement: true,
@@ -46,7 +45,7 @@ describe('createEditorContext', () => {
     it('create a normal context with domIndexer', () => {
         const isDarkMode = 'DARKMODE' as any;
         const defaultFormat = 'DEFAULTFORMAT' as any;
-        const colorManager = 'COLOR' as any;
+        const darkColorHandler = 'DARKHANDLER' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
         const domIndexer = 'DOMINDEXER' as any;
@@ -68,7 +67,7 @@ describe('createEditorContext', () => {
             format: {
                 defaultFormat,
             },
-            colorManager,
+            darkColorHandler,
             cache: {
                 domIndexer,
             },
@@ -78,7 +77,7 @@ describe('createEditorContext', () => {
 
         expect(context).toEqual({
             isDarkMode,
-            colorManager,
+            darkColorHandler,
             defaultFormat,
             addDelimiterForEntity: true,
             allowCacheElement: true,
@@ -94,7 +93,7 @@ describe('createEditorContext - checkZoomScale', () => {
     let getBoundingClientRectSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
-    const colorManager = 'COLOR' as any;
+    const darkColorHandler = 'DARKHANDLER' as any;
 
     beforeEach(() => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
@@ -116,7 +115,7 @@ describe('createEditorContext - checkZoomScale', () => {
             format: {
                 defaultFormat,
             },
-            colorManager,
+            darkColorHandler,
             cache: {},
         } as any) as StandaloneEditorCore;
     });
@@ -132,7 +131,7 @@ describe('createEditorContext - checkZoomScale', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
-            colorManager,
+            darkColorHandler,
             addDelimiterForEntity: true,
             zoomScale: 1,
             allowCacheElement: true,
@@ -151,7 +150,7 @@ describe('createEditorContext - checkZoomScale', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
-            colorManager,
+            darkColorHandler,
             addDelimiterForEntity: true,
             zoomScale: 2,
             allowCacheElement: true,
@@ -170,7 +169,7 @@ describe('createEditorContext - checkZoomScale', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
-            colorManager,
+            darkColorHandler,
             addDelimiterForEntity: true,
             zoomScale: 0.5,
             allowCacheElement: true,
@@ -186,7 +185,7 @@ describe('createEditorContext - checkRootDir', () => {
     let getBoundingClientRectSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
-    const colorManager = 'COLOR' as any;
+    const darkColorHandler = 'DARKHANDLER' as any;
 
     beforeEach(() => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
@@ -208,7 +207,7 @@ describe('createEditorContext - checkRootDir', () => {
             format: {
                 defaultFormat,
             },
-            colorManager,
+            darkColorHandler,
             cache: {},
         } as any) as StandaloneEditorCore;
     });
@@ -223,7 +222,7 @@ describe('createEditorContext - checkRootDir', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
-            colorManager,
+            darkColorHandler,
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
@@ -240,7 +239,7 @@ describe('createEditorContext - checkRootDir', () => {
         expect(context).toEqual({
             isDarkMode,
             defaultFormat,
-            colorManager,
+            darkColorHandler,
             addDelimiterForEntity: true,
             isRootRtl: true,
             allowCacheElement: true,

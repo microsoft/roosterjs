@@ -6,6 +6,7 @@ describe('createEditorCore', () => {
     const mockedSizeTransformer = 'TRANSFORMER' as any;
     const mockedEditPluginState = 'EDITSTATE' as any;
     const mockedContextMenuPluginState = 'CONTEXTMENUSTATE' as any;
+    const mockedInnerHandler = 'INNER' as any;
     const mockedDarkHandler = 'DARK' as any;
 
     beforeEach(() => {
@@ -13,14 +14,13 @@ describe('createEditorCore', () => {
     });
 
     it('No additional option', () => {
-        const div = document.createElement('div');
         const core = createEditorCore(
-            div,
             {},
             {
                 edit: mockedEditPluginState,
                 contextMenu: mockedContextMenuPluginState,
             },
+            mockedInnerHandler,
             mockedSizeTransformer
         );
 
@@ -34,6 +34,7 @@ describe('createEditorCore', () => {
             sizeTransformer: mockedSizeTransformer,
             darkColorHandler: mockedDarkHandler,
         });
+        expect(darkColorHandler.createDarkColorHandler).toHaveBeenCalledWith(mockedInnerHandler);
     });
 
     it('With additional plugins', () => {
@@ -43,10 +44,8 @@ describe('createEditorCore', () => {
         const mockedCoreApi = {
             a: 'b',
         } as any;
-        const div = document.createElement('div');
 
         const core = createEditorCore(
-            div,
             {
                 plugins: [mockedPlugin1, mockedPlugin2],
                 experimentalFeatures: mockedFeatures,
@@ -56,6 +55,7 @@ describe('createEditorCore', () => {
                 edit: mockedEditPluginState,
                 contextMenu: mockedContextMenuPluginState,
             },
+            mockedInnerHandler,
             mockedSizeTransformer
         );
 
@@ -69,5 +69,6 @@ describe('createEditorCore', () => {
             sizeTransformer: mockedSizeTransformer,
             darkColorHandler: mockedDarkHandler,
         });
+        expect(darkColorHandler.createDarkColorHandler).toHaveBeenCalledWith(mockedInnerHandler);
     });
 });

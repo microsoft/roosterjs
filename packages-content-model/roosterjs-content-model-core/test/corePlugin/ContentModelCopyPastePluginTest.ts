@@ -19,7 +19,7 @@ import {
     ClipboardData,
     CopyPastePluginState,
     PluginWithState,
-    ColorManager,
+    DarkColorHandler,
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
@@ -80,7 +80,7 @@ describe('ContentModelCopyPastePlugin |', () => {
     let getVisibleViewportSpy: jasmine.Spy;
     let formatResult: boolean | undefined;
     let modelResult: ContentModelDocument | undefined;
-    let mockedColorManager: ColorManager;
+    let mockedDarkColorHandler: DarkColorHandler;
 
     beforeEach(() => {
         modelResult = undefined;
@@ -104,7 +104,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             (model: any) => pasteModelValue
         );
         transformColorSpy = spyOn(transformColor, 'transformColor');
-        mockedColorManager = 'COLOR' as any;
+        mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
@@ -157,7 +157,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             pasteFromClipboard: (ar1: any) => {
                 pasteSpy(ar1);
             },
-            getColorManager: () => mockedColorManager,
+            getColorManager: () => mockedDarkColorHandler,
             isDisposed,
             getVisibleViewport: getVisibleViewportSpy,
             formatContentModel: formatContentModelSpy,
@@ -361,7 +361,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     cloneEntity,
                     true,
                     'darkToLight',
-                    mockedColorManager
+                    mockedDarkColorHandler
                 );
 
                 return pasteModelValue;

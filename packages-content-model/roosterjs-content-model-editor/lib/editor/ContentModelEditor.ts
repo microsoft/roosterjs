@@ -125,11 +125,13 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         const corePluginState = bridgePlugin.getCorePluginState();
 
         super(contentDiv, standaloneEditorOptions, () => {
+            const core = this.getCore();
+
             // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
             this.contentModelEditorCore = createEditorCore(
-                contentDiv,
                 options,
                 corePluginState,
+                core.darkColorHandler,
                 size => size / this.getCore().zoomScale
             );
 
@@ -956,7 +958,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             core.contentDiv,
             true /*includeSelf*/,
             nextDarkMode ? 'lightToDark' : 'darkToLight',
-            core.colorManager
+            core.darkColorHandler
         );
 
         this.triggerContentChangedEvent(
@@ -981,7 +983,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             node,
             true /*includeSelf*/,
             direction == ColorTransformDirection.DarkToLight ? 'darkToLight' : 'lightToDark',
-            core.colorManager
+            core.darkColorHandler
         );
     }
 

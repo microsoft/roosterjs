@@ -1,46 +1,23 @@
-import { getObjectKeys } from 'roosterjs-content-model-dom';
-import type {
-    ColorKeyAndValue,
-    DarkColorHandler,
-    ModeIndependentColor,
-} from 'roosterjs-editor-types';
+import { getColor, getObjectKeys, parseColor, setColor } from 'roosterjs-content-model-dom';
+import type { ColorKeyAndValue, DarkColorHandler } from 'roosterjs-editor-types';
+import type { DarkColorHandler as StandaloneDarkColorHandler } from 'roosterjs-content-model-types';
 
 const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';
 const COLOR_VAR_PREFIX = 'darkColor';
-const enum ColorAttributeEnum {
-    CssColor = 0,
-    HtmlColor = 1,
-}
-const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
-    {
-        [ColorAttributeEnum.CssColor]: 'color',
-        [ColorAttributeEnum.HtmlColor]: 'color',
-    },
-    {
-        [ColorAttributeEnum.CssColor]: 'background-color',
-        [ColorAttributeEnum.HtmlColor]: 'bgcolor',
-    },
-];
-const HEX3_REGEX = /^#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])$/;
-const HEX6_REGEX = /^#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$/;
-const RGB_REGEX = /^rgb\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)$/;
-const RGBA_REGEX = /^rgba\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)$/;
 
 /**
  * @internal
  */
 export class DarkColorHandlerImpl implements DarkColorHandler {
-    private knownColors: Record<string, Readonly<ModeIndependentColor>> = {};
-
-    constructor(private contentDiv: HTMLElement, private getDarkColor: (color: string) => string) {}
+    constructor(private innerHandler: StandaloneDarkColorHandler) {}
 
     /**
      * Get a copy of known colors
      * @returns
      */
     getKnownColorsCopy() {
-        return Object.values(this.knownColors);
+        return Object.values(this.innerHandler.knownColors);
     }
 
     /**
@@ -64,12 +41,10 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
             colorKey =
                 colorKey || `--${COLOR_VAR_PREFIX}_${lightModeColor.replace(/[^\d\w]/g, '_')}`;
 
-            if (!this.knownColors[colorKey]) {
-                darkModeColor = darkModeColor || this.getDarkColor(lightModeColor);
-
-                this.knownColors[colorKey] = { lightModeColor, darkModeColor };
-                this.contentDiv.style.setProperty(colorKey, darkModeColor);
-            }
+            this.innerHandler.updateKnownColor(isDarkMode, colorKey, {
+                lightModeColor,
+                darkModeColor: darkModeColor || this.innerHandler.getDarkColor(lightModeColor),
+            });
 
             return `var(${colorKey}, ${lightModeColor})`;
         } else {
@@ -81,8 +56,7 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
      * Reset known color record, clean up registered color variables.
      */
     reset(): void {
-        getObjectKeys(this.knownColors).forEach(key => this.contentDiv.style.removeProperty(key));
-        this.knownColors = {};
+        this.innerHandler.updateKnownColor(false /*isDarkColor*/);
     }
 
     /**
@@ -104,7 +78,7 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
                 if (match[2]) {
                     key = match[1];
                     lightModeColor = match[2];
-                    darkModeColor = this.knownColors[key]?.darkModeColor;
+                    darkModeColor = this.innerHandler.knownColors[key]?.darkModeColor;
                 } else {
                     lightModeColor = '';
                 }
@@ -130,11 +104,12 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
      * @param darkColor The existing dark color
      */
     findLightColorFromDarkColor(darkColor: string): string | null {
-        const rgbSearch = this.parseColor(darkColor);
+        const rgbSearch = parseColor(darkColor);
+        const knownColors = this.innerHandler.knownColors;
 
         if (rgbSearch) {
-            const key = getObjectKeys(this.knownColors).find(key => {
-                const rgbCurrent = this.parseColor(this.knownColors[key].darkModeColor);
+            const key = getObjectKeys(knownColors).find(key => {
+                const rgbCurrent = parseColor(knownColors[key].darkModeColor);
 
                 return (
                     rgbCurrent &&
@@ -145,7 +120,7 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
             });
 
             if (key) {
-                return this.knownColors[key].lightModeColor;
+                return knownColors[key].lightModeColor;
             }
         }
 
@@ -159,52 +134,17 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
      * @param toDarkMode Whether this is transforming color to dark mode
      */
     transformElementColor(element: HTMLElement, fromDarkMode: boolean, toDarkMode: boolean): void {
-        ColorAttributeName.forEach((names, i) => {
-            const color = this.parseColorValue(
-                element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
-                    element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
-                !!fromDarkMode
-            ).lightModeColor;
-            const transformedColor =
-                color && color != 'inherit' ? this.registerColor(color, !!toDarkMode) : null;
+        const textColor = getColor(element, false /*isBackground*/, !toDarkMode, this.innerHandler);
+        const backColor = getColor(element, true /*isBackground*/, !toDarkMode, this.innerHandler);
 
-            element.style.setProperty(names[ColorAttributeEnum.CssColor], transformedColor);
-            element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
-        });
-    }
-
-    /**
-     * Parse color string to r/g/b value.
-     * If the given color is not in a recognized format, return null
-     */
-    private parseColor(color: string): [number, number, number] | null {
-        color = (color || '').trim();
-
-        let match: RegExpMatchArray | null;
-        if ((match = color.match(HEX3_REGEX))) {
-            return [
-                parseInt(match[1] + match[1], 16),
-                parseInt(match[2] + match[2], 16),
-                parseInt(match[3] + match[3], 16),
-            ];
-        } else if ((match = color.match(HEX6_REGEX))) {
-            return [parseInt(match[1], 16), parseInt(match[2], 16), parseInt(match[3], 16)];
-        } else if ((match = color.match(RGB_REGEX) || color.match(RGBA_REGEX))) {
-            return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
-        } else {
-            // CSS color names such as red, green is not included for now.
-            // If need, we can add those colors from https://www.w3.org/wiki/CSS/Properties/color/keywords
-            return null;
-        }
+        setColor(element, textColor, false /*isBackground*/, toDarkMode, this.innerHandler);
+        setColor(element, backColor, true /*isBackground*/, toDarkMode, this.innerHandler);
     }
 }
 
 /**
  * @internal
  */
-export function createDarkColorHandler(
-    contentDiv: HTMLElement,
-    getDarkColor: (color: string) => string
-): DarkColorHandler {
-    return new DarkColorHandlerImpl(contentDiv, getDarkColor);
+export function createDarkColorHandler(innerHandler: StandaloneDarkColorHandler): DarkColorHandler {
+    return new DarkColorHandlerImpl(innerHandler);
 }

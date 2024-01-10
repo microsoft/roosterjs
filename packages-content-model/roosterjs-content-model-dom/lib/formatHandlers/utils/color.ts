@@ -1,5 +1,5 @@
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
-import type { ColorManager, Colors } from 'roosterjs-content-model-types';
+import type { DarkColorHandler, Colors } from 'roosterjs-content-model-types';
 
 /**
  * List of deprecated colors
@@ -51,7 +51,7 @@ export function getColor(
     element: HTMLElement,
     isBackground: boolean,
     isDarkMode: boolean,
-    colorManager?: ColorManager
+    colorManager?: DarkColorHandler
 ): string | undefined {
     let color =
         (isBackground ? element.style.backgroundColor : element.style.color) ||
@@ -91,7 +91,7 @@ export function setColor(
     color: string | null | undefined,
     isBackground: boolean,
     isDarkMode: boolean,
-    colorManager?: ColorManager
+    colorManager?: DarkColorHandler
 ) {
     const match = color && color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
     const [_, existingKey, fallbackColor] = match ?? [];

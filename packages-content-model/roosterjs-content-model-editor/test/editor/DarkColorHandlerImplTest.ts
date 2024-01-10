@@ -1,4 +1,5 @@
 import { ColorKeyAndValue } from 'roosterjs-editor-types';
+import { createDarkColorHandler } from 'roosterjs-content-model-core/lib/editor/DarkColorHandlerImpl';
 import { DarkColorHandlerImpl } from '../../lib/editor/DarkColorHandlerImpl';
 
 function getDarkColor(color: string) {
@@ -8,14 +9,16 @@ function getDarkColor(color: string) {
 describe('DarkColorHandlerImpl.ctor', () => {
     it('No additional param', () => {
         const div = document.createElement('div');
-        const handler = new DarkColorHandlerImpl(div, getDarkColor);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        const handler = new DarkColorHandlerImpl(innerHandler);
 
         expect(handler).toBeDefined();
     });
 
     it('Calculate color using customized base color', () => {
         const div = document.createElement('div');
-        const handler = new DarkColorHandlerImpl(div, getDarkColor);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        const handler = new DarkColorHandlerImpl(innerHandler);
 
         const darkColor = handler.registerColor('red', true);
         const parsedColor = handler.parseColorValue(darkColor);
@@ -35,7 +38,8 @@ describe('DarkColorHandlerImpl.parseColorValue', () => {
 
     beforeEach(() => {
         div = document.createElement('div');
-        handler = new DarkColorHandlerImpl(div, getDarkColor);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        handler = new DarkColorHandlerImpl(innerHandler);
     });
 
     function runTest(input: string, expectedOutput: ColorKeyAndValue) {
@@ -77,7 +81,7 @@ describe('DarkColorHandlerImpl.parseColorValue', () => {
     });
 
     it('var color with fallback, has dark color', () => {
-        (handler as any).knownColors = {
+        (handler as any).innerHandler.knownColors = {
             '--bb': {
                 lightModeColor: 'dd',
                 darkModeColor: 'ee',
@@ -113,7 +117,7 @@ describe('DarkColorHandlerImpl.parseColorValue', () => {
     });
 
     it('known simple color in dark mode', () => {
-        (handler as any).knownColors = {
+        (handler as any).innerHandler.knownColors = {
             '--bb': {
                 lightModeColor: '#ff0000',
                 darkModeColor: '#00ffff',
@@ -138,7 +142,8 @@ describe('DarkColorHandlerImpl.registerColor', () => {
                 setProperty,
             },
         } as any) as HTMLElement;
-        handler = new DarkColorHandlerImpl(div, getDarkColor);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        handler = new DarkColorHandlerImpl(innerHandler);
     });
 
     function runTest(
@@ -146,118 +151,77 @@ describe('DarkColorHandlerImpl.registerColor', () => {
         isDark: boolean,
         darkColor: string | undefined,
         expectedOutput: string,
-        expectedKnownColors: Record<string, ColorKeyAndValue>,
-        expectedSetPropertyCalls: [string, string][]
+        expectedKnownColors: Record<string, ColorKeyAndValue>
     ) {
         const result = handler.registerColor(input, isDark, darkColor);
 
         expect(result).toEqual(expectedOutput);
-        expect((handler as any).knownColors).toEqual(expectedKnownColors);
-        expect(setProperty).toHaveBeenCalledTimes(expectedSetPropertyCalls.length);
-
-        expectedSetPropertyCalls.forEach(v => {
-            expect(setProperty).toHaveBeenCalledWith(...v);
-        });
+        expect((handler as any).innerHandler.knownColors).toEqual(expectedKnownColors);
     }
 
     it('empty color, light mode', () => {
-        runTest('', false, undefined, '', {}, []);
+        runTest('', false, undefined, '', {});
     });
 
     it('simple color, light mode', () => {
-        runTest('red', false, undefined, 'red', {}, []);
+        runTest('red', false, undefined, 'red', {});
     });
 
     it('empty color, dark mode', () => {
-        runTest('', true, undefined, '', {}, []);
+        runTest('', true, undefined, '', {});
     });
 
     it('simple color, dark mode', () => {
-        runTest(
-            'red',
-            true,
-            undefined,
-            'var(--darkColor_red, red)',
-            {
-                '--darkColor_red': {
-                    lightModeColor: 'red',
-                    darkModeColor: 'Dark_red',
-                },
+        runTest('red', true, undefined, 'var(--darkColor_red, red)', {
+            '--darkColor_red': {
+                lightModeColor: 'red',
+                darkModeColor: 'Dark_red',
             },
-            [['--darkColor_red', 'Dark_red']]
-        );
+        });
     });
 
     it('simple color, dark mode, with dark color', () => {
-        runTest(
-            'red',
-            true,
-            'blue',
-            'var(--darkColor_red, red)',
-            {
-                '--darkColor_red': {
-                    lightModeColor: 'red',
-                    darkModeColor: 'blue',
-                },
+        runTest('red', true, 'blue', 'var(--darkColor_red, red)', {
+            '--darkColor_red': {
+                lightModeColor: 'red',
+                darkModeColor: 'blue',
             },
-            [['--darkColor_red', 'blue']]
-        );
+        });
     });
 
     it('var color, light mode', () => {
-        runTest('var(--aa, bb)', false, undefined, 'bb', {}, []);
+        runTest('var(--aa, bb)', false, undefined, 'bb', {});
     });
 
     it('var color, dark mode', () => {
-        runTest(
-            'var(--aa, red)',
-            true,
-            undefined,
-            'var(--aa, red)',
-            {
-                '--aa': {
-                    lightModeColor: 'red',
-                    darkModeColor: 'Dark_red',
-                },
+        runTest('var(--aa, red)', true, undefined, 'var(--aa, red)', {
+            '--aa': {
+                lightModeColor: 'red',
+                darkModeColor: 'Dark_red',
             },
-            [['--aa', 'Dark_red']]
-        );
+        });
     });
 
     it('var color, dark mode with dark color', () => {
-        runTest(
-            'var(--aa, bb)',
-            true,
-            'cc',
-            'var(--aa, bb)',
-            {
-                '--aa': {
-                    lightModeColor: 'bb',
-                    darkModeColor: 'cc',
-                },
+        runTest('var(--aa, bb)', true, 'cc', 'var(--aa, bb)', {
+            '--aa': {
+                lightModeColor: 'bb',
+                darkModeColor: 'cc',
             },
-            [['--aa', 'cc']]
-        );
+        });
     });
 
     it('var color, dark mode with dark color and existing dark color', () => {
-        (handler as any).knownColors['--aa'] = {
+        (handler as any).innerHandler.knownColors['--aa'] = {
             lightModeColor: 'dd',
             darkModeColor: 'ee',
         };
-        runTest(
-            'var(--aa, bb)',
-            true,
-            'cc',
-            'var(--aa, bb)',
-            {
-                '--aa': {
-                    lightModeColor: 'dd',
-                    darkModeColor: 'ee',
-                },
+        runTest('var(--aa, bb)', true, 'cc', 'var(--aa, bb)', {
+            '--aa': {
+                lightModeColor: 'dd',
+                darkModeColor: 'ee',
             },
-            []
-        );
+        });
     });
 });
 
@@ -269,9 +233,10 @@ describe('DarkColorHandlerImpl.reset', () => {
                 removeProperty,
             },
         } as any) as HTMLElement;
-        const handler = new DarkColorHandlerImpl(div, null!);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        const handler = new DarkColorHandlerImpl(innerHandler);
 
-        (handler as any).knownColors = {
+        (handler as any).innerHandler.knownColors = {
             '--aa': {
                 lightModeColor: 'bb',
                 darkModeColor: 'cc',
@@ -284,7 +249,6 @@ describe('DarkColorHandlerImpl.reset', () => {
 
         handler.reset();
 
-        expect((handler as any).knownColors).toEqual({});
         expect(removeProperty).toHaveBeenCalledTimes(2);
         expect(removeProperty).toHaveBeenCalledWith('--aa');
         expect(removeProperty).toHaveBeenCalledWith('--dd');
@@ -294,7 +258,8 @@ describe('DarkColorHandlerImpl.reset', () => {
 describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
     it('Not found', () => {
         const div = ({} as any) as HTMLElement;
-        const handler = new DarkColorHandlerImpl(div, null!);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        const handler = new DarkColorHandlerImpl(innerHandler);
 
         const result = handler.findLightColorFromDarkColor('#010203');
 
@@ -303,9 +268,10 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 
     it('Found: HEX to RGB', () => {
         const div = ({} as any) as HTMLElement;
-        const handler = new DarkColorHandlerImpl(div, null!);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        const handler = new DarkColorHandlerImpl(innerHandler);
 
-        (handler as any).knownColors = {
+        (handler as any).innerHandler.knownColors = {
             '--bb': {
                 lightModeColor: 'bb',
                 darkModeColor: 'rgb(4,5,6)',
@@ -323,9 +289,10 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 
     it('Found: HEX to HEX', () => {
         const div = ({} as any) as HTMLElement;
-        const handler = new DarkColorHandlerImpl(div, null!);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        const handler = new DarkColorHandlerImpl(innerHandler);
 
-        (handler as any).knownColors = {
+        (handler as any).innerHandler.knownColors = {
             '--bb': {
                 lightModeColor: 'bb',
                 darkModeColor: 'rgb(4,5,6)',
@@ -343,9 +310,10 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 
     it('Found: RGB to HEX', () => {
         const div = ({} as any) as HTMLElement;
-        const handler = new DarkColorHandlerImpl(div, null!);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        const handler = new DarkColorHandlerImpl(innerHandler);
 
-        (handler as any).knownColors = {
+        (handler as any).innerHandler.knownColors = {
             '--bb': {
                 lightModeColor: 'bb',
                 darkModeColor: 'rgb(4,5,6)',
@@ -363,9 +331,10 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 
     it('Found: RGB to RGB', () => {
         const div = ({} as any) as HTMLElement;
-        const handler = new DarkColorHandlerImpl(div, null!);
+        const innerHandler = createDarkColorHandler(div, getDarkColor);
+        const handler = new DarkColorHandlerImpl(innerHandler);
 
-        (handler as any).knownColors = {
+        (handler as any).innerHandler.knownColors = {
             '--bb': {
                 lightModeColor: 'bb',
                 darkModeColor: 'rgb(4,5,6)',
@@ -383,17 +352,13 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 });
 
 describe('DarkColorHandlerImpl.transformElementColor', () => {
-    let parseColorSpy: jasmine.Spy;
-    let registerColorSpy: jasmine.Spy;
     let handler: DarkColorHandlerImpl;
     let contentDiv: HTMLDivElement;
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
-        handler = new DarkColorHandlerImpl(contentDiv, getDarkColor);
-
-        parseColorSpy = spyOn(handler, 'parseColorValue').and.callThrough();
-        registerColorSpy = spyOn(handler, 'registerColor').and.callThrough();
+        const innerHandler = createDarkColorHandler(contentDiv, getDarkColor);
+        handler = new DarkColorHandlerImpl(innerHandler);
     });
 
     it('No color, light to dark', () => {
@@ -401,9 +366,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, false, true);
 
         expect(span.outerHTML).toBe('<span></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(2);
-        expect(parseColorSpy).toHaveBeenCalledWith(null, false);
-        expect(registerColorSpy).not.toHaveBeenCalled();
     });
 
     it('Has simple color in HTML, light to dark', () => {
@@ -414,11 +376,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, false, true);
 
         expect(span.outerHTML).toBe('<span style="color: var(--darkColor_red, red);"></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(3);
-        expect(parseColorSpy).toHaveBeenCalledWith('red', false);
-        expect(parseColorSpy).toHaveBeenCalledWith(null, false);
-        expect(registerColorSpy).toHaveBeenCalledTimes(1);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', true);
     });
 
     it('Has simple color in CSS, light to dark', () => {
@@ -429,11 +386,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, false, true);
 
         expect(span.outerHTML).toBe('<span style="color: var(--darkColor_red, red);"></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(3);
-        expect(parseColorSpy).toHaveBeenCalledWith('red', false);
-        expect(parseColorSpy).toHaveBeenCalledWith(null, false);
-        expect(registerColorSpy).toHaveBeenCalledTimes(1);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', true);
     });
 
     it('Has color in both text and background, light to dark', () => {
@@ -447,14 +399,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         expect(span.outerHTML).toBe(
             '<span style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green);"></span>'
         );
-        expect(parseColorSpy).toHaveBeenCalledTimes(4);
-        expect(parseColorSpy).toHaveBeenCalledWith('red', false);
-        expect(parseColorSpy).toHaveBeenCalledWith('green', false);
-        expect(parseColorSpy).toHaveBeenCalledWith('red');
-        expect(parseColorSpy).toHaveBeenCalledWith('green');
-        expect(registerColorSpy).toHaveBeenCalledTimes(2);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', true);
-        expect(registerColorSpy).toHaveBeenCalledWith('green', true);
     });
 
     it('Has var-based color, light to dark', () => {
@@ -465,12 +409,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, false, true);
 
         expect(span.outerHTML).toBe('<span style="color: var(--darkColor_red, red);"></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(3);
-        expect(parseColorSpy).toHaveBeenCalledWith('var(--darkColor_red, red)', false);
-        expect(parseColorSpy).toHaveBeenCalledWith('red');
-        expect(parseColorSpy).toHaveBeenCalledWith(null, false);
-        expect(registerColorSpy).toHaveBeenCalledTimes(1);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', true);
     });
 
     it('No color, dark to light', () => {
@@ -478,9 +416,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, true, false);
 
         expect(span.outerHTML).toBe('<span></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(2);
-        expect(parseColorSpy).toHaveBeenCalledWith(null, true);
-        expect(registerColorSpy).not.toHaveBeenCalled();
     });
 
     it('Has simple color in HTML, dark to light', () => {
@@ -491,10 +426,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, true, false);
 
         expect(span.outerHTML).toBe('<span></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(2);
-        expect(parseColorSpy).toHaveBeenCalledWith('red', true);
-        expect(parseColorSpy).toHaveBeenCalledWith(null, true);
-        expect(registerColorSpy).not.toHaveBeenCalled();
     });
 
     it('Has simple color in CSS, dark to light', () => {
@@ -505,10 +436,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, true, false);
 
         expect(span.outerHTML).toBe('<span style=""></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(2);
-        expect(parseColorSpy).toHaveBeenCalledWith('red', true);
-        expect(parseColorSpy).toHaveBeenCalledWith(null, true);
-        expect(registerColorSpy).not.toHaveBeenCalled();
     });
 
     it('Has color in both text and background, dark to light', () => {
@@ -520,10 +447,6 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, true, false);
 
         expect(span.outerHTML).toBe('<span style=""></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(2);
-        expect(parseColorSpy).toHaveBeenCalledWith('red', true);
-        expect(parseColorSpy).toHaveBeenCalledWith('green', true);
-        expect(registerColorSpy).not.toHaveBeenCalled();
     });
 
     it('Has var-based color, dark to light', () => {
@@ -534,11 +457,5 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
         handler.transformElementColor(span, true, false);
 
         expect(span.outerHTML).toBe('<span style="color: red;"></span>');
-        expect(parseColorSpy).toHaveBeenCalledTimes(3);
-        expect(parseColorSpy).toHaveBeenCalledWith('var(--darkColor_red, red)', true);
-        expect(parseColorSpy).toHaveBeenCalledWith('red');
-        expect(parseColorSpy).toHaveBeenCalledWith(null, true);
-        expect(registerColorSpy).toHaveBeenCalledTimes(1);
-        expect(registerColorSpy).toHaveBeenCalledWith('red', false);
     });
 });

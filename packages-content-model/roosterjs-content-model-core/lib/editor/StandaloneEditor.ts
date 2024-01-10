@@ -3,10 +3,10 @@ import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { transformColor } from '../publicApi/color/transformColor';
 import type {
     ClipboardData,
-    ColorManager,
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
+    DarkColorHandler,
     DOMEventRecord,
     DOMSelection,
     DomToModelOption,
@@ -66,7 +66,7 @@ export class StandaloneEditor implements IStandaloneEditor {
             }
         }
 
-        core.colorManager.updateKnownColor(false /*isDarkMode*/); // Force clear color variables
+        core.darkColorHandler.updateKnownColor(false /*isDarkMode*/); // Force clear color variables
 
         this.core = null;
     }
@@ -264,7 +264,7 @@ export class StandaloneEditor implements IStandaloneEditor {
                 core.contentDiv,
                 true /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
-                core.colorManager
+                core.darkColorHandler
             );
 
             core.api.triggerEvent(
@@ -330,8 +330,8 @@ export class StandaloneEditor implements IStandaloneEditor {
     /**
      * Get a color manager object for this editor.
      */
-    getColorManager(): ColorManager {
-        return this.getCore().colorManager;
+    getColorManager(): DarkColorHandler {
+        return this.getCore().darkColorHandler;
     }
 
     /**

@@ -1,11 +1,12 @@
-import * as ColorManagerImpl from '../../lib/editor/ColorManagerImpl';
 import * as createDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
 import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
+import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
 import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
 import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 import {
     createStandaloneEditorCore,
     defaultTrustHtmlHandler,
+    getDarkColorFallback,
 } from '../../lib/editor/createStandaloneEditorCore';
 
 describe('createEditorCore', () => {
@@ -33,7 +34,7 @@ describe('createEditorCore', () => {
         selection: mockedSelectionPlugin,
         undo: mockedUndoPlugin,
     };
-    const mockedColorManager = 'DARKCOLOR' as any;
+    const mockedDarkColorHandler = 'DARKCOLOR' as any;
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
     const mockedModelToDomSettings = 'MODELTODOM' as any;
 
@@ -42,7 +43,9 @@ describe('createEditorCore', () => {
             createStandaloneEditorCorePlugins,
             'createStandaloneEditorCorePlugins'
         ).and.returnValue(mockedPlugins);
-        spyOn(ColorManagerImpl, 'createColorManager').and.returnValue(mockedColorManager);
+        spyOn(DarkColorHandlerImpl, 'createDarkColorHandler').and.returnValue(
+            mockedDarkColorHandler
+        );
         spyOn(createDefaultSettings, 'createDomToModelSettings').and.returnValue(
             mockedDomToModelSettings
         );
@@ -77,7 +80,7 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: false,
             },
-            colorManager: mockedColorManager,
+            darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: defaultTrustHtmlHandler,
             domToModelSettings: mockedDomToModelSettings,
             modelToDomSettings: mockedModelToDomSettings,
@@ -116,9 +119,9 @@ describe('createEditorCore', () => {
             {}
         );
 
-        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            undefined,
+            getDarkColorFallback,
             undefined
         );
     });
@@ -161,16 +164,16 @@ describe('createEditorCore', () => {
                 mockedUndoPlugin,
                 mockedLifeCyclePlugin,
             ],
-            colorManager: mockedColorManager,
+            darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: mockedTrustHtmlHandler,
             disposeErrorHandler: mockedDisposeErrorHandler,
             zoomScale: 2,
         });
 
-        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            undefined,
-            mockedGetDarkColor
+            mockedGetDarkColor,
+            undefined
         );
     });
 
@@ -187,9 +190,9 @@ describe('createEditorCore', () => {
 
         runTest(mockedDiv, mockedOptions, {});
 
-        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            undefined,
+            getDarkColorFallback,
             undefined
         );
     });
@@ -219,9 +222,9 @@ describe('createEditorCore', () => {
             },
         });
 
-        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            undefined,
+            getDarkColorFallback,
             undefined
         );
     });
@@ -251,9 +254,9 @@ describe('createEditorCore', () => {
             },
         });
 
-        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            undefined,
+            getDarkColorFallback,
             undefined
         );
     });
@@ -283,9 +286,9 @@ describe('createEditorCore', () => {
             },
         });
 
-        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            undefined,
+            getDarkColorFallback,
             undefined
         );
     });
@@ -315,9 +318,9 @@ describe('createEditorCore', () => {
             },
         });
 
-        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            undefined,
+            getDarkColorFallback,
             undefined
         );
     });
@@ -347,9 +350,9 @@ describe('createEditorCore', () => {
             },
         });
 
-        expect(ColorManagerImpl.createColorManager).toHaveBeenCalledWith(
+        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            undefined,
+            getDarkColorFallback,
             undefined
         );
     });

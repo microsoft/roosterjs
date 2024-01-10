@@ -107,7 +107,7 @@ describe('textColorFormatHandler.apply', () => {
     beforeEach(() => {
         div = document.createElement('div');
         context = createModelToDomContext();
-        context.colorManager = {
+        context.darkColorHandler = {
             updateKnownColor: () => {},
             getDarkColor: (lightColor: string) => `var(--darkColor_${lightColor}, ${lightColor})`,
         } as any;

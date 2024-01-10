@@ -9,8 +9,12 @@ import type { FormatHandler } from '../FormatHandler';
 export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const backgroundColor =
-            getColor(element, true /*isBackground*/, !!context.isDarkMode, context.colorManager) ||
-            defaultStyle.backgroundColor;
+            getColor(
+                element,
+                true /*isBackground*/,
+                !!context.isDarkMode,
+                context.darkColorHandler
+            ) || defaultStyle.backgroundColor;
 
         if (
             shouldSetValue(
@@ -30,7 +34,7 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
                 format.backgroundColor,
                 true /*isBackground*/,
                 !!context.isDarkMode,
-                context.colorManager
+                context.darkColorHandler
             );
         }
     },

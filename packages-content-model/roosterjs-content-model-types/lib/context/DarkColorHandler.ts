@@ -31,7 +31,7 @@ export type ColorTransformFunction = (
 /**
  * A handler object for dark color, used for variable-based dark color solution
  */
-export interface ColorManager {
+export interface DarkColorHandler {
     /**
      * Map of known colors
      */

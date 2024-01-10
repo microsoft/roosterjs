@@ -192,7 +192,7 @@ export {
     ObjectDefinition,
     Definition,
 } from './metadata/Definition';
-export { ColorManager, Colors, ColorTransformFunction } from './context/ColorManager';
+export { DarkColorHandler, Colors, ColorTransformFunction } from './context/DarkColorHandler';
 
 export { IStandaloneEditor } from './editor/IStandaloneEditor';
 export { StandaloneEditorOptions } from './editor/StandaloneEditorOptions';

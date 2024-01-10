@@ -16,7 +16,7 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type { ColorManager } from '../context/ColorManager';
+import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
 /**
@@ -207,7 +207,7 @@ export interface IStandaloneEditor {
     /**
      * Get a darkColorHandler object for this editor.
      */
-    getColorManager(): ColorManager;
+    getColorManager(): DarkColorHandler;
 
     /**
      * Dispose this editor, dispose all plugins and custom data
