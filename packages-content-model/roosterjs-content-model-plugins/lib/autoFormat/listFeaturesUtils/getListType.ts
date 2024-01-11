@@ -15,7 +15,9 @@ import {
 } from 'roosterjs-content-model-core';
 
 export function getListType(
-    editor: IStandaloneEditor
+    editor: IStandaloneEditor,
+    shouldSearchForBullet: boolean = true,
+    shouldSearchForNumbering: boolean = true
 ): { listType: 'UL' | 'OL'; styleType: number; index?: number } | undefined {
     const model = editor.createContentModel();
     const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, true);
@@ -31,9 +33,9 @@ export function getListType(
         const listMarker = listMarkerSegment.text;
         const bulletType = bulletListType[listMarker];
 
-        if (bulletType) {
+        if (bulletType && shouldSearchForBullet) {
             return { listType: 'UL', styleType: bulletType };
-        } else {
+        } else if (shouldSearchForNumbering) {
             const previousList = getPreviousListLevel(model, paragraph);
             const previousListStyle = getPreviousListStyle(previousList);
             const numberingType = getNumberingListStyle(

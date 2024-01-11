@@ -16,7 +16,6 @@ import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { ContentModelSegmentFormat, Snapshot } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
@@ -24,6 +23,11 @@ import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
+import {
+    ContentModelAutoFormatPlugin,
+    ContentModelEditPlugin,
+    EntityDelimiterPlugin,
+} from 'roosterjs-content-model-plugins';
 import {
     ContentModelEditor,
     ContentModelEditorOptions,
@@ -97,6 +101,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
     private contentModelEditPlugin: ContentModelEditPlugin;
+    private contentModelAutoFormatPlugin: ContentModelAutoFormatPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
@@ -125,6 +130,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.contentModelEditPlugin = new ContentModelEditPlugin();
+        this.contentModelAutoFormatPlugin = new ContentModelAutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
@@ -188,6 +194,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             ...this.toggleablePlugins,
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.contentModelEditPlugin,
+            this.contentModelAutoFormatPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.entityDelimiterPlugin,

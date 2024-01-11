@@ -1,5 +1,4 @@
-import { keyboardDelete } from './keyboardDelete';
-import { keyboardInput } from './keyboardInput';
+import { keyboardListTrigger } from './keyboardListTrigger';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type {
@@ -9,20 +8,29 @@ import type {
     PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
 
-/**
- * ContentModel edit plugins helps editor to do editing operation on top of content model.
- * This includes:
- * 1. Delete Key
- * 2. Backspace Key
- */
-export class ContentModelEditPlugin implements EditorPlugin {
+interface AutoFormatOptions {
+    autoBullet: boolean;
+    autoNumbering: boolean;
+}
+
+export class ContentModelAutoFormatPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+    private options: AutoFormatOptions = {
+        autoBullet: true,
+        autoNumbering: true,
+    };
+
+    constructor(options?: AutoFormatOptions) {
+        if (options) {
+            this.options = options;
+        }
+    }
 
     /**
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelEdit';
+        return 'ContentModelAutoFormat';
     }
 
     /**
@@ -63,20 +71,13 @@ export class ContentModelEditPlugin implements EditorPlugin {
 
     private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
         const rawEvent = event.rawEvent;
-
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
-            // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (rawEvent.key) {
-                case 'Backspace':
-                case 'Delete':
-                    // Use our API to handle BACKSPACE/DELETE key.
-                    // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
-                    keyboardDelete(editor, rawEvent);
-                    break;
+                case ' ':
+                    if (this.options.autoBullet || this.options.autoNumbering) {
+                        keyboardListTrigger(editor, rawEvent);
+                    }
 
-                case 'Enter':
-                default:
-                    keyboardInput(editor, rawEvent);
                     break;
             }
         }
