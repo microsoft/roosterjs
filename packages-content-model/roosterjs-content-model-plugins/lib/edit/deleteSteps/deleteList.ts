@@ -8,7 +8,7 @@ export const deleteList: DeleteSelectionStep = context => {
     const { paragraph, marker, path } = context.insertPoint;
 
     if (context.deleteResult == 'nothingToDelete' || context.deleteResult == 'notDeleted') {
-        const index = getClosestAncestorBlockGroupIndex(path, ['ListItem']);
+        const index = getClosestAncestorBlockGroupIndex(path, ['ListItem', 'TableCell']);
         const item = path[index];
         if (
             index >= 0 &&
@@ -18,7 +18,7 @@ export const deleteList: DeleteSelectionStep = context => {
                 (paragraph.segments.length == 2 && paragraph.segments[1].segmentType == 'Br'))
         ) {
             item.levels = [];
-            context.deleteResult = 'singleChar';
+            context.deleteResult = 'range';
         }
     }
 };
