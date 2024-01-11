@@ -1,10 +1,6 @@
 import type { ContentModelCorePluginState } from './ContentModelCorePlugins';
 import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
-    CompatibleGetContentMode,
-    CompatibleExperimentalFeatures,
-} from 'roosterjs-editor-types/lib/compatibleTypes';
-import type {
     CustomData,
     ExperimentalFeatures,
     ContentMetadata,
@@ -41,7 +37,7 @@ export type SetContent = (
 export type GetContent = (
     core: ContentModelEditorCore,
     innerCore: StandaloneEditorCore,
-    mode: GetContentMode | CompatibleGetContentMode
+    mode: GetContentMode
 ) => string;
 
 /**
@@ -157,7 +153,7 @@ export interface ContentModelEditorCore extends ContentModelCorePluginState {
     /**
      * Enabled experimental features
      */
-    readonly experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
+    readonly experimentalFeatures: ExperimentalFeatures[];
 
     /**
      * @deprecated Use zoomScale instead

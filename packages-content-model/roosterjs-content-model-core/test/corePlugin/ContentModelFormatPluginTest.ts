@@ -102,7 +102,7 @@ describe('ContentModelFormatPlugin', () => {
     });
 
     it('with pending format and selection, trigger CompositionEnd event', () => {
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const triggerEvent = jasmine.createSpy('triggerEvent');
         const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         const editor = ({
@@ -112,7 +112,7 @@ describe('ContentModelFormatPlugin', () => {
             },
             cacheContentModel: () => {},
             isDarkMode: () => false,
-            triggerPluginEvent,
+            triggerEvent,
             getVisibleViewport,
         } as any) as IStandaloneEditor;
         const plugin = createContentModelFormatPlugin({});

@@ -36,6 +36,8 @@ import type {
     NodePosition,
     PendableFormatState,
     PluginEvent,
+    PluginEventData,
+    PluginEventFromType,
     PositionType,
     Rect,
     Region,
@@ -56,6 +58,7 @@ import type {
     CompatibleContentPosition,
     CompatibleExperimentalFeatures,
     CompatibleGetContentMode,
+    CompatiblePluginEventType,
     CompatibleQueryScope,
     CompatibleRegionType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -290,7 +293,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         const core = this.getContentModelEditorCore();
         const innerCore = this.getCore();
 
-        return core.api.getContent(core, innerCore, mode);
+        return core.api.getContent(core, innerCore, mode as GetContentMode);
     }
 
     /**
@@ -533,6 +536,27 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         });
 
         return this.attachDomEvent(eventsMapResult);
+    }
+
+    /**
+     * Trigger an event to be dispatched to all plugins
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
+     * @param broadcast indicates if the event needs to be dispatched to all plugins
+     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    public triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast: boolean = false
+    ): PluginEventFromType<T> {
+        return this.triggerEvent(
+            eventType as PluginEventType,
+            data,
+            broadcast
+        ) as PluginEventFromType<T>;
     }
 
     /**
@@ -945,7 +969,11 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param feature The feature to check
      */
     isFeatureEnabled(feature: ExperimentalFeatures | CompatibleExperimentalFeatures): boolean {
-        return this.getContentModelEditorCore().experimentalFeatures.indexOf(feature) >= 0;
+        return (
+            this.getContentModelEditorCore().experimentalFeatures.indexOf(
+                feature as ExperimentalFeatures
+            ) >= 0
+        );
     }
 
     /**

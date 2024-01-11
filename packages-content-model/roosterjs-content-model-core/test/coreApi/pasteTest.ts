@@ -117,7 +117,7 @@ describe('Paste ', () => {
         });
 
         spyOn(editor, 'getDocument').and.callThrough();
-        spyOn(editor, 'triggerPluginEvent').and.callThrough();
+        spyOn(editor, 'triggerEvent').and.callThrough();
     });
 
     afterEach(() => {

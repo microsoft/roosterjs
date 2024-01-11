@@ -144,7 +144,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                 : null;
 
             if (newRange) {
-                newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                newRange = this.editor.triggerEvent(PluginEventType.BeforeCutCopy, {
                     clonedRoot: tempDiv,
                     range: newRange,
                     rawEvent: event as ClipboardEvent,
