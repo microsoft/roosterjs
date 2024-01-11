@@ -1,6 +1,5 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import MainPaneBase from '../../MainPaneBase';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
 
 const WIDTH = [0.25, 0.5, 0.75, 1, 1.5, 2.25, 3, 4.5, 6];
 
@@ -8,7 +7,7 @@ const WIDTH = [0.25, 0.5, 0.75, 1, 1.5, 2.25, 3, 4.5, 6];
  * @internal
  * "Table Border Width" button on the format ribbon
  */
-export const tableBorderWidthButton: RibbonButton<'buttonNameTableBorderWidth'> = {
+export const tableBorderWidthButton: ContentModelRibbonButton<'buttonNameTableBorderWidth'> = {
     key: 'buttonNameTableBorderWidth',
     unlocalizedText: 'Table Border Width',
     iconName: 'LineThickness',
@@ -21,10 +20,9 @@ export const tableBorderWidthButton: RibbonButton<'buttonNameTableBorderWidth'> 
         allowLivePreview: true,
     },
     onClick: (editor, width) => {
-        if (isContentModelEditor(editor)) {
-            MainPaneBase.getInstance().setTableBorderWidth(width);
-            editor.focus();
-        }
+        MainPaneBase.getInstance().setTableBorderWidth(width);
+        editor.focus();
+
         return true;
     },
 };

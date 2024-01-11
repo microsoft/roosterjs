@@ -1,6 +1,5 @@
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { NumberingListType } from 'roosterjs-content-model-core';
-import { RibbonButton } from 'roosterjs-react';
 import { setListStyle } from 'roosterjs-content-model-api';
 
 const dropDownMenuItems = {
@@ -26,7 +25,7 @@ const dropDownMenuItems = {
     [NumberingListType.UpperRomanDash]: 'UpperRomanDash',
 };
 
-export const setNumberedListStyleButton: RibbonButton<'ribbonButtonNumberedListStyle'> = {
+export const setNumberedListStyleButton: ContentModelRibbonButton<'ribbonButtonNumberedListStyle'> = {
     key: 'ribbonButtonNumberedListStyle',
     dropDownMenu: { items: dropDownMenuItems },
     unlocalizedText: 'Set ordered list style',
@@ -35,10 +34,8 @@ export const setNumberedListStyleButton: RibbonButton<'ribbonButtonNumberedListS
     onClick: (editor, key) => {
         const value = parseInt(key);
 
-        if (isContentModelEditor(editor)) {
-            setListStyle(editor, {
-                orderedStyleType: value,
-            });
-        }
+        setListStyle(editor, {
+            orderedStyleType: value,
+        });
     },
 };

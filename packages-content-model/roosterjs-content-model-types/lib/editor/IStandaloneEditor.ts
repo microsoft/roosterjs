@@ -3,7 +3,6 @@ import type { ClipboardData } from '../parameter/ClipboardData';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -113,7 +112,7 @@ export interface IStandaloneEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+    triggerEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast?: boolean
@@ -143,6 +142,13 @@ export interface IStandaloneEditor {
      * @returns current zoom scale number
      */
     getZoomScale(): number;
+
+    /**
+     * Set current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    setZoomScale(scale: number): void;
 
     /**
      * Add a single undo snapshot to undo stack

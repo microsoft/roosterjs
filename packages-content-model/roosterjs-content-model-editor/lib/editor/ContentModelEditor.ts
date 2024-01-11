@@ -1,9 +1,8 @@
+import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { createCorePlugins } from '../corePlugins/createCorePlugins';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
 import {
     createModelFromHtml,
     isBold,
@@ -37,6 +36,8 @@ import type {
     NodePosition,
     PendableFormatState,
     PluginEvent,
+    PluginEventData,
+    PluginEventFromType,
     PositionType,
     Rect,
     Region,
@@ -57,6 +58,7 @@ import type {
     CompatibleContentPosition,
     CompatibleExperimentalFeatures,
     CompatibleGetContentMode,
+    CompatiblePluginEventType,
     CompatibleQueryScope,
     CompatibleRegionType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -98,14 +100,8 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        const corePlugins = createCorePlugins(options);
-        const plugins = [
-            corePlugins.eventTranslate,
-            corePlugins.edit,
-            ...(options.plugins ?? []),
-            corePlugins.contextMenu,
-            corePlugins.normalizeTable,
-        ];
+        const bridgePlugin = new BridgePlugin(options);
+        const plugins = [bridgePlugin, ...(options.plugins ?? [])];
         const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
             initContent && !options.initialModel
@@ -118,13 +114,10 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 : options.initialModel;
         const standaloneEditorOptions: ContentModelEditorOptions = {
             ...options,
-            plugins: plugins,
+            plugins,
             initialModel,
         };
-        const corePluginState: ContentModelCorePluginState = {
-            edit: corePlugins.edit.getState(),
-            contextMenu: corePlugins.contextMenu.getState(),
-        };
+        const corePluginState = bridgePlugin.getCorePluginState();
 
         super(contentDiv, standaloneEditorOptions, () => {
             // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
@@ -133,6 +126,8 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 corePluginState,
                 size => size / this.getCore().zoomScale
             );
+
+            bridgePlugin.setOuterEditor(this);
         });
     }
 
@@ -298,7 +293,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         const core = this.getContentModelEditorCore();
         const innerCore = this.getCore();
 
-        return core.api.getContent(core, innerCore, mode);
+        return core.api.getContent(core, innerCore, mode as GetContentMode);
     }
 
     /**
@@ -541,6 +536,27 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         });
 
         return this.attachDomEvent(eventsMapResult);
+    }
+
+    /**
+     * Trigger an event to be dispatched to all plugins
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
+     * @param broadcast indicates if the event needs to be dispatched to all plugins
+     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    public triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast: boolean = false
+    ): PluginEventFromType<T> {
+        return this.triggerEvent(
+            eventType as PluginEventType,
+            data,
+            broadcast
+        ) as PluginEventFromType<T>;
     }
 
     /**
@@ -953,7 +969,11 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param feature The feature to check
      */
     isFeatureEnabled(feature: ExperimentalFeatures | CompatibleExperimentalFeatures): boolean {
-        return this.getContentModelEditorCore().experimentalFeatures.indexOf(feature) >= 0;
+        return (
+            this.getContentModelEditorCore().experimentalFeatures.indexOf(
+                feature as ExperimentalFeatures
+            ) >= 0
+        );
     }
 
     /**
@@ -971,32 +991,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      */
     getSizeTransformer(): SizeTransformer {
         return this.getContentModelEditorCore().sizeTransformer;
-    }
-
-    /**
-     * Set current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
-     */
-    setZoomScale(scale: number): void {
-        const core = this.getCore();
-
-        if (scale > 0 && scale <= 10) {
-            const oldValue = core.zoomScale;
-            core.zoomScale = scale;
-
-            if (oldValue != scale) {
-                this.triggerPluginEvent(
-                    PluginEventType.ZoomChanged,
-                    {
-                        oldZoomScale: oldValue,
-                        newZoomScale: scale,
-                    },
-                    true /*broadcast*/
-                );
-            }
-        }
     }
 
     /**

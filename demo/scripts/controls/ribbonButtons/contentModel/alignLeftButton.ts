@@ -1,19 +1,17 @@
-import { AlignLeftButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { setAlignment } from 'roosterjs-content-model-api';
+import { AlignLeftButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Align left" button on the format ribbon
  */
-export const alignLeftButton: RibbonButton<AlignLeftButtonStringKey> = {
+export const alignLeftButton: ContentModelRibbonButton<AlignLeftButtonStringKey> = {
     key: 'buttonNameAlignLeft',
     unlocalizedText: 'Align left',
     iconName: 'AlignLeft',
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            setAlignment(editor, 'left');
-        }
+        setAlignment(editor, 'left');
         return true;
     },
 };

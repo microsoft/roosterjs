@@ -26,12 +26,12 @@ import type {
     IStandaloneEditor,
     OnNodeCreated,
     StandaloneEditorOptions,
+    PluginWithState,
     ContentModelDocument,
     ContentModelParagraph,
     TableSelectionContext,
     ContentModelSegment,
 } from 'roosterjs-content-model-types';
-import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * Copy and paste plugin for handling onCopy and onPaste event
@@ -63,8 +63,8 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IStandaloneEditor & IEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
         this.disposer = this.editor.attachDomEvent({
             paste: {
                 beforeDispatch: e => this.onPaste(e),
@@ -144,7 +144,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
                 : null;
 
             if (newRange) {
-                newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                newRange = this.editor.triggerEvent(PluginEventType.BeforeCutCopy, {
                     clonedRoot: tempDiv,
                     range: newRange,
                     rawEvent: event as ClipboardEvent,

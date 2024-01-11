@@ -4,11 +4,9 @@ import { PluginEventType } from 'roosterjs-editor-types';
 import { transformColor } from '../publicApi/color/transformColor';
 import type {
     DarkColorHandler,
-    IEditor,
     PluginEventData,
     PluginEventFromType,
 } from 'roosterjs-editor-types';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     ClipboardData,
     ContentModelDocument,
@@ -49,11 +47,7 @@ export class StandaloneEditor implements IStandaloneEditor {
 
         onBeforeInitializePlugins?.();
 
-        // TODO: Remove this type cast
-        const editor: IStandaloneEditor = this;
-        this.getCore().plugins.forEach(plugin =>
-            plugin.initialize(editor as IStandaloneEditor & IEditor)
-        );
+        this.getCore().plugins.forEach(plugin => plugin.initialize(this));
     }
 
     /**
@@ -217,7 +211,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+    triggerEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast: boolean = false
@@ -358,6 +352,32 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     getZoomScale(): number {
         return this.getCore().zoomScale;
+    }
+
+    /**
+     * Set current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
+     */
+    setZoomScale(scale: number): void {
+        const core = this.getCore();
+
+        if (scale > 0 && scale <= 10) {
+            const oldValue = core.zoomScale;
+            core.zoomScale = scale;
+
+            if (oldValue != scale) {
+                this.triggerEvent(
+                    PluginEventType.ZoomChanged,
+                    {
+                        oldZoomScale: oldValue,
+                        newZoomScale: scale,
+                    },
+                    true /*broadcast*/
+                );
+            }
+        }
     }
 
     /**

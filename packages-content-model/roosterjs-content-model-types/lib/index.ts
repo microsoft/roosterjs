@@ -217,9 +217,11 @@ export {
     Paste,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
+export { EditorPlugin } from './editor/EditorPlugin';
+export { PluginWithState } from './editor/PluginWithState';
+export { ContextMenuProvider } from './editor/ContextMenuProvider';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export { StandaloneEditorCorePluginState } from './pluginState/StandaloneEditorPluginState';
 export {
     ContentModelFormatPluginState,
     PendingFormat,
@@ -230,6 +232,14 @@ export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
 export { UndoPluginState } from './pluginState/UndoPluginState';
+export {
+    PluginKey,
+    KeyOfStatePlugin,
+    TypeOfStatePlugin,
+    StatePluginKeys,
+    GenericPluginState,
+    PluginState,
+} from './pluginState/PluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -264,11 +274,10 @@ export { SnapshotsManager } from './parameter/SnapshotsManager';
 export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
+export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
 
 export {
-    MergePastedContentFunc,
-    DomToModelOptionForPaste,
     ContentModelBeforePasteEvent,
     ContentModelBeforePasteEventData,
     CompatibleContentModelBeforePasteEvent,
@@ -277,10 +286,45 @@ export {
     ContentModelContentChangedEvent,
     CompatibleContentModelContentChangedEvent,
     ContentModelContentChangedEventData,
-    ChangedEntity,
 } from './event/ContentModelContentChangedEvent';
 export {
     CompatibleContentModelSelectionChangedEvent,
     ContentModelSelectionChangedEvent,
     ContentModelSelectionChangedEventData,
 } from './event/ContentModelSelectionChangedEvent';
+export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
+export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
+export { BeforeDisposeEvent } from './event/BeforeDisposeEvent';
+export { BeforeKeyboardEditingEvent } from './event/BeforeKeyboardEditingEvent';
+export {
+    BeforePasteEvent,
+    DomToModelOptionForPaste,
+    MergePastedContentFunc,
+} from './event/BeforePasteEvent';
+export { BeforeSetContentEvent } from './event/BeforeSetContentEvent';
+export { ContentChangedEvent, ChangedEntity } from './event/ContentChangedEvent';
+export { ContextMenuEvent } from './event/ContextMenuEvent';
+export { EditImageEvent } from './event/EditImageEvent';
+export { EditorReadyEvent } from './event/EditorReadyEvent';
+export { EntityOperationEvent, Entity } from './event/EntityOperationEvent';
+export { ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';
+export { EditorInputEvent } from './event/EditorInputEvent';
+export {
+    KeyDownEvent,
+    KeyPressEvent,
+    KeyUpEvent,
+    CompositionEndEvent,
+} from './event/KeyboardEvent';
+export { MouseDownEvent, MouseUpEvent } from './event/MouseEvent';
+export { PluginEvent } from './event/PluginEvent';
+export {
+    PluginEventData,
+    PluginEventFromTypeGeneric,
+    PluginEventFromType,
+    PluginEventDataGeneric,
+} from './event/PluginEventData';
+export { PluginEventType } from './event/PluginEventType';
+export { ScrollEvent } from './event/ScrollEvent';
+export { SelectionChangedEvent } from './event/SelectionChangedEvent';
+export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
+export { ZoomChangedEvent } from './event/ZoomChangedEvent';

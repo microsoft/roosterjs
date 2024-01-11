@@ -1,8 +1,7 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { editTable } from 'roosterjs-content-model-api';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { TableOperation } from 'roosterjs-content-model-types';
 import {
-    RibbonButton,
     TableEditAlignMenuItemStringKey,
     TableEditAlignTableMenuItemStringKey,
     TableEditDeleteMenuItemStringKey,
@@ -38,7 +37,7 @@ const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOpe
     menuNameTableAlignTableRight: 'alignRight',
 };
 
-export const tableInsertButton: RibbonButton<
+export const tableInsertButton: ContentModelRibbonButton<
     'ribbonButtonTableInsert' | TableEditInsertMenuItemStringKey
 > = {
     key: 'ribbonButtonTableInsert',
@@ -54,13 +53,13 @@ export const tableInsertButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableInsert') {
+        if (key != 'ribbonButtonTableInsert') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableDeleteButton: RibbonButton<
+export const tableDeleteButton: ContentModelRibbonButton<
     'ribbonButtonTableDelete' | TableEditDeleteMenuItemStringKey
 > = {
     key: 'ribbonButtonTableDelete',
@@ -75,13 +74,13 @@ export const tableDeleteButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableDelete') {
+        if (key != 'ribbonButtonTableDelete') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableMergeButton: RibbonButton<
+export const tableMergeButton: ContentModelRibbonButton<
     'ribbonButtonTableMerge' | TableEditMergeMenuItemStringKey
 > = {
     key: 'ribbonButtonTableMerge',
@@ -99,13 +98,13 @@ export const tableMergeButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableMerge') {
+        if (key != 'ribbonButtonTableMerge') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableSplitButton: RibbonButton<
+export const tableSplitButton: ContentModelRibbonButton<
     'ribbonButtonTableSplit' | TableEditSplitMenuItemStringKey
 > = {
     key: 'ribbonButtonTableSplit',
@@ -119,13 +118,13 @@ export const tableSplitButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableSplit') {
+        if (key != 'ribbonButtonTableSplit') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableAlignCellButton: RibbonButton<
+export const tableAlignCellButton: ContentModelRibbonButton<
     'ribbonButtonTableAlignCell' | TableEditAlignMenuItemStringKey
 > = {
     key: 'ribbonButtonTableAlignCell',
@@ -144,13 +143,13 @@ export const tableAlignCellButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableAlignCell') {
+        if (key != 'ribbonButtonTableAlignCell') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableAlignTableButton: RibbonButton<
+export const tableAlignTableButton: ContentModelRibbonButton<
     'ribbonButtonTableAlignTable' | TableEditAlignTableMenuItemStringKey
 > = {
     key: 'ribbonButtonTableAlignTable',
@@ -165,7 +164,7 @@ export const tableAlignTableButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableAlignTable') {
+        if (key != 'ribbonButtonTableAlignTable') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
