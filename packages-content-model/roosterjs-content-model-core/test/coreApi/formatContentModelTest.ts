@@ -37,7 +37,7 @@ describe('formatContentModel', () => {
         getFocusedPosition = jasmine
             .createSpy('getFocusedPosition')
             .and.returnValue({ node: mockedContainer, offset: mockedOffset });
-        triggerEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue(null);
         hasFocus = jasmine.createSpy('hasFocus');
 

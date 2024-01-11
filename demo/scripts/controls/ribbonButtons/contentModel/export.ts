@@ -45,7 +45,7 @@ export const exportContent: ContentModelRibbonButton<ExportButtonStringKey> = {
                             });
 
                             if (isEntity && format.id && format.entityType) {
-                                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                                editor.triggerEvent(PluginEventType.EntityOperation, {
                                     operation: EntityOperation.ReplaceTemporaryContent,
                                     entity: {
                                         wrapper: clonedRoot,

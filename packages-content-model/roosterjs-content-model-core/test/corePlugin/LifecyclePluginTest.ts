@@ -6,12 +6,12 @@ describe('LifecyclePlugin', () => {
     it('init', () => {
         const div = document.createElement('div');
         const plugin = createLifecyclePlugin({}, div);
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const triggerEvent = jasmine.createSpy('triggerEvent');
         const state = plugin.getState();
         const setContentModelSpy = jasmine.createSpy('setContentModel');
 
         plugin.initialize(<IStandaloneEditor>(<any>{
-            triggerPluginEvent,
+            triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
@@ -28,8 +28,8 @@ describe('LifecyclePlugin', () => {
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
         expect(div.innerHTML).toBe('');
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
-        expect(triggerPluginEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
         expect(setContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setContentModelSpy).toHaveBeenCalledWith(
             {
@@ -64,12 +64,12 @@ describe('LifecyclePlugin', () => {
             },
             div
         );
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const triggerEvent = jasmine.createSpy('triggerEvent');
         const state = plugin.getState();
         const setContentModelSpy = jasmine.createSpy('setContentModel');
 
         plugin.initialize(<IStandaloneEditor>(<any>{
-            triggerPluginEvent,
+            triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
@@ -88,8 +88,8 @@ describe('LifecyclePlugin', () => {
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
-        expect(triggerPluginEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();
@@ -99,11 +99,11 @@ describe('LifecyclePlugin', () => {
         const div = document.createElement('div');
         div.contentEditable = 'true';
         const plugin = createLifecyclePlugin({}, div);
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const triggerEvent = jasmine.createSpy('triggerEvent');
         const setContentModelSpy = jasmine.createSpy('setContentModel');
 
         plugin.initialize(<IStandaloneEditor>(<any>{
-            triggerPluginEvent,
+            triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
@@ -113,8 +113,8 @@ describe('LifecyclePlugin', () => {
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('');
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
-        expect(triggerPluginEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
 
         expect(setContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setContentModelSpy).toHaveBeenCalledWith(
@@ -142,11 +142,11 @@ describe('LifecyclePlugin', () => {
         const div = document.createElement('div');
         div.contentEditable = 'false';
         const plugin = createLifecyclePlugin({}, div);
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const triggerEvent = jasmine.createSpy('triggerEvent');
         const setContentModelSpy = jasmine.createSpy('setContentModel');
 
         plugin.initialize(<IStandaloneEditor>(<any>{
-            triggerPluginEvent,
+            triggerEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
@@ -173,8 +173,8 @@ describe('LifecyclePlugin', () => {
         );
         expect(div.isContentEditable).toBeFalse();
         expect(div.style.userSelect).toBe('');
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
-        expect(triggerPluginEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe(PluginEventType.EditorReady);
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();

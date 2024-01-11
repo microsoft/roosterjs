@@ -92,14 +92,14 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         this.adjustColor();
 
         // Let other plugins know that we are ready
-        this.editor.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
+        this.editor.triggerEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.editor?.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
+        this.editor?.triggerEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
 
         if (this.disposer) {
             this.disposer();
