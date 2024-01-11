@@ -323,4 +323,137 @@ describe('deleteList', () => {
         });
         expect(result.deleteResult).toEqual('notDeleted');
     });
+
+    it('delete list inside with table cell', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'ListItem',
+                                            blocks: [
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: true,
+                                                            format: {},
+                                                        },
+                                                        {
+                                                            segmentType: 'Br',
+                                                            format: {},
+                                                        },
+                                                    ],
+                                                    format: {},
+                                                    isImplicit: false,
+                                                },
+                                            ],
+                                            levels: [
+                                                {
+                                                    listType: 'UL',
+                                                    format: {
+                                                        marginBlockStart: '0px',
+                                                        marginBlockEnd: '0px',
+                                                        listStyleType: 'disc',
+                                                    },
+                                                    dataset: {},
+                                                },
+                                            ],
+                                            formatHolder: {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: true,
+                                                format: {},
+                                            },
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":"top"}',
+                    },
+                },
+            ],
+            format: {},
+        };
+        const result = deleteSelection(model, [deleteList]);
+        normalizeContentModel(model);
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
+                                                    format: {},
+                                                },
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: false,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":"top"}',
+                    },
+                },
+            ],
+            format: {},
+        });
+        expect(result.deleteResult).toEqual('range');
+    });
 });
