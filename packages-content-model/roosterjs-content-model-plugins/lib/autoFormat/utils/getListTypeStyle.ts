@@ -1,5 +1,6 @@
 import getNumberingListStyle from './getNumberingListStyle';
 import { getIndex } from './getIndex';
+
 import type {
     IStandaloneEditor,
     ContentModelDocument,
@@ -14,16 +15,23 @@ import {
     getSelectedSegmentsAndParagraphs,
 } from 'roosterjs-content-model-core';
 
-export function getListType(
+interface ListTypeStyle {
+    listType: 'UL' | 'OL';
+    styleType: number;
+    index?: number;
+}
+
+export function getListTypeStyle(
     editor: IStandaloneEditor,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
-): { listType: 'UL' | 'OL'; styleType: number; index?: number } | undefined {
+): ListTypeStyle | undefined {
     const model = editor.createContentModel();
     const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, true);
     const marker = selectedSegmentsAndParagraphs[0][0];
     const paragraph = selectedSegmentsAndParagraphs[0][1];
     const listMarkerSegment = paragraph?.segments[0];
+
     if (
         marker &&
         marker.segmentType == 'SelectionMarker' &&
@@ -49,7 +57,7 @@ export function getListType(
                 return {
                     listType: 'OL',
                     styleType: numberingType,
-                    index: getIndex(listMarker),
+                    index: previousList?.format?.listStyleType ? getIndex(listMarker) : undefined,
                 };
             }
         }

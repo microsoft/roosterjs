@@ -1,5 +1,5 @@
 import { createListItem, createListLevel } from 'roosterjs-content-model-dom';
-import { getListType } from './listFeaturesUtils/getListType';
+import { getListTypeStyle } from './utils/getListTypeStyle';
 import {
     getOperationalBlocks,
     isBlockGroupOfType,
@@ -15,7 +15,7 @@ export const keyboardListTrigger = (
 ) => {
     if (rawEvent.key === ' ') {
         editor.formatContentModel((model, context) => {
-            const listStyleType = getListType(
+            const listStyleType = getListTypeStyle(
                 editor,
                 shouldSearchForBullet,
                 shouldSearchForNumbering
@@ -29,6 +29,11 @@ export const keyboardListTrigger = (
                         const blockIndex = parent.blocks.indexOf(block);
                         const listLevel = createListLevel(listType, {
                             startNumberOverride: index,
+                            direction: block.format.direction,
+                            textAlign: block.format.textAlign,
+                            marginTop: '0',
+                            marginBlockEnd: '0px',
+                            marginBlockStart: '0px',
                         });
                         updateListMetadata(
                             listLevel,
