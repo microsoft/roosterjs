@@ -16,37 +16,29 @@ class DarkColorHandlerImpl implements DarkColorHandler {
             // Has values to set
             // When in light mode: Update the value to known values, do not touch container property
             // When in dark mode: Update the value to known colors, set value to container
-            this.updateColorInternal(isDarkMode, key, colorPair, false /*removeWhenLight*/);
+            if (!this.knownColors[key]) {
+                this.knownColors[key] = colorPair;
+            }
+
+            if (isDarkMode) {
+                this.root.style.setProperty(key, colorPair.darkModeColor);
+            }
         } else {
             // No value to set
-            // When in light mode: Remove existing value from container, do not touch known values
+            // When in light mode: No op
             // When in dark mode: Set all values to container, do not touch known values
-            Object.keys(this.knownColors).forEach(key => {
-                this.updateColorInternal(
-                    isDarkMode,
-                    key,
-                    this.knownColors[key],
-                    true /*removeWhenLight*/
-                );
-            });
+            if (isDarkMode) {
+                Object.keys(this.knownColors).forEach(key => {
+                    this.root.style.setProperty(key, this.knownColors[key].darkModeColor);
+                });
+            }
         }
     }
 
-    private updateColorInternal(
-        isDarkMode: boolean,
-        key: string,
-        colorPair: Colors,
-        removeWhenLight: boolean
-    ) {
-        if (!this.knownColors[key]) {
-            this.knownColors[key] = colorPair;
-        }
-
-        if (isDarkMode) {
-            this.root.style.setProperty(key, colorPair.darkModeColor);
-        } else if (removeWhenLight) {
+    reset() {
+        Object.keys(this.knownColors).forEach(key => {
             this.root.style.removeProperty(key);
-        }
+        });
     }
 }
 

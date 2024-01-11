@@ -90,10 +90,12 @@ describe('StandaloneEditor', () => {
         const createContentModelSpy = jasmine
             .createSpy('createContentModel')
             .and.returnValue(mockedModel);
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 createContentModel: createContentModelSpy,
@@ -123,16 +125,18 @@ describe('StandaloneEditor', () => {
 
         editor.dispose();
         expect(() => editor.createContentModel()).toThrow();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
     });
 
     it('setContentModel', () => {
         const div = document.createElement('div');
         const setContentModelSpy = jasmine.createSpy('setContentModel');
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 setContentModel: setContentModelSpy,
@@ -166,17 +170,19 @@ describe('StandaloneEditor', () => {
         );
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.setContentModel(mockedModel)).toThrow();
     });
 
     it('getEnvironment', () => {
         const div = document.createElement('div');
         const mockedEnvironment = 'ENVIRONMENT' as any;
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             environment: mockedEnvironment,
         } as any;
@@ -190,7 +196,7 @@ describe('StandaloneEditor', () => {
         expect(result).toBe(mockedEnvironment);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.getEnvironment()).toThrow();
     });
 
@@ -200,10 +206,12 @@ describe('StandaloneEditor', () => {
         const getDOMSelectionSpy = jasmine
             .createSpy('getDOMSelection')
             .and.returnValue(mockedSelection);
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 getDOMSelection: getDOMSelectionSpy,
@@ -220,7 +228,7 @@ describe('StandaloneEditor', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalledWith(mockedCore);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.getDOMSelection()).toThrow();
     });
 
@@ -228,10 +236,12 @@ describe('StandaloneEditor', () => {
         const div = document.createElement('div');
         const mockedSelection = 'SELECTION' as any;
         const setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 setDOMSelection: setDOMSelectionSpy,
@@ -251,7 +261,7 @@ describe('StandaloneEditor', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(mockedCore, mockedSelection);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.setDOMSelection(null)).toThrow();
     });
 
@@ -260,10 +270,12 @@ describe('StandaloneEditor', () => {
         const mockedFormatter = 'FORMATTER' as any;
         const mockedOptions = 'OPTIONS' as any;
         const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 formatContentModel: formatContentModelSpy,
@@ -287,17 +299,19 @@ describe('StandaloneEditor', () => {
         );
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.formatContentModel(mockedFormatter)).toThrow();
     });
 
     it('getPendingFormat', () => {
         const div = document.createElement('div');
         const mockedFormat = 'FORMAT' as any;
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             format: {},
         } as any;
@@ -318,7 +332,7 @@ describe('StandaloneEditor', () => {
         expect(result2).toBe(mockedFormat);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.getPendingFormat()).toThrow();
     });
 
@@ -328,10 +342,12 @@ describe('StandaloneEditor', () => {
         const addUndoSnapshotSpy = jasmine
             .createSpy('addUndoSnapshot')
             .and.returnValue(mockedSnapshot);
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 addUndoSnapshot: addUndoSnapshotSpy,
@@ -348,7 +364,7 @@ describe('StandaloneEditor', () => {
         expect(snapshot).toBe(mockedSnapshot);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.takeSnapshot()).toThrow();
     });
 
@@ -356,10 +372,12 @@ describe('StandaloneEditor', () => {
         const div = document.createElement('div');
         const mockedSnapshot = 'SNAPSHOT' as any;
         const restoreUndoSnapshotSpy = jasmine.createSpy('restoreUndoSnapshot');
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 restoreUndoSnapshot: restoreUndoSnapshotSpy,
@@ -375,17 +393,19 @@ describe('StandaloneEditor', () => {
         expect(restoreUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, mockedSnapshot);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.restoreSnapshot(mockedSnapshot)).toThrow();
     });
 
     it('focus', () => {
         const div = document.createElement('div');
         const focusSpy = jasmine.createSpy('focus');
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 focus: focusSpy,
@@ -400,7 +420,7 @@ describe('StandaloneEditor', () => {
         expect(focusSpy).toHaveBeenCalledWith(mockedCore);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.focus()).toThrow();
     });
 
@@ -408,10 +428,12 @@ describe('StandaloneEditor', () => {
         const div = document.createElement('div');
         const mockedResult = 'RESULT' as any;
         const hasFocusSpy = jasmine.createSpy('hasFocus').and.returnValue(mockedResult);
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 hasFocus: hasFocusSpy,
@@ -428,7 +450,7 @@ describe('StandaloneEditor', () => {
         expect(hasFocusSpy).toHaveBeenCalledWith(mockedCore);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.hasFocus()).toThrow();
     });
 
@@ -440,10 +462,12 @@ describe('StandaloneEditor', () => {
         const triggerEventSpy = jasmine.createSpy('triggerEvent').and.callFake((core, data) => {
             data.a = 'b';
         });
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 triggerEvent: triggerEventSpy,
@@ -473,7 +497,7 @@ describe('StandaloneEditor', () => {
         );
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.triggerEvent(mockedEventType, mockedEventData, true)).toThrow();
     });
 
@@ -483,10 +507,12 @@ describe('StandaloneEditor', () => {
         const attachDomEventSpy = jasmine
             .createSpy('attachDomEvent')
             .and.returnValue(mockedDisposer);
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 attachDomEvent: attachDomEventSpy,
@@ -504,17 +530,19 @@ describe('StandaloneEditor', () => {
         expect(attachDomEventSpy).toHaveBeenCalledWith(mockedCore, mockedEventMap);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.attachDomEvent(mockedEventMap)).toThrow();
     });
 
     it('getSnapshotsManager', () => {
         const div = document.createElement('div');
         const mockedSnapshotManager = 'MANAGER' as any;
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             undo: {
                 snapshotsManager: mockedSnapshotManager,
@@ -530,7 +558,7 @@ describe('StandaloneEditor', () => {
         expect(result).toBe(mockedSnapshotManager);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.getSnapshotsManager()).toThrow();
     });
 
@@ -541,10 +569,12 @@ describe('StandaloneEditor', () => {
             .and.callFake((core, isOn) => {
                 mockedCore.lifecycle.shadowEditFragment = isOn;
             });
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             lifecycle: {},
             api: {
@@ -571,7 +601,7 @@ describe('StandaloneEditor', () => {
         expect(switchShadowEditSpy).toHaveBeenCalledWith(mockedCore, false);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.isInShadowEdit()).toThrow();
         expect(() => editor.startShadowEdit()).toThrow();
         expect(() => editor.stopShadowEdit()).toThrow();
@@ -580,10 +610,12 @@ describe('StandaloneEditor', () => {
     it('pasteFromClipboard', () => {
         const div = document.createElement('div');
         const pasteSpy = jasmine.createSpy('paste');
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             api: {
                 paste: pasteSpy,
@@ -606,14 +638,16 @@ describe('StandaloneEditor', () => {
         expect(pasteSpy).toHaveBeenCalledWith(mockedCore, mockedClipboardData, mockedPasteType);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.pasteFromClipboard(mockedClipboardData)).toThrow();
     });
 
     it('getColorManager', () => {
         const div = document.createElement('div');
+        const resetSpy = jasmine.createSpy('reset');
         const mockedColorHandler = {
             updateKnownColor: updateKnownColorSpy,
+            reset: resetSpy,
         } as any;
         const mockedCore = {
             plugins: [],
@@ -631,13 +665,14 @@ describe('StandaloneEditor', () => {
 
         editor.dispose();
 
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.getColorManager()).toThrow();
     });
 
     it('isNodeInEditor', () => {
         const mockedResult = 'RESULT' as any;
         const containsSpy = jasmine.createSpy('contains').and.returnValue(mockedResult);
+        const resetSpy = jasmine.createSpy('reset');
         const div = {
             contains: containsSpy,
         } as any;
@@ -645,6 +680,7 @@ describe('StandaloneEditor', () => {
             plugins: [],
             darkColorHandler: {
                 updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
             },
             contentDiv: div,
         } as any;
@@ -660,7 +696,7 @@ describe('StandaloneEditor', () => {
         expect(containsSpy).toHaveBeenCalledWith(mockedNode);
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.isNodeInEditor(mockedNode)).toThrow();
     });
 
@@ -670,14 +706,14 @@ describe('StandaloneEditor', () => {
             mockedCore.lifecycle.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
         });
         const div = document.createElement('div');
+        const resetSpy = jasmine.createSpy('reset');
         const mockedColorHandler = {
             updateKnownColor: updateKnownColorSpy,
+            reset: resetSpy,
         } as any;
         const mockedCore = {
             plugins: [],
-            darkColorHandler: {
-                updateKnownColor: updateKnownColorSpy,
-            },
+            darkColorHandler: mockedColorHandler,
             contentDiv: div,
             lifecycle: {
                 isDarkMode: false,
@@ -740,7 +776,7 @@ describe('StandaloneEditor', () => {
         );
 
         editor.dispose();
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
+        expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.isDarkMode()).toThrow();
         expect(() => editor.setDarkModeState()).toThrow();
     });

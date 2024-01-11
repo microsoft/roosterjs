@@ -88,7 +88,7 @@ describe('DarkColorHandlerImpl.updateKnownColor', () => {
                 darkModeColor: 'dark',
             },
         });
-        expect(removePropertySpy).toHaveBeenCalledWith('aa');
+        expect(removePropertySpy).not.toHaveBeenCalled();
     });
 
     it('dark mode, with values', () => {

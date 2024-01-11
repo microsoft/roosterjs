@@ -53,6 +53,11 @@ export interface DarkColorHandler {
     updateKnownColor(isDarkMode: boolean, key: string, colorPair: Colors): void;
 
     /**
+     * Reset known color record, clean up registered color variables.
+     */
+    reset(): void;
+
+    /**
      * A util function to transform light mode color to dark mode color
      */
     getDarkColor: ColorTransformFunction;

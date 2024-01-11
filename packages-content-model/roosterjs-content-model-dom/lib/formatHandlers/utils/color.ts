@@ -45,13 +45,13 @@ const COLOR_VAR_PREFIX = '--darkColor';
  * @param element The element to get color from
  * @param isBackground True to get background color, false to get text color
  * @param isDarkMode Whether element is in dark mode now
- * @param colorManager @optional The color manager object to help manager dark mode color
+ * @param darkColorHandler @optional The dark color handler object to help manager dark mode color
  */
 export function getColor(
     element: HTMLElement,
     isBackground: boolean,
     isDarkMode: boolean,
-    colorManager?: DarkColorHandler
+    darkColorHandler?: DarkColorHandler
 ): string | undefined {
     let color =
         (isBackground ? element.style.backgroundColor : element.style.color) ||
@@ -60,9 +60,7 @@ export function getColor(
 
     if (color && DeprecatedColors.indexOf(color) > -1) {
         color = isBackground ? undefined : BlackColor;
-    }
-
-    if (colorManager && color) {
+    } else if (darkColorHandler && color) {
         const match = color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
 
         if (match) {
@@ -71,7 +69,7 @@ export function getColor(
             // If editor is in dark mode but the color is not in dark color format, it is possible the color was inserted from external code
             // without any light color info. So we first try to see if there is a known dark color can match this color, and use its related
             // light color as light mode color. Otherwise we need to drop this color to avoid show "white on white" content.
-            color = findLightColorFromDarkColor(color, colorManager.knownColors) || '';
+            color = findLightColorFromDarkColor(color, darkColorHandler.knownColors) || '';
         }
     }
 
@@ -84,32 +82,32 @@ export function getColor(
  * @param color The color to set, always pass in color in light mode
  * @param isBackground True to set background color, false to set text color
  * @param isDarkMode Whether element is in dark mode now
- * @param colorManager @optional The color manager object to help manager dark mode color
+ * @param darkColorHandler @optional The dark color handler object to help manager dark mode color
  */
 export function setColor(
     element: HTMLElement,
     color: string | null | undefined,
     isBackground: boolean,
     isDarkMode: boolean,
-    colorManager?: DarkColorHandler
+    darkColorHandler?: DarkColorHandler
 ) {
     const match = color && color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
     const [_, existingKey, fallbackColor] = match ?? [];
 
     color = fallbackColor ?? color;
 
-    if (colorManager && color) {
+    if (darkColorHandler && color) {
         const key = existingKey || `${COLOR_VAR_PREFIX}_${color.replace(/[^\d\w]/g, '_')}`;
         const darkModeColor =
-            colorManager.knownColors?.[key]?.darkModeColor ||
-            colorManager.getDarkColor(
+            darkColorHandler.knownColors?.[key]?.darkModeColor ||
+            darkColorHandler.getDarkColor(
                 color,
                 undefined /*baseLAValue*/,
                 isBackground ? 'background' : 'text',
                 element
             );
 
-        colorManager.updateKnownColor(isDarkMode, key, {
+        darkColorHandler.updateKnownColor(isDarkMode, key, {
             lightModeColor: color,
             darkModeColor,
         });

@@ -66,7 +66,7 @@ export class StandaloneEditor implements IStandaloneEditor {
             }
         }
 
-        core.darkColorHandler.updateKnownColor(false /*isDarkMode*/); // Force clear color variables
+        core.darkColorHandler.reset();
 
         this.core = null;
     }

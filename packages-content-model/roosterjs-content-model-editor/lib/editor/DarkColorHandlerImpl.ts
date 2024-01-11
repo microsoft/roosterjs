@@ -56,7 +56,7 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
      * Reset known color record, clean up registered color variables.
      */
     reset(): void {
-        this.innerHandler.updateKnownColor(false /*isDarkColor*/);
+        this.innerHandler.reset();
     }
 
     /**
