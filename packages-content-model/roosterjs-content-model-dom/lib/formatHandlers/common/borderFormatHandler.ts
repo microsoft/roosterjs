@@ -26,6 +26,8 @@ const BorderRadiusKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderBottomRightRadius',
 ];
 
+const AllKeys = BorderKeys.concat(BorderRadiusKeys);
+
 /**
  * @internal
  */
@@ -60,7 +62,7 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
         }
     },
     apply: (format, element) => {
-        BorderKeys.concat(BorderRadiusKeys).forEach(key => {
+        AllKeys.forEach(key => {
             const value = format[key];
 
             if (value) {
