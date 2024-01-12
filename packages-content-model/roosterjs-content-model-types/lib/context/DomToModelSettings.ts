@@ -1,4 +1,4 @@
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import type { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import type { DomToModelContext } from './DomToModelContext';
