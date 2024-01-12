@@ -689,10 +689,11 @@ describe('StandaloneEditor', () => {
         expect(transformColorSpy).toHaveBeenCalledTimes(1);
         expect(transformColorSpy).toHaveBeenCalledWith(
             div,
-            true,
+            false,
             'lightToDark',
             mockedColorHandler
         );
+        expect(mockedCore.lifecycle.isDarkMode).toEqual(true);
         expect(triggerEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerEventSpy).toHaveBeenCalledWith(
             mockedCore,
@@ -709,7 +710,7 @@ describe('StandaloneEditor', () => {
         expect(transformColorSpy).toHaveBeenCalledTimes(2);
         expect(transformColorSpy).toHaveBeenCalledWith(
             div,
-            true,
+            false,
             'darkToLight',
             mockedColorHandler
         );
@@ -722,6 +723,7 @@ describe('StandaloneEditor', () => {
             },
             true
         );
+        expect(mockedCore.lifecycle.isDarkMode).toEqual(false);
 
         editor.dispose();
 
