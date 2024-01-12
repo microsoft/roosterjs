@@ -18,7 +18,6 @@ describe('formatSegmentWithContentModel', () => {
     let editor: IStandaloneEditor;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
-    let getPendingFormat: jasmine.Spy;
     let formatContentModel: jasmine.Spy;
     let formatResult: boolean | undefined;
     let context: FormatWithContentModelContext | undefined;
@@ -43,12 +42,9 @@ describe('formatSegmentWithContentModel', () => {
                 }
             );
 
-        getPendingFormat = jasmine.createSpy('getPendingFormat');
-
         editor = ({
             focus,
             formatContentModel,
-            getPendingFormat,
         } as any) as IStandaloneEditor;
     });
 
@@ -63,7 +59,6 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeFalse();
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
     });
 
     it('doc with selection', () => {
@@ -98,7 +93,6 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -153,7 +147,6 @@ describe('formatSegmentWithContentModel', () => {
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text.format, text, para);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(1);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text.format, false, text, para);
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -230,7 +223,6 @@ describe('formatSegmentWithContentModel', () => {
         expect(toggleStyleCallback).toHaveBeenCalledTimes(2);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text1.format, true, text1, para);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text3.format, true, text3, para);
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -271,7 +263,6 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeFalse();
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -294,8 +285,6 @@ describe('formatSegmentWithContentModel', () => {
         const pendingFormat: ContentModelSegmentFormat = {
             fontSize: '10px',
         };
-
-        getPendingFormat.and.returnValue(pendingFormat);
 
         formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
         expect(model).toEqual({
@@ -320,7 +309,6 @@ describe('formatSegmentWithContentModel', () => {
             fontSize: '10px',
             fontFamily: 'test',
         });
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],

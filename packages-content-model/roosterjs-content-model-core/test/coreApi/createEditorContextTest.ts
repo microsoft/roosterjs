@@ -39,6 +39,7 @@ describe('createEditorContext', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -82,6 +83,7 @@ describe('createEditorContext', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer,
+            pendingFormat: undefined,
         });
     });
 });
@@ -136,6 +138,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 1,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -155,6 +158,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 2,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -174,6 +178,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 0.5,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 });
@@ -226,6 +231,7 @@ describe('createEditorContext - checkRootDir', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -244,6 +250,7 @@ describe('createEditorContext - checkRootDir', () => {
             isRootRtl: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 });
