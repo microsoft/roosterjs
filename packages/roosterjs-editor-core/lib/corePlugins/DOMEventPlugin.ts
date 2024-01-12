@@ -95,9 +95,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
         // 7. onBlur handlers
         if (Browser.isSafari) {
-            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
-            document.addEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.addEventListener('blur', this.cacheSelection);
+            document.addEventListener('selectionchange', this.onSelectionChange);
         } else if (Browser.isIEOrEdge) {
             type EventHandlersIE = {
                 beforedeactivate: DOMEventHandler<HTMLElementEventMap['blur']>;
@@ -121,13 +119,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     dispose() {
         const document = this.editor?.getDocument();
         if (document && Browser.isSafari) {
-            document.removeEventListener(
-                'mousedown',
-                this.onMouseDownDocument,
-                true /*useCapture*/
-            );
-            document.removeEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.removeEventListener('blur', this.cacheSelection);
+            document.removeEventListener('selectionchange', this.onSelectionChange);
         }
 
         document?.defaultView?.removeEventListener('resize', this.onScroll);
@@ -172,22 +164,11 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
                 this.editor?.select(this.state.selectionRange);
             }
         }
-
-        this.state.selectionRange = null;
-    };
-    private onKeyDownDocument = (event: KeyboardEvent) => {
-        if (event.which == Keys.TAB && !event.defaultPrevented) {
-            this.cacheSelection();
-        }
     };
 
-    private onMouseDownDocument = (event: MouseEvent) => {
-        if (
-            this.editor &&
-            !this.state.selectionRange &&
-            !this.editor.contains(event.target as Node)
-        ) {
-            this.cacheSelection();
+    private onSelectionChange = () => {
+        if (this.editor && !this.editor.isInShadowEdit() && this.editor.hasFocus()) {
+            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
         }
     };
 
@@ -196,6 +177,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
         }
     };
+
     private onScroll = (e: Event) => {
         this.editor?.triggerPluginEvent(PluginEventType.Scroll, {
             rawEvent: e,
