@@ -1,5 +1,4 @@
 import { createContentModelCachePlugin } from '../../lib/corePlugin/ContentModelCachePlugin';
-import { PluginEventType } from 'roosterjs-editor-types';
 import {
     ContentModelCachePluginState,
     ContentModelDomIndexer,
@@ -63,7 +62,7 @@ describe('ContentModelCachePlugin', () => {
 
         it('ENTER key', () => {
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'Enter',
                 } as any,
@@ -78,7 +77,7 @@ describe('ContentModelCachePlugin', () => {
 
         it('Other key without selection', () => {
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'B',
                 } as any,
@@ -99,7 +98,7 @@ describe('ContentModelCachePlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'B',
                 } as any,
@@ -119,7 +118,7 @@ describe('ContentModelCachePlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'B',
                 } as any,
@@ -140,7 +139,7 @@ describe('ContentModelCachePlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowUp',
                 } as any,
@@ -162,7 +161,7 @@ describe('ContentModelCachePlugin', () => {
             } as any;
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'B',
                 } as any,
@@ -182,7 +181,7 @@ describe('ContentModelCachePlugin', () => {
             } as any;
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'B',
                 } as any,
@@ -200,7 +199,7 @@ describe('ContentModelCachePlugin', () => {
             isInShadowEditSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'Enter',
                 } as any,
@@ -227,7 +226,7 @@ describe('ContentModelCachePlugin', () => {
             getDOMSelectionSpy.and.returnValue(selection);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
+                eventType: 'input',
                 rawEvent: null!,
             });
 
@@ -249,7 +248,7 @@ describe('ContentModelCachePlugin', () => {
             getDOMSelectionSpy.and.returnValue(selection);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
+                eventType: 'input',
                 rawEvent: null!,
             });
 
@@ -273,7 +272,7 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelectionSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
+                eventType: 'input',
                 rawEvent: null!,
             });
 
@@ -295,7 +294,7 @@ describe('ContentModelCachePlugin', () => {
             getDOMSelectionSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
+                eventType: 'input',
                 rawEvent: null!,
             });
 
@@ -320,7 +319,7 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelectionSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
+                eventType: 'input',
                 rawEvent: null!,
             });
 
@@ -351,8 +350,8 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelectionSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: selection,
+                eventType: 'selectionChanged',
+                newSelection: selection,
             });
 
             expect(state).toEqual({
@@ -377,8 +376,8 @@ describe('ContentModelCachePlugin', () => {
             getDOMSelectionSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: newRangeEx,
+                eventType: 'selectionChanged',
+                newSelection: newRangeEx,
             });
 
             expect(state).toEqual({
@@ -403,8 +402,8 @@ describe('ContentModelCachePlugin', () => {
             getDOMSelectionSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: newRangeEx,
+                eventType: 'selectionChanged',
+                newSelection: newRangeEx,
             });
 
             expect(state).toEqual({
@@ -430,7 +429,7 @@ describe('ContentModelCachePlugin', () => {
             state.cachedSelection = undefined;
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: '',
             });
 
@@ -454,7 +453,7 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelectionSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: '',
                 contentModel: model,
                 selection: newRangeEx,
@@ -481,7 +480,7 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelectionSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: '',
                 contentModel: model,
                 selection: newRangeEx,

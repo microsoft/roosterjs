@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ContentModelContentChangedEvent } from 'roosterjs-content-model-types';
 import { EntityOperation, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 import {
@@ -177,25 +176,6 @@ export default class ContentModelEventViewPane extends React.Component<
                         Source=
                         {event.source}, Data=
                         {event.data && event.data.toString && event.data.toString()}
-                        {!!(event as ContentModelContentChangedEvent).contentModel && (
-                            <details>
-                                <summary>Content Model</summary>
-                                <pre className={styles.eventContent}>
-                                    {JSON.stringify(
-                                        (event as ContentModelContentChangedEvent).contentModel,
-                                        (key, value) =>
-                                            safeInstanceOf(value, 'Node')
-                                                ? Object.prototype.toString.apply(value)
-                                                : key == 'src'
-                                                ? value.length > 100
-                                                    ? value.substring(0, 97) + '...'
-                                                    : value
-                                                : value,
-                                        2
-                                    )}
-                                </pre>
-                            </details>
-                        )}
                     </span>
                 );
 

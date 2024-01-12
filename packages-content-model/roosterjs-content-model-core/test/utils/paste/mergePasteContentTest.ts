@@ -8,7 +8,6 @@ import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
 import { pasteDisplayFormatParser } from '../../../lib/override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../../../lib/override/pasteTextProcessor';
-import { PasteType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -119,7 +118,7 @@ describe('mergePasteContent', () => {
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
 
         const eventResult = {
-            pasteType: PasteType.Normal,
+            pasteType: 'normal',
             domToModelOption: { additionalAllowedTags: [] },
         } as any;
 
@@ -226,7 +225,7 @@ describe('mergePasteContent', () => {
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
 
         const eventResult = {
-            pasteType: PasteType.Normal,
+            pasteType: 'normal',
             domToModelOption: { additionalAllowedTags: [] },
             customizedMerge,
         } as any;
@@ -250,7 +249,7 @@ describe('mergePasteContent', () => {
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
 
         const eventResult = {
-            pasteType: PasteType.MergeFormat,
+            pasteType: 'mergeFormat',
             domToModelOption: { additionalAllowedTags: [] },
         } as any;
 

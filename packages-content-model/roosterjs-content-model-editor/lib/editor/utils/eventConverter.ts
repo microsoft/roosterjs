@@ -16,6 +16,7 @@ import type {
     AnnounceData as NewAnnounceData,
     KnownAnnounceStrings as NewKnownAnnounceStrings,
     EntityOperation as NewEntityOperation,
+    PluginEventType as NewPluginEventType,
 } from 'roosterjs-content-model-types';
 
 const PasteTypeNewToOld: Record<NewPasteType, OldPasteType> = {
@@ -67,6 +68,36 @@ const EntityOperationNewToOld: Record<NewEntityOperation, OldEntityOperation> = 
     replaceTemporaryContent: OldEntityOperation.ReplaceTemporaryContent,
     updateEntityState: OldEntityOperation.UpdateEntityState,
     click: OldEntityOperation.Click,
+};
+
+/**
+ * @internal
+ */
+export const OldEventTypeToNewEventType: Record<PluginEventType, NewPluginEventType | undefined> = {
+    [PluginEventType.BeforeCutCopy]: 'beforeCutCopy',
+    [PluginEventType.BeforeDispose]: 'beforeDispose',
+    [PluginEventType.BeforeKeyboardEditing]: 'beforeKeyboardEditing',
+    [PluginEventType.BeforePaste]: 'beforePaste',
+    [PluginEventType.BeforeSetContent]: 'beforeSetContent',
+    [PluginEventType.CompositionEnd]: 'compositionEnd',
+    [PluginEventType.ContentChanged]: 'contentChanged',
+    [PluginEventType.ContextMenu]: 'contextMenu',
+    [PluginEventType.EditImage]: 'editImage',
+    [PluginEventType.EditorReady]: 'editorReady',
+    [PluginEventType.EnteredShadowEdit]: 'enteredShadowEdit',
+    [PluginEventType.EntityOperation]: 'entityOperation',
+    [PluginEventType.ExtractContentWithDom]: 'extractContentWithDom',
+    [PluginEventType.Input]: 'input',
+    [PluginEventType.KeyDown]: 'keyDown',
+    [PluginEventType.KeyPress]: 'keyPress',
+    [PluginEventType.KeyUp]: 'keyUp',
+    [PluginEventType.LeavingShadowEdit]: 'leavingShadowEdit',
+    [PluginEventType.MouseDown]: 'mouseDown',
+    [PluginEventType.MouseUp]: 'mouseUp',
+    [PluginEventType.PendingFormatStateChanged]: undefined,
+    [PluginEventType.Scroll]: 'scroll',
+    [PluginEventType.SelectionChanged]: 'selectionChanged',
+    [PluginEventType.ZoomChanged]: 'zoomChanged',
 };
 
 /**
