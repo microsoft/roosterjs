@@ -1,6 +1,7 @@
 import { getFormatState } from 'roosterjs-editor-api';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
+import { insertLink } from '../component/buttons/insertLink';
 import type RibbonButton from '../type/RibbonButton';
 import type RibbonPlugin from '../type/RibbonPlugin';
 import type { FormatState, IEditor, PluginEvent } from 'roosterjs-editor-types';
@@ -49,6 +50,15 @@ class RibbonPluginImpl implements RibbonPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
+        if (
+            event.eventType == PluginEventType.KeyDown &&
+            event.rawEvent.key == 'k' &&
+            event.rawEvent.ctrlKey
+        ) {
+            this.onButtonClick(insertLink, 'insertLinkTitle', undefined);
+            event.rawEvent.preventDefault();
+        }
+
         switch (event.eventType) {
             case PluginEventType.EditorReady:
             case PluginEventType.ContentChanged:
