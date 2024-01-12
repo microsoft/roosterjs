@@ -5,8 +5,7 @@ import { isGoogleSheetDocument } from './isGoogleSheetDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
 import { isWordDesktopDocument } from './isWordDesktopDocument';
 import { shouldConvertToSingleImage } from './shouldConvertToSingleImage';
-import type { ClipboardData } from 'roosterjs-content-model-types';
-import type { BeforePasteEvent } from 'roosterjs-editor-types';
+import type { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
 
 /**
  * @internal
