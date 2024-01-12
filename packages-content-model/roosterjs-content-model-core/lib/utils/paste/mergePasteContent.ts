@@ -1,4 +1,4 @@
-import { containerWidthFormatParser } from '../../override/containerWidthFormatParser';
+import { containerSizeFormatParser } from '../../override/containerSizeFormatParser';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createPasteEntityProcessor } from '../../override/pasteEntityProcessor';
 import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
@@ -54,7 +54,7 @@ export function mergePasteContent(
                 display: pasteDisplayFormatParser,
             },
             additionalFormatParsers: {
-                container: [containerWidthFormatParser],
+                container: [containerSizeFormatParser],
             },
         },
         domToModelOption
