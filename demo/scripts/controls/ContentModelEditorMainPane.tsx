@@ -26,6 +26,7 @@ import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import {
     ContentModelAutoFormatPlugin,
     ContentModelEditPlugin,
+    ContentModelPastePlugin,
     EntityDelimiterPlugin,
 } from 'roosterjs-content-model-plugins';
 import {
@@ -109,6 +110,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private entityDelimiterPlugin: EntityDelimiterPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
+    private pastePlugin: ContentModelPastePlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
     private snapshots: Snapshots<Snapshot>;
 
@@ -136,6 +138,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.emojiPlugin = createEmojiPlugin();
         this.entityDelimiterPlugin = new EntityDelimiterPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
+        this.pastePlugin = new ContentModelPastePlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
@@ -252,7 +255,11 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             id={MainPaneBase.editorDivId}
                             className={styles.editor}
                             legacyPlugins={allPlugins}
-                            plugins={[this.contentModelRibbonPlugin, this.formatPainterPlugin]}
+                            plugins={[
+                                this.contentModelRibbonPlugin,
+                                this.formatPainterPlugin,
+                                this.pastePlugin,
+                            ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}

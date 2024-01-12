@@ -4,6 +4,11 @@ import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
 import {
+    newEventToOldEvent,
+    oldEventToNewEvent,
+    OldEventTypeToNewEventType,
+} from './utils/eventConverter';
+import {
     createModelFromHtml,
     isBold,
     redo,
@@ -36,6 +41,8 @@ import type {
     NodePosition,
     PendableFormatState,
     PluginEvent,
+    PluginEventData,
+    PluginEventFromType,
     PositionType,
     Rect,
     Region,
@@ -44,7 +51,7 @@ import type {
     SizeTransformer,
     StyleBasedFormatState,
     TableSelection,
-    TrustedHTMLHandler,
+    DOMEventHandlerObject,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -56,6 +63,7 @@ import type {
     CompatibleContentPosition,
     CompatibleExperimentalFeatures,
     CompatibleGetContentMode,
+    CompatiblePluginEventType,
     CompatibleQueryScope,
     CompatibleRegionType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -290,7 +298,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         const core = this.getContentModelEditorCore();
         const innerCore = this.getCore();
 
-        return core.api.getContent(core, innerCore, mode);
+        return core.api.getContent(core, innerCore, mode as GetContentMode);
     }
 
     /**
@@ -522,17 +530,53 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             };
 
             if (typeof handlerObj === 'number') {
-                result.pluginEventType = handlerObj as PluginEventType;
+                result.pluginEventType = OldEventTypeToNewEventType[handlerObj as PluginEventType];
             } else if (typeof handlerObj === 'function') {
                 result.beforeDispatch = handlerObj;
             } else if (typeof handlerObj === 'object') {
-                result = handlerObj as DOMEventRecord;
+                const record = handlerObj as DOMEventHandlerObject;
+                result = {
+                    beforeDispatch: record.beforeDispatch,
+                    pluginEventType:
+                        typeof record.pluginEventType == 'number'
+                            ? OldEventTypeToNewEventType[record.pluginEventType]
+                            : undefined,
+                };
             }
 
             eventsMapResult[key] = result;
         });
 
         return this.attachDomEvent(eventsMapResult);
+    }
+
+    /**
+     * Trigger an event to be dispatched to all plugins
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
+     * @param broadcast indicates if the event needs to be dispatched to all plugins
+     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    public triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast: boolean = false
+    ): PluginEventFromType<T> {
+        const oldEvent = {
+            eventType,
+            ...data,
+        } as PluginEvent;
+        const newEvent = oldEventToNewEvent(oldEvent);
+        const core = this.getCore();
+
+        if (newEvent) {
+            core.api.triggerEvent(core, newEvent, broadcast);
+            return (newEventToOldEvent(newEvent, oldEvent) ?? oldEvent) as PluginEventFromType<T>;
+        } else {
+            return oldEvent as PluginEventFromType<T>;
+        }
     }
 
     /**
@@ -635,7 +679,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 data: data,
                 additionalData,
             };
-            core.api.triggerEvent(core, event, true /*broadcast*/);
+            this.triggerPluginEvent(PluginEventType.ContentChanged, event, true /*broadcast*/);
         }
 
         if (canUndoByBackspace) {
@@ -945,17 +989,11 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param feature The feature to check
      */
     isFeatureEnabled(feature: ExperimentalFeatures | CompatibleExperimentalFeatures): boolean {
-        return this.getContentModelEditorCore().experimentalFeatures.indexOf(feature) >= 0;
-    }
-
-    /**
-     * Get a function to convert HTML string to trusted HTML string.
-     * By default it will just return the input HTML directly. To override this behavior,
-     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
-     */
-    getTrustedHTMLHandler(): TrustedHTMLHandler {
-        return this.getCore().trustedHTMLHandler;
+        return (
+            this.getContentModelEditorCore().experimentalFeatures.indexOf(
+                feature as ExperimentalFeatures
+            ) >= 0
+        );
     }
 
     /**

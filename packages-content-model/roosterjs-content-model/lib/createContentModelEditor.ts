@@ -5,11 +5,11 @@ import {
     ContentModelPastePlugin,
     EntityDelimiterPlugin,
 } from 'roosterjs-content-model-plugins';
-import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from 'roosterjs-content-model-editor';
+import type { EditorPlugin } from 'roosterjs-content-model-types';
 
 /**
  * Create a Content Model Editor using the given options
@@ -24,16 +24,16 @@ export function createContentModelEditor(
     additionalPlugins?: EditorPlugin[],
     initialContent?: string
 ): IContentModelEditor {
-    const plugins = additionalPlugins ? [...additionalPlugins] : [];
-    plugins.push(
-        new ContentModelPastePlugin(),
+    const legacyPlugins = [
         new ContentModelEditPlugin(),
         new EntityDelimiterPlugin(),
-        new ContentModelAutoFormatPlugin()
-    );
+        new ContentModelAutoFormatPlugin(),
+    ];
+    const plugins = [new ContentModelPastePlugin(), ...(additionalPlugins ?? [])];
 
     const options: ContentModelEditorOptions = {
-        legacyPlugins: plugins,
+        legacyPlugins: legacyPlugins,
+        plugins: plugins,
         initialContent: initialContent,
         defaultSegmentFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
