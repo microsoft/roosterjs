@@ -1,3 +1,4 @@
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import type { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import type { DomToModelContext } from './DomToModelContext';
@@ -33,6 +34,16 @@ export type FormatParser<TFormat extends ContentModelFormatBase> = (
 ) => void;
 
 /**
+ * Parse format from the given text node
+ * @param format The format object to parse into
+ * @param textNode The text node to parse format from
+ * @param context The context object that provide related context information
+ */
+export type TextFormatParser<
+    TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
+> = (format: TFormat, textNode: Text, context: DomToModelContext) => void;
+
+/**
  * All format parsers
  */
 export type FormatParsers = {
@@ -40,10 +51,17 @@ export type FormatParsers = {
 };
 
 /**
+ * A map from format parser category name to an array of parsers. This is for HTML Element only
+ */
+export type ElementFormatParserPerCategory = {
+    [Key in keyof ContentModelFormatMap]: (FormatParser<ContentModelFormatMap[Key]> | null)[];
+};
+
+/**
  * A map from format parser category name to an array of parsers
  */
-export type FormatParsersPerCategory = {
-    [Key in keyof ContentModelFormatMap]: (FormatParser<ContentModelFormatMap[Key]> | null)[];
+export type FormatParsersPerCategory = ElementFormatParserPerCategory & {
+    text: TextFormatParser[];
 };
 
 /**

@@ -142,6 +142,8 @@ export {
     ApplyMetadata,
     MetadataApplier,
     MetadataAppliers,
+    TextFormatApplier,
+    ElementFormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
 export {
     DefaultStyleMap,
@@ -150,6 +152,8 @@ export {
     FormatParsersPerCategory,
     DomToModelSettings,
     FormatParser,
+    TextFormatParser,
+    ElementFormatParserPerCategory,
 } from './context/DomToModelSettings';
 export { DomToModelContext } from './context/DomToModelContext';
 export { ElementProcessor } from './context/ElementProcessor';
