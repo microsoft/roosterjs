@@ -1,7 +1,6 @@
 import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { cloneModel } from 'roosterjs-content-model-core';
 import { ContentModelEntityFormat } from 'roosterjs-content-model-types';
-import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -45,8 +44,8 @@ export const exportContent: ContentModelRibbonButton<ExportButtonStringKey> = {
                             });
 
                             if (isEntity && format.id && format.entityType) {
-                                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                                    operation: EntityOperation.ReplaceTemporaryContent,
+                                editor.triggerEvent('entityOperation', {
+                                    operation: 'replaceTemporaryContent',
                                     entity: {
                                         wrapper: clonedRoot,
                                         id: format.id,

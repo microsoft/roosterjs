@@ -12,7 +12,7 @@ export function editingTestCommon(
     result: ContentModelDocument,
     calledTimes: number
 ) {
-    const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+    const triggerEvent = jasmine.createSpy('triggerEvent');
 
     let formatResult: boolean | undefined;
 
@@ -29,7 +29,7 @@ export function editingTestCommon(
         });
 
     const editor = ({
-        triggerPluginEvent,
+        triggerEvent,
         getEnvironment: () => ({}),
         formatContentModel,
     } as any) as IContentModelEditor;

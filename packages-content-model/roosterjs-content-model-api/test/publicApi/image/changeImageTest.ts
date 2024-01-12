@@ -1,7 +1,6 @@
 import * as readFile from 'roosterjs-content-model-core/lib/publicApi/domUtils/readFile';
 import changeImage from '../../../lib/publicApi/image/changeImage';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
-import { PluginEventType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -18,7 +17,7 @@ describe('changeImage', () => {
     const testUrl = 'http://test.com/test';
     const blob = ({ a: 1 } as any) as File;
     let imageNode: HTMLImageElement;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
 
     function runTest(
         model: ContentModelDocument,
@@ -29,7 +28,7 @@ describe('changeImage', () => {
         const getDOMSelection = jasmine
             .createSpy()
             .and.returnValues({ type: 'image', image: imageNode });
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.callThrough();
+        triggerEvent = jasmine.createSpy('triggerEvent').and.callThrough();
 
         let formatResult: boolean | undefined;
         const formatContentModel = jasmine
@@ -50,7 +49,7 @@ describe('changeImage', () => {
             isDisposed: () => false,
             getPendingFormat: () => null as any,
             getDOMSelection,
-            triggerPluginEvent,
+            triggerEvent,
             formatContentModel,
         } as any) as IStandaloneEditor;
 
@@ -82,7 +81,7 @@ describe('changeImage', () => {
             0
         );
 
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(0);
+        expect(triggerEvent).toHaveBeenCalledTimes(0);
     });
 
     it('Doc without selection', () => {
@@ -116,7 +115,7 @@ describe('changeImage', () => {
             0
         );
 
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(0);
+        expect(triggerEvent).toHaveBeenCalledTimes(0);
     });
 
     it('Doc with selection, but no image', () => {
@@ -194,8 +193,8 @@ describe('changeImage', () => {
             1
         );
 
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EditImage, {
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent).toHaveBeenCalledWith('editImage', {
             image: imageNode,
             newSrc: testUrl,
             previousSrc: 'test',

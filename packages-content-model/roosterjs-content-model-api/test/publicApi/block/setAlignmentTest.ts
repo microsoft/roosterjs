@@ -417,12 +417,12 @@ describe('setAlignment', () => {
 describe('setAlignment in table', () => {
     let editor: IStandaloneEditor;
     let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
         createContentModel = jasmine.createSpy('createContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         spyOn(normalizeTable, 'normalizeTable');
@@ -432,7 +432,7 @@ describe('setAlignment in table', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             createContentModel,
             isDarkMode: () => false,
-            triggerPluginEvent,
+            triggerEvent,
             getVisibleViewport,
         } as any) as IStandaloneEditor;
     });
@@ -823,13 +823,13 @@ describe('setAlignment in list', () => {
     let editor: IStandaloneEditor;
     let setContentModel: jasmine.Spy<IStandaloneEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
@@ -838,7 +838,7 @@ describe('setAlignment in list', () => {
             setContentModel,
             createContentModel,
             isDarkMode: () => false,
-            triggerPluginEvent,
+            triggerEvent,
             getVisibleViewport,
         } as any) as IStandaloneEditor;
     });

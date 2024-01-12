@@ -1,13 +1,7 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { transformColor } from '../publicApi/color/transformColor';
-import type {
-    DarkColorHandler,
-    PluginEventData,
-    PluginEventFromType,
-} from 'roosterjs-editor-types';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
+import type { DarkColorHandler, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import type {
     ClipboardData,
     ContentModelDocument,
@@ -22,6 +16,9 @@ import type {
     ModelToDomOption,
     OnNodeCreated,
     PasteType,
+    PluginEventData,
+    PluginEventFromType,
+    PluginEventType,
     Snapshot,
     SnapshotsManager,
     StandaloneEditorCore,
@@ -212,7 +209,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+    triggerEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast: boolean = false
@@ -271,7 +268,7 @@ export class StandaloneEditor implements IStandaloneEditor {
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: PluginEventType.ContentChanged,
+                    eventType: 'contentChanged',
                     source: isDarkMode
                         ? ChangeSource.SwitchToDarkMode
                         : ChangeSource.SwitchToLightMode,
@@ -369,8 +366,8 @@ export class StandaloneEditor implements IStandaloneEditor {
             core.zoomScale = scale;
 
             if (oldValue != scale) {
-                this.triggerPluginEvent(
-                    PluginEventType.ZoomChanged,
+                this.triggerEvent(
+                    'zoomChanged',
                     {
                         oldZoomScale: oldValue,
                         newZoomScale: scale,
@@ -379,6 +376,16 @@ export class StandaloneEditor implements IStandaloneEditor {
                 );
             }
         }
+    }
+
+    /**
+     * Get a function to convert HTML string to trusted HTML string.
+     * By default it will just return the input HTML directly. To override this behavior,
+     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getTrustedHTMLHandler(): TrustedHTMLHandler {
+        return this.getCore().trustedHTMLHandler;
     }
 
     /**

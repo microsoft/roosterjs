@@ -32,7 +32,7 @@ describe('createPasteFragment', () => {
         }
     }
 
-    xit('Empty source, paste image', () => {
+    it('Empty source, paste image', () => {
         const root = document.createElement('div');
 
         root.innerHTML = 'HTML';
@@ -91,7 +91,7 @@ describe('createPasteFragment', () => {
         );
     });
 
-    xit('Has url, paste normal, has text', () => {
+    it('Has url, paste normal, has text', () => {
         const root = document.createElement('div');
 
         root.innerHTML = 'HTML';
@@ -131,7 +131,7 @@ describe('createPasteFragment', () => {
         );
     });
 
-    xit('Has text, paste normal', () => {
+    it('Has text, paste normal', () => {
         const root = document.createElement('div');
 
         root.innerHTML = 'HTML';
