@@ -1,5 +1,5 @@
+import type { PluginEvent } from '../event/PluginEvent';
 import type { IStandaloneEditor } from './IStandaloneEditor';
-import type { PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * Interface of an editor plugin
