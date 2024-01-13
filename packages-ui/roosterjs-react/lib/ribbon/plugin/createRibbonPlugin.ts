@@ -53,7 +53,8 @@ class RibbonPluginImpl implements RibbonPlugin {
         if (
             event.eventType == PluginEventType.KeyDown &&
             event.rawEvent.key == 'k' &&
-            event.rawEvent.ctrlKey
+            (event.rawEvent.ctrlKey || event.rawEvent.metaKey) &&
+            !event.rawEvent.altKey
         ) {
             this.onButtonClick(insertLink, 'insertLinkTitle', undefined);
             event.rawEvent.preventDefault();
