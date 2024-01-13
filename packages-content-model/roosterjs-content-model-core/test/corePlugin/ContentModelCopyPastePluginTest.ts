@@ -129,7 +129,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 domEvents = eventMap;
             },
             createContentModel: (options: any) => createContentModelSpy(options),
-            triggerPluginEvent(eventType: any, data: any, broadcast: any) {
+            triggerEvent(eventType: any, data: any, broadcast: any) {
                 triggerPluginEventSpy(eventType, data, broadcast);
                 return data;
             },

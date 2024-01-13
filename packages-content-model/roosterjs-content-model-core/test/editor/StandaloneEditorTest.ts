@@ -1,7 +1,6 @@
 import * as createStandaloneEditorCore from '../../lib/editor/createStandaloneEditorCore';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 
 describe('StandaloneEditor', () => {
@@ -418,7 +417,7 @@ describe('StandaloneEditor', () => {
         expect(() => editor.hasFocus()).toThrow();
     });
 
-    it('triggerPluginEvent', () => {
+    it('triggerEvent', () => {
         const div = document.createElement('div');
         const mockedEventData = {
             event: 'Mocked',
@@ -441,7 +440,7 @@ describe('StandaloneEditor', () => {
         const editor = new StandaloneEditor(div);
         const mockedEventType = 'EVENTTYPE' as any;
 
-        const result = editor.triggerPluginEvent<any>(mockedEventType, mockedEventData, true);
+        const result = editor.triggerEvent<any>(mockedEventType, mockedEventData, true);
 
         expect(result).toEqual({
             eventType: mockedEventType,
@@ -460,7 +459,7 @@ describe('StandaloneEditor', () => {
 
         editor.dispose();
 
-        expect(() => editor.triggerPluginEvent(mockedEventType, mockedEventData, true)).toThrow();
+        expect(() => editor.triggerEvent(mockedEventType, mockedEventData, true)).toThrow();
     });
 
     it('attachDomEvent', () => {
@@ -698,7 +697,7 @@ describe('StandaloneEditor', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             mockedCore,
             {
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: ChangeSource.SwitchToDarkMode,
             },
             true
@@ -718,7 +717,7 @@ describe('StandaloneEditor', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             mockedCore,
             {
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: ChangeSource.SwitchToLightMode,
             },
             true

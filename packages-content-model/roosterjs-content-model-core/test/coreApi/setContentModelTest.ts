@@ -1,6 +1,5 @@
 import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
-import { EditorCore } from 'roosterjs-editor-types';
 import { setContentModel } from '../../lib/coreApi/setContentModel';
 import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
@@ -15,7 +14,7 @@ const mockedDiv = { ownerDocument: mockedDoc } as any;
 const mockedConfig = 'CONFIG' as any;
 
 describe('setContentModel', () => {
-    let core: StandaloneEditorCore & EditorCore;
+    let core: StandaloneEditorCore;
     let contentModelToDomSpy: jasmine.Spy;
     let createEditorContext: jasmine.Spy;
     let createModelToDomContextSpy: jasmine.Spy;
@@ -53,7 +52,7 @@ describe('setContentModel', () => {
             modelToDomSettings: {
                 calculated: mockedConfig,
             },
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
     });
 
     it('no default option, no shadow edit', () => {

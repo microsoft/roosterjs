@@ -1,8 +1,6 @@
 import insertLink from '../../../lib/publicApi/link/insertLink';
-import { ChangeSource } from 'roosterjs-content-model-core';
-import { ContentModelEditor } from 'roosterjs-content-model-editor';
+import { ChangeSource, StandaloneEditor } from 'roosterjs-content-model-core';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
-import { PluginEventType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelLink,
@@ -330,8 +328,8 @@ describe('insertLink', () => {
             getName: () => 'mock',
             onPluginEvent: onPluginEvent,
         };
-        const editor = new ContentModelEditor(div, {
-            legacyPlugins: [mockedPlugin],
+        const editor = new StandaloneEditor(div, {
+            plugins: [mockedPlugin],
         });
 
         editor.focus();
@@ -344,12 +342,10 @@ describe('insertLink', () => {
 
         expect(a!.outerHTML).toBe('<a href="http://test.com" title="title">http://test.com</a>');
         expect(onPluginEvent).toHaveBeenCalledWith({
-            eventType: PluginEventType.ContentChanged,
+            eventType: 'contentChanged',
             source: ChangeSource.CreateLink,
             data: a,
-            additionalData: {
-                formatApiName: 'insertLink',
-            },
+            formatApiName: 'insertLink',
             contentModel: jasmine.anything(),
             selection: jasmine.anything(),
             changedEntities: [],

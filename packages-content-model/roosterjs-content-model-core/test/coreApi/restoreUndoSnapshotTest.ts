@@ -2,7 +2,6 @@ import * as restoreSnapshotColors from '../../lib/utils/restoreSnapshotColors';
 import * as restoreSnapshotHTML from '../../lib/utils/restoreSnapshotHTML';
 import * as restoreSnapshotSelection from '../../lib/utils/restoreSnapshotSelection';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { restoreUndoSnapshot } from '../../lib/coreApi/restoreUndoSnapshot';
 import { Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
@@ -44,7 +43,7 @@ describe('restoreUndoSnapshot', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.BeforeSetContent,
+                eventType: 'beforeSetContent',
                 newContent: mockedHTML,
             },
             true
@@ -52,7 +51,7 @@ describe('restoreUndoSnapshot', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 entityStates: undefined,
                 source: ChangeSource.SetContent,
             },
@@ -77,7 +76,7 @@ describe('restoreUndoSnapshot', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.BeforeSetContent,
+                eventType: 'beforeSetContent',
                 newContent: mockedHTML,
             },
             true
@@ -85,7 +84,7 @@ describe('restoreUndoSnapshot', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 entityStates: mockedEntityState,
                 source: ChangeSource.SetContent,
             },
