@@ -11,7 +11,10 @@ export const underlineFormatHandler: FormatHandler<UnderlineFormat> = {
 
         if (textDecoration?.indexOf('underline')! >= 0) {
             format.underline = true;
-        } else if (element.tagName == 'A' && textDecoration == 'none') {
+        } else if (
+            (element.tagName == 'A' && textDecoration == 'none') ||
+            context.defaultFormat?.underline
+        ) {
             format.underline = false;
         }
     },
