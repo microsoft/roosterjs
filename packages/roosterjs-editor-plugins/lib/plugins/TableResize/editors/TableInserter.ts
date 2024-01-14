@@ -21,7 +21,8 @@ export default function createTableInserter(
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
     onShowHelperElement?: (
         elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+        td: HTMLTableCellElement
     ) => void,
     anchorContainer?: HTMLElement
 ): TableEditFeature | null {
@@ -41,7 +42,7 @@ export default function createTableInserter(
             editor.getDefaultFormat().backgroundColor || 'white'
         );
 
-        onShowHelperElement?.(createElementData, 'TableInserter');
+        onShowHelperElement?.(createElementData, 'TableInserter', td);
 
         const div = createElement(createElementData, document) as HTMLDivElement;
 
