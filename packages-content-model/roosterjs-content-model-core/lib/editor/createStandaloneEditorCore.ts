@@ -7,8 +7,8 @@ import {
 } from './createStandaloneEditorDefaultSettings';
 import type {
     EditorEnvironment,
+    PluginState,
     StandaloneEditorCore,
-    StandaloneEditorCorePluginState,
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
@@ -76,7 +76,7 @@ export function defaultTrustHtmlHandler(html: string) {
     return html;
 }
 
-function getPluginState(corePlugins: StandaloneEditorCorePlugins): StandaloneEditorCorePluginState {
+function getPluginState(corePlugins: StandaloneEditorCorePlugins): PluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),
         copyPaste: corePlugins.copyPaste.getState(),

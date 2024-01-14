@@ -1,5 +1,4 @@
-import { BeforePasteEvent } from 'roosterjs-editor-types';
-import { ClipboardData } from 'roosterjs-content-model-types';
+import { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
 import { getPasteSource } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
 import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
 import {

@@ -19,7 +19,8 @@ export default function createCellResizer(
     onEnd: () => false,
     onShowHelperElement?: (
         elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+        td: HTMLTableCellElement
     ) => void,
     anchorContainer?: HTMLElement
 ): TableEditFeature | null {
@@ -29,7 +30,7 @@ export default function createCellResizer(
         style: `position: fixed; cursor: ${isHorizontal ? 'row' : 'col'}-resize; user-select: none`,
     };
 
-    onShowHelperElement?.(createElementData, 'CellResizer');
+    onShowHelperElement?.(createElementData, 'CellResizer', td);
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 

@@ -22,7 +22,6 @@ export interface BuildInPluginList {
     tableEditMenu: boolean;
     contextMenu: boolean;
     autoFormat: boolean;
-    contentModelPaste: boolean;
     announce: boolean;
 }
 

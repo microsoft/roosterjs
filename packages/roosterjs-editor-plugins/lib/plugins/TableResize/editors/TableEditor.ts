@@ -80,7 +80,8 @@ export default class TableEditor {
         private onChanged: () => void,
         private onShowHelperElement?: (
             elementData: CreateElementData,
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+            tableOrTd: HTMLTableElement | HTMLTableCellElement
         ) => void,
         private anchorContainer?: HTMLElement,
         private contentDiv?: EventTarget | null

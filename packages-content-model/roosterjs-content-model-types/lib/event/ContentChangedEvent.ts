@@ -1,13 +1,10 @@
+import type { AnnounceData } from '../parameter/AnnounceData';
+import type { BasePluginEvent } from './BasePluginEvent';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
 import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
-import type {
-    CompatibleContentChangedEvent,
-    ContentChangedEvent,
-    ContentChangedEventData,
-} from 'roosterjs-editor-types';
 
 /**
  * Represents an entity that has been changed during a content change process
@@ -30,9 +27,9 @@ export interface ChangedEntity {
 }
 
 /**
- * Data of ContentModelContentChangedEvent
+ * Represents a change to the editor made by another plugin with content model inside
  */
-export interface ContentModelContentChangedEventData extends ContentChangedEventData {
+export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
     /**
      * The content model that is applied which causes this content changed event
      */
@@ -52,18 +49,24 @@ export interface ContentModelContentChangedEventData extends ContentChangedEvent
      * Entity states related to this event
      */
     readonly entityStates?: EntityState[];
+
+    /**
+     * Source of the change
+     */
+    readonly source: string;
+
+    /**
+     * Optional related data
+     */
+    readonly data?: any;
+
+    /**
+     * Optional property to store the format api name when using ChangeSource.Format
+     */
+    readonly formatApiName?: string;
+
+    /**
+     * @optional Announce data from this content changed event.
+     */
+    readonly announceData?: AnnounceData;
 }
-
-/**
- * Represents a change to the editor made by another plugin with content model inside
- */
-export interface ContentModelContentChangedEvent
-    extends ContentChangedEvent,
-        ContentModelContentChangedEventData {}
-
-/**
- * Represents a change to the editor made by another plugin with content model inside
- */
-export interface CompatibleContentModelContentChangedEvent
-    extends CompatibleContentChangedEvent,
-        ContentModelContentChangedEventData {}

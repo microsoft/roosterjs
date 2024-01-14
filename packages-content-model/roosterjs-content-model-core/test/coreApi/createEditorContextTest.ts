@@ -1,5 +1,4 @@
 import { createEditorContext } from '../../lib/coreApi/createEditorContext';
-import { EditorCore } from 'roosterjs-editor-types';
 import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('createEditorContext', () => {
@@ -29,7 +28,7 @@ describe('createEditorContext', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
 
         const context = createEditorContext(core);
 
@@ -72,7 +71,7 @@ describe('createEditorContext', () => {
             cache: {
                 domIndexer,
             },
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
 
         const context = createEditorContext(core);
 
@@ -88,7 +87,7 @@ describe('createEditorContext', () => {
 });
 
 describe('createEditorContext - checkZoomScale', () => {
-    let core: StandaloneEditorCore & EditorCore;
+    let core: StandaloneEditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
     let getBoundingClientRectSpy: jasmine.Spy;
@@ -118,7 +117,7 @@ describe('createEditorContext - checkZoomScale', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
     });
 
     it('Zoom scale = 1', () => {
@@ -180,7 +179,7 @@ describe('createEditorContext - checkZoomScale', () => {
 });
 
 describe('createEditorContext - checkRootDir', () => {
-    let core: StandaloneEditorCore & EditorCore;
+    let core: StandaloneEditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
     let getBoundingClientRectSpy: jasmine.Spy;
@@ -210,7 +209,7 @@ describe('createEditorContext - checkRootDir', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
     });
 
     it('LTR CSS', () => {
