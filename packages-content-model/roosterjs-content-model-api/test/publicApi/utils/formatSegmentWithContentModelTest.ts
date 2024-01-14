@@ -51,7 +51,13 @@ describe('formatSegmentWithContentModel', () => {
     it('empty doc', () => {
         model = createContentModelDocument();
 
-        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
+        const callback = jasmine
+            .createSpy('callback')
+            .and.callFake((format: ContentModelSegmentFormat) => {
+                format.fontFamily = 'test';
+            });
+
+        formatSegmentWithContentModel(editor, apiName, callback);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -59,6 +65,7 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeFalse();
+        expect(callback).toHaveBeenCalledTimes(0);
     });
 
     it('doc with selection', () => {
@@ -71,7 +78,14 @@ describe('formatSegmentWithContentModel', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
+        const callback = jasmine
+            .createSpy('callback')
+            .and.callFake((format: ContentModelSegmentFormat) => {
+                format.fontFamily = 'test';
+            });
+
+        formatSegmentWithContentModel(editor, apiName, callback);
+
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -93,6 +107,8 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(text.format, true, text, para);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -241,7 +257,13 @@ describe('formatSegmentWithContentModel', () => {
         para.segments.push(marker);
         model.blocks.push(para);
 
-        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
+        const callback = jasmine
+            .createSpy('callback')
+            .and.callFake((format: ContentModelSegmentFormat) => {
+                format.fontFamily = 'test';
+            });
+
+        formatSegmentWithContentModel(editor, apiName, callback);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -263,57 +285,14 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeFalse();
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(marker.format, true, marker, para);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
             newImages: [],
             newPendingFormat: {
                 fontSize: '10px',
-                fontFamily: 'test',
-            },
-        });
-    });
-
-    it('With pending format', () => {
-        model = createContentModelDocument();
-        const para = createParagraph();
-        const text = createText('test');
-        const marker = createSelectionMarker();
-
-        para.segments.push(text, marker);
-        model.blocks.push(para);
-
-        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
-        expect(model).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'test',
-                            },
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
-        expect(formatContentModel).toHaveBeenCalledTimes(1);
-        expect(formatResult).toBeFalse();
-        expect(context).toEqual({
-            newEntities: [],
-            deletedEntities: [],
-            newImages: [],
-            newPendingFormat: {
                 fontFamily: 'test',
             },
         });

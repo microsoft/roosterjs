@@ -20,7 +20,7 @@ export interface EditorContext {
     /**
      * Pending format if any
      */
-    pendingFormat?: PendingFormat | null;
+    pendingFormat?: PendingFormat;
 
     /**
      * Color manager, to help manager color in dark mode

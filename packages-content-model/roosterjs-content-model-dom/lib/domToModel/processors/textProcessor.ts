@@ -25,8 +25,7 @@ export const textProcessor: ElementProcessor<Text> = (
     let txt = textNode.nodeValue || '';
     const offsets = getRegularSelectionOffsets(context, textNode);
     const txtStartOffset = offsets[0];
-    const txtEndOffset = offsets[1];
-    let adjustedEndOffset = txtEndOffset;
+    let txtEndOffset = offsets[1];
     const segments: (ContentModelText | undefined)[] = [];
     const paragraph = ensureParagraph(group, context.blockFormat);
 
@@ -38,22 +37,22 @@ export const textProcessor: ElementProcessor<Text> = (
         addSelectionMarker(group, context, textNode, txtStartOffset);
 
         txt = txt.substring(txtStartOffset);
-        adjustedEndOffset -= txtStartOffset;
+        txtEndOffset -= txtStartOffset;
     }
 
-    if (adjustedEndOffset >= 0) {
-        const subText = txt.substring(0, adjustedEndOffset);
+    if (txtEndOffset >= 0) {
+        const subText = txt.substring(0, txtEndOffset);
         segments.push(addTextSegment(group, subText, paragraph, context));
 
         if (
             context.selection &&
             (context.selection.type != 'range' || !context.selection.range.collapsed)
         ) {
-            addSelectionMarker(group, context, textNode, txtEndOffset);
+            addSelectionMarker(group, context, textNode, offsets[1]); // Must use offsets[1] here as the unchanged offset value, cannot use txtEndOffset since it has been modified
         }
 
         context.isInSelection = false;
-        txt = txt.substring(adjustedEndOffset);
+        txt = txt.substring(txtEndOffset);
     }
 
     segments.push(addTextSegment(group, txt, paragraph, context));
