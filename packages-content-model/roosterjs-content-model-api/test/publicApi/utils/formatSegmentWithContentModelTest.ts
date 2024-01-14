@@ -278,13 +278,10 @@ describe('formatSegmentWithContentModel', () => {
         model = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
+        const marker = createSelectionMarker();
 
-        para.segments.push(text);
+        para.segments.push(text, marker);
         model.blocks.push(para);
-
-        const pendingFormat: ContentModelSegmentFormat = {
-            fontSize: '10px',
-        };
 
         formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
         expect(model).toEqual({
@@ -299,20 +296,26 @@ describe('formatSegmentWithContentModel', () => {
                             text: 'test',
                             format: {},
                         },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'test',
+                            },
+                            isSelected: true,
+                        },
                     ],
                 },
             ],
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
-        expect(formatResult).toBeTrue();
-        expect(pendingFormat).toEqual({
-            fontSize: '10px',
-            fontFamily: 'test',
-        });
+        expect(formatResult).toBeFalse();
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
             newImages: [],
+            newPendingFormat: {
+                fontFamily: 'test',
+            },
         });
     });
 });

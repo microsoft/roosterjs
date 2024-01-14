@@ -417,7 +417,7 @@ describe('Paste with clipboardData', () => {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {
-                                textColor: 'rgb(0, 0, 0)',
+                                textColor: '',
                                 backgroundColor: '',
                                 fontFamily: '',
                                 fontSize: '',

@@ -82,8 +82,8 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Calibri, sans-serif',
-                                fontSize: '11pt',
+                                fontFamily: '',
+                                fontSize: '',
                                 backgroundColor: '',
                                 fontWeight: '',
                                 italic: false,
