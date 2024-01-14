@@ -26,4 +26,24 @@ export type BorderFormat = {
      * Radius to be applied in all borders corners
      */
     borderRadius?: string;
+
+    /**
+     * Radius to be applied in top left corner
+     */
+    borderTopLeftRadius?: string;
+
+    /**
+     * Radius to be applied in top right corner
+     */
+    borderTopRightRadius?: string;
+
+    /**
+     * Radius to be applied in bottom left corner
+     */
+    borderBottomLeftRadius?: string;
+
+    /**
+     * Radius to be applied in bottom right corner
+     */
+    borderBottomRightRadius?: string;
 };
