@@ -71,6 +71,9 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
     const commandBarItems = React.useMemo((): ICommandBarItemProps[] => {
         return buttons.map(
             (button): ICommandBarItemProps => {
+                if (button.key == 'buttonNameInsertLink') {
+                    button.disableInsertLink = true;
+                }
                 const selectedItem =
                     formatState && button.dropDownMenu?.getSelectedItemKey?.(formatState);
                 const dropDownMenu = button.dropDownMenu;

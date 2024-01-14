@@ -13,6 +13,7 @@ export const insertLink: RibbonButton<InsertLinkButtonStringKey> = {
     unlocalizedText: 'Insert link',
     iconName: 'Link',
     isDisabled: formatState => !!formatState.isMultilineSelection,
+    disableInsertLink: true,
     onClick: (editor, _, strings, uiUtilities) => {
         const existingLink = editor.queryElements<HTMLAnchorElement>(
             'a[href]',

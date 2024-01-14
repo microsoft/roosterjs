@@ -56,6 +56,11 @@ class RibbonPluginImpl implements RibbonPlugin {
             (event.rawEvent.ctrlKey || event.rawEvent.metaKey) &&
             !event.rawEvent.altKey
         ) {
+            if (insertLink.disableInsertLink) {
+                event.rawEvent.preventDefault();
+                return;
+            }
+
             this.onButtonClick(insertLink, 'insertLinkTitle', undefined);
             event.rawEvent.preventDefault();
         }
