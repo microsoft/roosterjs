@@ -11,7 +11,13 @@ interface AutoFormatOptions {
     autoBullet: boolean;
     autoNumbering: boolean;
 }
-
+/**
+ * Auto Format plugin handles auto formatting, such as transforming * characters into a bullet list.
+ * It can be customized with options to enable or disable auto list features.
+ * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
+ *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
+ *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
+ */
 export class ContentModelAutoFormatPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
     private options: AutoFormatOptions = {
