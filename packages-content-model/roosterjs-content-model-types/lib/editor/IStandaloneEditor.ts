@@ -1,3 +1,5 @@
+import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
+import type { PluginEventType } from '../event/PluginEventType';
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
@@ -14,12 +16,7 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type {
-    DarkColorHandler,
-    PluginEventData,
-    PluginEventFromType,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import type { DarkColorHandler, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 /**
  * An interface of standalone Content Model editor.
@@ -220,4 +217,12 @@ export interface IStandaloneEditor {
      * @returns true if focus is in editor, otherwise false
      */
     hasFocus(): boolean;
+
+    /**
+     * Get a function to convert HTML string to trusted HTML string.
+     * By default it will just return the input HTML directly. To override this behavior,
+     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getTrustedHTMLHandler(): TrustedHTMLHandler;
 }
