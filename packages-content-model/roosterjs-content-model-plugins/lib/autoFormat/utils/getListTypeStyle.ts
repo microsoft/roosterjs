@@ -14,6 +14,9 @@ import {
     getSelectedSegmentsAndParagraphs,
 } from 'roosterjs-content-model-core';
 
+/**
+ * @internal
+ */
 interface ListTypeStyle {
     listType: 'UL' | 'OL';
     styleType: number;
