@@ -8,7 +8,8 @@ import type {
 import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 
 /**
- * @internal
+ * - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
+ * - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
  */
 interface AutoFormatOptions {
     autoBullet: boolean;
