@@ -7,6 +7,9 @@ import type {
 } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 
+/**
+ * @internal
+ */
 interface AutoFormatOptions {
     autoBullet: boolean;
     autoNumbering: boolean;
