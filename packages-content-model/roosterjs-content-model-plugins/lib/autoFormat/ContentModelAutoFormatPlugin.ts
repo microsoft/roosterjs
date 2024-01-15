@@ -1,5 +1,5 @@
 import keyboardListTrigger from './keyboardListTrigger';
-import {
+import type {
     EditorPlugin,
     IStandaloneEditor,
     KeyDownEvent,
