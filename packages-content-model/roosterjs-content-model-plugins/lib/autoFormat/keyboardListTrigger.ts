@@ -7,6 +7,9 @@ import {
 } from 'roosterjs-content-model-core';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
+/**
+ * @internal
+ */
 export default function keyboardListTrigger(
     editor: IStandaloneEditor,
     shouldSearchForBullet: boolean = true,

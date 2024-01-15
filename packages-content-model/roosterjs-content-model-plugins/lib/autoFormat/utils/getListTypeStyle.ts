@@ -20,6 +20,9 @@ interface ListTypeStyle {
     index?: number;
 }
 
+/**
+ * @internal
+ */
 export function getListTypeStyle(
     model: ContentModelDocument,
     shouldSearchForBullet: boolean = true,

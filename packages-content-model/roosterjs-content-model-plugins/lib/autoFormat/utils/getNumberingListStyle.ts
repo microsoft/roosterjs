@@ -128,10 +128,6 @@ const identifyNumberingListType = (
 
 /**
  * @internal
- * @param textBeforeCursor The trigger character
- * @param previousListChain @optional This parameters is used to keep the list chain, if the is not a new list
- * @param previousListStyle @optional The list style of the previous list
- * @returns The style of a numbering list triggered by a string
  */
 export default function getNumberingListStyle(
     textBeforeCursor: string,
