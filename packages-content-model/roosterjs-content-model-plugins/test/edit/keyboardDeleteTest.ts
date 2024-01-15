@@ -3,6 +3,7 @@ import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCo
 import { ChangeSource } from 'roosterjs-content-model-core';
 import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
+import { deleteList } from '../../lib/edit/deleteSteps/deleteList';
 import { DeleteResult, DeleteSelectionStep } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
@@ -56,6 +57,7 @@ describe('keyboardDelete', () => {
                         collapsed: false,
                     },
                 });
+
                 const result = keyboardDelete(editor, mockedEvent);
 
                 expect(result).toBeTrue();
@@ -86,7 +88,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection, null!],
             'notDeleted',
             true,
             0
@@ -104,7 +106,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -124,7 +126,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, forwardDeleteWordSelection, forwardDeleteCollapsedSelection],
+            [null!, forwardDeleteWordSelection, forwardDeleteCollapsedSelection, null!],
             'notDeleted',
             true,
             0
@@ -144,7 +146,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, backwardDeleteWordSelection, backwardDeleteCollapsedSelection],
+            [null!, backwardDeleteWordSelection, backwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -164,7 +166,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection, null!],
             'notDeleted',
             true,
             0
@@ -184,7 +186,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [deleteAllSegmentBefore, null!, backwardDeleteCollapsedSelection],
+            [deleteAllSegmentBefore, null!, backwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -226,7 +228,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection, null!],
             'notDeleted',
             true,
             0
@@ -268,7 +270,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -320,7 +322,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection, null!],
             'singleChar',
             false,
             1
@@ -372,7 +374,101 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection, deleteList],
+            'singleChar',
+            false,
+            1
+        );
+    });
+
+    it('Backspace on empty list', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        format: {
+                            listStyleType: '"1. "',
+                        },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        format: {},
+                                        isSelected: true,
+                                    },
+                                    {
+                                        segmentType: 'Br',
+                                        format: {},
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    },
+                ],
+            },
+            'Backspace',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        format: {
+                            listStyleType: '"1. "',
+                        },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        format: {},
+                                        isSelected: true,
+                                    },
+                                    {
+                                        segmentType: 'Br',
+                                        format: {},
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    },
+                ],
+            },
+            [null!, null!, backwardDeleteCollapsedSelection, deleteList],
             'singleChar',
             false,
             1
