@@ -1,7 +1,6 @@
 import { BulletListType, NumberingListType } from 'roosterjs-content-model-core';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { getListTypeStyle } from '../../../lib/autoFormat/utils/getListTypeStyle';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 
 describe('getListTypeStyle', () => {
     function runTest(
@@ -16,15 +15,8 @@ describe('getListTypeStyle', () => {
         shouldSearchForBullet?: boolean,
         shouldSearchForNumbering?: boolean
     ) {
-        const createContentModel = jasmine.createSpy('createContentModel').and.returnValue(model);
-
-        const editor = ({
-            createContentModel,
-            getEnvironment: () => ({}),
-        } as any) as IContentModelEditor;
-
         const listTypeStyle = getListTypeStyle(
-            editor,
+            model,
             shouldSearchForBullet,
             shouldSearchForNumbering
         );

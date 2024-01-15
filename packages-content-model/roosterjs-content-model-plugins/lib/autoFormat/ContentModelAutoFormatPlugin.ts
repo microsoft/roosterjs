@@ -1,12 +1,11 @@
-import { keyboardListTrigger } from './keyboardListTrigger';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { IContentModelEditor } from 'roosterjs-content-model-editor';
-import type {
+import keyboardListTrigger from './keyboardListTrigger';
+import {
     EditorPlugin,
-    IEditor,
+    IStandaloneEditor,
+    KeyDownEvent,
     PluginEvent,
-    PluginKeyDownEvent,
-} from 'roosterjs-editor-types';
+} from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 
 interface AutoFormatOptions {
     autoBullet: boolean;
@@ -39,7 +38,7 @@ export class ContentModelAutoFormatPlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
+    initialize(editor: IStandaloneEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
     }
@@ -62,20 +61,21 @@ export class ContentModelAutoFormatPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.KeyDown:
+                case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
             }
         }
     }
 
-    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
+    private handleKeyDownEvent(editor: IContentModelEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
                 case ' ':
-                    if (this.options.autoBullet || this.options.autoNumbering) {
-                        keyboardListTrigger(editor, rawEvent);
+                    const { autoBullet, autoNumbering } = this.options;
+                    if (autoBullet || autoNumbering) {
+                        keyboardListTrigger(editor, autoBullet, autoNumbering);
                     }
 
                     break;

@@ -1,4 +1,4 @@
-import { getIndex } from './getIndex';
+import getIndex from './getIndex';
 import { NumberingListType } from 'roosterjs-content-model-core';
 
 const enum NumberingTypes {

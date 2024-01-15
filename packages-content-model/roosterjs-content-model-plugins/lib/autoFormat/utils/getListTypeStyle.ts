@@ -1,8 +1,7 @@
+import getIndex from './getIndex';
 import getNumberingListStyle from './getNumberingListStyle';
-import { getIndex } from './getIndex';
 
 import type {
-    IStandaloneEditor,
     ContentModelDocument,
     ContentModelListItem,
     ContentModelParagraph,
@@ -22,11 +21,10 @@ interface ListTypeStyle {
 }
 
 export function getListTypeStyle(
-    editor: IStandaloneEditor,
+    model: ContentModelDocument,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ): ListTypeStyle | undefined {
-    const model = editor.createContentModel();
     const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, true);
     const marker = selectedSegmentsAndParagraphs[0][0];
     const paragraph = selectedSegmentsAndParagraphs[0][1];
