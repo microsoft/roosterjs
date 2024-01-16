@@ -1,8 +1,7 @@
 import addParser from '../utils/addParser';
 import { isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
-import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
-import type { BeforePasteEvent } from 'roosterjs-content-model-types';
+import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-content-model-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
