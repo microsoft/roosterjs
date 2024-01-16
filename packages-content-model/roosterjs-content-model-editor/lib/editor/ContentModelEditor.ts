@@ -44,7 +44,6 @@ import type {
     PluginEventData,
     PluginEventFromType,
     PositionType,
-    Rect,
     Region,
     SelectionPath,
     SelectionRangeEx,
@@ -90,7 +89,7 @@ import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type { DOMEventRecord } from 'roosterjs-content-model-types';
+import type { DOMEventRecord, Rect } from 'roosterjs-content-model-types';
 
 /**
  * Editor for Content Model.
