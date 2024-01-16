@@ -76,7 +76,7 @@ describe('createModelToDomContext', () => {
 
         const appliers = buildFormatAppliers();
 
-        appliers.block[4] = mockedBlockApplier;
+        appliers.block[5] = mockedBlockApplier;
         appliers.elementBasedSegment[4] = mockedBoldApplier;
         appliers.segment[7] = mockedBoldApplier;
         appliers.segmentOnBlock[7] = mockedBoldApplier;

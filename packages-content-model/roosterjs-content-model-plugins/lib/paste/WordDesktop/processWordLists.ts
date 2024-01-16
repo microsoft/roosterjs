@@ -1,4 +1,5 @@
 import { getListStyleTypeFromString, updateListMetadata } from 'roosterjs-content-model-core';
+import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
 import type { WordMetadata } from './WordMetadata';
 import {
     addBlock,
@@ -142,6 +143,7 @@ function processAsListItem(
 
     parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
     parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
+    parseFormat(element, [removeNegativeTextIndentParser], listItem.format, context);
 
     if (listType == 'OL') {
         setStartNumber(listItem, context, listMetadata);

@@ -3,6 +3,7 @@ import getStyleMetadata from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
+import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type {
@@ -13,7 +14,6 @@ import type {
     DomToModelContext,
     ElementProcessor,
     FormatParser,
-    TextIndentFormat,
 } from 'roosterjs-content-model-types';
 
 const PERCENTAGE_REGEX = /%/;
@@ -88,11 +88,5 @@ function listLevelParser(
 const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
     if (format.marginLeft?.startsWith('-')) {
         delete format.marginLeft;
-    }
-};
-
-const removeNegativeTextIndentParser: FormatParser<TextIndentFormat> = (format, element) => {
-    if (format.textIndent?.startsWith('-')) {
-        format.textIndent = undefined;
     }
 };

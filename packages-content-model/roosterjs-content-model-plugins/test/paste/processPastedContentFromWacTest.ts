@@ -1747,6 +1747,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -1781,6 +1782,7 @@ describe('wordOnlineHandler', () => {
                                                         backgroundColor: 'rgb(21, 96, 130)',
                                                         verticalAlign: 'middle',
                                                         width: '312px',
+                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -1841,6 +1843,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -1875,6 +1878,7 @@ describe('wordOnlineHandler', () => {
                                                         backgroundColor: 'rgb(21, 96, 130)',
                                                         verticalAlign: 'middle',
                                                         width: '312px',
+                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -1940,6 +1944,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -1975,6 +1980,7 @@ describe('wordOnlineHandler', () => {
                                                         backgroundColor: 'rgb(0, 0, 0)',
                                                         verticalAlign: 'middle',
                                                         width: '624px',
+                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -1996,6 +2002,7 @@ describe('wordOnlineHandler', () => {
                                                         backgroundColor: 'rgb(0, 0, 0)',
                                                         verticalAlign: 'middle',
                                                         width: '624px',
+                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: true,
                                                     spanAbove: false,
@@ -2062,6 +2069,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2101,6 +2109,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2188,6 +2197,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2308,6 +2318,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2346,6 +2357,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2400,6 +2412,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2438,6 +2451,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2536,6 +2550,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2623,6 +2638,7 @@ describe('wordOnlineHandler', () => {
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -2657,6 +2673,7 @@ describe('wordOnlineHandler', () => {
                                                         borderLeft: '1px solid rgb(0, 0, 0)',
                                                         verticalAlign: 'top',
                                                         width: '624px',
+                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -2677,6 +2694,7 @@ describe('wordOnlineHandler', () => {
                                                         borderLeft: '1px solid rgb(0, 0, 0)',
                                                         verticalAlign: 'top',
                                                         width: '624px',
+                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: true,
                                                     spanAbove: false,
@@ -2698,6 +2716,7 @@ describe('wordOnlineHandler', () => {
                                         width: '0px',
                                         tableLayout: 'fixed',
                                         borderCollapse: true,
+                                        textIndent: '0px',
                                     },
                                     widths: [],
                                     dataset: {
@@ -2712,6 +2731,7 @@ describe('wordOnlineHandler', () => {
                                 marginTop: '2px',
                                 marginRight: '0px',
                                 marginBottom: '2px',
+                                textIndent: '0px',
                             },
                         },
                     ],
@@ -2723,6 +2743,7 @@ describe('wordOnlineHandler', () => {
                         marginRight: '0px',
                         marginBottom: '0px',
                         marginLeft: '0px',
+                        textIndent: '0px',
                     },
                 },
             ],
