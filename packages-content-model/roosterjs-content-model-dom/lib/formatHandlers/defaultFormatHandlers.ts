@@ -6,11 +6,11 @@ import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
 import { displayFormatHandler } from './block/displayFormatHandler';
+import { entityFormatHandler } from './entity/entityFormatHandler';
 import { floatFormatHandler } from './common/floatFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
-import { FormatHandler } from './FormatHandler';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../domUtils/getObjectKeys';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
@@ -19,7 +19,7 @@ import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
-import { listStylePositionFormatHandler } from './list/listStylePositionFormatHandler';
+import { listStyleFormatHandler } from './list/listStyleFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
@@ -35,16 +35,15 @@ import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
 import { wordBreakFormatHandler } from './common/wordBreakFormatHandler';
-import {
+import type { FormatHandler } from './FormatHandler';
+import type {
     ContentModelFormatMap,
-    FormatHandlerTypeMap,
-    FormatKey,
     FormatApplier,
     FormatAppliers,
-    FormatAppliersPerCategory,
+    FormatHandlerTypeMap,
+    FormatKey,
     FormatParser,
     FormatParsers,
-    FormatParsersPerCategory,
 } from 'roosterjs-content-model-types';
 
 type FormatHandlers = {
@@ -63,6 +62,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     float: floatFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
+    entity: entityFormatHandler,
     htmlAlign: htmlAlignFormatHandler,
     id: idFormatHandler,
     italic: italicFormatHandler,
@@ -71,7 +71,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     link: linkFormatHandler,
     listItemThread: listItemThreadFormatHandler,
     listLevelThread: listLevelThreadFormatHandler,
-    listStylePosition: listStylePositionFormatHandler,
+    listStyle: listStyleFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
     size: sizeFormatHandler,
@@ -116,21 +116,24 @@ const sharedContainerFormats: (keyof FormatHandlerTypeMap)[] = [
     'border',
 ];
 
-const defaultFormatKeysPerCategory: {
+/**
+ * @internal
+ */
+export const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
     block: sharedBlockFormats,
-    listItem: ['listItemThread'],
-    listItemElement: [...sharedBlockFormats, 'direction', 'textAlign', 'lineHeight', 'margin'],
-    listLevel: [
-        'listLevelThread',
+    listItemThread: ['listItemThread'],
+    listLevelThread: ['listLevelThread'],
+    listItemElement: [
+        ...sharedBlockFormats,
         'direction',
         'textAlign',
+        'lineHeight',
         'margin',
-        'padding',
-        'listStylePosition',
-        'backgroundColor',
+        'listStyle',
     ],
+    listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     elementBasedSegment: elementBasedSegmentFormats,
     segment: [
@@ -166,6 +169,7 @@ const defaultFormatKeysPerCategory: {
         'margin',
         'size',
         'tableLayout',
+        'textColor',
     ],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
@@ -179,6 +183,7 @@ const defaultFormatKeysPerCategory: {
         'boxShadow',
         'display',
         'float',
+        'verticalAlign',
     ],
     link: [
         'link',
@@ -197,6 +202,7 @@ const defaultFormatKeysPerCategory: {
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
+    entity: ['entity'],
 };
 
 /**
@@ -220,49 +226,3 @@ export const defaultFormatAppliers: FormatAppliers = getObjectKeys(defaultFormat
     },
     <FormatAppliers>{}
 );
-
-/**
- * @internal
- */
-export function getFormatParsers(
-    override: Partial<FormatParsers> = {},
-    additionalParsers: Partial<FormatParsersPerCategory> = {}
-): FormatParsersPerCategory {
-    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
-        const value = defaultFormatKeysPerCategory[key]
-            .map(
-                formatKey =>
-                    (override[formatKey] === undefined
-                        ? defaultFormatParsers[formatKey]
-                        : override[formatKey]) as FormatParser<any>
-            )
-            .concat((additionalParsers[key] as FormatParser<any>[]) || []);
-
-        result[key] = value;
-
-        return result;
-    }, {} as FormatParsersPerCategory);
-}
-
-/**
- * @internal
- */
-export function getFormatAppliers(
-    override: Partial<FormatAppliers> = {},
-    additionalAppliers: Partial<FormatAppliersPerCategory> = {}
-): FormatAppliersPerCategory {
-    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
-        const value = defaultFormatKeysPerCategory[key]
-            .map(
-                formatKey =>
-                    (override[formatKey] === undefined
-                        ? defaultFormatAppliers[formatKey]
-                        : override[formatKey]) as FormatApplier<any>
-            )
-            .concat((additionalAppliers[key] as FormatApplier<any>[]) || []);
-
-        result[key] = value;
-
-        return result;
-    }, {} as FormatAppliersPerCategory);
-}

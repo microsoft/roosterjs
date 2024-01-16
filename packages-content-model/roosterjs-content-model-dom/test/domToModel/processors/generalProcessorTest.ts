@@ -4,17 +4,18 @@ import { childProcessor as originalChildProcessor } from '../../../lib/domToMode
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
+    ContentModelDomIndexer,
     ContentModelGeneralBlock,
     ContentModelGeneralSegment,
+    ContentModelParagraph,
     DomToModelContext,
     ElementProcessor,
 } from 'roosterjs-content-model-types';
 
 describe('generalProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
@@ -150,18 +151,15 @@ describe('generalProcessor', () => {
         const text = document.createTextNode('test');
 
         span.appendChild(text);
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: text,
-                    startOffset: 1,
-                    endContainer: text,
-                    endOffset: 3,
-                    collapsed: false,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: text,
+                startOffset: 1,
+                endContainer: text,
+                endOffset: 3,
+                collapsed: false,
+            } as any,
         };
 
         childProcessor.and.callFake(originalChildProcessor);
@@ -220,18 +218,15 @@ describe('generalProcessor', () => {
         const text = document.createTextNode('test');
 
         span.appendChild(text);
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: text,
-                    startOffset: 1,
-                    endContainer: text,
-                    endOffset: 3,
-                    collapsed: false,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: text,
+                startOffset: 1,
+                endContainer: text,
+                endOffset: 3,
+                collapsed: false,
+            } as any,
         };
         context.isInSelection = true;
 
@@ -257,7 +252,13 @@ describe('generalProcessor', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: 'tes',
+                                            text: 't',
+                                            format: {},
+                                            isSelected: true,
+                                        },
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'es',
                                             format: {},
                                             isSelected: true,
                                         },
@@ -309,5 +310,50 @@ describe('generalProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Process a SPAN element with domIndexer', () => {
+        const doc = createContentModelDocument();
+        const span = document.createElement('span');
+        const segment: ContentModelGeneralSegment = {
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
+            element: span,
+            blocks: [],
+            format: {},
+        };
+
+        spyOn(createGeneralSegment, 'createGeneralSegment').and.returnValue(segment);
+
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [segment],
+            format: {},
+        };
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledWith(segment, span, context);
+        expect(onSegmentSpy).toHaveBeenCalledWith(span, paragraph, [segment]);
     });
 });

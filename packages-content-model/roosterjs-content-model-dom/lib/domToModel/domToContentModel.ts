@@ -1,30 +1,26 @@
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
-import { createDomToModelContext } from './context/createDomToModelContext';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
-import {
+import type {
     ContentModelDocument,
-    DomToModelOption,
-    EditorContext,
+    DOMSelection,
+    DomToModelContext,
 } from 'roosterjs-content-model-types';
 
 /**
  * Create Content Model from DOM tree in this editor
  * @param root Root element of DOM tree to create Content Model from
- * @param option The option to customize the behavior of DOM to Content Model conversion
- * @param editorContext Context of content model editor
- * @param selection Existing selection range in editor
+ * @param context Context object for DOM to Content Model conversion
+ * @param selection Selection that already exists in content
  * @returns A ContentModelDocument object that contains all the models created from the give root element
  */
 export function domToContentModel(
     root: HTMLElement | DocumentFragment,
-    option?: DomToModelOption,
-    editorContext?: EditorContext,
-    selection?: SelectionRangeEx
+    context: DomToModelContext,
+    selection?: DOMSelection
 ): ContentModelDocument {
-    const model = createContentModelDocument(editorContext?.defaultFormat);
-    const context = createDomToModelContext(editorContext, option, selection);
+    const model = createContentModelDocument(context.defaultFormat);
 
+    context.selection = selection;
     context.elementProcessors.child(model, root, context);
 
     normalizeContentModel(model);

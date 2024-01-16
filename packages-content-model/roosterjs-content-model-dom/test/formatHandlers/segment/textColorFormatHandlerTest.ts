@@ -1,6 +1,7 @@
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { defaultHTMLStyleMap } from '../../../lib/config/defaultHTMLStyleMap';
+import { DeprecatedColors } from '../../../lib';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
 import {
@@ -17,7 +18,6 @@ describe('textColorFormatHandler.parse', () => {
     beforeEach(() => {
         div = document.createElement('div');
         context = createDomToModelContext();
-        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock: ' + s);
         format = {};
     });
 
@@ -73,7 +73,7 @@ describe('textColorFormatHandler.parse', () => {
     it('Color from hyperlink with override', () => {
         div.style.color = 'red';
 
-        textColorFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+        textColorFormatHandler.parse(format, div, context, defaultHTMLStyleMap.a!);
 
         expect(format).toEqual({
             textColor: 'red',
@@ -87,6 +87,16 @@ describe('textColorFormatHandler.parse', () => {
 
         expect(format.textColor).toBe('red');
     });
+
+    DeprecatedColors.forEach(color => {
+        it('Remove deprecated color ' + color, () => {
+            div.style.backgroundColor = color;
+
+            textColorFormatHandler.parse(format, div, context, {});
+
+            expect(format.textColor).toBe(undefined);
+        });
+    });
 });
 
 describe('textColorFormatHandler.apply', () => {
@@ -97,7 +107,10 @@ describe('textColorFormatHandler.apply', () => {
     beforeEach(() => {
         div = document.createElement('div');
         context = createModelToDomContext();
-        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock: ' + s);
+        context.darkColorHandler = {
+            registerColor: (color: string, isDarkMode: boolean) =>
+                isDarkMode ? `var(--darkColor_${color}, ${color})` : color,
+        } as any;
 
         format = {};
     });
@@ -122,10 +135,7 @@ describe('textColorFormatHandler.apply', () => {
 
         textColorFormatHandler.apply(format, div, context);
 
-        const expectedResult = [
-            '<div style="--darkColor_red:darkMock: red; color: var(--darkColor_red, red);"></div>',
-            '<div style="--darkColor_red: darkMock: red; color: var(--darkColor_red, red);"></div>',
-        ];
+        const expectedResult = ['<div style="color: var(--darkColor_red, red);"></div>'];
 
         expectHtml(div.outerHTML, expectedResult);
     });

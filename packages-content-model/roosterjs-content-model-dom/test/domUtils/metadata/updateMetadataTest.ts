@@ -1,6 +1,5 @@
-import * as validate from 'roosterjs-editor-dom/lib/metadata/validate';
-import { ContentModelWithDataset } from 'roosterjs-content-model-types';
-import { Definition } from 'roosterjs-editor-types';
+import * as validate from 'roosterjs-content-model-dom/lib/domUtils/metadata/validate';
+import { ContentModelWithDataset, Definition } from 'roosterjs-content-model-types';
 import { hasMetadata, updateMetadata } from '../../../lib/domUtils/metadata/updateMetadata';
 
 describe('updateMetadata', () => {
@@ -101,7 +100,7 @@ describe('updateMetadata', () => {
         };
         const callback = jasmine.createSpy('callback').and.callFake(() => null);
 
-        spyOn(validate, 'default').and.returnValue(true);
+        spyOn(validate, 'validate').and.returnValue(true);
 
         const result = updateMetadata(model, callback, {} as Definition<void>);
 
@@ -124,7 +123,7 @@ describe('updateMetadata', () => {
             return !!input.c;
         }
 
-        spyOn(validate, 'default').and.callFake(fakeValidation);
+        spyOn(validate, 'validate').and.callFake(fakeValidation);
 
         const result = updateMetadata(model, callback, {} as Definition<void>);
 
@@ -149,7 +148,7 @@ describe('updateMetadata', () => {
             return !!input.a;
         }
 
-        spyOn(validate, 'default').and.callFake(fakeValidation);
+        spyOn(validate, 'validate').and.callFake(fakeValidation);
 
         const result = updateMetadata(model, callback, {} as Definition<void>);
 

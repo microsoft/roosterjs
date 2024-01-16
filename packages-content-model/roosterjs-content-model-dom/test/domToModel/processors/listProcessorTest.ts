@@ -1,14 +1,15 @@
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
-import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
+import { BulletListType } from 'roosterjs-content-model-core/lib/constants/BulletListType';
 import { childProcessor as originalChildProcessor } from '../../../lib/domToModel/processors/childProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext, ElementProcessor } from 'roosterjs-content-model-types';
 import { listProcessor } from '../../../lib/domToModel/processors/listProcessor';
+import { NumberingListType } from 'roosterjs-content-model-core/lib/constants/NumberingListType';
 
 describe('listProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
@@ -68,6 +69,7 @@ describe('listProcessor', () => {
 
             blocks: [],
         });
+        expect(childProcessor).toHaveBeenCalledWith(group, ol, context);
 
         expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
@@ -269,7 +271,7 @@ describe('listProcessor', () => {
 });
 
 describe('listProcessor without format handlers', () => {
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
     let context: DomToModelContext;
 
     beforeEach(() => {
@@ -447,7 +449,7 @@ describe('listProcessor without format handlers', () => {
 
 describe('listProcessor process metadata', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
@@ -514,11 +516,12 @@ describe('listProcessor process metadata', () => {
         ol.dataset.editingInfo = metadata;
 
         childProcessor.and.callFake((group, element, context) => {
+            // We now don't parse metadata in processor so even metadata is invalid, we still keep it
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
                     format: {},
-                    dataset: {},
+                    dataset: { editingInfo: metadata },
                 },
             ]);
         });
@@ -568,10 +571,11 @@ describe('listProcessor process metadata', () => {
         ol.dataset.editingInfo = editingInfo;
 
         childProcessor.and.callFake((group, element, context) => {
+            // We now don't parse metadata in processor so even metadata is invalid, we still keep it
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    dataset: {},
+                    dataset: { editingInfo },
                     format: {},
                 },
             ]);
@@ -595,7 +599,9 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    format: {},
+                    format: {
+                        listStyleType: 'decimal',
+                    },
                     dataset: {
                         editingInfo: JSON.stringify({ orderedStyleType: NumberingListType.Max }),
                     },

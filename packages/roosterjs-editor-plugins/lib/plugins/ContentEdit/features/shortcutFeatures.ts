@@ -1,10 +1,8 @@
 import { Browser, cacheGetEventData } from 'roosterjs-editor-dom';
-import {
+import { FontSizeChange, Keys, PluginEventType } from 'roosterjs-editor-types';
+import type {
     BuildInEditFeature,
-    FontSizeChange,
     IEditor,
-    Keys,
-    PluginEventType,
     PluginKeyboardEvent,
     ShortcutFeatureSettings,
 } from 'roosterjs-editor-types';
@@ -97,7 +95,7 @@ const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     ],
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
-        let command = cacheGetCommand(event);
+        const command = cacheGetCommand(event);
         if (command) {
             command.action(editor);
             event.rawEvent.preventDefault();
@@ -108,8 +106,8 @@ const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
 
 function cacheGetCommand(event: PluginKeyboardEvent) {
     return cacheGetEventData(event, 'DEFAULT_SHORT_COMMAND', () => {
-        let e = event.rawEvent;
-        let key =
+        const e = event.rawEvent;
+        const key =
             // Need to check AltGraph isn't being pressed since some languages (e.g. Polski) use AltGr
             // to input some special characters. In that case, ctrlKey and altKey are both true in Edge,
             // but we should not trigger any shortcut function here. However, we still want to capture

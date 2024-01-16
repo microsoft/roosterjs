@@ -188,6 +188,16 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
         expect(select.calls.argsFor(0)[0]).toBe(range);
         expect(state.selectionRange).toBeNull();
     });
+
+    it('Skip applying selection when skipReselectOnFocus is true', () => {
+        const range = document.createRange();
+        state.selectionRange = range;
+        state.skipReselectOnFocus = true;
+        eventMap.focus(<Event>{});
+
+        expect(select).not.toHaveBeenCalled();
+        expect(state.selectionRange).toBeNull();
+    });
 });
 
 describe('DOMEventPlugin verify event handlers while disallow keyboard event propagation', () => {

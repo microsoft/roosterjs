@@ -5,7 +5,7 @@ import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { parseFormat } from '../utils/parseFormat';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelFormatContainer,
     ContentModelFormatContainerFormat,
     ContentModelParagraph,
@@ -43,9 +43,7 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
         parseFormat(element, context.formatParsers.container, format, context);
 
         const tagName =
-            getDefaultStyle(element, context).display == 'block'
-                ? element.tagName.toLowerCase()
-                : 'div';
+            getDefaultStyle(element).display == 'block' ? element.tagName.toLowerCase() : 'div';
         const formatContainer = createFormatContainer(tagName, format);
 
         // It is possible to inherit margin left/right styles from parent DIV or other containers,

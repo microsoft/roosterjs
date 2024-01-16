@@ -1,23 +1,28 @@
-import { ElementProcessor } from 'roosterjs-content-model-types';
-import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
-import { handleRegularSelection } from './childProcessor';
+import { addSelectionMarker } from '../utils/addSelectionMarker';
+import type { ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * @param group
- * @param element
+ * @param node
  * @param context
  */
-export const delimiterProcessor: ElementProcessor<Node> = (group, element, context) => {
-    let index = 0;
-    const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, element);
+export const delimiterProcessor: ElementProcessor<Node> = (group, node, context) => {
+    const range = context.selection?.type == 'range' ? context.selection.range : null;
 
-    for (let child = element.firstChild; child; child = child.nextSibling) {
-        handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+    if (range) {
+        if (node.contains(range.startContainer)) {
+            context.isInSelection = true;
 
-        delimiterProcessor(group, child, context);
-        index++;
+            addSelectionMarker(group, context);
+        }
+
+        if (context.selection?.type == 'range' && node.contains(range.endContainer)) {
+            if (!context.selection.range.collapsed) {
+                addSelectionMarker(group, context);
+            }
+
+            context.isInSelection = false;
+        }
     }
-
-    handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
 };

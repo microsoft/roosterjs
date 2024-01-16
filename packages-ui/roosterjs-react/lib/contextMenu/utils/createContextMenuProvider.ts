@@ -1,9 +1,9 @@
-import ContextMenuItem from '../types/ContextMenuItem';
 import getLocalizedString from '../../common/utils/getLocalizedString';
-import { ContextMenuProvider, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
-import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
+import type ContextMenuItem from '../types/ContextMenuItem';
+import type { ContextMenuProvider, EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import type { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
+import type { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
 
 /**
  * A plugin of editor to provide context menu items
@@ -59,7 +59,7 @@ class ContextMenuProviderImpl<TString extends string, TContext>
                   .filter(
                       item => !item.shouldShow || item.shouldShow(this.editor!, node, this.context)
                   )
-                  .map(item => this.convertMenuItems(item))
+                  .map(item => this.convertMenuItems(item, node))
             : [];
     }
 
@@ -67,7 +67,11 @@ class ContextMenuProviderImpl<TString extends string, TContext>
         this.uiUtilities = uiUtilities;
     }
 
-    private convertMenuItems(item: ContextMenuItem<TString, TContext>): IContextualMenuItem {
+    private convertMenuItems(
+        item: ContextMenuItem<TString, TContext>,
+        node: Node
+    ): IContextualMenuItem {
+        const selectedId = item.getSelectedId?.(this.editor!, node);
         return {
             key: item.key,
             data: item,
@@ -85,6 +89,12 @@ class ContextMenuProviderImpl<TString extends string, TContext>
                           onRender: item.itemRender
                               ? subItem => item.itemRender?.(subItem, () => this.onClick(item, key))
                               : undefined,
+                          iconProps:
+                              key == selectedId
+                                  ? {
+                                        iconName: 'Checkmark',
+                                    }
+                                  : undefined,
                       })),
                       ...(item.commandBarSubMenuProperties || {}),
                   }

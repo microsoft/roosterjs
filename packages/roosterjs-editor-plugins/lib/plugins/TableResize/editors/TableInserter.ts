@@ -1,7 +1,8 @@
-import Disposable from '../../../pluginUtils/Disposable';
-import TableEditFeature from './TableEditorFeature';
 import { createElement, getIntersectedRect, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { CreateElementData, IEditor, TableOperation } from 'roosterjs-editor-types';
+import { TableOperation } from 'roosterjs-editor-types';
+import type Disposable from '../../../pluginUtils/Disposable';
+import type TableEditFeature from './TableEditorFeature';
+import type { CreateElementData, IEditor, TableSelection } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';
@@ -20,7 +21,8 @@ export default function createTableInserter(
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
     onShowHelperElement?: (
         elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+        td: HTMLTableCellElement
     ) => void,
     anchorContainer?: HTMLElement
 ): TableEditFeature | null {
@@ -40,7 +42,7 @@ export default function createTableInserter(
             editor.getDefaultFormat().backgroundColor || 'white'
         );
 
-        onShowHelperElement?.(createElementData, 'TableInserter');
+        onShowHelperElement?.(createElementData, 'TableInserter', td);
 
         const div = createElement(createElementData, document) as HTMLDivElement;
 
@@ -105,7 +107,7 @@ class TableInsertHandler implements Disposable {
     }
 
     private insertTd = () => {
-        let vtable = new VTable(this.td);
+        const vtable = new VTable(this.td);
         if (!this.isHorizontal) {
             vtable.normalizeTableCellSize(this.editor.getZoomScale());
 
@@ -118,6 +120,21 @@ class TableInsertHandler implements Disposable {
         vtable.writeBack();
 
         this.onInsert(vtable.table);
+
+        // Select newly inserted row or column
+        if (vtable.row != undefined && vtable.col != undefined && vtable.cells) {
+            const inserted: TableSelection = this.isHorizontal
+                ? {
+                      firstCell: { x: 0, y: vtable.row + 1 },
+                      lastCell: { x: vtable.cells[vtable.row].length - 1, y: vtable.row + 1 },
+                  }
+                : {
+                      firstCell: { x: vtable.col + 1, y: 0 },
+                      lastCell: { x: vtable.col + 1, y: vtable.cells.length - 1 },
+                  };
+
+            this.editor.select(vtable.table, inserted);
+        }
     };
 }
 

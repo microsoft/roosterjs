@@ -1,69 +1,65 @@
+import { addDelimiters } from '../../domUtils/entityUtils';
 import { applyFormat } from '../utils/applyFormat';
-import { Entity } from 'roosterjs-editor-types';
-import { reuseCachedElement } from '../utils/reuseCachedElement';
-import {
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
+import { wrap } from '../../domUtils/wrap';
+import type {
     ContentModelBlockHandler,
     ContentModelEntity,
-    ModelToDomContext,
+    ContentModelSegmentHandler,
 } from 'roosterjs-content-model-types';
-import {
-    addDelimiters,
-    commitEntity,
-    getObjectKeys,
-    isBlockElement,
-    wrap,
-} from 'roosterjs-editor-dom';
 
 /**
  * @internal
  */
-export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
-    doc: Document,
-    parent: Node,
-    entityModel: ContentModelEntity,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
+    _,
+    parent,
+    entityModel,
+    context,
+    refNode
 ) => {
-    const { id, type, isReadonly, format } = entityModel;
-    let wrapper = entityModel.wrapper;
+    const { entityFormat, wrapper } = entityModel;
 
-    if (!context.allowCacheElement) {
-        wrapper = wrapper.cloneNode(true /*deep*/) as HTMLElement;
-        wrapper.style.color = wrapper.style.color || 'inherit';
-        wrapper.style.backgroundColor = wrapper.style.backgroundColor || 'inherit';
-    }
-
-    const entity: Entity | null =
-        id && type
-            ? {
-                  wrapper,
-                  id,
-                  type,
-                  isReadonly: !!isReadonly,
-              }
-            : null;
-    const isInlineEntity = !isBlockElement(wrapper);
-
-    if (entity) {
-        // Commit the entity attributes in case there is any change
-        commitEntity(wrapper, entity.type, entity.isReadonly, entity.id);
-    }
+    applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     refNode = reuseCachedElement(parent, wrapper, refNode);
+    context.onNodeCreated?.(entityModel, wrapper);
 
-    if (isInlineEntity && getObjectKeys(format).length > 0) {
-        const span = wrap(wrapper, 'span');
+    return refNode;
+};
+
+/**
+ * @internal
+ */
+export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity> = (
+    doc,
+    parent,
+    entityModel,
+    context,
+    newSegments
+) => {
+    const { entityFormat, wrapper, format } = entityModel;
+
+    parent.appendChild(wrapper);
+    newSegments?.push(wrapper);
+
+    if (getObjectKeys(format).length > 0) {
+        const span = wrap(doc, wrapper, 'span');
 
         applyFormat(span, context.formatAppliers.segment, format, context);
     }
 
-    if (context.addDelimiterForEntity && isInlineEntity && isReadonly) {
-        const [after] = addDelimiters(wrapper);
+    applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
+    if (context.addDelimiterForEntity && entityFormat.isReadonly) {
+        const [after, before] = addDelimiters(doc, wrapper);
+
+        newSegments?.push(after, before);
         context.regularSelection.current.segment = after;
+    } else {
+        context.regularSelection.current.segment = wrapper;
     }
 
     context.onNodeCreated?.(entityModel, wrapper);
-
-    return refNode;
 };

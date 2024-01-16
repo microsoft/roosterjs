@@ -1,4 +1,4 @@
-import { PluginEventType } from '../enum/PluginEventType';
+import type { PluginEventType } from '../enum/PluginEventType';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**

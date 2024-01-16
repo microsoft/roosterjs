@@ -1,5 +1,5 @@
 import { getDefaultStyle } from './getDefaultStyle';
-import {
+import type {
     ContentModelFormatBase,
     DomToModelContext,
     FormatParser,
@@ -18,7 +18,7 @@ export function parseFormat<T extends ContentModelFormatBase>(
     format: T,
     context: DomToModelContext
 ) {
-    const defaultStyle = getDefaultStyle(element, context);
+    const defaultStyle = getDefaultStyle(element);
 
     parsers.forEach(parser => {
         parser?.(format, element, context, defaultStyle);

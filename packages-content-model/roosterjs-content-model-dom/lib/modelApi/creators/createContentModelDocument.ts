@@ -1,4 +1,7 @@
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelDocument model

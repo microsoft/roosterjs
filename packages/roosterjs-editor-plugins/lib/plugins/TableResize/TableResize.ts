@@ -1,11 +1,11 @@
 import TableEditor from './editors/TableEditor';
-import { normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
-import {
+import { contains, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type {
     CreateElementData,
     EditorPlugin,
     IEditor,
     PluginEvent,
-    PluginEventType,
     Rect,
 } from 'roosterjs-editor-types';
 
@@ -32,7 +32,8 @@ export default class TableResize implements EditorPlugin {
     constructor(
         private onShowHelperElement?: (
             elementData: CreateElementData,
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+            tableOrTd: HTMLTableElement | HTMLTableCellElement
         ) => void,
         private anchorContainerSelector?: string
     ) {}
@@ -52,17 +53,18 @@ export default class TableResize implements EditorPlugin {
         this.editor = editor;
         this.onMouseMoveDisposer = this.editor.addDomEventHandler({
             mousemove: this.onMouseMove,
-            mouseout: e => this.onMouseOut(e),
         });
+        const scrollContainer = this.editor.getScrollContainer();
+        scrollContainer.addEventListener('mouseout', this.onMouseOut);
     }
 
-    private onMouseOut = (ev: Event) => {
+    private onMouseOut = ({ relatedTarget, currentTarget }: MouseEvent) => {
         if (
-            isMouseEvent(ev) &&
-            safeInstanceOf(ev.relatedTarget, 'HTMLElement') &&
+            safeInstanceOf(relatedTarget, 'HTMLElement') &&
+            safeInstanceOf(currentTarget, 'HTMLElement') &&
             this.tableEditor &&
-            !this.tableEditor.isOwnedElement(ev.relatedTarget) &&
-            !this.editor?.contains(ev.relatedTarget)
+            !this.tableEditor.isOwnedElement(relatedTarget) &&
+            !contains(currentTarget, relatedTarget)
         ) {
             this.setTableEditor(null);
         }
@@ -72,6 +74,8 @@ export default class TableResize implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
+        const scrollContainer = this.editor?.getScrollContainer();
+        scrollContainer?.removeEventListener('mouseout', this.onMouseOut);
         this.onMouseMoveDisposer?.();
         this.invalidateTableRects();
         this.disposeTableEditor();
@@ -129,7 +133,12 @@ export default class TableResize implements EditorPlugin {
         this.tableEditor?.onMouseMove(x, y);
     };
 
-    private setTableEditor(table: HTMLTableElement | null, e?: MouseEvent) {
+    /**
+     * @internal Public only for unit test
+     * @param table Table to use when setting the Editors
+     * @param event (Optional) Mouse event
+     */
+    public setTableEditor(table: HTMLTableElement | null, event?: MouseEvent) {
         if (this.tableEditor && !this.tableEditor.isEditing() && table != this.tableEditor.table) {
             this.disposeTableEditor();
         }
@@ -145,7 +154,7 @@ export default class TableResize implements EditorPlugin {
                 this.invalidateTableRects,
                 this.onShowHelperElement,
                 safeInstanceOf(container, 'HTMLElement') ? container : undefined,
-                e?.currentTarget
+                event?.currentTarget
             );
         }
     }
@@ -175,8 +184,4 @@ export default class TableResize implements EditorPlugin {
             });
         }
     }
-}
-
-function isMouseEvent(e: Event): e is MouseEvent {
-    return !!(e as MouseEvent).pageX;
 }

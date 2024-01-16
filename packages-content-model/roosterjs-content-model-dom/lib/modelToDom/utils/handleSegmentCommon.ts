@@ -1,5 +1,5 @@
 import { applyFormat } from './applyFormat';
-import { ContentModelSegment, ModelToDomContext } from 'roosterjs-content-model-types';
+import type { ContentModelSegment, ModelToDomContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -9,7 +9,8 @@ export function handleSegmentCommon(
     segmentNode: Node,
     containerNode: HTMLElement,
     segment: ContentModelSegment,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    segmentNodes: Node[]
 ) {
     if (!segmentNode.firstChild) {
         context.regularSelection.current.segment = segmentNode;
@@ -17,7 +18,8 @@ export function handleSegmentCommon(
 
     applyFormat(containerNode, context.formatAppliers.styleBasedSegment, segment.format, context);
 
-    context.modelHandlers.segmentDecorator(doc, containerNode, segment, context);
+    segmentNodes?.push(segmentNode);
+    context.modelHandlers.segmentDecorator(doc, containerNode, segment, context, segmentNodes);
 
     applyFormat(containerNode, context.formatAppliers.elementBasedSegment, segment.format, context);
 

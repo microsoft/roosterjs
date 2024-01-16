@@ -1,6 +1,7 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { FontSizeChange, IEditor } from 'roosterjs-editor-types';
+import { FontSizeChange } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 import type { CompatibleFontSizeChange } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -22,13 +23,13 @@ export default function changeFontSize(
     change: FontSizeChange | CompatibleFontSizeChange,
     fontSizes: number[] = FONT_SIZES
 ) {
-    let changeBase: 1 | -1 = change == FontSizeChange.Increase ? 1 : -1;
+    const changeBase: 1 | -1 = change == FontSizeChange.Increase ? 1 : -1;
     applyInlineStyle(
         editor,
         element => {
-            let pt = parseFloat(getComputedStyle(element, 'font-size') || element.style.fontSize);
+            const pt = parseFloat(getComputedStyle(element, 'font-size') || element.style.fontSize);
             element.style.fontSize = getNewFontSize(pt, changeBase, fontSizes) + 'pt';
-            let lineHeight = getComputedStyle(element, 'line-height');
+            const lineHeight = getComputedStyle(element, 'line-height');
             if (lineHeight && lineHeight != 'normal') {
                 element.style.lineHeight = 'normal';
             }
@@ -46,7 +47,7 @@ export default function changeFontSize(
  */
 export function getNewFontSize(pt: number, changeBase: 1 | -1, fontSizes: number[]): number {
     pt = changeBase == 1 ? Math.floor(pt) : Math.ceil(pt);
-    let last = fontSizes[fontSizes.length - 1];
+    const last = fontSizes[fontSizes.length - 1];
     if (pt <= fontSizes[0]) {
         pt = Math.max(pt + changeBase, MIN_FONT_SIZE);
     } else if (pt > last || (pt == last && changeBase == 1)) {

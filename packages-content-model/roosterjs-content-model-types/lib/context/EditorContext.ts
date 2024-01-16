@@ -1,5 +1,6 @@
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { DarkColorHandler } from 'roosterjs-editor-types';
+import type { ColorManager } from './ColorManager';
+import type { ContentModelDomIndexer } from './ContentModelDomIndexer';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * An editor context interface used by ContentModel PAI
@@ -16,9 +17,9 @@ export interface EditorContext {
     defaultFormat?: ContentModelSegmentFormat;
 
     /**
-     * Dark model color handler
+     * Color manager, to help manager color in dark mode
      */
-    darkColorHandler?: DarkColorHandler | null;
+    darkColorHandler?: ColorManager;
 
     /**
      * Whether to handle delimiters in Content Model
@@ -40,4 +41,9 @@ export interface EditorContext {
      * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
      */
     allowCacheElement?: boolean;
+
+    /**
+     * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
+     */
+    domIndexer?: ContentModelDomIndexer;
 }

@@ -5,7 +5,7 @@ import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import getToggleablePlugins from './getToggleablePlugins';
-import MainPaneBase from './MainPaneBase';
+import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
 import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
@@ -13,10 +13,12 @@ import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
+import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
+import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
 import {
     createRibbonPlugin,
@@ -28,6 +30,7 @@ import {
     AllButtonStringKeys,
     getButtons,
     AllButtonKeys,
+    Rooster,
 } from 'roosterjs-react';
 
 const styles = require('./MainPane.scss');
@@ -92,7 +95,11 @@ const DarkTheme: PartialTheme = {
     },
 };
 
-class MainPane extends MainPaneBase {
+interface MainPaneState extends MainPaneBaseState {
+    editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
+}
+
+class MainPane extends MainPaneBase<MainPaneState> {
     private formatStatePlugin: FormatStatePlugin;
     private editorOptionPlugin: EditorOptionsPlugin;
     private eventViewPlugin: EventViewPlugin;
@@ -102,6 +109,7 @@ class MainPane extends MainPaneBase {
     private emojiPlugin: EditorPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private sampleEntityPlugin: SampleEntityPlugin;
+    private snapshotPlugin: SnapshotPlugin;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
 
@@ -143,7 +151,7 @@ class MainPane extends MainPaneBase {
     }
 
     renderTitleBar() {
-        return <TitleBar className={styles.noGrow} isContentModelPane={false} />;
+        return <TitleBar className={styles.noGrow} mode="classical" />;
     }
 
     renderRibbon(isPopout: boolean) {
@@ -163,7 +171,7 @@ class MainPane extends MainPaneBase {
             <SidePane
                 ref={this.sidePane}
                 plugins={this.getSidePanePlugins()}
-                isContentModelDemo={false}
+                mode="classical"
                 className={`main-pane ${styles.sidePane} ${
                     fullWidth ? styles.sidePaneFullWidth : ''
                 }`}
@@ -202,6 +210,42 @@ class MainPane extends MainPaneBase {
 
     getTheme(isDark: boolean): PartialTheme {
         return isDark ? DarkTheme : LightTheme;
+    }
+
+    renderEditor() {
+        const styles = this.getStyles();
+        const allPlugins = this.getPlugins();
+        const editorStyles = {
+            transform: `scale(${this.state.scale})`,
+            transformOrigin: this.state.isRtl ? 'right top' : 'left top',
+            height: `calc(${100 / this.state.scale}%)`,
+            width: `calc(${100 / this.state.scale}%)`,
+        };
+
+        this.updateContentPlugin.forceUpdate();
+
+        return (
+            <div className={styles.editorContainer} id="EditorContainer">
+                <div style={editorStyles}>
+                    {this.state.editorCreator && (
+                        <Rooster
+                            className={styles.editor}
+                            plugins={allPlugins}
+                            defaultFormat={this.state.initState.defaultFormat}
+                            inDarkMode={this.state.isDarkMode}
+                            getDarkColor={getDarkColor}
+                            experimentalFeatures={this.state.initState.experimentalFeatures}
+                            undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
+                            trustedHTMLHandler={trustedHTMLHandler}
+                            zoomScale={this.state.scale}
+                            initialContent={this.content}
+                            editorCreator={this.state.editorCreator}
+                            dir={this.state.isRtl ? 'rtl' : 'ltr'}
+                        />
+                    )}
+                </div>
+            </div>
+        );
     }
 
     private getSidePanePlugins() {

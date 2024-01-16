@@ -1,8 +1,12 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from 'roosterjs-content-model-types';
 import { imageProcessor } from '../../../lib/domToModel/processors/imageProcessor';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import {
+    ContentModelDomIndexer,
+    ContentModelImage,
+    ContentModelParagraph,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 describe('imageProcessor', () => {
     let context: DomToModelContext;
@@ -67,6 +71,34 @@ describe('imageProcessor', () => {
         });
     });
 
+    it('Image with src and port', () => {
+        const doc = createContentModelDocument();
+        const img = document.createElement('img');
+
+        img.src = 'http://test.com:80/testSrc';
+
+        imageProcessor(doc, img, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            format: {},
+                            src: 'http://test.com:80/testSrc',
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
     it('Image with regular selection', () => {
         const doc = createContentModelDocument();
         const img = document.createElement('img');
@@ -100,8 +132,8 @@ describe('imageProcessor', () => {
         const doc = createContentModelDocument();
         const img = document.createElement('img');
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.ImageSelection,
+        context.selection = {
+            type: 'image',
             image: img,
         } as any;
 
@@ -136,8 +168,8 @@ describe('imageProcessor', () => {
         img.id = 'id1';
         img.style.display = 'block';
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.ImageSelection,
+        context.selection = {
+            type: 'image',
             image: img,
         } as any;
 
@@ -215,7 +247,9 @@ describe('imageProcessor', () => {
 
         img.src = 'http://test.com/testSrc';
 
-        context.formatParsers.dataset = [datasetParser];
+        context = createDomToModelContext(undefined, {
+            formatParserOverride: { dataset: datasetParser },
+        });
 
         imageProcessor(doc, img, context);
 
@@ -251,7 +285,9 @@ describe('imageProcessor', () => {
 
         img.src = 'http://test.com/testSrc';
 
-        context.formatParsers.dataset = [datasetParser];
+        context = createDomToModelContext(undefined, {
+            formatParserOverride: { dataset: datasetParser },
+        });
 
         imageProcessor(doc, img, context);
 
@@ -276,5 +312,40 @@ describe('imageProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Image with domIndexer', () => {
+        const doc = createContentModelDocument();
+        const img = document.createElement('img');
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        imageProcessor(doc, img, context);
+
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            format: {},
+            src: '',
+            dataset: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            format: {},
+            isImplicit: true,
+            segments: [segment],
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(onSegmentSpy).toHaveBeenCalledWith(img, paragraph, [segment]);
     });
 });

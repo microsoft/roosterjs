@@ -5,7 +5,7 @@ import { ContentModelView } from '../ContentModelView';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
-import { hasSelectionInBlock } from 'roosterjs-content-model-editor';
+import { hasSelectionInBlock } from 'roosterjs-content-model-core';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import {

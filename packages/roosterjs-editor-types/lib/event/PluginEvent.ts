@@ -1,29 +1,36 @@
-import BeforeCutCopyEvent, { CompatibleBeforeCutCopyEvent } from './BeforeCutCopyEvent';
-import BeforeDisposeEvent, { CompatibleBeforeDisposeEvent } from './BeforeDisposeEvent';
-import BeforeKeyboardEditingEvent, {
-    CompatibleBeforeKeyboardEditingEvent,
-} from './BeforeKeyboardEditingEvent';
-import BeforePasteEvent, { CompatibleBeforePasteEvent } from './BeforePasteEvent';
-import BeforeSetContentEvent, { CompatibleBeforeSetContentEvent } from './BeforeSetContentEvent';
-import ContentChangedEvent, { CompatibleContentChangedEvent } from './ContentChangedEvent';
-import EditImageEvent, { CompatibleEditImageEvent } from './EditImageEvent';
-import EditorReadyEvent, { CompatibleEditorReadyEvent } from './EditorReadyEvent';
-import EntityOperationEvent, { CompatibleEntityOperationEvent } from './EntityOperationEvent';
-import SelectionChangedEvent, { CompatibleSelectionChangedEvent } from './SelectionChangeEvent';
-import ZoomChangedEvent, { CompatibleZoomChangedEvent } from './ZoomChangedEvent';
-import { CompatiblePluginDomEvent, PluginDomEvent } from './PluginDomEvent';
-import {
+import type { CompatibleBeforeCutCopyEvent } from './BeforeCutCopyEvent';
+import type BeforeCutCopyEvent from './BeforeCutCopyEvent';
+import type { CompatibleBeforeDisposeEvent } from './BeforeDisposeEvent';
+import type BeforeDisposeEvent from './BeforeDisposeEvent';
+import type { CompatibleBeforeKeyboardEditingEvent } from './BeforeKeyboardEditingEvent';
+import type BeforeKeyboardEditingEvent from './BeforeKeyboardEditingEvent';
+import type { CompatibleBeforePasteEvent } from './BeforePasteEvent';
+import type BeforePasteEvent from './BeforePasteEvent';
+import type { CompatibleBeforeSetContentEvent } from './BeforeSetContentEvent';
+import type BeforeSetContentEvent from './BeforeSetContentEvent';
+import type { CompatibleContentChangedEvent } from './ContentChangedEvent';
+import type ContentChangedEvent from './ContentChangedEvent';
+import type { CompatibleEditImageEvent } from './EditImageEvent';
+import type EditImageEvent from './EditImageEvent';
+import type { CompatibleEditorReadyEvent } from './EditorReadyEvent';
+import type EditorReadyEvent from './EditorReadyEvent';
+import type { CompatibleEntityOperationEvent } from './EntityOperationEvent';
+import type EntityOperationEvent from './EntityOperationEvent';
+import type { CompatibleSelectionChangedEvent } from './SelectionChangeEvent';
+import type SelectionChangedEvent from './SelectionChangeEvent';
+import type { CompatibleZoomChangedEvent } from './ZoomChangedEvent';
+import type ZoomChangedEvent from './ZoomChangedEvent';
+import type { CompatiblePluginDomEvent, PluginDomEvent } from './PluginDomEvent';
+import type {
     CompatibleEnterShadowEditEvent,
     CompatibleLeaveShadowEditEvent,
     EnterShadowEditEvent,
     LeaveShadowEditEvent,
 } from './ShadowEditEvent';
-import PendingFormatStateChangedEvent, {
-    CompatiblePendingFormatStateChangedEvent,
-} from './PendingFormatStateChangedEvent';
-import ExtractContentWithDomEvent, {
-    CompatibleExtractContentWithDomEvent,
-} from './ExtractContentWithDomEvent';
+import type { CompatiblePendingFormatStateChangedEvent } from './PendingFormatStateChangedEvent';
+import type PendingFormatStateChangedEvent from './PendingFormatStateChangedEvent';
+import type { CompatibleExtractContentWithDomEvent } from './ExtractContentWithDomEvent';
+import type ExtractContentWithDomEvent from './ExtractContentWithDomEvent';
 
 /**
  * Editor plugin event interface

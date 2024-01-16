@@ -7,14 +7,14 @@ import convertPastedContentFromWord from './wordConverter/convertPastedContentFr
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import sanitizeLinks from './sanitizeLinks/sanitizeLinks';
-import { getPasteSource } from 'roosterjs-editor-dom';
-import { KnownPasteSourceType } from 'roosterjs-editor-types';
-import {
+import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
+import { KnownPasteSourceType, PasteType, PluginEventType } from 'roosterjs-editor-types';
+
+import type {
+    HtmlSanitizerOptions,
     EditorPlugin,
     IEditor,
-    PasteType,
     PluginEvent,
-    PluginEventType,
 } from 'roosterjs-editor-types';
 
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
@@ -104,9 +104,16 @@ export default class Paste implements EditorPlugin {
             }
             sanitizeLinks(sanitizingOption);
             sanitizeHtmlColorsFromPastedContent(sanitizingOption);
+            sanitizeBlockStyles(sanitizingOption);
 
             // Replace unknown tags with SPAN
             sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
         }
     }
+}
+
+function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
+    chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, 'display', (value: string) => {
+        return value != 'flex'; // return whether we keep the style
+    });
 }

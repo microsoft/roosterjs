@@ -1,9 +1,8 @@
-import {
+import type {
     ContentModelHandlerMap,
-    DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
-    OnNodeCreated,
+    MetadataAppliers,
 } from './ModelToDomSettings';
 
 /**
@@ -26,14 +25,12 @@ export interface ModelToDomOption {
     modelHandlerOverride?: Partial<ContentModelHandlerMap>;
 
     /**
-     * Overrides default element styles
+     * Overrides default metadata appliers
      */
-    defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
+    metadataAppliers?: Partial<MetadataAppliers>;
 
     /**
-     * An optional callback that will be called when a DOM node is created
-     * @param modelElement The related Content Model element
-     * @param node The node created for this model element
+     * When set to true, selection from content model will not be applied
      */
-    onNodeCreated?: OnNodeCreated;
+    ignoreSelection?: boolean;
 }

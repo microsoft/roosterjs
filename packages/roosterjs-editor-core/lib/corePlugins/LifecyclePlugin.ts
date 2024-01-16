@@ -1,37 +1,14 @@
-import { Browser, getObjectKeys, setColor } from 'roosterjs-editor-dom';
-import {
-    DocumentCommand,
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
+import { getObjectKeys, setColor } from 'roosterjs-editor-dom';
+import type {
     EditorOptions,
     IEditor,
     LifecyclePluginState,
-    PluginEventType,
     PluginWithState,
     PluginEvent,
-    ChangeSource,
 } from 'roosterjs-editor-types';
 
 const CONTENT_EDITABLE_ATTRIBUTE_NAME = 'contenteditable';
-const COMMANDS: Record<string, string> = Browser.isFirefox
-    ? {
-          /**
-           * Disable these object resizing for firefox since other browsers don't have these behaviors
-           */
-          [DocumentCommand.EnableObjectResizing]: (false as any) as string,
-          [DocumentCommand.EnableInlineTableEditing]: (false as any) as string,
-      }
-    : Browser.isIE
-    ? {
-          /**
-           * Change the default paragraph separator to DIV. This is mainly for IE since its default setting is P
-           */
-          [DocumentCommand.DefaultParagraphSeparator]: 'div',
-
-          /**
-           * Disable auto link feature in IE since we have our own implementation
-           */
-          [DocumentCommand.AutoUrlDetect]: (false as any) as string,
-      }
-    : {};
 
 const DARK_MODE_DEFAULT_FORMAT = {
     backgroundColors: {
@@ -69,11 +46,9 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             this.initializer = () => {
                 contentDiv.contentEditable = 'true';
                 contentDiv.style.userSelect = 'text';
-                contentDiv.style.webkitUserSelect = 'text';
             };
             this.disposer = () => {
                 contentDiv.style.userSelect = '';
-                contentDiv.style.webkitUserSelect = '';
                 contentDiv.removeAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME);
             };
         }
@@ -160,9 +135,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         // Set editor background color for dark mode
         this.adjustColor();
 
-        // Do proper change for browsers to disable some browser-specified behaviors.
-        this.adjustBrowserBehavior();
-
         // Let other plugins know that we are ready
         this.editor.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
     }
@@ -212,14 +184,5 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             this.state.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
             this.adjustColor();
         }
-    }
-
-    private adjustBrowserBehavior() {
-        getObjectKeys(COMMANDS).forEach(command => {
-            // Catch any possible exception since this should not block the initialization of editor
-            try {
-                this.editor?.getDocument().execCommand(command, false, COMMANDS[command]);
-            } catch {}
-        });
     }
 }

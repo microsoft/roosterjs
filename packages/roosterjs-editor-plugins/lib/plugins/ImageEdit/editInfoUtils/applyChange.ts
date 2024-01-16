@@ -1,9 +1,10 @@
 import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
 import generateDataURL from './generateDataURL';
 import getGeneratedImageSize from './getGeneratedImageSize';
-import ImageEditInfo from '../types/ImageEditInfo';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { deleteEditInfo, getEditInfoFromImage, saveEditInfo } from './editInfo';
-import { IEditor, PluginEventType } from 'roosterjs-editor-types';
+import type ImageEditInfo from '../types/ImageEditInfo';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -21,7 +22,8 @@ export default function applyChange(
     editInfo: ImageEditInfo,
     previousSrc: string,
     wasResizedOrCropped: boolean,
-    editingImage?: HTMLImageElement
+    editingImage?: HTMLImageElement,
+    applyChangesOnMouseUp?: boolean
 ) {
     let newSrc = '';
 
@@ -56,6 +58,10 @@ export default function applyChange(
             newSrc,
         });
         newSrc = event.newSrc;
+    } else if (applyChangesOnMouseUp) {
+        editor.triggerPluginEvent(PluginEventType.ContentChanged, {
+            source: ChangeSource.ImageResize,
+        });
     }
 
     if (newSrc == editInfo.src) {
@@ -79,5 +85,6 @@ export default function applyChange(
         image.style.removeProperty('width');
         image.style.removeProperty('height');
         image.style.removeProperty('max-width');
+        image.style.removeProperty('max-height');
     }
 }

@@ -1,16 +1,15 @@
-import { clearFormat, isContentModelEditor } from 'roosterjs-content-model-editor';
-import { ClearFormatButtonStringKey, RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { clearFormat } from 'roosterjs-content-model-api';
+import { ClearFormatButtonStringKey } from 'roosterjs-react';
 
 /**
  * "Clear format" button on the format ribbon
  */
-export const clearFormatButton: RibbonButton<ClearFormatButtonStringKey> = {
+export const clearFormatButton: ContentModelRibbonButton<ClearFormatButtonStringKey> = {
     key: 'buttonNameClearFormat',
     unlocalizedText: 'Clear format',
     iconName: 'ClearFormatting',
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            clearFormat(editor);
-        }
+        clearFormat(editor);
     },
 };

@@ -1,18 +1,17 @@
-import { AlignCenterButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor, setAlignment } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { setAlignment } from 'roosterjs-content-model-api';
+import { AlignCenterButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Align center" button on the format ribbon
  */
-export const alignCenterButton: RibbonButton<AlignCenterButtonStringKey> = {
+export const alignCenterButton: ContentModelRibbonButton<AlignCenterButtonStringKey> = {
     key: 'buttonNameAlignCenter',
     unlocalizedText: 'Align center',
     iconName: 'AlignCenter',
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            setAlignment(editor, 'center');
-        }
+        setAlignment(editor, 'center');
         return true;
     },
 };

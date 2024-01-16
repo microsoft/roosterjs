@@ -1,43 +1,46 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler, ContentModelSegment } from 'roosterjs-content-model-types';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { stackFormat } from '../utils/stackFormat';
+import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
+import type {
+    ContentModelSegment,
+    ContentModelSegmentHandler,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleSegmentDecorator: ContentModelHandler<ContentModelSegment> = (
-    doc,
+export const handleSegmentDecorator: ContentModelSegmentHandler<ContentModelSegment> = (
+    _,
     parent,
     segment,
-    context
+    context,
+    segmentNodes
 ) => {
     const { code, link } = segment;
 
-    if (link) {
-        stackFormat(context, 'a', () => {
-            const a = document.createElement('a');
+    if (isNodeOfType(parent, 'ELEMENT_NODE')) {
+        if (link) {
+            stackFormat(context, 'a', () => {
+                const a = wrapAllChildNodes(parent, 'a');
 
-            moveChildNodes(a, parent);
-            parent.appendChild(a);
+                applyFormat(a, context.formatAppliers.link, link.format, context);
+                applyFormat(a, context.formatAppliers.dataset, link.dataset, context);
 
-            applyFormat(a, context.formatAppliers.link, link.format, context);
-            applyFormat(a, context.formatAppliers.dataset, link.dataset, context);
+                segmentNodes?.push(a);
+                context.onNodeCreated?.(link, a);
+            });
+        }
 
-            context.onNodeCreated?.(link, a);
-        });
-    }
+        if (code) {
+            stackFormat(context, 'code', () => {
+                const codeNode = wrapAllChildNodes(parent, 'code');
 
-    if (code) {
-        stackFormat(context, 'code', () => {
-            const codeNode = document.createElement('code');
+                applyFormat(codeNode, context.formatAppliers.code, code.format, context);
 
-            moveChildNodes(codeNode, parent);
-            parent.appendChild(codeNode);
-
-            applyFormat(codeNode, context.formatAppliers.code, code.format, context);
-
-            context.onNodeCreated?.(code, codeNode);
-        });
+                segmentNodes?.push(codeNode);
+                context.onNodeCreated?.(code, codeNode);
+            });
+        }
     }
 };

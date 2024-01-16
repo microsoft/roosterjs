@@ -1,4 +1,4 @@
-import { BrowserInfo } from 'roosterjs-editor-types';
+import type { BrowserInfo } from 'roosterjs-editor-types';
 
 const isAndroidRegex = /android/i;
 
@@ -18,8 +18,8 @@ export function getBrowserInfo(
     // IE11 will use rv in UA instead of MSIE. Unfortunately Firefox also uses this. We should also look for "Trident" to confirm this.
     // There have been cases where companies using older version of IE and custom UserAgents have broken this logic (e.g. IE 10 and KellyServices)
     // therefore we should check that the Trident/rv combo is not just from an older IE browser
-    let isIE11OrGreater = userAgent.indexOf('rv:') != -1 && userAgent.indexOf('Trident') != -1;
-    let isIE = userAgent.indexOf('MSIE') != -1 || isIE11OrGreater;
+    const isIE11OrGreater = userAgent.indexOf('rv:') != -1 && userAgent.indexOf('Trident') != -1;
+    const isIE = userAgent.indexOf('MSIE') != -1 || isIE11OrGreater;
 
     // IE11+ may also have 'Chrome', 'Firefox' and 'Safari' in user agent. But it will have 'trident' as well
     let isChrome = false;
@@ -62,9 +62,9 @@ export function getBrowserInfo(
         }
     }
 
-    let isMac = appVersion.indexOf('Mac') != -1;
-    let isWin = appVersion.indexOf('Win') != -1 || appVersion.indexOf('NT') != -1;
-    let isAndroid = isAndroidRegex.test(userAgent);
+    const isMac = appVersion.indexOf('Mac') != -1;
+    const isWin = appVersion.indexOf('Win') != -1 || appVersion.indexOf('NT') != -1;
+    const isAndroid = isAndroidRegex.test(userAgent);
 
     return {
         isMac,

@@ -1,11 +1,5 @@
-import {
-    CustomReplacement,
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    PositionType,
-} from 'roosterjs-editor-types';
+import { PluginEventType, PositionType } from 'roosterjs-editor-types';
+import type { CustomReplacement, EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const makeReplacement = (
     sourceString: string,
@@ -170,7 +164,7 @@ function getLongestReplacementSourceLength(replacements: CustomReplacement[]): n
 
 function getReplacementEndCharacters(replacements: CustomReplacement[]): Set<string> {
     const endChars = new Set<string>();
-    for (let replacement of replacements) {
+    for (const replacement of replacements) {
         const sourceString = replacement.sourceString;
         if (sourceString.length == 0) {
             continue;

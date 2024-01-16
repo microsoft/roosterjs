@@ -1,5 +1,24 @@
+import getAnnounceDataForList from '../../../pluginUtils/announceData/getAnnounceDataForList';
 import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
 import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
+import {
+    Browser,
+    cacheGetEventData,
+    createNumberDefinition,
+    createObjectDefinition,
+    createVListFromRegion,
+    findClosestElementAncestor,
+    getComputedStyle,
+    getMetadata,
+    getTagOfNode,
+    isBlockElement,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
+    Position,
+    safeInstanceOf,
+    VList,
+    VListChain,
+} from 'roosterjs-editor-dom';
 import {
     blockFormat,
     commitListChains,
@@ -8,39 +27,22 @@ import {
     toggleNumbering,
     toggleListType,
 } from 'roosterjs-editor-api';
-import {
-    Browser,
-    getTagOfNode,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
-    Position,
-    VListChain,
-    createVListFromRegion,
-    isBlockElement,
-    cacheGetEventData,
-    safeInstanceOf,
-    VList,
-    createObjectDefinition,
-    createNumberDefinition,
-    getMetadata,
-    findClosestElementAncestor,
-    getComputedStyle,
-} from 'roosterjs-editor-dom';
-import {
+import type {
     BuildInEditFeature,
     IEditor,
-    Indentation,
     ListFeatureSettings,
-    Keys,
     PluginKeyboardEvent,
+} from 'roosterjs-editor-types';
+import {
+    Indentation,
+    Keys,
     QueryScope,
-    RegionBase,
     ListType,
     ExperimentalFeatures,
     PositionType,
     NumberingListType,
     BulletListType,
-    IPositionContentSearcher,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -94,7 +96,25 @@ const handleIndentationEvent = (indenting: boolean) => (
         event.rawEvent.keyCode !== Keys.TAB &&
         (currentElement = editor.getElementAtCursor()) &&
         getComputedStyle(currentElement, 'direction') == 'rtl';
-    setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
+
+    editor.addUndoSnapshot(
+        () => {
+            setIndentation(
+                editor,
+                isRTL == indenting ? Indentation.Decrease : Indentation.Increase
+            );
+        },
+        ChangeSource.Format,
+        false /* canUndoByBackspace */,
+        {
+            getAnnounceData: () =>
+                getAnnounceDataForList(
+                    editor.getElementAtCursor('OL,UL'),
+                    editor.getElementAtCursor('LI')
+                ),
+        }
+    );
+
     event.rawEvent.preventDefault();
 };
 
@@ -146,12 +166,12 @@ const OutdentWhenAltShiftLeft: BuildInEditFeature<PluginKeyboardEvent> = {
 const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
-        let range = editor.getSelectionRange();
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const range = editor.getSelectionRange();
         return li && range?.collapsed && isPositionAtBeginningOf(Position.getStart(range), li);
     },
     handleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         if (li?.previousSibling) {
             blockFormat(editor, (region, start, end) => {
                 const vList = createVListFromRegion(
@@ -182,7 +202,7 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
 const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         return (
             li &&
             isNodeEmpty(li) &&
@@ -223,7 +243,7 @@ const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
 const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         return !event.rawEvent.shiftKey && li && isNodeEmpty(li);
     },
     handleEvent: (event, editor) => {
@@ -237,87 +257,24 @@ const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * Validate if a block of text is considered a list pattern
- * The regex expression will look for patterns of the form:
- * 1.  1>  1)  1-  (1)
- * @returns if a text is considered a list pattern
- */
-function isAListPattern(textBeforeCursor: string) {
-    const REGEX: RegExp = /^(\*|-|[0-9]{1,2}\.|[0-9]{1,2}\>|[0-9]{1,2}\)|[0-9]{1,2}\-|\([0-9]{1,2}\))$/;
-    return REGEX.test(textBeforeCursor);
-}
-
-/**
- * AutoBullet edit feature, provides the ability to automatically convert current line into a list.
- * When user input "1. ", convert into a numbering list
- * When user input "- " or "* ", convert into a bullet list
+ * @deprecated Use AutoBulletList and AutoNumberingList instead
  */
 const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        let searcher: IPositionContentSearcher | null;
-        if (
-            !cacheGetListElement(event, editor) &&
-            !editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList) &&
-            (searcher = editor.getContentSearcherOfCursor(event))
-        ) {
-            let textBeforeCursor = searcher.getSubStringBefore(4);
-
-            // Auto list is triggered if:
-            // 1. Text before cursor exactly matches '*', '-' or '1.'
-            // 2. There's no non-text inline entities before cursor
-            return isAListPattern(textBeforeCursor) && !searcher.getNearestNonTextInlineElement();
-        }
         return false;
     },
-    handleEvent: (event, editor) => {
-        editor.insertContent('&nbsp;');
-        event.rawEvent.preventDefault();
-        editor.addUndoSnapshot(
-            () => {
-                let regions: RegionBase[];
-                let searcher = editor.getContentSearcherOfCursor();
-                if (!searcher) {
-                    return;
-                }
-                let textBeforeCursor = searcher.getSubStringBefore(4);
-                let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-
-                if (!textRange) {
-                    // no op if the range can't be found
-                } else if (
-                    textBeforeCursor.indexOf('*') == 0 ||
-                    textBeforeCursor.indexOf('-') == 0
-                ) {
-                    prepareAutoBullet(editor, textRange);
-                    toggleBullet(editor);
-                } else if (isAListPattern(textBeforeCursor)) {
-                    prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor);
-                } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
-                    const num = parseInt(textBeforeCursor);
-                    prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor, num);
-                }
-                searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
-            },
-            undefined /*changeSource*/,
-            true /*canUndoByBackspace*/
-        );
-    },
+    handleEvent: (event, editor) => {},
+    defaultDisabled: true,
 };
 
 /**
- * Requires @see ExperimentalFeatures.AutoFormatList to be enabled
  * AutoBulletList edit feature, provides the ability to automatically convert current line into a bullet list.
  */
 const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (
-            !cacheGetListElement(event, editor) &&
-            editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-        ) {
+        if (!cacheGetListElement(event, editor)) {
             return shouldTriggerList(event, editor, getAutoBulletListStyle, ListType.Unordered);
         }
         return false;
@@ -327,12 +284,12 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
         event.rawEvent.preventDefault();
         editor.addUndoSnapshot(
             () => {
-                let searcher = editor.getContentSearcherOfCursor();
+                const searcher = editor.getContentSearcherOfCursor();
                 if (!searcher) {
                     return;
                 }
-                let textBeforeCursor = searcher.getSubStringBefore(5);
-                let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
+                const textBeforeCursor = searcher.getSubStringBefore(5);
+                const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
                 const listStyle = getAutoBulletListStyle(textBeforeCursor);
 
                 if (textRange) {
@@ -352,16 +309,12 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * Requires @see ExperimentalFeatures.AutoFormatList to be enabled
  * AutoNumberingList edit feature, provides the ability to automatically convert current line into a numbering list.
  */
 const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (
-            !cacheGetListElement(event, editor) &&
-            editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-        ) {
+        if (!cacheGetListElement(event, editor)) {
             return shouldTriggerList(event, editor, getAutoNumberingListStyle, ListType.Ordered);
         }
         return false;
@@ -485,10 +438,10 @@ function toggleListAndPreventDefault(
     editor: IEditor,
     includeSiblingLists: boolean = true
 ) {
-    let listInfo = cacheGetListElement(event, editor);
+    const listInfo = cacheGetListElement(event, editor);
     if (listInfo) {
-        let listElement = listInfo[0];
-        let tag = getTagOfNode(listElement);
+        const listElement = listInfo[0];
+        const tag = getTagOfNode(listElement);
 
         if (tag == 'UL' || tag == 'OL') {
             toggleListType(
@@ -505,8 +458,8 @@ function toggleListAndPreventDefault(
 }
 
 function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
-    let li = editor.getElementAtCursor('LI,TABLE', undefined /*startFrom*/, event);
-    let listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
+    const li = editor.getElementAtCursor('LI,TABLE', undefined /*startFrom*/, event);
+    const listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
     return listElement ? [listElement, li] : null;
 }
 

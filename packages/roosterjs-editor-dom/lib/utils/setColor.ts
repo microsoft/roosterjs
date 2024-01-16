@@ -1,5 +1,5 @@
 import parseColor from './parseColor';
-import { DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
+import type { DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
 
 const WHITE = '#ffffff';
 const GRAY = '#333333';
@@ -113,7 +113,7 @@ function adaptFontColorToBackgroundColor(
 }
 
 function isADarkOrBrightColor(color: string): ColorTones {
-    let lightness = calculateLightness(color);
+    const lightness = calculateLightness(color);
     if (lightness < DARK_COLORS_LIGHTNESS) {
         return ColorTones.DARK;
     } else if (lightness > BRIGHT_COLORS_LIGHTNESS) {

@@ -1,11 +1,6 @@
-import * as createDomToModelContext from '../../lib/domToModel/context/createDomToModelContext';
 import * as normalizeContentModel from '../../lib/modelApi/common/normalizeContentModel';
 import { domToContentModel } from '../../lib/domToModel/domToContentModel';
-import {
-    ContentModelDocument,
-    DomToModelContext,
-    EditorContext,
-} from 'roosterjs-content-model-types';
+import { ContentModelDocument, DomToModelContext } from 'roosterjs-content-model-types';
 
 describe('domToContentModel', () => {
     it('Not include root', () => {
@@ -18,20 +13,16 @@ describe('domToContentModel', () => {
             },
             defaultStyles: {},
             segmentFormat: {},
-        } as any) as DomToModelContext;
-
-        spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(mockContext);
-        spyOn(normalizeContentModel, 'normalizeContentModel');
-
-        const rootElement = document.createElement('div');
-        const options = {};
-        const editorContext: EditorContext = {
             isDarkMode: false,
             defaultFormat: {
                 fontSize: '10pt',
             },
-        };
-        const model = domToContentModel(rootElement, options, editorContext);
+        } as any) as DomToModelContext;
+
+        spyOn(normalizeContentModel, 'normalizeContentModel');
+
+        const rootElement = document.createElement('div');
+        const model = domToContentModel(rootElement, mockContext);
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [],
@@ -41,12 +32,6 @@ describe('domToContentModel', () => {
         };
 
         expect(model).toEqual(result);
-        expect(createDomToModelContext.createDomToModelContext).toHaveBeenCalledTimes(1);
-        expect(createDomToModelContext.createDomToModelContext).toHaveBeenCalledWith(
-            editorContext,
-            options,
-            undefined
-        );
         expect(elementProcessor).not.toHaveBeenCalled();
         expect(childProcessor).toHaveBeenCalledTimes(1);
         expect(childProcessor).toHaveBeenCalledWith(result, rootElement, mockContext);

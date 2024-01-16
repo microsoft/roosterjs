@@ -5,8 +5,8 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
-import { BlockElement } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
+import type { BlockElement } from 'roosterjs-editor-types';
 
 const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 
@@ -40,7 +40,7 @@ export default class StartEndBlockElement implements BlockElement {
         let nodes = nodeContext
             ? collapseNodes(nodeContext, this.startNode, this.endNode, true /*canSplitParent*/)
             : [];
-        let blockContext = StartEndBlockElement.getBlockContext(this.startNode);
+        const blockContext = StartEndBlockElement.getBlockContext(this.startNode);
         while (
             nodes[0] &&
             nodes[0] != blockContext &&

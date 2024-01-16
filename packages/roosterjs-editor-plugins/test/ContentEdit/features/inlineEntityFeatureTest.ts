@@ -1,5 +1,6 @@
 import * as addDelimiters from 'roosterjs-editor-dom/lib/delimiter/addDelimiters';
 import * as getComputedStyles from 'roosterjs-editor-dom/lib/utils/getComputedStyles';
+import { BlockElement, Entity, IEditor, Keys, PluginKeyDownEvent } from 'roosterjs-editor-types';
 import { EntityFeatures } from '../../../lib/plugins/ContentEdit/features/entityFeatures';
 import {
     commitEntity,
@@ -9,14 +10,6 @@ import {
     Position,
     PositionContentSearcher,
 } from 'roosterjs-editor-dom';
-import {
-    Entity,
-    ExperimentalFeatures,
-    IEditor,
-    Keys,
-    PluginKeyDownEvent,
-    BlockElement,
-} from 'roosterjs-editor-types';
 
 describe('Content Edit Features |', () => {
     const { moveBetweenDelimitersFeature, removeEntityBetweenDelimiters } = EntityFeatures;
@@ -44,6 +37,7 @@ describe('Content Edit Features |', () => {
         cleanUp();
         defaultEvent = <PluginKeyDownEvent>{};
         testContainer = document.createElement('div');
+        testContainer.setAttribute('contenteditable', 'true');
         document.body.appendChild(testContainer);
 
         wrapper = document.createElement('span');
@@ -68,8 +62,6 @@ describe('Content Edit Features |', () => {
                     collapsed: true,
                 },
             select,
-            isFeatureEnabled: (feature: ExperimentalFeatures) =>
-                feature === ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
             getBodyTraverser: (startNode?: Node) =>
                 ContentTraverser.createBodyTraverser(testContainer, startNode),
             getBlockElementAtNode: (node: Node) => getBlockElementAtNode(document.body, node),
@@ -396,10 +388,44 @@ describe('Content Edit Features |', () => {
                 restoreSelection();
             });
 
+            it('DelimiterBefore, should handle and handle, nested entity no shiftKey', () => {
+                setupNestedEntityScenario(entity, delimiterBefore, delimiterAfter);
+
+                event = runTest(delimiterBefore, true /* expected */, event);
+
+                spyOnSelection();
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
+
+                expect(select).toHaveBeenCalledWith(new Position(delimiterAfter!, 1));
+                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+                expect(extendSpy).toHaveBeenCalledTimes(0);
+
+                restoreSelection();
+            });
+
             it('DelimiterBefore, should handle and handle,  no shiftKey elements wrapped in B', () => {
                 wrapElementInB(delimiterBefore);
                 wrapElementInB(entity.wrapper);
                 wrapElementInB(delimiterAfter);
+
+                event = runTest(delimiterBefore, true /* expected */, event);
+
+                spyOnSelection();
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
+
+                expect(select).toHaveBeenCalledWith(new Position(delimiterAfter!, 1));
+                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+                expect(extendSpy).toHaveBeenCalledTimes(0);
+
+                restoreSelection();
+            });
+
+            it('DelimiterBefore, should handle and handle,  no shiftKey elements wrapped in B and nestedEntity', () => {
+                wrapElementInB(delimiterBefore);
+                wrapElementInB(entity.wrapper);
+                wrapElementInB(delimiterAfter);
+                setupNestedEntityScenario(entity, delimiterBefore, delimiterAfter);
+
                 event = runTest(delimiterBefore, true /* expected */, event);
 
                 spyOnSelection();
@@ -433,7 +459,29 @@ describe('Content Edit Features |', () => {
                 restoreSelection();
             });
 
-            it('DelimiterBefore, should handle and handle, with shiftKey, elements wrapped in B', () => {
+            it('DelimiterBefore, should handle and handle, with shiftKey and nested entity', () => {
+                event = {
+                    ...event,
+                    rawEvent: <KeyboardEvent>{
+                        ...event.rawEvent,
+                        shiftKey: true,
+                    },
+                };
+                setupNestedEntityScenario(entity, delimiterBefore, delimiterAfter);
+
+                event = runTest(delimiterBefore, true /* expected */, event);
+
+                spyOnSelection();
+
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
+
+                expect(extendSpy).toHaveBeenCalledWith(testContainer, 3);
+                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+
+                restoreSelection();
+            });
+
+            it('DelimiterBefore, should handle and handle, with shiftKey, elements wrapped in B and nested entity', () => {
                 event = {
                     ...event,
                     rawEvent: <KeyboardEvent>{
@@ -445,6 +493,8 @@ describe('Content Edit Features |', () => {
                 wrapElementInB(delimiterBefore);
                 wrapElementInB(entity.wrapper);
                 wrapElementInB(delimiterAfter);
+                setupNestedEntityScenario(entity, delimiterBefore, delimiterAfter);
+
                 event = runTest(delimiterBefore, true /* expected */, event);
 
                 spyOnSelection();
@@ -527,6 +577,25 @@ describe('Content Edit Features |', () => {
                 restoreSelection();
             });
 
+            it('DelimiterBefore, shouldHandle and Handle, cursor at end of element before delimiter before and nested entity', () => {
+                const bold = document.createElement('b');
+                bold.append(document.createTextNode('Bold'));
+                testContainer.insertBefore(bold, delimiterBefore);
+                setupNestedEntityScenario(entity, delimiterBefore, delimiterAfter);
+
+                event = runTest(new Position(bold.firstChild!, 4), true /* expected */, event);
+
+                spyOnSelection();
+
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
+
+                expect(select).toHaveBeenCalledWith(new Position(delimiterAfter!, 1));
+                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+                expect(extendSpy).toHaveBeenCalledTimes(0);
+
+                restoreSelection();
+            });
+
             it('DelimiterBefore, should not Handle, cursor is not not at the start of the element after delimiter after', () => {
                 const bold = document.createElement('b');
                 bold.append(document.createTextNode('Bold'));
@@ -552,6 +621,21 @@ describe('Content Edit Features |', () => {
                 wrapElementInB(delimiterBefore);
                 wrapElementInB(entity.wrapper);
                 wrapElementInB(delimiterAfter);
+
+                runTest(delimiterBefore, true /* expected */, event);
+            });
+
+            it('DelimiterBefore, Inline Readonly Entity with multiple Inline Elements and nested scenario', () => {
+                const b = document.createElement('b');
+                b.appendChild(document.createTextNode('Bold'));
+
+                entity.wrapper.appendChild(b);
+                entity.wrapper.appendChild(b.cloneNode(true));
+
+                wrapElementInB(delimiterBefore);
+                wrapElementInB(entity.wrapper);
+                wrapElementInB(delimiterAfter);
+                setupNestedEntityScenario(entity, delimiterBefore, delimiterAfter);
 
                 runTest(delimiterBefore, true /* expected */, event);
             });
@@ -799,6 +883,22 @@ describe('Content Edit Features |', () => {
     }
 });
 
+function setupNestedEntityScenario(
+    entity: Entity,
+    delimiterBefore: Element | null,
+    delimiterAfter: Element | null
+) {
+    const wrapperClone = entity.wrapper.cloneNode(true /* deep */);
+    while (entity.wrapper.firstChild) {
+        entity.wrapper.removeChild(entity.wrapper.firstChild);
+    }
+    entity.wrapper.append(
+        delimiterBefore!.cloneNode(true /* deep */),
+        wrapperClone,
+        delimiterAfter!.cloneNode(true)
+    );
+}
+
 function wrapElementInB(delimiterBefore: Element | null) {
     const element = delimiterBefore?.insertAdjacentElement(
         'beforebegin',
@@ -832,6 +932,7 @@ function addEntityBeforeEach(entity: Entity, wrapper: HTMLElement) {
         type: 'Test',
         wrapper,
     };
+    wrapper.setAttribute('contenteditable', 'false');
 
     commitEntity(wrapper, 'test', true, 'test');
     addDelimiters.default(wrapper);

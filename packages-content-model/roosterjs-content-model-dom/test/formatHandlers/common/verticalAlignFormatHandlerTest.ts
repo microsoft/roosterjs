@@ -63,6 +63,7 @@ describe('verticalAlignFormatHandler.parse', () => {
         runTest('text-top', null, 'top');
         runTest('text-bottom', null, 'top');
         runTest('bottom', null, 'bottom');
+        runTest('middle', null, 'middle');
     });
 });
 

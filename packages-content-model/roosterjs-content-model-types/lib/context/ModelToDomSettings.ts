@@ -1,25 +1,34 @@
-import { ContentModelBlock } from '../block/ContentModelBlock';
-import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import { ContentModelBlockHandler, ContentModelHandler } from './ContentModelHandler';
-import { ContentModelBr } from '../segment/ContentModelBr';
-import { ContentModelDecorator } from '../decorator/ContentModelDecorator';
-import { ContentModelDivider } from '../block/ContentModelDivider';
-import { ContentModelEntity } from '../entity/ContentModelEntity';
-import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
-import { ContentModelFormatContainer } from '../group/ContentModelFormatContainer';
-import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
-import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
-import { ContentModelImage } from '../segment/ContentModelImage';
-import { ContentModelListItem } from '../group/ContentModelListItem';
-import { ContentModelParagraph } from '../block/ContentModelParagraph';
-import { ContentModelSegment } from '../segment/ContentModelSegment';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { ContentModelTable } from '../block/ContentModelTable';
-import { ContentModelTableRow } from '../block/ContentModelTableRow';
-import { ContentModelText } from '../segment/ContentModelText';
-import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
-import { ModelToDomContext } from './ModelToDomContext';
+import type { Definition } from '../metadata/Definition';
+import type { ContentModelBlock } from '../block/ContentModelBlock';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import type { ContentModelBr } from '../segment/ContentModelBr';
+import type { ContentModelDecorator } from '../decorator/ContentModelDecorator';
+import type { ContentModelDivider } from '../block/ContentModelDivider';
+import type { ContentModelEntity } from '../entity/ContentModelEntity';
+import type { ContentModelFormatBase } from '../format/ContentModelFormatBase';
+import type { ContentModelFormatContainer } from '../group/ContentModelFormatContainer';
+import type { ContentModelFormatMap } from '../format/ContentModelFormatMap';
+import type { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
+import type { ContentModelGeneralSegment } from '../segment/ContentModelGeneralSegment';
+import type { ContentModelImage } from '../segment/ContentModelImage';
+import type { ContentModelListItem } from '../group/ContentModelListItem';
+import type { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
+import type { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import type { ContentModelParagraph } from '../block/ContentModelParagraph';
+import type { ContentModelSegment } from '../segment/ContentModelSegment';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelTable } from '../block/ContentModelTable';
+import type { ContentModelTableRow } from '../block/ContentModelTableRow';
+import type { ContentModelText } from '../segment/ContentModelText';
+import type { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
+import type { ModelToDomContext } from './ModelToDomContext';
+import type { ListMetadataFormat } from '../format/metadata/ListMetadataFormat';
+import type {
+    ContentModelHandler,
+    ContentModelBlockHandler,
+    ContentModelSegmentHandler,
+} from './ContentModelHandler';
 
 /**
  * Default implicit format map from tag name (lower case) to segment format
@@ -72,17 +81,27 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelBr
      */
-    br: ContentModelHandler<ContentModelBr>;
+    br: ContentModelSegmentHandler<ContentModelBr>;
 
     /**
      * Content Model type for child models of ContentModelEntity
      */
-    entity: ContentModelBlockHandler<ContentModelEntity>;
+    entityBlock: ContentModelBlockHandler<ContentModelEntity>;
+
+    /**
+     * Content Model type for child models of ContentModelEntity
+     */
+    entitySegment: ContentModelSegmentHandler<ContentModelEntity>;
 
     /**
      * Content Model type for ContentModelGeneralBlock
      */
-    general: ContentModelBlockHandler<ContentModelGeneralBlock>;
+    generalBlock: ContentModelBlockHandler<ContentModelGeneralBlock>;
+
+    /**
+     * Content Model type for ContentModelGeneralBlock
+     */
+    generalSegment: ContentModelSegmentHandler<ContentModelGeneralSegment>;
 
     /**
      * Content Model type for ContentModelHR
@@ -92,7 +111,7 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelImage
      */
-    image: ContentModelHandler<ContentModelImage>;
+    image: ContentModelSegmentHandler<ContentModelImage>;
 
     /**
      * Content Model type for list group of ContentModelListItem
@@ -117,12 +136,12 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelSegment
      */
-    segment: ContentModelHandler<ContentModelSegment>;
+    segment: ContentModelSegmentHandler<ContentModelSegment>;
 
     /**
      * Content Model type for ContentModelCode
      */
-    segmentDecorator: ContentModelHandler<ContentModelSegment>;
+    segmentDecorator: ContentModelSegmentHandler<ContentModelSegment>;
 
     /**
      * Content Model type for ContentModelTable
@@ -132,7 +151,49 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelText
      */
-    text: ContentModelHandler<ContentModelText>;
+    text: ContentModelSegmentHandler<ContentModelText>;
+};
+
+/**
+ * Function type to apply metadata value into format
+ * @param metadata The metadata object to apply
+ * @param format The format object to apply metadata to
+ * @param context Content Model to DOM context
+ */
+export type ApplyMetadata<TMetadata, TFormat extends ContentModelFormatBase> = (
+    metadata: TMetadata | null,
+    format: TFormat,
+    context: ModelToDomContext
+) => void;
+
+/**
+ * Metadata applier interface
+ */
+export interface MetadataApplier<TMetadata, TFormat extends ContentModelFormatBase> {
+    /**
+     * The metadata applier function
+     */
+    applierFunction: ApplyMetadata<TMetadata, TFormat>;
+
+    /**
+     * @optional Metadata definition, used for validate the metadata object
+     */
+    metadataDefinition?: Definition<TMetadata>;
+}
+
+/**
+ * Map of metadata handlers
+ */
+export type MetadataAppliers = {
+    /**
+     * Metadata handler for list item
+     */
+    listItem?: MetadataApplier<ListMetadataFormat, ContentModelListItemFormat>;
+
+    /**
+     * Metadata handler for list level
+     */
+    listLevel?: MetadataApplier<ListMetadataFormat, ContentModelListItemLevelFormat>;
 };
 
 /**
@@ -165,9 +226,9 @@ export interface ModelToDomSettings {
     formatAppliers: FormatAppliersPerCategory;
 
     /**
-     * Map of default implicit format for segment
+     * Map of metadata appliers
      */
-    defaultImplicitFormatMap: DefaultImplicitFormatMap;
+    metadataAppliers: MetadataAppliers;
 
     /**
      * Default Content Model to DOM handlers before overriding.

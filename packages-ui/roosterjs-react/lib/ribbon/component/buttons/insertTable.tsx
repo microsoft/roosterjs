@@ -1,11 +1,11 @@
 import * as React from 'react';
-import RibbonButton from '../../type/RibbonButton';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
-import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { insertTable as insertTableApi } from 'roosterjs-editor-api';
-import { InsertTableButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
+import type RibbonButton from '../../type/RibbonButton';
+import type { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
+import type { InsertTableButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 const MaxRows = 10;
 const MaxCols = 10;
@@ -107,7 +107,7 @@ function InsertTablePane(props: {
     const ariaLabels = React.useMemo<string[][]>(() => {
         const result: string[][] = [];
         for (let i = 1; i <= MaxCols; i++) {
-            let col: string[] = [];
+            const col: string[] = [];
             for (let j = 1; j <= MaxRows; j++) {
                 col[j] = formatText(item.text ?? '', i, j);
             }

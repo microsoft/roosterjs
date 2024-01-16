@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { VerticalAlignFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { VerticalAlignFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -21,6 +21,10 @@ export const verticalAlignFormatHandler: FormatHandler<VerticalAlignFormat> = {
 
             case 'bottom':
                 format.verticalAlign = 'bottom';
+                break;
+
+            case 'middle':
+                format.verticalAlign = 'middle';
                 break;
         }
     },

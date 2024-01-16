@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { SizeFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { SizeFormat } from 'roosterjs-content-model-types';
 
 const PercentageRegex = /[\d\.]+%/;
 
@@ -62,7 +62,7 @@ function tryParseSize(element: HTMLElement, attrName: 'width' | 'height'): strin
 
     return attrValue && PercentageRegex.test(attrValue)
         ? attrValue
-        : Number.isNaN(value)
+        : Number.isNaN(value) || value == 0
         ? undefined
         : value + 'px';
 }

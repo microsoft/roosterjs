@@ -1,7 +1,8 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import setBackgroundColor from '../format/setBackgroundColor';
-import { IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
 import { Position, VTable } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
+import type { IEditor, TableFormat } from 'roosterjs-editor-types';
 
 /**
  * Insert table into editor at current selection
@@ -18,15 +19,15 @@ export default function insertTable(
     rows: number,
     format?: TableFormat
 ) {
-    let document = editor.getDocument();
-    let table = document.createElement('table') as HTMLTableElement;
+    const document = editor.getDocument();
+    const table = document.createElement('table') as HTMLTableElement;
     table.cellSpacing = '0';
     table.cellPadding = '1';
     for (let i = 0; i < rows; i++) {
-        let tr = document.createElement('tr') as HTMLTableRowElement;
+        const tr = document.createElement('tr') as HTMLTableRowElement;
         table.appendChild(tr);
         for (let j = 0; j < columns; j++) {
-            let td = document.createElement('td') as HTMLTableCellElement;
+            const td = document.createElement('td') as HTMLTableCellElement;
             tr.appendChild(td);
             td.appendChild(document.createElement('br'));
             td.style.width = getTableCellWidth(columns);
@@ -41,7 +42,7 @@ export default function insertTable(
             if (element?.style.backgroundColor) {
                 setBackgroundColor(editor, 'transparent');
             }
-            let vtable = new VTable(table);
+            const vtable = new VTable(table);
             // Assign default vertical align
             format = format || { verticalAlign: 'top' };
             vtable.applyFormat(format || {});

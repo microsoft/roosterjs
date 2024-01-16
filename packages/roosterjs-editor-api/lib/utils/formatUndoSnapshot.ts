@@ -1,4 +1,5 @@
-import { ChangeSource, IEditor, NodePosition } from 'roosterjs-editor-types';
+import { ChangeSource } from 'roosterjs-editor-types';
+import type { IEditor, NodePosition } from 'roosterjs-editor-types';
 
 /**
  * @internal

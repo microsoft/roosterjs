@@ -15,9 +15,12 @@ import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import {
+    ContentModelCode,
+    ContentModelLink,
     ContentModelListLevel,
     ContentModelSegmentFormat,
     ContentModelTableCellFormat,
+    DatasetFormat,
 } from 'roosterjs-content-model-types';
 
 describe('Creators', () => {
@@ -188,6 +191,47 @@ describe('Creators', () => {
         expect(format).toEqual({ a: 1 });
     });
 
+    it('createText with decorators', () => {
+        const format = { a: 1 } as any;
+        const text = 'test';
+        const link: ContentModelLink = {
+            dataset: {},
+            format: {
+                href: 'test',
+            },
+        };
+        const code: ContentModelCode = {
+            format: { fontFamily: 'test' },
+        };
+        const result = createText(text, format, link, code);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: { a: 1 } as any,
+            text: text,
+            link,
+            code,
+        });
+        expect(result.link).not.toBe(link);
+        expect(result.code).not.toBe(code);
+
+        result.link!.dataset.a = 'b';
+        result.link!.format.href = 'test2';
+
+        expect(link).toEqual({
+            dataset: {},
+            format: {
+                href: 'test',
+            },
+        });
+
+        result.code!.format.fontFamily = 'test2';
+
+        expect(code).toEqual({
+            format: { fontFamily: 'test' },
+        });
+    });
+
     it('createTable', () => {
         const tableModel = createTable(2);
 
@@ -282,6 +326,48 @@ describe('Creators', () => {
             isHeader: true,
             format: { textAlign: 'start' },
             dataset: {},
+        });
+    });
+
+    it('createTableCell with dataset', () => {
+        const obj = { bgColorOverride: true, vAlignOverride: true, borderOverride: true };
+        const dataset: DatasetFormat = {
+            'data-editing-info': JSON.stringify(obj),
+        };
+        const unchangedDataset = { ...dataset };
+        const tdModel = createTableCell(
+            1 /*colSpan*/,
+            1 /*rowSpan*/,
+            false /*isHeader*/,
+            undefined /*format*/,
+            dataset
+        );
+
+        expect(tdModel).toEqual({
+            blockGroupType: 'TableCell',
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            format: {},
+            dataset: unchangedDataset,
+        });
+
+        // Change original dataset object should not impact the created table cell
+        dataset['data-editing-info'] = JSON.stringify({
+            bgColorOverride: false,
+            vAlignOverride: false,
+            borderOverride: false,
+        });
+
+        expect(tdModel).toEqual({
+            blockGroupType: 'TableCell',
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            format: {},
+            dataset: unchangedDataset,
         });
     });
 
@@ -429,34 +515,36 @@ describe('Creators', () => {
 
     it('createEntity', () => {
         const id = 'entity_1';
-        const type = 'entity';
+        const entityType = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, isReadonly, type, undefined, id);
+        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id,
-            type,
-            isReadonly,
+            entityFormat: {
+                id,
+                entityType,
+                isReadonly,
+            },
             wrapper,
         });
     });
 
     it('createEntity with format', () => {
         const id = 'entity_1';
-        const type = 'entity';
+        const entityType = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
         const entityModel = createEntity(
             wrapper,
             isReadonly,
-            type,
             {
                 fontSize: '10pt',
             },
+            entityType,
             id
         );
 
@@ -464,9 +552,11 @@ describe('Creators', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: { fontSize: '10pt' },
-            id,
-            type,
-            isReadonly,
+            entityFormat: {
+                id,
+                entityType,
+                isReadonly,
+            },
             wrapper,
         });
     });

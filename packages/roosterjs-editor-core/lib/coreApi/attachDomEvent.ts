@@ -1,5 +1,5 @@
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import {
+import type {
     AttachDomEvent,
     DOMEventHandler,
     DOMEventHandlerObject,
@@ -22,7 +22,7 @@ export const attachDomEvent: AttachDomEvent = (
     const disposers = getObjectKeys(eventMap || {}).map(key => {
         const { pluginEventType, beforeDispatch } = extractHandler(eventMap[key]);
         const eventName = key as keyof HTMLElementEventMap;
-        let onEvent = (event: HTMLElementEventMap[typeof eventName]) => {
+        const onEvent = (event: HTMLElementEventMap[typeof eventName]) => {
             if (beforeDispatch) {
                 beforeDispatch(event);
             }

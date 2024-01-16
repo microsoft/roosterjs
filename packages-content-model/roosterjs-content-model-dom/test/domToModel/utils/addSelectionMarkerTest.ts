@@ -52,6 +52,7 @@ describe('addSelectionMarker', () => {
                             format: { fontWeight: 'bold' },
                         },
                     ],
+                    segmentFormat: { fontWeight: 'bold' },
                 },
             ],
         });

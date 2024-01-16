@@ -1,4 +1,4 @@
-import {
+import type {
     ContentModelParagraphDecorator,
     ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';

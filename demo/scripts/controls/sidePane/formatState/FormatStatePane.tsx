@@ -69,6 +69,7 @@ export default class FormatStatePane extends React.Component<
                             {this.renderSpan(format.isStrikeThrough, 'Strike')}
                             {this.renderSpan(format.isSubscript, 'Subscript')}
                             {this.renderSpan(format.isSuperscript, 'Superscript')}
+                            {`Font-weight: ${format.fontWeight}`}
                         </td>
                     </tr>
                     <tr>
@@ -83,8 +84,8 @@ export default class FormatStatePane extends React.Component<
                             {this.renderSpan(format.tableHasHeader, 'Table Has Header')}
                             <span
                                 className={
-                                    format.headerLevel == 0 && styles.inactive
-                                }>{`Header ${format.headerLevel}`}</span>
+                                    format.headingLevel == 0 && styles.inactive
+                                }>{`Heading ${format.headingLevel}`}</span>
                         </td>
                     </tr>
                     <tr>

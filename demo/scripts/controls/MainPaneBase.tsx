@@ -2,19 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
-import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
-import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
-import { getDarkColor } from 'roosterjs-color-utils';
+import { Border } from 'roosterjs-content-model-types';
+import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-import {
-    createUpdateContentPlugin,
-    Rooster,
-    UpdateContentPlugin,
-    UpdateMode,
-} from 'roosterjs-react';
 
 export interface MainPaneBaseState {
     showSidePane: boolean;
@@ -22,8 +15,8 @@ export interface MainPaneBaseState {
     initState: BuildInPluginState;
     scale: number;
     isDarkMode: boolean;
-    editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
     isRtl: boolean;
+    tableBorderFormat?: Border;
 }
 
 const PopoutRoot = 'mainPane';
@@ -32,20 +25,24 @@ const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
-export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
+export default abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Component<
+    {},
+    T
+> {
     private mouseX: number;
-    private static instance: MainPaneBase;
+    private static instance: MainPaneBase<MainPaneBaseState>;
     private popoutRoot: HTMLElement;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
-    protected snapshotPlugin: SnapshotPlugin;
     protected content: string = '';
     protected themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
 
     static getInstance() {
         return this.instance;
     }
+
+    static readonly editorDivId = 'RoosterJsContentDiv';
 
     constructor(props: {}) {
         super(props);
@@ -62,11 +59,11 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
 
     abstract renderSidePane(fullWidth: boolean): JSX.Element;
 
-    abstract getPlugins(): EditorPlugin[];
-
     abstract resetEditor(): void;
 
     abstract getTheme(isDark: boolean): PartialTheme;
+
+    abstract renderEditor(): JSX.Element;
 
     render() {
         const styles = this.getStyles();
@@ -129,6 +126,28 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
         });
     }
 
+    getTableBorder(): Border {
+        return this.state.tableBorderFormat;
+    }
+
+    setTableBorderColor(color: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), color },
+        });
+    }
+
+    setTableBorderWidth(width: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), width },
+        });
+    }
+
+    setTableBorderStyle(style: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), style },
+        });
+    }
+
     toggleDarkMode(): void {
         this.setState({
             isDarkMode: !this.state.isDarkMode,
@@ -160,42 +179,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
                     this.renderSidePaneButton()
                 )}
             </>
-        );
-    }
-
-    private renderEditor() {
-        const styles = this.getStyles();
-        const allPlugins = this.getPlugins();
-        const editorStyles = {
-            transform: `scale(${this.state.scale})`,
-            transformOrigin: this.state.isRtl ? 'right top' : 'left top',
-            height: `calc(${100 / this.state.scale}%)`,
-            width: `calc(${100 / this.state.scale}%)`,
-        };
-
-        this.updateContentPlugin.forceUpdate();
-
-        return (
-            <div className={styles.editorContainer} id="EditorContainer">
-                <div style={editorStyles}>
-                    {this.state.editorCreator && (
-                        <Rooster
-                            className={styles.editor}
-                            plugins={allPlugins}
-                            defaultFormat={this.state.initState.defaultFormat}
-                            inDarkMode={this.state.isDarkMode}
-                            getDarkColor={getDarkColor}
-                            experimentalFeatures={this.state.initState.experimentalFeatures}
-                            undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
-                            trustedHTMLHandler={trustedHTMLHandler}
-                            zoomScale={this.state.scale}
-                            initialContent={this.content}
-                            editorCreator={this.state.editorCreator}
-                            dir={this.state.isRtl ? 'rtl' : 'ltr'}
-                        />
-                    )}
-                </div>
-            </div>
         );
     }
 

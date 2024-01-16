@@ -1,27 +1,22 @@
 import { getCellAtCursor } from '../utils/getCellAtCursor';
 import { getCellCoordinates } from '../utils/getCellCoordinates';
 import { isAfter } from '../utils/isAfter';
+import { Keys, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { prepareSelection } from '../utils/prepareSelection';
 import { selectTable } from '../utils/selectTable';
 import { setData } from '../utils/setData';
 import { TABLE_CELL_SELECTOR } from '../constants';
-import { TableCellSelectionState } from '../TableCellSelectionState';
 import { updateSelection } from '../utils/updateSelection';
+import type { TableCellSelectionState } from '../TableCellSelectionState';
 import {
     contains,
+    createRange,
     isCtrlOrMetaPressed,
     Position,
     safeInstanceOf,
     VTable,
 } from 'roosterjs-editor-dom';
-import {
-    Coordinates,
-    IEditor,
-    Keys,
-    PluginKeyDownEvent,
-    PositionType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import type { Coordinates, IEditor, PluginKeyDownEvent } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -37,6 +32,7 @@ export function handleKeyDownEvent(
         return;
     }
 
+    const range = editor.getSelectionRangeEx();
     if (shiftKey) {
         if (!state.firstTarget) {
             const pos = editor.getFocusedPosition();
@@ -70,10 +66,15 @@ export function handleKeyDownEvent(
             }
         });
     } else if (
-        editor.getSelectionRangeEx()?.type == SelectionRangeTypes.TableSelection &&
+        range?.type == SelectionRangeTypes.TableSelection &&
         (!isCtrlOrMetaPressed(event.rawEvent) || which == Keys.HOME || which == Keys.END)
     ) {
-        editor.select(null);
+        // Select all content in the first cell
+        const row = range.ranges[0];
+        const firstCell = row.startContainer.childNodes[row.startOffset];
+        const children = firstCell.childNodes;
+        const contentRange = createRange(children[0], children[children.length - 1]);
+        editor.select(contentRange);
     }
 }
 
@@ -168,7 +169,7 @@ function getNextTD(
         state.lastTarget && editor.getElementAtCursor(TABLE_CELL_SELECTOR, state.lastTarget);
 
     if (safeInstanceOf(state.lastTarget, 'HTMLTableCellElement') && state.vTable?.cells) {
-        let coordinates = getCellCoordinates(state.vTable, state.lastTarget);
+        const coordinates = getCellCoordinates(state.vTable, state.lastTarget);
 
         if (state.tableSelection && coordinates) {
             switch (event.rawEvent.which) {

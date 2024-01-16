@@ -11,18 +11,20 @@ import {
     VTable,
     isWholeTableSelected,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     CopyPastePluginState,
     EditorOptions,
-    GetContentMode,
     IEditor,
-    PluginEventType,
     PluginWithState,
-    KnownCreateElementDataIndex,
     SelectionRangeEx,
-    SelectionRangeTypes,
     TableSelection,
+} from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    GetContentMode,
+    PluginEventType,
+    KnownCreateElementDataIndex,
+    SelectionRangeTypes,
     TableOperation,
 } from 'roosterjs-editor-types';
 

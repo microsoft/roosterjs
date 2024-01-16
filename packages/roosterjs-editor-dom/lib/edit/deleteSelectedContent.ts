@@ -7,7 +7,8 @@ import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';
-import { NodePosition, PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
+import { PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * Delete selected content, and return the new position to select
@@ -60,12 +61,12 @@ export default function deleteSelectedContent(
             // Make sure there are node before and after the merging point.
             // This is required by mergeBlocksInRegion API.
             // This may create some empty text node as anchor
-            let [beforeEnd, afterEnd] = ensureBeforeAndAfter(
+            const [beforeEnd, afterEnd] = ensureBeforeAndAfter(
                 endContainer,
                 endOffset,
                 false /*isStart*/
             );
-            let [beforeStart, afterStart] = ensureBeforeAndAfter(
+            const [beforeStart, afterStart] = ensureBeforeAndAfter(
                 startContainer,
                 startOffset,
                 true /*isStart*/

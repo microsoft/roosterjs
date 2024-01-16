@@ -1,7 +1,14 @@
+import * as applyChange from '../../lib/plugins/ImageEdit/editInfoUtils/applyChange';
 import * as TestHelper from '../TestHelper';
 import ImageEditInfo from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
-import { IEditor, ImageEditOperation, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { ImageEdit } from '../../lib/ImageEdit';
+import {
+    IEditor,
+    ImageEditOperation,
+    PluginEvent,
+    PluginEventType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 import {
     getEditInfoFromImage,
     saveEditInfo,
@@ -12,7 +19,9 @@ describe('ImageEdit | rotate and flip', () => {
     const TEST_ID = 'imageEditTest';
     let plugin: ImageEdit;
     beforeEach(() => {
-        plugin = new ImageEdit();
+        plugin = new ImageEdit({
+            applyChangesOnMouseUp: true,
+        });
         editor = TestHelper.initEditor(TEST_ID, [plugin]);
     });
 
@@ -220,12 +229,12 @@ describe('ImageEdit | rotate and flip', () => {
         editor.select(image);
         plugin.setEditingImage(image, ImageEditOperation.Resize);
         expect(editor.getContent()).toBe(
-            '<span style="vertical-align: bottom; font-size: 24px;"><img id="IMAGE_ID_EDITING" src="test"></span>'
+            '<span style="vertical-align: bottom;"><img id="IMAGE_ID_EDITING" src="test"></span>'
         );
     });
 });
 
-describe('ImageEdit | plugin events | quitting', () => {
+describe('ImageEdit | plugin events | ', () => {
     let editor: IEditor;
     const TEST_ID = 'imageEditTest';
     let plugin: ImageEdit;
@@ -270,22 +279,34 @@ describe('ImageEdit | plugin events | quitting', () => {
         target.dispatchEvent(event);
     };
 
-    it('image selection quit editing', () => {
-        const IMG_ID = 'IMAGE_ID_QUIT';
+    const mouseUp = (target: HTMLElement, keyNumber: number) => {
+        const rect = target.getBoundingClientRect();
+        const event = new MouseEvent('mouseup', {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: rect.left,
+            clientY: rect.top,
+            shiftKey: false,
+            button: keyNumber,
+        });
+        target.dispatchEvent(event);
+    };
+
+    it('mouse up | keep image selected if click in a image', () => {
+        const IMG_ID = 'IMAGE_ID_MOUSE';
         const SPAN_ID = 'SPAN_ID';
         const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
         editor.setContent(content);
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
         editor.focus();
         editor.select(image);
-        expect(setEditingImageSpy).toHaveBeenCalled();
-        expect(setEditingImageSpy).toHaveBeenCalledWith(
-            image as any,
-            ImageEditOperation.ResizeAndRotate as any
-        );
+        mouseUp(image, 0);
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
     });
 
-    it('mousedown quit editing', () => {
+    it('quitting | mousedown quit editing', () => {
         const IMG_ID = 'IMAGE_ID_MOUSE';
         const SPAN_ID = 'SPAN_ID';
         const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
@@ -294,12 +315,12 @@ describe('ImageEdit | plugin events | quitting', () => {
         const span = document.getElementById(SPAN_ID) as HTMLImageElement;
         editor.focus();
         editor.select(image);
-        mouseDown(span, 0);
+        mouseDown(span, 2);
         expect(setEditingImageSpy).toHaveBeenCalled();
         expect(setEditingImageSpy).toHaveBeenCalledWith(null);
     });
 
-    it('keydown quit editing', () => {
+    it('quitting | keydown quit editing', () => {
         const IMG_ID = 'IMAGE_ID';
         const content = `<img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);
@@ -344,6 +365,20 @@ describe('ImageEdit | wrapper', () => {
         expect(imageShadow?.style.maxWidth).toBe('');
     });
 
+    it('image selection, remove max-height', () => {
+        const IMG_ID = 'IMAGE_ID_SELECTION';
+        const content = `<img id="${IMG_ID}" src='test'/>`;
+        editor.setContent(content);
+        const image = document.getElementById(IMG_ID) as HTMLImageElement;
+        image.style.maxHeight = '100%';
+        editor.focus();
+        editor.select(image);
+        const imageParent = image.parentElement;
+        const shadowRoot = imageParent?.shadowRoot;
+        const imageShadow = shadowRoot?.querySelector('img');
+        expect(imageShadow?.style.maxHeight).toBe('');
+    });
+
     it('image selection, cloned image should use style width/height attributes', () => {
         const IMG_ID = 'IMAGE_ID_SELECTION_2';
         const content = `<img id="${IMG_ID}" style="width: 300px; height: 300px" src='test'/>`;
@@ -356,5 +391,51 @@ describe('ImageEdit | wrapper', () => {
         const imageShadow = shadowRoot?.querySelector('img');
         expect(imageShadow?.style.height).toBe('300px');
         expect(imageShadow?.style.width).toBe('300px');
+    });
+});
+
+describe('ImageEdit | applyChangesOnMouseUp', () => {
+    let editor: IEditor;
+    const TEST_ID = 'imageEditTest';
+    let plugin: ImageEdit;
+    beforeEach(() => {
+        plugin = new ImageEdit({
+            applyChangesOnMouseUp: true,
+        });
+        editor = TestHelper.initEditor(TEST_ID, [plugin]);
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    const mouseUp = (target: HTMLElement, keyNumber: number) => {
+        const event = new MouseEvent('mouseup', {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            shiftKey: false,
+            button: keyNumber,
+        });
+        target.dispatchEvent(event);
+    };
+
+    it('should call apply changed', () => {
+        const IMG_ID = 'IMAGE_ID_MOUSE';
+        const wrapperId = 'WRAPPER_ID';
+        const content = `<span id="${wrapperId}"></span><img id="${IMG_ID}" src='test'/>`;
+        editor.setContent(content);
+        const applyChangeSpy = spyOn(applyChange, 'default');
+        const image = document.getElementById(IMG_ID) as HTMLImageElement;
+        const wrapper = document.getElementById(wrapperId) as HTMLImageElement;
+        editor.focus();
+        editor.select(image);
+        plugin.insertImageWrapper(wrapper);
+        mouseUp(wrapper!, 2);
+        expect(applyChangeSpy).toHaveBeenCalled();
     });
 });

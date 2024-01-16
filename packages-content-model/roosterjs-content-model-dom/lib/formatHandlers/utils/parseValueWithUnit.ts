@@ -1,5 +1,3 @@
-import { getComputedStyle } from 'roosterjs-editor-dom';
-
 const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
 
 /**
@@ -28,6 +26,7 @@ export function parseValueWithUnit(
                 result = ptToPx(num);
                 break;
             case 'em':
+            case 'rem':
                 result = getFontSize(currentSizePxOrElement) * num;
                 break;
             case 'ex':
@@ -55,7 +54,9 @@ function getFontSize(currentSizeOrElement?: number | HTMLElement): number {
     } else if (typeof currentSizeOrElement === 'number') {
         return currentSizeOrElement;
     } else {
-        const styleInPt = getComputedStyle(currentSizeOrElement, 'font-size');
+        const styleInPt =
+            currentSizeOrElement.ownerDocument.defaultView?.getComputedStyle(currentSizeOrElement)
+                .fontSize ?? '';
         const floatInPt = parseFloat(styleInPt);
         const floatInPx = ptToPx(floatInPt);
 

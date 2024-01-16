@@ -1,4 +1,4 @@
-import {
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelSegment,
@@ -65,7 +65,8 @@ export function isSegmentEmpty(segment: ContentModelSegment): boolean {
 }
 
 /**
- * @internal
+ * Get whether the model is empty.
+ * @returns true if the model is empty.
  */
 export function isEmpty(
     model: ContentModelBlock | ContentModelBlockGroup | ContentModelSegment

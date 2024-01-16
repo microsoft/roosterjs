@@ -2,7 +2,9 @@ import createCellResizer from './CellResizer';
 import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
-import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
+import { ChangeSource } from 'roosterjs-editor-types';
+import { disposeTableEditFeature } from './TableEditorFeature';
+import type TableEditFeature from './TableEditorFeature';
 import {
     contains,
     getComputedStyle,
@@ -11,8 +13,7 @@ import {
     safeInstanceOf,
     VTable,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     IEditor,
     NodePosition,
     TableSelection,
@@ -79,7 +80,8 @@ export default class TableEditor {
         private onChanged: () => void,
         private onShowHelperElement?: (
             elementData: CreateElementData,
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+            tableOrTd: HTMLTableElement | HTMLTableCellElement
         ) => void,
         private anchorContainer?: HTMLElement,
         private contentDiv?: EventTarget | null
@@ -114,34 +116,26 @@ export default class TableEditor {
     }
 
     onMouseMove(x: number, y: number) {
-        //Get Cell [0,0]
-        const firstCell = this.table.rows[0]?.cells[0];
+        // Get whole table rect
+        const tableRect = normalizeRect(this.table.getBoundingClientRect());
 
-        if (!firstCell) {
-            return;
-        }
-
-        const firstCellRect = normalizeRect(firstCell.getBoundingClientRect());
-
-        if (!firstCellRect) {
+        if (!tableRect) {
             return;
         }
 
         // Determine if cursor is on top or side
         const topOrSide =
-            y <= firstCellRect.top + INSERTER_HOVER_OFFSET
+            y <= tableRect.top + INSERTER_HOVER_OFFSET
                 ? TOP_OR_SIDE.top
                 : this.isRTL
-                ? x >= firstCellRect.right - INSERTER_HOVER_OFFSET
+                ? x >= tableRect.right - INSERTER_HOVER_OFFSET
                     ? TOP_OR_SIDE.side
                     : undefined
-                : x <= firstCellRect.left + INSERTER_HOVER_OFFSET
+                : x <= tableRect.left + INSERTER_HOVER_OFFSET
                 ? TOP_OR_SIDE.side
                 : undefined;
         const topOrSideBinary = topOrSide ? 1 : 0;
 
-        // Get whole table rect
-        const tableRect = normalizeRect(this.table.getBoundingClientRect());
         // i is row index, j is column index
         for (let i = 0; i < this.table.rows.length; i++) {
             const tr = this.table.rows[i];
@@ -165,9 +159,6 @@ export default class TableEditor {
                     : x >= tdRect.left - INSERTER_HOVER_OFFSET * topOrSideBinary;
 
                 if (lessThanBottom && lessThanRight && moreThanLeft) {
-                    const isOnLeftOrRight = this.isRTL
-                        ? tdRect.right <= tableRect.right && tdRect.right >= tableRect.right - 1
-                        : tdRect.left >= tableRect.left && tdRect.left <= tableRect.left + 1;
                     if (i === 0 && topOrSide == TOP_OR_SIDE.top) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
@@ -175,7 +166,7 @@ export default class TableEditor {
                             isOnRightHalf ? td : tr.cells[j - 1],
                             false /*isHorizontal*/
                         );
-                    } else if (j === 0 && topOrSide == TOP_OR_SIDE.side && isOnLeftOrRight) {
+                    } else if (j === 0 && topOrSide == TOP_OR_SIDE.side) {
                         const tdAbove = this.table.rows[i - 1]?.cells[0];
                         const tdAboveRect = tdAbove
                             ? normalizeRect(tdAbove.getBoundingClientRect())

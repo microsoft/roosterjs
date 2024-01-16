@@ -1,5 +1,5 @@
-import { DirectionFormat } from 'roosterjs-content-model-types';
-import { FormatHandler } from '../FormatHandler';
+import type { DirectionFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal

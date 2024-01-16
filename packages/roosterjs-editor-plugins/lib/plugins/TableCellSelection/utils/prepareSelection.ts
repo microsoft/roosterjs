@@ -1,8 +1,8 @@
 import { findClosestElementAncestor } from 'roosterjs-editor-dom';
 import { getTableAtCursor } from './getTableAtCursor';
-import { IEditor } from 'roosterjs-editor-types';
 import { TABLE_CELL_SELECTOR } from '../constants';
-import { TableCellSelectionState } from '../TableCellSelectionState';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { TableCellSelectionState } from '../TableCellSelectionState';
 
 /**
  * @internal

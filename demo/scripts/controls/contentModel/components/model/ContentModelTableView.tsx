@@ -8,13 +8,14 @@ import { ContentModelView } from '../ContentModelView';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
-import { hasSelectionInBlock, updateTableMetadata } from 'roosterjs-content-model-editor';
+import { hasSelectionInBlock } from 'roosterjs-content-model-core';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import { TableLayoutFormatRenderer } from '../format/formatPart/TableLayoutFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
+import { updateTableMetadata } from 'roosterjs-content-model-core';
 import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelTableView.scss');

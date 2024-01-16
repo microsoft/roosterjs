@@ -1,8 +1,8 @@
-import * as getDelimiterFromElement from 'roosterjs-editor-dom/lib/delimiter/getDelimiterFromElement';
-import { commitEntity } from 'roosterjs-editor-dom';
+import * as entityUtils from '../../../lib/domUtils/entityUtils';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { elementProcessor } from '../../../lib/domToModel/processors/elementProcessor';
+import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
 import {
     ContentModelDocument,
     DomToModelContext,
@@ -15,7 +15,7 @@ describe('elementProcessor', () => {
     let divProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
     let generalProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
     let entityProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
-    let delimiterProcessor: jasmine.Spy<ElementProcessor<HTMLSpanElement>>;
+    let delimiterProcessor: jasmine.Spy<ElementProcessor<Node>>;
 
     beforeEach(() => {
         group = createContentModelDocument();
@@ -59,7 +59,7 @@ describe('elementProcessor', () => {
     it('Entity', () => {
         const div = document.createElement('div');
 
-        commitEntity(div, 'entity', true, 'entity_1');
+        setEntityElementClasses(div, 'entity', true, 'entity_1');
 
         elementProcessor(group, div, context);
 
@@ -117,7 +117,7 @@ describe('elementProcessor', () => {
 
     it('delimiter', () => {
         const element = document.createElement('span') as HTMLElement;
-        spyOn(getDelimiterFromElement, 'default').and.returnValue(element);
+        spyOn(entityUtils, 'isEntityDelimiter').and.returnValue(true);
 
         elementProcessor(group, element, context);
 

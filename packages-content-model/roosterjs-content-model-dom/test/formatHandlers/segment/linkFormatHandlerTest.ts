@@ -1,5 +1,6 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { defaultHTMLStyleMap } from '../../../lib/config/defaultHTMLStyleMap';
 import { DomToModelContext, LinkFormat, ModelToDomContext } from 'roosterjs-content-model-types';
 import { linkFormatHandler } from '../../../lib/formatHandlers/segment/linkFormatHandler';
 
@@ -17,7 +18,7 @@ describe('linkFormatHandler.parse', () => {
 
         div.setAttribute('href', '/test');
 
-        linkFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+        linkFormatHandler.parse(format, div, context, defaultHTMLStyleMap.a!);
 
         expect(format).toEqual({});
     });
@@ -27,7 +28,7 @@ describe('linkFormatHandler.parse', () => {
 
         a.href = '/test';
 
-        linkFormatHandler.parse(format, a, context, context.defaultStyles.a!);
+        linkFormatHandler.parse(format, a, context, defaultHTMLStyleMap.a!);
 
         expect(format).toEqual({
             href: '/test',
@@ -45,7 +46,7 @@ describe('linkFormatHandler.parse', () => {
         a.target = 'target';
         a.name = 'name';
 
-        linkFormatHandler.parse(format, a, context, context.defaultStyles.a!);
+        linkFormatHandler.parse(format, a, context, defaultHTMLStyleMap.a!);
 
         expect(format).toEqual({
             anchorClass: 'class',

@@ -1,8 +1,8 @@
 import { HtmlSanitizer, matchLink, wrap } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 import {
     ChangeSource,
     DocumentCommand,
-    IEditor,
     QueryScope,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
@@ -60,16 +60,16 @@ export default function createLink(
     target?: string
 ) {
     editor.focus();
-    let url = (checkXss(link) || '').trim();
+    const url = (checkXss(link) || '').trim();
     if (url) {
-        let linkData = matchLink(url);
+        const linkData = matchLink(url);
         // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
         // we know in that case, users will want to insert a link like http://abc
         // so we have separate logic in applyLinkPrefix to add link prefix depending on the format of the link
         // i.e. if the link starts with something like abc@xxx, we will add mailto: prefix
         // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
-        let normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
-        let originalUrl = linkData ? linkData.originalUrl : url;
+        const normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
+        const originalUrl = linkData ? linkData.originalUrl : url;
 
         editor.addUndoSnapshot(() => {
             const selection = editor.getSelectionRangeEx();
@@ -100,7 +100,7 @@ export default function createLink(
                     let currentInline = traverser?.getNextInlineElement();
 
                     // list for removing unwanted lines
-                    let deletionInlineList: Node[] = [];
+                    const deletionInlineList: Node[] = [];
 
                     while (currentInline) {
                         deletionInlineList.push(currentInline.getContainerNode());

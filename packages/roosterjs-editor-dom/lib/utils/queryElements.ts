@@ -25,7 +25,8 @@ export default function queryElements(
     let elements = toArray(container.querySelectorAll<HTMLElement>(selector));
 
     if (scope != QueryScope.Body && range) {
-        let { startContainer, startOffset, endContainer, endOffset } = range;
+        const { startOffset, endOffset } = range;
+        let { startContainer, endContainer } = range;
         if (startContainer.nodeType == NodeType.Element && startContainer.firstChild) {
             const child = startContainer.childNodes[startOffset];
 
@@ -61,9 +62,9 @@ function isIntersectWithNodeRange(
     endNode: Node,
     nodeContainedByRangeOnly: boolean
 ): boolean {
-    let startPosition = node.compareDocumentPosition(startNode);
-    let endPosition = node.compareDocumentPosition(endNode);
-    let targetPositions = [DocumentPosition.Same, DocumentPosition.Contains];
+    const startPosition = node.compareDocumentPosition(startNode);
+    const endPosition = node.compareDocumentPosition(endNode);
+    const targetPositions = [DocumentPosition.Same, DocumentPosition.Contains];
 
     if (!nodeContainedByRangeOnly) {
         targetPositions.push(DocumentPosition.ContainedBy);

@@ -1,17 +1,10 @@
+import { PluginEventType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
-
-import {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    PositionType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const Escape = 'Escape';
 const Delete = 'Delete';
-const mouseLeftButton = 0;
+const mouseMiddleButton = 1;
 
 /**
  * Detect image selection and help highlight the image
@@ -45,20 +38,13 @@ export default class ImageSelection implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.EnteredShadowEdit:
-                case PluginEventType.LeavingShadowEdit:
-                    const selection = this.editor.getSelectionRangeEx();
-                    if (selection.type == SelectionRangeTypes.ImageSelection) {
-                        this.editor.select(selection.image);
-                    }
-                    break;
-
                 case PluginEventType.MouseUp:
                     const target = event.rawEvent.target;
                     if (
                         safeInstanceOf(target, 'HTMLImageElement') &&
                         target.isContentEditable &&
-                        event.rawEvent.button === mouseLeftButton
+                        event.rawEvent.button != mouseMiddleButton &&
+                        event.isClicking
                     ) {
                         this.editor.select(target);
                     }
@@ -74,19 +60,27 @@ export default class ImageSelection implements EditorPlugin {
                         this.editor.select(null);
                     }
                     break;
-                case PluginEventType.KeyUp:
-                    const key = event.rawEvent.key;
+                case PluginEventType.KeyDown:
+                    const rawEvent = event.rawEvent;
+                    const key = rawEvent.key;
                     const keyDownSelection = this.editor.getSelectionRangeEx();
-                    if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
-                        if (key === Escape) {
+                    if (
+                        !rawEvent.ctrlKey &&
+                        !rawEvent.altKey &&
+                        !rawEvent.shiftKey &&
+                        !rawEvent.metaKey &&
+                        keyDownSelection.type === SelectionRangeTypes.ImageSelection
+                    ) {
+                        const imageParent = keyDownSelection.image?.parentNode;
+                        if (key === Escape && imageParent) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange()?.collapse();
                             event.rawEvent.stopPropagation();
                         } else if (key === Delete) {
                             this.editor.deleteNode(keyDownSelection.image);
                             event.rawEvent.preventDefault();
-                        } else {
-                            this.editor.select(keyDownSelection.ranges[0]);
+                        } else if (imageParent) {
+                            this.editor.select(keyDownSelection.image, PositionType.Before);
                         }
                     }
                     break;

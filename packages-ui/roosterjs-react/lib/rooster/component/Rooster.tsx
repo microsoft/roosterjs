@@ -1,10 +1,11 @@
 import * as React from 'react';
-import RoosterProps from '../type/RoosterProps';
-import { createUIUtilities, ReactEditorPlugin } from '../../common/index';
+import { createUIUtilities } from '../../common/index';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { useTheme } from '@fluentui/react/lib/Theme';
+import type RoosterProps from '../type/RoosterProps';
+import type { ReactEditorPlugin } from '../../common/index';
+import type { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 
 /**
  * Main component of react wrapper for roosterjs

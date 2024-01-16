@@ -1,4 +1,4 @@
-import { PluginEvent } from 'roosterjs-editor-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * Gets the cached event data by cache key from event object if there is already one.
@@ -12,7 +12,7 @@ export default function cacheGetEventData<T>(
     key: string,
     getter: () => T
 ): T {
-    let result =
+    const result =
         event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)
             ? <T>event.eventDataCache[key]
             : getter();

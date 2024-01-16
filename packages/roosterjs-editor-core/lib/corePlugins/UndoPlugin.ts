@@ -1,11 +1,9 @@
-import {
-    ChangeSource,
+import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
+import type {
     ContentChangedEvent,
     EditorOptions,
     IEditor,
-    Keys,
     PluginEvent,
-    PluginEventType,
     PluginWithState,
     Snapshot,
     UndoPluginState,
@@ -142,7 +140,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 this.state.autoCompletePosition = null;
                 this.lastKeyPress = evt.which;
             } else if (!evt.defaultPrevented) {
-                let selectionRange = this.editor?.getSelectionRange();
+                const selectionRange = this.editor?.getSelectionRange();
 
                 // Add snapshot when
                 // 1. Something has been selected (not collapsed), or
@@ -181,7 +179,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
             return;
         }
 
-        let range = this.editor?.getSelectionRange();
+        const range = this.editor?.getSelectionRange();
         if (
             (range && !range.collapsed) ||
             (evt.which == Keys.SPACE && this.lastKeyPress != Keys.SPACE) ||

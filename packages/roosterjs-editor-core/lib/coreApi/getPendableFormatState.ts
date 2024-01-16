@@ -1,15 +1,10 @@
-import {
-    contains,
-    getObjectKeys,
-    getTagOfNode,
-    PendableFormatNames,
-    Position,
-} from 'roosterjs-editor-dom';
-import {
+import { contains, getObjectKeys, getTagOfNode, Position } from 'roosterjs-editor-dom';
+import { NodeType } from 'roosterjs-editor-types';
+import type { PendableFormatNames } from 'roosterjs-editor-dom';
+import type {
     EditorCore,
     GetPendableFormatState,
     NodePosition,
-    NodeType,
     PendableFormatState,
 } from 'roosterjs-editor-types';
 
@@ -85,8 +80,8 @@ function queryCommandStateFromDOM(
     currentPosition: NodePosition
 ): PendableFormatState {
     let node: Node | null = currentPosition.node;
-    let formatState: PendableFormatState = {};
-    let pendableKeys: PendableFormatNames[] = [];
+    const formatState: PendableFormatState = {};
+    const pendableKeys: PendableFormatNames[] = [];
     while (node && contains(core.contentDiv, node)) {
         const tag = getTagOfNode(node);
         const style = node.nodeType == NodeType.Element && (node as HTMLElement).style;

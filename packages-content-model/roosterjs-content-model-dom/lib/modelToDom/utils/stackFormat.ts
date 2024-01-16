@@ -1,4 +1,5 @@
-import {
+import { defaultContentModelFormatMap } from '../../config/defaultContentModelFormatMap';
+import type {
     ContentModelBlockFormat,
     ContentModelSegmentFormat,
     ModelToDomContext,
@@ -14,7 +15,7 @@ export function stackFormat(
 ) {
     const newFormat =
         typeof tagNameOrFormat === 'string'
-            ? context.defaultImplicitFormatMap[tagNameOrFormat]
+            ? defaultContentModelFormatMap[tagNameOrFormat]
             : tagNameOrFormat;
 
     if (newFormat) {

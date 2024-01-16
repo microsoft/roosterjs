@@ -17,7 +17,6 @@ const RomanValues: Record<string, number> = {
 };
 
 /**
- * @internal
  * Convert decimal numbers into roman numbers
  * @param decimal The decimal number that needs to be converted
  * @param isLowerCase if true the roman value will appear in lower case
@@ -25,8 +24,8 @@ const RomanValues: Record<string, number> = {
  */
 export default function convertDecimalsToRoman(decimal: number, isLowerCase?: boolean) {
     let romanValue = '';
-    for (let i of getObjectKeys(RomanValues)) {
-        let timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
+    for (const i of getObjectKeys(RomanValues)) {
+        const timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
         decimal = decimal - timesRomanCharAppear * RomanValues[i];
         romanValue = romanValue + i.repeat(timesRomanCharAppear);
     }

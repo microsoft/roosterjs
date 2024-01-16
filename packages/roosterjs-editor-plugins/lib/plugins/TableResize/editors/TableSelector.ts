@@ -1,7 +1,7 @@
-import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
-import TableEditorFeature from './TableEditorFeature';
-import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
+import type DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
+import type TableEditorFeature from './TableEditorFeature';
+import type { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
 import {
     createElement,
     normalizeRect,
@@ -22,7 +22,8 @@ export default function createTableSelector(
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
     onShowHelperElement?: (
         elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+        table: HTMLTableElement
     ) => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement
@@ -40,7 +41,7 @@ export default function createTableSelector(
         style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
     };
 
-    onShowHelperElement?.(createElementData, 'TableSelector');
+    onShowHelperElement?.(createElementData, 'TableSelector', table);
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 

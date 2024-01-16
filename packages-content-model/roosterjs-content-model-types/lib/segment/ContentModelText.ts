@@ -1,4 +1,4 @@
-import { ContentModelSegmentBase } from './ContentModelSegmentBase';
+import type { ContentModelSegmentBase } from './ContentModelSegmentBase';
 
 /**
  * Content Model for Text

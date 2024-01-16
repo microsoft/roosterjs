@@ -1,6 +1,6 @@
-import { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
-import { IEditor } from 'roosterjs-editor-types';
-import { LocalizedStrings, UIUtilities } from '../../common/index';
+import type { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
  * Represent a context menu item
@@ -41,6 +41,14 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
      * @param context A context object that passed in from context menu provider, can be anything
      */
     shouldShow?: (editor: IEditor, targetNode: Node, context?: TContext) => boolean;
+
+    /**
+     * A callback function to verify which subitem ID should have a checkmark
+     * @param editor The editor object that triggers this event
+     * @param targetNode The node that user is clicking onto
+     * @returns ID to be shown as selected, null for none
+     */
+    getSelectedId?: (editor: IEditor, targetNode: Node) => TString | null;
 
     /**
      * A key-value map for sub menu items, key is the key of menu item, value is unlocalized string

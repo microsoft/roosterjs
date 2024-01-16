@@ -1,6 +1,6 @@
 import applyListItemStyleWrap from '../utils/applyListItemWrap';
-import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 import { setColor } from 'roosterjs-editor-dom';
+import type { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
  * Set text color at selection

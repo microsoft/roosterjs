@@ -29,6 +29,7 @@ export {
     SuperscriptButtonStringKey,
     SubscriptButtonStringKey,
     StrikethroughButtonStringKey,
+    HeadingButtonStringKey,
     HeaderButtonStringKey,
     CodeButtonStringKey,
     LtrButtonStringKey,

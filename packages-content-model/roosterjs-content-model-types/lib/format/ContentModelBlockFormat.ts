@@ -1,13 +1,13 @@
-import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
-import { BorderFormat } from './formatParts/BorderFormat';
-import { DirectionFormat } from './formatParts/DirectionFormat';
-import { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
-import { LineHeightFormat } from './formatParts/LineHeightFormat';
-import { MarginFormat } from './formatParts/MarginFormat';
-import { PaddingFormat } from './formatParts/PaddingFormat';
-import { TextAlignFormat } from './formatParts/TextAlignFormat';
-import { TextIndentFormat } from './formatParts/TextIndentFormat';
-import { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
+import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
+import type { BorderFormat } from './formatParts/BorderFormat';
+import type { DirectionFormat } from './formatParts/DirectionFormat';
+import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
+import type { LineHeightFormat } from './formatParts/LineHeightFormat';
+import type { MarginFormat } from './formatParts/MarginFormat';
+import type { PaddingFormat } from './formatParts/PaddingFormat';
+import type { TextAlignFormat } from './formatParts/TextAlignFormat';
+import type { TextIndentFormat } from './formatParts/TextIndentFormat';
+import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
 
 /**
  * The format object for a paragraph in Content Model

@@ -1,5 +1,5 @@
-import ContextMenuProvider from '../interface/ContextMenuProvider';
-import { ImageSelectionRange, TableSelectionRange } from '../interface/SelectionRangeEx';
+import type ContextMenuProvider from '../interface/ContextMenuProvider';
+import type { ImageSelectionRange, TableSelectionRange } from '../interface/SelectionRangeEx';
 
 /**
  * The state object for DOMEventPlugin
@@ -39,4 +39,9 @@ export default interface DOMEventPluginState {
      * Image selection range
      */
     imageSelectionRange: ImageSelectionRange | null;
+
+    /**
+     * When set to true, onFocus event will not trigger reselect cached range
+     */
+    skipReselectOnFocus?: boolean;
 }

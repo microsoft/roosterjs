@@ -1,7 +1,7 @@
-import { editTable, isContentModelEditor } from 'roosterjs-content-model-editor';
-import { TableOperation } from 'roosterjs-editor-types';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { editTable } from 'roosterjs-content-model-api';
+import { TableOperation } from 'roosterjs-content-model-types';
 import {
-    RibbonButton,
     TableEditAlignMenuItemStringKey,
     TableEditAlignTableMenuItemStringKey,
     TableEditDeleteMenuItemStringKey,
@@ -12,32 +12,32 @@ import {
 } from 'roosterjs-react';
 
 const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOperation>> = {
-    menuNameTableInsertAbove: TableOperation.InsertAbove,
-    menuNameTableInsertBelow: TableOperation.InsertBelow,
-    menuNameTableInsertLeft: TableOperation.InsertLeft,
-    menuNameTableInsertRight: TableOperation.InsertRight,
-    menuNameTableDeleteTable: TableOperation.DeleteTable,
-    menuNameTableDeleteColumn: TableOperation.DeleteColumn,
-    menuNameTableDeleteRow: TableOperation.DeleteRow,
-    menuNameTableMergeAbove: TableOperation.MergeAbove,
-    menuNameTableMergeBelow: TableOperation.MergeBelow,
-    menuNameTableMergeLeft: TableOperation.MergeLeft,
-    menuNameTableMergeRight: TableOperation.MergeRight,
-    menuNameTableMergeCells: TableOperation.MergeCells,
-    menuNameTableSplitHorizontally: TableOperation.SplitHorizontally,
-    menuNameTableSplitVertically: TableOperation.SplitVertically,
-    menuNameTableAlignLeft: TableOperation.AlignCellLeft,
-    menuNameTableAlignCenter: TableOperation.AlignCellCenter,
-    menuNameTableAlignRight: TableOperation.AlignCellRight,
-    menuNameTableAlignTop: TableOperation.AlignCellTop,
-    menuNameTableAlignMiddle: TableOperation.AlignCellMiddle,
-    menuNameTableAlignBottom: TableOperation.AlignCellBottom,
-    menuNameTableAlignTableLeft: TableOperation.AlignLeft,
-    menuNameTableAlignTableCenter: TableOperation.AlignCenter,
-    menuNameTableAlignTableRight: TableOperation.AlignRight,
+    menuNameTableInsertAbove: 'insertAbove',
+    menuNameTableInsertBelow: 'insertBelow',
+    menuNameTableInsertLeft: 'insertLeft',
+    menuNameTableInsertRight: 'insertRight',
+    menuNameTableDeleteTable: 'deleteTable',
+    menuNameTableDeleteColumn: 'deleteColumn',
+    menuNameTableDeleteRow: 'deleteRow',
+    menuNameTableMergeAbove: 'mergeAbove',
+    menuNameTableMergeBelow: 'mergeBelow',
+    menuNameTableMergeLeft: 'mergeLeft',
+    menuNameTableMergeRight: 'mergeRight',
+    menuNameTableMergeCells: 'mergeCells',
+    menuNameTableSplitHorizontally: 'splitHorizontally',
+    menuNameTableSplitVertically: 'splitVertically',
+    menuNameTableAlignLeft: 'alignCellLeft',
+    menuNameTableAlignCenter: 'alignCellCenter',
+    menuNameTableAlignRight: 'alignCellRight',
+    menuNameTableAlignTop: 'alignCellTop',
+    menuNameTableAlignMiddle: 'alignCellMiddle',
+    menuNameTableAlignBottom: 'alignCellBottom',
+    menuNameTableAlignTableLeft: 'alignLeft',
+    menuNameTableAlignTableCenter: 'alignCenter',
+    menuNameTableAlignTableRight: 'alignRight',
 };
 
-export const tableInsertButton: RibbonButton<
+export const tableInsertButton: ContentModelRibbonButton<
     'ribbonButtonTableInsert' | TableEditInsertMenuItemStringKey
 > = {
     key: 'ribbonButtonTableInsert',
@@ -53,13 +53,13 @@ export const tableInsertButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableInsert') {
+        if (key != 'ribbonButtonTableInsert') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableDeleteButton: RibbonButton<
+export const tableDeleteButton: ContentModelRibbonButton<
     'ribbonButtonTableDelete' | TableEditDeleteMenuItemStringKey
 > = {
     key: 'ribbonButtonTableDelete',
@@ -74,13 +74,13 @@ export const tableDeleteButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableDelete') {
+        if (key != 'ribbonButtonTableDelete') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableMergeButton: RibbonButton<
+export const tableMergeButton: ContentModelRibbonButton<
     'ribbonButtonTableMerge' | TableEditMergeMenuItemStringKey
 > = {
     key: 'ribbonButtonTableMerge',
@@ -98,13 +98,13 @@ export const tableMergeButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableMerge') {
+        if (key != 'ribbonButtonTableMerge') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableSplitButton: RibbonButton<
+export const tableSplitButton: ContentModelRibbonButton<
     'ribbonButtonTableSplit' | TableEditSplitMenuItemStringKey
 > = {
     key: 'ribbonButtonTableSplit',
@@ -118,13 +118,13 @@ export const tableSplitButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableSplit') {
+        if (key != 'ribbonButtonTableSplit') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableAlignCellButton: RibbonButton<
+export const tableAlignCellButton: ContentModelRibbonButton<
     'ribbonButtonTableAlignCell' | TableEditAlignMenuItemStringKey
 > = {
     key: 'ribbonButtonTableAlignCell',
@@ -143,13 +143,13 @@ export const tableAlignCellButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableAlignCell') {
+        if (key != 'ribbonButtonTableAlignCell') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },
 };
 
-export const tableAlignTableButton: RibbonButton<
+export const tableAlignTableButton: ContentModelRibbonButton<
     'ribbonButtonTableAlignTable' | TableEditAlignTableMenuItemStringKey
 > = {
     key: 'ribbonButtonTableAlignTable',
@@ -164,7 +164,7 @@ export const tableAlignTableButton: RibbonButton<
         },
     },
     onClick: (editor, key) => {
-        if (isContentModelEditor(editor) && key != 'ribbonButtonTableAlignTable') {
+        if (key != 'ribbonButtonTableAlignTable') {
             editTable(editor, TableEditOperationMap[key]);
         }
     },

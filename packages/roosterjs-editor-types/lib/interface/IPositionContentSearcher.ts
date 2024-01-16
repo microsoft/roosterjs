@@ -1,4 +1,4 @@
-import InlineElement from './InlineElement';
+import type InlineElement from './InlineElement';
 
 /**
  * The class that helps search content around a position

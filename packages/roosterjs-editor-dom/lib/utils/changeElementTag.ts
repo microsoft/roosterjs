@@ -33,10 +33,10 @@ export default function changeElementTag(element: HTMLElement, newTag: string): 
         return element;
     }
 
-    let newElement = element.ownerDocument.createElement(newTag);
+    const newElement = element.ownerDocument.createElement(newTag);
 
     for (let i = 0; i < element.attributes.length; i++) {
-        let attr = element.attributes[i];
+        const attr = element.attributes[i];
         newElement.setAttribute(attr.name, attr.value);
     }
 

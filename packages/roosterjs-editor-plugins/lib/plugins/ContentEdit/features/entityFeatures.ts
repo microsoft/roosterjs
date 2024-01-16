@@ -1,5 +1,5 @@
-import { ContentTraverser } from 'roosterjs-editor-dom';
 import {
+    ContentTraverser,
     addDelimiters,
     cacheGetEventData,
     createRange,
@@ -12,18 +12,20 @@ import {
     Position,
 } from 'roosterjs-editor-dom';
 import {
+    DelimiterClasses,
+    EntityOperation,
+    Keys,
+    NodeType,
+    PluginEventType,
+    PositionType,
+} from 'roosterjs-editor-types';
+
+import type {
     BuildInEditFeature,
     EntityFeatureSettings,
-    EntityOperation,
     IEditor,
-    Keys,
     PluginKeyboardEvent,
-    PositionType,
-    PluginEventType,
-    DelimiterClasses,
     PluginEvent,
-    NodeType,
-    ExperimentalFeatures,
     Entity,
     IContentTraverser,
     InlineElement,
@@ -215,17 +217,13 @@ function cacheGetNeighborEntityElement(
 }
 
 /**
- * @requires ExperimentalFeatures.InlineEntityReadOnlyDelimiters to be enabled
  * Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys
  */
 const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.RIGHT, Keys.LEFT],
     allowFunctionKeys: true,
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) => {
-        if (
-            event.rawEvent.altKey ||
-            !editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
-        ) {
+        if (event.rawEvent.altKey) {
             return false;
         }
 
@@ -270,16 +268,11 @@ const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * @requires ExperimentalFeatures.InlineEntityReadOnlyDelimiters to be enabled
  * Content edit Feature to trigger a Delete Entity Operation when one of the Delimiter is about to be removed with DELETE or Backspace
  */
 const RemoveEntityBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE, Keys.DELETE],
     shouldHandleEvent(event: PluginKeyboardEvent, editor: IEditor) {
-        if (!editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
-            return false;
-        }
-
         const range = editor.getSelectionRange();
         if (!range?.collapsed) {
             return false;
@@ -433,11 +426,7 @@ function triggerOperation(
         entity,
     });
 
-    if (
-        entity.isReadonly &&
-        !isBlockElement(entity.wrapper) &&
-        editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
-    ) {
+    if (entity.isReadonly && !isBlockElement(entity.wrapper)) {
         if (event.rawEvent.defaultPrevented) {
             editor.runAsync(() => {
                 if (!editor.contains(entity.wrapper)) {
@@ -474,8 +463,8 @@ function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean):
 }
 
 function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor: IEditor) {
-    let entity: Element | null = null;
-    let delimiterPair: Element | null = null;
+    let entity: HTMLElement | null = null;
+    let delimiterPair: HTMLElement | null = null;
     const traverser = getBlockTraverser(editor, delimiter);
     if (!traverser) {
         return { delimiterPair, entity };
@@ -497,11 +486,18 @@ function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor
         entity = entity || getElementFromInline(current, entitySelector);
         delimiterPair = delimiterPair || getElementFromInline(current, selector);
 
-        // If we found the entity but the next inline after the entity is not a delimiter,
-        // it means that the delimiter pair got removed or is invalid, return null instead.
-        if (entity && !delimiterPair && !getElementFromInline(current, entitySelector)) {
-            delimiterPair = null;
-            break;
+        if (entity) {
+            // If we found the entity but the next inline after the entity is not a delimiter,
+            // it means that the delimiter pair got removed or is invalid, return null instead.
+            if (!delimiterPair && !getElementFromInline(current, entitySelector)) {
+                delimiterPair = null;
+                break;
+            }
+            // If the delimiter is not editable keep looking for a editable one, by setting the value as null,
+            //  in case the entity is wrapping another inline readonly entity
+            if (delimiterPair && !delimiterPair.isContentEditable) {
+                delimiterPair = null;
+            }
         }
         current = traverseFn(traverser);
     }

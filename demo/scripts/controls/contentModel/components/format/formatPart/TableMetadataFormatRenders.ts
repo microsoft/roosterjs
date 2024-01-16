@@ -1,8 +1,9 @@
-import { CompatibleTableBorderFormat } from 'roosterjs-editor-types/lib/compatibleTypes';
 import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRenderer';
 import { createColorFormatRenderer } from '../utils/createColorFormatRender';
 import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { TableBorderFormat } from 'roosterjs-content-model-core';
 import { TableMetadataFormat } from 'roosterjs-content-model-types';
 
 export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] = [
@@ -58,23 +59,23 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
         format => format.bgColorOdd,
         (format, value) => (format.bgColorOdd = value)
     ),
-    createDropDownFormatRenderer<TableMetadataFormat, keyof typeof CompatibleTableBorderFormat>(
+    createDropDownFormatRenderer<TableMetadataFormat, keyof typeof TableBorderFormat>(
         'TableBorderFormat',
         [
-            'DEFAULT',
-            'LIST_WITH_SIDE_BORDERS',
-            'NO_HEADER_BORDERS',
-            'NO_SIDE_BORDERS',
-            'FIRST_COLUMN_HEADER_EXTERNAL',
-            'ESPECIAL_TYPE_1',
-            'ESPECIAL_TYPE_2',
-            'ESPECIAL_TYPE_3',
-            'CLEAR',
+            'Default',
+            'ListWithSideBorders',
+            'NoHeaderBorders',
+            'NoSideBorders',
+            'FirstColumnHeaderExternal',
+            'EspecialType1',
+            'EspecialType2',
+            'EspecialType3',
+            'Clear',
         ],
         format =>
-            CompatibleTableBorderFormat[
-                format.tableBorderFormat
-            ] as keyof typeof CompatibleTableBorderFormat,
-        (format, newValue) => (format.tableBorderFormat = CompatibleTableBorderFormat[newValue])
+            getObjectKeys(TableBorderFormat)[
+                Object.values(TableBorderFormat).indexOf(format.tableBorderFormat)
+            ],
+        (format, newValue) => (format.tableBorderFormat = TableBorderFormat[newValue])
     ),
 ];

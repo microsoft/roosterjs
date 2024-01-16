@@ -1,6 +1,6 @@
-import ImageEditInfo from './ImageEditInfo';
-import { ImageEditElementClass } from './ImageEditElementClass';
-import { ImageEditOptions } from 'roosterjs-editor-types';
+import type ImageEditInfo from './ImageEditInfo';
+import type { ImageEditElementClass } from './ImageEditElementClass';
+import type { ImageEditOptions } from 'roosterjs-editor-types';
 
 /**
  * Horizontal direction types for image edit

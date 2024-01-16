@@ -123,9 +123,9 @@ export enum KnownRibbonButtonKey {
     Strikethrough,
 
     /**
-     * "Header" button on the format ribbon
+     * "Heading" button on the format ribbon
      */
-    Header,
+    Heading,
 
     /**
      * "Code" button on the format ribbon
@@ -156,4 +156,10 @@ export enum KnownRibbonButtonKey {
      * "ClearFormat" button on the format ribbon
      */
     ClearFormat,
+
+    /**
+     * @deprecated Use Heading instead
+     * "Heading" button on the format ribbon
+     */
+    Header,
 }

@@ -1,5 +1,5 @@
-import ModeIndependentColor from './ModeIndependentColor';
-import { ImageEditOperation } from '../enum/ImageEditOperation';
+import type ModeIndependentColor from './ModeIndependentColor';
+import type { ImageEditOperation } from '../enum/ImageEditOperation';
 import type { CompatibleImageEditOperation } from '../compatibleEnum/ImageEditOperation';
 
 /**
@@ -71,4 +71,9 @@ export default interface ImageEditOptions {
      * @default ImageEditOperation.ResizeAndRotate
      */
     onSelectState?: ImageEditOperation | CompatibleImageEditOperation;
+
+    /**
+     * Apply changes when mouse upp
+     */
+    applyChangesOnMouseUp?: boolean;
 }

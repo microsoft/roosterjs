@@ -1,6 +1,3 @@
-import { TableBorderFormat } from 'roosterjs-editor-types';
-import type { CompatibleTableBorderFormat } from 'roosterjs-editor-types/lib/compatibleTypes';
-
 /**
  * Format of table that stored as metadata
  */
@@ -56,9 +53,9 @@ export type TableMetadataFormat = {
     bgColorOdd?: string | null;
 
     /**
-     * Table Borders Type
+     * Table Borders Type. Use value of constant TableBorderFormat as value
      */
-    tableBorderFormat?: TableBorderFormat | CompatibleTableBorderFormat;
+    tableBorderFormat?: number;
     /**
      * Vertical alignment for each row
      */

@@ -1,72 +1,140 @@
-import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
-import {
-    ContentModelDocument,
-    ContentModelSegmentFormat,
-    DomToModelOption,
-    EditorContext,
-    ModelToDomOption,
-} from 'roosterjs-content-model-types';
+import type { ContentModelCorePluginState } from './ContentModelCorePlugins';
+import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type {
+    CustomData,
+    ExperimentalFeatures,
+    ContentMetadata,
+    GetContentMode,
+    InsertOption,
+    NodePosition,
+    StyleBasedFormatState,
+    SizeTransformer,
+} from 'roosterjs-editor-types';
 
 /**
- * Create a EditorContext object used by ContentModel API
+ * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
+ * if triggerContentChangedEvent is set to true
  * @param core The ContentModelEditorCore object
+ * @param innerCore The StandaloneEditorCore object
+ * @param content HTML content to set in
+ * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
  */
-export type CreateEditorContext = (core: ContentModelEditorCore) => EditorContext;
-
-/**
- * Create Content Model from DOM tree in this editor
- * @param core The ContentModelEditorCore object
- * @param option The option to customize the behavior of DOM to Content Model conversion
- */
-export type CreateContentModel = (
+export type SetContent = (
     core: ContentModelEditorCore,
-    option?: DomToModelOption,
-    selectionOverride?: SelectionRangeEx
-) => ContentModelDocument;
-
-/**
- * Set content with content model
- * @param core The ContentModelEditorCore object
- * @param model The content model to set
- * @param option Additional options to customize the behavior of Content Model to DOM conversion
- */
-export type SetContentModel = (
-    core: ContentModelEditorCore,
-    model: ContentModelDocument,
-    option?: ModelToDomOption
+    innerCore: StandaloneEditorCore,
+    content: string,
+    triggerContentChangedEvent: boolean,
+    metadata?: ContentMetadata
 ) => void;
 
 /**
- * The interface for the map of core API for Content Model editor.
- * Editor can call call API from this map under ContentModelEditorCore object
+ * Get current editor content as HTML string
+ * @param core The ContentModelEditorCore object
+ * @param innerCore The StandaloneEditorCore object
+ * @param mode specify what kind of HTML content to retrieve
+ * @returns HTML string representing current editor content
  */
-export interface ContentModelCoreApiMap extends CoreApiMap {
+export type GetContent = (
+    core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
+    mode: GetContentMode
+) => string;
+
+/**
+ * Insert a DOM node into editor content
+ * @param core The ContentModelEditorCore object. No op if null.
+ * @param innerCore The StandaloneEditorCore object
+ * @param option An insert option object to specify how to insert the node
+ */
+export type InsertNode = (
+    core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
+    node: Node,
+    option: InsertOption | null
+) => boolean;
+
+/**
+ * Get style based format state from current selection, including font name/size and colors
+ * @param core The ContentModelEditorCore objects
+ * @param innerCore The StandaloneEditorCore object
+ * @param node The node to get style from
+ */
+export type GetStyleBasedFormatState = (
+    core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
+    node: Node | null
+) => StyleBasedFormatState;
+
+/**
+ * Ensure user will type into a container element rather than into the editor content DIV directly
+ * @param core The ContentModelEditorCore object.
+ * @param innerCore The StandaloneEditorCore object
+ * @param position The position that user is about to type to
+ * @param keyboardEvent Optional keyboard event object
+ * @param deprecated Deprecated parameter, not used
+ */
+export type EnsureTypeInContainer = (
+    core: ContentModelEditorCore,
+    innerCore: StandaloneEditorCore,
+    position: NodePosition,
+    keyboardEvent?: KeyboardEvent,
+    deprecated?: boolean
+) => void;
+
+/**
+ * Core API map for Content Model editor
+ */
+export interface ContentModelCoreApiMap {
     /**
-     * Create a EditorContext object used by ContentModel API
+     * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
+     * if triggerContentChangedEvent is set to true
      * @param core The ContentModelEditorCore object
+     * @param innerCore The StandaloneEditorCore object
+     * @param content HTML content to set in
+     * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
-    createEditorContext: CreateEditorContext;
+    setContent: SetContent;
 
     /**
-     * Create Content Model from DOM tree in this editor
-     * @param core The ContentModelEditorCore object
-     * @param option The option to customize the behavior of DOM to Content Model conversion
+     * Insert a DOM node into editor content
+     * @param core The ContentModelEditorCore object. No op if null.
+     * @param innerCore The StandaloneEditorCore object
+     * @param option An insert option object to specify how to insert the node
      */
-    createContentModel: CreateContentModel;
+    insertNode: InsertNode;
 
     /**
-     * Set content with content model
+     * Get current editor content as HTML string
      * @param core The ContentModelEditorCore object
-     * @param model The content model to set
-     * @param option Additional options to customize the behavior of Content Model to DOM conversion
+     * @param innerCore The StandaloneEditorCore object
+     * @param mode specify what kind of HTML content to retrieve
+     * @returns HTML string representing current editor content
      */
-    setContentModel: SetContentModel;
+    getContent: GetContent;
+
+    /**
+     * Get style based format state from current selection, including font name/size and colors
+     * @param core The ContentModelEditorCore objects
+     * @param innerCore The StandaloneEditorCore object
+     * @param node The node to get style from
+     */
+    getStyleBasedFormatState: GetStyleBasedFormatState;
+
+    /**
+     * Ensure user will type into a container element rather than into the editor content DIV directly
+     * @param core The EditorCore object.
+     * @param innerCore The StandaloneEditorCore object
+     * @param position The position that user is about to type to
+     * @param keyboardEvent Optional keyboard event object
+     * @param deprecated Deprecated parameter, not used
+     */
+    ensureTypeInContainer: EnsureTypeInContainer;
 }
 
 /**
  * Represents the core data structure of a Content Model editor
  */
-export interface ContentModelEditorCore extends EditorCore {
+export interface ContentModelEditorCore extends ContentModelCorePluginState {
     /**
      * Core API map of this editor
      */
@@ -78,32 +146,17 @@ export interface ContentModelEditorCore extends EditorCore {
     readonly originalApi: ContentModelCoreApiMap;
 
     /**
-     * When reuse Content Model is allowed, we cache the Content Model object here after created
+     * Custom data of this editor
      */
-    cachedModel?: ContentModelDocument;
+    readonly customData: Record<string, CustomData>;
 
     /**
-     * Cached selection range ex. This range only exist when cached model exists and it has selection
+     * Enabled experimental features
      */
-    cachedRangeEx?: SelectionRangeEx;
+    readonly experimentalFeatures: ExperimentalFeatures[];
 
     /**
-     * Default format used by Content Model. This is calculated from lifecycle.defaultFormat
+     * @deprecated Use zoomScale instead
      */
-    defaultFormat: ContentModelSegmentFormat;
-
-    /**
-     * Default DOM to Content Model options
-     */
-    defaultDomToModelOptions: DomToModelOption;
-
-    /**
-     * Default Content Model to DOM options
-     */
-    defaultModelToDomOptions: ModelToDomOption;
-
-    /**
-     * Whether adding delimiter for entity is allowed
-     */
-    addDelimiterForEntity: boolean;
+    readonly sizeTransformer: SizeTransformer;
 }

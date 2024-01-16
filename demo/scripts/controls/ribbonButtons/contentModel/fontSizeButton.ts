@@ -1,5 +1,6 @@
-import { FontSizeButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor, setFontSize } from 'roosterjs-content-model-editor';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { setFontSize } from 'roosterjs-content-model-api';
+import { FontSizeButtonStringKey } from 'roosterjs-react';
 
 const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
 
@@ -7,7 +8,7 @@ const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72
  * @internal
  * "Font Size" button on the format ribbon
  */
-export const fontSizeButton: RibbonButton<FontSizeButtonStringKey> = {
+export const fontSizeButton: ContentModelRibbonButton<FontSizeButtonStringKey> = {
     key: 'buttonNameFontSize',
     unlocalizedText: 'Font size',
     iconName: 'FontSize',
@@ -20,8 +21,6 @@ export const fontSizeButton: RibbonButton<FontSizeButtonStringKey> = {
         allowLivePreview: true,
     },
     onClick: (editor, size) => {
-        if (isContentModelEditor(editor)) {
-            setFontSize(editor, size);
-        }
+        setFontSize(editor, size);
     },
 };

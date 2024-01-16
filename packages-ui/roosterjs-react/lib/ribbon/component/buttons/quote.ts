@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { QuoteButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleBlockQuote } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { QuoteButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

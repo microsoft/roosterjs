@@ -1,6 +1,7 @@
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import isNodeAfter from '../utils/isNodeAfter';
-import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 import type { CompatiblePositionType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -67,7 +68,7 @@ export default class Position implements NodePosition {
                 break;
 
             default:
-                let endOffset = getEndOffset(this.node);
+                const endOffset = getEndOffset(this.node);
                 this.offset = Math.max(0, Math.min(<number>offsetOrPosType, endOffset));
                 this.isAtEnd = offsetOrPosType > 0 && offsetOrPosType >= endOffset;
                 break;

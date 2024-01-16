@@ -1,16 +1,14 @@
-import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
-
 /**
  * Format of list / list item that stored as metadata
  */
 export type ListMetadataFormat = {
     /**
-     * Style type for Ordered list
+     * Style type for Ordered list. Use value of constant NumberingListType as value.
      */
-    orderedStyleType?: NumberingListType;
+    orderedStyleType?: number;
 
     /**
-     * Style type for Unordered list
+     * Style type for Unordered list. Use value of constant BulletListType as value.
      */
-    unorderedStyleType?: BulletListType;
+    unorderedStyleType?: number;
 };

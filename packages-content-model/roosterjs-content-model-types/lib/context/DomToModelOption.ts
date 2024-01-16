@@ -1,5 +1,4 @@
-import {
-    DefaultStyleMap,
+import type {
     ElementProcessorMap,
     FormatParsers,
     FormatParsersPerCategory,
@@ -13,11 +12,6 @@ export interface DomToModelOption {
      * Overrides default element processors
      */
     processorOverride?: Partial<ElementProcessorMap>;
-
-    /**
-     * Overrides default element styles
-     */
-    defaultStyleOverride?: DefaultStyleMap;
 
     /**
      * Overrides default format handlers

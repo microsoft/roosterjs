@@ -1,11 +1,11 @@
-import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
 import showInputDialog from '../../inputDialog/utils/showInputDialog';
-import { EditorPlugin, IEditor } from 'roosterjs-editor-types';
-import { ListNumberMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
-import { LocalizedStrings } from '../../common/type/LocalizedStrings';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { setOrderedListNumbering } from 'roosterjs-editor-api';
+import type ContextMenuItem from '../types/ContextMenuItem';
+import type { EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import type { ListNumberMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
+import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
 
 const ListNumberResetMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
     key: 'menuNameListNumberReset',

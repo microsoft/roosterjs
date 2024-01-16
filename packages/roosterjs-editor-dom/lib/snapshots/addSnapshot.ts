@@ -1,5 +1,5 @@
 import clearProceedingSnapshots from './clearProceedingSnapshots';
-import { Snapshot, Snapshots } from 'roosterjs-editor-types';
+import type { Snapshot, Snapshots } from 'roosterjs-editor-types';
 
 /**
  * Add a new snapshot to the given snapshots data structure

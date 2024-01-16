@@ -14,6 +14,7 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
     private linkTitle = React.createRef<HTMLInputElement>();
     private watermarkText = React.createRef<HTMLInputElement>();
     private forcePreserveRatio = React.createRef<HTMLInputElement>();
+    private applyChangesOnMouseUp = React.createRef<HTMLInputElement>();
 
     render() {
         return (
@@ -52,6 +53,16 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                             (state, value) => (state.forcePreserveRatio = value)
                         )
                     )}
+                    {this.renderPluginItem(
+                        'imageEdit',
+                        'Image Edit Plugin',
+                        this.renderCheckBox(
+                            'Apply changed on mouse up',
+                            this.applyChangesOnMouseUp,
+                            this.props.state.applyChangesOnMouseUp,
+                            (state, value) => (state.applyChangesOnMouseUp = value)
+                        )
+                    )}
                     {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
                     {this.renderPluginItem(
@@ -59,7 +70,6 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                         'Show customized context menu for special cases'
                     )}
                     {this.renderPluginItem('tableCellSelection', 'Table Cell Selection')}
-                    {this.renderPluginItem('contentModelPaste', 'Paste Plugin using content model')}
                 </tbody>
             </table>
         );

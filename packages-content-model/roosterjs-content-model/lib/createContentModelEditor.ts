@@ -1,11 +1,14 @@
-import { EditorPlugin } from 'roosterjs-editor-types';
-import { getDarkColor } from 'roosterjs-color-utils';
+import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import {
-    ContentModelEditor,
-    ContentModelEditorOptions,
+    ContentModelEditPlugin,
     ContentModelPastePlugin,
+    EntityDelimiterPlugin,
+} from 'roosterjs-content-model-plugins';
+import type {
+    ContentModelEditorOptions,
     IContentModelEditor,
 } from 'roosterjs-content-model-editor';
+import type { EditorPlugin } from 'roosterjs-content-model-types';
 
 /**
  * Create a Content Model Editor using the given options
@@ -20,17 +23,14 @@ export function createContentModelEditor(
     additionalPlugins?: EditorPlugin[],
     initialContent?: string
 ): IContentModelEditor {
-    let plugins: EditorPlugin[] = [new ContentModelPastePlugin()];
+    const legacyPlugins = [new ContentModelEditPlugin(), new EntityDelimiterPlugin()];
+    const plugins = [new ContentModelPastePlugin(), ...(additionalPlugins ?? [])];
 
-    if (additionalPlugins) {
-        plugins = plugins.concat(additionalPlugins);
-    }
-
-    let options: ContentModelEditorOptions = {
+    const options: ContentModelEditorOptions = {
+        legacyPlugins: legacyPlugins,
         plugins: plugins,
         initialContent: initialContent,
-        getDarkColor: getDarkColor,
-        defaultFormat: {
+        defaultSegmentFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
             fontSize: '11pt',
             textColor: '#000000',

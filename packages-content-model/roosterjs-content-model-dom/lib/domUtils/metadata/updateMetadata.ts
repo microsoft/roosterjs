@@ -1,6 +1,5 @@
-import { ContentModelWithDataset } from 'roosterjs-content-model-types';
-import { Definition } from 'roosterjs-editor-types';
-import { validate } from 'roosterjs-editor-dom';
+import { validate } from './validate';
+import type { ContentModelWithDataset, Definition } from 'roosterjs-content-model-types';
 
 const EditingInfoDatasetName = 'editingInfo';
 

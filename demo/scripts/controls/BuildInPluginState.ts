@@ -22,7 +22,7 @@ export interface BuildInPluginList {
     tableEditMenu: boolean;
     contextMenu: boolean;
     autoFormat: boolean;
-    contentModelPaste: boolean;
+    announce: boolean;
 }
 
 export default interface BuildInPluginState {
@@ -34,7 +34,9 @@ export default interface BuildInPluginState {
     experimentalFeatures: ExperimentalFeatures[];
     forcePreserveRatio: boolean;
     isRtl: boolean;
+    cacheModel?: boolean;
     tableFeaturesContainerSelector: string;
+    applyChangesOnMouseUp?: boolean;
 }
 
 export interface BuildInPluginProps extends BuildInPluginState, SidePaneElementProps {}

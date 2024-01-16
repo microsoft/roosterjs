@@ -1,6 +1,6 @@
-import { BulletListType } from 'roosterjs-editor-types';
-import { isContentModelEditor, setListStyle } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { BulletListType } from 'roosterjs-content-model-core';
+import { setListStyle } from 'roosterjs-content-model-api';
 const dropDownMenuItems = {
     [BulletListType.Disc]: 'Disc',
     [BulletListType.Dash]: 'Dash',
@@ -13,27 +13,17 @@ const dropDownMenuItems = {
     [BulletListType.Circle]: 'Circle',
 };
 
-export const setBulletedListStyleButton: RibbonButton<'ribbonButtonBulletedListStyle'> = {
+export const setBulletedListStyleButton: ContentModelRibbonButton<'ribbonButtonBulletedListStyle'> = {
     key: 'ribbonButtonBulletedListStyle',
     dropDownMenu: { items: dropDownMenuItems },
     unlocalizedText: 'Set unordered list style',
     iconName: 'BulletedList',
     isDisabled: formatState => !formatState.isBullet,
     onClick: (editor, key) => {
-        const li = editor.getElementAtCursor('li') as HTMLLIElement;
-        const value = parseInt(key) as BulletListType;
+        const value = parseInt(key);
 
-        if (
-            isContentModelEditor(editor) &&
-            li &&
-            value >= BulletListType.Min &&
-            value <= BulletListType.Max
-        ) {
-            editor.select(li);
-
-            setListStyle(editor, {
-                unorderedStyleType: value,
-            });
-        }
+        setListStyle(editor, {
+            unorderedStyleType: value,
+        });
     },
 };

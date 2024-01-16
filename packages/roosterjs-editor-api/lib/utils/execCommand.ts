@@ -1,11 +1,8 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
-import { getObjectKeys, PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
-import {
-    DocumentCommand,
-    IEditor,
-    PluginEventType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import { getObjectKeys, PendableFormatCommandMap } from 'roosterjs-editor-dom';
+import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { PendableFormatNames } from 'roosterjs-editor-dom';
+import type { DocumentCommand, IEditor } from 'roosterjs-editor-types';
 import type { CompatibleDocumentCommand } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -25,9 +22,9 @@ export default function execCommand(
 ) {
     editor.focus();
 
-    let formatter = () => editor.getDocument().execCommand(command, false, undefined);
+    const formatter = () => editor.getDocument().execCommand(command, false, undefined);
 
-    let selection = editor.getSelectionRangeEx();
+    const selection = editor.getSelectionRangeEx();
     if (selection && selection.areAllCollapsed) {
         editor.addUndoSnapshot();
         const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);

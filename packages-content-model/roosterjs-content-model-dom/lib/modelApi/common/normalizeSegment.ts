@@ -1,5 +1,5 @@
 import { hasSpacesOnly } from './hasSpacesOnly';
-import {
+import type {
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelText,

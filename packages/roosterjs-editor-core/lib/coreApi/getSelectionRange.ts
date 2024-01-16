@@ -1,5 +1,5 @@
 import { contains, createRange } from 'roosterjs-editor-dom';
-import { EditorCore, GetSelectionRange } from 'roosterjs-editor-types';
+import type { EditorCore, GetSelectionRange } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -26,9 +26,9 @@ export const getSelectionRange: GetSelectionRange = (
         return result;
     } else {
         if (!tryGetFromCache || core.api.hasFocus(core)) {
-            let selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
+            const selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
             if (selection && selection.rangeCount > 0) {
-                let range = selection.getRangeAt(0);
+                const range = selection.getRangeAt(0);
                 if (contains(core.contentDiv, range)) {
                     result = range;
                 }

@@ -1,6 +1,7 @@
-import UpdateContentPlugin from '../type/UpdateContentPlugin';
-import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { UpdateMode } from '../type/UpdateMode';
+import type UpdateContentPlugin from '../type/UpdateContentPlugin';
+import type { IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * A plugin to help get HTML content from editor

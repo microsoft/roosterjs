@@ -7,11 +7,10 @@ import toArray from '../jsUtils/toArray';
 import { getTableCellMetadata, saveTableCellMetadata } from './tableCellInfo';
 import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
 import { removeMetadata } from '../metadata/metadata';
-import {
+import { TableBorderFormat, TableOperation } from 'roosterjs-editor-types';
+import type {
     SizeTransformer,
-    TableBorderFormat,
     TableFormat,
-    TableOperation,
     TableSelection,
     VCell,
     DarkColorHandler,
@@ -80,15 +79,15 @@ export default class VTable {
     ) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
-            let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
-            let trs = toArray(this.table.rows);
+            const currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
+            const trs = toArray(this.table.rows);
             this.cells = trs.map(row => []);
             trs.forEach((tr, rowIndex) => {
                 this.trs[rowIndex % 2] = tr;
                 for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
                     // Skip the cells which already initialized
                     for (; this.cells![rowIndex][targetCol]; targetCol++) {}
-                    let td = tr.cells[sourceCol];
+                    const td = tr.cells[sourceCol];
 
                     if (td == currentTd) {
                         this.col = targetCol;
@@ -109,6 +108,17 @@ export default class VTable {
                                 };
                             }
                         }
+                    }
+                }
+                for (let col = 0; col < this.cells![rowIndex].length; col++) {
+                    if (!this.cells![rowIndex][col]) {
+                        this.cells![rowIndex][col] = {
+                            td: null,
+                            spanLeft: false,
+                            spanAbove: false,
+                            width: undefined,
+                            height: undefined,
+                        };
                     }
                 }
             });
@@ -144,7 +154,7 @@ export default class VTable {
         if (this.cells) {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
-                let tr = cloneNode(this.trs[r % 2] || this.trs[0]);
+                const tr = cloneNode(this.trs[r % 2] || this.trs[0]);
 
                 if (tr) {
                     this.table.appendChild(tr);
@@ -216,8 +226,8 @@ export default class VTable {
             return;
         }
 
-        let currentRow = this.cells[this.row];
-        let currentCell = currentRow[this.col];
+        const currentRow = this.cells[this.row];
+        const currentCell = currentRow[this.col];
         const firstRow = this.selection ? this.selection.firstCell.y : this.row;
         const lastRow = this.selection ? this.selection.lastCell.y : this.row;
         const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
@@ -230,17 +240,17 @@ export default class VTable {
                 break;
             case TableOperation.InsertBelow:
                 for (let i = firstRow; i <= lastRow; i++) {
-                    let newRow = lastRow + this.countSpanAbove(lastRow, this.col);
+                    const newRow = lastRow + this.countSpanAbove(lastRow, this.col);
                     this.cells.splice(
                         newRow,
                         0,
                         this.cells[newRow - 1].map((cell, colIndex) => {
-                            let nextCell = this.getCell(newRow, colIndex);
+                            const nextCell = this.getCell(newRow, colIndex);
 
                             if (nextCell.spanAbove) {
                                 return cloneCell(nextCell);
                             } else if (cell.spanLeft) {
-                                let newCell = cloneCell(cell);
+                                const newCell = cloneCell(cell);
                                 newCell.spanAbove = false;
                                 return newCell;
                             } else {
@@ -264,9 +274,9 @@ export default class VTable {
                 break;
             case TableOperation.InsertRight:
                 for (let i = firstColumn; i <= lastColumn; i++) {
-                    let newCol = lastColumn + this.countSpanLeft(this.row, lastColumn);
+                    const newCol = lastColumn + this.countSpanLeft(this.row, lastColumn);
                     this.forEachCellOfColumn(newCol - 1, (cell, row, i) => {
-                        let nextCell = this.getCell(i, newCol);
+                        const nextCell = this.getCell(i, newCol);
                         let newCell: VCell;
                         if (nextCell.spanLeft) {
                             newCell = cloneCell(nextCell);
@@ -288,7 +298,7 @@ export default class VTable {
             case TableOperation.DeleteRow:
                 for (let rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
                     this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) => {
-                        let nextCell = this.getCell(rowIndex + 1, i);
+                        const nextCell = this.getCell(rowIndex + 1, i);
                         if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
                             nextCell.td = cell.td;
                         }
@@ -307,7 +317,7 @@ export default class VTable {
                 let deletedColumns = 0;
                 for (let colIndex = firstColumn; colIndex <= lastColumn; colIndex++) {
                     this.forEachCellOfColumn(colIndex, (cell, row, i) => {
-                        let nextCell = this.getCell(i, colIndex + 1);
+                        const nextCell = this.getCell(i, colIndex + 1);
                         if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
                             nextCell.td = cell.td;
                         }
@@ -325,16 +335,16 @@ export default class VTable {
 
             case TableOperation.MergeAbove:
             case TableOperation.MergeBelow:
-                let rowStep = operation == TableOperation.MergeAbove ? -1 : 1;
+                const rowStep = operation == TableOperation.MergeAbove ? -1 : 1;
                 for (
                     let rowIndex = this.row + rowStep;
                     rowIndex >= 0 && rowIndex < this.cells.length;
                     rowIndex += rowStep
                 ) {
-                    let cell = this.getCell(rowIndex, this.col);
+                    const cell = this.getCell(rowIndex, this.col);
                     if (cell.td && !cell.spanAbove) {
-                        let aboveCell = rowIndex < this.row ? cell : currentCell;
-                        let belowCell = rowIndex < this.row ? currentCell : cell;
+                        const aboveCell = rowIndex < this.row ? cell : currentCell;
+                        const belowCell = rowIndex < this.row ? currentCell : cell;
                         this.mergeCells(aboveCell, belowCell);
                         break;
                     }
@@ -343,16 +353,16 @@ export default class VTable {
 
             case TableOperation.MergeLeft:
             case TableOperation.MergeRight:
-                let colStep = operation == TableOperation.MergeLeft ? -1 : 1;
+                const colStep = operation == TableOperation.MergeLeft ? -1 : 1;
                 for (
                     let colIndex = this.col + colStep;
                     colIndex >= 0 && colIndex < this.cells[this.row].length;
                     colIndex += colStep
                 ) {
-                    let cell = this.getCell(this.row, colIndex);
+                    const cell = this.getCell(this.row, colIndex);
                     if (cell.td && !cell.spanLeft) {
-                        let leftCell = colIndex < this.col ? cell : currentCell;
-                        let rightCell = colIndex < this.col ? currentCell : cell;
+                        const leftCell = colIndex < this.col ? cell : currentCell;
+                        const rightCell = colIndex < this.col ? currentCell : cell;
                         this.mergeCells(leftCell, rightCell, true /** horizontally */);
                         break;
                     }
@@ -362,14 +372,14 @@ export default class VTable {
             case TableOperation.MergeCells:
                 for (let colIndex = firstColumn; colIndex <= lastColumn; colIndex++) {
                     for (let rowIndex = firstRow + 1; rowIndex <= lastRow; rowIndex++) {
-                        let cell = this.getCell(firstRow, colIndex);
-                        let nextCellBelow = this.getCell(rowIndex, colIndex);
+                        const cell = this.getCell(firstRow, colIndex);
+                        const nextCellBelow = this.getCell(rowIndex, colIndex);
                         this.mergeCells(cell, nextCellBelow);
                     }
                 }
                 for (let colIndex = firstColumn + 1; colIndex <= lastColumn; colIndex++) {
-                    let cell = this.getCell(firstRow, firstColumn);
-                    let nextCellRight = this.getCell(firstRow, colIndex);
+                    const cell = this.getCell(firstRow, firstColumn);
+                    const nextCellRight = this.getCell(firstRow, colIndex);
                     this.mergeCells(cell, nextCellRight, true /** horizontally */);
                 }
 
@@ -382,7 +392,7 @@ export default class VTable {
                 if (currentCell.td && currentCell.td.rowSpan > 1) {
                     this.getCell(this.row + 1, this.col).td = cloneNode(currentCell.td);
                 } else {
-                    let splitRow = currentRow.map(cell => {
+                    const splitRow = currentRow.map(cell => {
                         return {
                             td: cell == currentCell ? cloneNode(cell.td) : null,
                             spanAbove: cell != currentCell,
@@ -631,7 +641,7 @@ export default class VTable {
             col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;
             if (!isNaN(row) && !isNaN(col)) {
                 while (row >= 0 && col >= 0) {
-                    let cell = this.getCell(row, col);
+                    const cell = this.getCell(row, col);
                     if (cell.td) {
                         return cell.td;
                     } else if (cell.spanLeft) {
@@ -667,7 +677,7 @@ export default class VTable {
     }
 
     private recalculateSpans(row: number, col: number) {
-        let td = this.getCell(row, col).td;
+        const td = this.getCell(row, col).td;
         if (td) {
             td.colSpan = this.countSpanLeft(row, col);
             td.rowSpan = this.countSpanAbove(row, col);
@@ -683,7 +693,7 @@ export default class VTable {
     private countSpanLeft(row: number, col: number) {
         let result = 1;
         for (let i = col + 1; this.cells && i < this.cells[row].length; i++) {
-            let cell = this.getCell(row, i);
+            const cell = this.getCell(row, i);
             if (cell.td || !cell.spanLeft) {
                 break;
             }
@@ -695,7 +705,7 @@ export default class VTable {
     private countSpanAbove(row: number, col: number) {
         let result = 1;
         for (let i = row + 1; this.cells && i < this.cells.length; i++) {
-            let cell = this.getCell(i, col);
+            const cell = this.getCell(i, col);
             if (cell.td || !cell.spanAbove) {
                 break;
             }
@@ -798,7 +808,7 @@ function cloneCell(cell: VCell): VCell {
  * @param node The node to clone
  */
 function cloneNode<T extends Node>(node: T | null | undefined): T | null {
-    let newNode = node ? <T>node.cloneNode(false /*deep*/) : null;
+    const newNode = node ? <T>node.cloneNode(false /*deep*/) : null;
     if (safeInstanceOf(newNode, 'HTMLTableCellElement')) {
         newNode.removeAttribute('id');
         if (!newNode.firstChild) {

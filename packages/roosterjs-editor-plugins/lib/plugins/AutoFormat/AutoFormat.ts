@@ -1,11 +1,5 @@
-import {
-    ChangeSource,
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    PositionType,
-} from 'roosterjs-editor-types';
+import { ChangeSource, PluginEventType, PositionType } from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
 
@@ -65,17 +59,19 @@ export default class AutoFormat implements EditorPlugin {
             if (
                 this.lastKeyTyped === '-' &&
                 !specialCharacters.test(keyTyped) &&
-                keyTyped !== ' ' &&
                 keyTyped !== '-'
             ) {
                 const searcher = this.editor.getContentSearcherOfCursor(event);
                 const textBeforeCursor = searcher?.getSubStringBefore(3);
                 const dashes = searcher?.getSubStringBefore(2);
                 const isPrecededByADash = textBeforeCursor?.[0] === '-';
-                const isPrecededByASpace = textBeforeCursor?.[0] === ' ';
+                const isSpaced =
+                    (textBeforeCursor == ' --' && keyTyped !== ' ') ||
+                    (textBeforeCursor !== ' --' && keyTyped === ' ');
+
                 if (
                     isPrecededByADash ||
-                    isPrecededByASpace ||
+                    isSpaced ||
                     (typeof textBeforeCursor === 'string' &&
                         specialCharacters.test(textBeforeCursor[0])) ||
                     dashes !== '--'
@@ -84,7 +80,10 @@ export default class AutoFormat implements EditorPlugin {
                 }
 
                 const textRange = searcher?.getRangeFromText(dashes, true /* exactMatch */);
-                const nodeHyphen = document.createTextNode('—');
+                const nodeHyphen =
+                    textBeforeCursor === ' --' && keyTyped === ' '
+                        ? document.createTextNode('–')
+                        : document.createTextNode('—');
                 this.editor.addUndoSnapshot(
                     () => {
                         if (textRange) {

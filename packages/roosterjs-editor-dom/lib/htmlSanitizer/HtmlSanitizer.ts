@@ -9,6 +9,7 @@ import setStyles from '../style/setStyles';
 import toArray from '../jsUtils/toArray';
 import { cloneObject } from './cloneObject';
 import { isCssVariable, processCssVariable } from './processCssVariable';
+import { NodeType } from 'roosterjs-editor-types';
 import {
     getAllowedAttributes,
     getAllowedCssClassesRegex,
@@ -16,12 +17,11 @@ import {
     getDefaultStyleValues,
     getStyleCallbacks,
 } from './getAllowedValues';
-import {
+import type {
     AttributeCallbackMap,
     CssStyleCallbackMap,
     ElementCallbackMap,
     HtmlSanitizerOptions,
-    NodeType,
     PredefinedCssMap,
     SanitizeHtmlOptions,
     StringMap,
@@ -40,7 +40,7 @@ export default class HtmlSanitizer {
      * @param additionalStyleNodes (Optional) additional HTML STYLE elements used as global CSS
      */
     static convertInlineCss(html: string, additionalStyleNodes?: HTMLStyleElement[]) {
-        let sanitizer = new HtmlSanitizer({
+        const sanitizer = new HtmlSanitizer({
             additionalGlobalStyleNodes: additionalStyleNodes,
         });
         return sanitizer.exec(html, true /*convertCssOnly*/);
@@ -54,8 +54,8 @@ export default class HtmlSanitizer {
      */
     static sanitizeHtml(html: string, options?: SanitizeHtmlOptions) {
         options = options || {};
-        let sanitizer = new HtmlSanitizer(options);
-        let currentStyles = safeInstanceOf(options.currentElementOrStyle, 'HTMLElement')
+        const sanitizer = new HtmlSanitizer(options);
+        const currentStyles = safeInstanceOf(options.currentElementOrStyle, 'HTMLElement')
             ? getInheritableStyles(options.currentElementOrStyle)
             : options.currentElementOrStyle;
         return sanitizer.exec(html, options.convertCssOnly, currentStyles);
@@ -137,26 +137,26 @@ export default class HtmlSanitizer {
      * @param rootNode The HTML Document
      */
     convertGlobalCssToInlineCss(rootNode: ParentNode) {
-        let styleNodes = toArray(rootNode.querySelectorAll('style'));
-        let styleSheets = this.additionalGlobalStyleNodes
+        const styleNodes = toArray(rootNode.querySelectorAll('style'));
+        const styleSheets = this.additionalGlobalStyleNodes
             .reverse()
             .map(node => node.sheet as CSSStyleSheet)
             .concat(styleNodes.map(node => node.sheet as CSSStyleSheet).reverse())
             .filter(sheet => sheet);
-        for (let styleSheet of styleSheets) {
+        for (const styleSheet of styleSheets) {
             for (let j = styleSheet.cssRules.length - 1; j >= 0; j--) {
                 // Skip any none-style rule, i.e. @page
-                let styleRule = styleSheet.cssRules[j] as CSSStyleRule;
-                let text = styleRule && styleRule.style ? styleRule.style.cssText : null;
+                const styleRule = styleSheet.cssRules[j] as CSSStyleRule;
+                const text = styleRule && styleRule.style ? styleRule.style.cssText : null;
                 if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
                     continue;
                 }
                 // Make sure the selector is not empty
-                for (let selector of styleRule.selectorText.split(',')) {
+                for (const selector of styleRule.selectorText.split(',')) {
                     if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
                         continue;
                     }
-                    let nodes = toArray(rootNode.querySelectorAll(selector));
+                    const nodes = toArray(rootNode.querySelectorAll(selector));
                     // Always put existing styles after so that they have higher priority
                     // Which means if both global style and inline style apply to the same element,
                     // inline style will have higher priority
@@ -227,8 +227,8 @@ export default class HtmlSanitizer {
                 .replace(/^ /gm, '\u00A0')
                 .replace(/ {2}/g, ' \u00A0');
         } else if (isElement || isFragment) {
-            let thisStyle = cloneObject(currentStyle);
-            let element = <HTMLElement>node;
+            const thisStyle = cloneObject(currentStyle);
+            const element = <HTMLElement>node;
             if (isElement) {
                 this.processAttributes(element, context);
                 this.preprocessCss(element, thisStyle);
@@ -260,8 +260,8 @@ export default class HtmlSanitizer {
         const styles = getStyles(element);
         getObjectKeys(styles).forEach(name => {
             let value = styles[name];
-            let callback = this.styleCallbacks[name];
-            let isInheritable = thisStyle[name] != undefined;
+            const callback = this.styleCallbacks[name];
+            const isInheritable = thisStyle[name] != undefined;
             let keep = true;
 
             if (keep && !!callback) {
@@ -297,10 +297,10 @@ export default class HtmlSanitizer {
 
     private processAttributes(element: HTMLElement, context: Object) {
         for (let i = element.attributes.length - 1; i >= 0; i--) {
-            let attribute = element.attributes[i];
-            let name = attribute.name.toLowerCase().trim();
-            let value = attribute.value;
-            let callback = this.attributeCallbacks[name];
+            const attribute = element.attributes[i];
+            const name = attribute.name.toLowerCase().trim();
+            const value = attribute.value;
+            const callback = this.attributeCallbacks[name];
 
             let newValue = callback
                 ? callback(value, element, context)

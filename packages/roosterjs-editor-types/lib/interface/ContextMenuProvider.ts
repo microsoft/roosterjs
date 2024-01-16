@@ -1,4 +1,4 @@
-import EditorPlugin from './EditorPlugin';
+import type EditorPlugin from './EditorPlugin';
 
 /**
  * An extended Editor plugin interface which supports providing context menu items

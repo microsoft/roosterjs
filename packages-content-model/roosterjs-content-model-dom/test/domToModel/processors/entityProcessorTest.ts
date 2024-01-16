@@ -1,8 +1,13 @@
-import { commitEntity } from 'roosterjs-editor-dom';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from 'roosterjs-content-model-types';
 import { entityProcessor } from '../../../lib/domToModel/processors/entityProcessor';
+import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
+import {
+    ContentModelDomIndexer,
+    ContentModelEntity,
+    ContentModelParagraph,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 describe('entityProcessor', () => {
     let context: DomToModelContext;
@@ -25,9 +30,12 @@ describe('entityProcessor', () => {
                     blockType: 'Entity',
                     segmentType: 'Entity',
                     format: {},
-                    id: undefined,
-                    type: undefined,
-                    isReadonly: true,
+                    entityFormat: {
+                        isFakeEntity: true,
+                        id: undefined,
+                        entityType: undefined,
+                        isReadonly: true,
+                    },
                     wrapper: div,
                 },
             ],
@@ -38,7 +46,7 @@ describe('entityProcessor', () => {
         const group = createContentModelDocument();
         const div = document.createElement('div');
 
-        commitEntity(div, 'entity', true, 'entity_1');
+        setEntityElementClasses(div, 'entity', true, 'entity_1');
 
         entityProcessor(group, div, context);
 
@@ -50,9 +58,11 @@ describe('entityProcessor', () => {
                     blockType: 'Entity',
                     segmentType: 'Entity',
                     format: {},
-                    id: 'entity_1',
-                    type: 'entity',
-                    isReadonly: true,
+                    entityFormat: {
+                        id: 'entity_1',
+                        entityType: 'entity',
+                        isReadonly: true,
+                    },
                     wrapper: div,
                 },
             ],
@@ -63,7 +73,7 @@ describe('entityProcessor', () => {
         const group = createContentModelDocument();
         const span = document.createElement('span');
 
-        commitEntity(span, 'entity', true, 'entity_1');
+        setEntityElementClasses(span, 'entity', true, 'entity_1');
 
         entityProcessor(group, span, context);
 
@@ -79,9 +89,11 @@ describe('entityProcessor', () => {
                             blockType: 'Entity',
                             segmentType: 'Entity',
                             format: {},
-                            id: 'entity_1',
-                            type: 'entity',
-                            isReadonly: true,
+                            entityFormat: {
+                                id: 'entity_1',
+                                entityType: 'entity',
+                                isReadonly: true,
+                            },
                             wrapper: span,
                         },
                     ],
@@ -101,7 +113,6 @@ describe('entityProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -111,9 +122,46 @@ describe('entityProcessor', () => {
                             blockType: 'Entity',
                             segmentType: 'Entity',
                             format: {},
-                            id: undefined,
-                            type: undefined,
-                            isReadonly: true,
+                            entityFormat: {
+                                isFakeEntity: true,
+                                id: undefined,
+                                entityType: undefined,
+                                isReadonly: true,
+                            },
+                            wrapper: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Readonly element (editable fake entity)', () => {
+        const group = createContentModelDocument();
+        const span = document.createElement('span');
+
+        span.contentEditable = 'true';
+
+        entityProcessor(group, span, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'Entity',
+                            segmentType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                isFakeEntity: true,
+                                id: undefined,
+                                entityType: undefined,
+                                isReadonly: false,
+                            },
                             wrapper: span,
                         },
                     ],
@@ -127,7 +175,7 @@ describe('entityProcessor', () => {
         const group = createContentModelDocument();
         const span = document.createElement('span');
 
-        commitEntity(span, 'entity', true, 'entity_1');
+        setEntityElementClasses(span, 'entity', true, 'entity_1');
         context.isInSelection = true;
 
         entityProcessor(group, span, context);
@@ -144,9 +192,11 @@ describe('entityProcessor', () => {
                             blockType: 'Entity',
                             segmentType: 'Entity',
                             format: {},
-                            id: 'entity_1',
-                            type: 'entity',
-                            isReadonly: true,
+                            entityFormat: {
+                                id: 'entity_1',
+                                entityType: 'entity',
+                                isReadonly: true,
+                            },
                             wrapper: span,
                             isSelected: true,
                         },
@@ -161,7 +211,7 @@ describe('entityProcessor', () => {
         const group = createContentModelDocument();
         const div = document.createElement('div');
 
-        commitEntity(div, 'entity', true, 'entity_1');
+        setEntityElementClasses(div, 'entity', true, 'entity_1');
         context.isInSelection = true;
         context.segmentFormat = {
             fontFamily: 'Arial',
@@ -180,9 +230,7 @@ describe('entityProcessor', () => {
                     segmentType: 'Entity',
                     blockType: 'Entity',
                     format: {},
-                    id: 'entity_1',
-                    type: 'entity',
-                    isReadonly: true,
+                    entityFormat: { id: 'entity_1', entityType: 'entity', isReadonly: true },
                     wrapper: div,
                     isSelected: true,
                 },
@@ -196,5 +244,44 @@ describe('entityProcessor', () => {
         expect(context.blockFormat).toEqual({
             lineHeight: '20px',
         });
+    });
+
+    it('Inline Entity with domIndexer', () => {
+        const group = createContentModelDocument();
+        const span = document.createElement('span');
+
+        setEntityElementClasses(span, 'entity', true, 'entity_1');
+
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        entityProcessor(group, span, context);
+
+        const entityModel: ContentModelEntity = {
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            wrapper: span,
+            entityFormat: { entityType: 'entity', id: 'entity_1', isReadonly: true },
+        };
+        const paragraphModel: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [entityModel],
+            format: {},
+        };
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraphModel],
+        });
+        expect(onSegmentSpy).toHaveBeenCalledWith(span, paragraphModel, [entityModel]);
     });
 });

@@ -1,8 +1,8 @@
-import { ContentModelBlockBase } from './ContentModelBlockBase';
-import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
-import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
-import { ContentModelSegment } from '../segment/ContentModelSegment';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelBlockBase } from './ContentModelBlockBase';
+import type { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
+import type { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
+import type { ContentModelSegment } from '../segment/ContentModelSegment';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Content Model of Paragraph
@@ -21,7 +21,7 @@ export interface ContentModelParagraph
     segmentFormat?: ContentModelSegmentFormat;
 
     /**
-     * Header info for this paragraph if it is a header
+     * Decorator info for this paragraph, used by heading and P tags
      */
     decorator?: ContentModelParagraphDecorator;
 

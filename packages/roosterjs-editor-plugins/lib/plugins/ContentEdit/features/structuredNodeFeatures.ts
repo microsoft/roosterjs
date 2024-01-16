@@ -1,10 +1,8 @@
-import {
+import { Keys, KnownCreateElementDataIndex, PositionType } from 'roosterjs-editor-types';
+import type {
     BuildInEditFeature,
     IEditor,
-    Keys,
-    KnownCreateElementDataIndex,
     PluginKeyboardEvent,
-    PositionType,
     StructuredNodeFeatureSettings,
 } from 'roosterjs-editor-types';
 import {
@@ -32,8 +30,8 @@ const InsertLineBeforeStructuredNodeFeature: BuildInEditFeature<PluginKeyboardEv
     keys: [Keys.ENTER],
     shouldHandleEvent: cacheGetStructuredElement,
     handleEvent: (event, editor) => {
-        let element = cacheGetStructuredElement(event, editor);
-        let div = createElement(
+        const element = cacheGetStructuredElement(event, editor);
+        const div = createElement(
             KnownCreateElementDataIndex.EmptyLine,
             editor.getDocument()
         ) as HTMLElement;
@@ -52,10 +50,10 @@ const InsertLineBeforeStructuredNodeFeature: BuildInEditFeature<PluginKeyboardEv
 function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: IEditor) {
     return cacheGetEventData(event, 'FIRST_STRUCTURE', () => {
         // Provide a chance to keep browser default behavior by pressing SHIFT
-        let element = event.rawEvent.shiftKey ? null : editor.getElementAtCursor(CHILD_SELECTOR);
+        const element = event.rawEvent.shiftKey ? null : editor.getElementAtCursor(CHILD_SELECTOR);
 
         if (element) {
-            let range = editor.getSelectionRange();
+            const range = editor.getSelectionRange();
             if (
                 range &&
                 range.collapsed &&

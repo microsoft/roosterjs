@@ -136,17 +136,30 @@ export const enum ExperimentalFeatures {
      */
     EditWithContentModel = 'EditWithContentModel',
 
+    /**
+     * @deprecated This feature is always enabled
+     * Trigger formatting by a especial characters. Ex: (A), 1. i).
+     */
+    AutoFormatList = 'AutoFormatList',
+
+    /**
+     * @deprecated This feature is always enabled
+     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
+     */
+    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
+
+    /**
+     * @deprecated This feature is always enabled
+     * Paste with Content model
+     */
+    ContentModelPaste = 'ContentModelPaste',
+
     //#endregion
 
     /**
      * Provide additional Tab Key Features. Requires Text Features Content Editable Features
      */
     TabKeyTextFeatures = 'TabKeyTextFeatures',
-
-    /**
-     * Trigger formatting by a especial characters. Ex: (A), 1. i).
-     */
-    AutoFormatList = 'AutoFormatList',
 
     /**
      * With this feature enabled, when writing back a list item we will re-use all
@@ -160,16 +173,6 @@ export const enum ExperimentalFeatures {
      * Delete table with Backspace key with the whole was selected with table selector
      */
     DeleteTableWithBackspace = 'DeleteTableWithBackspace',
-
-    /**
-     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
-     */
-    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
-
-    /**
-     * Paste with Content model
-     */
-    ContentModelPaste = 'ContentModelPaste',
 
     /**
      * Disable list chain functionality

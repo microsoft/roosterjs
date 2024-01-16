@@ -1,10 +1,10 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createEntity } from '../../modelApi/creators/createEntity';
-import { ElementProcessor } from 'roosterjs-content-model-types';
-import { getEntityFromElement } from 'roosterjs-editor-dom';
 import { isBlockElement } from '../utils/isBlockElement';
+import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
+import type { ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * Content Model Element Processor for entity
@@ -13,17 +13,15 @@ import { stackFormat } from '../utils/stackFormat';
  * @param context DOM to Content Model context
  */
 export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const entity = getEntityFromElement(element);
-
-    // In Content Model we also treat read only element as an entity since we cannot edit it
-    const { id, type, isReadonly } = entity || { isReadonly: true };
-    const isBlockEntity = isBlockElement(element, context);
+    const isBlockEntity = isBlockElement(element);
 
     stackFormat(
         context,
         { segment: isBlockEntity ? 'empty' : undefined, paragraph: 'empty' },
         () => {
-            const entityModel = createEntity(element, isReadonly, type, context.segmentFormat, id);
+            const entityModel = createEntity(element, true /*isReadonly*/, context.segmentFormat);
+
+            parseFormat(element, context.formatParsers.entity, entityModel.entityFormat, context);
 
             // TODO: Need to handle selection for editable entity
             if (context.isInSelection) {
@@ -33,7 +31,8 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
             if (isBlockEntity) {
                 addBlock(group, entityModel);
             } else {
-                addSegment(group, entityModel);
+                const paragraph = addSegment(group, entityModel);
+                context.domIndexer?.onSegment(element, paragraph, [entityModel]);
             }
         }
     );

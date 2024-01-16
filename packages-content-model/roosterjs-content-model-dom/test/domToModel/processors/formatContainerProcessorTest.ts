@@ -189,9 +189,15 @@ describe('formatContainerProcessor', () => {
 
         quote.style.color = 'blue';
         quote.style.borderLeft = 'solid 1px black';
+
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
+
         context.segmentFormat.textColor = 'green';
         context.segmentFormat.fontSize = '20px';
-        context.elementProcessors.child = childProcessor;
 
         formatContainerProcessor(group, quote, context);
 
@@ -225,13 +231,17 @@ describe('formatContainerProcessor', () => {
 
         quote.style.borderLeft = 'solid 1px black';
 
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
+
         context.blockFormat.backgroundColor = 'red';
         context.blockFormat.htmlAlign = 'center';
         context.blockFormat.lineHeight = '2';
         context.blockFormat.whiteSpace = 'pre';
         context.blockFormat.direction = 'rtl';
-
-        context.elementProcessors.child = childProcessor;
 
         formatContainerProcessor(group, quote, context);
 

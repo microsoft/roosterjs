@@ -1,6 +1,6 @@
 import contains from '../utils/contains';
 import isNodeAfter from '../utils/isNodeAfter';
-import { BlockElement } from 'roosterjs-editor-types';
+import type { BlockElement } from 'roosterjs-editor-types';
 
 /**
  * @internal

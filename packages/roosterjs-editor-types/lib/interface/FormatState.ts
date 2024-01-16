@@ -1,5 +1,5 @@
-import ModeIndependentColor from './ModeIndependentColor';
-import TableFormat from './TableFormat';
+import type ModeIndependentColor from './ModeIndependentColor';
+import type TableFormat from './TableFormat';
 
 /**
  * Format states that can have pending state.
@@ -85,7 +85,13 @@ export interface ElementBasedFormatState {
     canAddImageAltText?: boolean;
 
     /**
-     * Header level (0-6, 0 means no header)
+     * Heading level (0-6, 0 means no heading)
+     */
+    headingLevel?: number;
+
+    /**
+     * @deprecated Use headingLevel instead
+     * Heading level (0-6, 0 means no heading)
      */
     headerLevel?: number;
 
@@ -168,6 +174,11 @@ export interface StyleBasedFormatState {
      * Direction of the element ('ltr' or 'rtl')
      */
     direction?: string;
+
+    /**
+     * Font weight
+     */
+    fontWeight?: string;
 }
 
 /**

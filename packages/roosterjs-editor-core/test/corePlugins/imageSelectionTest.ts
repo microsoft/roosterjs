@@ -7,6 +7,8 @@ import {
     ImageSelectionRange,
     PluginEvent,
     PluginEventType,
+    PluginMouseUpEvent,
+    PluginMouseDownEvent,
 } from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
@@ -58,8 +60,8 @@ describe('ImageSelectionPlugin |', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);
-        simulateMouseEvent('mousedown', target!, 0);
-        simulateMouseEvent('mouseup', target!, 0);
+        imageSelection.onPluginEvent(mouseDown(target!, 0));
+        imageSelection.onPluginEvent(mouseup(target!, 0, true));
         editor.focus();
 
         const selection = editor.getSelectionRangeEx();
@@ -67,24 +69,17 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(false);
     });
 
-    it('should be triggered in shadow Edit', () => {
+    it('should not be triggered in mouse up left click', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);
+        imageSelection.onPluginEvent(mouseDown(target!, 0));
+        imageSelection.onPluginEvent(mouseup(target!, 0, false));
         editor.focus();
-        editor.select(target);
 
-        editor.startShadowEdit();
-
-        let selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-        expect(selection.areAllCollapsed).toBe(false);
-
-        editor.stopShadowEdit();
-
-        selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-        expect(selection.areAllCollapsed).toBe(false);
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
     });
 
     it('should handle a ESCAPE KEY in a image', () => {
@@ -127,6 +122,21 @@ describe('ImageSelectionPlugin |', () => {
         imageSelection.onPluginEvent(keyUp(Space));
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
+    });
+
+    it('should not handle any key in a image in ctrl', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(Space, true));
+        imageSelection.onPluginEvent(keyUp(Space, true));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
         expect(selection.areAllCollapsed).toBe(false);
     });
 
@@ -169,24 +179,32 @@ describe('ImageSelectionPlugin |', () => {
         expect(editor.select).not.toHaveBeenCalled();
     });
 
-    const keyDown = (key: string): PluginEvent => {
+    const keyDown = (key: string, ctrlKey: boolean = false): PluginEvent => {
         return {
             eventType: PluginEventType.KeyDown,
             rawEvent: <KeyboardEvent>{
                 key: key,
                 preventDefault: () => {},
                 stopPropagation: () => {},
+                shiftKey: false,
+                ctrlKey: ctrlKey,
+                altKey: false,
+                metaKey: false,
             },
         };
     };
 
-    const keyUp = (key: string): PluginEvent => {
+    const keyUp = (key: string, ctrlKey: boolean = false): PluginEvent => {
         return {
             eventType: PluginEventType.KeyUp,
             rawEvent: <KeyboardEvent>{
                 key: key,
                 preventDefault: () => {},
                 stopPropagation: () => {},
+                shiftKey: false,
+                ctrlKey: ctrlKey,
+                altKey: false,
+                metaKey: false,
             },
         };
     };
@@ -201,17 +219,42 @@ describe('ImageSelectionPlugin |', () => {
         };
     };
 
-    function simulateMouseEvent(mouseEvent: string, target: HTMLElement, keyNumber: number) {
+    const mouseup = (
+        target: HTMLElement,
+        keyNumber: number,
+        isClicking: boolean
+    ): PluginMouseUpEvent => {
         const rect = target.getBoundingClientRect();
-        var event = new MouseEvent(mouseEvent, {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            clientX: rect.left,
-            clientY: rect.top,
-            shiftKey: false,
-            button: keyNumber,
-        });
-        target.dispatchEvent(event);
-    }
+        return {
+            eventType: PluginEventType.MouseUp,
+            rawEvent: <any>{
+                target: target,
+                view: window,
+                bubbles: true,
+                cancelable: true,
+                clientX: rect.left,
+                clientY: rect.top,
+                shiftKey: false,
+                button: keyNumber,
+            },
+            isClicking,
+        };
+    };
+
+    const mouseDown = (target: HTMLElement, keyNumber: number): PluginMouseDownEvent => {
+        const rect = target.getBoundingClientRect();
+        return {
+            eventType: PluginEventType.MouseDown,
+            rawEvent: <any>{
+                target: target,
+                view: window,
+                bubbles: true,
+                cancelable: true,
+                clientX: rect.left,
+                clientY: rect.top,
+                shiftKey: false,
+                button: keyNumber,
+            },
+        };
+    };
 });

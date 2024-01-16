@@ -1,10 +1,6 @@
+import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { getEntityFromElement, getEntitySelector, queryElements } from 'roosterjs-editor-dom';
-import {
-    EditorCore,
-    EntityOperation,
-    PluginEventType,
-    RestoreUndoSnapshot,
-} from 'roosterjs-editor-types';
+import type { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
 
 /**
  * @internal

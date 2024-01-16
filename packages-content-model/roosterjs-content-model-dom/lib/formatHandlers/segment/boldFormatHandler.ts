@@ -1,6 +1,7 @@
-import { BoldFormat } from 'roosterjs-content-model-types';
-import { FormatHandler } from '../FormatHandler';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { shouldSetValue } from '../utils/shouldSetValue';
+import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
+import type { BoldFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal
@@ -9,7 +10,7 @@ export const boldFormatHandler: FormatHandler<BoldFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const fontWeight = element.style.fontWeight || defaultStyle.fontWeight;
 
-        if (fontWeight) {
+        if (shouldSetValue(fontWeight, '400', format.fontWeight, defaultStyle.fontWeight)) {
             format.fontWeight = fontWeight;
         }
     },
@@ -25,9 +26,7 @@ export const boldFormatHandler: FormatHandler<BoldFormat> = {
             (!blockFontWeight && format.fontWeight && format.fontWeight != 'normal')
         ) {
             if (format.fontWeight == 'bold') {
-                const b = element.ownerDocument.createElement('b');
-                moveChildNodes(b, element);
-                element.appendChild(b);
+                wrapAllChildNodes(element, 'b');
             } else {
                 element.style.fontWeight = format.fontWeight || 'normal';
             }

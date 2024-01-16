@@ -1,25 +1,15 @@
 import * as createGeneralBlock from '../lib/modelApi/creators/createGeneralBlock';
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { contentModelToDom } from '../lib/modelToDom/contentModelToDom';
+import { createDomToModelContext, createModelToDomContext } from '../lib';
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import {
     ContentModelBlockFormat,
     ContentModelDocument,
     ContentModelGeneralBlock,
-    EditorContext,
 } from 'roosterjs-content-model-types';
 
 describe('End to end test for DOM => Model', () => {
-    let context: EditorContext;
-
-    beforeEach(() => {
-        context = {
-            isDarkMode: false,
-            darkColorHandler: new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s),
-        };
-    });
-
     function runTest(
         html: string,
         expectedModel: ContentModelDocument,
@@ -29,13 +19,13 @@ describe('End to end test for DOM => Model', () => {
         const div1 = document.createElement('div');
         div1.innerHTML = html;
 
-        const model = domToContentModel(div1, undefined, context);
+        const model = domToContentModel(div1, createDomToModelContext());
 
         expect(model).toEqual(expectedModel);
 
         const div2 = document.createElement('div');
 
-        contentModelToDom(document, div2, model, context);
+        contentModelToDom(document, div2, model, createModelToDomContext());
         const possibleHTML = [
             expectedHtml, //chrome or firefox
             expectedHTMLFirefox, //firefox
@@ -136,7 +126,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ul style="margin-bottom: 0in;"><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
+            '<ul style="margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
         );
     });
 
@@ -233,8 +223,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ol start="1"><li>1</li><ol start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>',
-            '<ol start="1"><li>1</li><ol start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
+            '<ol start="1"><li>1</li><ol start="1"><li>a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
         );
     });
 

@@ -10,15 +10,10 @@ export interface ExperimentalFeaturesProps {
 
 const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
-    [ExperimentalFeatures.AutoFormatList]:
-        'Trigger formatting by a especial characters. Ex: (A), 1. i).',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
         "Reuse ancestor list elements even if they don't match the types from the list item.",
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
-    [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
-        'Add read entities around read only entities to handle browser edge cases.',
-    [ExperimentalFeatures.ContentModelPaste]: 'Paste with content model',
     [ExperimentalFeatures.DisableListChain]: 'Disable list chain functionality',
 };
 
@@ -40,7 +35,7 @@ export default class ContentModelExperimentalFeaturesPane extends React.Componen
                     id={name}
                     onChange={() => this.onClick(name)}
                 />
-                <label htmlFor={name}>{FeatureNames[name]}</label>
+                <label htmlFor={name}>{name + ': ' + FeatureNames[name]}</label>
             </div>
         );
     }

@@ -1,10 +1,5 @@
-import {
-    EditorCore,
-    EditorPlugin,
-    PluginEvent,
-    PluginEventType,
-    TriggerEvent,
-} from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { EditorCore, EditorPlugin, PluginEvent, TriggerEvent } from 'roosterjs-editor-types';
 import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const allowedEventsInShadowEdit: (PluginEventType | CompatiblePluginEventType)[] = [

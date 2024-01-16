@@ -1,17 +1,19 @@
-import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
 import showInputDialog from '../../inputDialog/utils/showInputDialog';
-import { DocumentCommand, EditorPlugin, IEditor, ImageEditOperation } from 'roosterjs-editor-types';
-import { ImageEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
-import { LocalizedStrings } from '../../common/type/LocalizedStrings';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
-import { setImageAltText } from 'roosterjs-editor-api';
 import {
     canRegenerateImage,
-    ImageEdit,
+    isResizedTo,
     resetImage,
     resizeByPercentage,
 } from 'roosterjs-editor-plugins';
+import { DocumentCommand, ImageEditOperation, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-editor-dom';
+import { setImageAltText } from 'roosterjs-editor-api';
+import type ContextMenuItem from '../types/ContextMenuItem';
+import type { EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import type { ImageEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
+import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
+import type { ImageEdit } from 'roosterjs-editor-plugins';
 
 const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageAltText',
@@ -43,6 +45,13 @@ const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdi
     },
 };
 
+const sizeMap: { [key in ImageEditMenuItemStringKey]?: number } = {
+    menuNameImageSizeBestFit: 0,
+    menuNameImageSizeSmall: 0.25,
+    menuNameImageSizeMedium: 0.5,
+    menuNameImageSizeOriginal: 1,
+};
+
 const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageResize',
     unlocalizedText: 'Size',
@@ -52,33 +61,39 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
         menuNameImageSizeMedium: 'Medium',
         menuNameImageSizeOriginal: 'Original',
     },
-    onClick: (key, editor, node) => {
+    onClick: (key, editor, _) => {
+        const selection = editor.getSelectionRangeEx();
+        if (selection.type !== SelectionRangeTypes.ImageSelection) {
+            return;
+        }
         editor.addUndoSnapshot(() => {
-            let percentage = 0;
-            switch (key) {
-                case 'menuNameImageSizeSmall':
-                    percentage = 0.25;
-                    break;
-                case 'menuNameImageSizeMedium':
-                    percentage = 0.5;
-                    break;
-                case 'menuNameImageSizeOriginal':
-                    percentage = 1;
-                    break;
-            }
+            const percentage = sizeMap[key];
 
-            if (percentage > 0) {
+            if (percentage != undefined && percentage > 0) {
                 resizeByPercentage(
                     editor,
-                    node as HTMLImageElement,
+                    selection.image,
                     percentage,
                     10 /*minWidth*/,
                     10 /*minHeight*/
                 );
             } else {
-                resetImage(editor, node as HTMLImageElement);
+                resetImage(editor, selection.image);
             }
         });
+    },
+    getSelectedId: (editor, _) => {
+        const selection = editor.getSelectionRangeEx();
+        return (
+            (selection.type === SelectionRangeTypes.ImageSelection &&
+                getObjectKeys(sizeMap).find(key => {
+                    return key == 'menuNameImageSizeBestFit'
+                        ? !selection.image.hasAttribute('width') &&
+                              !selection.image.hasAttribute('height')
+                        : isResizedTo(selection.image, sizeMap[key]!);
+                })) ||
+            null
+        );
     },
 };
 
@@ -187,8 +202,9 @@ const ImageCutMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> =
     },
 };
 
-function shouldShowImageEditItems(editor: IEditor, node: Node) {
-    return safeInstanceOf(node, 'HTMLImageElement') && node.isContentEditable;
+function shouldShowImageEditItems(editor: IEditor, _: Node) {
+    const selection = editor.getSelectionRangeEx();
+    return selection.type === SelectionRangeTypes.ImageSelection && !!selection.image;
 }
 
 /**

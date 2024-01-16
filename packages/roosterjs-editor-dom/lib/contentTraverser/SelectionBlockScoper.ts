@@ -4,9 +4,10 @@ import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
 import NodeBlockElement from '../blockElements/NodeBlockElement';
 import Position from '../selection/Position';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import TraversingScoper from './TraversingScoper';
-import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
+import { ContentPosition } from 'roosterjs-editor-types';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
+import type TraversingScoper from './TraversingScoper';
+import type { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import {
     getFirstInlineElement,
     getLastInlineElement,
@@ -68,7 +69,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
                     );
                 case ContentPosition.SelectionStart:
                     // Get the inline before selection start point, and ensure it falls in the selection block
-                    let startInline = getInlineElementAfter(this.rootNode, this.position);
+                    const startInline = getInlineElementAfter(this.rootNode, this.position);
                     return startInline && this.block.contains(startInline.getContainerNode())
                         ? startInline
                         : new EmptyInlineElement(this.position, this.block);
@@ -109,7 +110,7 @@ function getFirstLastInlineElementFromBlockElement(
     isFirst: boolean
 ): InlineElement | null {
     if (block instanceof NodeBlockElement) {
-        let blockNode = block.getStartNode();
+        const blockNode = block.getStartNode();
         return isFirst ? getFirstInlineElement(blockNode) : getLastInlineElement(blockNode);
     } else {
         return getInlineElementAtNode(block, isFirst ? block.getStartNode() : block.getEndNode());
