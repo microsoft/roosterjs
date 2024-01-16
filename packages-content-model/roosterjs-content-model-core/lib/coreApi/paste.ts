@@ -11,8 +11,8 @@ import type {
     ClipboardData,
     Paste,
     StandaloneEditorCore,
+    TrustedHTMLHandler,
 } from 'roosterjs-content-model-types';
-import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 const CloneOption: CloneModelOptions = {
     includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),

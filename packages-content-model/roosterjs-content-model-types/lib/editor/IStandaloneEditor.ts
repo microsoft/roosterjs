@@ -16,7 +16,8 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type { DarkColorHandler, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type { DarkColorHandler } from 'roosterjs-editor-types';
+import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
 /**
  * An interface of standalone Content Model editor.
