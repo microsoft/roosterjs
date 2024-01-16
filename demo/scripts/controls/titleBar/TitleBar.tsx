@@ -2,25 +2,31 @@ import * as React from 'react';
 
 const classicalStyles = require('./TitleBar.scss');
 const contentModelStyles = require('./ContentModelTitleBar.scss');
+const standaloneStyles = require('./StandaloneTitleBar.scss');
 
 const github = require('./iconmonstr-github-1.svg');
 
 export interface TitleBarProps {
     className?: string;
-    mode: 'classical' | 'contentModel';
+    mode: 'classical' | 'contentModel' | 'standalone';
 }
 
 export default class TitleBar extends React.Component<TitleBarProps, {}> {
     render() {
         const { mode, className: baseClassName } = this.props;
-        const styles = mode == 'contentModel' ? contentModelStyles : classicalStyles;
+        const styles =
+            mode == 'contentModel'
+                ? contentModelStyles
+                : mode == 'standalone'
+                ? standaloneStyles
+                : classicalStyles;
         const className = styles.titleBar + ' ' + (baseClassName || '');
         const titleText =
             mode == 'contentModel'
                 ? 'RoosterJs Content Model Demo Site'
                 : mode == 'classical'
                 ? 'RoosterJs Demo Site'
-                : 'RoosterJs Adapter Demo Site';
+                : 'RoosterJs Standalone Demo Site';
         const switchLink =
             mode == 'contentModel' ? (
                 <a className={styles.link} href="?cm=0">
