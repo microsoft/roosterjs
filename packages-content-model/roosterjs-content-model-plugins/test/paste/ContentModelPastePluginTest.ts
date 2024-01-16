@@ -148,7 +148,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(WacFile.processPastedContentWacComponents).toHaveBeenCalledWith(event);
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(4);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Default', () => {
