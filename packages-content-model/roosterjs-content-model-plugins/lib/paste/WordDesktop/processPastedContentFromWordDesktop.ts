@@ -13,6 +13,7 @@ import type {
     DomToModelContext,
     ElementProcessor,
     FormatParser,
+    TextIndentFormat,
 } from 'roosterjs-content-model-types';
 
 const PERCENTAGE_REGEX = /%/;
@@ -31,6 +32,7 @@ export function processPastedContentFromWordDesktop(
 
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
+    addParser(ev.domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'container', wordTableParser);
     addParser(ev.domToModelOption, 'table', wordTableParser);
@@ -86,5 +88,11 @@ function listLevelParser(
 const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
     if (format.marginLeft?.startsWith('-')) {
         delete format.marginLeft;
+    }
+};
+
+const removeNegativeTextIndentParser: FormatParser<TextIndentFormat> = (format, element) => {
+    if (format.textIndent?.startsWith('-')) {
+        format.textIndent = undefined;
     }
 };
