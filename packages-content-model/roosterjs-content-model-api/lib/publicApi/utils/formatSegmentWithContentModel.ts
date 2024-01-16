@@ -70,9 +70,6 @@ export function formatSegmentWithContentModel(
 
             if (isCollapsedSelection) {
                 context.newPendingFormat = segmentAndParagraphs[0][0].format;
-            }
-
-            if (isCollapsedSelection) {
                 editor.focus();
                 return false;
             } else {
