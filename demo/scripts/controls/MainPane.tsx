@@ -171,7 +171,7 @@ class MainPane extends MainPaneBase<MainPaneState> {
             <SidePane
                 ref={this.sidePane}
                 plugins={this.getSidePanePlugins()}
-                isContentModelDemo={false}
+                mode="classical"
                 className={`main-pane ${styles.sidePane} ${
                     fullWidth ? styles.sidePaneFullWidth : ''
                 }`}
