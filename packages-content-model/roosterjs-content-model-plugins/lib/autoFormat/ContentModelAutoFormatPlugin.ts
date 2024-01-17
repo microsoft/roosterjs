@@ -5,26 +5,41 @@ import type {
     KeyDownEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
-import type { IContentModelEditor } from 'roosterjs-content-model-editor';
+
+/**
+ * @internal
+ */
+type AutoFormatOptions = {
+    autoBullet: boolean;
+    autoNumbering: boolean;
+};
+
+/**
+ * @internal
+ */
+const DefaultOptions: Required<AutoFormatOptions> = {
+    autoBullet: true,
+    autoNumbering: true,
+};
 
 /**
  * Auto Format plugin handles auto formatting, such as transforming * characters into a bullet list.
  * It can be customized with options to enable or disable auto list features.
- * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
- *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
- *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
  */
 export class ContentModelAutoFormatPlugin implements EditorPlugin {
-    private editor: IContentModelEditor | null = null;
+    private editor: IStandaloneEditor | null = null;
     private options = {
         autoBullet: true,
         autoNumbering: true,
     };
 
-    constructor(options?: { autoBullet: boolean; autoNumbering: boolean }) {
-        if (options) {
-            this.options = options;
-        }
+    /**
+     * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
+     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
+     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
+     */
+    constructor(options: AutoFormatOptions = DefaultOptions) {
+        this.options = options;
     }
 
     /**
@@ -41,8 +56,7 @@ export class ContentModelAutoFormatPlugin implements EditorPlugin {
      * @param editor The editor object
      */
     initialize(editor: IStandaloneEditor) {
-        // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IContentModelEditor;
+        this.editor = editor;
     }
 
     /**
@@ -70,7 +84,7 @@ export class ContentModelAutoFormatPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(editor: IContentModelEditor, event: KeyDownEvent) {
+    private handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
