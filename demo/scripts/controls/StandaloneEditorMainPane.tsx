@@ -16,7 +16,6 @@ import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
@@ -24,6 +23,11 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
+import {
+    ContentModelAutoFormatPlugin,
+    ContentModelEditPlugin,
+    EntityDelimiterPlugin,
+} from 'roosterjs-content-model-plugins';
 import {
     ContentModelSegmentFormat,
     IStandaloneEditor,
@@ -99,6 +103,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentModelPanePlugin: ContentModelPanePlugin;
     private contentModelEditPlugin: ContentModelEditPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
+    private contentAutoFormatPlugin: ContentModelAutoFormatPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
@@ -126,6 +131,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.contentModelEditPlugin = new ContentModelEditPlugin();
+        this.contentAutoFormatPlugin = new ContentModelAutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
@@ -246,7 +252,11 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             id={MainPaneBase.editorDivId}
                             className={styles.editor}
                             legacyPlugins={allPlugins}
-                            plugins={[this.contentModelRibbonPlugin, this.formatPainterPlugin]}
+                            plugins={[
+                                this.contentModelRibbonPlugin,
+                                this.formatPainterPlugin,
+                                this.contentAutoFormatPlugin,
+                            ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}

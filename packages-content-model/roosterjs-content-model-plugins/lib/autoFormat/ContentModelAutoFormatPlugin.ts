@@ -7,9 +7,9 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Options to customize the Content Model Auto Format Plugin
  */
-type AutoFormatOptions = {
+export type AutoFormatOptions = {
     autoBullet: boolean;
     autoNumbering: boolean;
 };
