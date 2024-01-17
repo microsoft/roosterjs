@@ -322,6 +322,31 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             },
         ]);
     });
+
+    it('Has onChanged', () => {
+        const onChanged = jasmine.createSpy('onChanged');
+        snapshots.onChanged = onChanged;
+
+        runTest(
+            100,
+            () => {
+                service.addSnapshot(
+                    {
+                        html: 'test',
+                        knownColors: [],
+                        isDarkMode: false,
+                    },
+                    false
+                );
+            },
+            0,
+            4,
+            [{ html: 'test', knownColors: [], isDarkMode: false }],
+            -1
+        );
+
+        expect(onChanged).toHaveBeenCalledWith('add');
+    });
 });
 
 describe('SnapshotsManagerImpl.canMove', () => {
@@ -392,6 +417,15 @@ describe('SnapshotsManagerImpl.canMove', () => {
 
     it('Two snapshots, start from 1', () => {
         runTest(1, ['test1', 'test2'], false, true, false, false, false, false);
+    });
+
+    it('with onChanged', () => {
+        const onChanged = jasmine.createSpy('onChanged');
+        snapshots.onChanged = onChanged;
+
+        runTest(1, ['test1', 'test2'], false, true, false, false, false, false);
+
+        expect(onChanged).not.toHaveBeenCalled();
     });
 
     it('10 snapshots, start from 0', () => {
@@ -524,6 +558,15 @@ describe('SnapshotsManagerImpl.move', () => {
     it('3 snapshots, start from 1, move 2', () => {
         runTest(1, ['test1', 'test2', 'test3'], 2, 1, null);
     });
+
+    it('with onChanged', () => {
+        const onChanged = jasmine.createSpy('onChanged');
+        snapshots.onChanged = onChanged;
+
+        runTest(1, ['test1', 'test2', 'test3'], 2, 1, null);
+
+        expect(onChanged).toHaveBeenCalledWith('move');
+    });
 });
 
 describe('SnapshotsManagerImpl.clearRedo', () => {
@@ -592,6 +635,24 @@ describe('SnapshotsManagerImpl.clearRedo', () => {
     it('Two snapshots, start from 1', () => {
         runTest(1, ['test1', 'test2'], 10, ['test1', 'test2']);
     });
+
+    it('with onChanged, not cleared', () => {
+        const onChanged = jasmine.createSpy('onChanged');
+        snapshots.onChanged = onChanged;
+
+        runTest(1, ['test1', 'test2'], 10, ['test1', 'test2']);
+
+        expect(onChanged).not.toHaveBeenCalled();
+    });
+
+    it('with onChanged, cleared', () => {
+        const onChanged = jasmine.createSpy('onChanged');
+        snapshots.onChanged = onChanged;
+
+        runTest(0, ['test1', 'test2'], 5, ['test1']);
+
+        expect(onChanged).toHaveBeenCalledWith('clear');
+    });
 });
 
 describe('SnapshotsManagerImpl.canUndoAutoComplete', () => {
@@ -635,5 +696,17 @@ describe('SnapshotsManagerImpl.canUndoAutoComplete', () => {
         snapshots.currentIndex = 0;
 
         expect(service.canUndoAutoComplete()).toBeFalse();
+    });
+
+    it('with onChanged, cleared', () => {
+        const onChanged = jasmine.createSpy('onChanged');
+        snapshots.onChanged = onChanged;
+
+        snapshots.autoCompleteIndex = 1;
+        snapshots.currentIndex = 1;
+
+        expect(service.canUndoAutoComplete()).toBeFalse();
+
+        expect(onChanged).not.toHaveBeenCalled();
     });
 });

@@ -100,7 +100,7 @@ describe('createDomToModelContext', () => {
 
         const parsers = buildFormatParsers();
 
-        parsers.block[4] = mockedBlockParser;
+        parsers.block[5] = mockedBlockParser;
         parsers.elementBasedSegment[4] = mockedBoldParser;
         parsers.segment[7] = mockedBoldParser;
         parsers.segmentOnBlock[7] = mockedBoldParser;
