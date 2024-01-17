@@ -28,7 +28,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
      */
     constructor(options: StandaloneEditorOptions) {
         this.state = {
-            snapshotsManager: options.snapshotsManager || createSnapshotsManager(),
+            snapshotsManager: createSnapshotsManager(options.snapshots),
             isRestoring: false,
             isNested: false,
             posContainer: null,

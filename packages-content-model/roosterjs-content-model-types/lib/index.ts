@@ -36,6 +36,7 @@ export { HtmlAlignFormat } from './format/formatParts/HtmlAlignFormat';
 export { MarginFormat } from './format/formatParts/MarginFormat';
 export { PaddingFormat } from './format/formatParts/PaddingFormat';
 export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
+export { TextIndentFormat } from './format/formatParts/TextIndentFormat';
 export { WhiteSpaceFormat } from './format/formatParts/WhiteSpaceFormat';
 export { DisplayFormat } from './format/formatParts/DisplayFormat';
 export { IdFormat } from './format/formatParts/IdFormat';
@@ -142,6 +143,8 @@ export {
     ApplyMetadata,
     MetadataApplier,
     MetadataAppliers,
+    TextFormatApplier,
+    ElementFormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
 export {
     DefaultStyleMap,
@@ -150,6 +153,8 @@ export {
     FormatParsersPerCategory,
     DomToModelSettings,
     FormatParser,
+    TextFormatParser,
+    ElementFormatParserPerCategory,
 } from './context/DomToModelSettings';
 export { DomToModelContext } from './context/DomToModelContext';
 export { ElementProcessor } from './context/ElementProcessor';
@@ -275,6 +280,8 @@ export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRec
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
+export { TrustedHTMLHandler } from './parameter/TrustedHTMLHandler';
+export { Rect } from './parameter/Rect';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';

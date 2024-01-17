@@ -17,5 +17,7 @@ export const handleText: ContentModelSegmentHandler<ContentModelText> = (
     parent.appendChild(element);
     element.appendChild(txt);
 
+    context.formatAppliers.text.forEach(applier => applier(segment.format, txt, context));
+
     handleSegmentCommon(doc, txt, element, segment, context, segmentNodes);
 };
