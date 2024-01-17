@@ -16,6 +16,7 @@ import type {
     FormatParser,
     FormatParsers,
     FormatParsersPerCategory,
+    TextFormatParser,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -118,22 +119,35 @@ export function buildFormatParsers(
 ): FormatParsersPerCategory {
     const combinedOverrides = Object.assign({}, ...overrides);
 
-    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
-        const value = defaultFormatKeysPerCategory[key]
-            .map(
-                formatKey =>
-                    (combinedOverrides[formatKey] === undefined
-                        ? defaultFormatParsers[formatKey]
-                        : combinedOverrides[formatKey]) as FormatParser<any>
-            )
-            .concat(
-                ...additionalParsersArray.map(
-                    parsers => (parsers?.[key] ?? []) as FormatParser<any>[]
+    const result = getObjectKeys(defaultFormatKeysPerCategory).reduce(
+        (result, key) => {
+            const value = defaultFormatKeysPerCategory[key]
+                .map(
+                    formatKey =>
+                        (combinedOverrides[formatKey] === undefined
+                            ? defaultFormatParsers[formatKey]
+                            : combinedOverrides[formatKey]) as FormatParser<any>
                 )
-            );
+                .concat(
+                    ...additionalParsersArray.map(
+                        parsers => (parsers?.[key] ?? []) as FormatParser<any>[]
+                    )
+                );
 
-        result[key] = value;
+            result[key] = value;
 
-        return result;
-    }, {} as FormatParsersPerCategory);
+            return result;
+        },
+        {
+            text: [] as TextFormatParser[],
+        } as FormatParsersPerCategory
+    );
+
+    additionalParsersArray.forEach(parsers => {
+        if (parsers?.text) {
+            result.text = result.text.concat(parsers.text);
+        }
+    });
+
+    return result;
 }

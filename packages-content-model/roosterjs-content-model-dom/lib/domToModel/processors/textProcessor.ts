@@ -6,6 +6,7 @@ import { ensureParagraph } from '../../modelApi/common/ensureParagraph';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { hasSpacesOnly } from '../../modelApi/common/hasSpacesOnly';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
+import { stackFormat } from '../utils/stackFormat';
 import type {
     ContentModelBlockGroup,
     ContentModelParagraph,
@@ -22,6 +23,23 @@ export const textProcessor: ElementProcessor<Text> = (
     textNode: Text,
     context: DomToModelContext
 ) => {
+    if (context.formatParsers.text.length > 0) {
+        stackFormat(context, { segment: 'shallowClone' }, () => {
+            context.formatParsers.text.forEach(parser => {
+                parser(context.segmentFormat, textNode, context);
+                internalTextProcessor(group, textNode, context);
+            });
+        });
+    } else {
+        internalTextProcessor(group, textNode, context);
+    }
+};
+
+function internalTextProcessor(
+    group: ContentModelBlockGroup,
+    textNode: Text,
+    context: DomToModelContext
+) {
     let txt = textNode.nodeValue || '';
     const offsets = getRegularSelectionOffsets(context, textNode);
     const txtStartOffset = offsets[0];
@@ -61,7 +79,7 @@ export const textProcessor: ElementProcessor<Text> = (
         paragraph,
         segments.filter((x): x is ContentModelText => !!x)
     );
-};
+}
 
 function addTextSegment(
     group: ContentModelBlockGroup,
