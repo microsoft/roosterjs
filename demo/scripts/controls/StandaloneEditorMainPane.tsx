@@ -9,19 +9,15 @@ import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlug
 import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
 import ContentModelRooster from './contentModel/editor/ContentModelRooster';
 import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
-import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
 import RibbonPlugin from './ribbonButtons/contentModel/RibbonPlugin';
-import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
-import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
+import { ContentModelEditPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
-import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
+import { Snapshots } from 'roosterjs-editor-types';
 import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import {
@@ -99,13 +95,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentModelPanePlugin: ContentModelPanePlugin;
     private contentModelEditPlugin: ContentModelEditPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
-    private pasteOptionPlugin: EditorPlugin;
-    private emojiPlugin: EditorPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
-    private entityDelimiterPlugin: EntityDelimiterPlugin;
-    private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
-    private sampleEntityPlugin: SampleEntityPlugin;
     private snapshots: Snapshots<Snapshot>;
 
     constructor(props: {}) {
@@ -127,11 +118,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.contentModelEditPlugin = new ContentModelEditPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
-        this.pasteOptionPlugin = createPasteOptionPlugin();
-        this.emojiPlugin = createEmojiPlugin();
-        this.entityDelimiterPlugin = new EntityDelimiterPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
-        this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -181,30 +168,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         );
     }
 
-    getPlugins() {
-        this.toggleablePlugins =
-            this.toggleablePlugins || getToggleablePlugins(this.state.initState);
-
-        const plugins = [
-            ...this.toggleablePlugins,
-            this.contentModelPanePlugin.getInnerRibbonPlugin(),
-            this.pasteOptionPlugin,
-            this.emojiPlugin,
-            this.entityDelimiterPlugin,
-            this.sampleEntityPlugin,
-        ];
-
-        if (this.state.showSidePane || this.state.popoutWindow) {
-            arrayPush(plugins, this.getSidePanePlugins());
-        }
-
-        plugins.push(this.updateContentPlugin);
-
-        return plugins;
-    }
-
     resetEditor() {
-        this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) =>
                 new StandaloneEditor(div, {
@@ -216,7 +180,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
 
     renderEditor() {
         const styles = this.getStyles();
-        const allPlugins = this.getPlugins();
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
             transformOrigin: this.state.isRtl ? 'right top' : 'left top',
@@ -244,7 +207,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                         <ContentModelRooster
                             id={MainPaneBase.editorDivId}
                             className={styles.editor}
-                            legacyPlugins={allPlugins}
                             plugins={[
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
