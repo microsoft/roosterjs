@@ -188,7 +188,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         const plugins = [
             ...this.toggleablePlugins,
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
-            this.contentModelEditPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.entityDelimiterPlugin,
@@ -246,7 +245,11 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             id={MainPaneBase.editorDivId}
                             className={styles.editor}
                             legacyPlugins={allPlugins}
-                            plugins={[this.contentModelRibbonPlugin, this.formatPainterPlugin]}
+                            plugins={[
+                                this.contentModelRibbonPlugin,
+                                this.formatPainterPlugin,
+                                this.contentModelEditPlugin,
+                            ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}

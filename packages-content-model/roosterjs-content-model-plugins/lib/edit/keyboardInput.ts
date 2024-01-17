@@ -1,12 +1,11 @@
 import { deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
-import type { IContentModelEditor } from 'roosterjs-content-model-editor';
-import type { DOMSelection } from 'roosterjs-content-model-types';
+import type { DOMSelection, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function keyboardInput(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
+export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
 
     if (shouldInputWithContentModel(selection, rawEvent, editor.isInIME())) {
