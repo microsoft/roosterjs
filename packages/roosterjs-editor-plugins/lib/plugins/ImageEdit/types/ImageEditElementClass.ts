@@ -2,6 +2,7 @@
  * @internal
  * CSS class names for image editing elements
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ImageEditElementClass {
     /**
      * CSS class name for resize handle

@@ -1,6 +1,7 @@
 /**
  * Prefix of content types
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ContentTypePrefix {
     /**
      * Text type prefix
@@ -16,6 +17,7 @@ export const enum ContentTypePrefix {
 /**
  * Known content types
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ContentType {
     /**
      * Plain text content type
