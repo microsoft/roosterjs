@@ -203,6 +203,7 @@ describe(ID, () => {
                         width: '170pt',
                         useBorderBox: true,
                         borderCollapse: true,
+                        textColor: 'rgb(0, 0, 0)',
                     },
                     widths: <any>jasmine.anything(),
                     dataset: {},
