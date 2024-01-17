@@ -3,8 +3,8 @@ import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
+    TrustedHTMLHandler,
 } from 'roosterjs-content-model-types';
-import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 /**
  * Create Content Model from HTML string

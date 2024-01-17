@@ -3,10 +3,11 @@ import SidePanePlugin from '../SidePanePlugin';
 
 const classicStyles = require('./SidePane.scss');
 const contentModelStyles = require('./ContentModelSidePane.scss');
+const standaloneModelStyles = require('./StandaloneSidePane.scss');
 
 export interface SidePaneProps {
     plugins: SidePanePlugin[];
-    isContentModelDemo: boolean;
+    mode: 'classical' | 'contentModel' | 'standalone';
     className?: string;
 }
 
@@ -96,6 +97,10 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
     };
 
     private getStyles() {
-        return this.props.isContentModelDemo ? contentModelStyles : classicStyles;
+        return this.props.mode == 'contentModel'
+            ? contentModelStyles
+            : this.props.mode == 'standalone'
+            ? standaloneModelStyles
+            : classicStyles;
     }
 }
