@@ -34,6 +34,7 @@ describe('setDOMSelection', () => {
         doc = {
             querySelectorAll: querySelectorAllSpy,
             createRange: createRangeSpy,
+            contains: () => true,
         } as any;
         contentDiv = {
             ownerDocument: doc,
@@ -483,6 +484,53 @@ describe('setDOMSelection', () => {
             expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
             expect(insertRuleSpy).toHaveBeenCalledWith(
                 '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:red!important;}'
+            );
+        });
+
+        it('do not select if node is out of document', () => {
+            const mockedSelection = {
+                type: 'image',
+                image: mockedImage,
+            } as any;
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                selectNode: selectNodeSpy,
+                collapse: collapseSpy,
+            };
+
+            doc.contains = () => false;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            querySelectorAllSpy.and.returnValue([]);
+            hasFocusSpy.and.returnValue(false);
+
+            setDOMSelection(core, mockedSelection);
+
+            expect(core.selection).toEqual({
+                skipReselectOnFocus: undefined,
+                selection: mockedSelection,
+                selectionStyleNode: mockedStyleNode,
+            } as any);
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'selectionChanged',
+                    newSelection: mockedSelection,
+                },
+                true
+            );
+            expect(selectNodeSpy).not.toHaveBeenCalled();
+            expect(collapseSpy).not.toHaveBeenCalled();
+            expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
+            expect(contentDiv.id).toBe('contentDiv_0');
+            expect(mockedImage.id).toBe('image_0');
+            expect(deleteRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
+            expect(insertRuleSpy).toHaveBeenCalledWith(
+                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
         });
     });

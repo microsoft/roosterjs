@@ -12,10 +12,12 @@ import type { AddUndoSnapshot, Snapshot } from 'roosterjs-content-model-types';
  */
 export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entityStates) => {
     const { lifecycle, api, contentDiv, darkColorHandler, undo } = core;
+    let snapshot: Snapshot | null = null;
 
     if (!lifecycle.shadowEditFragment) {
         const selection = api.getDOMSelection(core);
-        const snapshot: Snapshot = {
+
+        snapshot = {
             html: contentDiv.innerHTML,
             knownColors: darkColorHandler.getKnownColorsCopy(),
             entityStates,
@@ -26,4 +28,6 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
         undo.snapshotsManager.addSnapshot(snapshot, !!canUndoByBackspace);
         undo.snapshotsManager.hasNewContent = false;
     }
+
+    return snapshot;
 };

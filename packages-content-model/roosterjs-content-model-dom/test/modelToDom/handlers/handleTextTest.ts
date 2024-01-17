@@ -137,4 +137,24 @@ describe('handleText', () => {
         expect(segmentNodes.length).toBe(1);
         expect(segmentNodes[0]).toBe(parent.firstChild!.firstChild!);
     });
+
+    it('Handle text with format applier', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const segmentNodes: Node[] = [];
+        const applierSpy = jasmine.createSpy('applier');
+
+        context.formatAppliers.text = [applierSpy];
+
+        handleText(document, parent, text, context, segmentNodes);
+
+        expect(parent.innerHTML).toBe('<span>test</span>');
+        expect(segmentNodes.length).toBe(1);
+        expect(segmentNodes[0]).toBe(parent.firstChild!.firstChild!);
+        expect(applierSpy).toHaveBeenCalledTimes(1);
+        expect(applierSpy).toHaveBeenCalledWith(text.format, segmentNodes[0], context);
+    });
 });

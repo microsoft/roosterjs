@@ -3,6 +3,7 @@ import getStyleMetadata from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
+import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type {
@@ -31,6 +32,7 @@ export function processPastedContentFromWordDesktop(
 
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
+    addParser(ev.domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'container', wordTableParser);
     addParser(ev.domToModelOption, 'table', wordTableParser);

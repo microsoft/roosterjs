@@ -1,75 +1,15 @@
 import * as React from 'react';
 import ContentModelSnapshotPane from './ContentModelSnapshotPane';
 import SidePanePlugin from '../../SidePanePlugin';
-import { createSnapshotsManager } from 'roosterjs-content-model-core';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import {
-    IStandaloneEditor,
-    Snapshot,
-    Snapshots,
-    SnapshotsManager,
-} from 'roosterjs-content-model-types';
-
-class SnapshotsManagerProxy implements SnapshotsManager {
-    private innerManager: SnapshotsManager;
-    private hijackUndoSnapshotCallback: undefined | ((snapshot: Snapshot) => void);
-
-    constructor(snapshots: Snapshots, private onChange: () => void) {
-        this.innerManager = createSnapshotsManager(snapshots);
-    }
-
-    get hasNewContent() {
-        return this.innerManager.hasNewContent;
-    }
-
-    set hasNewContent(value: boolean) {
-        this.innerManager.hasNewContent = value;
-    }
-
-    public startHijackUndoSnapshot(callback: (snapshot: Snapshot) => void) {
-        this.hijackUndoSnapshotCallback = callback;
-    }
-
-    public stopHijackUndoSnapshot() {
-        this.hijackUndoSnapshotCallback = undefined;
-    }
-
-    public canMove(delta: number): boolean {
-        return this.innerManager.canMove(delta);
-    }
-
-    public move(delta: number): Snapshot {
-        const result = this.innerManager.move(delta);
-        this.onChange();
-        return result;
-    }
-
-    public addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean) {
-        if (this.hijackUndoSnapshotCallback) {
-            this.hijackUndoSnapshotCallback(snapshot);
-        } else {
-            this.innerManager.addSnapshot(snapshot, isAutoCompleteSnapshot);
-            this.onChange();
-        }
-    }
-
-    public clearRedo() {
-        this.innerManager.clearRedo();
-        this.onChange();
-    }
-
-    public canUndoAutoComplete() {
-        return this.innerManager.canUndoAutoComplete();
-    }
-}
+import { IStandaloneEditor, Snapshot, Snapshots } from 'roosterjs-content-model-types';
 
 export default class ContentModelSnapshotPlugin implements SidePanePlugin {
     private editorInstance: IEditor & IStandaloneEditor;
     private component: ContentModelSnapshotPane;
-    private snapshotManager: SnapshotsManagerProxy;
 
     constructor(private snapshots: Snapshots) {
-        this.snapshotManager = new SnapshotsManagerProxy(snapshots, this.updateSnapshots);
+        this.snapshots.onChanged = () => this.updateSnapshots();
     }
 
     getName() {
@@ -98,8 +38,8 @@ export default class ContentModelSnapshotPlugin implements SidePanePlugin {
         return <ContentModelSnapshotPane {...this.getComponentProps()} ref={this.refCallback} />;
     }
 
-    getSnapshotsManager() {
-        return this.snapshotManager;
+    getSnapshots() {
+        return this.snapshots;
     }
 
     private refCallback = (ref: ContentModelSnapshotPane) => {
@@ -118,22 +58,12 @@ export default class ContentModelSnapshotPlugin implements SidePanePlugin {
     }
 
     private onTakeSnapshot = (): Snapshot => {
-        let newSnapshot: Snapshot;
-
-        try {
-            this.snapshotManager.startHijackUndoSnapshot(snapshot => {
-                newSnapshot = snapshot;
-            });
-            this.editorInstance.addUndoSnapshot();
-        } finally {
-            this.snapshotManager.stopHijackUndoSnapshot();
-        }
-
-        return newSnapshot;
+        return this.editorInstance.takeSnapshot();
     };
 
     private onMove = (step: number) => {
-        const snapshot = this.snapshotManager.move(step);
+        const snapshotsManager = this.editorInstance.getSnapshotsManager();
+        const snapshot = snapshotsManager.move(step);
         this.onRestoreSnapshot(snapshot);
     };
 
