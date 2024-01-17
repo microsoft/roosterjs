@@ -275,6 +275,8 @@ export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRec
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
+export { TrustedHTMLHandler } from './parameter/TrustedHTMLHandler';
+export { Rect } from './parameter/Rect';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
