@@ -315,7 +315,10 @@ describe('StandaloneEditor', () => {
 
     it('formatContentModel', () => {
         const div = document.createElement('div');
-        const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+        const mockedSnapshot = 'SNAPSHOT' as any;
+        const addUndoSnapshotSpy = jasmine
+            .createSpy('addUndoSnapshot')
+            .and.returnValue(mockedSnapshot);
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
@@ -330,9 +333,10 @@ describe('StandaloneEditor', () => {
 
         const editor = new StandaloneEditor(div);
 
-        editor.takeSnapshot();
+        const snapshot = editor.takeSnapshot();
 
         expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false);
+        expect(snapshot).toBe(mockedSnapshot);
 
         editor.dispose();
         expect(() => editor.takeSnapshot()).toThrow();

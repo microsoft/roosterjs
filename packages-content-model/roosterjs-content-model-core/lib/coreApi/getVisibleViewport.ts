@@ -1,5 +1,4 @@
-import type { Rect } from 'roosterjs-editor-types';
-import type { GetVisibleViewport } from 'roosterjs-content-model-types';
+import type { GetVisibleViewport, Rect } from 'roosterjs-content-model-types';
 
 /**
  * @internal

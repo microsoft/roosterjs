@@ -111,6 +111,7 @@ describe(ID, () => {
                                                                 marginLeft: '0px',
                                                                 paddingRight: '7px',
                                                                 paddingLeft: '7px',
+                                                                textIndent: '0px',
                                                             },
                                                             blockGroupType: 'FormatContainer',
                                                             blocks: [
@@ -142,6 +143,7 @@ describe(ID, () => {
                                                                         marginRight: '0px',
                                                                         marginBottom: '0px',
                                                                         marginLeft: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     decorator: {
                                                                         tagName: 'p',
@@ -160,6 +162,7 @@ describe(ID, () => {
                                                         borderLeft: '1px solid',
                                                         verticalAlign: 'top',
                                                         width: '312px',
+                                                        textIndent: '0px',
                                                     },
                                                     dataset: {
                                                         celllook: '0',
@@ -183,6 +186,7 @@ describe(ID, () => {
                                                                 marginLeft: '0px',
                                                                 paddingRight: '7px',
                                                                 paddingLeft: '7px',
+                                                                textIndent: '0px',
                                                             },
                                                             blockGroupType: 'FormatContainer',
                                                             blocks: [
@@ -214,6 +218,7 @@ describe(ID, () => {
                                                                         marginRight: '0px',
                                                                         marginBottom: '0px',
                                                                         marginLeft: '0px',
+                                                                        textIndent: '0px',
                                                                     },
                                                                     decorator: {
                                                                         tagName: 'p',
@@ -232,6 +237,7 @@ describe(ID, () => {
                                                         borderLeft: '1px solid',
                                                         verticalAlign: 'top',
                                                         width: '312px',
+                                                        textIndent: '0px',
                                                     },
                                                     dataset: {
                                                         celllook: '0',
@@ -253,6 +259,7 @@ describe(ID, () => {
                                         tableLayout: 'fixed',
                                         useBorderBox: true,
                                         borderCollapse: true,
+                                        textIndent: '0px',
                                     },
                                     dataset: {
                                         tablestyle: 'MsoTableGrid',
@@ -301,6 +308,7 @@ describe(ID, () => {
                                 marginRight: '0px',
                                 marginBottom: '0px',
                                 marginLeft: '0px',
+                                textIndent: '0px',
                             },
                             decorator: {
                                 tagName: 'p',

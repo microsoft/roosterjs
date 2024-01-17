@@ -23,7 +23,8 @@ export default function createTableResizer(
     onEnd: () => false,
     onShowHelperElement?: (
         elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+        table: HTMLTableElement
     ) => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement
@@ -44,7 +45,7 @@ export default function createTableResizer(
         }-resize; user-select: none; border: 1px solid #808080`,
     };
 
-    onShowHelperElement?.(createElementData, 'TableResizer');
+    onShowHelperElement?.(createElementData, 'TableResizer', table);
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 

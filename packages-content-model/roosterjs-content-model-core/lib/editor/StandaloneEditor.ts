@@ -1,7 +1,7 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { transformColor } from '../publicApi/color/transformColor';
-import type { DarkColorHandler, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type { DarkColorHandler } from 'roosterjs-editor-types';
 import type {
     ClipboardData,
     ContentModelDocument,
@@ -23,6 +23,7 @@ import type {
     SnapshotsManager,
     StandaloneEditorCore,
     StandaloneEditorOptions,
+    TrustedHTMLHandler,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -159,10 +160,10 @@ export class StandaloneEditor implements IStandaloneEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): void {
+    takeSnapshot(): Snapshot | null {
         const core = this.getCore();
 
-        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
     }
 
     /**

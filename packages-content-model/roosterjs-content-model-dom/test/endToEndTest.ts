@@ -1750,4 +1750,60 @@ describe('End to end test for DOM => Model', () => {
             '<a href="#">before</a><span style="color: red;"><a href="#" style="color: red;">test</a></span><a href="#">after</a>'
         );
     });
+
+    it('text-indent', () => {
+        runTest(
+            '<div style="text-indent:20px">aa<div>bb</div>cc</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: { textIndent: '20px' },
+                        segments: [{ segmentType: 'Text', format: {}, text: 'aa' }],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: { textIndent: '20px' },
+                        segments: [{ segmentType: 'Text', format: {}, text: 'bb' }],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [{ segmentType: 'Text', format: {}, text: 'cc' }],
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<div style="text-indent: 20px;">aa</div><div style="text-indent: 20px;">bb</div>cc'
+        );
+    });
+
+    it('text-indent with inner block', () => {
+        runTest(
+            '<div style="text-indent: 20px"><div>aa</div>bb<div style="text-indent: 40px">cc</div></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: { textIndent: '20px' },
+                        segments: [{ segmentType: 'Text', format: {}, text: 'aa' }],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [{ segmentType: 'Text', format: {}, text: 'bb' }],
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: { textIndent: '40px' },
+                        segments: [{ segmentType: 'Text', format: {}, text: 'cc' }],
+                    },
+                ],
+            },
+            '<div style="text-indent: 20px;">aa</div>bb<div style="text-indent: 40px;">cc</div>'
+        );
+    });
 });

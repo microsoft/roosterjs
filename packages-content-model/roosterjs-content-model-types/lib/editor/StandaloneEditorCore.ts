@@ -6,7 +6,7 @@ import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
-import type { DarkColorHandler, Rect, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type { DarkColorHandler } from 'roosterjs-editor-types';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
@@ -15,6 +15,8 @@ import type { EditorContext } from '../context/EditorContext';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ModelToDomSettings, OnNodeCreated } from '../context/ModelToDomSettings';
+import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
+import type { Rect } from '../parameter/Rect';
 import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
@@ -116,7 +118,7 @@ export type AddUndoSnapshot = (
     core: StandaloneEditorCore,
     canUndoByBackspace: boolean,
     entityStates?: EntityState[]
-) => void;
+) => Snapshot | null;
 
 /**
  * Retrieves the rect of the visible viewport of the editor.

@@ -692,4 +692,39 @@ describe('textProcessor', () => {
         });
         expect(onSegmentSpy).toHaveBeenCalledWith(text, paragraph, [segment1, segment2, segment3]);
     });
+
+    it('process with text format parser', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test1');
+        const parserSpy = jasmine.createSpy('parser');
+
+        context.formatParsers.text = [parserSpy];
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+        });
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(parserSpy).toHaveBeenCalledTimes(1);
+        expect(parserSpy).toHaveBeenCalledWith({}, text, context);
+    });
 });

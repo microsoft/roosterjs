@@ -40,11 +40,12 @@ describe('addUndoSnapshot', () => {
     it('Is in shadow edit', () => {
         core.lifecycle.shadowEditFragment = {} as any;
 
-        addUndoSnapshot(core, false);
+        const result = addUndoSnapshot(core, false);
 
         expect(getDOMSelectionSpy).not.toHaveBeenCalled();
         expect(createSnapshotSelectionSpy).not.toHaveBeenCalled();
         expect(addSnapshotSpy).not.toHaveBeenCalled();
+        expect(result).toEqual(null);
     });
 
     it('Has a selection', () => {
@@ -59,7 +60,7 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy.and.returnValue(mockedColors);
         createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
 
-        addUndoSnapshot(core, false);
+        const result = addUndoSnapshot(core, false);
 
         expect(core.undo).toEqual({
             snapshotsManager: snapshotsManager,
@@ -77,6 +78,13 @@ describe('addUndoSnapshot', () => {
             },
             false
         );
+        expect(result).toEqual({
+            html: mockedHTML,
+            knownColors: mockedColors,
+            entityStates: undefined,
+            isDarkMode: false,
+            selection: mockedSnapshotSelection,
+        });
     });
 
     it('Has a selection, canUndoByBackspace', () => {
@@ -91,7 +99,8 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy.and.returnValue(mockedColors);
         createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
 
-        addUndoSnapshot(core, true);
+        const result = addUndoSnapshot(core, true);
+
         expect(core.undo).toEqual({
             snapshotsManager: snapshotsManager,
         } as any);
@@ -108,6 +117,13 @@ describe('addUndoSnapshot', () => {
             },
             true
         );
+        expect(result).toEqual({
+            html: mockedHTML,
+            knownColors: mockedColors,
+            entityStates: undefined,
+            isDarkMode: false,
+            selection: mockedSnapshotSelection,
+        });
     });
 
     it('Has entityStates', () => {
@@ -123,7 +139,7 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy.and.returnValue(mockedColors);
         createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
 
-        addUndoSnapshot(core, false, mockedEntityStates);
+        const result = addUndoSnapshot(core, false, mockedEntityStates);
 
         expect(core.undo).toEqual({
             snapshotsManager: snapshotsManager,
@@ -141,5 +157,12 @@ describe('addUndoSnapshot', () => {
             },
             false
         );
+        expect(result).toEqual({
+            html: mockedHTML,
+            knownColors: mockedColors,
+            entityStates: mockedEntityStates,
+            isDarkMode: false,
+            selection: mockedSnapshotSelection,
+        });
     });
 });
