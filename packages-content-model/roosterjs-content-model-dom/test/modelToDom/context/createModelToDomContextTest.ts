@@ -62,17 +62,28 @@ describe('createModelToDomContext', () => {
         const mockedBoldApplier = 'bold' as any;
         const mockedBlockApplier = 'block' as any;
         const mockedBrHandler = 'br' as any;
-        const context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                br: mockedBrHandler,
+        const mockedTextApplier1 = 'applier1' as any;
+        const mockedTextApplier2 = 'applier2' as any;
+        const context = createModelToDomContext(
+            undefined,
+            {
+                modelHandlerOverride: {
+                    br: mockedBrHandler,
+                },
+                formatApplierOverride: {
+                    bold: mockedBoldApplier,
+                },
+                additionalFormatAppliers: {
+                    block: [mockedBlockApplier],
+                    text: [mockedTextApplier1],
+                },
             },
-            formatApplierOverride: {
-                bold: mockedBoldApplier,
-            },
-            additionalFormatAppliers: {
-                block: [mockedBlockApplier],
-            },
-        });
+            {
+                additionalFormatAppliers: {
+                    text: [mockedTextApplier2],
+                },
+            }
+        );
 
         const appliers = buildFormatAppliers();
 
@@ -81,6 +92,7 @@ describe('createModelToDomContext', () => {
         appliers.segment[7] = mockedBoldApplier;
         appliers.segmentOnBlock[7] = mockedBoldApplier;
         appliers.segmentOnTableCell[7] = mockedBoldApplier;
+        appliers.text = [mockedTextApplier1, mockedTextApplier2];
 
         expect(context).toEqual({
             regularSelection: {
