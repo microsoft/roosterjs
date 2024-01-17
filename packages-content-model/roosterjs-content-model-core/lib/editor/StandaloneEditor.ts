@@ -160,10 +160,10 @@ export class StandaloneEditor implements IStandaloneEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): void {
+    takeSnapshot(): Snapshot | null {
         const core = this.getCore();
 
-        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
     }
 
     /**

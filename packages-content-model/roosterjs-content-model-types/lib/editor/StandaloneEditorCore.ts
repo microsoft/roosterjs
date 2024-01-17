@@ -118,7 +118,7 @@ export type AddUndoSnapshot = (
     core: StandaloneEditorCore,
     canUndoByBackspace: boolean,
     entityStates?: EntityState[]
-) => void;
+) => Snapshot | null;
 
 /**
  * Retrieves the rect of the visible viewport of the editor.
