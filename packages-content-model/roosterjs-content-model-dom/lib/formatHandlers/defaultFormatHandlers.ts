@@ -166,6 +166,7 @@ export const defaultFormatKeysPerCategory: {
         'margin',
         'size',
         'tableLayout',
+        'textColor',
     ],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
