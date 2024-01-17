@@ -1031,9 +1031,6 @@ describe('wordOnlineHandler', () => {
                 '<ul style="list-style-type: disc;"><li>A</li><ul style="list-style-type: circle;"><li>B</li><ul style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; list-style-type: square;"><li style="margin: 0px 0px 0px 120px;">C</li></ul><li>D</li><ul style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; list-style-type: square;"><li style="margin: 0px 0px 0px 120px;">E</li></ul></ul></ul>'
             );
         });
-        // Error: Expected
-        // '<ul style="list-style-type: disc;"><li>A</li><ul style="list-style-type: circle;"><li>B</li><ul style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; list-style-type: square;"><li style="margin: 0px 0px 0px 120px;">C</li></ul><li>D</li><ul style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; list-style-type: square;"><li style="margin: 0px 0px 0px 120px;">E</li></ul></ul></ul>' to be
-        // '<ul style="list-style-type: disc;"><li>A</li><ul style="list-style-type: circle;"><li>B</li><ul style="list-style-type: square;"><li style="margin: 0px 0px 0px 120px;">C</li></ul><li>D</li><ul style="list-style-type: square;"><li style="margin: 0px 0px 0px 120px;">E</li></ul></ul></ul>'.
 
         it('does not have BulletListStyle or NumberListStyle but has ListContainerWrapper', () => {
             runTest(

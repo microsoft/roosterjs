@@ -23,10 +23,14 @@ import type {
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
 const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
 
-interface WacListFormat extends DomToModelContext {
-    lastHtmlParentList?: HTMLElement | null;
-    lastHtmlListItem?: HTMLElement | null;
-    knownListLevels?: ContentModelListLevel[];
+interface WacContext extends DomToModelContext {
+    /**
+     * Current list levels
+     */
+    currentListLevels?: ContentModelListLevel[];
+    /**
+     * Array to keep the start of the lists and determine if the start override should be set.
+     */
     listItemThread?: number[];
 }
 
@@ -92,14 +96,14 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
     ctx: DomToModelContext
 ): void => {
     const level = parseInt(element.getAttribute('data-aria-level') ?? '');
-    const context = ctx as WacListFormat;
+    const context = ctx as WacContext;
     const listType =
         context.listFormat.levels[context.listFormat.levels.length - 1]?.listType ||
         (element.closest('ol,ul')?.tagName.toUpperCase() as 'UL' | 'OL');
     const newLevel: ContentModelListLevel = createListLevel(listType, context.blockFormat);
     parseFormat(element, context.formatParsers.listLevelThread, newLevel.format, context);
     parseFormat(element, context.formatParsers.listLevel, newLevel.format, context);
-    context.listFormat.levels = context.knownListLevels || context.listFormat.levels;
+    context.listFormat.levels = context.currentListLevels || context.listFormat.levels;
 
     if (level > 0) {
         if (level > context.listFormat.levels.length) {
@@ -133,7 +137,7 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
         };
         newLevels.push(newValue);
     });
-    context.knownListLevels = newLevels;
+    context.currentListLevels = newLevels;
     listFormat.levels = [];
 };
 
@@ -242,7 +246,7 @@ function updateStartOverride(
     }
 
     const list = element.closest('ol');
-    const context = ctx as WacListFormat;
+    const context = ctx as WacContext;
     const [start, listLevel] = extractWordListMetadata(list, element);
 
     if (!context.listItemThread) {
