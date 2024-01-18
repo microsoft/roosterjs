@@ -2,13 +2,13 @@ import type {
     ContentModelFormatMap,
     DomToModelOption,
     FormatParser,
-    FormatParsersPerCategory,
+    ElementFormatParserPerCategory,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export default function addParser<TKey extends keyof FormatParsersPerCategory>(
+export default function addParser<TKey extends keyof ElementFormatParserPerCategory>(
     domToModelOption: DomToModelOption,
     entry: TKey,
     additionalFormatParsers: FormatParser<ContentModelFormatMap[TKey]>

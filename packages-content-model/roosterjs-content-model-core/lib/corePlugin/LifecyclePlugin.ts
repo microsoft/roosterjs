@@ -125,7 +125,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
             (event.source == ChangeSource.SwitchToDarkMode ||
                 event.source == ChangeSource.SwitchToLightMode)
         ) {
-            this.state.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
             this.adjustColor();
         }
     }

@@ -262,10 +262,12 @@ export class StandaloneEditor implements IStandaloneEditor {
         if (!!isDarkMode != core.lifecycle.isDarkMode) {
             transformColor(
                 core.contentDiv,
-                true /*includeSelf*/,
+                false /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
                 core.darkColorHandler
             );
+
+            core.lifecycle.isDarkMode = !!isDarkMode;
 
             core.api.triggerEvent(
                 core,
