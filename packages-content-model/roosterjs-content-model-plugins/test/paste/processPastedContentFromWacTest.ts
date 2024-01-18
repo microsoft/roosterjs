@@ -2926,6 +2926,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -2998,85 +2999,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: true,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3156,6 +3079,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3179,13 +3103,6 @@ describe('wordOnlineHandler', () => {
                             },
                         },
                         levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
                             {
                                 listType: 'OL',
                                 format: {
@@ -3242,6 +3159,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3328,6 +3246,94 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                decorator: {
+                                    tagName: 'p',
+                                    format: {},
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                segments: [
+                                    {
+                                        text: '_',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        text: ' ',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3407,6 +3413,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3486,6 +3493,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3558,6 +3566,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3630,6 +3639,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3649,6 +3659,7 @@ describe('wordOnlineHandler', () => {
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
+                            textIndent: '0px',
                             backgroundColor: 'rgb(255, 255, 255)',
                             marginTop: '0px',
                             marginRight: '0px',
@@ -3681,6 +3692,7 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3700,6 +3712,7 @@ describe('wordOnlineHandler', () => {
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
+                            textIndent: '0px',
                             backgroundColor: 'rgb(255, 255, 255)',
                             marginTop: '0px',
                             marginRight: '0px',
@@ -3732,6 +3745,7 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3751,6 +3765,7 @@ describe('wordOnlineHandler', () => {
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
+                            textIndent: '0px',
                             backgroundColor: 'rgb(255, 255, 255)',
                             marginTop: '0px',
                             marginRight: '0px',
@@ -3795,6 +3810,7 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -3814,6 +3830,7 @@ describe('wordOnlineHandler', () => {
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
+                            textIndent: '0px',
                             backgroundColor: 'rgb(255, 255, 255)',
                             marginTop: '0px',
                             marginRight: '0px',
@@ -3846,379 +3863,7 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: true,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                    startNumberOverride: 1,
-                                },
-                                dataset: {},
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    textAlign: 'start',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: true,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    textAlign: 'start',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -4292,10 +3937,76 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                decorator: {
+                                    tagName: 'p',
+                                    format: {},
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        tagName: 'div',
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                        blockGroupType: 'FormatContainer',
+                        blocks: [
+                            {
+                                segments: [
+                                    {
+                                        text: '_',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        text: ' ',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
                                     marginLeft: '0px',
                                 },
                                 decorator: {
@@ -4364,6 +4075,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -4383,6 +4095,7 @@ describe('wordOnlineHandler', () => {
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
+                            textIndent: '0px',
                             backgroundColor: 'rgb(255, 255, 255)',
                             marginTop: '0px',
                             marginRight: '0px',
@@ -4415,6 +4128,7 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -4434,6 +4148,7 @@ describe('wordOnlineHandler', () => {
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
+                            textIndent: '0px',
                             backgroundColor: 'rgb(255, 255, 255)',
                             marginTop: '0px',
                             marginRight: '0px',
@@ -4478,6 +4193,60 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
+                                    marginLeft: '0px',
+                                },
+                                decorator: {
+                                    tagName: 'p',
+                                    format: {},
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        tagName: 'div',
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                        blockGroupType: 'FormatContainer',
+                        blocks: [
+                            {
+                                segments: [
+                                    {
+                                        text: ' ',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -4551,6 +4320,7 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
@@ -4623,6 +4393,272 @@ describe('wordOnlineHandler', () => {
                                 blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                decorator: {
+                                    tagName: 'p',
+                                    format: {},
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        tagName: 'div',
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                        blockGroupType: 'FormatContainer',
+                        blocks: [
+                            {
+                                segments: [
+                                    {
+                                        text: ' ',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
+                                    marginLeft: '0px',
+                                },
+                                decorator: {
+                                    tagName: 'p',
+                                    format: {},
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        tagName: 'div',
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                        blockGroupType: 'FormatContainer',
+                        blocks: [
+                            {
+                                segments: [
+                                    {
+                                        text: '_',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        text: ' ',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
+                                    marginLeft: '0px',
+                                },
+                                decorator: {
+                                    tagName: 'p',
+                                    format: {},
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    startNumberOverride: 1,
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                segments: [
+                                    {
+                                        text: '_',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        text: ' ',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                decorator: {
+                                    tagName: 'p',
+                                    format: {},
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                segments: [
+                                    {
+                                        text: '_',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        text: ' ',
+                                        segmentType: 'Text',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
                                     whiteSpace: 'pre-wrap',
                                     marginTop: '0px',
                                     marginRight: '0px',
