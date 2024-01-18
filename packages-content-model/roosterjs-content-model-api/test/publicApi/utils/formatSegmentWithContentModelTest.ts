@@ -18,7 +18,6 @@ describe('formatSegmentWithContentModel', () => {
     let editor: IStandaloneEditor;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
-    let getPendingFormat: jasmine.Spy;
     let formatContentModel: jasmine.Spy;
     let formatResult: boolean | undefined;
     let context: FormatWithContentModelContext | undefined;
@@ -43,19 +42,22 @@ describe('formatSegmentWithContentModel', () => {
                 }
             );
 
-        getPendingFormat = jasmine.createSpy('getPendingFormat');
-
         editor = ({
             focus,
             formatContentModel,
-            getPendingFormat,
         } as any) as IStandaloneEditor;
     });
 
     it('empty doc', () => {
         model = createContentModelDocument();
 
-        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
+        const callback = jasmine
+            .createSpy('callback')
+            .and.callFake((format: ContentModelSegmentFormat) => {
+                format.fontFamily = 'test';
+            });
+
+        formatSegmentWithContentModel(editor, apiName, callback);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -63,7 +65,7 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeFalse();
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledTimes(0);
     });
 
     it('doc with selection', () => {
@@ -76,7 +78,14 @@ describe('formatSegmentWithContentModel', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
+        const callback = jasmine
+            .createSpy('callback')
+            .and.callFake((format: ContentModelSegmentFormat) => {
+                format.fontFamily = 'test';
+            });
+
+        formatSegmentWithContentModel(editor, apiName, callback);
+
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -98,7 +107,8 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(text.format, true, text, para);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -153,7 +163,6 @@ describe('formatSegmentWithContentModel', () => {
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text.format, text, para);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(1);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text.format, false, text, para);
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -230,7 +239,6 @@ describe('formatSegmentWithContentModel', () => {
         expect(toggleStyleCallback).toHaveBeenCalledTimes(2);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text1.format, true, text1, para);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text3.format, true, text3, para);
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -249,7 +257,13 @@ describe('formatSegmentWithContentModel', () => {
         para.segments.push(marker);
         model.blocks.push(para);
 
-        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
+        const callback = jasmine
+            .createSpy('callback')
+            .and.callFake((format: ContentModelSegmentFormat) => {
+                format.fontFamily = 'test';
+            });
+
+        formatSegmentWithContentModel(editor, apiName, callback);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -271,7 +285,8 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeFalse();
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(marker.format, true, marker, para);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
@@ -280,51 +295,6 @@ describe('formatSegmentWithContentModel', () => {
                 fontSize: '10px',
                 fontFamily: 'test',
             },
-        });
-    });
-
-    it('With pending format', () => {
-        model = createContentModelDocument();
-        const para = createParagraph();
-        const text = createText('test');
-
-        para.segments.push(text);
-        model.blocks.push(para);
-
-        const pendingFormat: ContentModelSegmentFormat = {
-            fontSize: '10px',
-        };
-
-        getPendingFormat.and.returnValue(pendingFormat);
-
-        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
-        expect(model).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: {},
-                        },
-                    ],
-                },
-            ],
-        });
-        expect(formatContentModel).toHaveBeenCalledTimes(1);
-        expect(formatResult).toBeTrue();
-        expect(pendingFormat).toEqual({
-            fontSize: '10px',
-            fontFamily: 'test',
-        });
-        expect(getPendingFormat).toHaveBeenCalledTimes(1);
-        expect(context).toEqual({
-            newEntities: [],
-            deletedEntities: [],
-            newImages: [],
         });
     });
 });
