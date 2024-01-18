@@ -1,5 +1,5 @@
-import getIndex from './getIndex';
-import getNumberingListStyle from './getNumberingListStyle';
+import { getIndex } from './getIndex';
+import { getNumberingListStyle } from './getNumberingListStyle';
 
 import type {
     ContentModelDocument,

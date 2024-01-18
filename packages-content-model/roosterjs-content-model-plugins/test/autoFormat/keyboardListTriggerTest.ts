@@ -1,5 +1,5 @@
-import keyboardListTrigger from '../../lib/autoFormat/keyboardListTrigger';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { keyboardListTrigger } from '../../lib/autoFormat/keyboardListTrigger';
 
 describe('keyboardListTrigger', () => {
     function runTest(
@@ -22,13 +22,14 @@ describe('keyboardListTrigger', () => {
 
         keyboardListTrigger(
             {
+                focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
             shouldSearchForBullet,
             shouldSearchForNumbering
         );
 
-        expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(formatWithContentModelSpy).toHaveBeenCalled();
         expect(input).toEqual(expectedModel);
     }
 
@@ -62,14 +63,27 @@ describe('keyboardListTrigger', () => {
                     {
                         blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
-                        blocks: [],
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        isSelected: true,
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
-                                    marginTop: '0',
+                                    marginTop: undefined,
                                     marginBlockEnd: '0px',
-                                    startNumberOverride: undefined,
+                                    startNumberOverride: 1,
                                     direction: undefined,
                                     textAlign: undefined,
                                     marginBlockStart: '0px',
@@ -82,7 +96,11 @@ describe('keyboardListTrigger', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                fontFamily: undefined,
+                                fontSize: undefined,
+                                textColor: undefined,
+                            },
                         },
                         format: {},
                     },
@@ -167,7 +185,7 @@ describe('keyboardListTrigger', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: ' test',
+                                        text: 'test',
                                         format: {},
                                     },
                                 ],
@@ -199,7 +217,20 @@ describe('keyboardListTrigger', () => {
                     {
                         blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
-                        blocks: [],
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        isSelected: true,
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
                         levels: [
                             {
                                 listType: 'OL',
@@ -208,7 +239,7 @@ describe('keyboardListTrigger', () => {
                                     direction: undefined,
                                     textAlign: undefined,
                                     marginBlockStart: '0px',
-                                    marginTop: '0',
+                                    marginTop: undefined,
                                     marginBlockEnd: '0px',
                                 },
                                 dataset: {
@@ -219,7 +250,11 @@ describe('keyboardListTrigger', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                fontFamily: undefined,
+                                fontSize: undefined,
+                                textColor: undefined,
+                            },
                         },
                         format: {},
                     },
@@ -312,14 +347,27 @@ describe('keyboardListTrigger', () => {
                     {
                         blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
-                        blocks: [],
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        isSelected: true,
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
                         levels: [
                             {
                                 listType: 'UL',
                                 format: {
-                                    marginTop: '0',
+                                    marginTop: undefined,
                                     marginBlockEnd: '0px',
-                                    startNumberOverride: undefined,
+                                    startNumberOverride: 1,
                                     direction: undefined,
                                     textAlign: undefined,
                                     marginBlockStart: '0px',
@@ -332,7 +380,11 @@ describe('keyboardListTrigger', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                fontFamily: undefined,
+                                fontSize: undefined,
+                                textColor: undefined,
+                            },
                         },
                         format: {},
                     },

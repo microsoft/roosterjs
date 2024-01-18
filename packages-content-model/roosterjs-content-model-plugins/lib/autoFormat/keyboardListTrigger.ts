@@ -1,56 +1,42 @@
-import { createListItem, createListLevel } from 'roosterjs-content-model-dom';
 import { getListTypeStyle } from './utils/getListTypeStyle';
-import {
-    getOperationalBlocks,
-    isBlockGroupOfType,
-    updateListMetadata,
-} from 'roosterjs-content-model-core';
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
+import { setListStartNumber, setListStyle } from 'roosterjs-content-model-api';
+import { setListType } from 'roosterjs-content-model-api/lib/modelApi/list/setListType';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export default function keyboardListTrigger(
+export function keyboardListTrigger(
     editor: IStandaloneEditor,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ) {
-    editor.formatContentModel((model, _) => {
+    editor.formatContentModel((model, context) => {
         const listStyleType = getListTypeStyle(
             model,
             shouldSearchForBullet,
             shouldSearchForNumbering
         );
         if (listStyleType) {
+            const paragraph = getSelectedSegmentsAndParagraphs(model, false)[0][1];
+            if (paragraph) {
+                paragraph.segments.splice(0, 1);
+            }
             const { listType, styleType, index } = listStyleType;
-
-            const paragraphOrListItems = getOperationalBlocks(model, ['ListItem'], []);
-            paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
-                if (!isBlockGroupOfType(block, 'General')) {
-                    const blockIndex = parent.blocks.indexOf(block);
-                    const listLevel = createListLevel(listType, {
-                        startNumberOverride: index,
-                        direction: block.format.direction,
-                        textAlign: block.format.textAlign,
-                        marginTop: '0',
-                        marginBlockEnd: '0px',
-                        marginBlockStart: '0px',
-                    });
-                    updateListMetadata(listLevel, metadata => {
-                        return (metadata =
-                            listType == 'UL'
-                                ? {
-                                      unorderedStyleType: styleType,
-                                  }
-                                : {
-                                      orderedStyleType: styleType,
-                                  });
-                    });
-
-                    const listItem = createListItem([listLevel]);
-                    parent.blocks.splice(blockIndex, 1, listItem);
-                }
-            });
+            const isOrderedList = listType === 'OL';
+            setListType(model, listType);
+            if (index && isOrderedList) {
+                setListStartNumber(editor, index);
+            }
+            setListStyle(
+                editor,
+                isOrderedList
+                    ? {
+                          orderedStyleType: styleType,
+                      }
+                    : { unorderedStyleType: styleType }
+            );
 
             return true;
         }

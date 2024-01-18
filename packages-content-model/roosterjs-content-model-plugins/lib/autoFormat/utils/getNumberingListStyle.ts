@@ -1,4 +1,4 @@
-import getIndex from './getIndex';
+import { getIndex } from './getIndex';
 import { NumberingListType } from 'roosterjs-content-model-core';
 
 const enum NumberingTypes {
@@ -129,7 +129,7 @@ const identifyNumberingListType = (
 /**
  * @internal
  */
-export default function getNumberingListStyle(
+export function getNumberingListStyle(
     textBeforeCursor: string,
     previousListIndex?: number,
     previousListStyle?: number

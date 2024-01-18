@@ -4,7 +4,7 @@
  * @param letter The letter that needs to be converted
  * @returns
  */
-export default function convertAlphaToDecimals(letter: string): number | undefined {
+export function convertAlphaToDecimals(letter: string): number | undefined {
     const alpha = letter.toUpperCase();
     if (alpha) {
         let result = 0;

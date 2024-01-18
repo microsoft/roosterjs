@@ -1,4 +1,4 @@
-import * as keyboardListTrigger from '../../lib/autoFormat/keyboardListTrigger';
+import * as keyboardTrigger from '../../lib/autoFormat/keyboardListTrigger';
 import { ContentModelAutoFormatPlugin } from '../../lib/autoFormat/ContentModelAutoFormatPlugin';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { KeyDownEvent } from 'roosterjs-content-model-types';
@@ -8,6 +8,7 @@ describe('Content Model Auto Format Plugin Test', () => {
 
     beforeEach(() => {
         editor = ({
+            focus: () => {},
             getDOMSelection: () =>
                 ({
                     type: -1,
@@ -19,7 +20,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         let keyboardListTriggerSpy: jasmine.Spy;
 
         beforeEach(() => {
-            keyboardListTriggerSpy = spyOn(keyboardListTrigger, 'default');
+            keyboardListTriggerSpy = spyOn(keyboardTrigger, 'keyboardListTrigger');
         });
 
         function runTest(

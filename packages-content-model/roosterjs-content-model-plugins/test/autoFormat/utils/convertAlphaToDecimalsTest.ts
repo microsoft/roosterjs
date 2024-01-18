@@ -1,4 +1,4 @@
-import convertAlphaToDecimals from '../../../lib/autoFormat/utils/convertAlphaToDecimals';
+import { convertAlphaToDecimals } from '../../../lib/autoFormat/utils/convertAlphaToDecimals';
 
 describe('convertAlphaToDecimals', () => {
     function runTest(alpha: string, expectedResult: number) {

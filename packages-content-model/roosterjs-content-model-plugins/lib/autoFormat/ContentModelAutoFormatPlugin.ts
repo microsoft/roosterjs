@@ -1,4 +1,4 @@
-import keyboardListTrigger from './keyboardListTrigger';
+import { keyboardListTrigger } from './keyboardListTrigger';
 import type {
     EditorPlugin,
     IStandaloneEditor,
@@ -10,7 +10,14 @@ import type {
  * Options to customize the Content Model Auto Format Plugin
  */
 export type AutoFormatOptions = {
+    /**
+     * When true, after type *, ->, -, --, => , —, > and space key a type of bullet list will be triggered. @default true
+     */
     autoBullet: boolean;
+
+    /**
+     * When true, after type 1, A, a, i, I followed by ., ), - or between () and space key a type of numbering list will be triggered. @default true
+     */
     autoNumbering: boolean;
 };
 
@@ -28,19 +35,13 @@ const DefaultOptions: Required<AutoFormatOptions> = {
  */
 export class ContentModelAutoFormatPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
-    private options = {
-        autoBullet: true,
-        autoNumbering: true,
-    };
 
     /**
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
      *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
      *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
      */
-    constructor(options: AutoFormatOptions = DefaultOptions) {
-        this.options = options;
-    }
+    constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
     /**
      * Get name of this plugin
