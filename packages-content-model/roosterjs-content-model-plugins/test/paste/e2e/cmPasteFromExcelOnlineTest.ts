@@ -1183,7 +1183,19 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                         {
                             segmentType: 'Br',
