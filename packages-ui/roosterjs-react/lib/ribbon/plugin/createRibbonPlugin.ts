@@ -64,7 +64,6 @@ class RibbonPluginImpl implements RibbonPlugin {
 
             case PluginEventType.KeyDown:
                 if (
-                    event.eventType == PluginEventType.KeyDown &&
                     event.rawEvent.key == 'k' &&
                     isCtrlOrMetaPressed(event.rawEvent) &&
                     !event.rawEvent.altKey &&
