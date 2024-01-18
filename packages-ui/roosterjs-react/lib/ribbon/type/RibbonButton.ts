@@ -23,12 +23,6 @@ export default interface RibbonButton<T extends string> {
     flipWhenRtl?: boolean;
 
     /**
-     * Set to false if we need to enable insert link button on KeyDown event.
-     * @default True insert link button on KeyDown event is disabled by default.
-     */
-    disableInsertLink?: boolean;
-
-    /**
      * Text of the button. This text is not localized. To show a localized text, pass a dictionary to Ribbon component via RibbonProps.strings.
      */
     unlocalizedText: string;
