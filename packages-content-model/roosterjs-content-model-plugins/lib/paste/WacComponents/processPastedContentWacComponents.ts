@@ -16,6 +16,7 @@ import type {
     ContentModelListLevel,
     ContentModelSegmentFormat,
     DomToModelContext,
+    DomToModelListFormat,
     ElementProcessor,
     FormatParser,
 } from 'roosterjs-content-model-types';
@@ -23,7 +24,7 @@ import type {
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
 const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
 
-interface WacContext extends DomToModelContext {
+interface WacContext extends DomToModelListFormat {
     /**
      * Current list levels
      */
@@ -93,17 +94,17 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
 const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
     group: ContentModelBlockGroup,
     element: HTMLLIElement,
-    ctx: DomToModelContext
+    context: DomToModelContext
 ): void => {
     const level = parseInt(element.getAttribute('data-aria-level') ?? '');
-    const context = ctx as WacContext;
+    const listFormat = context.listFormat as WacContext;
     const listType =
-        context.listFormat.levels[context.listFormat.levels.length - 1]?.listType ||
+        listFormat.levels[context.listFormat.levels.length - 1]?.listType ||
         (element.closest('ol,ul')?.tagName.toUpperCase() as 'UL' | 'OL');
     const newLevel: ContentModelListLevel = createListLevel(listType, context.blockFormat);
     parseFormat(element, context.formatParsers.listLevelThread, newLevel.format, context);
     parseFormat(element, context.formatParsers.listLevel, newLevel.format, context);
-    context.listFormat.levels = context.currentListLevels || context.listFormat.levels;
+    context.listFormat.levels = listFormat.currentListLevels || context.listFormat.levels;
 
     if (level > 0) {
         if (level > context.listFormat.levels.length) {
@@ -118,7 +119,6 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
 
     context.defaultElementProcessors.li?.(group, element, context);
 
-    const { listFormat } = context;
     const listParent = listFormat.listParent;
     if (listParent) {
         const lastblock = listParent.blocks[listParent.blocks.length - 1];
@@ -137,7 +137,7 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
         };
         newLevels.push(newValue);
     });
-    context.currentListLevels = newLevels;
+    listFormat.currentListLevels = newLevels;
     listFormat.levels = [];
 };
 
@@ -246,18 +246,18 @@ function updateStartOverride(
     }
 
     const list = element.closest('ol');
-    const context = ctx as WacContext;
+    const listFormat = ctx.listFormat as WacContext;
     const [start, listLevel] = extractWordListMetadata(list, element);
 
-    if (!context.listItemThread) {
-        context.listItemThread = [];
+    if (!listFormat.listItemThread) {
+        listFormat.listItemThread = [];
     }
 
-    const thread: number | undefined = context.listItemThread[listLevel];
+    const thread: number | undefined = listFormat.listItemThread[listLevel];
     if (thread && start - thread != 1) {
         currentLevel.format.startNumberOverride = start;
     }
-    context.listItemThread[listLevel] = start;
+    listFormat.listItemThread[listLevel] = start;
 }
 function extractWordListMetadata(
     list: HTMLElement | null | undefined,
