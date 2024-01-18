@@ -160,10 +160,10 @@ export class StandaloneEditor implements IStandaloneEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): void {
+    takeSnapshot(): Snapshot | null {
         const core = this.getCore();
 
-        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
     }
 
     /**
@@ -261,10 +261,12 @@ export class StandaloneEditor implements IStandaloneEditor {
         if (!!isDarkMode != core.lifecycle.isDarkMode) {
             transformColor(
                 core.contentDiv,
-                true /*includeSelf*/,
+                false /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
                 core.darkColorHandler
             );
+
+            core.lifecycle.isDarkMode = !!isDarkMode;
 
             core.api.triggerEvent(
                 core,
