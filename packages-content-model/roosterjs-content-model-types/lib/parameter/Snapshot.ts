@@ -112,6 +112,11 @@ export interface Snapshots {
     autoCompleteIndex: number;
 
     /**
+     * An optional callback to be invoked when snapshots are changed
+     */
+    onChanged?: (type: 'add' | 'move' | 'clear') => void;
+
+    /**
      * Max size of all snapshots
      */
     readonly maxSize: number;
