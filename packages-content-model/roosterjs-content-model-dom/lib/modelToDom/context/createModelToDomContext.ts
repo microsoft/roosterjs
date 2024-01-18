@@ -14,6 +14,7 @@ import type {
     ModelToDomOption,
     ModelToDomSelectionContext,
     ModelToDomSettings,
+    TextFormatApplier,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -100,22 +101,35 @@ export function buildFormatAppliers(
 ): FormatAppliersPerCategory {
     const combinedOverrides = Object.assign({}, ...overrides);
 
-    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
-        const value = defaultFormatKeysPerCategory[key]
-            .map(
-                formatKey =>
-                    (combinedOverrides[formatKey] === undefined
-                        ? defaultFormatAppliers[formatKey]
-                        : combinedOverrides[formatKey]) as FormatApplier<any>
-            )
-            .concat(
-                ...additionalAppliersArray.map(
-                    appliers => (appliers?.[key] ?? []) as FormatApplier<any>[]
+    const result = getObjectKeys(defaultFormatKeysPerCategory).reduce(
+        (result, key) => {
+            const value = defaultFormatKeysPerCategory[key]
+                .map(
+                    formatKey =>
+                        (combinedOverrides[formatKey] === undefined
+                            ? defaultFormatAppliers[formatKey]
+                            : combinedOverrides[formatKey]) as FormatApplier<any>
                 )
-            );
+                .concat(
+                    ...additionalAppliersArray.map(
+                        appliers => (appliers?.[key] ?? []) as FormatApplier<any>[]
+                    )
+                );
 
-        result[key] = value;
+            result[key] = value;
 
-        return result;
-    }, {} as FormatAppliersPerCategory);
+            return result;
+        },
+        {
+            text: [] as TextFormatApplier[],
+        } as FormatAppliersPerCategory
+    );
+
+    additionalAppliersArray.forEach(appliers => {
+        if (appliers?.text) {
+            result.text = result.text.concat(appliers.text);
+        }
+    });
+
+    return result;
 }

@@ -15,7 +15,6 @@ export const darkMode: ContentModelRibbonButton<DarkModeButtonStringKey> = {
     iconName: 'ClearNight',
     isChecked: formatState => formatState.isDarkMode,
     onClick: editor => {
-        editor.setDarkModeState(!editor.isDarkMode());
         editor.focus();
 
         // Let main pane know this state change so that it can be persisted when pop out/pop in

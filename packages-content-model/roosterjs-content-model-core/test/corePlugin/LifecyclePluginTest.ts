@@ -1,3 +1,5 @@
+import * as color from 'roosterjs-content-model-dom/lib/formatHandlers/utils/color';
+import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createLifecyclePlugin } from '../../lib/corePlugin/LifecyclePlugin';
 import { DarkColorHandler } from 'roosterjs-editor-types';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
@@ -12,7 +14,6 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
-            setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
@@ -70,7 +71,6 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
-            setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
@@ -104,7 +104,6 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
-            setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
@@ -147,7 +146,6 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
-            setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
             getDarkColorHandler: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
@@ -178,5 +176,129 @@ describe('LifecyclePlugin', () => {
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();
+    });
+
+    it('Handle ContentChangedEvent, not change color', () => {
+        const div = document.createElement('div');
+        const plugin = createLifecyclePlugin({}, div);
+        const triggerEvent = jasmine.createSpy('triggerEvent');
+        const state = plugin.getState();
+        const setContentModelSpy = jasmine.createSpy('setContentModel');
+        const mockedDarkColorHandler = 'HANDLER' as any;
+
+        const setColorSpy = spyOn(color, 'setColor');
+
+        plugin.initialize(<IStandaloneEditor>(<any>{
+            triggerEvent,
+            getDarkColorHandler: () => mockedDarkColorHandler,
+            setContentModel: setContentModelSpy,
+        }));
+
+        expect(setColorSpy).toHaveBeenCalledTimes(2);
+
+        expect(state).toEqual({
+            isDarkMode: false,
+            onExternalContentTransform: null,
+            shadowEditFragment: null,
+        });
+
+        plugin.onPluginEvent({
+            eventType: 'contentChanged',
+            source: 'Test',
+        });
+
+        expect(setColorSpy).toHaveBeenCalledTimes(2);
+        expect(state.isDarkMode).toBe(false);
+    });
+
+    it('Handle ContentChangedEvent, change color', () => {
+        const div = document.createElement('div');
+        const plugin = createLifecyclePlugin({}, div);
+        const triggerEvent = jasmine.createSpy('triggerEvent');
+        const state = plugin.getState();
+        const setContentModelSpy = jasmine.createSpy('setContentModel');
+        const mockedDarkColorHandler = 'HANDLER' as any;
+
+        const setColorSpy = spyOn(color, 'setColor');
+
+        plugin.initialize(<IStandaloneEditor>(<any>{
+            triggerEvent,
+            getDarkColorHandler: () => mockedDarkColorHandler,
+            setContentModel: setContentModelSpy,
+        }));
+
+        expect(setColorSpy).toHaveBeenCalledTimes(2);
+
+        expect(state).toEqual({
+            isDarkMode: false,
+            onExternalContentTransform: null,
+            shadowEditFragment: null,
+        });
+
+        const mockedIsDarkColor = 'Dark' as any;
+
+        state.isDarkMode = mockedIsDarkColor;
+
+        plugin.onPluginEvent({
+            eventType: 'contentChanged',
+            source: ChangeSource.SwitchToDarkMode,
+        });
+
+        expect(setColorSpy).toHaveBeenCalledTimes(4);
+        expect(setColorSpy).toHaveBeenCalledWith(
+            div,
+            '#000000',
+            false,
+            mockedDarkColorHandler,
+            mockedIsDarkColor
+        );
+        expect(setColorSpy).toHaveBeenCalledWith(
+            div,
+            '#ffffff',
+            true,
+            mockedDarkColorHandler,
+            mockedIsDarkColor
+        );
+    });
+
+    it('Handle ContentChangedEvent, not change color when editor does not allow adjust container color', () => {
+        const div = document.createElement('div');
+        const plugin = createLifecyclePlugin(
+            {
+                doNotAdjustEditorColor: true,
+            },
+            div
+        );
+        const triggerEvent = jasmine.createSpy('triggerEvent');
+        const state = plugin.getState();
+        const setContentModelSpy = jasmine.createSpy('setContentModel');
+        const mockedDarkColorHandler = 'HANDLER' as any;
+
+        const setColorSpy = spyOn(color, 'setColor');
+
+        plugin.initialize(<IStandaloneEditor>(<any>{
+            triggerEvent,
+            getDarkColorHandler: () => mockedDarkColorHandler,
+            setContentModel: setContentModelSpy,
+        }));
+
+        expect(setColorSpy).toHaveBeenCalledTimes(0);
+
+        expect(state).toEqual({
+            isDarkMode: false,
+            onExternalContentTransform: null,
+            shadowEditFragment: null,
+        });
+
+        const mockedIsDarkColor = 'Dark' as any;
+
+        state.isDarkMode = mockedIsDarkColor;
+
+        plugin.onPluginEvent({
+            eventType: 'contentChanged',
+            source: ChangeSource.SwitchToDarkMode,
+        });
+
+        expect(setColorSpy).toHaveBeenCalledTimes(0);
     });
 });

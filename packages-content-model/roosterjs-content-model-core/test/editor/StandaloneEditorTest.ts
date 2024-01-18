@@ -315,7 +315,10 @@ describe('StandaloneEditor', () => {
 
     it('formatContentModel', () => {
         const div = document.createElement('div');
-        const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+        const mockedSnapshot = 'SNAPSHOT' as any;
+        const addUndoSnapshotSpy = jasmine
+            .createSpy('addUndoSnapshot')
+            .and.returnValue(mockedSnapshot);
         const mockedCore = {
             plugins: [],
             darkColorHandler: {
@@ -330,9 +333,10 @@ describe('StandaloneEditor', () => {
 
         const editor = new StandaloneEditor(div);
 
-        editor.takeSnapshot();
+        const snapshot = editor.takeSnapshot();
 
         expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false);
+        expect(snapshot).toBe(mockedSnapshot);
 
         editor.dispose();
         expect(() => editor.takeSnapshot()).toThrow();
@@ -689,10 +693,11 @@ describe('StandaloneEditor', () => {
         expect(transformColorSpy).toHaveBeenCalledTimes(1);
         expect(transformColorSpy).toHaveBeenCalledWith(
             div,
-            true,
+            false,
             'lightToDark',
             mockedColorHandler
         );
+        expect(mockedCore.lifecycle.isDarkMode).toEqual(true);
         expect(triggerEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerEventSpy).toHaveBeenCalledWith(
             mockedCore,
@@ -709,7 +714,7 @@ describe('StandaloneEditor', () => {
         expect(transformColorSpy).toHaveBeenCalledTimes(2);
         expect(transformColorSpy).toHaveBeenCalledWith(
             div,
-            true,
+            false,
             'darkToLight',
             mockedColorHandler
         );
@@ -722,6 +727,7 @@ describe('StandaloneEditor', () => {
             },
             true
         );
+        expect(mockedCore.lifecycle.isDarkMode).toEqual(false);
 
         editor.dispose();
 

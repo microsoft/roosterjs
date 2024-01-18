@@ -74,25 +74,38 @@ describe('createDomToModelContext', () => {
         const mockedAProcessor = 'a' as any;
         const mockedBoldParser = 'bold' as any;
         const mockedBlockParser = 'block' as any;
-        const context = createDomToModelContext(undefined, undefined, {
-            processorOverride: {
-                a: mockedAProcessor,
+        const mockedTextParser1 = 'parser1' as any;
+        const mockedTextParser2 = 'parser2' as any;
+        const context = createDomToModelContext(
+            undefined,
+            undefined,
+            {
+                processorOverride: {
+                    a: mockedAProcessor,
+                },
+                formatParserOverride: {
+                    bold: mockedBoldParser,
+                },
+                additionalFormatParsers: {
+                    block: mockedBlockParser,
+                    text: [mockedTextParser1],
+                },
             },
-            formatParserOverride: {
-                bold: mockedBoldParser,
-            },
-            additionalFormatParsers: {
-                block: mockedBlockParser,
-            },
-        });
+            {
+                additionalFormatParsers: {
+                    text: [mockedTextParser2],
+                },
+            }
+        );
 
         const parsers = buildFormatParsers();
 
-        parsers.block[4] = mockedBlockParser;
+        parsers.block[5] = mockedBlockParser;
         parsers.elementBasedSegment[4] = mockedBoldParser;
         parsers.segment[7] = mockedBoldParser;
         parsers.segmentOnBlock[7] = mockedBoldParser;
         parsers.segmentOnTableCell[7] = mockedBoldParser;
+        parsers.text = [mockedTextParser1, mockedTextParser2];
 
         expect(context).toEqual({
             isInSelection: false,
