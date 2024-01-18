@@ -187,7 +187,7 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
-            getDarkColorHandler: () => mockedDarkColorHandler,
+            getColorManager: () => mockedDarkColorHandler,
             setContentModel: setContentModelSpy,
         }));
 
@@ -219,7 +219,7 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
-            getDarkColorHandler: () => mockedDarkColorHandler,
+            getColorManager: () => mockedDarkColorHandler,
             setContentModel: setContentModelSpy,
         }));
 
@@ -244,15 +244,15 @@ describe('LifecyclePlugin', () => {
             div,
             '#000000',
             false,
-            mockedDarkColorHandler,
-            mockedIsDarkColor
+            mockedIsDarkColor,
+            mockedDarkColorHandler
         );
         expect(setColorSpy).toHaveBeenCalledWith(
             div,
             '#ffffff',
             true,
-            mockedDarkColorHandler,
-            mockedIsDarkColor
+            mockedIsDarkColor,
+            mockedDarkColorHandler
         );
     });
 
