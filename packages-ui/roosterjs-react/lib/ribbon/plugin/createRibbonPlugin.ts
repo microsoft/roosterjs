@@ -17,7 +17,7 @@ class RibbonPluginImpl implements RibbonPlugin {
     private timer = 0;
     private formatState: FormatState | null = null;
     private uiUtilities: UIUtilities | null = null;
-    private allowInsertHotKey: Boolean = true;
+    private options: RibbonPluginOptions | undefined;
 
     /**
      * Construct a new instance of RibbonPlugin object
@@ -25,9 +25,7 @@ class RibbonPluginImpl implements RibbonPlugin {
      * @param options The options for ribbon plugin to allow insert link on hot key press.
      */
     constructor(private delayUpdateTime: number = 200, options?: RibbonPluginOptions) {
-        if (options?.allowInsertHotKey !== undefined) {
-            this.allowInsertHotKey = options.allowInsertHotKey;
-        }
+        this.options = options;
     }
 
     /**
@@ -57,17 +55,6 @@ class RibbonPluginImpl implements RibbonPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.KeyDown &&
-            event.rawEvent.key == 'k' &&
-            isCtrlOrMetaPressed(event.rawEvent) &&
-            !event.rawEvent.altKey &&
-            this.allowInsertHotKey
-        ) {
-            this.handleButtonClick(insertLink, 'insertLinkTitle', undefined);
-            event.rawEvent.preventDefault();
-        }
-
         switch (event.eventType) {
             case PluginEventType.EditorReady:
             case PluginEventType.ContentChanged:
@@ -76,6 +63,16 @@ class RibbonPluginImpl implements RibbonPlugin {
                 break;
 
             case PluginEventType.KeyDown:
+                if (
+                    event.eventType == PluginEventType.KeyDown &&
+                    event.rawEvent.key == 'k' &&
+                    isCtrlOrMetaPressed(event.rawEvent) &&
+                    !event.rawEvent.altKey &&
+                    this.options?.allowInsertLinkHotKey
+                ) {
+                    this.handleButtonClick(insertLink, 'insertLinkTitle', undefined);
+                    event.rawEvent.preventDefault();
+                }
             case PluginEventType.MouseUp:
                 this.delayUpdate();
                 break;
