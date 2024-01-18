@@ -939,30 +939,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     //#region Dark mode APIs
 
     /**
-     * Set the dark mode state and transforms the content to match the new state.
-     * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
-     */
-    setDarkModeState(nextDarkMode?: boolean) {
-        const isDarkMode = this.isDarkMode();
-
-        if (isDarkMode == !!nextDarkMode) {
-            return;
-        }
-        const core = this.getCore();
-
-        transformColor(
-            core.contentDiv,
-            true /*includeSelf*/,
-            nextDarkMode ? 'lightToDark' : 'darkToLight',
-            core.darkColorHandler
-        );
-
-        this.triggerContentChangedEvent(
-            nextDarkMode ? ChangeSource.SwitchToDarkMode : ChangeSource.SwitchToLightMode
-        );
-    }
-
-    /**
      * Transform the given node and all its child nodes to dark mode color if editor is in dark mode
      * @param node The node to transform
      * @param direction The transform direction. @default ColorTransformDirection.LightToDark

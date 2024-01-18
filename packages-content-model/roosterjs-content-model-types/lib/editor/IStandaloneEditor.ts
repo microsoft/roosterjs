@@ -151,7 +151,7 @@ export interface IStandaloneEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): void;
+    takeSnapshot(): Snapshot | null;
 
     /**
      * Restore an undo snapshot into editor

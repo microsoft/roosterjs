@@ -4,7 +4,7 @@ import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
-import type { SnapshotsManager } from '../parameter/SnapshotsManager';
+import type { Snapshots } from '../parameter/Snapshot';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
 /**
@@ -93,10 +93,9 @@ export interface StandaloneEditorOptions {
     inDarkMode?: boolean;
 
     /**
-     * Undo snapshot service based on content metadata. Use this parameter to customize the undo snapshot service.
-     * When this property is set, value of undoSnapshotService will be ignored.
+     * Undo snapshot. Use this parameter to provide an external storage of undo snapshots
      */
-    snapshotsManager?: SnapshotsManager;
+    snapshots?: Snapshots;
 
     /**
      * A callback to be invoked when any exception is thrown during disposing editor
