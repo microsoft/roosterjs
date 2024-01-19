@@ -61,7 +61,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -69,7 +68,7 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             },
             0,
             4,
-            [{ html: 'test', knownColors: [], isDarkMode: false }],
+            [{ html: 'test', isDarkMode: false }],
             -1
         );
     });
@@ -81,7 +80,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     true
@@ -89,7 +87,7 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             },
             0,
             4,
-            [{ html: 'test', knownColors: [], isDarkMode: false }],
+            [{ html: 'test', isDarkMode: false }],
             0
         );
     });
@@ -101,7 +99,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test1',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -109,7 +106,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test2',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -118,8 +114,8 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             1,
             10,
             [
-                { html: 'test1', knownColors: [], isDarkMode: false },
-                { html: 'test2', knownColors: [], isDarkMode: false },
+                { html: 'test1', isDarkMode: false },
+                { html: 'test2', isDarkMode: false },
             ],
             -1
         );
@@ -132,7 +128,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test01',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -152,7 +147,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test1',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -160,7 +154,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test2',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -171,7 +164,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             [
                 {
                     html: 'test2',
-                    knownColors: [],
                     isDarkMode: false,
                 },
             ],
@@ -186,7 +178,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test1',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -194,7 +185,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test2',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -203,7 +193,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test03',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -214,12 +203,10 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             [
                 {
                     html: 'test1',
-                    knownColors: [],
                     isDarkMode: false,
                 },
                 {
                     html: 'test03',
-                    knownColors: [],
                     isDarkMode: false,
                 },
             ],
@@ -234,7 +221,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test1',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -242,7 +228,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test1',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -253,7 +238,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             [
                 {
                     html: 'test1',
-                    knownColors: [],
                     isDarkMode: false,
                 },
             ],
@@ -268,7 +252,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             {
                 html: 'test',
                 isDarkMode: false,
-                knownColors: [],
             },
             false
         );
@@ -277,7 +260,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             {
                 html: 'test',
                 isDarkMode: false,
-                knownColors: [],
             },
         ]);
 
@@ -285,7 +267,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             {
                 html: 'test',
                 isDarkMode: false,
-                knownColors: [],
             },
             false
         );
@@ -294,7 +275,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             {
                 html: 'test',
                 isDarkMode: false,
-                knownColors: [],
             },
         ]);
 
@@ -302,7 +282,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             {
                 html: 'test',
                 isDarkMode: false,
-                knownColors: [],
                 entityStates: mockedEntityStates,
             },
             false
@@ -312,12 +291,10 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             {
                 html: 'test',
                 isDarkMode: false,
-                knownColors: [],
             },
             {
                 html: 'test',
                 isDarkMode: false,
-                knownColors: [],
                 entityStates: mockedEntityStates,
             },
         ]);
@@ -333,7 +310,6 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
                 service.addSnapshot(
                     {
                         html: 'test',
-                        knownColors: [],
                         isDarkMode: false,
                     },
                     false
@@ -341,7 +317,7 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
             },
             0,
             4,
-            [{ html: 'test', knownColors: [], isDarkMode: false }],
+            [{ html: 'test', isDarkMode: false }],
             -1
         );
 

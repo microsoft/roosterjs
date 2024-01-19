@@ -1,4 +1,5 @@
-import type { DarkColorHandler } from 'roosterjs-editor-types';
+import { getColor, setColor } from 'roosterjs-content-model-dom';
+import type { DarkColorHandler } from 'roosterjs-content-model-types';
 
 /**
  * Edit and transform color of elements between light mode and dark mode
@@ -11,11 +12,15 @@ export function transformColor(
     rootNode: Node,
     includeSelf: boolean,
     direction: 'lightToDark' | 'darkToLight',
-    darkColorHandler: DarkColorHandler
+    darkColorHandler?: DarkColorHandler
 ) {
     const toDarkMode = direction == 'lightToDark';
     const transformer = (element: HTMLElement) => {
-        darkColorHandler.transformElementColor(element, !toDarkMode, toDarkMode);
+        const textColor = getColor(element, false /*isBackground*/, !toDarkMode, darkColorHandler);
+        const backColor = getColor(element, true /*isBackground*/, !toDarkMode, darkColorHandler);
+
+        setColor(element, textColor, false /*isBackground*/, toDarkMode, darkColorHandler);
+        setColor(element, backColor, true /*isBackground*/, toDarkMode, darkColorHandler);
     };
 
     iterateElements(rootNode, transformer, includeSelf);

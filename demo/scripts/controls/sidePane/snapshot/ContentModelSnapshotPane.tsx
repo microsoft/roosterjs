@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { EntityState, Snapshot, SnapshotSelection } from 'roosterjs-content-model-types';
-import { ModeIndependentColor } from 'roosterjs-editor-types';
 
 const styles = require('./SnapshotPane.scss');
 
@@ -21,7 +20,6 @@ export default class ContentModelSnapshotPane extends React.Component<
     ContentModelSnapshotPaneState
 > {
     private html = React.createRef<HTMLTextAreaElement>();
-    private knownColors = React.createRef<HTMLTextAreaElement>();
     private entityStates = React.createRef<HTMLTextAreaElement>();
     private isDarkColor = React.createRef<HTMLInputElement>();
     private selection = React.createRef<HTMLTextAreaElement>();
@@ -55,8 +53,6 @@ export default class ContentModelSnapshotPane extends React.Component<
                 <textarea ref={this.selection} className={styles.textarea} spellCheck={false} />
                 <div>Entity states:</div>
                 <textarea ref={this.entityStates} className={styles.textarea} spellCheck={false} />
-                <div>Known colors:</div>
-                <textarea ref={this.knownColors} className={styles.textarea} spellCheck={false} />
                 <div>
                     <input type="checkbox" ref={this.isDarkColor} id="isUndoInDarkColor" />
                     <label htmlFor="isUndoInDarkColor">Is in dark mode</label>
@@ -70,9 +66,6 @@ export default class ContentModelSnapshotPane extends React.Component<
         const selection = this.selection.current.value
             ? (JSON.parse(this.selection.current.value) as SnapshotSelection)
             : undefined;
-        const knownColors = this.knownColors.current.value
-            ? (JSON.parse(this.knownColors.current.value) as ModeIndependentColor[])
-            : [];
         const entityStates = this.entityStates.current.value
             ? (JSON.parse(this.entityStates.current.value) as EntityState[])
             : undefined;
@@ -80,7 +73,6 @@ export default class ContentModelSnapshotPane extends React.Component<
 
         return {
             html,
-            knownColors,
             entityStates,
             isDarkMode,
             selection,
@@ -124,7 +116,6 @@ export default class ContentModelSnapshotPane extends React.Component<
                         html: html,
                         entityStates: [],
                         isDarkMode: isDarkMode,
-                        knownColors: [],
                         selection: metadata as SnapshotSelection,
                     });
 
@@ -158,9 +149,6 @@ export default class ContentModelSnapshotPane extends React.Component<
         this.html.current.value = snapshot.html;
         this.entityStates.current.value = snapshot.entityStates
             ? JSON.stringify(snapshot.entityStates)
-            : '';
-        this.knownColors.current.value = snapshot.knownColors
-            ? JSON.stringify(snapshot.knownColors)
             : '';
         this.selection.current.value = snapshot.selection ? JSON.stringify(snapshot.selection) : '';
         this.isDarkColor.current.checked = !!snapshot.isDarkMode;
