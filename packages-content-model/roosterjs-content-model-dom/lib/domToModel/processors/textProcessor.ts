@@ -52,7 +52,7 @@ function internalTextProcessor(
         segments.push(addTextSegment(group, subText, paragraph, context));
         context.isInSelection = true;
 
-        addSelectionMarker(group, context);
+        addSelectionMarker(group, context, textNode, txtStartOffset);
 
         txt = txt.substring(txtStartOffset);
         txtEndOffset -= txtStartOffset;
@@ -66,7 +66,7 @@ function internalTextProcessor(
             context.selection &&
             (context.selection.type != 'range' || !context.selection.range.collapsed)
         ) {
-            addSelectionMarker(group, context);
+            addSelectionMarker(group, context, textNode, offsets[1]); // Must use offsets[1] here as the unchanged offset value, cannot use txtEndOffset since it has been modified
         }
 
         context.isInSelection = false;

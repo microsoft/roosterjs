@@ -11,8 +11,8 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
             getColor(
                 element,
                 false /*isBackground*/,
-                context.darkColorHandler,
-                !!context.isDarkMode
+                !!context.isDarkMode,
+                context.darkColorHandler
             ) || defaultStyle.color;
 
         if (textColor && textColor != 'inherit') {
@@ -27,8 +27,8 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
                 element,
                 format.textColor,
                 false /*isBackground*/,
-                context.darkColorHandler,
-                !!context.isDarkMode
+                !!context.isDarkMode,
+                context.darkColorHandler
             );
         }
     },

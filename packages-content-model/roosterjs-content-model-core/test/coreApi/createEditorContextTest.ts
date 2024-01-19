@@ -39,6 +39,7 @@ describe('createEditorContext', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -82,6 +83,50 @@ describe('createEditorContext', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer,
+            pendingFormat: undefined,
+        });
+    });
+
+    it('create with pending format', () => {
+        const isDarkMode = 'DARKMODE' as any;
+        const defaultFormat = 'DEFAULTFORMAT' as any;
+        const darkColorHandler = 'DARKHANDLER' as any;
+        const mockedPendingFormat = 'PENDINGFORMAT' as any;
+        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
+        const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+
+        const div = {
+            ownerDocument: {
+                defaultView: {
+                    getComputedStyle: getComputedStyleSpy,
+                },
+            },
+            getBoundingClientRect: getBoundingClientRectSpy,
+        };
+
+        const core = ({
+            contentDiv: div,
+            lifecycle: {
+                isDarkMode,
+            },
+            format: {
+                defaultFormat,
+                pendingFormat: mockedPendingFormat,
+            },
+            darkColorHandler,
+            cache: {},
+        } as any) as StandaloneEditorCore;
+
+        const context = createEditorContext(core);
+
+        expect(context).toEqual({
+            isDarkMode,
+            darkColorHandler,
+            defaultFormat,
+            addDelimiterForEntity: true,
+            allowCacheElement: true,
+            domIndexer: undefined,
+            pendingFormat: mockedPendingFormat,
         });
     });
 });
@@ -136,6 +181,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 1,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -155,6 +201,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 2,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -174,6 +221,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 0.5,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 });
@@ -226,6 +274,7 @@ describe('createEditorContext - checkRootDir', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -244,6 +293,7 @@ describe('createEditorContext - checkRootDir', () => {
             isRootRtl: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 });

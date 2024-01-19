@@ -233,7 +233,7 @@ describe('paste with content model & paste plugin', () => {
 
         editor?.paste(clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
@@ -417,7 +417,17 @@ describe('Paste with clipboardData', () => {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {
-                                textColor: 'rgb(0, 0, 0)',
+                                textColor: '',
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                underline: false,
                             },
                         },
                     ],
@@ -456,7 +466,19 @@ describe('Paste with clipboardData', () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                     ],
                     blockType: 'Paragraph',
@@ -499,7 +521,19 @@ describe('Paste with clipboardData', () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                             link: {
                                 format: {
                                     underline: true,
