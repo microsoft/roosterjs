@@ -1,14 +1,13 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ClipboardData, DomToModelOption } from 'roosterjs-content-model-types';
+import { ClipboardData, DomToModelOption, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_E2E';
 
 describe(ID, () => {
-    let editor: IContentModelEditor = undefined!;
+    let editor: IStandaloneEditor = undefined!;
 
     beforeEach(() => {
         editor = initEditor(ID);
@@ -35,7 +34,7 @@ describe(ID, () => {
                 '<table style="text-align: left; white-space: normal; width: 170pt; box-sizing: border-box; border-collapse: collapse; border-spacing: 0px; background-color: rgb(255, 255, 255);"><tbody><tr><td data-ogsb="white" style="text-align: center; white-space: nowrap; border-width: 0.5pt; border-style: solid; border-color: initial; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 52pt; height: 28.5pt; background-color: white;"><div style="text-align: center; white-space: nowrap; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">No.</span></div></td><td data-ogsb="white" style="text-align: center; white-space: nowrap; border-top: 0.5pt solid; border-right: 0.5pt solid; border-bottom: 0.5pt solid; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 56pt; background-color: white;"><div style="text-align: center; white-space: nowrap; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">ID</span></div></td><td data-ogsb="white" style="text-align: center; white-space: normal; border-top: 0.5pt solid; border-right: 0.5pt solid; border-bottom: 0.5pt solid; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 62pt; background-color: white;"><div style="text-align: center; white-space: normal; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">Work Item Type</span></div></td></tr></tbody></table><div><br></div><!--{"start":[0],"end":[1,0]}-->',
         });
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
 
         const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {
@@ -203,6 +202,7 @@ describe(ID, () => {
                         width: '170pt',
                         useBorderBox: true,
                         borderCollapse: true,
+                        textColor: 'rgb(0, 0, 0)',
                     },
                     widths: <any>jasmine.anything(),
                     dataset: {},
@@ -213,7 +213,19 @@ describe(ID, () => {
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                         {
                             segmentType: 'Br',

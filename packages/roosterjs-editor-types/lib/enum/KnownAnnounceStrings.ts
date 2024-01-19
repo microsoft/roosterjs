@@ -1,6 +1,7 @@
 /**
  * Known announce strings
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum KnownAnnounceStrings {
     /**
      * String announced for a list item in a OL List

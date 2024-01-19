@@ -1,6 +1,5 @@
 import type { TableSelectionCoordinates } from '../selection/TableSelectionCoordinates';
 import type { EntityState } from './FormatWithContentModelContext';
-import type { ModeIndependentColor } from 'roosterjs-editor-types';
 import type { SelectionType } from '../selection/DOMSelection';
 
 /**
@@ -66,11 +65,6 @@ export interface Snapshot {
     html: string;
 
     /**
-     * Known colors for dark mode
-     */
-    knownColors: Readonly<ModeIndependentColor>[];
-
-    /**
      * Entity states related to this undo snapshots. When undo/redo to this snapshot, each entity state will trigger
      * an EntityOperation event with operation = EntityOperation.UpdateEntityState
      */
@@ -110,6 +104,11 @@ export interface Snapshots {
      * Index of snapshot added before an auto complete action
      */
     autoCompleteIndex: number;
+
+    /**
+     * An optional callback to be invoked when snapshots are changed
+     */
+    onChanged?: (type: 'add' | 'move' | 'clear') => void;
 
     /**
      * Max size of all snapshots

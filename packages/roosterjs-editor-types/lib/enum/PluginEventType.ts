@@ -1,6 +1,7 @@
 /**
  * Editor plugin event type
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum PluginEventType {
     /**
      * HTML KeyDown event

@@ -27,6 +27,7 @@ module.exports = {
         '@typescript-eslint',
         '@typescript-eslint/tslint',
         'eslint-plugin-import',
+        'etc',
     ],
     root: true,
     rules: {
@@ -148,5 +149,6 @@ module.exports = {
         'import/no-duplicates': 'error',
         'prefer-const': 'error',
         'no-var': 'error',
+        'etc/no-const-enum': ['error', { allowLocal: true }],
     },
 };

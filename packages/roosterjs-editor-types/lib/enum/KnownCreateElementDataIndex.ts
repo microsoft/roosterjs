@@ -1,6 +1,7 @@
 /**
  * Index of known CreateElementData used by createElement function
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum KnownCreateElementDataIndex {
     /**
      * Set a none value to help createElement function ignore falsy value

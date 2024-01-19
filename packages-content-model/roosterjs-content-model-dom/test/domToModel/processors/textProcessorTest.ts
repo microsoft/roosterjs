@@ -1,3 +1,4 @@
+import * as addSelectionMarker from '../../../lib/domToModel/utils/addSelectionMarker';
 import { addBlock } from '../../../lib/modelApi/common/addBlock';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -691,5 +692,216 @@ describe('textProcessor', () => {
             blocks: [paragraph],
         });
         expect(onSegmentSpy).toHaveBeenCalledWith(text, paragraph, [segment1, segment2, segment3]);
+    });
+
+    it('process with text format parser', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test1');
+        const parserSpy = jasmine.createSpy('parser');
+
+        context.formatParsers.text = [parserSpy];
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+        });
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(parserSpy).toHaveBeenCalledTimes(1);
+        expect(parserSpy).toHaveBeenCalledWith({}, text, context);
+    });
+
+    it('With pending format, match collapsed selection', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const addSelectionMarkerSpy = spyOn(
+            addSelectionMarker,
+            'addSelectionMarker'
+        ).and.callThrough();
+
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: text,
+                endContainer: text,
+                startOffset: 2,
+                endOffset: 2,
+            } as any,
+        };
+        context.pendingFormat = {
+            format: {
+                a: 'a',
+            } as any,
+            posContainer: text,
+            posOffset: 2,
+        };
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'te',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: { a: 'a' } as any,
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(addSelectionMarkerSpy).toHaveBeenCalledTimes(2);
+        expect(addSelectionMarkerSpy).toHaveBeenCalledWith(doc, context, text, 2);
+    });
+
+    it('With pending format, match expanded selection', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const addSelectionMarkerSpy = spyOn(
+            addSelectionMarker,
+            'addSelectionMarker'
+        ).and.callThrough();
+
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: text,
+                endContainer: text,
+                startOffset: 1,
+                endOffset: 3,
+            } as any,
+        };
+        context.pendingFormat = {
+            format: {
+                a: 'a',
+            } as any,
+            posContainer: text,
+            posOffset: 3,
+        };
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 't',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'es',
+                            format: {} as any,
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 't',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(addSelectionMarkerSpy).toHaveBeenCalledTimes(2);
+        expect(addSelectionMarkerSpy).toHaveBeenCalledWith(doc, context, text, 1);
+        expect(addSelectionMarkerSpy).toHaveBeenCalledWith(doc, context, text, 3);
+    });
+
+    it('With pending format, not match selection', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const addSelectionMarkerSpy = spyOn(
+            addSelectionMarker,
+            'addSelectionMarker'
+        ).and.callThrough();
+
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: text,
+                endContainer: text,
+                startOffset: 2,
+                endOffset: 2,
+            } as any,
+        };
+        context.pendingFormat = {
+            format: {
+                a: 'a',
+            } as any,
+            posContainer: text,
+            posOffset: 3,
+        };
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'te',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(addSelectionMarkerSpy).toHaveBeenCalledTimes(2);
+        expect(addSelectionMarkerSpy).toHaveBeenCalledWith(doc, context, text, 2);
     });
 });

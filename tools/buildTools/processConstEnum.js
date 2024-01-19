@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { compatibleEnumPath } = require('./common');
 
-const EnumRegex = /(^\s*\/\*(?:\*(?!\/)|[^*])*\*\/)?\W*export const enum ([A-Za-z0-9]+)\s{([^}]+)}/gm;
+const EnumRegex = /(\s*\/\*(?:\*(?!\/)|[^*])*\*\/)?\W*\s*(\/\/[\s\S]+?)?export const enum ([A-Za-z0-9]+)\s\{([^}]+)\}/gm;
 const CompatibleTypePrefix = 'Compatible';
 
 function parseEnum(source) {
@@ -13,11 +13,12 @@ function parseEnum(source) {
     let enumMatch;
     while (!!(enumMatch = EnumRegex.exec(source))) {
         const enumComment = enumMatch[1] || '';
-        const enumName = enumMatch[2];
-        const enumContent = enumMatch[3];
+        const eslintComment = enumMatch[2] || '';
+        const enumName = enumMatch[3];
+        const enumContent = enumMatch[4];
         const currentEnum = {
             name: enumName,
-            comment: enumComment,
+            comment: enumComment.trim() + '\r\n' + eslintComment.trim(),
             content: enumContent,
         };
 

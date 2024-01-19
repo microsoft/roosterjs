@@ -1,9 +1,10 @@
+import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
+import type { PluginEventType } from '../event/PluginEventType';
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -15,12 +16,8 @@ import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
 } from '../parameter/FormatWithContentModelOptions';
-import type {
-    DarkColorHandler,
-    PluginEventData,
-    PluginEventFromType,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import type { DarkColorHandler } from '../context/DarkColorHandler';
+import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
 /**
  * An interface of standalone Content Model editor.
@@ -113,7 +110,7 @@ export interface IStandaloneEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+    triggerEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast?: boolean
@@ -145,9 +142,16 @@ export interface IStandaloneEditor {
     getZoomScale(): number;
 
     /**
+     * Set current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    setZoomScale(scale: number): void;
+
+    /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): void;
+    takeSnapshot(): Snapshot | null;
 
     /**
      * Restore an undo snapshot into editor
@@ -203,7 +207,7 @@ export interface IStandaloneEditor {
     /**
      * Get a darkColorHandler object for this editor.
      */
-    getDarkColorHandler(): DarkColorHandler;
+    getColorManager(): DarkColorHandler;
 
     /**
      * Dispose this editor, dispose all plugins and custom data
@@ -214,4 +218,12 @@ export interface IStandaloneEditor {
      * @returns true if focus is in editor, otherwise false
      */
     hasFocus(): boolean;
+
+    /**
+     * Get a function to convert HTML string to trusted HTML string.
+     * By default it will just return the input HTML directly. To override this behavior,
+     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getTrustedHTMLHandler(): TrustedHTMLHandler;
 }

@@ -1,19 +1,12 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { transformColor } from '../publicApi/color/transformColor';
-import type {
-    DarkColorHandler,
-    IEditor,
-    PluginEventData,
-    PluginEventFromType,
-} from 'roosterjs-editor-types';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     ClipboardData,
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
+    DarkColorHandler,
     DOMEventRecord,
     DOMSelection,
     DomToModelOption,
@@ -23,10 +16,14 @@ import type {
     ModelToDomOption,
     OnNodeCreated,
     PasteType,
+    PluginEventData,
+    PluginEventFromType,
+    PluginEventType,
     Snapshot,
     SnapshotsManager,
     StandaloneEditorCore,
     StandaloneEditorOptions,
+    TrustedHTMLHandler,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -49,11 +46,7 @@ export class StandaloneEditor implements IStandaloneEditor {
 
         onBeforeInitializePlugins?.();
 
-        // TODO: Remove this type cast
-        const editor: IStandaloneEditor = this;
-        this.getCore().plugins.forEach(plugin =>
-            plugin.initialize(editor as IStandaloneEditor & IEditor)
-        );
+        this.getCore().plugins.forEach(plugin => plugin.initialize(this));
     }
 
     /**
@@ -74,6 +67,7 @@ export class StandaloneEditor implements IStandaloneEditor {
         }
 
         core.darkColorHandler.reset();
+
         this.core = null;
     }
 
@@ -167,10 +161,10 @@ export class StandaloneEditor implements IStandaloneEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): void {
+    takeSnapshot(): Snapshot | null {
         const core = this.getCore();
 
-        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
     }
 
     /**
@@ -217,7 +211,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+    triggerEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast: boolean = false
@@ -268,15 +262,17 @@ export class StandaloneEditor implements IStandaloneEditor {
         if (!!isDarkMode != core.lifecycle.isDarkMode) {
             transformColor(
                 core.contentDiv,
-                true /*includeSelf*/,
+                false /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
                 core.darkColorHandler
             );
 
+            core.lifecycle.isDarkMode = !!isDarkMode;
+
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: PluginEventType.ContentChanged,
+                    eventType: 'contentChanged',
                     source: isDarkMode
                         ? ChangeSource.SwitchToDarkMode
                         : ChangeSource.SwitchToLightMode,
@@ -334,9 +330,9 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Get a darkColorHandler object for this editor.
+     * Get a color manager object for this editor.
      */
-    getDarkColorHandler(): DarkColorHandler {
+    getColorManager(): DarkColorHandler {
         return this.getCore().darkColorHandler;
     }
 
@@ -358,6 +354,42 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     getZoomScale(): number {
         return this.getCore().zoomScale;
+    }
+
+    /**
+     * Set current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
+     */
+    setZoomScale(scale: number): void {
+        const core = this.getCore();
+
+        if (scale > 0 && scale <= 10) {
+            const oldValue = core.zoomScale;
+            core.zoomScale = scale;
+
+            if (oldValue != scale) {
+                this.triggerEvent(
+                    'zoomChanged',
+                    {
+                        oldZoomScale: oldValue,
+                        newZoomScale: scale,
+                    },
+                    true /*broadcast*/
+                );
+            }
+        }
+    }
+
+    /**
+     * Get a function to convert HTML string to trusted HTML string.
+     * By default it will just return the input HTML directly. To override this behavior,
+     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getTrustedHTMLHandler(): TrustedHTMLHandler {
+        return this.getCore().trustedHTMLHandler;
     }
 
     /**

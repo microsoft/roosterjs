@@ -1,12 +1,10 @@
-import type { ValueSanitizer } from '../parameter/ValueSanitizer';
+import type { PasteType } from '../enum/PasteType';
+import type { ClipboardData } from '../parameter/ClipboardData';
+import type { BasePluginEvent } from './BasePluginEvent';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
-import type {
-    BeforePasteEvent,
-    BeforePasteEventData,
-    CompatibleBeforePasteEvent,
-} from 'roosterjs-editor-types';
+import type { ValueSanitizer } from '../parameter/ValueSanitizer';
 
 /**
  * Options for DOM to Content Model conversion for paste only
@@ -15,22 +13,22 @@ export interface DomToModelOptionForPaste extends Required<DomToModelOption> {
     /**
      * Additional allowed HTML tags in lower case. Element with these tags will be preserved
      */
-    additionalAllowedTags: Lowercase<string>[];
+    readonly additionalAllowedTags: Lowercase<string>[];
 
     /**
      * Additional disallowed HTML tags in lower case. Elements with these tags will be dropped
      */
-    additionalDisallowedTags: Lowercase<string>[];
+    readonly additionalDisallowedTags: Lowercase<string>[];
 
     /**
      * Additional sanitizers for CSS styles
      */
-    styleSanitizers: Record<string, ValueSanitizer>;
+    readonly styleSanitizers: Record<string, ValueSanitizer>;
 
     /**
      * Additional sanitizers for CSS styles
      */
-    attributeSanitizers: Record<string, ValueSanitizer>;
+    readonly attributeSanitizers: Record<string, ValueSanitizer>;
 }
 
 /**
@@ -47,28 +45,44 @@ export type MergePastedContentFunc = (
 /**
  * Data of ContentModelBeforePasteEvent
  */
-export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
+export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
+    /**
+     * An object contains all related data for pasting
+     */
+    readonly clipboardData: ClipboardData;
+
+    /**
+     * HTML Document Fragment which will be inserted into content
+     */
+    readonly fragment: DocumentFragment;
+
+    /**
+     * Stripped HTML string before "StartFragment" comment
+     */
+    readonly htmlBefore: string;
+
+    /**
+     * Stripped HTML string after "EndFragment" comment
+     */
+    readonly htmlAfter: string;
+
+    /**
+     * Attributes of the root "HTML" tag
+     */
+    readonly htmlAttributes: Record<string, string>;
+
+    /**
+     * Paste type option (as plain text, merge format, normal, as image)
+     */
+    readonly pasteType: PasteType;
+
     /**
      * domToModel Options to use when creating the content model from the paste fragment
      */
-    domToModelOption: DomToModelOptionForPaste;
+    readonly domToModelOption: DomToModelOptionForPaste;
 
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
     customizedMerge?: MergePastedContentFunc;
 }
-
-/**
- * Provides a chance for plugin to change the content before it is pasted into editor.
- */
-export interface ContentModelBeforePasteEvent
-    extends ContentModelBeforePasteEventData,
-        BeforePasteEvent {}
-
-/**
- * Provides a chance for plugin to change the content before it is pasted into editor.
- */
-export interface CompatibleContentModelBeforePasteEvent
-    extends ContentModelBeforePasteEventData,
-        CompatibleBeforePasteEvent {}

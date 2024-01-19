@@ -1,6 +1,5 @@
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import MainPaneBase from '../../MainPaneBase';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
 
 const STYLES: Record<string, string> = {
     dashed: 'dashed',
@@ -17,7 +16,7 @@ const STYLES: Record<string, string> = {
  * @internal
  * "Table Border Style" button on the format ribbon
  */
-export const tableBorderStyleButton: RibbonButton<'buttonNameTableBorderStyle'> = {
+export const tableBorderStyleButton: ContentModelRibbonButton<'buttonNameTableBorderStyle'> = {
     key: 'buttonNameTableBorderStyle',
     unlocalizedText: 'Table Border Style',
     iconName: 'LineStyle',
@@ -27,10 +26,9 @@ export const tableBorderStyleButton: RibbonButton<'buttonNameTableBorderStyle'> 
         allowLivePreview: true,
     },
     onClick: (editor, style) => {
-        if (isContentModelEditor(editor)) {
-            MainPaneBase.getInstance().setTableBorderStyle(style);
-            editor.focus();
-        }
+        MainPaneBase.getInstance().setTableBorderStyle(style);
+        editor.focus();
+
         return true;
     },
 };

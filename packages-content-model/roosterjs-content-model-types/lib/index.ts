@@ -36,6 +36,7 @@ export { HtmlAlignFormat } from './format/formatParts/HtmlAlignFormat';
 export { MarginFormat } from './format/formatParts/MarginFormat';
 export { PaddingFormat } from './format/formatParts/PaddingFormat';
 export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
+export { TextIndentFormat } from './format/formatParts/TextIndentFormat';
 export { WhiteSpaceFormat } from './format/formatParts/WhiteSpaceFormat';
 export { DisplayFormat } from './format/formatParts/DisplayFormat';
 export { IdFormat } from './format/formatParts/IdFormat';
@@ -142,6 +143,8 @@ export {
     ApplyMetadata,
     MetadataApplier,
     MetadataAppliers,
+    TextFormatApplier,
+    ElementFormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
 export {
     DefaultStyleMap,
@@ -150,6 +153,8 @@ export {
     FormatParsersPerCategory,
     DomToModelSettings,
     FormatParser,
+    TextFormatParser,
+    ElementFormatParserPerCategory,
 } from './context/DomToModelSettings';
 export { DomToModelContext } from './context/DomToModelContext';
 export { ElementProcessor } from './context/ElementProcessor';
@@ -192,7 +197,7 @@ export {
     ObjectDefinition,
     Definition,
 } from './metadata/Definition';
-export { ColorManager, Colors } from './context/ColorManager';
+export { DarkColorHandler, Colors, ColorTransformFunction } from './context/DarkColorHandler';
 
 export { IStandaloneEditor } from './editor/IStandaloneEditor';
 export { StandaloneEditorOptions } from './editor/StandaloneEditorOptions';
@@ -217,9 +222,11 @@ export {
     Paste,
 } from './editor/StandaloneEditorCore';
 export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
+export { EditorPlugin } from './editor/EditorPlugin';
+export { PluginWithState } from './editor/PluginWithState';
+export { ContextMenuProvider } from './editor/ContextMenuProvider';
 
 export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export { StandaloneEditorCorePluginState } from './pluginState/StandaloneEditorPluginState';
 export {
     ContentModelFormatPluginState,
     PendingFormat,
@@ -230,6 +237,14 @@ export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
 export { SelectionPluginState } from './pluginState/SelectionPluginState';
 export { UndoPluginState } from './pluginState/UndoPluginState';
+export {
+    PluginKey,
+    KeyOfStatePlugin,
+    TypeOfStatePlugin,
+    StatePluginKeys,
+    GenericPluginState,
+    PluginState,
+} from './pluginState/PluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -264,23 +279,44 @@ export { SnapshotsManager } from './parameter/SnapshotsManager';
 export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRecord';
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
+export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
+export { TrustedHTMLHandler } from './parameter/TrustedHTMLHandler';
+export { Rect } from './parameter/Rect';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
 
+export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
+export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
+export { BeforeDisposeEvent } from './event/BeforeDisposeEvent';
+export { BeforeKeyboardEditingEvent } from './event/BeforeKeyboardEditingEvent';
 export {
-    MergePastedContentFunc,
+    BeforePasteEvent,
     DomToModelOptionForPaste,
-    ContentModelBeforePasteEvent,
-    ContentModelBeforePasteEventData,
-    CompatibleContentModelBeforePasteEvent,
-} from './event/ContentModelBeforePasteEvent';
+    MergePastedContentFunc,
+} from './event/BeforePasteEvent';
+export { BeforeSetContentEvent } from './event/BeforeSetContentEvent';
+export { ContentChangedEvent, ChangedEntity } from './event/ContentChangedEvent';
+export { ContextMenuEvent } from './event/ContextMenuEvent';
+export { EditImageEvent } from './event/EditImageEvent';
+export { EditorReadyEvent } from './event/EditorReadyEvent';
+export { EntityOperationEvent, Entity } from './event/EntityOperationEvent';
+export { ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';
+export { EditorInputEvent } from './event/EditorInputEvent';
 export {
-    ContentModelContentChangedEvent,
-    CompatibleContentModelContentChangedEvent,
-    ContentModelContentChangedEventData,
-    ChangedEntity,
-} from './event/ContentModelContentChangedEvent';
+    KeyDownEvent,
+    KeyPressEvent,
+    KeyUpEvent,
+    CompositionEndEvent,
+} from './event/KeyboardEvent';
+export { MouseDownEvent, MouseUpEvent } from './event/MouseEvent';
+export { PluginEvent } from './event/PluginEvent';
 export {
-    CompatibleContentModelSelectionChangedEvent,
-    ContentModelSelectionChangedEvent,
-    ContentModelSelectionChangedEventData,
-} from './event/ContentModelSelectionChangedEvent';
+    PluginEventData,
+    PluginEventFromTypeGeneric,
+    PluginEventFromType,
+    PluginEventDataGeneric,
+} from './event/PluginEventData';
+export { PluginEventType } from './event/PluginEventType';
+export { ScrollEvent } from './event/ScrollEvent';
+export { SelectionChangedEvent } from './event/SelectionChangedEvent';
+export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
+export { ZoomChangedEvent } from './event/ZoomChangedEvent';

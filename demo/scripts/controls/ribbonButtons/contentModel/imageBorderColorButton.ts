@@ -1,6 +1,5 @@
-import { getButtons, getTextColorValue, KnownRibbonButtonKey } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
+import { getButtons, getTextColorValue, KnownRibbonButtonKey, RibbonButton } from 'roosterjs-react';
 import { setImageBorder } from 'roosterjs-content-model-api';
 
 const originalButton = getButtons([KnownRibbonButtonKey.TextColor])[0] as RibbonButton<
@@ -11,14 +10,14 @@ const originalButton = getButtons([KnownRibbonButtonKey.TextColor])[0] as Ribbon
  * @internal
  * "Image Border Color" button on the format ribbon
  */
-export const imageBorderColorButton: RibbonButton<'buttonNameImageBorderColor'> = {
+export const imageBorderColorButton: ContentModelRibbonButton<'buttonNameImageBorderColor'> = {
     ...originalButton,
     unlocalizedText: 'Image Border Color',
     iconName: 'Photo2',
     isDisabled: formatState => !formatState.canAddImageAltText,
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
-        if (key != 'buttonNameImageBorderColor' && isContentModelEditor(editor)) {
+        if (key != 'buttonNameImageBorderColor') {
             setImageBorder(editor, { color: getTextColorValue(key).lightModeColor }, '5px');
         }
     },

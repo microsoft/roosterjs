@@ -1,9 +1,13 @@
+import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { createCorePlugins } from '../corePlugins/createCorePlugins';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { getPendableFormatState } from './utils/getPendableFormatState';
-import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
+import {
+    newEventToOldEvent,
+    oldEventToNewEvent,
+    OldEventTypeToNewEventType,
+} from './utils/eventConverter';
 import {
     createModelFromHtml,
     isBold,
@@ -37,15 +41,17 @@ import type {
     NodePosition,
     PendableFormatState,
     PluginEvent,
+    PluginEventData,
+    PluginEventFromType,
     PositionType,
-    Rect,
     Region,
     SelectionPath,
     SelectionRangeEx,
     SizeTransformer,
     StyleBasedFormatState,
     TableSelection,
-    TrustedHTMLHandler,
+    DOMEventHandlerObject,
+    DarkColorHandler,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -57,6 +63,7 @@ import type {
     CompatibleContentPosition,
     CompatibleExperimentalFeatures,
     CompatibleGetContentMode,
+    CompatiblePluginEventType,
     CompatibleQueryScope,
     CompatibleRegionType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -83,7 +90,7 @@ import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type { DOMEventRecord } from 'roosterjs-content-model-types';
+import type { DOMEventRecord, Rect } from 'roosterjs-content-model-types';
 
 /**
  * Editor for Content Model.
@@ -98,14 +105,8 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        const corePlugins = createCorePlugins(options);
-        const plugins = [
-            corePlugins.eventTranslate,
-            corePlugins.edit,
-            ...(options.plugins ?? []),
-            corePlugins.contextMenu,
-            corePlugins.normalizeTable,
-        ];
+        const bridgePlugin = new BridgePlugin(options);
+        const plugins = [bridgePlugin, ...(options.plugins ?? [])];
         const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
             initContent && !options.initialModel
@@ -118,21 +119,23 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 : options.initialModel;
         const standaloneEditorOptions: ContentModelEditorOptions = {
             ...options,
-            plugins: plugins,
+            plugins,
             initialModel,
         };
-        const corePluginState: ContentModelCorePluginState = {
-            edit: corePlugins.edit.getState(),
-            contextMenu: corePlugins.contextMenu.getState(),
-        };
+        const corePluginState = bridgePlugin.getCorePluginState();
 
         super(contentDiv, standaloneEditorOptions, () => {
+            const core = this.getCore();
+
             // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
             this.contentModelEditorCore = createEditorCore(
                 options,
                 corePluginState,
+                core.darkColorHandler,
                 size => size / this.getCore().zoomScale
             );
+
+            bridgePlugin.setOuterEditor(this);
         });
     }
 
@@ -298,7 +301,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         const core = this.getContentModelEditorCore();
         const innerCore = this.getCore();
 
-        return core.api.getContent(core, innerCore, mode);
+        return core.api.getContent(core, innerCore, mode as GetContentMode);
     }
 
     /**
@@ -530,17 +533,53 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             };
 
             if (typeof handlerObj === 'number') {
-                result.pluginEventType = handlerObj as PluginEventType;
+                result.pluginEventType = OldEventTypeToNewEventType[handlerObj as PluginEventType];
             } else if (typeof handlerObj === 'function') {
                 result.beforeDispatch = handlerObj;
             } else if (typeof handlerObj === 'object') {
-                result = handlerObj as DOMEventRecord;
+                const record = handlerObj as DOMEventHandlerObject;
+                result = {
+                    beforeDispatch: record.beforeDispatch,
+                    pluginEventType:
+                        typeof record.pluginEventType == 'number'
+                            ? OldEventTypeToNewEventType[record.pluginEventType]
+                            : undefined,
+                };
             }
 
             eventsMapResult[key] = result;
         });
 
         return this.attachDomEvent(eventsMapResult);
+    }
+
+    /**
+     * Trigger an event to be dispatched to all plugins
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
+     * @param broadcast indicates if the event needs to be dispatched to all plugins
+     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    public triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast: boolean = false
+    ): PluginEventFromType<T> {
+        const oldEvent = {
+            eventType,
+            ...data,
+        } as PluginEvent;
+        const newEvent = oldEventToNewEvent(oldEvent);
+        const core = this.getCore();
+
+        if (newEvent) {
+            core.api.triggerEvent(core, newEvent, broadcast);
+            return (newEventToOldEvent(newEvent, oldEvent) ?? oldEvent) as PluginEventFromType<T>;
+        } else {
+            return oldEvent as PluginEventFromType<T>;
+        }
     }
 
     /**
@@ -643,7 +682,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 data: data,
                 additionalData,
             };
-            core.api.triggerEvent(core, event, true /*broadcast*/);
+            this.triggerPluginEvent(PluginEventType.ContentChanged, event, true /*broadcast*/);
         }
 
         if (canUndoByBackspace) {
@@ -904,30 +943,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     //#region Dark mode APIs
 
     /**
-     * Set the dark mode state and transforms the content to match the new state.
-     * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
-     */
-    setDarkModeState(nextDarkMode?: boolean) {
-        const isDarkMode = this.isDarkMode();
-
-        if (isDarkMode == !!nextDarkMode) {
-            return;
-        }
-        const core = this.getCore();
-
-        transformColor(
-            core.contentDiv,
-            true /*includeSelf*/,
-            nextDarkMode ? 'lightToDark' : 'darkToLight',
-            core.darkColorHandler
-        );
-
-        this.triggerContentChangedEvent(
-            nextDarkMode ? ChangeSource.SwitchToDarkMode : ChangeSource.SwitchToLightMode
-        );
-    }
-
-    /**
      * Transform the given node and all its child nodes to dark mode color if editor is in dark mode
      * @param node The node to transform
      * @param direction The transform direction. @default ColorTransformDirection.LightToDark
@@ -953,17 +968,11 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param feature The feature to check
      */
     isFeatureEnabled(feature: ExperimentalFeatures | CompatibleExperimentalFeatures): boolean {
-        return this.getContentModelEditorCore().experimentalFeatures.indexOf(feature) >= 0;
-    }
-
-    /**
-     * Get a function to convert HTML string to trusted HTML string.
-     * By default it will just return the input HTML directly. To override this behavior,
-     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
-     */
-    getTrustedHTMLHandler(): TrustedHTMLHandler {
-        return this.getCore().trustedHTMLHandler;
+        return (
+            this.getContentModelEditorCore().experimentalFeatures.indexOf(
+                feature as ExperimentalFeatures
+            ) >= 0
+        );
     }
 
     /**
@@ -974,38 +983,20 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     }
 
     /**
-     * Set current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
-     */
-    setZoomScale(scale: number): void {
-        const core = this.getCore();
-
-        if (scale > 0 && scale <= 10) {
-            const oldValue = core.zoomScale;
-            core.zoomScale = scale;
-
-            if (oldValue != scale) {
-                this.triggerPluginEvent(
-                    PluginEventType.ZoomChanged,
-                    {
-                        oldZoomScale: oldValue,
-                        newZoomScale: scale,
-                    },
-                    true /*broadcast*/
-                );
-            }
-        }
-    }
-
-    /**
      * Retrieves the rect of the visible viewport of the editor.
      */
     getVisibleViewport(): Rect | null {
         const core = this.getCore();
 
         return core.api.getVisibleViewport(core);
+    }
+
+    /**
+     * Get a darkColorHandler object for this editor.
+     */
+    getDarkColorHandler(): DarkColorHandler {
+        const core = this.getContentModelEditorCore();
+        return core.darkColorHandler;
     }
 
     /**

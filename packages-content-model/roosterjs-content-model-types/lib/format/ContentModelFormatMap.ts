@@ -1,3 +1,4 @@
+import type { SizeFormat } from './formatParts/SizeFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import type { ContentModelDividerFormat } from './ContentModelDividerFormat';
 import type { ContentModelEntityFormat } from './ContentModelEntityFormat';
@@ -65,6 +66,11 @@ export interface ContentModelFormatMap {
      * Format type for tableRow
      */
     tableRow: ContentModelBlockFormat;
+
+    /**
+     * Format type for tableColumn
+     */
+    tableColumn: SizeFormat;
 
     /**
      * Format type for table border

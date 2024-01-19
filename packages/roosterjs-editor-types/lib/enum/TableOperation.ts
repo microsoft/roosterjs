@@ -1,6 +1,7 @@
 /**
  * Operations used by editTable() API
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum TableOperation {
     /**
      * Insert a row above current row
