@@ -6,7 +6,7 @@ import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
-import type { DarkColorHandler } from 'roosterjs-editor-types';
+import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';

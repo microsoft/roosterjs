@@ -1,6 +1,7 @@
 /**
  * Experimental feature flags
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ExperimentalFeatures {
     // #region Graduated and deprecated features.
     // These features will be removed in next major release

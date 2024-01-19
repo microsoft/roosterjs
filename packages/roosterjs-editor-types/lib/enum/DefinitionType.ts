@@ -1,6 +1,7 @@
 /**
  * Types of definitions, used by Definition type
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum DefinitionType {
     /**
      * Boolean type definition, represents a boolean type value

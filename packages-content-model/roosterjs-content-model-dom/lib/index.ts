@@ -62,7 +62,7 @@ export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplici
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
-export { DeprecatedColors, getColor, setColor } from './formatHandlers/utils/color';
+export { DeprecatedColors, getColor, setColor, parseColor } from './formatHandlers/utils/color';
 
 export {
     createDomToModelContext,

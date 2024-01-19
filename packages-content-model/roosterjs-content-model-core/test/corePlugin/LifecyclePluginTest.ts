@@ -1,8 +1,7 @@
 import * as color from 'roosterjs-content-model-dom/lib/formatHandlers/utils/color';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createLifecyclePlugin } from '../../lib/corePlugin/LifecyclePlugin';
-import { DarkColorHandler } from 'roosterjs-editor-types';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { DarkColorHandler, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 describe('LifecyclePlugin', () => {
     it('init', () => {
@@ -15,14 +14,13 @@ describe('LifecyclePlugin', () => {
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
             getFocusedPosition: () => <any>null,
-            getDarkColorHandler: () => <DarkColorHandler | null>null,
+            getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
 
         expect(state).toEqual({
             isDarkMode: false,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         });
 
@@ -72,14 +70,13 @@ describe('LifecyclePlugin', () => {
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
             getFocusedPosition: () => <any>null,
-            getDarkColorHandler: () => <DarkColorHandler | null>null,
+            getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
 
         expect(state).toEqual({
             isDarkMode: false,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         });
 
@@ -105,7 +102,7 @@ describe('LifecyclePlugin', () => {
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
             getFocusedPosition: () => <any>null,
-            getDarkColorHandler: () => <DarkColorHandler | null>null,
+            getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
@@ -147,7 +144,7 @@ describe('LifecyclePlugin', () => {
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
             getFocusedPosition: () => <any>null,
-            getDarkColorHandler: () => <DarkColorHandler | null>null,
+            getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             setContentModel: setContentModelSpy,
         }));
@@ -190,7 +187,7 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
-            getDarkColorHandler: () => mockedDarkColorHandler,
+            getColorManager: () => mockedDarkColorHandler,
             setContentModel: setContentModelSpy,
         }));
 
@@ -198,7 +195,6 @@ describe('LifecyclePlugin', () => {
 
         expect(state).toEqual({
             isDarkMode: false,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         });
 
@@ -223,7 +219,7 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IStandaloneEditor>(<any>{
             triggerEvent,
-            getDarkColorHandler: () => mockedDarkColorHandler,
+            getColorManager: () => mockedDarkColorHandler,
             setContentModel: setContentModelSpy,
         }));
 
@@ -231,7 +227,6 @@ describe('LifecyclePlugin', () => {
 
         expect(state).toEqual({
             isDarkMode: false,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         });
 
@@ -249,15 +244,15 @@ describe('LifecyclePlugin', () => {
             div,
             '#000000',
             false,
-            mockedDarkColorHandler,
-            mockedIsDarkColor
+            mockedIsDarkColor,
+            mockedDarkColorHandler
         );
         expect(setColorSpy).toHaveBeenCalledWith(
             div,
             '#ffffff',
             true,
-            mockedDarkColorHandler,
-            mockedIsDarkColor
+            mockedIsDarkColor,
+            mockedDarkColorHandler
         );
     });
 
@@ -286,7 +281,6 @@ describe('LifecyclePlugin', () => {
 
         expect(state).toEqual({
             isDarkMode: false,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         });
 

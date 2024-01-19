@@ -1,6 +1,7 @@
 /**
  *  Enum used to control the different types of bullet list
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum BulletListType {
     /**
      * Minimum value of the enum
