@@ -1,4 +1,5 @@
 import addParser from '../utils/addParser';
+import { createListLevel, parseFormat } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
 import {
     COMMENT_HIGHLIGHT_CLASS,
@@ -12,8 +13,10 @@ import type {
     ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,
+    ContentModelListLevel,
     ContentModelSegmentFormat,
     DomToModelContext,
+    DomToModelListFormat,
     ElementProcessor,
     FormatParser,
 } from 'roosterjs-content-model-types';
@@ -21,8 +24,16 @@ import type {
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
 const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
 
-const COMMENT_BG_COLOR_REST = 'rgba(209, 209, 209, 0.5)';
-const COMMENTS_TEXT_HIGHLIGHT_CLICKED = 'rgba(197, 139, 204, 0.5)';
+interface WacContext extends DomToModelListFormat {
+    /**
+     * Current list levels
+     */
+    currentListLevels?: ContentModelListLevel[];
+    /**
+     * Array to keep the start of the lists and determine if the start override should be set.
+     */
+    listItemThread?: number[];
+}
 
 /**
  * Wac components do not use sub and super tags, instead only add vertical align to a span.
@@ -85,32 +96,49 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
     element: HTMLLIElement,
     context: DomToModelContext
 ): void => {
+    const level = parseInt(element.getAttribute('data-aria-level') ?? '');
+    const listFormat = context.listFormat as WacContext;
+    const listType =
+        listFormat.levels[context.listFormat.levels.length - 1]?.listType ||
+        (element.closest('ol,ul')?.tagName.toUpperCase() as 'UL' | 'OL');
+    const newLevel: ContentModelListLevel = createListLevel(listType, context.blockFormat);
+    parseFormat(element, context.formatParsers.listLevelThread, newLevel.format, context);
+    parseFormat(element, context.formatParsers.listLevel, newLevel.format, context);
+    context.listFormat.levels = listFormat.currentListLevels || context.listFormat.levels;
+
+    if (level > 0) {
+        if (level > context.listFormat.levels.length) {
+            while (level != context.listFormat.levels.length) {
+                context.listFormat.levels.push(newLevel);
+            }
+        } else {
+            context.listFormat.levels.splice(level, context.listFormat.levels.length - 1);
+            context.listFormat.levels[level - 1] = newLevel;
+        }
+    }
+
     context.defaultElementProcessors.li?.(group, element, context);
-    const { listFormat } = context;
+
     const listParent = listFormat.listParent;
     if (listParent) {
         const lastblock = listParent.blocks[listParent.blocks.length - 1];
-        if (
-            lastblock.blockType == 'BlockGroup' &&
-            lastblock.blockGroupType == 'ListItem' &&
-            context.listFormat.listParent !== lastblock
-        ) {
+        if (lastblock.blockType == 'BlockGroup' && lastblock.blockGroupType == 'ListItem') {
             const currentLevel = lastblock.levels[lastblock.levels.length - 1];
-
-            // Get item level from 'data-aria-level' attribute
-            const level = parseInt(element.getAttribute('data-aria-level') ?? '');
-            if (level > 0) {
-                if (level > lastblock.levels.length) {
-                    while (level != lastblock.levels.length) {
-                        lastblock.levels.push(currentLevel);
-                    }
-                } else {
-                    lastblock.levels.splice(level, lastblock.levels.length - 1);
-                    lastblock.levels[level - 1] = currentLevel;
-                }
-            }
+            updateStartOverride(currentLevel, element, context);
         }
     }
+
+    const newLevels: ContentModelListLevel[] = [];
+    listFormat.levels.forEach(v => {
+        const newValue: ContentModelListLevel = {
+            dataset: { ...v.dataset },
+            format: { ...v.format },
+            listType: v.listType,
+        };
+        newLevels.push(newValue);
+    });
+    listFormat.currentListLevels = newLevels;
+    listFormat.levels = [];
 };
 
 /**
@@ -174,10 +202,8 @@ const wacCommentParser: FormatParser<ContentModelSegmentFormat> = (
     element: HTMLElement
 ): void => {
     if (
-        (element.className.includes(COMMENT_HIGHLIGHT_CLASS) &&
-            element.style.backgroundColor == COMMENT_BG_COLOR_REST) ||
-        (element.className.includes(COMMENT_HIGHLIGHT_CLICKED_CLASS) &&
-            element.style.backgroundColor == COMMENTS_TEXT_HIGHLIGHT_CLICKED)
+        element.className.includes(COMMENT_HIGHLIGHT_CLASS) ||
+        element.className.includes(COMMENT_HIGHLIGHT_CLICKED_CLASS)
     ) {
         delete format.backgroundColor;
     }
@@ -199,51 +225,7 @@ export function processPastedContentWacComponents(ev: BeforePasteEvent) {
 
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
-    setProcessor(ev.domToModelOption, 'ol', wacListProcessor);
-    setProcessor(ev.domToModelOption, 'ul', wacListProcessor);
 }
-
-/**
- * List items from word have this format when using List items:
- * @example
-        <div>
-           <ol></ol>
-        </div>
-        <div>
-           <ol></ol>
-        </div>
-        <div>
-           <ol></ol>
-        </div>
- *  Due to this the div between each of the lists we need to restore the list context to use the previous list,
- *  otherwise it could create a new list instead under the same list element
- */
-const wacListProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement> = (
-    group: ContentModelBlockGroup,
-    element: HTMLOListElement | HTMLUListElement,
-    context: DomToModelContext
-): void => {
-    const lastBlock = group.blocks[group.blocks.length - 1];
-    const isWrappedInContainer = element.closest(`.${LIST_CONTAINER_ELEMENT_CLASS_NAME}`);
-    if (
-        isWrappedInContainer?.previousElementSibling?.classList.contains(
-            LIST_CONTAINER_ELEMENT_CLASS_NAME
-        )
-    ) {
-        if (lastBlock?.blockType === 'BlockGroup' && lastBlock.blockGroupType == 'ListItem') {
-            context.listFormat = {
-                threadItemCounts: [],
-                levels: lastBlock.levels,
-                listParent: group,
-            };
-        }
-    }
-    if (element.tagName.toUpperCase() === 'OL') {
-        context.defaultElementProcessors.ol?.(group, element as HTMLOListElement, context);
-    } else {
-        context.defaultElementProcessors.ul?.(group, element as HTMLUListElement, context);
-    }
-};
 
 const wacContainerParser: FormatParser<ContentModelBlockFormat> = (
     format: ContentModelBlockFormat,
@@ -253,3 +235,39 @@ const wacContainerParser: FormatParser<ContentModelBlockFormat> = (
         delete format.marginLeft;
     }
 };
+
+function updateStartOverride(
+    currentLevel: ContentModelListLevel | undefined,
+    element: HTMLLIElement,
+    ctx: DomToModelContext
+) {
+    if (!currentLevel || currentLevel.listType == 'UL') {
+        return;
+    }
+
+    const list = element.closest('ol');
+    const listFormat = ctx.listFormat as WacContext;
+    const [start, listLevel] = extractWordListMetadata(list, element);
+
+    if (!listFormat.listItemThread) {
+        listFormat.listItemThread = [];
+    }
+
+    const thread: number | undefined = listFormat.listItemThread[listLevel];
+    if (thread && start - thread != 1) {
+        currentLevel.format.startNumberOverride = start;
+    }
+    listFormat.listItemThread[listLevel] = start;
+}
+function extractWordListMetadata(
+    list: HTMLElement | null | undefined,
+    item: HTMLElement | null | undefined
+) {
+    const itemIndex =
+        item && Array.from(list?.querySelectorAll('li') || []).indexOf(item as HTMLLIElement);
+    const start =
+        parseInt(list?.getAttribute('start') || '1') + (itemIndex && itemIndex > 0 ? itemIndex : 0);
+    const listLevel = parseInt(item?.getAttribute('data-aria-level') || '');
+
+    return [start, listLevel];
+}
