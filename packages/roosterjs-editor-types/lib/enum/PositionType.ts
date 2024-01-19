@@ -1,6 +1,7 @@
 /**
  * Represent the type of a position
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum PositionType {
     /**
      * At the beginning of a node

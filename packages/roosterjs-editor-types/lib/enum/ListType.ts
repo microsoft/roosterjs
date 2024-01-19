@@ -1,6 +1,7 @@
 /**
  * Type of list (numbering or bullet)
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ListType {
     /**
      * None list type

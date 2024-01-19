@@ -1,6 +1,7 @@
 /**
  * Query scope for queryElements() API
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum QueryScope {
     /**
      * Query from the whole body of root node. This is default value.

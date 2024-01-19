@@ -1,6 +1,5 @@
 import type { TableSelectionCoordinates } from '../selection/TableSelectionCoordinates';
 import type { EntityState } from './FormatWithContentModelContext';
-import type { ModeIndependentColor } from 'roosterjs-editor-types';
 import type { SelectionType } from '../selection/DOMSelection';
 
 /**
@@ -64,11 +63,6 @@ export interface Snapshot {
      * HTML content string
      */
     html: string;
-
-    /**
-     * Known colors for dark mode
-     */
-    knownColors: Readonly<ModeIndependentColor>[];
 
     /**
      * Entity states related to this undo snapshots. When undo/redo to this snapshot, each entity state will trigger

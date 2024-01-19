@@ -43,7 +43,8 @@ export function createStandaloneEditorCore(
         environment: createEditorEnvironment(contentDiv),
         darkColorHandler: createDarkColorHandler(
             contentDiv,
-            options.getDarkColor ?? getDarkColorFallback
+            options.getDarkColor ?? getDarkColorFallback,
+            options.knownColors
         ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domToModelSettings: createDomToModelSettings(options),

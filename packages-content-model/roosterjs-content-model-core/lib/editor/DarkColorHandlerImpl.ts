@@ -1,201 +1,44 @@
-import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type {
-    ColorKeyAndValue,
     DarkColorHandler,
-    ModeIndependentColor,
-} from 'roosterjs-editor-types';
+    ColorTransformFunction,
+    Colors,
+} from 'roosterjs-content-model-types';
 
-const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
-const VARIABLE_PREFIX = 'var(';
-const COLOR_VAR_PREFIX = 'darkColor';
-const enum ColorAttributeEnum {
-    CssColor = 0,
-    HtmlColor = 1,
-}
-const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
-    {
-        [ColorAttributeEnum.CssColor]: 'color',
-        [ColorAttributeEnum.HtmlColor]: 'color',
-    },
-    {
-        [ColorAttributeEnum.CssColor]: 'background-color',
-        [ColorAttributeEnum.HtmlColor]: 'bgcolor',
-    },
-];
-const HEX3_REGEX = /^#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])$/;
-const HEX6_REGEX = /^#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$/;
-const RGB_REGEX = /^rgb\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)$/;
-const RGBA_REGEX = /^rgba\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)$/;
+class DarkColorHandlerImpl implements DarkColorHandler {
+    constructor(
+        private readonly root: HTMLElement,
+        public getDarkColor: ColorTransformFunction,
+        public readonly knownColors: Record<string, Colors>
+    ) {}
 
-/**
- * @internal
- */
-export class DarkColorHandlerImpl implements DarkColorHandler {
-    private knownColors: Record<string, Readonly<ModeIndependentColor>> = {};
-
-    constructor(private contentDiv: HTMLElement, private getDarkColor: (color: string) => string) {}
-
-    /**
-     * Get a copy of known colors
-     * @returns
-     */
-    getKnownColorsCopy() {
-        return Object.values(this.knownColors);
-    }
-
-    /**
-     * Given a light mode color value and an optional dark mode color value, register this color
-     * so that editor can handle it, then return the CSS color value for current color mode.
-     * @param lightModeColor Light mode color value
-     * @param isDarkMode Whether current color mode is dark mode
-     * @param darkModeColor Optional dark mode color value. If not passed, we will calculate one.
-     */
-    registerColor(lightModeColor: string, isDarkMode: boolean, darkModeColor?: string): string {
-        const parsedColor = this.parseColorValue(lightModeColor);
-        let colorKey: string | undefined;
-
-        if (parsedColor) {
-            lightModeColor = parsedColor.lightModeColor;
-            darkModeColor = parsedColor.darkModeColor || darkModeColor;
-            colorKey = parsedColor.key;
-        }
-
-        if (isDarkMode && lightModeColor) {
-            colorKey =
-                colorKey || `--${COLOR_VAR_PREFIX}_${lightModeColor.replace(/[^\d\w]/g, '_')}`;
-
-            if (!this.knownColors[colorKey]) {
-                darkModeColor = darkModeColor || this.getDarkColor(lightModeColor);
-
-                this.knownColors[colorKey] = { lightModeColor, darkModeColor };
-                this.contentDiv.style.setProperty(colorKey, darkModeColor);
+    updateKnownColor(isDarkMode: boolean, key?: string, colorPair?: Colors): void {
+        if (key && colorPair) {
+            // Has values to set
+            // When in light mode: Update the value to known values, do not touch container property
+            // When in dark mode: Update the value to known colors, set value to container
+            if (!this.knownColors[key]) {
+                this.knownColors[key] = colorPair;
             }
 
-            return `var(${colorKey}, ${lightModeColor})`;
+            if (isDarkMode) {
+                this.root.style.setProperty(key, colorPair.darkModeColor);
+            }
         } else {
-            return lightModeColor;
-        }
-    }
-
-    /**
-     * Reset known color record, clean up registered color variables.
-     */
-    reset(): void {
-        getObjectKeys(this.knownColors).forEach(key => this.contentDiv.style.removeProperty(key));
-        this.knownColors = {};
-    }
-
-    /**
-     * Parse an existing color value, if it is in variable-based color format, extract color key,
-     * light color and query related dark color if any
-     * @param color The color string to parse
-     * @param isInDarkMode Whether current content is in dark mode. When set to true, if the color value is not in dark var format,
-     * we will treat is as a dark mode color and try to find a matched dark mode color.
-     */
-    parseColorValue(color: string | undefined | null, isInDarkMode?: boolean): ColorKeyAndValue {
-        let key: string | undefined;
-        let lightModeColor = '';
-        let darkModeColor: string | undefined;
-
-        if (color) {
-            const match = color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
-
-            if (match) {
-                if (match[2]) {
-                    key = match[1];
-                    lightModeColor = match[2];
-                    darkModeColor = this.knownColors[key]?.darkModeColor;
-                } else {
-                    lightModeColor = '';
-                }
-            } else if (isInDarkMode) {
-                // If editor is in dark mode but the color is not in dark color format, it is possible the color was inserted from external code
-                // without any light color info. So we first try to see if there is a known dark color can match this color, and use its related
-                // light color as light mode color. Otherwise we need to drop this color to avoid show "white on white" content.
-                lightModeColor = this.findLightColorFromDarkColor(color) || '';
-
-                if (lightModeColor) {
-                    darkModeColor = color;
-                }
-            } else {
-                lightModeColor = color;
+            // No value to set
+            // When in light mode: No op
+            // When in dark mode: Set all values to container, do not touch known values
+            if (isDarkMode) {
+                Object.keys(this.knownColors).forEach(key => {
+                    this.root.style.setProperty(key, this.knownColors[key].darkModeColor);
+                });
             }
         }
-
-        return { key, lightModeColor, darkModeColor };
     }
 
-    /**
-     * Find related light mode color from dark mode color.
-     * @param darkColor The existing dark color
-     */
-    findLightColorFromDarkColor(darkColor: string): string | null {
-        const rgbSearch = this.parseColor(darkColor);
-
-        if (rgbSearch) {
-            const key = getObjectKeys(this.knownColors).find(key => {
-                const rgbCurrent = this.parseColor(this.knownColors[key].darkModeColor);
-
-                return (
-                    rgbCurrent &&
-                    rgbCurrent[0] == rgbSearch[0] &&
-                    rgbCurrent[1] == rgbSearch[1] &&
-                    rgbCurrent[2] == rgbSearch[2]
-                );
-            });
-
-            if (key) {
-                return this.knownColors[key].lightModeColor;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Transform element color, from dark to light or from light to dark
-     * @param element The element to transform color
-     * @param fromDarkMode Whether this is transforming color from dark mode
-     * @param toDarkMode Whether this is transforming color to dark mode
-     */
-    transformElementColor(element: HTMLElement, fromDarkMode: boolean, toDarkMode: boolean): void {
-        ColorAttributeName.forEach((names, i) => {
-            const color = this.parseColorValue(
-                element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
-                    element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
-                !!fromDarkMode
-            ).lightModeColor;
-            const transformedColor =
-                color && color != 'inherit' ? this.registerColor(color, !!toDarkMode) : null;
-
-            element.style.setProperty(names[ColorAttributeEnum.CssColor], transformedColor);
-            element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
+    reset() {
+        Object.keys(this.knownColors).forEach(key => {
+            this.root.style.removeProperty(key);
         });
-    }
-
-    /**
-     * Parse color string to r/g/b value.
-     * If the given color is not in a recognized format, return null
-     */
-    private parseColor(color: string): [number, number, number] | null {
-        color = (color || '').trim();
-
-        let match: RegExpMatchArray | null;
-        if ((match = color.match(HEX3_REGEX))) {
-            return [
-                parseInt(match[1] + match[1], 16),
-                parseInt(match[2] + match[2], 16),
-                parseInt(match[3] + match[3], 16),
-            ];
-        } else if ((match = color.match(HEX6_REGEX))) {
-            return [parseInt(match[1], 16), parseInt(match[2], 16), parseInt(match[3], 16)];
-        } else if ((match = color.match(RGB_REGEX) || color.match(RGBA_REGEX))) {
-            return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
-        } else {
-            // CSS color names such as red, green is not included for now.
-            // If need, we can add those colors from https://www.w3.org/wiki/CSS/Properties/color/keywords
-            return null;
-        }
     }
 }
 
@@ -203,8 +46,9 @@ export class DarkColorHandlerImpl implements DarkColorHandler {
  * @internal
  */
 export function createDarkColorHandler(
-    contentDiv: HTMLElement,
-    getDarkColor: (color: string) => string
+    root: HTMLElement,
+    getDarkColor: ColorTransformFunction,
+    knownColors: Record<string, Colors> = {}
 ): DarkColorHandler {
-    return new DarkColorHandlerImpl(contentDiv, getDarkColor);
+    return new DarkColorHandlerImpl(root, getDarkColor, knownColors);
 }

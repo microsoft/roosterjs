@@ -51,6 +51,7 @@ import type {
     StyleBasedFormatState,
     TableSelection,
     DOMEventHandlerObject,
+    DarkColorHandler,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -124,10 +125,13 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         const corePluginState = bridgePlugin.getCorePluginState();
 
         super(contentDiv, standaloneEditorOptions, () => {
+            const core = this.getCore();
+
             // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
             this.contentModelEditorCore = createEditorCore(
                 options,
                 corePluginState,
+                core.darkColorHandler,
                 size => size / this.getCore().zoomScale
             );
 
@@ -985,6 +989,14 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         const core = this.getCore();
 
         return core.api.getVisibleViewport(core);
+    }
+
+    /**
+     * Get a darkColorHandler object for this editor.
+     */
+    getDarkColorHandler(): DarkColorHandler {
+        const core = this.getContentModelEditorCore();
+        return core.darkColorHandler;
     }
 
     /**
