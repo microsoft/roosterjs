@@ -11,7 +11,7 @@ import type { AddUndoSnapshot, Snapshot } from 'roosterjs-content-model-types';
  * when undo/redo to this snapshot
  */
 export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entityStates) => {
-    const { lifecycle, api, contentDiv, darkColorHandler, undo } = core;
+    const { lifecycle, api, contentDiv, undo } = core;
     let snapshot: Snapshot | null = null;
 
     if (!lifecycle.shadowEditFragment) {
@@ -19,7 +19,6 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
 
         snapshot = {
             html: contentDiv.innerHTML,
-            knownColors: darkColorHandler.getKnownColorsCopy(),
             entityStates,
             isDarkMode: !!lifecycle.isDarkMode,
             selection: createSnapshotSelection(contentDiv, selection),

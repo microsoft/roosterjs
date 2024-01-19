@@ -13,7 +13,6 @@ import {
 
 const editorContext: EditorContext = {
     isDarkMode: false,
-    darkColorHandler: undefined,
 };
 
 describe('ContentModelEditor', () => {
