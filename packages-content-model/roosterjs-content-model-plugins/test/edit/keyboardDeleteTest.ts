@@ -1,14 +1,16 @@
 import * as deleteSelection from 'roosterjs-content-model-core/lib/publicApi/selection/deleteSelection';
 import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCommon';
 import { ChangeSource } from 'roosterjs-content-model-core';
-import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteList } from '../../lib/edit/deleteSteps/deleteList';
 import { DeleteResult, DeleteSelectionStep } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { keyboardDelete } from '../../lib/edit/keyboardDelete';
-import { Keys } from 'roosterjs-editor-types';
+import {
+    ContentModelDocument,
+    DOMSelection,
+    IStandaloneEditor,
+} from 'roosterjs-content-model-types';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
@@ -17,6 +19,9 @@ import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
 } from '../../lib/edit/deleteSteps/deleteCollapsedSelection';
+
+const Delete = 46;
+const Backspace = 8;
 
 describe('keyboardDelete', () => {
     let deleteSelectionSpy: jasmine.Spy;
@@ -484,16 +489,16 @@ describe('keyboardDelete', () => {
                 type: 'range',
                 range: { collapsed: false },
             }),
-        } as any) as IContentModelEditor;
+        } as any) as IStandaloneEditor;
         const event = {
-            which: Keys.DELETE,
+            which: Delete,
             key: 'Delete',
         } as any;
 
         keyboardDelete(editor, event);
 
         expect(spy.calls.argsFor(0)[1]!.changeSource).toBe(ChangeSource.Keyboard);
-        expect(spy.calls.argsFor(0)[1]!.getChangeData?.()).toBe(Keys.DELETE);
+        expect(spy.calls.argsFor(0)[1]!.getChangeData?.()).toBe(Delete);
         expect(spy.calls.argsFor(0)[1]!.apiName).toBe('handleDeleteKey');
     });
 
@@ -508,7 +513,7 @@ describe('keyboardDelete', () => {
                 range: { collapsed: false },
             }),
         } as any;
-        const which = Keys.BACKSPACE;
+        const which = Backspace;
         const event = {
             key: 'Backspace',
             which,
