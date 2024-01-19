@@ -111,8 +111,8 @@ describe('backgroundColorFormatHandler.apply', () => {
         format.backgroundColor = 'red';
         context.isDarkMode = true;
         context.darkColorHandler = {
-            registerColor: (color: string, isDarkMode: boolean) =>
-                isDarkMode ? `var(--darkColor_${color}, ${color})` : color,
+            updateKnownColor: () => {},
+            getDarkColor: (lightColor: string) => `var(--darkColor_${lightColor}, ${lightColor})`,
         } as any;
 
         backgroundColorFormatHandler.apply(format, div, context);

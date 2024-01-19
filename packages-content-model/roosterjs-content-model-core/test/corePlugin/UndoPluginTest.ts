@@ -62,14 +62,18 @@ describe('UndoPlugin', () => {
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith();
+            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(undefined);
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
         it('ctor with option', () => {
+            const mockedSnapshots = 'SNAPSHOTS' as any;
             const mockedManager = 'MANAGER' as any;
+
+            createSnapshotsManagerSpy.and.returnValue(mockedManager);
+
             const plugin = createUndoPlugin({
-                snapshotsManager: mockedManager,
+                snapshots: mockedSnapshots,
             });
             const state = plugin.getState();
 
@@ -81,7 +85,7 @@ describe('UndoPlugin', () => {
                 posOffset: null,
                 lastKeyPress: null,
             });
-            expect(createSnapshotsManagerSpy).not.toHaveBeenCalled();
+            expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(mockedSnapshots);
             expect(undoSpy).not.toHaveBeenCalled();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });

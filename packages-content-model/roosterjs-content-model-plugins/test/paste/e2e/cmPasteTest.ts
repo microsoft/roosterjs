@@ -203,6 +203,7 @@ describe(ID, () => {
                         width: '170pt',
                         useBorderBox: true,
                         borderCollapse: true,
+                        textColor: 'rgb(0, 0, 0)',
                     },
                     widths: <any>jasmine.anything(),
                     dataset: {},
@@ -213,7 +214,19 @@ describe(ID, () => {
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                         {
                             segmentType: 'Br',

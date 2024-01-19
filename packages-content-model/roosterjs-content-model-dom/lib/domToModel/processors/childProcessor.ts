@@ -22,14 +22,14 @@ export const childProcessor: ElementProcessor<ParentNode> = (
     let index = 0;
 
     for (let child = parent.firstChild; child; child = child.nextSibling) {
-        handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+        handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset, parent);
 
         processChildNode(group, child, context);
 
         index++;
     }
 
-    handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+    handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset, parent);
 };
 
 /**
@@ -58,23 +58,25 @@ export function processChildNode(
  * @param group The parent block group
  * @param nodeStartOffset Start offset of current regular selection
  * @param nodeEndOffset  End offset of current regular selection
+ * @param container The container node of this selection
  */
 export function handleRegularSelection(
     index: number,
     context: DomToModelContext,
     group: ContentModelBlockGroup,
     nodeStartOffset: number,
-    nodeEndOffset: number
+    nodeEndOffset: number,
+    container?: Node
 ) {
     if (index == nodeStartOffset) {
         context.isInSelection = true;
 
-        addSelectionMarker(group, context);
+        addSelectionMarker(group, context, container, index);
     }
 
     if (index == nodeEndOffset && context.selection?.type == 'range') {
         if (!context.selection.range.collapsed) {
-            addSelectionMarker(group, context);
+            addSelectionMarker(group, context, container, index);
         }
         context.isInSelection = false;
     }

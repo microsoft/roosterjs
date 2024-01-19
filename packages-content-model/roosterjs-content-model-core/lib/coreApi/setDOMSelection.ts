@@ -201,7 +201,7 @@ function handleTableSelected(
 }
 
 function setRangeSelection(doc: Document, element: HTMLElement | undefined) {
-    if (element) {
+    if (element && doc.contains(element)) {
         const range = doc.createRange();
 
         range.selectNode(element);

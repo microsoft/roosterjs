@@ -1,3 +1,4 @@
+import * as darkColorHandler from '../../lib/editor/DarkColorHandlerImpl';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { createEditorCore } from '../../lib/editor/createEditorCore';
 
@@ -5,6 +6,12 @@ describe('createEditorCore', () => {
     const mockedSizeTransformer = 'TRANSFORMER' as any;
     const mockedEditPluginState = 'EDITSTATE' as any;
     const mockedContextMenuPluginState = 'CONTEXTMENUSTATE' as any;
+    const mockedInnerHandler = 'INNER' as any;
+    const mockedDarkHandler = 'DARK' as any;
+
+    beforeEach(() => {
+        spyOn(darkColorHandler, 'createDarkColorHandler').and.returnValue(mockedDarkHandler);
+    });
 
     it('No additional option', () => {
         const core = createEditorCore(
@@ -13,6 +20,7 @@ describe('createEditorCore', () => {
                 edit: mockedEditPluginState,
                 contextMenu: mockedContextMenuPluginState,
             },
+            mockedInnerHandler,
             mockedSizeTransformer
         );
 
@@ -24,7 +32,9 @@ describe('createEditorCore', () => {
             edit: mockedEditPluginState,
             contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
+            darkColorHandler: mockedDarkHandler,
         });
+        expect(darkColorHandler.createDarkColorHandler).toHaveBeenCalledWith(mockedInnerHandler);
     });
 
     it('With additional plugins', () => {
@@ -45,6 +55,7 @@ describe('createEditorCore', () => {
                 edit: mockedEditPluginState,
                 contextMenu: mockedContextMenuPluginState,
             },
+            mockedInnerHandler,
             mockedSizeTransformer
         );
 
@@ -56,6 +67,8 @@ describe('createEditorCore', () => {
             edit: mockedEditPluginState,
             contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
+            darkColorHandler: mockedDarkHandler,
         });
+        expect(darkColorHandler.createDarkColorHandler).toHaveBeenCalledWith(mockedInnerHandler);
     });
 });

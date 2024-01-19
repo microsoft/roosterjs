@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { EntityState, Snapshot, SnapshotSelection } from 'roosterjs-content-model-types';
-import { ModeIndependentColor } from 'roosterjs-editor-types';
 
 const styles = require('./SnapshotPane.scss');
 
@@ -21,7 +20,6 @@ export default class ContentModelSnapshotPane extends React.Component<
     ContentModelSnapshotPaneState
 > {
     private html = React.createRef<HTMLTextAreaElement>();
-    private knownColors = React.createRef<HTMLTextAreaElement>();
     private entityStates = React.createRef<HTMLTextAreaElement>();
     private isDarkColor = React.createRef<HTMLInputElement>();
     private selection = React.createRef<HTMLTextAreaElement>();
@@ -38,7 +36,7 @@ export default class ContentModelSnapshotPane extends React.Component<
 
     render() {
         return (
-            <div className={styles.snapshotPane}>
+            <div className={styles.snapshotPane} onPaste={this.onPaste}>
                 <h3>Undo Snapshots</h3>
                 <div className={styles.snapshotList}>
                     {this.state.snapshots.map(this.renderItem)}
@@ -47,6 +45,7 @@ export default class ContentModelSnapshotPane extends React.Component<
                 <div className={styles.buttons}>
                     <button onClick={this.takeSnapshot}>{'Take snapshot'}</button>{' '}
                     <button onClick={this.onClickRestoreSnapshot}>{'Restore snapshot'}</button>
+                    <button onClick={this.onCopy}>{'Copy snapshot with metadata'}</button>
                 </div>
                 <div>HTML:</div>
                 <textarea ref={this.html} className={styles.textarea} spellCheck={false} />
@@ -54,8 +53,6 @@ export default class ContentModelSnapshotPane extends React.Component<
                 <textarea ref={this.selection} className={styles.textarea} spellCheck={false} />
                 <div>Entity states:</div>
                 <textarea ref={this.entityStates} className={styles.textarea} spellCheck={false} />
-                <div>Known colors:</div>
-                <textarea ref={this.knownColors} className={styles.textarea} spellCheck={false} />
                 <div>
                     <input type="checkbox" ref={this.isDarkColor} id="isUndoInDarkColor" />
                     <label htmlFor="isUndoInDarkColor">Is in dark mode</label>
@@ -64,29 +61,68 @@ export default class ContentModelSnapshotPane extends React.Component<
         );
     }
 
-    private onClickRestoreSnapshot = () => {
+    private getCurrentSnapshot(): Snapshot {
         const html = this.html.current.value;
         const selection = this.selection.current.value
             ? (JSON.parse(this.selection.current.value) as SnapshotSelection)
             : undefined;
-        const knownColors = this.knownColors.current.value
-            ? (JSON.parse(this.knownColors.current.value) as ModeIndependentColor[])
-            : [];
         const entityStates = this.entityStates.current.value
             ? (JSON.parse(this.entityStates.current.value) as EntityState[])
             : undefined;
         const isDarkMode = !!this.isDarkColor.current.checked;
 
-        this.props.onRestoreSnapshot(
-            {
-                html,
-                knownColors,
-                entityStates,
-                isDarkMode,
-                selection,
-            },
-            true
-        );
+        return {
+            html,
+            entityStates,
+            isDarkMode,
+            selection,
+        };
+    }
+
+    private onClickRestoreSnapshot = () => {
+        const snapshot = this.getCurrentSnapshot();
+
+        this.props.onRestoreSnapshot(snapshot, true);
+    };
+
+    private onCopy = () => {
+        const snapshot = this.getCurrentSnapshot();
+        const metadata = {
+            ...snapshot.selection,
+            isDarkMode: snapshot.isDarkMode,
+        };
+        const textToCopy = snapshot.html + `<!--${JSON.stringify(metadata)}-->`;
+
+        navigator.clipboard.writeText(textToCopy);
+    };
+
+    private onPaste = (event: React.ClipboardEvent) => {
+        const str = event.clipboardData.getData('text/plain');
+
+        if (str) {
+            const idx = str.lastIndexOf('<!--');
+
+            if (idx >= 0 && str.endsWith('-->')) {
+                const html = str.substring(0, idx);
+                const json = str.substring(idx + 4, str.length - 3);
+
+                try {
+                    const metadata = JSON.parse(json);
+                    const isDarkMode = !!metadata.isDarkMode;
+
+                    delete metadata.isDarkMode;
+
+                    this.setSnapshot({
+                        html: html,
+                        entityStates: [],
+                        isDarkMode: isDarkMode,
+                        selection: metadata as SnapshotSelection,
+                    });
+
+                    event.preventDefault();
+                } catch {}
+            }
+        }
     };
 
     updateSnapshots(snapshots: Snapshot[], currentIndex: number, autoCompleteIndex: number) {
@@ -113,9 +149,6 @@ export default class ContentModelSnapshotPane extends React.Component<
         this.html.current.value = snapshot.html;
         this.entityStates.current.value = snapshot.entityStates
             ? JSON.stringify(snapshot.entityStates)
-            : '';
-        this.knownColors.current.value = snapshot.knownColors
-            ? JSON.stringify(snapshot.knownColors)
             : '';
         this.selection.current.value = snapshot.selection ? JSON.stringify(snapshot.selection) : '';
         this.isDarkColor.current.checked = !!snapshot.isDarkMode;

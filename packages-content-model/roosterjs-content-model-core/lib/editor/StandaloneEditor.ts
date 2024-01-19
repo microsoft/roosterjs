@@ -1,12 +1,12 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { transformColor } from '../publicApi/color/transformColor';
-import type { DarkColorHandler, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import type {
     ClipboardData,
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
+    DarkColorHandler,
     DOMEventRecord,
     DOMSelection,
     DomToModelOption,
@@ -23,6 +23,7 @@ import type {
     SnapshotsManager,
     StandaloneEditorCore,
     StandaloneEditorOptions,
+    TrustedHTMLHandler,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -66,6 +67,7 @@ export class StandaloneEditor implements IStandaloneEditor {
         }
 
         core.darkColorHandler.reset();
+
         this.core = null;
     }
 
@@ -159,10 +161,10 @@ export class StandaloneEditor implements IStandaloneEditor {
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): void {
+    takeSnapshot(): Snapshot | null {
         const core = this.getCore();
 
-        core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
     }
 
     /**
@@ -260,10 +262,12 @@ export class StandaloneEditor implements IStandaloneEditor {
         if (!!isDarkMode != core.lifecycle.isDarkMode) {
             transformColor(
                 core.contentDiv,
-                true /*includeSelf*/,
+                false /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
                 core.darkColorHandler
             );
+
+            core.lifecycle.isDarkMode = !!isDarkMode;
 
             core.api.triggerEvent(
                 core,
@@ -326,9 +330,9 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Get a darkColorHandler object for this editor.
+     * Get a color manager object for this editor.
      */
-    getDarkColorHandler(): DarkColorHandler {
+    getColorManager(): DarkColorHandler {
         return this.getCore().darkColorHandler;
     }
 

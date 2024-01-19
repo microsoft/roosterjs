@@ -1,6 +1,7 @@
 /**
  * Represents the strategy to clear the format of the current editor selection
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ClearFormatMode {
     /**
      * Inline format. Remove text format.

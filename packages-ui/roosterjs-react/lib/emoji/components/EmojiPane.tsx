@@ -4,13 +4,13 @@ import EmojiNavBar from './EmojiNavBar';
 import EmojiStatusBar from './EmojiStatusBar';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
 import { CommonEmojis, EmojiFamilyKeys, EmojiList, MoreEmoji } from '../utils/emojiList';
+import { css, KeyCodes, memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { FocusZone } from '@fluentui/react/lib/FocusZone';
 import { getLocalizedString } from '../../common/index';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { searchEmojis } from '../utils/searchEmojis';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { useTheme } from '@fluentui/react/lib/Theme';
-import { css, KeyCodes, memoizeFunction } from '@fluentui/react/lib/Utilities';
 import type { EmojiIconProps } from './EmojiIcon';
 import type { EmojiNavBarProps } from './EmojiNavBar';
 import type { EmojiStatusBarProps } from './EmojiStatusBar';
@@ -52,6 +52,7 @@ const TooltipCalloutProps: ICalloutProps = {
  * @internal
  * Types of emoji pane size
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum EmojiPaneMode {
     Quick,
     Partial,
@@ -62,6 +63,7 @@ export const enum EmojiPaneMode {
  * @internal
  * Types of emoji Navigation direction
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum EmojiPaneNavigateDirection {
     Horizontal,
     Vertical,
