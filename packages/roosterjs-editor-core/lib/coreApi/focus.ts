@@ -1,4 +1,4 @@
-import { createRange, getFirstLeafNode } from 'roosterjs-editor-dom';
+import { Browser, createRange, getFirstLeafNode } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
 import type { EditorCore, Focus } from 'roosterjs-editor-types';
 
@@ -34,7 +34,9 @@ export const focus: Focus = (core: EditorCore) => {
         }
 
         // remember to clear cached selection range
-        core.domEvent.selectionRange = null;
+        if (!Browser.isSafari) {
+            core.domEvent.selectionRange = null;
+        }
 
         // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor
         if (!core.api.hasFocus(core)) {
