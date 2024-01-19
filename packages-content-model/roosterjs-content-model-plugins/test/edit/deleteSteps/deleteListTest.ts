@@ -363,8 +363,8 @@ describe('deleteList', () => {
                                                 {
                                                     listType: 'UL',
                                                     format: {
-                                                        marginBlockStart: '0px',
-                                                        marginBlockEnd: '0px',
+                                                        marginTop: '0px',
+                                                        marginBottom: '0px',
                                                         listStyleType: 'disc',
                                                     },
                                                     dataset: {},

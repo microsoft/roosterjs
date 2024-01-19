@@ -473,12 +473,9 @@ function createListElement(
         result = doc.createElement(listType == ListType.Ordered ? 'ol' : 'ul');
     }
 
-    if (
-        originalRoot?.style.marginBlockStart == '0px' &&
-        originalRoot?.style.marginBlockEnd == '0px'
-    ) {
-        result.style.marginBlockStart = '0px';
-        result.style.marginBlockEnd = '0px';
+    if (originalRoot?.style.marginTop == '0px' && originalRoot?.style.marginBottom == '0px') {
+        result.style.marginTop = '0px';
+        result.style.marginBottom = '0px';
     }
 
     // Always maintain the metadata saved in the list
