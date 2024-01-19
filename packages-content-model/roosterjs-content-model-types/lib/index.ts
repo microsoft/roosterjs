@@ -184,6 +184,7 @@ export {
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { ContentModelDomIndexer } from './context/ContentModelDomIndexer';
+export { TextMutationObserver } from './context/TextMutationObserver';
 
 export { DefinitionType } from './metadata/DefinitionType';
 export {

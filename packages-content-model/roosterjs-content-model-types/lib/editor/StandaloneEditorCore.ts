@@ -25,8 +25,9 @@ import type {
 /**
  * Create a EditorContext object used by ContentModel API
  * @param core The StandaloneEditorCore object
+ * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
  */
-export type CreateEditorContext = (core: StandaloneEditorCore) => EditorContext;
+export type CreateEditorContext = (core: StandaloneEditorCore, saveIndex: boolean) => EditorContext;
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -176,6 +177,7 @@ export interface StandaloneCoreApiMap {
     /**
      * Create a EditorContext object used by ContentModel API
      * @param core The StandaloneEditorCore object
+     * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
      */
     createEditorContext: CreateEditorContext;
 

@@ -4,12 +4,7 @@ import {
     createDomToModelContextWithConfig,
     domToContentModel,
 } from 'roosterjs-content-model-dom';
-import type {
-    DOMSelection,
-    DomToModelOption,
-    CreateContentModel,
-    StandaloneEditorCore,
-} from 'roosterjs-content-model-types';
+import type { CreateContentModel } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -30,9 +25,20 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         return cachedModel;
     } else {
         const selection = selectionOverride || core.api.getDOMSelection(core) || undefined;
-        const model = internalCreateContentModel(core, selection, option);
+        const saveIndex = !option && !selectionOverride;
+        const editorContext = core.api.createEditorContext(core, saveIndex);
+        const domToModelContext = option
+            ? createDomToModelContext(
+                  editorContext,
+                  core.domToModelSettings.builtIn,
+                  core.domToModelSettings.customized,
+                  option
+              )
+            : createDomToModelContextWithConfig(core.domToModelSettings.calculated, editorContext);
 
-        if (!option && !selectionOverride) {
+        const model = domToContentModel(core.contentDiv, domToModelContext, selection);
+
+        if (saveIndex) {
             core.cache.cachedModel = model;
             core.cache.cachedSelection = selection;
         }
@@ -40,21 +46,3 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         return model;
     }
 };
-
-function internalCreateContentModel(
-    core: StandaloneEditorCore,
-    selection?: DOMSelection,
-    option?: DomToModelOption
-) {
-    const editorContext = core.api.createEditorContext(core);
-    const domToModelContext = option
-        ? createDomToModelContext(
-              editorContext,
-              core.domToModelSettings.builtIn,
-              core.domToModelSettings.customized,
-              option
-          )
-        : createDomToModelContextWithConfig(core.domToModelSettings.calculated, editorContext);
-
-    return domToContentModel(core.contentDiv, domToModelContext, selection);
-}
