@@ -1,5 +1,4 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { PluginEventType } from 'roosterjs-editor-types';
 import {
     createBr,
     createContentModelDocument,
@@ -12,9 +11,10 @@ import type {
     ContentModelSegmentFormat,
     IStandaloneEditor,
     LifecyclePluginState,
+    PluginEvent,
+    PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
-import type { IEditor, PluginWithState, PluginEvent } from 'roosterjs-editor-types';
 
 const ContentEditableAttributeName = 'contenteditable';
 const DefaultTextColor = '#000000';
@@ -59,7 +59,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
 
         this.state = {
             isDarkMode: !!options.inDarkMode,
-            onExternalContentTransform: null,
             shadowEditFragment: null,
         };
     }
@@ -75,8 +74,8 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IEditor & IStandaloneEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         this.editor.setContentModel(this.initialModel, { ignoreSelection: true });
 
@@ -91,14 +90,14 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         this.adjustColor();
 
         // Let other plugins know that we are ready
-        this.editor.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
+        this.editor.triggerEvent('editorReady', {}, true /*broadcast*/);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.editor?.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
+        this.editor?.triggerEvent('beforeDispose', {}, true /*broadcast*/);
 
         if (this.disposer) {
             this.disposer();
@@ -122,11 +121,10 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      */
     onPluginEvent(event: PluginEvent) {
         if (
-            event.eventType == PluginEventType.ContentChanged &&
+            event.eventType == 'contentChanged' &&
             (event.source == ChangeSource.SwitchToDarkMode ||
                 event.source == ChangeSource.SwitchToLightMode)
         ) {
-            this.state.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
             this.adjustColor();
         }
     }
@@ -134,21 +132,21 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     private adjustContainerColor(contentDiv: HTMLElement) {
         if (this.editor) {
             const { isDarkMode } = this.state;
-            const darkColorHandler = this.editor.getDarkColorHandler();
+            const darkColorHandler = this.editor.getColorManager();
 
             setColor(
                 contentDiv,
                 DefaultTextColor,
                 false /*isBackground*/,
-                darkColorHandler,
-                isDarkMode
+                isDarkMode,
+                darkColorHandler
             );
             setColor(
                 contentDiv,
                 DefaultBackColor,
                 true /*isBackground*/,
-                darkColorHandler,
-                isDarkMode
+                isDarkMode,
+                darkColorHandler
             );
         }
     }

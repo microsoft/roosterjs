@@ -1,6 +1,10 @@
 import { createSelectionPlugin } from '../../lib/corePlugin/SelectionPlugin';
-import { EditorPlugin, IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
-import { IStandaloneEditor, SelectionPluginState } from 'roosterjs-content-model-types';
+import {
+    EditorPlugin,
+    IStandaloneEditor,
+    PluginWithState,
+    SelectionPluginState,
+} from 'roosterjs-content-model-types';
 
 const MockedStyleNode = 'STYLENODE' as any;
 
@@ -26,7 +30,7 @@ describe('SelectionPlugin', () => {
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         plugin.initialize(editor);
 
@@ -67,7 +71,7 @@ describe('SelectionPlugin', () => {
             removeEventListener: removeEventListenerSpy,
         });
 
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
@@ -87,7 +91,7 @@ describe('SelectionPlugin', () => {
 
 describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let plugin: PluginWithState<SelectionPluginState>;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let eventMap: Record<string, any>;
     let getElementAtCursorSpy: jasmine.Spy;
     let createElementSpy: jasmine.Spy;
@@ -96,10 +100,10 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let setDOMSelectionSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
 
-    let editor: IEditor;
+    let editor: IStandaloneEditor;
 
     beforeEach(() => {
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
         createElementSpy = jasmine.createSpy('createElement').and.returnValue(MockedStyleNode);
         appendChildSpy = jasmine.createSpy('appendChild');
@@ -115,9 +119,9 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
 
         plugin = createSelectionPlugin({});
 
-        editor = <IEditor>(<any>{
+        editor = <IStandaloneEditor>(<any>{
             getDocument: getDocumentSpy,
-            triggerPluginEvent,
+            triggerEvent,
             getEnvironment: () => ({}),
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
@@ -168,7 +172,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
 
 describe('SelectionPlugin handle image selection', () => {
     let plugin: EditorPlugin;
-    let editor: IEditor;
+    let editor: IStandaloneEditor;
     let getDOMSelectionSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let getDocumentSpy: jasmine.Spy;
@@ -204,7 +208,7 @@ describe('SelectionPlugin handle image selection', () => {
     it('No selection, mouse down to div', () => {
         const node = document.createElement('div');
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: node,
             } as any,
@@ -234,7 +238,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         const node = document.createElement('div');
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: node,
             } as any,
@@ -265,7 +269,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         const node = document.createElement('div');
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: node,
             } as any,
@@ -284,7 +288,7 @@ describe('SelectionPlugin handle image selection', () => {
         });
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
             } as any,
@@ -304,7 +308,7 @@ describe('SelectionPlugin handle image selection', () => {
         });
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
                 button: 2,
@@ -319,7 +323,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         mockedImage.contentEditable = 'true';
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
                 button: 2,
@@ -333,7 +337,7 @@ describe('SelectionPlugin handle image selection', () => {
         const node = document.createElement('div');
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: 'mouseDown',
             rawEvent: {
                 target: node,
                 button: 2,
@@ -349,7 +353,7 @@ describe('SelectionPlugin handle image selection', () => {
         mockedImage.contentEditable = 'true';
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseUp,
+            eventType: 'mouseUp',
             isClicking: true,
             rawEvent: {
                 target: mockedImage,
@@ -369,7 +373,7 @@ describe('SelectionPlugin handle image selection', () => {
         mockedImage.contentEditable = 'false';
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseUp,
+            eventType: 'mouseUp',
             isClicking: true,
             rawEvent: {
                 target: mockedImage,
@@ -385,7 +389,7 @@ describe('SelectionPlugin handle image selection', () => {
         mockedImage.contentEditable = 'true';
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseUp,
+            eventType: 'mouseUp',
             isClicking: false,
             rawEvent: {
                 target: mockedImage,
@@ -402,7 +406,7 @@ describe('SelectionPlugin handle image selection', () => {
         getDOMSelectionSpy.and.returnValue(null);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -418,7 +422,7 @@ describe('SelectionPlugin handle image selection', () => {
         });
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -450,7 +454,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -487,7 +491,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -525,7 +529,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 
@@ -557,7 +561,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
+            eventType: 'keyDown',
             rawEvent,
         });
 

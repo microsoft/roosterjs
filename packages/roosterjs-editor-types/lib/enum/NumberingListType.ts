@@ -1,6 +1,7 @@
 /**
  *  Enum used to control the different types of numbering list
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum NumberingListType {
     /**
      * Minimum value of the enum

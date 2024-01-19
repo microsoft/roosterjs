@@ -26,7 +26,7 @@ const regClassInterface = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+
 // 2. [export ][default |declare ]function <NAME>(...)[: <TYPE>];
 const regFunction = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?function\s+([a-zA-Z0-9_]+(\s*<(?:[^>]|=>)+>)?)\s*(\([^;]+;)/g;
 // 3. [export ][default |declare ]const enum <NAME> {...}
-const regEnum = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(const\s+)?enum\s+([a-zA-Z0-9_<>]+)\s*{/g;
+const regEnum = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(?:\/\/.*\n)?(export\s+)?(default\s+|declare\s+)?(const\s+)?enum\s+([a-zA-Z0-9_<>]+)\s*{/g;
 // 4. [export ][default |declare ]type <NAME> = ...;
 const regType = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?type\s+([0-9a-zA-Z_]+(\s*<[^>]+>)?)\s*=\s*/g;
 // 5. [export ][default |declare ]const <NAME>: ...;

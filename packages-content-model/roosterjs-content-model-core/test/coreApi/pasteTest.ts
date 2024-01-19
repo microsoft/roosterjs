@@ -9,7 +9,6 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { BeforePasteEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
@@ -22,6 +21,8 @@ import {
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
     IStandaloneEditor,
+    BeforePasteEvent,
+    PluginEvent,
 } from 'roosterjs-content-model-types';
 
 let clipboardData: ClipboardData;
@@ -117,7 +118,7 @@ describe('Paste ', () => {
         });
 
         spyOn(editor, 'getDocument').and.callThrough();
-        spyOn(editor, 'triggerPluginEvent').and.callThrough();
+        spyOn(editor, 'triggerEvent').and.callThrough();
     });
 
     afterEach(() => {
@@ -222,7 +223,7 @@ describe('paste with content model & paste plugin', () => {
         editor?.paste(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -232,7 +233,7 @@ describe('paste with content model & paste plugin', () => {
 
         editor?.paste(clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
@@ -347,7 +348,7 @@ describe('paste with content model & paste plugin', () => {
                     dispose: () => {},
                     getName: () => 'test',
                     onPluginEvent(event: PluginEvent) {
-                        if (event.eventType === PluginEventType.BeforePaste) {
+                        if (event.eventType === 'beforePaste') {
                             eventChecker = event;
                         }
                     },
@@ -360,7 +361,7 @@ describe('paste with content model & paste plugin', () => {
         expect(eventChecker?.clipboardData).toEqual(clipboardData);
         expect(eventChecker?.htmlBefore).toBeTruthy();
         expect(eventChecker?.htmlAfter).toBeTruthy();
-        expect(eventChecker?.pasteType).toEqual(0);
+        expect(eventChecker?.pasteType).toEqual('normal');
     });
 });
 
@@ -416,7 +417,17 @@ describe('Paste with clipboardData', () => {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {
-                                textColor: 'rgb(0, 0, 0)',
+                                textColor: '',
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                underline: false,
                             },
                         },
                     ],
@@ -455,7 +466,19 @@ describe('Paste with clipboardData', () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                     ],
                     blockType: 'Paragraph',
@@ -498,7 +521,19 @@ describe('Paste with clipboardData', () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                             link: {
                                 format: {
                                     underline: true,

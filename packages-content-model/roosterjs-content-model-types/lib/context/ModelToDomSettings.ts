@@ -51,6 +51,16 @@ export type FormatApplier<TFormat extends ContentModelFormatBase> = (
 ) => void;
 
 /**
+ * Apply format to the given text node
+ * @param format The format object to apply
+ * @param textNode The text node to apply format to
+ * @param context The context object that provide related context information
+ */
+export type TextFormatApplier<
+    TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
+> = (format: TFormat, textNode: Text, context: ModelToDomContext) => void;
+
+/**
  * All format appliers
  */
 export type FormatAppliers = {
@@ -58,10 +68,17 @@ export type FormatAppliers = {
 };
 
 /**
+ * A map from format parser category name to an array of parsers. This is for HTMLElement only
+ */
+export type ElementFormatAppliersPerCategory = {
+    [Key in keyof ContentModelFormatMap]: (FormatApplier<ContentModelFormatMap[Key]> | null)[];
+};
+
+/**
  * A map from format parser category name to an array of parsers
  */
-export type FormatAppliersPerCategory = {
-    [Key in keyof ContentModelFormatMap]: (FormatApplier<ContentModelFormatMap[Key]> | null)[];
+export type FormatAppliersPerCategory = ElementFormatAppliersPerCategory & {
+    text: TextFormatApplier[];
 };
 
 /**

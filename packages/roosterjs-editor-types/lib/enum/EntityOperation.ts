@@ -1,6 +1,7 @@
 /**
  * Define possible operations to an entity
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum EntityOperation {
     /**
      * Notify plugins that there is a new plugin was added into editor.

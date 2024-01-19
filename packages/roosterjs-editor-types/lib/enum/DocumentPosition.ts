@@ -2,6 +2,7 @@
  * The is essentially an enum representing result from browser compareDocumentPosition API
  * https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum DocumentPosition {
     /**
      * Same node

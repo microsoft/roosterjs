@@ -27,7 +27,9 @@ export interface StackFormatOptions {
 //   line 1       <---------------------------- in red here
 //   <div>line 2</div>  <---------------------- not in red here
 // </span>
-const SkippedStylesForBlock: (keyof ContentModelSegmentFormat)[] = ['backgroundColor'];
+const SkippedStylesForBlockOnSegmentOnSegment: (keyof ContentModelSegmentFormat)[] = [
+    'backgroundColor',
+];
 const SkippedStylesForTable: (keyof ContentModelBlockFormat)[] = [
     'marginLeft',
     'marginRight',
@@ -146,14 +148,26 @@ function stackFormatInternal<T extends ContentModelFormatBase>(
             getObjectKeys(format).forEach(key => {
                 if (
                     (processType == 'shallowCloneForBlock' &&
-                        SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >=
-                            0) ||
+                        SkippedStylesForBlockOnSegmentOnSegment.indexOf(
+                            key as keyof ContentModelSegmentFormat
+                        ) >= 0) ||
                     (processType == 'shallowCloneForGroup' &&
                         SkippedStylesForTable.indexOf(key as keyof ContentModelBlockFormat) >= 0)
                 ) {
                     delete result[key];
                 }
             });
+
+            if (processType == 'shallowClone' || processType == 'shallowCloneForGroup') {
+                const blockFormat = format as ContentModelBlockFormat;
+
+                // For a new paragraph, if current text indent is already applied to previous block in the same level,
+                // we need to ignore it according to browser rendering behavior
+                if (blockFormat.textIndent) {
+                    delete (result as ContentModelBlockFormat).isTextIndentApplied;
+                    blockFormat.isTextIndentApplied = true;
+                }
+            }
 
             return result;
     }

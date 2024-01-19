@@ -32,7 +32,8 @@ export default class TableResize implements EditorPlugin {
     constructor(
         private onShowHelperElement?: (
             elementData: CreateElementData,
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+            tableOrTd: HTMLTableElement | HTMLTableCellElement
         ) => void,
         private anchorContainerSelector?: string
     ) {}

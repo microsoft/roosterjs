@@ -1,5 +1,4 @@
 import { createEditorContext } from '../../lib/coreApi/createEditorContext';
-import { EditorCore } from 'roosterjs-editor-types';
 import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('createEditorContext', () => {
@@ -29,7 +28,7 @@ describe('createEditorContext', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
 
         const context = createEditorContext(core);
 
@@ -40,6 +39,7 @@ describe('createEditorContext', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -72,7 +72,7 @@ describe('createEditorContext', () => {
             cache: {
                 domIndexer,
             },
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
 
         const context = createEditorContext(core);
 
@@ -83,12 +83,56 @@ describe('createEditorContext', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer,
+            pendingFormat: undefined,
+        });
+    });
+
+    it('create with pending format', () => {
+        const isDarkMode = 'DARKMODE' as any;
+        const defaultFormat = 'DEFAULTFORMAT' as any;
+        const darkColorHandler = 'DARKHANDLER' as any;
+        const mockedPendingFormat = 'PENDINGFORMAT' as any;
+        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
+        const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+
+        const div = {
+            ownerDocument: {
+                defaultView: {
+                    getComputedStyle: getComputedStyleSpy,
+                },
+            },
+            getBoundingClientRect: getBoundingClientRectSpy,
+        };
+
+        const core = ({
+            contentDiv: div,
+            lifecycle: {
+                isDarkMode,
+            },
+            format: {
+                defaultFormat,
+                pendingFormat: mockedPendingFormat,
+            },
+            darkColorHandler,
+            cache: {},
+        } as any) as StandaloneEditorCore;
+
+        const context = createEditorContext(core);
+
+        expect(context).toEqual({
+            isDarkMode,
+            darkColorHandler,
+            defaultFormat,
+            addDelimiterForEntity: true,
+            allowCacheElement: true,
+            domIndexer: undefined,
+            pendingFormat: mockedPendingFormat,
         });
     });
 });
 
 describe('createEditorContext - checkZoomScale', () => {
-    let core: StandaloneEditorCore & EditorCore;
+    let core: StandaloneEditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
     let getBoundingClientRectSpy: jasmine.Spy;
@@ -118,7 +162,7 @@ describe('createEditorContext - checkZoomScale', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
     });
 
     it('Zoom scale = 1', () => {
@@ -137,6 +181,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 1,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -156,6 +201,7 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 2,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -175,12 +221,13 @@ describe('createEditorContext - checkZoomScale', () => {
             zoomScale: 0.5,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 });
 
 describe('createEditorContext - checkRootDir', () => {
-    let core: StandaloneEditorCore & EditorCore;
+    let core: StandaloneEditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
     let getBoundingClientRectSpy: jasmine.Spy;
@@ -210,7 +257,7 @@ describe('createEditorContext - checkRootDir', () => {
             },
             darkColorHandler,
             cache: {},
-        } as any) as StandaloneEditorCore & EditorCore;
+        } as any) as StandaloneEditorCore;
     });
 
     it('LTR CSS', () => {
@@ -227,6 +274,7 @@ describe('createEditorContext - checkRootDir', () => {
             addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 
@@ -245,6 +293,7 @@ describe('createEditorContext - checkRootDir', () => {
             isRootRtl: true,
             allowCacheElement: true,
             domIndexer: undefined,
+            pendingFormat: undefined,
         });
     });
 });

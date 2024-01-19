@@ -2,11 +2,11 @@ import { applyDefaultFormat } from './utils/applyDefaultFormat';
 import { applyPendingFormat } from './utils/applyPendingFormat';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type {
     ContentModelFormatPluginState,
     IStandaloneEditor,
+    PluginEvent,
+    PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 
@@ -47,9 +47,9 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
+    initialize(editor: IStandaloneEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IStandaloneEditor & IEditor;
+        this.editor = editor;
         this.hasDefaultFormat =
             getObjectKeys(this.state.defaultFormat).filter(
                 x => typeof this.state.defaultFormat[x] !== 'undefined'
@@ -84,7 +84,7 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
         }
 
         switch (event.eventType) {
-            case PluginEventType.Input:
+            case 'input':
                 const env = this.editor.getEnvironment();
 
                 // In Safari, isComposing will be undefined but isInIME() works
@@ -96,11 +96,11 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
 
                 break;
 
-            case PluginEventType.CompositionEnd:
+            case 'compositionEnd':
                 this.checkAndApplyPendingFormat(event.rawEvent.data);
                 break;
 
-            case PluginEventType.KeyDown:
+            case 'keyDown':
                 if (isCursorMovingKey(event.rawEvent)) {
                     this.clearPendingFormat();
                 } else if (
@@ -112,8 +112,8 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
 
                 break;
 
-            case PluginEventType.MouseUp:
-            case PluginEventType.ContentChanged:
+            case 'mouseUp':
+            case 'contentChanged':
                 if (!this.canApplyPendingFormat()) {
                     this.clearPendingFormat();
                 }

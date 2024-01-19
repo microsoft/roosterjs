@@ -2,6 +2,7 @@
  * Possible change sources. Here are the predefined sources.
  * It can also be other string if the change source can't fall into these sources.
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ChangeSource {
     /**
      * Content changed by auto link

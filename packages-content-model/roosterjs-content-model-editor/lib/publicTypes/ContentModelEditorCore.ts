@@ -1,10 +1,6 @@
 import type { ContentModelCorePluginState } from './ContentModelCorePlugins';
 import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
-    CompatibleGetContentMode,
-    CompatibleExperimentalFeatures,
-} from 'roosterjs-editor-types/lib/compatibleTypes';
-import type {
     CustomData,
     ExperimentalFeatures,
     ContentMetadata,
@@ -13,6 +9,7 @@ import type {
     NodePosition,
     StyleBasedFormatState,
     SizeTransformer,
+    DarkColorHandler,
 } from 'roosterjs-editor-types';
 
 /**
@@ -41,7 +38,7 @@ export type SetContent = (
 export type GetContent = (
     core: ContentModelEditorCore,
     innerCore: StandaloneEditorCore,
-    mode: GetContentMode | CompatibleGetContentMode
+    mode: GetContentMode
 ) => string;
 
 /**
@@ -157,7 +154,13 @@ export interface ContentModelEditorCore extends ContentModelCorePluginState {
     /**
      * Enabled experimental features
      */
-    readonly experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
+    readonly experimentalFeatures: ExperimentalFeatures[];
+
+    /**
+     * Dark model handler for the editor, used for variable-based solution.
+     * If keep it null, editor will still use original dataset-based dark mode solution.
+     */
+    readonly darkColorHandler: DarkColorHandler;
 
     /**
      * @deprecated Use zoomScale instead

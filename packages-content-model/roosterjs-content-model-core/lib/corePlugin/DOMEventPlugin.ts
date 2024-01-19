@@ -1,14 +1,14 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
-import { PluginEventType } from 'roosterjs-editor-types';
 import type {
     DOMEventPluginState,
     IStandaloneEditor,
     DOMEventRecord,
     StandaloneEditorOptions,
+    PluginWithState,
+    PluginEventType,
 } from 'roosterjs-content-model-types';
-import type { IEditor, PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -52,17 +52,17 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IStandaloneEditor & IEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         const document = this.editor.getDocument();
         const eventHandlers: Partial<
             { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
         > = {
             // 1. Keyboard event
-            keypress: this.getEventHandler(PluginEventType.KeyPress),
-            keydown: this.getEventHandler(PluginEventType.KeyDown),
-            keyup: this.getEventHandler(PluginEventType.KeyUp),
+            keypress: this.getEventHandler('keyPress'),
+            keydown: this.getEventHandler('keyDown'),
+            keyup: this.getEventHandler('keyUp'),
 
             // 2. Mouse event
             mousedown: { beforeDispatch: this.onMouseDown },
@@ -76,7 +76,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             drop: { beforeDispatch: this.onDrop },
 
             // 5. Input event
-            input: this.getEventHandler(PluginEventType.Input),
+            input: this.getEventHandler('input'),
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -126,7 +126,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         doc?.defaultView?.requestAnimationFrame(() => {
             if (this.editor) {
                 this.editor.takeSnapshot();
-                this.editor.triggerPluginEvent(PluginEventType.ContentChanged, {
+                this.editor.triggerEvent('contentChanged', {
                     source: ChangeSource.Drop,
                 });
             }
@@ -134,7 +134,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     };
 
     private onScroll = (e: Event) => {
-        this.editor?.triggerPluginEvent(PluginEventType.Scroll, {
+        this.editor?.triggerEvent('scroll', {
             rawEvent: e,
             scrollContainer: this.state.scrollContainer,
         });
@@ -142,7 +142,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
     private getEventHandler(eventType: PluginEventType): DOMEventRecord {
         const beforeDispatch = (event: Event) =>
-            eventType == PluginEventType.Input
+            eventType == 'input'
                 ? this.onInputEvent(<InputEvent>event)
                 : this.onKeyboardEvent(<KeyboardEvent>event);
 
@@ -175,7 +175,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 this.state.mouseDownY = event.pageY;
             }
 
-            this.editor.triggerPluginEvent(PluginEventType.MouseDown, {
+            this.editor.triggerEvent('mouseDown', {
                 rawEvent: event,
             });
         }
@@ -184,7 +184,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private onMouseUp = (rawEvent: MouseEvent) => {
         if (this.editor) {
             this.removeMouseUpEventListener();
-            this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
+            this.editor.triggerEvent('mouseUp', {
                 rawEvent,
                 isClicking:
                     this.state.mouseDownX == rawEvent.pageX &&
@@ -199,7 +199,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
     private onCompositionEnd = (rawEvent: CompositionEvent) => {
         this.state.isInIME = false;
-        this.editor?.triggerPluginEvent(PluginEventType.CompositionEnd, {
+        this.editor?.triggerEvent('compositionEnd', {
             rawEvent,
         });
     };

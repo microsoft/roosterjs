@@ -24,7 +24,8 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
     constructor(options: ContentModelEditorOptions) {
         this.state = {
             contextMenuProviders:
-                options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
+                options.legacyPlugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) ||
+                [],
         };
     }
 
