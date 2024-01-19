@@ -1,6 +1,7 @@
 /**
  * Key numbers common used keys
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum Keys {
     NULL = 0,
     BACKSPACE = 8,

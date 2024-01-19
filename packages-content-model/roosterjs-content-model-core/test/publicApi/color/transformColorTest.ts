@@ -1,5 +1,4 @@
-import { DarkColorHandlerImpl } from '../../../lib/editor/DarkColorHandlerImpl';
-import { getDarkColor } from 'roosterjs-color-utils';
+import { createDarkColorHandler } from '../../../lib/editor/DarkColorHandlerImpl';
 import { transformColor } from '../../../lib/publicApi/color/transformColor';
 
 describe('transform to dark mode', () => {
@@ -9,39 +8,21 @@ describe('transform to dark mode', () => {
         div = document.createElement('div');
     });
 
-    function runTest(
-        element: HTMLElement,
-        expectedHtml: string,
-        expectedParseValueCalls: string[],
-        expectedRegisterColorCalls: [string, boolean][]
-    ) {
-        const handler = new DarkColorHandlerImpl(div, getDarkColor);
-
-        const parseColorValue = spyOn(handler, 'parseColorValue').and.callFake((color: string) => ({
-            lightModeColor: color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '',
-        }));
-        const registerColor = spyOn(handler, 'registerColor').and.callFake(
-            (color: string) => color
-        );
-
-        transformColor(element, true, 'lightToDark', handler);
-
-        expect(element.outerHTML).toBe(expectedHtml);
-        expect(parseColorValue).toHaveBeenCalledTimes(expectedParseValueCalls.length);
-        expect(registerColor).toHaveBeenCalledTimes(expectedRegisterColorCalls.length);
-
-        expectedParseValueCalls.forEach(v => {
-            expect(parseColorValue).toHaveBeenCalledWith(v, false);
+    function runTest(element: HTMLElement, expectedHtml: string, expectedContainerHtml: string) {
+        const colorManager = createDarkColorHandler(div, color => {
+            return color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '';
         });
-        expectedRegisterColorCalls.forEach(v => {
-            expect(registerColor).toHaveBeenCalledWith(...v);
-        });
+
+        transformColor(element, true, 'lightToDark', colorManager);
+
+        expect(element.outerHTML).toBe(expectedHtml, 'element html');
+        expect(div.outerHTML).toBe(expectedContainerHtml, 'container html');
     }
 
     it('no color', () => {
         const element = document.createElement('div');
 
-        runTest(element, '<div></div>', [null!, null!], []);
+        runTest(element, '<div></div>', '<div></div>');
     });
 
     it('has style colors', () => {
@@ -51,12 +32,8 @@ describe('transform to dark mode', () => {
 
         runTest(
             element,
-            '<div style="color: blue; background-color: yellow;"></div>',
-            ['red', 'green'],
-            [
-                ['blue', true],
-                ['yellow', true],
-            ]
+            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green);"></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
         );
     });
 
@@ -67,12 +44,8 @@ describe('transform to dark mode', () => {
 
         runTest(
             element,
-            '<div style="color: blue; background-color: yellow;"></div>',
-            ['red', 'green'],
-            [
-                ['blue', true],
-                ['yellow', true],
-            ]
+            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green);"></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
         );
     });
 
@@ -85,12 +58,8 @@ describe('transform to dark mode', () => {
 
         runTest(
             element,
-            '<div style="color: blue; background-color: yellow;"></div>',
-            ['red', 'green'],
-            [
-                ['blue', true],
-                ['yellow', true],
-            ]
+            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green);"></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
         );
     });
 });
@@ -102,87 +71,65 @@ describe('transform to light mode', () => {
         div = document.createElement('div');
     });
 
-    function runTest(
-        element: HTMLElement,
-        expectedHtml: string,
-        expectedParseValueCalls: string[],
-        expectedRegisterColorCalls: [string, boolean][]
-    ) {
-        const handler = new DarkColorHandlerImpl(div, getDarkColor);
-        const parseColorValue = spyOn(handler, 'parseColorValue').and.callFake((color: string) => ({
-            lightModeColor: color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '',
-        }));
-        const registerColor = spyOn(handler, 'registerColor').and.callFake(
-            (color: string) => color
-        );
-
-        transformColor(element, true /*includeSelf*/, 'darkToLight', handler);
-
-        expect(element.outerHTML).toBe(expectedHtml);
-        expect(parseColorValue).toHaveBeenCalledTimes(expectedParseValueCalls.length);
-        expect(registerColor).toHaveBeenCalledTimes(expectedRegisterColorCalls.length);
-
-        expectedParseValueCalls.forEach(v => {
-            expect(parseColorValue).toHaveBeenCalledWith(v, true);
+    function runTest(element: HTMLElement, expectedHtml: string, expectedContainerHtml: string) {
+        const colorManager = createDarkColorHandler(div, color => color, {
+            red: {
+                lightModeColor: '#0000ff',
+                darkModeColor: '#ff0000',
+            },
+            green: {
+                lightModeColor: '#ffff00',
+                darkModeColor: '#00ff00',
+            },
         });
-        expectedRegisterColorCalls.forEach(v => {
-            expect(registerColor).toHaveBeenCalledWith(...v);
-        });
+
+        transformColor(element, true /*includeSelf*/, 'darkToLight', colorManager);
+
+        expect(element.outerHTML).toBe(expectedHtml, 'element html');
+        expect(div.outerHTML).toBe(expectedContainerHtml, 'container html');
     }
 
     it('no color', () => {
         const element = document.createElement('div');
 
-        runTest(element, '<div></div>', [null!, null!], []);
+        runTest(element, '<div></div>', '<div></div>');
     });
 
     it('has style colors', () => {
         const element = document.createElement('div');
-        element.style.color = 'red';
-        element.style.backgroundColor = 'green';
+        element.style.color = '#ff0000';
+        element.style.backgroundColor = '#00ff00';
 
         runTest(
             element,
-            '<div style="color: blue; background-color: yellow;"></div>',
-            ['red', 'green'],
-            [
-                ['blue', false],
-                ['yellow', false],
-            ]
+            '<div style="color: rgb(0, 0, 255); background-color: rgb(255, 255, 0);"></div>',
+            '<div></div>'
         );
     });
 
     it('has attribute colors', () => {
         const element = document.createElement('div');
-        element.setAttribute('color', 'red');
-        element.setAttribute('bgcolor', 'green');
+        element.setAttribute('color', '#ff0000');
+        element.setAttribute('bgcolor', '#00ff00');
 
         runTest(
             element,
-            '<div style="color: blue; background-color: yellow;"></div>',
-            ['red', 'green'],
-            [
-                ['blue', false],
-                ['yellow', false],
-            ]
+            '<div style="color: rgb(0, 0, 255); background-color: rgb(255, 255, 0);"></div>',
+            '<div></div>'
         );
     });
 
     it('has both css and attribute colors', () => {
         const element = document.createElement('div');
-        element.style.color = 'red';
-        element.style.backgroundColor = 'green';
-        element.setAttribute('color', 'gray');
-        element.setAttribute('bgcolor', 'brown');
+        element.style.color = '#ff0000';
+        element.style.backgroundColor = '#00ff00';
+        element.setAttribute('color', '#888888');
+        element.setAttribute('bgcolor', '#444444');
 
         runTest(
             element,
-            '<div style="color: blue; background-color: yellow;"></div>',
-            ['red', 'green'],
-            [
-                ['blue', false],
-                ['yellow', false],
-            ]
+            '<div style="color: rgb(0, 0, 255); background-color: rgb(255, 255, 0);"></div>',
+            '<div></div>'
         );
     });
 });

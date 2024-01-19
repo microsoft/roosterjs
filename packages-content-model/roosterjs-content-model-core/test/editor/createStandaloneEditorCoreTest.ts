@@ -1,13 +1,13 @@
 import * as createDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
 import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
 import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
+import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
+import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 import {
     createStandaloneEditorCore,
     defaultTrustHtmlHandler,
     getDarkColorFallback,
 } from '../../lib/editor/createStandaloneEditorCore';
-import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
-import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 
 describe('createEditorCore', () => {
     function createMockedPlugin(stateName: string): any {
@@ -121,7 +121,8 @@ describe('createEditorCore', () => {
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            getDarkColorFallback
+            getDarkColorFallback,
+            undefined
         );
     });
 
@@ -171,7 +172,8 @@ describe('createEditorCore', () => {
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            mockedGetDarkColor
+            mockedGetDarkColor,
+            undefined
         );
     });
 
@@ -190,7 +192,8 @@ describe('createEditorCore', () => {
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            getDarkColorFallback
+            getDarkColorFallback,
+            undefined
         );
     });
 
@@ -221,7 +224,8 @@ describe('createEditorCore', () => {
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            getDarkColorFallback
+            getDarkColorFallback,
+            undefined
         );
     });
 
@@ -252,7 +256,8 @@ describe('createEditorCore', () => {
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            getDarkColorFallback
+            getDarkColorFallback,
+            undefined
         );
     });
 
@@ -283,7 +288,8 @@ describe('createEditorCore', () => {
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            getDarkColorFallback
+            getDarkColorFallback,
+            undefined
         );
     });
 
@@ -314,7 +320,8 @@ describe('createEditorCore', () => {
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            getDarkColorFallback
+            getDarkColorFallback,
+            undefined
         );
     });
 
@@ -345,7 +352,8 @@ describe('createEditorCore', () => {
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
-            getDarkColorFallback
+            getDarkColorFallback,
+            undefined
         );
     });
 });

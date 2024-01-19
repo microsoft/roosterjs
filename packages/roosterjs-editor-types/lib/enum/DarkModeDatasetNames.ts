@@ -2,6 +2,7 @@
  * @deprecated
  * Constants string for dataset names used by dark mode
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum DarkModeDatasetNames {
     /**
      * Original style text color

@@ -17,6 +17,7 @@ const ALL_KEYS = [...ROTATE_CROP_KEYS, ...RESIZE_KEYS];
  * State of an edit info object for image editing.
  * It is returned by checkEditInfoState() function
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ImageEditInfoState {
     /**
      * Invalid edit info. It means the given edit info object is either null,

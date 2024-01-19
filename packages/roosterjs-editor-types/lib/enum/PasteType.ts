@@ -1,6 +1,7 @@
 /**
  * Enum for paste options
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum PasteType {
     /**
      * Default paste behavior
