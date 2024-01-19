@@ -95,7 +95,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
         // 7. onBlur handlers
         if (Browser.isSafari) {
-            document.addEventListener('selectionchange', this.onSelectionChange);
+            document.addEventListener('selectionchange', this.onSelectionChangeSafari);
         } else if (Browser.isIEOrEdge) {
             type EventHandlersIE = {
                 beforedeactivate: DOMEventHandler<HTMLElementEventMap['blur']>;
@@ -119,7 +119,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     dispose() {
         const document = this.editor?.getDocument();
         if (document && Browser.isSafari) {
-            document.removeEventListener('selectionchange', this.onSelectionChange);
+            document.removeEventListener('selectionchange', this.onSelectionChangeSafari);
         }
 
         document?.defaultView?.removeEventListener('resize', this.onScroll);
@@ -164,10 +164,16 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
                 this.editor?.select(this.state.selectionRange);
             }
         }
+
+        if (!Browser.isSafari) {
+            this.state.selectionRange = null;
+        }
     };
 
-    private onSelectionChange = () => {
-        if (this.editor && !this.editor.isInShadowEdit() && this.editor.hasFocus()) {
+    private onSelectionChangeSafari = () => {
+        // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
+        // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
+        if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
             this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
         }
     };
