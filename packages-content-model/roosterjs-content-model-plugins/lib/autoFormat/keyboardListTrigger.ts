@@ -1,8 +1,7 @@
 import { getListTypeStyle } from './utils/getListTypeStyle';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
-import { setListStartNumber, setListStyle } from 'roosterjs-content-model-api';
-import { setListType } from 'roosterjs-content-model-api/lib/modelApi/list/setListType';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { setListStartNumber, setListStyle, setListType } from 'roosterjs-content-model-api';
+import type { ContentModelDocument, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -12,7 +11,7 @@ export function keyboardListTrigger(
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ) {
-    editor.formatContentModel((model, context) => {
+    editor.formatContentModel((model, _context) => {
         const listStyleType = getListTypeStyle(
             model,
             shouldSearchForBullet,
@@ -24,22 +23,33 @@ export function keyboardListTrigger(
                 paragraph.segments.splice(0, 1);
             }
             const { listType, styleType, index } = listStyleType;
-            const isOrderedList = listType === 'OL';
-            setListType(model, listType);
-            if (index && isOrderedList) {
-                setListStartNumber(editor, index);
-            }
-            setListStyle(
-                editor,
-                isOrderedList
-                    ? {
-                          orderedStyleType: styleType,
-                      }
-                    : { unorderedStyleType: styleType }
-            );
-
+            triggerList(editor, model, listType, styleType, index);
             return true;
         }
         return false;
     });
 }
+
+const triggerList = (
+    editor: IStandaloneEditor,
+    model: ContentModelDocument,
+    listType: 'OL' | 'UL',
+    styleType: number,
+    index?: number
+) => {
+    setListType(model, listType);
+    const isOrderedList = listType == 'OL';
+    if (index && isOrderedList) {
+        setListStartNumber(editor, index);
+    }
+    setListStyle(
+        editor,
+        isOrderedList
+            ? {
+                  orderedStyleType: styleType,
+              }
+            : {
+                  unorderedStyleType: styleType,
+              }
+    );
+};

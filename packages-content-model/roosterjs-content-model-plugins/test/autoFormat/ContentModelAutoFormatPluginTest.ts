@@ -47,7 +47,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should trigger keyboardListTrigger', () => {
             const event: KeyDownEvent = {
                 eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false } as any,
+                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
                 handledByEditFeature: false,
             };
             runTest(event, true);
@@ -56,7 +56,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should not trigger keyboardListTrigger', () => {
             const event: KeyDownEvent = {
                 eventType: 'keyDown',
-                rawEvent: { key: '*', defaultPrevented: false } as any,
+                rawEvent: { key: '*', defaultPrevented: false, preventDefault: () => {} } as any,
                 handledByEditFeature: false,
             };
 
@@ -66,7 +66,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should not trigger keyboardListTrigger', () => {
             const event: KeyDownEvent = {
                 eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false } as any,
+                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
                 handledByEditFeature: false,
             };
 
@@ -76,7 +76,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should trigger keyboardListTrigger with auto bullet only', () => {
             const event: KeyDownEvent = {
                 eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false } as any,
+                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
                 handledByEditFeature: false,
             };
             runTest(event, true, { autoBullet: true, autoNumbering: false });
@@ -85,7 +85,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should trigger keyboardListTrigger with auto numbering only', () => {
             const event: KeyDownEvent = {
                 eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false } as any,
+                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
                 handledByEditFeature: false,
             };
             runTest(event, true, { autoBullet: false, autoNumbering: true });
@@ -94,7 +94,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should not trigger keyboardListTrigger, because handledByEditFeature', () => {
             const event: KeyDownEvent = {
                 eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false } as any,
+                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
                 handledByEditFeature: true,
             };
 

@@ -8,7 +8,8 @@
         "roosterjs-content-model-core": "",
         "roosterjs-content-model-editor": "",
         "roosterjs-content-model-dom": "",
-        "roosterjs-content-model-types": ""
+        "roosterjs-content-model-types": "",
+        "roosterjs-content-model-api": ""
     },
     "version": "0.0.0",
     "main": "./lib/index.ts"
