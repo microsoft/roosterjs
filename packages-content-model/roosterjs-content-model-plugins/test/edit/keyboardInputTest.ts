@@ -1,15 +1,15 @@
 import * as deleteSelection from 'roosterjs-content-model-core/lib/publicApi/selection/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { keyboardInput } from '../../lib/edit/keyboardInput';
 import {
     ContentModelDocument,
     ContentModelFormatter,
     FormatWithContentModelContext,
+    IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
 describe('keyboardInput', () => {
-    let editor: IContentModelEditor;
+    let editor: IStandaloneEditor;
     let takeSnapshotSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
