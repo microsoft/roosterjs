@@ -1,10 +1,12 @@
 import { getFormatState } from 'roosterjs-editor-api';
-import { getObjectKeys } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { insertLink } from '../component/buttons/insertLink';
-import { isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
+
+import { getObjectKeys, isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
+
 import type RibbonButton from '../type/RibbonButton';
 import type RibbonPlugin from '../type/RibbonPlugin';
+
 import type { FormatState, IEditor, PluginEvent } from 'roosterjs-editor-types';
 import type { LocalizedStrings, UIUtilities, RibbonPluginOptions } from '../../common/index';
 
