@@ -72,6 +72,7 @@ class RibbonPluginImpl implements RibbonPlugin {
                     this.handleButtonClick(insertLink, 'insertLinkTitle', undefined);
                     event.rawEvent.preventDefault();
                 }
+                break;
             case PluginEventType.MouseUp:
                 this.delayUpdate();
                 break;
