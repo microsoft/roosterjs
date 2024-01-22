@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.23% </span>
+                <span class="strong">90.91% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>52/57</span>
+                <span class='fraction'>50/55</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.13% </span>
+                <span class="strong">77.42% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>50/64</span>
+                <span class='fraction'>48/62</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.57% </span>
+                <span class="strong">90.2% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>48/53</span>
+                <span class='fraction'>46/51</span>
             </div>
         
             
@@ -193,11 +193,7 @@
 <a name='L134'></a><a href='#L134'>134</a>
 <a name='L135'></a><a href='#L135'>135</a>
 <a name='L136'></a><a href='#L136'>136</a>
-<a name='L137'></a><a href='#L137'>137</a>
-<a name='L138'></a><a href='#L138'>138</a>
-<a name='L139'></a><a href='#L139'>139</a>
-<a name='L140'></a><a href='#L140'>140</a>
-<a name='L141'></a><a href='#L141'>141</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L137'></a><a href='#L137'>137</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -224,7 +220,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
@@ -263,7 +258,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -310,8 +304,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -365,7 +357,6 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             : shouldIgnoreBlock(block)
     );
     let existingListItems: ContentModelListItem[] = [];
-    let hasIgnoredParagraphBefore = false;
 &nbsp;
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) =&gt; {
         if (isBlockGroupOfType&lt;ContentModelListItem&gt;(block, 'ListItem')) {
@@ -414,9 +405,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                         : 1,
                                 direction: block.format.direction,
                                 textAlign: block.format.textAlign,
-                                marginTop: hasIgnoredParagraphBefore ? '0' : undefined,
-                                marginBlockEnd: '0px',
-                                marginBlockStart: '0px',
+                                marginTop: '0px',
+                                marginBottom: '0px',
                             }),
                         ],
                         // For list bullet, we only want to carry over these formats from segments:
@@ -451,9 +441,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                     parent.blocks.splice(index, 1, newListItem);
                     existingListItems.push(newListItem);
                 } else {
-                    hasIgnoredParagraphBefore = true;
-&nbsp;
-                    existingListItems.forEach(x =&gt; (x.levels[0].format.marginBottom = '0'));
+                    existingListItems.forEach(x =&gt; (x.levels[0].format.marginBottom = '0px'));
                     existingListItems = [];
                 }
             }
@@ -484,7 +472,7 @@ function shouldIgnoreBlock(block: ContentModelBlock) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Jan 22 2024 17:38:51 GMT+0000 (Coordinated Universal Time)
+                at Mon Jan 22 2024 18:04:45 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
