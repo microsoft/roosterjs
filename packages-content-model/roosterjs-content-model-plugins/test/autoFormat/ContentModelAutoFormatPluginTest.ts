@@ -36,6 +36,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             if (shouldCallTrigger) {
                 expect(keyboardListTriggerSpy).toHaveBeenCalledWith(
                     editor,
+                    event.rawEvent,
                     options?.autoBullet ?? true,
                     options?.autoNumbering ?? true
                 );

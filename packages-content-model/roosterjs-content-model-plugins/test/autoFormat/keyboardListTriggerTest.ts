@@ -25,6 +25,9 @@ describe('keyboardListTrigger', () => {
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
+            {
+                preventDefault: () => {},
+            } as KeyboardEvent,
             shouldSearchForBullet,
             shouldSearchForNumbering
         );

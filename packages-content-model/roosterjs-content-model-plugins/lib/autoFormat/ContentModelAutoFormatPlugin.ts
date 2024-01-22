@@ -92,10 +92,8 @@ export class ContentModelAutoFormatPlugin implements EditorPlugin {
                 case ' ':
                     const { autoBullet, autoNumbering } = this.options;
                     if (autoBullet || autoNumbering) {
-                        event.rawEvent.preventDefault();
-                        keyboardListTrigger(editor, autoBullet, autoNumbering);
+                        keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
                     }
-
                     break;
             }
         }

@@ -8,6 +8,7 @@ import type { ContentModelDocument, IStandaloneEditor } from 'roosterjs-content-
  */
 export function keyboardListTrigger(
     editor: IStandaloneEditor,
+    rawEvent: KeyboardEvent,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ) {
@@ -24,6 +25,7 @@ export function keyboardListTrigger(
             }
             const { listType, styleType, index } = listStyleType;
             triggerList(editor, model, listType, styleType, index);
+            rawEvent.preventDefault();
             return true;
         }
         return false;
