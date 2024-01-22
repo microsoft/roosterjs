@@ -10,6 +10,7 @@ export {
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
 export { ContextMenuPluginState } from './publicTypes/ContextMenuPluginState';
 export { ContentModelCorePluginState } from './publicTypes/ContentModelCorePlugins';
+export { ContentModelBeforePasteEvent } from './publicTypes/ContentModelBeforePasteEvent';
 
 export { ContentModelEditor } from './editor/ContentModelEditor';
 export { isContentModelEditor } from './editor/isContentModelEditor';
