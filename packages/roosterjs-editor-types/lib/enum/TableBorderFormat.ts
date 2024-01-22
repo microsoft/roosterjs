@@ -1,6 +1,7 @@
 /**
  * Table format border
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum TableBorderFormat {
     /**
      * All border of the table are displayed

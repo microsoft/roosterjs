@@ -2,8 +2,8 @@ import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUti
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createContentModelDocument, createEntity } from '../../../roosterjs-content-model-dom/lib';
 import { createEntityPlugin } from '../../lib/corePlugin/EntityPlugin';
-import { DarkColorHandler } from 'roosterjs-editor-types';
 import {
+    DarkColorHandler,
     EntityPluginState,
     IStandaloneEditor,
     PluginWithState,
@@ -25,14 +25,14 @@ describe('EntityPlugin', () => {
         isDarkModeSpy = jasmine.createSpy('isDarkMode');
         isNodeInEditorSpy = jasmine.createSpy('isNodeInEditor');
         transformColorSpy = spyOn(transformColor, 'transformColor');
-        mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
+        mockedDarkColorHandler = 'COLOR' as any;
 
         editor = {
             createContentModel: createContentModelSpy,
             triggerEvent: triggerPluginEventSpy,
             isDarkMode: isDarkModeSpy,
             isNodeInEditor: isNodeInEditorSpy,
-            getDarkColorHandler: () => mockedDarkColorHandler,
+            getColorManager: () => mockedDarkColorHandler,
         } as any;
         plugin = createEntityPlugin();
         plugin.initialize(editor);

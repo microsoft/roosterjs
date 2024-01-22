@@ -1,6 +1,7 @@
 /**
  * Types of Selection Ranges that the SelectionRangeEx can return
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum SelectionRangeTypes {
     /**
      * Normal selection range provided by browser.

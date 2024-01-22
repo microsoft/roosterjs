@@ -6,7 +6,7 @@ import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatWithContentModelContext';
-import type { DarkColorHandler } from 'roosterjs-editor-types';
+import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
@@ -25,8 +25,9 @@ import type {
 /**
  * Create a EditorContext object used by ContentModel API
  * @param core The StandaloneEditorCore object
+ * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
  */
-export type CreateEditorContext = (core: StandaloneEditorCore) => EditorContext;
+export type CreateEditorContext = (core: StandaloneEditorCore, saveIndex: boolean) => EditorContext;
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -118,7 +119,7 @@ export type AddUndoSnapshot = (
     core: StandaloneEditorCore,
     canUndoByBackspace: boolean,
     entityStates?: EntityState[]
-) => void;
+) => Snapshot | null;
 
 /**
  * Retrieves the rect of the visible viewport of the editor.
@@ -176,6 +177,7 @@ export interface StandaloneCoreApiMap {
     /**
      * Create a EditorContext object used by ContentModel API
      * @param core The StandaloneEditorCore object
+     * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
      */
     createEditorContext: CreateEditorContext;
 

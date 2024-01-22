@@ -17,9 +17,9 @@ import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { ContentModelSegmentFormat, Snapshot } from 'roosterjs-content-model-types';
+import { ContentModelSegmentFormat, Snapshots } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
-import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
+import { EditorPlugin } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
@@ -110,7 +110,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private pastePlugin: ContentModelPastePlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
-    private snapshots: Snapshots<Snapshot>;
+    private snapshots: Snapshots;
 
     constructor(props: {}) {
         super(props);
@@ -193,7 +193,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         const plugins = [
             ...this.toggleablePlugins,
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
-            this.contentModelEditPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.entityDelimiterPlugin,
@@ -255,12 +254,13 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
                                 this.pastePlugin,
+                                this.contentModelEditPlugin,
                             ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
                             experimentalFeatures={this.state.initState.experimentalFeatures}
-                            snapshotsManager={this.snapshotPlugin.getSnapshotsManager()}
+                            snapshots={this.snapshotPlugin.getSnapshots()}
                             trustedHTMLHandler={trustedHTMLHandler}
                             zoomScale={this.state.scale}
                             initialContent={this.content}

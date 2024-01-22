@@ -1,6 +1,7 @@
 /**
  * Represents a mode number to indicate what kind of content to retrieve when call Editor.getContent()
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum GetContentMode {
     /**
      * The clean content without any temporary content only for editor.

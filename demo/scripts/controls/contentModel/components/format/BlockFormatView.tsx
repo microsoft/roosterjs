@@ -10,6 +10,7 @@ import { LineHeightFormatRenderer } from './formatPart/LineHeightFormatRenderer'
 import { MarginFormatRenderer } from './formatPart/MarginFormatRenderer';
 import { PaddingFormatRenderer } from './formatPart/PaddingFormatRenderer';
 import { TextAlignFormatRenderer } from './formatPart/TextAlignFormatRenderer';
+import { TextIndentFormatRenderer } from './formatPart/TextIndentFormatRenderer';
 import { WhiteSpaceFormatRenderer } from './formatPart/WhiteSpaceFormatRenderer';
 
 const BlockFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
@@ -21,6 +22,7 @@ const BlockFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
     PaddingFormatRenderer,
     LineHeightFormatRenderer,
     WhiteSpaceFormatRenderer,
+    TextIndentFormatRenderer,
     ...BorderFormatRenderers,
 ];
 

@@ -23,8 +23,12 @@ export function createContentModelEditor(
     additionalPlugins?: EditorPlugin[],
     initialContent?: string
 ): IContentModelEditor {
-    const legacyPlugins = [new ContentModelEditPlugin(), new EntityDelimiterPlugin()];
-    const plugins = [new ContentModelPastePlugin(), ...(additionalPlugins ?? [])];
+    const legacyPlugins = [new EntityDelimiterPlugin()];
+    const plugins = [
+        new ContentModelPastePlugin(),
+        new ContentModelEditPlugin(),
+        ...(additionalPlugins ?? []),
+    ];
 
     const options: ContentModelEditorOptions = {
         legacyPlugins: legacyPlugins,

@@ -1,6 +1,7 @@
 /**
  * CSS Class names for Entity
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum EntityClasses {
     /**
      * Class name to specify this is an entity

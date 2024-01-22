@@ -1,11 +1,10 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
 import * as keyboardInput from '../../lib/edit/keyboardInput';
 import { ContentModelEditPlugin } from '../../lib/edit/ContentModelEditPlugin';
-import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
+import { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 describe('ContentModelEditPlugin', () => {
-    let editor: IContentModelEditor;
+    let editor: IStandaloneEditor;
 
     beforeEach(() => {
         editor = ({
@@ -13,7 +12,7 @@ describe('ContentModelEditPlugin', () => {
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
-        } as any) as IContentModelEditor;
+        } as any) as IStandaloneEditor;
     });
 
     describe('onPluginEvent', () => {
@@ -32,7 +31,7 @@ describe('ContentModelEditPlugin', () => {
             plugin.initialize(editor);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent,
             });
 
@@ -47,7 +46,7 @@ describe('ContentModelEditPlugin', () => {
             plugin.initialize(editor);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent,
             });
 
@@ -60,12 +59,12 @@ describe('ContentModelEditPlugin', () => {
             const rawEvent = { which: 41, key: 'A' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
-            editor.addUndoSnapshot = addUndoSnapshotSpy;
+            editor.takeSnapshot = addUndoSnapshotSpy;
 
             plugin.initialize(editor);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent,
             });
 
@@ -79,7 +78,7 @@ describe('ContentModelEditPlugin', () => {
 
             plugin.initialize(editor);
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent,
             });
 
@@ -94,8 +93,8 @@ describe('ContentModelEditPlugin', () => {
             plugin.initialize(editor);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.EntityOperation,
-                operation: EntityOperation.Overwrite,
+                eventType: 'entityOperation',
+                operation: 'overwrite',
                 rawEvent: {
                     type: 'keydown',
                 } as any,
@@ -103,7 +102,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: { key: 'Delete' } as any,
             });
 
@@ -112,7 +111,7 @@ describe('ContentModelEditPlugin', () => {
             } as any);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: { key: 'Delete' } as any,
             });
 

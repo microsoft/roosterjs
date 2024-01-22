@@ -1,3 +1,4 @@
+import type { TextMutationObserver } from '../context/TextMutationObserver';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelDomIndexer } from '../context/ContentModelDomIndexer';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -20,4 +21,9 @@ export interface ContentModelCachePluginState {
      * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
      */
     domIndexer?: ContentModelDomIndexer;
+
+    /**
+     * @optional A wrapper of MutationObserver to help detect text changes in editor
+     */
+    textMutationObserver?: TextMutationObserver;
 }
