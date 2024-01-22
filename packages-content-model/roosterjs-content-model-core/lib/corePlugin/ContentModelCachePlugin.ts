@@ -1,10 +1,9 @@
 import { areSameSelection } from './utils/areSameSelection';
 import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
-import { isCharacterValue } from '../publicApi/domUtils/eventUtils';
+import { createTextMutationObserver } from './utils/textMutationObserver';
 import type {
     ContentModelCachePluginState,
     IStandaloneEditor,
-    KeyDownEvent,
     PluginEvent,
     PluginWithState,
     StandaloneEditorOptions,
@@ -20,11 +19,15 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
     /**
      * Construct a new instance of ContentModelEditPlugin class
      * @param option The editor option
+     * @param contentDiv The editor content DIV
      */
-    constructor(option: StandaloneEditorOptions) {
-        this.state = {
-            domIndexer: option.cacheModel ? contentModelDomIndexer : undefined,
-        };
+    constructor(option: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
+        this.state = option.cacheModel
+            ? {
+                  domIndexer: contentModelDomIndexer,
+                  textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
+              }
+            : {};
     }
 
     /**
@@ -41,9 +44,10 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
      * @param editor The editor object
      */
     initialize(editor: IStandaloneEditor) {
-        // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor;
         this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
+
+        this.state.textMutationObserver?.startObserving();
     }
 
     /**
@@ -52,6 +56,8 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
      * called, plugin should not call to any editor method since it will result in error.
      */
     dispose() {
+        this.state.textMutationObserver?.stopObserving();
+
         if (this.editor) {
             this.editor
                 .getDocument()
@@ -79,37 +85,33 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
         }
 
         switch (event.eventType) {
-            case 'keyDown':
-                if (this.shouldClearCache(event)) {
-                    this.invalidateCache();
-                }
-                break;
-
-            case 'input':
-                {
-                    this.updateCachedModel(this.editor, true /*forceUpdate*/);
-                }
-                break;
-
             case 'selectionChanged':
                 this.updateCachedModel(this.editor);
                 break;
 
             case 'contentChanged':
-                {
-                    const { contentModel, selection } = event;
+                const { contentModel, selection } = event;
 
-                    if (contentModel && this.state.domIndexer) {
-                        this.state.cachedModel = contentModel;
-                        this.state.cachedSelection = selection;
-                    } else {
-                        this.invalidateCache();
-                    }
+                if (contentModel && this.state.domIndexer) {
+                    this.state.cachedModel = contentModel;
+                    this.state.cachedSelection = selection;
+                } else {
+                    this.invalidateCache();
                 }
 
                 break;
         }
     }
+
+    private onMutation = (isTextChangeOnly: boolean) => {
+        if (this.editor) {
+            if (isTextChangeOnly) {
+                this.updateCachedModel(this.editor, true /*forceUpdate*/);
+            } else {
+                this.invalidateCache();
+            }
+        }
+    };
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
@@ -150,48 +152,17 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
             this.state.cachedSelection = cachedSelection;
         }
     }
-
-    private shouldClearCache(event: KeyDownEvent) {
-        const { rawEvent, handledByEditFeature } = event;
-
-        // In these cases we can't update the model, so clear cache:
-        // 1. It is already handled by Content Edit Features
-        if (handledByEditFeature) {
-            return true;
-        }
-
-        // 2. Default behavior is prevented, which means other plugins has handled the event
-        if (rawEvent.defaultPrevented) {
-            return true;
-        }
-
-        // 3. ENTER key is pressed. ENTER key will create new paragraph, so need to update cache to reflect this change
-        // TODO: Handle ENTER key to better reuse content model
-
-        if (rawEvent.key == 'Enter') {
-            return true;
-        }
-
-        // 4. Current selection is image or table or expanded range selection, and is inputting some text
-        if (
-            (this.state.cachedSelection?.type != 'range' ||
-                !this.state.cachedSelection.range.collapsed) &&
-            isCharacterValue(rawEvent)
-        ) {
-            return true;
-        }
-
-        return false;
-    }
 }
 
 /**
  * @internal
  * Create a new instance of ContentModelCachePlugin class.
  * @param option The editor option
+ * @param contentDiv The editor content DIV
  */
 export function createContentModelCachePlugin(
-    option: StandaloneEditorOptions
+    option: StandaloneEditorOptions,
+    contentDiv: HTMLDivElement
 ): PluginWithState<ContentModelCachePluginState> {
-    return new ContentModelCachePlugin(option);
+    return new ContentModelCachePlugin(option, contentDiv);
 }
