@@ -8,6 +8,7 @@ describe('createEditorContext', () => {
         const darkColorHandler = 'DARKHANDLER' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+        const domIndexer = 'DOMINDEXER' as any;
 
         const div = {
             ownerDocument: {
@@ -27,10 +28,12 @@ describe('createEditorContext', () => {
                 defaultFormat,
             },
             darkColorHandler,
-            cache: {},
+            cache: {
+                domIndexer: domIndexer,
+            },
         } as any) as StandaloneEditorCore;
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -74,7 +77,7 @@ describe('createEditorContext', () => {
             },
         } as any) as StandaloneEditorCore;
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, true);
 
         expect(context).toEqual({
             isDarkMode,
@@ -117,7 +120,7 @@ describe('createEditorContext', () => {
             cache: {},
         } as any) as StandaloneEditorCore;
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -171,7 +174,7 @@ describe('createEditorContext - checkZoomScale', () => {
             width: 100,
         });
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -191,7 +194,7 @@ describe('createEditorContext - checkZoomScale', () => {
             width: 100,
         });
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -211,7 +214,7 @@ describe('createEditorContext - checkZoomScale', () => {
             width: 100,
         });
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -265,7 +268,7 @@ describe('createEditorContext - checkRootDir', () => {
             direction: 'ltr',
         });
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -283,7 +286,7 @@ describe('createEditorContext - checkRootDir', () => {
             direction: 'rtl',
         });
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,

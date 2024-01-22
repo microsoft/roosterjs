@@ -8,6 +8,7 @@ import {
 } from 'roosterjs-editor-types';
 import type { ContentChangedEvent, PluginEvent as OldEvent } from 'roosterjs-editor-types';
 import type { PluginEvent as NewEvent } from 'roosterjs-content-model-types';
+import type { ContentModelBeforePasteEvent } from '../../../lib/publicTypes/ContentModelBeforePasteEvent';
 
 describe('oldEventToNewEvent', () => {
     function runTest(
@@ -744,7 +745,9 @@ describe('newEventToOldEvent', () => {
                     preserveHtmlComments: false,
                     unknownTagReplacement: null,
                 },
-            }
+                customizedMerge: mockedCustomizedMerge,
+                domToModelOption: mockedDomToModelOption,
+            } as ContentModelBeforePasteEvent
         );
     });
 
@@ -792,7 +795,9 @@ describe('newEventToOldEvent', () => {
                 htmlAttributes: mockedHTmlAttributes,
                 pasteType: PasteType.AsImage,
                 sanitizingOption: mockedSanitizeOption,
-            }
+                customizedMerge: mockedCustomizedMerge,
+                domToModelOption: mockedDomToModelOption,
+            } as ContentModelBeforePasteEvent
         );
     });
 

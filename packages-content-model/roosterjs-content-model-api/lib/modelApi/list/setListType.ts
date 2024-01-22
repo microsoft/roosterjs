@@ -28,7 +28,6 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             : shouldIgnoreBlock(block)
     );
     let existingListItems: ContentModelListItem[] = [];
-    let hasIgnoredParagraphBefore = false;
 
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
@@ -77,9 +76,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                         : 1,
                                 direction: block.format.direction,
                                 textAlign: block.format.textAlign,
-                                marginTop: hasIgnoredParagraphBefore ? '0' : undefined,
-                                marginBlockEnd: '0px',
-                                marginBlockStart: '0px',
+                                marginTop: '0px',
+                                marginBottom: '0px',
                             }),
                         ],
                         // For list bullet, we only want to carry over these formats from segments:
@@ -114,9 +112,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                     parent.blocks.splice(index, 1, newListItem);
                     existingListItems.push(newListItem);
                 } else {
-                    hasIgnoredParagraphBefore = true;
-
-                    existingListItems.forEach(x => (x.levels[0].format.marginBottom = '0'));
+                    existingListItems.forEach(x => (x.levels[0].format.marginBottom = '0px'));
                     existingListItems = [];
                 }
             }

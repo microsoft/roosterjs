@@ -35,18 +35,6 @@ export const marginFormatHandler: FormatHandler<MarginFormat> = {
                 }
             }
         });
-
-        const marginBlockStart = element.style.marginBlockStart || defaultStyle.marginBlockStart;
-        const marginTop = element.style.marginTop || defaultStyle.marginTop;
-        if (marginBlockStart && !marginTop) {
-            format.marginBlockStart = parseValueWithUnit(marginBlockStart) + 'px';
-        }
-
-        const marginBlockEnd = element.style.marginBlockEnd || defaultStyle.marginBlockEnd;
-        const marginBottom = element.style.marginBottom || defaultStyle.marginBottom;
-        if (marginBlockEnd && !marginBottom) {
-            format.marginBlockEnd = parseValueWithUnit(marginBlockEnd) + 'px';
-        }
     },
     apply: (format, element, context) => {
         MarginKeys.forEach(key => {
@@ -56,13 +44,5 @@ export const marginFormatHandler: FormatHandler<MarginFormat> = {
                 element.style[key] = value || '0';
             }
         });
-
-        if (format.marginBlockStart && !format.marginTop) {
-            element.style.marginBlockStart = format.marginBlockStart;
-        }
-
-        if (format.marginBlockEnd && !format.marginBottom) {
-            element.style.marginBlockEnd = format.marginBlockEnd;
-        }
     },
 };
