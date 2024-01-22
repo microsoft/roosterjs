@@ -1,10 +1,8 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
-import { Browser } from 'roosterjs-editor-dom';
 import { expectEqual, initEditor } from './testUtils';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { tableProcessor } from 'roosterjs-content-model-dom';
-import type { ClipboardData } from 'roosterjs-content-model-types';
+import type { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_Excel_E2E';
 const clipboardData = <ClipboardData>(<any>{
@@ -22,7 +20,7 @@ const clipboardData = <ClipboardData>(<any>{
 });
 
 describe(ID, () => {
-    let editor: IContentModelEditor = undefined!;
+    let editor: IStandaloneEditor = undefined!;
 
     beforeEach(() => {
         editor = initEditor(ID);
@@ -32,25 +30,19 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
-    it('E2E', () => {
-        if (Browser.isFirefox) {
-            return;
-        }
+    itChromeOnly('E2E', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
         editor.createContentModel({});
 
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 
-    it('E2E paste as image', () => {
-        if (Browser.isFirefox) {
-            return;
-        }
+    itChromeOnly('E2E paste as image', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        editor.paste(clipboardData, false, false, true);
+        editor.pasteFromClipboard(clipboardData, 'asImage');
 
         const model = editor.createContentModel({
             processorOverride: {
@@ -113,7 +105,7 @@ describe(ID, () => {
             snapshotBeforePaste: '<br><!--{"start":[0],"end":[0]}-->',
         });
 
-        editor.paste(CD);
+        editor.pasteFromClipboard(CD);
 
         const model = editor.createContentModel({
             processorOverride: {

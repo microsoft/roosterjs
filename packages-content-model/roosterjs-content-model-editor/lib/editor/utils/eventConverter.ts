@@ -1,5 +1,6 @@
 import { convertDomSelectionToRangeEx, convertRangeExToDomSelection } from './selectionConverter';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
+import type { ContentModelBeforePasteEvent } from '../../publicTypes/ContentModelBeforePasteEvent';
 import {
     KnownAnnounceStrings as OldKnownAnnounceStrings,
     PasteType as OldPasteType,
@@ -133,20 +134,23 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
 
         case PluginEventType.BeforePaste:
             const refBeforePasteEvent = refEvent?.eventType == 'beforePaste' ? refEvent : undefined;
+            const cmBeforePasteEvent = input as ContentModelBeforePasteEvent;
 
             return {
                 eventType: 'beforePaste',
                 clipboardData: input.clipboardData,
-                customizedMerge: refBeforePasteEvent?.customizedMerge,
-                domToModelOption: refBeforePasteEvent?.domToModelOption ?? {
-                    additionalAllowedTags: [],
-                    additionalDisallowedTags: [],
-                    additionalFormatParsers: {},
-                    formatParserOverride: {},
-                    processorOverride: {},
-                    styleSanitizers: {},
-                    attributeSanitizers: {},
-                },
+                customizedMerge:
+                    cmBeforePasteEvent.customizedMerge ?? refBeforePasteEvent?.customizedMerge,
+                domToModelOption: cmBeforePasteEvent.domToModelOption ??
+                    refBeforePasteEvent?.domToModelOption ?? {
+                        additionalAllowedTags: [],
+                        additionalDisallowedTags: [],
+                        additionalFormatParsers: {},
+                        formatParserOverride: {},
+                        processorOverride: {},
+                        styleSanitizers: {},
+                        attributeSanitizers: {},
+                    },
                 eventDataCache: input.eventDataCache,
                 fragment: input.fragment,
                 htmlAfter: input.htmlAfter,
@@ -349,7 +353,7 @@ export function newEventToOldEvent(input: NewEvent, refEvent?: OldEvent): OldEve
             const refBeforePasteEvent =
                 refEvent?.eventType == PluginEventType.BeforePaste ? refEvent : undefined;
 
-            return {
+            const oldBeforePasteEvent: ContentModelBeforePasteEvent = {
                 eventType: PluginEventType.BeforePaste,
                 clipboardData: input.clipboardData,
                 eventDataCache: input.eventDataCache,
@@ -360,7 +364,11 @@ export function newEventToOldEvent(input: NewEvent, refEvent?: OldEvent): OldEve
                 pasteType: PasteTypeNewToOld[input.pasteType],
                 sanitizingOption:
                     refBeforePasteEvent?.sanitizingOption ?? createDefaultHtmlSanitizerOptions(),
+                domToModelOption: input.domToModelOption,
+                customizedMerge: input.customizedMerge,
             };
+
+            return oldBeforePasteEvent;
 
         case 'beforeSetContent':
             return {
