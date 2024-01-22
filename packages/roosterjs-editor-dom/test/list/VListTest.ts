@@ -1286,10 +1286,10 @@ describe('VList.split', () => {
         );
     });
 
-    it('split List 4 with margin-block', () => {
+    it('split List 4 with margin-top and bottom', () => {
         runTest(
-            `<ol id=${listId} style="margin-block:0px"><li id='${separatorElementId}'>1</li><ol style="margin-block: 0px;list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
-            '<ol id="listId" style="margin-block:0px" start="9"><li id="separatorId">1</li><ol style="margin-block: 0px; list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            `<ol id=${listId} style="margin-block:0px"><li id='${separatorElementId}'>1</li><ol style="margin-top: 0px;margin-bottom: 0px;list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
+            '<ol id="listId" style="margin-block:0px" start="9"><li id="separatorId">1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             9
         );
     });
@@ -1531,7 +1531,7 @@ describe('VList.removeMargins', () => {
         DomTestHelper.removeElement(testId);
     });
 
-    function runTest(source: string, shouldNotRemoveMargin: boolean = false) {
+    function runTest(source: string, expectedMarginTop: string, expectedMarginBottom: string) {
         DomTestHelper.createElementFromContent(testId, source);
         const list = document.getElementById(ListRoot) as HTMLOListElement;
 
@@ -1542,27 +1542,28 @@ describe('VList.removeMargins', () => {
 
         // Act
         vList.removeMargins();
-        if (shouldNotRemoveMargin) {
-            expect(list.style.marginBlock).toEqual('');
-        } else {
-            expect(list.style.marginBlock).toEqual('0px');
-        }
+
+        expect(list.style.marginTop).toBe(expectedMarginTop);
+        expect(list.style.marginBottom).toBe(expectedMarginBottom);
 
         DomTestHelper.removeElement(testId);
     }
 
     it('remove list margins OL list', () => {
         const list = `<ol id="${ListRoot}"></ol>`;
-        runTest(list);
+
+        runTest(list, '0px', '0px');
     });
 
     it('remove list margins UL list', () => {
         const list = `<ul id="${ListRoot}"></ul>`;
-        runTest(list);
+
+        runTest(list, '0px', '0px');
     });
 
     it('do not remove list margins UL list', () => {
         const list = `<ul style="margin-top:1px" id="${ListRoot}"><li>test</li></ul>`;
-        runTest(list, true /** shouldNotRemoveMargin */);
+
+        runTest(list, '1px', '');
     });
 });
