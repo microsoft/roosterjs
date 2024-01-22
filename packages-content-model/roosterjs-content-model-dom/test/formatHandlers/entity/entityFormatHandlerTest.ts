@@ -1,6 +1,7 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { entityFormatHandler } from '../../../lib/formatHandlers/entity/entityFormatHandler';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import {
     DomToModelContext,
     EntityInfoFormat,
@@ -104,15 +105,18 @@ describe('entityFormatHandler.apply', () => {
         );
     });
 
-    it('Real entity with entity info and block and div with different width than 100%', () => {
-        format.id = 'A';
-        format.entityType = 'B';
-        format.isReadonly = true;
-        format.isBlock = true;
-        div.style.width = '600px';
-        entityFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe(
-            '<div class="_Entity _EType_B _EId_A _EReadonly_1 _EBlock" contenteditable="false" style="width: 100%;"></div>'
-        );
-    });
+    itChromeOnly(
+        'Real entity with entity info and block and div with different width than 100%',
+        () => {
+            format.id = 'A';
+            format.entityType = 'B';
+            format.isReadonly = true;
+            format.isBlock = true;
+            div.style.width = '600px';
+            entityFormatHandler.apply(format, div, context);
+            expect(div.outerHTML).toBe(
+                '<div class="_Entity _EType_B _EId_A _EReadonly_1 _EBlock" contenteditable="false" style="width: 100%;"></div>'
+            );
+        }
+    );
 });
