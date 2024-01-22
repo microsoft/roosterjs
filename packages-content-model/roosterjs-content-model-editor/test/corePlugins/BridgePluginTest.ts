@@ -28,6 +28,7 @@ describe('BridgePlugin', () => {
         const onPluginEventSpy1 = jasmine.createSpy('onPluginEvent1');
         const onPluginEventSpy2 = jasmine.createSpy('onPluginEvent2');
         const disposeSpy = jasmine.createSpy('dispose');
+        const queryElementsSpy = jasmine.createSpy('queryElement').and.returnValue([]);
 
         const mockedPlugin1 = {
             initialize: initializeSpy,
@@ -39,7 +40,9 @@ describe('BridgePlugin', () => {
             onPluginEvent: onPluginEventSpy2,
             dispose: disposeSpy,
         } as any;
-        const mockedEditor = 'EDITOR' as any;
+        const mockedEditor = {
+            queryElements: queryElementsSpy,
+        } as any;
 
         const plugin = new BridgePlugin({
             legacyPlugins: [mockedPlugin1, mockedPlugin2],

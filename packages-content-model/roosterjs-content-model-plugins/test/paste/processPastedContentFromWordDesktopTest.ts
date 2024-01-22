@@ -1,9 +1,8 @@
 import * as getStyleMetadata from '../../lib/paste/WordDesktop/getStyleMetadata';
+import { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
 import { expectEqual } from './e2e/testUtils';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { processPastedContentFromWordDesktop } from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { WordMetadata } from '../../lib/paste/WordDesktop/WordMetadata';
-import { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,
     domToContentModel,
@@ -5127,29 +5126,28 @@ describe('processPastedContentFromWordDesktopTest', () => {
     });
 });
 
-export function createBeforePasteEventMock(fragment: DocumentFragment, htmlBefore: string = '') {
-    return ({
-        eventType: PluginEventType.BeforePaste,
+export function createBeforePasteEventMock(
+    fragment: DocumentFragment,
+    htmlBefore: string = ''
+): BeforePasteEvent {
+    return {
+        eventType: 'beforePaste',
         clipboardData: <ClipboardData>{},
         fragment: fragment,
-        sanitizingOption: {
-            elementCallbacks: {},
-            attributeCallbacks: {},
-            cssStyleCallbacks: {},
-            additionalTagReplacements: {},
-            additionalAllowedAttributes: [],
-            additionalAllowedCssClasses: [],
-            additionalDefaultStyleValues: {},
-            additionalGlobalStyleNodes: [],
-            additionalPredefinedCssForElement: {},
-            preserveHtmlComments: false,
-            unknownTagReplacement: null,
-        },
         htmlBefore,
         htmlAfter: '',
         htmlAttributes: {},
-        domToModelOption: { additionalAllowedTags: [], additionalDisallowedTags: [] },
-    } as any) as BeforePasteEvent;
+        pasteType: 'normal',
+        domToModelOption: {
+            additionalAllowedTags: [],
+            additionalDisallowedTags: [],
+            additionalFormatParsers: {},
+            attributeSanitizers: {},
+            formatParserOverride: {},
+            processorOverride: {},
+            styleSanitizers: {},
+        },
+    };
 }
 
 function createListElementFromWord(

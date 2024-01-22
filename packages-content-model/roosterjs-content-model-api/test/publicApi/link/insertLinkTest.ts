@@ -403,4 +403,47 @@ describe('insertLink', () => {
             ],
         });
     });
+
+    it('Invalid url', () => {
+        const doc = createContentModelDocument();
+        addSegment(doc, createSelectionMarker());
+
+        const url = 'javasc\nript:onC\nlick()';
+        let formatResult: boolean | undefined;
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                    formatResult = callback(doc, {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    });
+                }
+            );
+
+        editor.formatContentModel = formatContentModel;
+
+        insertLink(editor, url);
+
+        expect(formatContentModel).toHaveBeenCalledTimes(0);
+        expect(formatResult).toBeFalsy();
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });
