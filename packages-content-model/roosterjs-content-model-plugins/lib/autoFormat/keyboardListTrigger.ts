@@ -19,9 +19,9 @@ export function keyboardListTrigger(
             shouldSearchForNumbering
         );
         if (listStyleType) {
-            const paragraph = getSelectedSegmentsAndParagraphs(model, false)[0][1];
-            if (paragraph) {
-                paragraph.segments.splice(0, 1);
+            const segmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, false);
+            if (segmentsAndParagraphs[0] && segmentsAndParagraphs[0][1]) {
+                segmentsAndParagraphs[0][1].segments.splice(0, 1);
             }
             const { listType, styleType, index } = listStyleType;
             triggerList(editor, model, listType, styleType, index);
@@ -41,7 +41,8 @@ const triggerList = (
 ) => {
     setListType(model, listType);
     const isOrderedList = listType == 'OL';
-    if (index && isOrderedList) {
+    // If the index < 1, it is a new list, so it will be starting by 1, then no need to set startNumber
+    if (index && index > 1 && isOrderedList) {
         setListStartNumber(editor, index);
     }
     setListStyle(
