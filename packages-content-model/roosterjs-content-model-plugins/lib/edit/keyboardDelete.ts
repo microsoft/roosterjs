@@ -15,8 +15,11 @@ import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
 } from './deleteSteps/deleteCollapsedSelection';
-import type { IContentModelEditor } from 'roosterjs-content-model-editor';
-import type { DOMSelection, DeleteSelectionStep } from 'roosterjs-content-model-types';
+import type {
+    DOMSelection,
+    DeleteSelectionStep,
+    IStandaloneEditor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -24,7 +27,7 @@ import type { DOMSelection, DeleteSelectionStep } from 'roosterjs-content-model-
  * @param editor The Content Model Editor
  * @param rawEvent DOM keyboard event
  */
-export function keyboardDelete(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
+export function keyboardDelete(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
 
     if (shouldDeleteWithContentModel(selection, rawEvent)) {
