@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.55% </span>
+                <span class="strong">98.59% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>68/69</span>
+                <span class='fraction'>70/71</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.99% </span>
+                <span class="strong">92.79% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>199/214</span>
+                <span class='fraction'>206/222</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.55% </span>
+                <span class="strong">98.59% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>68/69</span>
+                <span class='fraction'>70/71</span>
             </div>
         
             
@@ -606,8 +606,17 @@
 <a name='L547'></a><a href='#L547'>547</a>
 <a name='L548'></a><a href='#L548'>548</a>
 <a name='L549'></a><a href='#L549'>549</a>
-<a name='L550'></a><a href='#L550'>550</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L550'></a><a href='#L550'>550</a>
+<a name='L551'></a><a href='#L551'>551</a>
+<a name='L552'></a><a href='#L552'>552</a>
+<a name='L553'></a><a href='#L553'>553</a>
+<a name='L554'></a><a href='#L554'>554</a>
+<a name='L555'></a><a href='#L555'>555</a>
+<a name='L556'></a><a href='#L556'>556</a>
+<a name='L557'></a><a href='#L557'>557</a>
+<a name='L558'></a><a href='#L558'>558</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -741,8 +750,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -971,6 +983,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1157,6 +1173,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { convertDomSelectionToRangeEx, convertRangeExToDomSelection } from './selectionConverter';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
+import type { ContentModelBeforePasteEvent } from '../../publicTypes/ContentModelBeforePasteEvent';
 import {
     KnownAnnounceStrings as OldKnownAnnounceStrings,
     PasteType as OldPasteType,
@@ -1290,20 +1307,23 @@ export function oldEventToNewEvent&lt;TOldEvent extends OldEvent&gt;(
 &nbsp;
         case PluginEventType.BeforePaste:
             const refBeforePasteEvent = refEvent?.eventType == 'beforePaste' ? refEvent : undefined;
+            const cmBeforePasteEvent = input as ContentModelBeforePasteEvent;
 &nbsp;
             return {
                 eventType: 'beforePaste',
                 clipboardData: input.clipboardData,
-                customizedMerge: refBeforePasteEvent?.customizedMerge,
-                domToModelOption: refBeforePasteEvent?.domToModelOption ?? {
-                    additionalAllowedTags: [],
-                    additionalDisallowedTags: [],
-                    additionalFormatParsers: {},
-                    formatParserOverride: {},
-                    processorOverride: {},
-                    styleSanitizers: {},
-                    attributeSanitizers: {},
-                },
+                customizedMerge:
+                    cmBeforePasteEvent.customizedMerge<span class="branch-0 cbranch-no" title="branch not covered" > ?? r</span>efBeforePasteEvent?.customizedMerge,
+                domToModelOption: cmBeforePasteEvent.domToModelOption ??
+                    refBeforePasteEvent?.domToModelOption ?? {
+                        additionalAllowedTags: [],
+                        additionalDisallowedTags: [],
+                        additionalFormatParsers: {},
+                        formatParserOverride: {},
+                        processorOverride: {},
+                        styleSanitizers: {},
+                        attributeSanitizers: {},
+                    },
                 eventDataCache: input.eventDataCache,
                 fragment: input.fragment,
                 htmlAfter: input.htmlAfter,
@@ -1506,7 +1526,7 @@ export function newEventToOldEvent(input: NewEvent, refEvent?: OldEvent): OldEve
             const refBeforePasteEvent =
                 refEvent?.eventType == PluginEventType.BeforePaste ? refEvent : undefined;
 &nbsp;
-            return {
+            const oldBeforePasteEvent: ContentModelBeforePasteEvent = {
                 eventType: PluginEventType.BeforePaste,
                 clipboardData: input.clipboardData,
                 eventDataCache: input.eventDataCache,
@@ -1517,7 +1537,11 @@ export function newEventToOldEvent(input: NewEvent, refEvent?: OldEvent): OldEve
                 pasteType: PasteTypeNewToOld[input.pasteType],
                 sanitizingOption:
                     refBeforePasteEvent?.sanitizingOption ?? createDefaultHtmlSanitizerOptions(),
+                domToModelOption: input.domToModelOption,
+                customizedMerge: input.customizedMerge,
             };
+&nbsp;
+            return oldBeforePasteEvent;
 &nbsp;
         case 'beforeSetContent':
             return {
@@ -1711,7 +1735,7 @@ function announceDataNewToOld(data: NewAnnounceData | undefined): OldAnnounceDat
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Jan 21 2024 07:06:36 GMT+0000 (Coordinated Universal Time)
+                at Mon Jan 22 2024 17:38:51 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
