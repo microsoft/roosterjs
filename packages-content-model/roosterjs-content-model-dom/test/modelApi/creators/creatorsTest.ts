@@ -517,8 +517,9 @@ describe('Creators', () => {
         const id = 'entity_1';
         const entityType = 'entity';
         const isReadonly = true;
+        const isBlock = false;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id);
+        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id, isBlock);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
@@ -528,6 +529,28 @@ describe('Creators', () => {
                 id,
                 entityType,
                 isReadonly,
+            },
+            wrapper,
+        });
+    });
+
+    it('createEntity, block entity', () => {
+        const id = 'entity_1';
+        const entityType = 'entity';
+        const isReadonly = true;
+        const isBlock = true;
+        const wrapper = document.createElement('div');
+        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id, isBlock);
+
+        expect(entityModel).toEqual({
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            entityFormat: {
+                id,
+                entityType,
+                isReadonly,
+                isBlock,
             },
             wrapper,
         });

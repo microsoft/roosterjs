@@ -45,6 +45,17 @@ describe('entityFormatHandler.parse', () => {
             isReadonly: true,
         });
     });
+
+    it('Real entity, block entity', () => {
+        div.className = '_Entity _EId_A _EType_B _EReadonly_1 _EBlock';
+        entityFormatHandler.parse(format, div, context, {});
+        expect(format).toEqual({
+            id: 'A',
+            entityType: 'B',
+            isReadonly: true,
+            isBlock: true,
+        });
+    });
 });
 
 describe('entityFormatHandler.apply', () => {
@@ -79,6 +90,29 @@ describe('entityFormatHandler.apply', () => {
         entityFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe(
             '<div class="_Entity _EType_B _EId_A _EReadonly_1" contenteditable="false"></div>'
+        );
+    });
+
+    it('Real entity with entity info and block', () => {
+        format.id = 'A';
+        format.entityType = 'B';
+        format.isReadonly = true;
+        format.isBlock = true;
+        entityFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe(
+            '<div class="_Entity _EType_B _EId_A _EReadonly_1 _EBlock" contenteditable="false" style="width: 100%;"></div>'
+        );
+    });
+
+    it('Real entity with entity info and block and div with different width than 100%', () => {
+        format.id = 'A';
+        format.entityType = 'B';
+        format.isReadonly = true;
+        format.isBlock = true;
+        div.style.width = '600px';
+        entityFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe(
+            '<div class="_Entity _EType_B _EId_A _EReadonly_1 _EBlock" contenteditable="false" style="width: 100%;"></div>'
         );
     });
 });

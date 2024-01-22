@@ -108,6 +108,20 @@ describe('parseEntityClassName', () => {
             entityType: 'B',
         });
     });
+
+    it('Parse isBlock format', () => {
+        const format: ContentModelEntityFormat = {
+            id: 'A',
+        };
+
+        const result = parseEntityClassName('_EBlock', format);
+
+        expect(result).toBeFalsy();
+        expect(format).toEqual({
+            id: 'A',
+            isBlock: true,
+        });
+    });
 });
 
 describe('generateEntityClassNames', () => {
@@ -139,6 +153,19 @@ describe('generateEntityClassNames', () => {
         const className = generateEntityClassNames(format);
 
         expect(className).toBe('_Entity _EType_A _EId_B _EReadonly_1');
+    });
+
+    it('Format with type and id, readonly and block', () => {
+        const format: ContentModelEntityFormat = {
+            entityType: 'A',
+            id: 'B',
+            isReadonly: true,
+            isBlock: true,
+        };
+
+        const className = generateEntityClassNames(format);
+
+        expect(className).toBe('_Entity _EType_A _EId_B _EReadonly_1 _EBlock');
     });
 
     it('Fake entity format with type and id and readonly', () => {

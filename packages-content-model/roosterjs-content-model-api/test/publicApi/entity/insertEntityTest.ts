@@ -114,8 +114,8 @@ describe('insertEntity', () => {
     it('block inline entity to root', () => {
         const entity = insertEntity(editor, type, true, 'root');
 
-        expect(createElementSpy).toHaveBeenCalledWith('div');
-        expect(setPropertySpy).toHaveBeenCalledWith('display', null);
+        expect(createElementSpy).toHaveBeenCalledWith('span');
+        expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
         expect(appendChildSpy).not.toHaveBeenCalled();
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
@@ -131,6 +131,7 @@ describe('insertEntity', () => {
                     id: undefined,
                     entityType: type,
                     isReadonly: true,
+                    isBlock: true,
                 },
                 wrapper: wrapper,
             },
@@ -150,6 +151,7 @@ describe('insertEntity', () => {
                 id: undefined,
                 entityType: type,
                 isReadonly: true,
+                isBlock: true,
             },
             wrapper: wrapper,
         });
@@ -165,7 +167,7 @@ describe('insertEntity', () => {
             wrapperDisplay: 'none',
         });
 
-        expect(createElementSpy).toHaveBeenCalledWith('div');
+        expect(createElementSpy).toHaveBeenCalledWith('span');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'none');
         expect(appendChildSpy).toHaveBeenCalledWith(contentNode);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
@@ -183,6 +185,7 @@ describe('insertEntity', () => {
                     id: undefined,
                     entityType: type,
                     isReadonly: true,
+                    isBlock: true,
                 },
                 wrapper: wrapper,
             },
@@ -202,6 +205,7 @@ describe('insertEntity', () => {
                 id: undefined,
                 entityType: type,
                 isReadonly: true,
+                isBlock: true,
             },
             wrapper: wrapper,
         });

@@ -2,6 +2,8 @@ import { generateEntityClassNames, parseEntityClassName } from '../../domUtils/e
 import type { EntityInfoFormat, IdFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
+const ONE_HUNDRED_PERCENT = '100%';
+
 /**
  * @internal
  */
@@ -28,6 +30,10 @@ export const entityFormatHandler: FormatHandler<EntityInfoFormat & IdFormat> = {
             element.contentEditable = 'false';
         } else {
             element.removeAttribute('contenteditable');
+        }
+
+        if (format.isBlock && element.style.width != ONE_HUNDRED_PERCENT) {
+            element.style.width = ONE_HUNDRED_PERCENT;
         }
     },
 };
