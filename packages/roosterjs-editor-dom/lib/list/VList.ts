@@ -332,8 +332,8 @@ export default class VList {
      */
     removeMargins() {
         if (!this.rootList.style.marginTop && !this.rootList.style.marginBottom) {
-            this.rootList.style.marginBlockStart = '0px';
-            this.rootList.style.marginBlockEnd = '0px';
+            this.rootList.style.marginTop = '0px';
+            this.rootList.style.marginBottom = '0px';
         }
     }
 
