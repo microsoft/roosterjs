@@ -21,14 +21,4 @@ export type MarginFormat = {
      * Margin left value
      */
     marginLeft?: string;
-
-    /**
-     * Margin-block start value
-     */
-    marginBlockStart?: string;
-
-    /**
-     * Margin-block end value
-     */
-    marginBlockEnd?: string;
 };
