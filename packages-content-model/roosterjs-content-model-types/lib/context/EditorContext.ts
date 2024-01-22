@@ -1,6 +1,7 @@
-import type { ColorManager } from './ColorManager';
+import type { DarkColorHandler } from './DarkColorHandler';
 import type { ContentModelDomIndexer } from './ContentModelDomIndexer';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { PendingFormat } from '../pluginState/ContentModelFormatPluginState';
 
 /**
  * An editor context interface used by ContentModel PAI
@@ -17,9 +18,14 @@ export interface EditorContext {
     defaultFormat?: ContentModelSegmentFormat;
 
     /**
+     * Pending format if any
+     */
+    pendingFormat?: PendingFormat;
+
+    /**
      * Color manager, to help manager color in dark mode
      */
-    darkColorHandler?: ColorManager;
+    darkColorHandler?: DarkColorHandler;
 
     /**
      * Whether to handle delimiters in Content Model

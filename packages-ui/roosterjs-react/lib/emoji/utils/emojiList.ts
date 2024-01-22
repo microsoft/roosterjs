@@ -24,6 +24,7 @@ export const CommonEmojis = [Common1, common2, common3, common4, common5, MoreEm
 /**
  * @internal
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum EmojiFamilyKeys {
     People = 'People',
     Nature = 'Nature',

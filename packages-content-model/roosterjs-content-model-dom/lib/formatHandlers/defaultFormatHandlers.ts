@@ -160,6 +160,7 @@ export const defaultFormatKeysPerCategory: {
         'size',
     ],
     tableRow: ['backgroundColor'],
+    tableColumn: ['size'],
     table: [
         'id',
         'border',

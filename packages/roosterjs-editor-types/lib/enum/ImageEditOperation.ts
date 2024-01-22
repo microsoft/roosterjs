@@ -1,6 +1,7 @@
 /**
  * Operation flags for ImageEdit plugin
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum ImageEditOperation {
     /**
      * No operation

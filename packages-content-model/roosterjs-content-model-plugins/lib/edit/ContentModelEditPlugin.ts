@@ -1,13 +1,11 @@
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type {
     EditorPlugin,
-    IEditor,
+    IStandaloneEditor,
+    KeyDownEvent,
     PluginEvent,
-    PluginKeyDownEvent,
-} from 'roosterjs-editor-types';
+} from 'roosterjs-content-model-types';
 
 /**
  * ContentModel edit plugins helps editor to do editing operation on top of content model.
@@ -16,7 +14,7 @@ import type {
  * 2. Backspace Key
  */
 export class ContentModelEditPlugin implements EditorPlugin {
-    private editor: IContentModelEditor | null = null;
+    private editor: IStandaloneEditor | null = null;
 
     /**
      * Get name of this plugin
@@ -31,9 +29,9 @@ export class ContentModelEditPlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
+    initialize(editor: IStandaloneEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IContentModelEditor;
+        this.editor = editor;
     }
 
     /**
@@ -54,18 +52,17 @@ export class ContentModelEditPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.KeyDown:
+                case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
             }
         }
     }
 
-    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
+    private handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
 
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
-            // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (rawEvent.key) {
                 case 'Backspace':
                 case 'Delete':

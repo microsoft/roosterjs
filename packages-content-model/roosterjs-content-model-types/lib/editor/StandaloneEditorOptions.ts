@@ -1,3 +1,4 @@
+import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
 import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
@@ -57,7 +58,12 @@ export interface StandaloneEditorOptions {
      * A util function to transform light mode color to dark mode color
      * Default value is to return the original light color
      */
-    getDarkColor?: (lightColor: string) => string;
+    getDarkColor?: ColorTransformFunction;
+
+    /**
+     * Existing known color pairs
+     */
+    knownColors?: Record<string, Colors>;
 
     /**
      * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree

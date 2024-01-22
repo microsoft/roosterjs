@@ -27,7 +27,8 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (core, innerCo
               'font-weight',
           ])
         : [];
-    const { contentDiv, darkColorHandler, lifecycle } = innerCore;
+    const { contentDiv, lifecycle } = innerCore;
+    const { darkColorHandler } = core;
 
     let styleTextColor: string | undefined;
     let styleBackColor: string | undefined;

@@ -196,7 +196,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         const plugins = [
             ...this.toggleablePlugins,
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
-            this.contentModelEditPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.entityDelimiterPlugin,
@@ -259,6 +258,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                                 this.formatPainterPlugin,
                                 this.pastePlugin,
                                 this.contentModelAutoFormatPlugin,
+                                this.contentModelEditPlugin,
                             ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}

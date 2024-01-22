@@ -1,12 +1,12 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { transformColor } from '../publicApi/color/transformColor';
-import type { DarkColorHandler } from 'roosterjs-editor-types';
 import type {
     ClipboardData,
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
+    DarkColorHandler,
     DOMEventRecord,
     DOMSelection,
     DomToModelOption,
@@ -67,6 +67,7 @@ export class StandaloneEditor implements IStandaloneEditor {
         }
 
         core.darkColorHandler.reset();
+
         this.core = null;
     }
 
@@ -329,9 +330,9 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Get a darkColorHandler object for this editor.
+     * Get a color manager object for this editor.
      */
-    getDarkColorHandler(): DarkColorHandler {
+    getColorManager(): DarkColorHandler {
         return this.getCore().darkColorHandler;
     }
 
