@@ -4,6 +4,7 @@
     "packages-content-model": "0.24.0",
     "overrides": {
         "roosterjs-editor-core": "8.59.1",
-        "roosterjs-editor-plugins": "8.60.0"
+        "roosterjs-editor-plugins": "8.60.0",
+        "roosterjs-content-model-editor": "8.24.1"
     }
 }
