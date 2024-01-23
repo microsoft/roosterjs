@@ -163,4 +163,23 @@ describe('getDOMSelection', () => {
 
         expect(result).toBe(mockedSelection);
     });
+
+    it('no cached selection, editor does not have focus', () => {
+        const mockedNewSelection = 'NEWSELECTION' as any;
+
+        hasFocusSpy.and.returnValue(false);
+        containsSpy.and.returnValue(true);
+
+        getSelectionSpy.and.returnValue({
+            rangeCount: 1,
+            getRangeAt: () => mockedNewSelection,
+        });
+
+        const result = getDOMSelection(core);
+
+        expect(result).toEqual({
+            type: 'range',
+            range: mockedNewSelection,
+        });
+    });
 });
