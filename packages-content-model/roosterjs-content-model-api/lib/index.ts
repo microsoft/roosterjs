@@ -40,3 +40,4 @@ export { default as adjustImageSelection } from './publicApi/image/adjustImageSe
 export { default as setParagraphMargin } from './publicApi/block/setParagraphMargin';
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
+export { setListType } from './modelApi/list/setListType';
