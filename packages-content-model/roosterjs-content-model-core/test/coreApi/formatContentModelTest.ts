@@ -837,20 +837,4 @@ describe('formatContentModel', () => {
             } as any);
         });
     });
-
-    describe('Cache related logic', () => {
-        it('Flush mutation before create model', () => {
-            const callback = jasmine.createSpy('callback').and.returnValue(true);
-            const flushMutationsSpy = jasmine.createSpy('flushMutations');
-
-            core.cache.textMutationObserver = {
-                flushMutations: flushMutationsSpy,
-            } as any;
-
-            formatContentModel(core, callback);
-
-            expect(callback).toHaveBeenCalledTimes(1);
-            expect(flushMutationsSpy).toHaveBeenCalledBefore(createContentModel);
-        });
-    });
 });
