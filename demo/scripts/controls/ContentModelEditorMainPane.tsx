@@ -27,7 +27,6 @@ import {
     ContentModelAutoFormatPlugin,
     ContentModelEditPlugin,
     ContentModelPastePlugin,
-    EntityDelimiterPlugin,
 } from 'roosterjs-content-model-plugins';
 import {
     ContentModelEditor,
@@ -107,7 +106,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
-    private entityDelimiterPlugin: EntityDelimiterPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private pastePlugin: ContentModelPastePlugin;
@@ -136,7 +134,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
-        this.entityDelimiterPlugin = new EntityDelimiterPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.pastePlugin = new ContentModelPastePlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
@@ -198,7 +195,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.pasteOptionPlugin,
             this.emojiPlugin,
-            this.entityDelimiterPlugin,
             this.sampleEntityPlugin,
         ];
 
