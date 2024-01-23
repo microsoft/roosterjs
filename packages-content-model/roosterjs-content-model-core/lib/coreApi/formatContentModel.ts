@@ -22,6 +22,8 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
     const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
         options || {};
 
+    core.cache.textMutationObserver?.flushMutations();
+
     const model = core.api.createContentModel(core, undefined /*option*/, selectionOverride);
     const context: FormatWithContentModelContext = {
         newEntities: [],
