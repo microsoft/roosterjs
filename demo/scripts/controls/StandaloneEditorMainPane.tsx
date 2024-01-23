@@ -13,13 +13,16 @@ import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
 import RibbonPlugin from './ribbonButtons/contentModel/RibbonPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
-import { ContentModelEditPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { Snapshots } from 'roosterjs-editor-types';
 import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
+import {
+    ContentModelAutoFormatPlugin,
+    ContentModelEditPlugin,
+} from 'roosterjs-content-model-plugins';
 import {
     ContentModelSegmentFormat,
     IStandaloneEditor,
@@ -95,6 +98,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentModelPanePlugin: ContentModelPanePlugin;
     private contentModelEditPlugin: ContentModelEditPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
+    private contentAutoFormatPlugin: ContentModelAutoFormatPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private snapshots: Snapshots<Snapshot>;
@@ -117,6 +121,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.contentModelEditPlugin = new ContentModelEditPlugin();
+        this.contentAutoFormatPlugin = new ContentModelAutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.state = {
@@ -211,6 +216,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
                                 this.contentModelEditPlugin,
+                                this.contentAutoFormatPlugin,
                             ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}

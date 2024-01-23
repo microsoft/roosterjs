@@ -12,7 +12,9 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Set a list type to content model
+ * @param model the model document
+ * @param listType the list type OL | UL
  */
 export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') {
     const paragraphOrListItems = getOperationalBlocks<ContentModelListItem>(
