@@ -32,13 +32,17 @@ class SnapshotsManagerImpl implements SnapshotsManager {
     }
 
     move(step: number): Snapshot | null {
+        let result: Snapshot | null = null;
+
         if (this.canMove(step)) {
             this.snapshots.currentIndex += step;
             this.snapshots.autoCompleteIndex = -1;
-            return this.snapshots.snapshots[this.snapshots.currentIndex];
-        } else {
-            return null;
+            result = this.snapshots.snapshots[this.snapshots.currentIndex];
         }
+
+        this.snapshots.onChanged?.('move');
+
+        return result;
     }
 
     addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean): void {
@@ -82,6 +86,8 @@ class SnapshotsManagerImpl implements SnapshotsManager {
             // replace the currentSnapshot's metadata so the selection is updated
             this.snapshots.snapshots.splice(this.snapshots.currentIndex, 1, snapshot);
         }
+
+        this.snapshots.onChanged?.('add');
     }
 
     clearRedo(): void {
@@ -98,6 +104,8 @@ class SnapshotsManagerImpl implements SnapshotsManager {
             this.snapshots.snapshots.splice(this.snapshots.currentIndex + 1);
             this.snapshots.totalSize -= removedSize;
             this.snapshots.autoCompleteIndex = -1;
+
+            this.snapshots.onChanged?.('clear');
         }
     }
 
@@ -114,6 +122,7 @@ class SnapshotsManagerImpl implements SnapshotsManager {
 }
 
 /**
+ * @internal
  * Create a new instance of Undo Snapshots Manager
  * @param snapshots @optional Snapshots object for storing undo snapshots. If not passed, default implementation will be used
  */

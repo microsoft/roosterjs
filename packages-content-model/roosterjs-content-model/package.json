@@ -7,7 +7,6 @@
         "roosterjs-content-model-dom": "",
         "roosterjs-content-model-core": "",
         "roosterjs-content-model-api": "",
-        "roosterjs-content-model-editor": "",
         "roosterjs-content-model-plugins": ""
     },
     "version": "0.0.0",

@@ -1,5 +1,5 @@
 import * as applyFormat from 'roosterjs-content-model-dom/lib/modelToDom/utils/applyFormat';
-import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
 import { handleList as originalHandleList } from 'roosterjs-content-model-dom/lib/modelToDom/handlers/handleList';
 import { handleListItem } from 'roosterjs-content-model-dom/lib/modelToDom/handlers/handleListItem';
 import {

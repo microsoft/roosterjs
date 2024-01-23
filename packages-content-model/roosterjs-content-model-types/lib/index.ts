@@ -36,6 +36,7 @@ export { HtmlAlignFormat } from './format/formatParts/HtmlAlignFormat';
 export { MarginFormat } from './format/formatParts/MarginFormat';
 export { PaddingFormat } from './format/formatParts/PaddingFormat';
 export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
+export { TextIndentFormat } from './format/formatParts/TextIndentFormat';
 export { WhiteSpaceFormat } from './format/formatParts/WhiteSpaceFormat';
 export { DisplayFormat } from './format/formatParts/DisplayFormat';
 export { IdFormat } from './format/formatParts/IdFormat';
@@ -142,6 +143,8 @@ export {
     ApplyMetadata,
     MetadataApplier,
     MetadataAppliers,
+    TextFormatApplier,
+    ElementFormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
 export {
     DefaultStyleMap,
@@ -150,6 +153,8 @@ export {
     FormatParsersPerCategory,
     DomToModelSettings,
     FormatParser,
+    TextFormatParser,
+    ElementFormatParserPerCategory,
 } from './context/DomToModelSettings';
 export { DomToModelContext } from './context/DomToModelContext';
 export { ElementProcessor } from './context/ElementProcessor';
@@ -179,6 +184,7 @@ export {
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { ContentModelDomIndexer } from './context/ContentModelDomIndexer';
+export { TextMutationObserver } from './context/TextMutationObserver';
 
 export { DefinitionType } from './metadata/DefinitionType';
 export {
@@ -192,7 +198,7 @@ export {
     ObjectDefinition,
     Definition,
 } from './metadata/Definition';
-export { ColorManager, Colors } from './context/ColorManager';
+export { DarkColorHandler, Colors, ColorTransformFunction } from './context/DarkColorHandler';
 
 export { IStandaloneEditor } from './editor/IStandaloneEditor';
 export { StandaloneEditorOptions } from './editor/StandaloneEditorOptions';

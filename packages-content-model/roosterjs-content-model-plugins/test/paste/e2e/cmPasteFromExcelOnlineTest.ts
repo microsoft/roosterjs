@@ -1,9 +1,7 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { expectEqual, initEditor } from './testUtils';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { tableProcessor } from 'roosterjs-content-model-dom';
-import type { ClipboardData } from 'roosterjs-content-model-types';
+import type { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_ExcelOnline_E2E';
 const clipboardData = <ClipboardData>(<any>{
@@ -21,7 +19,7 @@ const clipboardData = <ClipboardData>(<any>{
 });
 
 describe(ID, () => {
-    let editor: IContentModelEditor = undefined!;
+    let editor: IStandaloneEditor = undefined!;
 
     beforeEach(() => {
         editor = initEditor(ID);
@@ -34,7 +32,7 @@ describe(ID, () => {
     it('E2E', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        editor.paste(clipboardData);
+        editor.pasteFromClipboard(clipboardData);
         editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,
@@ -44,7 +42,7 @@ describe(ID, () => {
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 
-    itChromeOnly('E2E Table with table cells with text color', () => {
+    it('E2E Table with table cells with text color', () => {
         const CD = <ClipboardData>(<any>{
             types: ['text/plain', 'text/html'],
             text:
@@ -58,7 +56,7 @@ describe(ID, () => {
             snapshotBeforePaste: '<div><br></div><!--{"start":[0,0],"end":[0,0]}-->',
         });
 
-        editor.paste(CD);
+        editor.pasteFromClipboard(CD);
 
         const model = editor.createContentModel({
             processorOverride: {
@@ -244,6 +242,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '64px',
                                     },
                                     dataset: {},
                                 },
@@ -292,6 +291,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -332,6 +332,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '76px',
                                     },
                                     dataset: {},
                                 },
@@ -379,6 +380,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '64px',
                                     },
                                     dataset: {},
                                 },
@@ -427,6 +429,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -467,6 +470,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '76px',
                                     },
                                     dataset: {},
                                 },
@@ -514,6 +518,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '64px',
                                     },
                                     dataset: {},
                                 },
@@ -562,6 +567,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -602,6 +608,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '76px',
                                     },
                                     dataset: {},
                                 },
@@ -649,6 +656,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '64px',
                                     },
                                     dataset: {},
                                 },
@@ -697,6 +705,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -737,6 +746,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '76px',
                                     },
                                     dataset: {},
                                 },
@@ -784,6 +794,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '64px',
                                     },
                                     dataset: {},
                                 },
@@ -832,6 +843,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -872,6 +884,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '76px',
                                     },
                                     dataset: {},
                                 },
@@ -919,6 +932,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '64px',
                                     },
                                     dataset: {},
                                 },
@@ -967,6 +981,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -1007,6 +1022,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '76px',
                                     },
                                     dataset: {},
                                 },
@@ -1054,6 +1070,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '64px',
                                     },
                                     dataset: {},
                                 },
@@ -1102,6 +1119,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -1142,6 +1160,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '76px',
                                     },
                                     dataset: {},
                                 },
@@ -1162,7 +1181,19 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                         {
                             segmentType: 'Br',

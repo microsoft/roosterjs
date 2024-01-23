@@ -4,21 +4,20 @@ import * as getPasteSource from '../../lib/paste/pasteSourceValidations/getPaste
 import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
-import { BeforePasteEvent } from 'roosterjs-content-model-types';
+import { BeforePasteEvent, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { ContentModelPastePlugin } from '../../lib/paste/ContentModelPastePlugin';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
 
 const trustedHTMLHandler = (val: string) => val;
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Content Model Paste Plugin Test', () => {
-    let editor: IContentModelEditor;
+    let editor: IStandaloneEditor;
 
     beforeEach(() => {
         editor = ({
             getTrustedHTMLHandler: () => trustedHTMLHandler,
-        } as any) as IContentModelEditor;
+        } as any) as IStandaloneEditor;
         spyOn(addParser, 'default').and.callThrough();
         spyOn(setProcessor, 'setProcessor').and.callThrough();
     });
@@ -54,7 +53,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
+            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
@@ -148,7 +147,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(WacFile.processPastedContentWacComponents).toHaveBeenCalledWith(event);
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(4);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Default', () => {

@@ -7,8 +7,7 @@ import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSel
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
-import { createRange } from 'roosterjs-editor-dom';
-import { DarkColorHandler } from 'roosterjs-editor-types';
+import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,
@@ -20,6 +19,7 @@ import {
     ClipboardData,
     CopyPastePluginState,
     PluginWithState,
+    DarkColorHandler,
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
@@ -157,7 +157,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             pasteFromClipboard: (ar1: any) => {
                 pasteSpy(ar1);
             },
-            getDarkColorHandler: () => mockedDarkColorHandler,
+            getColorManager: () => mockedDarkColorHandler,
             isDisposed,
             getVisibleViewport: getVisibleViewportSpy,
             formatContentModel: formatContentModelSpy,
