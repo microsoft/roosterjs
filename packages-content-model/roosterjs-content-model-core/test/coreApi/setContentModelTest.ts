@@ -3,9 +3,6 @@ import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelT
 import { setContentModel } from '../../lib/coreApi/setContentModel';
 import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
-const mockedRange = {
-    type: 'image',
-} as any;
 const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
 const mockedEditorContext = 'EDITORCONTEXT' as any;
@@ -23,9 +20,7 @@ describe('setContentModel', () => {
     let getDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
-        contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(
-            mockedRange
-        );
+        contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
         createEditorContext = jasmine
             .createSpy('createEditorContext')
             .and.returnValue(mockedEditorContext);
@@ -56,6 +51,12 @@ describe('setContentModel', () => {
     });
 
     it('no default option, no shadow edit', () => {
+        const mockedRange = {
+            type: 'image',
+        } as any;
+
+        contentModelToDomSpy.and.returnValue(mockedRange);
+
         setContentModel(core, mockedModel);
 
         expect(createModelToDomContextSpy).not.toHaveBeenCalled();
@@ -76,6 +77,12 @@ describe('setContentModel', () => {
     });
 
     it('with default option, no shadow edit', () => {
+        const mockedRange = {
+            type: 'image',
+        } as any;
+
+        contentModelToDomSpy.and.returnValue(mockedRange);
+
         setContentModel(core, mockedModel);
 
         expect(createModelToDomContextWithConfigSpy).toHaveBeenCalledWith(
@@ -95,6 +102,11 @@ describe('setContentModel', () => {
     it('with default option, no shadow edit, with additional option', () => {
         const defaultOption = { o: 'OPTION' } as any;
         const additionalOption = { o: 'OPTION1', o2: 'OPTION2' } as any;
+        const mockedRange = {
+            type: 'image',
+        } as any;
+
+        contentModelToDomSpy.and.returnValue(mockedRange);
 
         core.modelToDomSettings.builtIn = defaultOption;
         setContentModel(core, mockedModel, additionalOption);
@@ -117,6 +129,11 @@ describe('setContentModel', () => {
 
     it('no default option, with shadow edit', () => {
         core.lifecycle.shadowEditFragment = {} as any;
+        const mockedRange = {
+            type: 'image',
+        } as any;
+
+        contentModelToDomSpy.and.returnValue(mockedRange);
 
         setContentModel(core, mockedModel);
 
@@ -135,6 +152,12 @@ describe('setContentModel', () => {
     });
 
     it('restore selection ', () => {
+        const mockedRange = {
+            type: 'image',
+        } as any;
+
+        contentModelToDomSpy.and.returnValue(mockedRange);
+
         core.selection = {
             selection: null,
             selectionStyleNode: null,
@@ -160,5 +183,69 @@ describe('setContentModel', () => {
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(core.selection.selection).toBe(mockedRange);
+    });
+
+    it('restore range selection ', () => {
+        const mockedRange = {
+            type: 'range',
+        } as any;
+
+        contentModelToDomSpy.and.returnValue(mockedRange);
+
+        core.selection = {
+            selection: null,
+            selectionStyleNode: null,
+        };
+        setContentModel(core, mockedModel, {
+            ignoreSelection: true,
+        });
+
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(
+            mockedEditorContext,
+            undefined,
+            undefined,
+            {
+                ignoreSelection: true,
+            }
+        );
+        expect(contentModelToDomSpy).toHaveBeenCalledWith(
+            mockedDoc,
+            mockedDiv,
+            mockedModel,
+            mockedContext,
+            undefined
+        );
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(core.selection.selection).toBe(mockedRange);
+    });
+
+    it('restore null selection ', () => {
+        contentModelToDomSpy.and.returnValue(null);
+
+        core.selection = {
+            selection: null,
+            selectionStyleNode: null,
+        };
+        setContentModel(core, mockedModel, {
+            ignoreSelection: true,
+        });
+
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(
+            mockedEditorContext,
+            undefined,
+            undefined,
+            {
+                ignoreSelection: true,
+            }
+        );
+        expect(contentModelToDomSpy).toHaveBeenCalledWith(
+            mockedDoc,
+            mockedDiv,
+            mockedModel,
+            mockedContext,
+            undefined
+        );
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(core.selection.selection).toBe(null);
     });
 });
