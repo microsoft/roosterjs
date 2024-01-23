@@ -28,7 +28,7 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
                 entityModel.isSelected = true;
             }
 
-            if (isBlockEntity) {
+            if (isBlockEntity || entityModel.entityFormat.isBlock) {
                 addBlock(group, entityModel);
             } else {
                 const paragraph = addSegment(group, entityModel);
