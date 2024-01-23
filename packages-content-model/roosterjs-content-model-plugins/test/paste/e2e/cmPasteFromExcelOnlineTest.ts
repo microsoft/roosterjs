@@ -1,6 +1,5 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { expectEqual, initEditor } from './testUtils';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 import type { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -43,7 +42,7 @@ describe(ID, () => {
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 
-    itChromeOnly('E2E Table with table cells with text color', () => {
+    it('E2E Table with table cells with text color', () => {
         const CD = <ClipboardData>(<any>{
             types: ['text/plain', 'text/html'],
             text:

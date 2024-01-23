@@ -1,6 +1,6 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { expectEqual, initEditor } from './testUtils';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 import type { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -30,7 +30,7 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
-    itChromeOnly('E2E', () => {
+    it('E2E', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
         editor.pasteFromClipboard(clipboardData);
@@ -39,7 +39,7 @@ describe(ID, () => {
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 
-    itChromeOnly('E2E paste as image', () => {
+    it('E2E paste as image', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
         editor.pasteFromClipboard(clipboardData, 'asImage');

@@ -1,6 +1,4 @@
 import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
-import { createElement } from 'roosterjs-editor-dom';
-import { CreateElementData } from 'roosterjs-editor-types';
 import { DOMSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../lib/coreApi/setDOMSelection';
 
@@ -666,41 +664,29 @@ describe('setDOMSelection', () => {
         });
 
         it('Select TH and TR in the same row', () => {
+            const table = document.createElement('table');
+            const tr1 = document.createElement('tr');
+            const th1 = document.createElement('th');
+            const td1 = document.createElement('td');
+            const tr2 = document.createElement('tr');
+            const th2 = document.createElement('th');
+            const td2 = document.createElement('td');
+
+            th1.appendChild(document.createTextNode('test'));
+            td1.appendChild(document.createTextNode('test'));
+            tr1.appendChild(th1);
+            tr1.appendChild(td1);
+
+            th2.appendChild(document.createTextNode('test'));
+            td2.appendChild(document.createTextNode('test'));
+            tr2.appendChild(th2);
+            tr2.appendChild(td2);
+
+            table.appendChild(tr1);
+            table.appendChild(tr2);
+
             runTest(
-                createElement(
-                    {
-                        tag: 'table',
-                        children: [
-                            {
-                                tag: 'TR',
-                                children: [
-                                    {
-                                        tag: 'TH',
-                                        children: ['test'],
-                                    },
-                                    {
-                                        tag: 'TD',
-                                        children: ['test'],
-                                    },
-                                ],
-                            },
-                            {
-                                tag: 'TR',
-                                children: [
-                                    {
-                                        tag: 'TH',
-                                        children: ['test'],
-                                    },
-                                    {
-                                        tag: 'TD',
-                                        children: ['test'],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    document
-                ) as HTMLTableElement,
+                table,
                 0,
                 0,
                 0,
@@ -773,41 +759,32 @@ describe('setDOMSelection', () => {
 });
 
 function buildTable(tbody: boolean, thead: boolean = false, tfoot: boolean = false) {
-    const getElement = (tag: string): CreateElementData => {
-        return {
-            tag,
-            children: [
-                {
-                    tag: 'TR',
-                    children: [
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                    ],
-                },
-                {
-                    tag: 'TR',
-                    children: [
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                    ],
-                },
-            ],
-        };
+    const getElement = (tag: string) => {
+        const container = document.createElement(tag);
+        const tr1 = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        const tr2 = document.createElement('tr');
+        const td3 = document.createElement('td');
+        const td4 = document.createElement('td');
+
+        td1.appendChild(document.createTextNode('test'));
+        td2.appendChild(document.createTextNode('test'));
+        tr1.appendChild(td1);
+        tr1.appendChild(td2);
+
+        td3.appendChild(document.createTextNode('test'));
+        td4.appendChild(document.createTextNode('test'));
+        tr2.appendChild(td3);
+        tr2.appendChild(td4);
+
+        container.appendChild(tr1);
+        container.appendChild(tr2);
+
+        return container;
     };
 
-    const children: (string | CreateElementData)[] = [];
+    const children: HTMLElement[] = [];
     if (thead) {
         children.push(getElement('thead'));
     }
@@ -818,41 +795,31 @@ function buildTable(tbody: boolean, thead: boolean = false, tfoot: boolean = fal
         children.push(getElement('tfoot'));
     }
     if (children.length === 0) {
-        children.push(
-            {
-                tag: 'TR',
-                children: [
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                ],
-            },
-            {
-                tag: 'TR',
-                children: [
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                ],
-            }
-        );
+        const tr1 = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        const tr2 = document.createElement('tr');
+        const td3 = document.createElement('td');
+        const td4 = document.createElement('td');
+
+        td1.appendChild(document.createTextNode('test'));
+        td2.appendChild(document.createTextNode('test'));
+        tr1.appendChild(td1);
+        tr1.appendChild(td2);
+
+        td3.appendChild(document.createTextNode('test'));
+        td4.appendChild(document.createTextNode('test'));
+        tr2.appendChild(td3);
+        tr2.appendChild(td4);
+
+        children.push(tr1, tr2);
     }
 
-    return createElement(
-        {
-            tag: 'table',
-            children,
-        },
-        document
-    ) as HTMLTableElement;
+    const table = document.createElement('table');
+
+    children.forEach(node => {
+        table.appendChild(node);
+    });
+
+    return table;
 }
