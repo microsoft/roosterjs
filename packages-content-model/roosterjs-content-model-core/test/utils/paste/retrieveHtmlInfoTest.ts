@@ -1,6 +1,6 @@
 import { ClipboardData } from 'roosterjs-content-model-types';
 import { HtmlFromClipboard, retrieveHtmlInfo } from '../../../lib/utils/paste/retrieveHtmlInfo';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 
 describe('retrieveHtmlInfo', () => {
     function runTest(

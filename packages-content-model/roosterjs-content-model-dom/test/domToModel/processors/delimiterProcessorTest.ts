@@ -1,7 +1,7 @@
 import * as delimiterProcessorFile from '../../../lib/domToModel/processors/childProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { createRange } from 'roosterjs-editor-dom';
+import { createRange } from '../../testUtils';
 import { delimiterProcessor } from '../../../lib/domToModel/processors/delimiterProcessor';
 import { DomToModelContext } from 'roosterjs-content-model-types';
 

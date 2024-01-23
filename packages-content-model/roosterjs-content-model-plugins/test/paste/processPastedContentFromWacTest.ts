@@ -1,8 +1,7 @@
-import { Browser } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { expectEqual } from './e2e/testUtils';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { pasteDisplayFormatParser } from 'roosterjs-content-model-core/lib/override/pasteDisplayFormatParser';
 import { processPastedContentWacComponents } from '../../lib/paste/WacComponents/processPastedContentWacComponents';
 import {
@@ -1400,10 +1399,10 @@ describe('wordOnlineHandler', () => {
                                             marginRight: '0px',
                                             marginBottom: '0px',
                                             marginLeft: '0px',
-                                            borderTop: Browser.isFirefox ? 'medium none' : '',
-                                            borderRight: Browser.isFirefox ? 'medium none' : '',
-                                            borderBottom: Browser.isFirefox ? 'medium none' : '',
-                                            borderLeft: Browser.isFirefox ? 'medium none' : '',
+                                            borderTop: '',
+                                            borderRight: '',
+                                            borderBottom: '',
+                                            borderLeft: '',
                                             verticalAlign: 'top',
                                         },
                                         dataset: {},

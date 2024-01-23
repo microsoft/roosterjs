@@ -1,6 +1,6 @@
 import * as setSelection from '../../../lib/publicApi/selection/setSelection';
 import { contentModelDomIndexer } from '../../../lib/corePlugin/utils/contentModelDomIndexer';
-import { createRange } from 'roosterjs-editor-dom';
+import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import {
     ContentModelDocument,
     ContentModelSegment,

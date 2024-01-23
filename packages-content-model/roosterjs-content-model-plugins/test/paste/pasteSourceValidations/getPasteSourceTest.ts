@@ -1,12 +1,16 @@
 import { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
 import { getPasteSource } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
 import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
-import {
-    EXCEL_ATTRIBUTE_VALUE,
-    getWacElement,
-    POWERPOINT_ATTRIBUTE_VALUE,
-    WORD_ATTRIBUTE_VALUE,
-} from 'roosterjs-editor-plugins/test/paste/pasteTestUtils';
+
+const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
+const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
+const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
+
+const getWacElement = (): HTMLElement => {
+    const element = document.createElement('span');
+    element.classList.add('WACImageContainer');
+    return element;
+};
 
 describe('getPasteSourceTest | ', () => {
     it('Is Word', () => {

@@ -1,10 +1,11 @@
-import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelEditPlugin, ContentModelPastePlugin } from 'roosterjs-content-model-plugins';
+import { StandaloneEditor } from 'roosterjs-content-model-core';
 import type {
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
-import type { EditorPlugin } from 'roosterjs-content-model-types';
+    ContentModelDocument,
+    EditorPlugin,
+    IStandaloneEditor,
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
 
 /**
  * Create a Content Model Editor using the given options
@@ -14,25 +15,25 @@ import type { EditorPlugin } from 'roosterjs-content-model-types';
  * @param initialContent The initial content to show in editor. It can't be removed by undo, user need to manually remove it if needed.
  * @returns The ContentModelEditor instance
  */
-export function createContentModelEditor(
+export function createEditor(
     contentDiv: HTMLDivElement,
     additionalPlugins?: EditorPlugin[],
-    initialContent?: string
-): IContentModelEditor {
+    initialModel?: ContentModelDocument
+): IStandaloneEditor {
     const plugins = [
         new ContentModelPastePlugin(),
         new ContentModelEditPlugin(),
         ...(additionalPlugins ?? []),
     ];
 
-    const options: ContentModelEditorOptions = {
+    const options: StandaloneEditorOptions = {
         plugins: plugins,
-        initialContent: initialContent,
+        initialModel,
         defaultSegmentFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
             fontSize: '11pt',
             textColor: '#000000',
         },
     };
-    return new ContentModelEditor(contentDiv, options);
+    return new StandaloneEditor(contentDiv, options);
 }
