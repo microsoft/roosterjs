@@ -1,4 +1,6 @@
 const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
+
+// According to https://developer.mozilla.org/en-US/docs/Glossary/CSS_pixel, 1in = 96px
 const PixelPerInch = 96;
 
 /**
