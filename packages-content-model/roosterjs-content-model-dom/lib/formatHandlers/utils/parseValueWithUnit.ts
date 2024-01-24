@@ -1,4 +1,5 @@
 const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
+const PixelPerInch = 96;
 
 /**
  * Parse unit value with its unit
@@ -34,6 +35,9 @@ export function parseValueWithUnit(
                 break;
             case '%':
                 result = (getFontSize(currentSizePxOrElement) * num) / 100;
+                break;
+            case 'in':
+                result = num * PixelPerInch;
                 break;
             default:
                 // TODO: Support more unit if need
