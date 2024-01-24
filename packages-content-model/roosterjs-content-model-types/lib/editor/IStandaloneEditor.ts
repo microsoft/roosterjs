@@ -1,4 +1,4 @@
-import { PluginEvent } from 'roosterjs-editor-types/lib';
+import type { PluginEvent } from 'roosterjs-editor-types';
 import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
 import type { PluginEventType } from '../event/PluginEventType';
 import type { PasteType } from '../enum/PasteType';

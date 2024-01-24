@@ -1,5 +1,5 @@
 import { isCharacterValue, iterateSelections } from 'roosterjs-content-model-core';
-import {
+import type {
     EditorPlugin,
     IStandaloneEditor,
     KeyDownEvent,

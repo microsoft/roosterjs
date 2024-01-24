@@ -1,8 +1,8 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { findClosestElementAncestor } from 'roosterjs-editor-dom';
-import { PluginEvent } from 'roosterjs-editor-types/lib';
 import { transformColor } from '../publicApi/color/transformColor';
+import type { PluginEvent } from 'roosterjs-editor-types';
 import type {
     ClipboardData,
     ContentModelDocument,
