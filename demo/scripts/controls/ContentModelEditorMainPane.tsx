@@ -24,9 +24,9 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import {
+    ContentModelAutoFormatPlugin,
     ContentModelEditPlugin,
     ContentModelPastePlugin,
-    EntityDelimiterPlugin,
 } from 'roosterjs-content-model-plugins';
 import {
     ContentModelEditor,
@@ -101,11 +101,11 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
     private contentModelEditPlugin: ContentModelEditPlugin;
+    private contentModelAutoFormatPlugin: ContentModelAutoFormatPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
-    private entityDelimiterPlugin: EntityDelimiterPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private pastePlugin: ContentModelPastePlugin;
@@ -130,10 +130,10 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.contentModelEditPlugin = new ContentModelEditPlugin();
+        this.contentModelAutoFormatPlugin = new ContentModelAutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
-        this.entityDelimiterPlugin = new EntityDelimiterPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.pastePlugin = new ContentModelPastePlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
@@ -195,7 +195,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.pasteOptionPlugin,
             this.emojiPlugin,
-            this.entityDelimiterPlugin,
             this.sampleEntityPlugin,
         ];
 
@@ -254,6 +253,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
                                 this.pastePlugin,
+                                this.contentModelAutoFormatPlugin,
                                 this.contentModelEditPlugin,
                             ]}
                             defaultSegmentFormat={defaultFormat}

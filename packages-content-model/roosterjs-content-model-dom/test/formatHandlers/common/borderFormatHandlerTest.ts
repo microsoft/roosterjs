@@ -2,7 +2,6 @@ import { BorderFormat, DomToModelContext, ModelToDomContext } from 'roosterjs-co
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 
 describe('borderFormatHandler.parse', () => {
     let div: HTMLElement;
@@ -51,7 +50,7 @@ describe('borderFormatHandler.parse', () => {
         });
     });
 
-    itChromeOnly('Has border width none value', () => {
+    it('Has border width none value', () => {
         div.style.borderWidth = '1px 2px 3px 4px';
         div.style.borderStyle = 'none';
         div.style.borderColor = 'red';
@@ -59,10 +58,10 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
-            borderTop: '1px none red',
-            borderRight: '2px none red',
-            borderBottom: '3px none red',
-            borderLeft: '4px none red',
+            borderTop: jasmine.stringMatching(/1px (none )?red/),
+            borderRight: jasmine.stringMatching(/2px (none )?red/),
+            borderBottom: jasmine.stringMatching(/3px (none )?red/),
+            borderLeft: jasmine.stringMatching(/4px (none )?red/),
         });
     });
 
@@ -171,7 +170,7 @@ describe('borderFormatHandler.apply', () => {
         expect(div.outerHTML).toEqual('<div style="border-top: 1px solid red;"></div>');
     });
 
-    itChromeOnly('Has border color - empty values', () => {
+    it('Has border color - empty values', () => {
         format.borderTop = 'red';
 
         borderFormatHandler.apply(format, div, context);
@@ -179,7 +178,7 @@ describe('borderFormatHandler.apply', () => {
         expect(div.outerHTML).toEqual('<div style="border-top: red;"></div>');
     });
 
-    itChromeOnly('Use independant border radius 1', () => {
+    it('Use independant border radius 1', () => {
         format.borderBottomLeftRadius = '2px';
         format.borderBottomRightRadius = '3px';
         format.borderTopRightRadius = '3px';

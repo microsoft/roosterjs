@@ -1,7 +1,7 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { ClipboardData, DomToModelOption, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_E2E';

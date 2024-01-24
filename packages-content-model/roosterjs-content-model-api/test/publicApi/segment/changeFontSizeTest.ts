@@ -1,6 +1,6 @@
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
-import { createRange } from 'roosterjs-editor-dom';
+import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
 import {

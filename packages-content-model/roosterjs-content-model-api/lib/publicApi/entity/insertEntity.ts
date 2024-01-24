@@ -8,7 +8,6 @@ import type {
     InsertEntityOptions,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
-import type { Entity } from 'roosterjs-editor-types';
 
 const InlineEntityTag = 'span';
 
@@ -98,17 +97,12 @@ export default function insertEntity(
         {
             selectionOverride: typeof position === 'object' ? position : undefined,
             changeSource: ChangeSource.InsertEntity,
-            getChangeData: () => {
-                // TODO: Remove this entity when we have standalone editor
-                const entity: Entity = {
-                    wrapper,
-                    type,
-                    id: '',
-                    isReadonly: true,
-                };
-
-                return entity;
-            },
+            getChangeData: () => ({
+                wrapper,
+                type,
+                id: '',
+                isReadonly: true,
+            }),
             apiName: 'insertEntity',
         }
     );
