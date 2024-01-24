@@ -34,14 +34,20 @@ import {
  * @param editor The editor instance
  * @param operation The table operation to apply
  */
-export default function editTable(editor: IStandaloneEditor, operation: TableOperation) {
+export default function editTable(
+    editor: IStandaloneEditor,
+    operation: TableOperation,
+    skipSnapshot?: boolean
+) {
     editor.focus();
 
     editor.formatContentModel(
-        model => {
+        (model, context) => {
             const [tableModel, path] = getFirstSelectedTable(model);
 
             if (tableModel) {
+                context.skipUndoSnapshot = skipSnapshot;
+
                 switch (operation) {
                     case 'alignCellLeft':
                     case 'alignCellCenter':
