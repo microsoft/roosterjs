@@ -1,5 +1,7 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
+import { findClosestElementAncestor } from 'roosterjs-editor-dom';
+import { PluginEvent } from 'roosterjs-editor-types/lib';
 import { transformColor } from '../publicApi/color/transformColor';
 import type {
     ClipboardData,
@@ -390,6 +392,35 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler {
         return this.getCore().trustedHTMLHandler;
+    }
+
+    /**
+     * Get an HTML element from current cursor position.
+     * When expectedTags is not specified, return value is the current node (if it is HTML element)
+     * or its parent node (if current node is a Text node).
+     * When expectedTags is specified, return value is the first ancestor of current node which has
+     * one of the expected tags.
+     * If no element found within editor by the given tag, return null.
+     * @param selector Optional, an HTML selector to find HTML element with.
+     * @param startFrom Start search from this node. If not specified, start from current focused position
+     * @param event Optional, if specified, editor will try to get cached result from the event object first.
+     * If it is not cached before, query from DOM and cache the result into the event object
+     */
+    public getElementAtCursor(
+        selector?: string,
+        startFrom?: Node,
+        event?: PluginEvent
+    ): HTMLElement | null {
+        event = startFrom ? undefined : event; // Only use cache when startFrom is not specified, for different start position can have different result
+
+        if (!startFrom) {
+            startFrom = this.getDocument().getSelection()?.focusNode || undefined;
+        }
+        return (
+            (startFrom &&
+                findClosestElementAncestor(startFrom, this.getCore().contentDiv, selector)) ||
+            null
+        );
     }
 
     /**
