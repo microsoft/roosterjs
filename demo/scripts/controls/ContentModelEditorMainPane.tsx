@@ -27,6 +27,7 @@ import {
     ContentModelAutoFormatPlugin,
     ContentModelEditPlugin,
     ContentModelPastePlugin,
+    TableEditPlugin,
 } from 'roosterjs-content-model-plugins';
 import {
     ContentModelEditor,
@@ -110,6 +111,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private pastePlugin: ContentModelPastePlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
+    private tableEditPlugin: TableEditPlugin;
     private snapshots: Snapshots;
 
     constructor(props: {}) {
@@ -136,6 +138,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.emojiPlugin = createEmojiPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.pastePlugin = new ContentModelPastePlugin();
+        this.tableEditPlugin = new TableEditPlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
@@ -198,6 +201,12 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             this.sampleEntityPlugin,
         ];
 
+        for (let i = 0; i < plugins.length; i++) {
+            if (plugins[i]?.getName() == 'TableResize') {
+                plugins.splice(i, 1);
+            }
+        }
+
         if (this.state.showSidePane || this.state.popoutWindow) {
             arrayPush(plugins, this.getSidePanePlugins());
         }
@@ -253,6 +262,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
                                 this.pastePlugin,
+                                this.tableEditPlugin,
                                 this.contentModelAutoFormatPlugin,
                                 this.contentModelEditPlugin,
                             ]}
