@@ -9,10 +9,9 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { BeforePasteEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
+import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 import {
     ClipboardData,
@@ -22,6 +21,8 @@ import {
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
     IStandaloneEditor,
+    BeforePasteEvent,
+    PluginEvent,
 } from 'roosterjs-content-model-types';
 
 let clipboardData: ClipboardData;
@@ -35,7 +36,6 @@ describe('Paste ', () => {
     let mockedModel: ContentModelDocument;
     let mockedMergeModel: ContentModelDocument;
     let getFocusedPosition: jasmine.Spy;
-    let getContent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
     let mergeModelSpy: jasmine.Spy;
     let formatResult: boolean | undefined;
@@ -69,7 +69,6 @@ describe('Paste ', () => {
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         focus = jasmine.createSpy('focus');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
-        getContent = jasmine.createSpy('getContent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => {
             mockedModel = mockedMergeModel;
@@ -103,7 +102,7 @@ describe('Paste ', () => {
         formatResult = undefined;
         context = undefined;
 
-        editor = new ContentModelEditor(div, {
+        editor = new StandaloneEditor(div, {
             plugins: [new ContentModelPastePlugin()],
             coreApiOverride: {
                 focus,
@@ -111,13 +110,10 @@ describe('Paste ', () => {
                 getVisibleViewport,
                 formatContentModel,
             },
-            legacyCoreApiOverride: {
-                getContent,
-            },
         });
 
         spyOn(editor, 'getDocument').and.callThrough();
-        spyOn(editor, 'triggerPluginEvent').and.callThrough();
+        spyOn(editor, 'triggerEvent').and.callThrough();
     });
 
     afterEach(() => {
@@ -187,13 +183,13 @@ describe('Paste ', () => {
 });
 
 describe('paste with content model & paste plugin', () => {
-    let editor: ContentModelEditor | undefined;
+    let editor: StandaloneEditor | undefined;
     let div: HTMLDivElement | undefined;
 
     beforeEach(() => {
         div = document.createElement('div');
         document.body.appendChild(div);
-        editor = new ContentModelEditor(div, {
+        editor = new StandaloneEditor(div, {
             plugins: [new ContentModelPastePlugin()],
         });
         spyOn(addParserF, 'default').and.callThrough();
@@ -219,10 +215,10 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wordDesktop');
         spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -230,9 +226,9 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wacComponents');
         spyOn(WacComponents, 'processPastedContentWacComponents').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
@@ -241,7 +237,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelOnline');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
@@ -252,7 +248,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelDesktop');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
@@ -263,7 +259,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
         spyOn(PPT, 'processPastedContentFromPowerPoint').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
@@ -275,7 +271,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wordDesktop');
         spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -286,7 +282,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wacComponents');
         spyOn(WacComponents, 'processPastedContentWacComponents').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -297,7 +293,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelOnline');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -308,7 +304,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelDesktop');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -319,7 +315,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
         spyOn(PPT, 'processPastedContentFromPowerPoint').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -340,14 +336,14 @@ describe('paste with content model & paste plugin', () => {
         };
 
         let eventChecker: BeforePasteEvent = <any>{};
-        editor = new ContentModelEditor(div!, {
+        editor = new StandaloneEditor(div!, {
             plugins: [
                 {
                     initialize: () => {},
                     dispose: () => {},
                     getName: () => 'test',
                     onPluginEvent(event: PluginEvent) {
-                        if (event.eventType === PluginEventType.BeforePaste) {
+                        if (event.eventType === 'beforePaste') {
                             eventChecker = event;
                         }
                     },
@@ -355,12 +351,12 @@ describe('paste with content model & paste plugin', () => {
             ],
         });
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(eventChecker?.clipboardData).toEqual(clipboardData);
         expect(eventChecker?.htmlBefore).toBeTruthy();
         expect(eventChecker?.htmlAfter).toBeTruthy();
-        expect(eventChecker?.pasteType).toEqual(0);
+        expect(eventChecker?.pasteType).toEqual('normal');
     });
 });
 
@@ -416,7 +412,17 @@ describe('Paste with clipboardData', () => {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {
-                                textColor: 'rgb(0, 0, 0)',
+                                textColor: '',
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                underline: false,
                             },
                         },
                     ],
@@ -455,7 +461,19 @@ describe('Paste with clipboardData', () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                     ],
                     blockType: 'Paragraph',
@@ -498,7 +516,19 @@ describe('Paste with clipboardData', () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                             link: {
                                 format: {
                                     underline: true,

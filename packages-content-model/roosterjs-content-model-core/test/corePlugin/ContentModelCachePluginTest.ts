@@ -1,14 +1,17 @@
+import * as textMutationObserver from '../../lib/corePlugin/utils/textMutationObserver';
+import { contentModelDomIndexer } from '../../lib/corePlugin/utils/contentModelDomIndexer';
 import { createContentModelCachePlugin } from '../../lib/corePlugin/ContentModelCachePlugin';
-import { IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
 import {
     ContentModelCachePluginState,
     ContentModelDomIndexer,
     IStandaloneEditor,
+    PluginWithState,
+    StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 
 describe('ContentModelCachePlugin', () => {
     let plugin: PluginWithState<ContentModelCachePluginState>;
-    let editor: IStandaloneEditor & IEditor;
+    let editor: IStandaloneEditor;
 
     let addEventListenerSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
@@ -16,8 +19,9 @@ describe('ContentModelCachePlugin', () => {
     let reconcileSelectionSpy: jasmine.Spy;
     let isInShadowEditSpy: jasmine.Spy;
     let domIndexer: ContentModelDomIndexer;
+    let contentDiv: HTMLDivElement;
 
-    function init() {
+    function init(option: StandaloneEditorOptions) {
         addEventListenerSpy = jasmine.createSpy('addEventListenerSpy');
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
@@ -28,6 +32,8 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelection: reconcileSelectionSpy,
         } as any;
 
+        contentDiv = document.createElement('div');
+
         editor = ({
             getDOMSelection: getDOMSelectionSpy,
             isInShadowEdit: isInShadowEditSpy,
@@ -37,57 +43,73 @@ describe('ContentModelCachePlugin', () => {
                     removeEventListener: removeEventListenerSpy,
                 };
             },
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
-        plugin = createContentModelCachePlugin({});
+        plugin = createContentModelCachePlugin(option, contentDiv);
         plugin.initialize(editor);
     }
 
     describe('initialize', () => {
-        beforeEach(init);
         afterEach(() => {
             plugin.dispose();
         });
 
         it('initialize', () => {
+            init({});
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
+            expect(plugin.getState()).toEqual({});
+        });
+
+        it('initialize with cache', () => {
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+            const mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+            spyOn(textMutationObserver, 'createTextMutationObserver').and.returnValue(
+                mockedObserver
+            );
+            init({
+                cacheModel: true,
+            });
+            expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
+            expect(plugin.getState()).toEqual({
+                domIndexer: contentModelDomIndexer,
+                textMutationObserver: mockedObserver,
+            });
+            expect(startObservingSpy).toHaveBeenCalledTimes(1);
         });
     });
 
     describe('KeyDown event', () => {
-        beforeEach(init);
+        beforeEach(() => {
+            init({});
+        });
         afterEach(() => {
             plugin.dispose();
         });
 
         it('ENTER key', () => {
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'Enter',
                 } as any,
             });
 
-            expect(plugin.getState()).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
-                domIndexer: undefined,
-            });
+            expect(plugin.getState()).toEqual({});
         });
 
         it('Other key without selection', () => {
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'B',
                 } as any,
             });
 
-            expect(plugin.getState()).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
-                domIndexer: undefined,
-            });
+            expect(plugin.getState()).toEqual({});
         });
 
         it('Other key with collapsed selection', () => {
@@ -98,7 +120,7 @@ describe('ContentModelCachePlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'B',
                 } as any,
@@ -106,28 +128,6 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedSelection: { type: 'range', range: { collapsed: true } as any },
-                domIndexer: undefined,
-            });
-        });
-
-        it('Expanded selection with text input', () => {
-            const state = plugin.getState();
-            state.cachedSelection = {
-                type: 'range',
-                range: { collapsed: false } as any,
-            };
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent: {
-                    key: 'B',
-                } as any,
-            });
-
-            expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
-                domIndexer: undefined,
             });
         });
 
@@ -139,7 +139,7 @@ describe('ContentModelCachePlugin', () => {
             };
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowUp',
                 } as any,
@@ -150,47 +150,6 @@ describe('ContentModelCachePlugin', () => {
                     type: 'range',
                     range: { collapsed: false } as any,
                 },
-                domIndexer: undefined,
-            });
-        });
-
-        it('Table selection', () => {
-            const state = plugin.getState();
-            state.cachedSelection = {
-                type: 'table',
-            } as any;
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent: {
-                    key: 'B',
-                } as any,
-            });
-
-            expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
-                domIndexer: undefined,
-            });
-        });
-
-        it('Image selection', () => {
-            const state = plugin.getState();
-            state.cachedSelection = {
-                type: 'image',
-            } as any;
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent: {
-                    key: 'B',
-                } as any,
-            });
-
-            expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
-                domIndexer: undefined,
             });
         });
 
@@ -199,20 +158,20 @@ describe('ContentModelCachePlugin', () => {
             isInShadowEditSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
+                eventType: 'keyDown',
                 rawEvent: {
                     key: 'Enter',
                 } as any,
             });
 
-            expect(state).toEqual({
-                domIndexer: undefined,
-            });
+            expect(state).toEqual({});
         });
     });
 
     describe('Input event', () => {
-        beforeEach(init);
+        beforeEach(() => {
+            init({});
+        });
         afterEach(() => {
             plugin.dispose();
         });
@@ -226,113 +185,21 @@ describe('ContentModelCachePlugin', () => {
             getDOMSelectionSpy.and.returnValue(selection);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
+                eventType: 'input',
                 rawEvent: null!,
             });
 
             expect(state).toEqual({
                 cachedModel: undefined,
                 cachedSelection: undefined,
-                domIndexer: undefined,
-            });
-        });
-
-        it('No cached range, has cached model', () => {
-            const selection = 'MockedRange' as any;
-            const model = 'MockedModel' as any;
-            const state = plugin.getState();
-
-            state.cachedModel = model;
-            state.cachedSelection = undefined;
-
-            getDOMSelectionSpy.and.returnValue(selection);
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
-                rawEvent: null!,
-            });
-
-            expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
-                domIndexer: undefined,
-            });
-        });
-
-        it('No cached range, has cached model, reconcile succeed', () => {
-            const selection = 'MockedRange' as any;
-            const model = 'MockedModel' as any;
-            const state = plugin.getState();
-
-            state.cachedModel = model;
-            state.cachedSelection = undefined;
-            state.domIndexer = domIndexer;
-
-            getDOMSelectionSpy.and.returnValue(selection);
-            reconcileSelectionSpy.and.returnValue(true);
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
-                rawEvent: null!,
-            });
-
-            expect(state).toEqual({
-                cachedModel: model,
-                cachedSelection: selection,
-                domIndexer: domIndexer,
-            });
-        });
-
-        it('has cached range, has cached model', () => {
-            const oldRangeEx = 'MockedRangeOld' as any;
-            const newRangeEx = 'MockedRangeNew' as any;
-            const model = 'MockedModel' as any;
-            const state = plugin.getState();
-
-            state.cachedModel = model;
-            state.cachedSelection = oldRangeEx;
-            getDOMSelectionSpy.and.returnValue(newRangeEx);
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
-                rawEvent: null!,
-            });
-
-            expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
-                domIndexer: undefined,
-            });
-        });
-
-        it('has cached range, has cached model, has domIndexer', () => {
-            const oldRangeEx = 'MockedRangeOld' as any;
-            const newRangeEx = 'MockedRangeNew' as any;
-            const model = 'MockedModel' as any;
-            const state = plugin.getState();
-
-            state.cachedModel = model;
-            state.cachedSelection = oldRangeEx;
-            state.domIndexer = domIndexer;
-
-            getDOMSelectionSpy.and.returnValue(newRangeEx);
-            reconcileSelectionSpy.and.returnValue(true);
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.Input,
-                rawEvent: null!,
-            });
-
-            expect(state).toEqual({
-                cachedModel: model,
-                cachedSelection: newRangeEx,
-                domIndexer,
             });
         });
     });
 
     describe('SelectionChanged', () => {
-        beforeEach(init);
+        beforeEach(() => {
+            init({});
+        });
         afterEach(() => {
             plugin.dispose();
         });
@@ -350,8 +217,8 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelectionSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: selection,
+                eventType: 'selectionChanged',
+                newSelection: selection,
             });
 
             expect(state).toEqual({
@@ -376,8 +243,8 @@ describe('ContentModelCachePlugin', () => {
             getDOMSelectionSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: newRangeEx,
+                eventType: 'selectionChanged',
+                newSelection: newRangeEx,
             });
 
             expect(state).toEqual({
@@ -402,8 +269,8 @@ describe('ContentModelCachePlugin', () => {
             getDOMSelectionSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: newRangeEx,
+                eventType: 'selectionChanged',
+                newSelection: newRangeEx,
             });
 
             expect(state).toEqual({
@@ -416,7 +283,9 @@ describe('ContentModelCachePlugin', () => {
     });
 
     describe('ContentChanged', () => {
-        beforeEach(init);
+        beforeEach(() => {
+            init({});
+        });
         afterEach(() => {
             plugin.dispose();
         });
@@ -429,14 +298,13 @@ describe('ContentModelCachePlugin', () => {
             state.cachedSelection = undefined;
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: '',
             });
 
             expect(state).toEqual({
                 cachedModel: undefined,
                 cachedSelection: undefined,
-                domIndexer: undefined,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
         });
@@ -453,7 +321,7 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelectionSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: '',
                 contentModel: model,
                 selection: newRangeEx,
@@ -462,7 +330,6 @@ describe('ContentModelCachePlugin', () => {
             expect(state).toEqual({
                 cachedModel: undefined,
                 cachedSelection: undefined,
-                domIndexer: undefined,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
         });
@@ -480,7 +347,7 @@ describe('ContentModelCachePlugin', () => {
             reconcileSelectionSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
-                eventType: PluginEventType.ContentChanged,
+                eventType: 'contentChanged',
                 source: '',
                 contentModel: model,
                 selection: newRangeEx,

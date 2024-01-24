@@ -2,7 +2,7 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { defaultHTMLStyleMap } from '../../../lib/config/defaultHTMLStyleMap';
 import { DeprecatedColors } from '../../../lib';
-import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { expectHtml } from '../../testUtils';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
 import {
     DomToModelContext,
@@ -108,8 +108,8 @@ describe('textColorFormatHandler.apply', () => {
         div = document.createElement('div');
         context = createModelToDomContext();
         context.darkColorHandler = {
-            registerColor: (color: string, isDarkMode: boolean) =>
-                isDarkMode ? `var(--darkColor_${color}, ${color})` : color,
+            updateKnownColor: () => {},
+            getDarkColor: (lightColor: string) => `var(--darkColor_${lightColor}, ${lightColor})`,
         } as any;
 
         format = {};

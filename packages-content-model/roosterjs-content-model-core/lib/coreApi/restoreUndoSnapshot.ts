@@ -1,12 +1,8 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { PluginEventType } from 'roosterjs-editor-types';
 import { restoreSnapshotColors } from '../utils/restoreSnapshotColors';
 import { restoreSnapshotHTML } from '../utils/restoreSnapshotHTML';
 import { restoreSnapshotSelection } from '../utils/restoreSnapshotSelection';
-import type {
-    ContentModelContentChangedEvent,
-    RestoreUndoSnapshot,
-} from 'roosterjs-content-model-types';
+import type { ContentChangedEvent, RestoreUndoSnapshot } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -18,7 +14,7 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, snapshot) => {
     core.api.triggerEvent(
         core,
         {
-            eventType: PluginEventType.BeforeSetContent,
+            eventType: 'beforeSetContent',
             newContent: snapshot.html,
         },
         true /*broadcast*/
@@ -31,8 +27,8 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, snapshot) => {
         restoreSnapshotSelection(core, snapshot);
         restoreSnapshotColors(core, snapshot);
 
-        const event: ContentModelContentChangedEvent = {
-            eventType: PluginEventType.ContentChanged,
+        const event: ContentChangedEvent = {
+            eventType: 'contentChanged',
             entityStates: snapshot.entityStates,
             source: ChangeSource.SetContent,
         };

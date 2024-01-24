@@ -2,7 +2,7 @@ import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
-import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { expectHtml } from '../../testUtils';
 import {
     BackgroundColorFormat,
     DomToModelContext,
@@ -111,8 +111,8 @@ describe('backgroundColorFormatHandler.apply', () => {
         format.backgroundColor = 'red';
         context.isDarkMode = true;
         context.darkColorHandler = {
-            registerColor: (color: string, isDarkMode: boolean) =>
-                isDarkMode ? `var(--darkColor_${color}, ${color})` : color,
+            updateKnownColor: () => {},
+            getDarkColor: (lightColor: string) => `var(--darkColor_${lightColor}, ${lightColor})`,
         } as any;
 
         backgroundColorFormatHandler.apply(format, div, context);

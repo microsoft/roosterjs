@@ -13,7 +13,6 @@ import {
 
 const editorContext: EditorContext = {
     isDarkMode: false,
-    darkColorHandler: undefined,
 };
 
 describe('ContentModelEditor', () => {
@@ -185,7 +184,7 @@ describe('ContentModelEditor', () => {
             },
         };
         const editor = new ContentModelEditor(div, {
-            plugins: [plugin],
+            legacyPlugins: [plugin],
         });
         editor.dispose();
 

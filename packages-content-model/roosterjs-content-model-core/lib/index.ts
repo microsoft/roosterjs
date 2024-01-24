@@ -58,4 +58,3 @@ export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
 export { StandaloneEditor } from './editor/StandaloneEditor';
-export { createSnapshotsManager } from './editor/SnapshotsManagerImpl';

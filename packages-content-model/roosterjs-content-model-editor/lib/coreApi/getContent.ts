@@ -1,4 +1,4 @@
-import { GetContentMode, PluginEventType } from 'roosterjs-editor-types';
+import { GetContentMode } from 'roosterjs-editor-types';
 import { transformColor } from 'roosterjs-content-model-core';
 import {
     createRange,
@@ -51,7 +51,7 @@ export const getContent: GetContent = (core, innerCore, mode): string => {
             api.triggerEvent(
                 innerCore,
                 {
-                    eventType: PluginEventType.ExtractContentWithDom,
+                    eventType: 'extractContentWithDom',
                     clonedRoot,
                 },
                 true /*broadcast*/

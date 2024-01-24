@@ -6,6 +6,7 @@ import type { LineHeightFormat } from './formatParts/LineHeightFormat';
 import type { MarginFormat } from './formatParts/MarginFormat';
 import type { PaddingFormat } from './formatParts/PaddingFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
+import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
 
 /**
@@ -19,4 +20,5 @@ export type ContentModelBlockFormat = BackgroundColorFormat &
     PaddingFormat &
     LineHeightFormat &
     WhiteSpaceFormat &
-    BorderFormat;
+    BorderFormat &
+    TextIndentFormat;

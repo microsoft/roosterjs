@@ -21,7 +21,7 @@ export function createStandaloneEditorCorePlugins(
     contentDiv: HTMLDivElement
 ): StandaloneEditorCorePlugins {
     return {
-        cache: createContentModelCachePlugin(options),
+        cache: createContentModelCachePlugin(options, contentDiv),
         format: createContentModelFormatPlugin(options),
         copyPaste: createContentModelCopyPastePlugin(options),
         domEvent: createDOMEventPlugin(options, contentDiv),

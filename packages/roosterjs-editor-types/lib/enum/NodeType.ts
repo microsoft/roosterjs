@@ -3,6 +3,7 @@
  * https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
  * Values not listed here are deprecated.
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum NodeType {
     /**
      * An Element node such as &lt;p&gt; or &lt;div&gt;.

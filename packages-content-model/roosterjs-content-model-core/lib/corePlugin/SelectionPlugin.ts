@@ -1,10 +1,10 @@
 import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { isModifierKey } from '../publicApi/domUtils/eventUtils';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type {
     DOMSelection,
     IStandaloneEditor,
+    PluginEvent,
+    PluginWithState,
     SelectionPluginState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
@@ -16,6 +16,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: IStandaloneEditor | null = null;
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
+    private isSafari = false;
 
     constructor(options: StandaloneEditorOptions) {
         this.state = {
@@ -29,8 +30,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         return 'Selection';
     }
 
-    initialize(editor: IEditor) {
-        this.editor = editor as IEditor & IStandaloneEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         const doc = this.editor.getDocument();
         const styleNode = doc.createElement('style');
@@ -41,10 +42,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const env = this.editor.getEnvironment();
         const document = this.editor.getDocument();
 
-        if (env.isSafari) {
-            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
-            document.addEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.addEventListener('blur', this.onBlur);
+        this.isSafari = !!env.isSafari;
+
+        if (this.isSafari) {
+            document.addEventListener('selectionchange', this.onSelectionChangeSafari);
             this.disposer = this.editor.attachDomEvent({ focus: { beforeDispatch: this.onFocus } });
         } else {
             this.disposer = this.editor.attachDomEvent({
@@ -55,6 +56,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     dispose() {
+        this.editor
+            ?.getDocument()
+            .removeEventListener('selectionchange', this.onSelectionChangeSafari);
+
         if (this.state.selectionStyleNode) {
             this.state.selectionStyleNode.parentNode?.removeChild(this.state.selectionStyleNode);
             this.state.selectionStyleNode = null;
@@ -65,19 +70,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             this.disposer = null;
         }
 
-        if (this.editor) {
-            const document = this.editor.getDocument();
-
-            document.removeEventListener(
-                'mousedown',
-                this.onMouseDownDocument,
-                true /*useCapture*/
-            );
-            document.removeEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.removeEventListener('blur', this.onBlur);
-
-            this.editor = null;
-        }
+        this.editor = null;
     }
 
     getState(): SelectionPluginState {
@@ -93,7 +86,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let selection: DOMSelection | null;
 
         switch (event.eventType) {
-            case PluginEventType.MouseUp:
+            case 'mouseUp':
                 if (
                     (image = this.getClickingImage(event.rawEvent)) &&
                     image.isContentEditable &&
@@ -104,7 +97,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
                 break;
 
-            case PluginEventType.MouseDown:
+            case 'mouseDown':
                 selection = this.editor.getDOMSelection();
                 if (
                     event.rawEvent.button === MouseRightButton &&
@@ -120,7 +113,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
                 break;
 
-            case PluginEventType.KeyDown:
+            case 'keyDown':
                 const rawEvent = event.rawEvent;
                 const key = rawEvent.key;
                 selection = this.editor.getDOMSelection();
@@ -179,7 +172,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             this.editor?.setDOMSelection(this.state.selection);
         }
 
-        if (this.state.selection?.type == 'range') {
+        if (this.state.selection?.type == 'range' && !this.isSafari) {
             // Editor is focused, now we can get live selection. So no need to keep a selection if the selection type is range.
             this.state.selection = null;
         }
@@ -191,15 +184,15 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private onKeyDownDocument = (event: KeyboardEvent) => {
-        if (event.key == 'Tab' && !event.defaultPrevented) {
-            this.onBlur();
-        }
-    };
+    private onSelectionChangeSafari = () => {
+        if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
+            // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
+            // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
+            const newSelection = this.editor.getDOMSelection();
 
-    private onMouseDownDocument = (event: MouseEvent) => {
-        if (this.editor && !this.editor.isNodeInEditor(event.target as Node)) {
-            this.onBlur();
+            if (newSelection?.type == 'range') {
+                this.state.selection = newSelection;
+            }
         }
     };
 }

@@ -2,6 +2,7 @@
  * Command strings for Document.execCommand() API
  * https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum DocumentCommand {
     /**
      * Changes the browser auto-link behavior (Internet Explorer only)

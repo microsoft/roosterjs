@@ -53,24 +53,36 @@ async function pack(isProduction, isAmd, target, filename) {
     await runWebPack(webpackConfig);
 }
 
-function createStep(isProduction, isAmd, target) {
+function createStep(isProduction, isAmd, target, enableForDemoSite) {
     const fileName = `${buildConfig[target].jsFileBaseName}${isAmd ? '-amd' : ''}${
         isProduction ? '-min' : ''
     }.js`;
     return {
         message: `Packing ${fileName}...`,
         callback: async () => pack(isProduction, isAmd, target, fileName),
-        enabled: options => (isProduction ? options.packprod : options.pack),
+        enabled: options =>
+            (enableForDemoSite && options.builddemo) ||
+            (isProduction ? options.packprod : options.pack),
     };
 }
 
 module.exports = {
     commonJsDebug: createStep(false /*isProduction*/, false /*isAmd*/, 'packages'),
-    commonJsProduction: createStep(true /*isProduction*/, false /*isAmd*/, 'packages'),
+    commonJsProduction: createStep(
+        true /*isProduction*/,
+        false /*isAmd*/,
+        'packages',
+        true /*enableForDemoSite*/
+    ),
     amdDebug: createStep(false /*isProduction*/, true /*isAmd*/, 'packages'),
     amdProduction: createStep(true /*isProduction*/, true /*isAmd*/, 'packages'),
     commonJsDebugUi: createStep(false /*isProduction*/, false /*isAmd*/, 'packages-ui'),
-    commonJsProductionUi: createStep(true /*isProduction*/, false /*isAmd*/, 'packages-ui'),
+    commonJsProductionUi: createStep(
+        true /*isProduction*/,
+        false /*isAmd*/,
+        'packages-ui',
+        true /*enableForDemoSite*/
+    ),
     amdDebugUi: createStep(false /*isProduction*/, true /*isAmd*/, 'packages-ui'),
     amdProductionUi: createStep(true /*isProduction*/, true /*isAmd*/, 'packages-ui'),
     commonJsDebugContentModel: createStep(
@@ -81,7 +93,8 @@ module.exports = {
     commonJsProductionContentModel: createStep(
         true /*isProduction*/,
         false /*isAmd*/,
-        'packages-content-model'
+        'packages-content-model',
+        true /*enableForDemoSite*/
     ),
     amdDebugContentModel: createStep(
         false /*isProduction*/,

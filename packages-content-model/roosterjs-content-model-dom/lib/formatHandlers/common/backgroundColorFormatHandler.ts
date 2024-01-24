@@ -12,8 +12,8 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
             getColor(
                 element,
                 true /*isBackground*/,
-                context.darkColorHandler,
-                !!context.isDarkMode
+                !!context.isDarkMode,
+                context.darkColorHandler
             ) || defaultStyle.backgroundColor;
 
         if (
@@ -33,8 +33,8 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
                 element,
                 format.backgroundColor,
                 true /*isBackground*/,
-                context.darkColorHandler,
-                !!context.isDarkMode
+                !!context.isDarkMode,
+                context.darkColorHandler
             );
         }
     },

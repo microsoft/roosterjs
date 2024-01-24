@@ -1,7 +1,11 @@
 import * as eventUtils from '../../lib/publicApi/domUtils/eventUtils';
-import { ChangeSource, IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
+import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createDOMEventPlugin } from '../../lib/corePlugin/DOMEventPlugin';
-import { DOMEventPluginState, IStandaloneEditor } from 'roosterjs-content-model-types';
+import {
+    DOMEventPluginState,
+    IStandaloneEditor,
+    PluginWithState,
+} from 'roosterjs-content-model-types';
 
 const getDocument = () => document;
 
@@ -21,7 +25,7 @@ describe('DOMEventPlugin', () => {
             getDocument,
             attachDomEvent,
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         plugin.initialize(editor);
 
@@ -66,7 +70,7 @@ describe('DOMEventPlugin', () => {
         const attachDomEvent = jasmine
             .createSpy('attachDomEvent')
             .and.returnValue(jasmine.createSpy('disposer'));
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument,
             attachDomEvent,
             getEnvironment: () => ({}),
@@ -101,7 +105,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         };
 
         plugin = createDOMEventPlugin({}, div);
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument,
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
@@ -118,10 +122,10 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
 
     it('check events are mapped', () => {
         expect(eventMap).toBeDefined();
-        expect(eventMap.keypress.pluginEventType).toBe(PluginEventType.KeyPress);
-        expect(eventMap.keydown.pluginEventType).toBe(PluginEventType.KeyDown);
-        expect(eventMap.keyup.pluginEventType).toBe(PluginEventType.KeyUp);
-        expect(eventMap.input.pluginEventType).toBe(PluginEventType.Input);
+        expect(eventMap.keypress.pluginEventType).toBe('keyPress');
+        expect(eventMap.keydown.pluginEventType).toBe('keyDown');
+        expect(eventMap.keyup.pluginEventType).toBe('keyUp');
+        expect(eventMap.input.pluginEventType).toBe('input');
         expect(eventMap.keypress.beforeDispatch).toBeDefined();
         expect(eventMap.keydown.beforeDispatch).toBeDefined();
         expect(eventMap.keyup.beforeDispatch).toBeDefined();
@@ -175,7 +179,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
     let plugin: PluginWithState<DOMEventPluginState>;
     let addEventListener: jasmine.Spy;
     let removeEventListener: jasmine.Spy;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let eventMap: Record<string, any>;
     let scrollContainer: HTMLElement;
     let onMouseUp: Function;
@@ -190,7 +194,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
                 onMouseUp = handler;
             });
         removeEventListener = jasmine.createSpy('.removeEventListener');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         scrollContainer = {
             addEventListener: () => {},
             removeEventListener: () => {},
@@ -201,12 +205,12 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
             },
             null!
         );
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
             }),
-            triggerPluginEvent,
+            triggerEvent,
             getEnvironment: () => ({}),
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
@@ -258,7 +262,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         onMouseUp(mockedEvent);
 
         expect(removeEventListener).toHaveBeenCalled();
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, {
+        expect(triggerEvent).toHaveBeenCalledWith('mouseUp', {
             rawEvent: mockedEvent,
             isClicking: true,
         });
@@ -296,7 +300,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         onMouseUp(mockedEvent2);
 
         expect(removeEventListener).toHaveBeenCalled();
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, {
+        expect(triggerEvent).toHaveBeenCalledWith('mouseUp', {
             rawEvent: mockedEvent2,
             isClicking: false,
         });
@@ -314,16 +318,16 @@ describe('DOMEventPlugin handle other event', () => {
     let plugin: PluginWithState<DOMEventPluginState>;
     let addEventListener: jasmine.Spy;
     let removeEventListener: jasmine.Spy;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let eventMap: Record<string, any>;
     let scrollContainer: HTMLElement;
     let addEventListenerSpy: jasmine.Spy;
-    let editor: IEditor & IStandaloneEditor;
+    let editor: IStandaloneEditor;
 
     beforeEach(() => {
         addEventListener = jasmine.createSpy('addEventListener');
         removeEventListener = jasmine.createSpy('.removeEventListener');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
 
         scrollContainer = {
@@ -337,7 +341,7 @@ describe('DOMEventPlugin handle other event', () => {
             null!
         );
 
-        editor = <IEditor & IStandaloneEditor>(<any>{
+        editor = <IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
@@ -349,7 +353,7 @@ describe('DOMEventPlugin handle other event', () => {
                     removeEventListener: () => {},
                 },
             }),
-            triggerPluginEvent,
+            triggerEvent,
             getEnvironment: () => ({}),
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
@@ -373,7 +377,7 @@ describe('DOMEventPlugin handle other event', () => {
             mouseUpEventListerAdded: false,
         });
 
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerEvent).not.toHaveBeenCalled();
 
         const mockedEvent = 'EVENT' as any;
         eventMap.compositionend.beforeDispatch(mockedEvent);
@@ -384,7 +388,7 @@ describe('DOMEventPlugin handle other event', () => {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.CompositionEnd, {
+        expect(triggerEvent).toHaveBeenCalledWith('compositionEnd', {
             rawEvent: mockedEvent,
         });
         expect(addEventListenerSpy).toHaveBeenCalledTimes(2);
@@ -409,7 +413,7 @@ describe('DOMEventPlugin handle other event', () => {
             mouseUpEventListerAdded: false,
         });
 
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerEvent).not.toHaveBeenCalled();
         expect(preventDefaultSpy).not.toHaveBeenCalled();
     });
 
@@ -432,7 +436,7 @@ describe('DOMEventPlugin handle other event', () => {
             mouseUpEventListerAdded: false,
         });
 
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerEvent).not.toHaveBeenCalled();
         expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
@@ -449,7 +453,7 @@ describe('DOMEventPlugin handle other event', () => {
             mouseUpEventListerAdded: false,
         });
         expect(takeSnapshotSpy).toHaveBeenCalledWith();
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+        expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
             source: ChangeSource.Drop,
         });
     });

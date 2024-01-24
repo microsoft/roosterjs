@@ -7,8 +7,8 @@ import {
 } from './createStandaloneEditorDefaultSettings';
 import type {
     EditorEnvironment,
+    PluginState,
     StandaloneEditorCore,
-    StandaloneEditorCorePluginState,
     StandaloneEditorCorePlugins,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
@@ -43,7 +43,8 @@ export function createStandaloneEditorCore(
         environment: createEditorEnvironment(contentDiv),
         darkColorHandler: createDarkColorHandler(
             contentDiv,
-            options.getDarkColor ?? getDarkColorFallback
+            options.getDarkColor ?? getDarkColorFallback,
+            options.knownColors
         ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domToModelSettings: createDomToModelSettings(options),
@@ -76,7 +77,7 @@ export function defaultTrustHtmlHandler(html: string) {
     return html;
 }
 
-function getPluginState(corePlugins: StandaloneEditorCorePlugins): StandaloneEditorCorePluginState {
+function getPluginState(corePlugins: StandaloneEditorCorePlugins): PluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),
         copyPaste: corePlugins.copyPaste.getState(),
