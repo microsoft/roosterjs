@@ -1,3 +1,5 @@
+import { Position } from './Position';
+
 /**
  * A helper class to provide DOM access APIs
  */
@@ -19,4 +21,9 @@ export interface DOMHelper {
      * @returns HTML Element array of the query result
      */
     queryElements(selector: string): HTMLElement[];
+
+    /**
+     * Gets the focused position
+     */
+    getFocusedPosition(): Position | null;
 }

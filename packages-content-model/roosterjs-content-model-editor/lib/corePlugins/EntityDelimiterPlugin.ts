@@ -7,7 +7,6 @@ import type {
 } from 'roosterjs-content-model-types';
 import {
     addDelimiters,
-    isBlockElement,
     isEntityDelimiter,
     isEntityElement,
     isNodeOfType,
@@ -26,11 +25,6 @@ const INLINE_ENTITY_SELECTOR = 'span.' + ENTITY_INFO_NAME;
  */
 class EntityDelimiterPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
-
-    /**
-     *
-     */
-    constructor(private contentDiv: HTMLDivElement) {}
 
     /**
      * Get a friendly name of this plugin
@@ -69,7 +63,7 @@ class EntityDelimiterPlugin implements EditorPlugin {
             switch (event.eventType) {
                 case 'contentChanged':
                 case 'editorReady':
-                    normalizeDelimitersInEditor(this.contentDiv);
+                    normalizeDelimitersInEditor(this.editor);
                     break;
 
                 case 'beforePaste':
@@ -99,7 +93,6 @@ class EntityDelimiterPlugin implements EditorPlugin {
 
 function preventTypeInDelimiter(delimiter: HTMLElement, editor?: IStandaloneEditor) {
     if (editor) {
-        removeDelimiterAttr(delimiter, false);
         editor.formatContentModel(model => {
             iterateSelections(model, (_path, _, block, _segments) => {
                 if (block?.blockType == 'Paragraph' && block.isImplicit) {
@@ -111,9 +104,10 @@ function preventTypeInDelimiter(delimiter: HTMLElement, editor?: IStandaloneEdit
     }
 }
 
-function normalizeDelimitersInEditor(root: HTMLElement) {
-    removeInvalidDelimiters(root.querySelectorAll(DELIMITER_SELECTOR));
-    addDelimitersIfNeeded(root.querySelectorAll(INLINE_ENTITY_SELECTOR));
+function normalizeDelimitersInEditor(editor: IStandaloneEditor) {
+    const helper = editor.getDOMHelper();
+    removeInvalidDelimiters(helper.queryElements(DELIMITER_SELECTOR));
+    addDelimitersIfNeeded(helper.queryElements(INLINE_ENTITY_SELECTOR));
 }
 
 function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
@@ -170,57 +164,10 @@ function removeDelimiterAttr(node: Element | undefined | null, checkEntity: bool
             range.deleteContents();
         }
     });
-}
-
-function handleCollapsedEnter(editor: IStandaloneEditor, delimiter: HTMLElement) {
-    const isAfter = delimiter.classList.contains(DELIMITER_AFTER);
-    const entity = !isAfter ? delimiter.nextSibling : delimiter.previousSibling;
-    const block = getBlock(delimiter);
-
-    requestAnimationFrame(editor, () => {
-        if (!block) {
-            return;
-        }
-        const blockToCheck = isAfter ? block.nextSibling : block.previousSibling;
-        if (blockToCheck && isNodeOfType(blockToCheck, 'ELEMENT_NODE')) {
-            const delimiters = blockToCheck.querySelectorAll(DELIMITER_SELECTOR);
-            // Check if the last or first delimiter still contain the delimiter class and remove it.
-            const delimiterToCheck = delimiters.item(isAfter ? 0 : delimiters.length - 1);
-            removeDelimiterAttr(delimiterToCheck);
-        }
-
-        if (entity && isEntityElement(entity)) {
-            const entityElement = entity as HTMLElement;
-            const { nextElementSibling, previousElementSibling } = entityElement;
-            [nextElementSibling, previousElementSibling].forEach(el => {
-                // Check if after Enter the ZWS got removed but we still have a element with the class
-                // Remove the attributes of the element if it is invalid now.
-                if (
-                    el &&
-                    (el.className.indexOf(DELIMITER_BEFORE) > -1 ||
-                        el.className.indexOf(DELIMITER_AFTER) > -1) &&
-                    !isEntityDelimiter(el)
-                ) {
-                    removeDelimiterAttr(el, false /* checkEntity */);
-                }
-            });
-
-            // Add delimiters to the entity if needed because on Enter we can sometimes lose the ZWS of the element.
-            addDelimiters(entityElement.ownerDocument, entityElement);
-        }
-    });
-}
-
-function getBlock(node: Node | undefined) {
-    if (!node) {
-        return undefined;
+    if (node.textContent == '') {
+        const br = node.ownerDocument.createElement('br');
+        node.appendChild(br);
     }
-
-    while (node && (!isNodeOfType(node, 'ELEMENT_NODE') || !isBlockElement(node))) {
-        node = node.parentElement || undefined;
-    }
-
-    return node;
 }
 
 function handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
@@ -240,14 +187,16 @@ function handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
 
         const refNode = element == node ? element.childNodes.item(selection.focusOffset) : element;
 
-        const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
+        let delimiter = editor.getDOMHelper().getFocusedPosition()?.container;
+        if (!isNodeOfType(delimiter, 'ELEMENT_NODE')) {
+            delimiter = delimiter?.parentElement;
+        }
         if (!delimiter) {
             return;
         }
 
-        if (rawEvent.key === 'Enter') {
-            handleCollapsedEnter(editor, delimiter);
-        } else if (delimiter.firstChild?.nodeType == Node.TEXT_NODE) {
+        if (delimiter.firstChild?.nodeType == Node.TEXT_NODE || rawEvent.key === 'Enter') {
+            removeDelimiterAttr(delimiter, false);
             requestAnimationFrame(editor, () => preventTypeInDelimiter(delimiter, editor));
         }
     }
@@ -257,8 +206,8 @@ function handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
  * @internal
  * Create a new instance of EntityDelimiterPlugin.
  */
-export function createEntityDelimiterPlugin(contentDiv: HTMLDivElement): EditorPlugin {
-    return new EntityDelimiterPlugin(contentDiv);
+export function createEntityDelimiterPlugin(): EditorPlugin {
+    return new EntityDelimiterPlugin();
 }
 
 function requestAnimationFrame(editor: IStandaloneEditor, callback: FrameRequestCallback) {

@@ -282,6 +282,7 @@ export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
 export { TrustedHTMLHandler } from './parameter/TrustedHTMLHandler';
+export { Position } from './parameter/Position';
 export { Rect } from './parameter/Rect';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
 export { DOMHelper } from './parameter/DOMHelper';

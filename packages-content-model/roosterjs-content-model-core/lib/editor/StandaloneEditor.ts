@@ -1,8 +1,7 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
-import { findClosestElementAncestor } from 'roosterjs-editor-dom';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
 import { transformColor } from '../publicApi/color/transformColor';
-import type { PluginEvent } from 'roosterjs-editor-types';
 import type {
     ClipboardData,
     ContentModelDocument,
@@ -19,6 +18,7 @@ import type {
     ModelToDomOption,
     OnNodeCreated,
     PasteType,
+    PluginEvent,
     PluginEventData,
     PluginEventFromType,
     PluginEventType,
@@ -414,7 +414,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @param event Optional, if specified, editor will try to get cached result from the event object first.
      * If it is not cached before, query from DOM and cache the result into the event object
      */
-    public getElementAtCursor(
+    public getFocusedElement(
         selector?: string,
         startFrom?: Node,
         event?: PluginEvent
@@ -424,11 +424,24 @@ export class StandaloneEditor implements IStandaloneEditor {
         if (!startFrom) {
             startFrom = this.getDocument().getSelection()?.focusNode || undefined;
         }
-        return (
-            (startFrom &&
-                findClosestElementAncestor(startFrom, this.getCore().contentDiv, selector)) ||
-            null
-        );
+        if (startFrom) {
+            let element = isNodeOfType(startFrom, 'ELEMENT_NODE')
+                ? startFrom
+                : startFrom.parentElement;
+
+            if (element && selector) {
+                element = element.closest(selector);
+            }
+
+            return element && this.isNodeInEditor(element) ? element : null;
+        }
+        return null;
+    }
+
+    querySelectorAll(selector: string): HTMLElement[] {
+        const core = this.getCore();
+
+        return Array.from(core.contentDiv.querySelectorAll(selector));
     }
 
     /**

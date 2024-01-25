@@ -28,6 +28,11 @@ export interface RangeSelection extends SelectionBase<'range'> {
      * The DOM Range of this selection
      */
     range: Range;
+
+    /**
+     * Is Reverted
+     */
+    isReverted: boolean;
 }
 
 /**

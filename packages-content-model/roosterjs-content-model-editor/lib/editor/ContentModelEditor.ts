@@ -108,7 +108,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         const bridgePlugin = new BridgePlugin(options);
         const plugins = [bridgePlugin, ...(options.plugins ?? [])];
-        plugins.push(createEntityDelimiterPlugin(contentDiv));
+        plugins.push(createEntityDelimiterPlugin());
         const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
             initContent && !options.initialModel

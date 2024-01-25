@@ -66,7 +66,7 @@ export function handleRegularSelection(
     group: ContentModelBlockGroup,
     nodeStartOffset: number,
     nodeEndOffset: number,
-    container?: Node
+    container: Node
 ) {
     if (index == nodeStartOffset) {
         context.isInSelection = true;

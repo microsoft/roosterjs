@@ -1,11 +1,15 @@
 import { toArray } from 'roosterjs-content-model-dom';
-import type { DOMHelper } from 'roosterjs-content-model-types';
+import type { DOMHelper, Position } from 'roosterjs-content-model-types';
 
 class DOMHelperImpl implements DOMHelper {
     constructor(private contentDiv: HTMLElement) {}
 
     queryElements(selector: string): HTMLElement[] {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
+    }
+
+    getFocusedPosition(): Position | null {
+        return null;
     }
 }
 

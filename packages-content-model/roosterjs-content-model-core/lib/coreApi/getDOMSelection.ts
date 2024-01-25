@@ -27,6 +27,9 @@ function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {
         ? {
               type: 'range',
               range: range,
+              isReverted:
+                  selection?.focusNode == range.endContainer &&
+                  selection.focusOffset == range.endOffset,
           }
         : null;
 }
