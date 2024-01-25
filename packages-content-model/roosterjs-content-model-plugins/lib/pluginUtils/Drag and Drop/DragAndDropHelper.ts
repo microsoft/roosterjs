@@ -1,5 +1,5 @@
 import { Browser } from 'roosterjs-editor-dom';
-import type Disposable from './Disposable';
+import type Disposable from '../Disposable';
 import type DragAndDropHandler from './DragAndDropHandler';
 
 /**
