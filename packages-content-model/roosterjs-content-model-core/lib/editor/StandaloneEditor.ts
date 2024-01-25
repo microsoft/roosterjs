@@ -24,6 +24,7 @@ import type {
     StandaloneEditorCore,
     StandaloneEditorOptions,
     TrustedHTMLHandler,
+    Rect,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -390,6 +391,20 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler {
         return this.getCore().trustedHTMLHandler;
+    }
+
+    /**
+     * Get the scroll container of the editor
+     */
+    getScrollContainer(): HTMLElement {
+        return this.getCore().domEvent.scrollContainer;
+    }
+
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null {
+        return this.getCore().api.getVisibleViewport(this.getCore());
     }
 
     /**
