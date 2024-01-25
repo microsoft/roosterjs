@@ -1,4 +1,4 @@
-import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
+import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import { getFirstSelectedTable, normalizeTable } from 'roosterjs-content-model-core';
 import type { ContentModelTable, IStandaloneEditor, Rect } from 'roosterjs-content-model-types';

@@ -1,7 +1,7 @@
-import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
+import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import type { Rect } from 'roosterjs-content-model-types';
-import type DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
+import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type TableEditFeature from './TableEditorFeature';
 import type { CreateElementData } from 'roosterjs-editor-types';
 
