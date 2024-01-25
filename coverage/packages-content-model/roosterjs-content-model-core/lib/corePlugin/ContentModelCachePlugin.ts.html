@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.93% </span>
+                <span class="strong">88.52% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>51/58</span>
+                <span class='fraction'>54/61</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.36% </span>
+                <span class="strong">78.95% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>41/53</span>
+                <span class='fraction'>45/57</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.93% </span>
+                <span class="strong">88.52% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>51/58</span>
+                <span class='fraction'>54/61</span>
             </div>
         
             
@@ -225,7 +225,15 @@
 <a name='L166'></a><a href='#L166'>166</a>
 <a name='L167'></a><a href='#L167'>167</a>
 <a name='L168'></a><a href='#L168'>168</a>
-<a name='L169'></a><a href='#L169'>169</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -312,6 +320,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
@@ -341,15 +357,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">52x</span>
-<span class="cline-any cline-yes">16353x</span>
+<span class="cline-any cline-yes">13679x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-yes">29x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -480,6 +496,14 @@ class ContentModelCachePlugin implements PluginWithState&lt;ContentModelCachePlu
         }
 &nbsp;
         switch (event.eventType) {
+            case 'keyDown':
+            case 'input':
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.state.textMutationObserver) {
+                    // When updating cache is not enabled, need to clear the cache to make sure other plugins can get an up-to-date content model
+                    this.invalidateCache();
+                }
+                break;
+&nbsp;
             case 'selectionChanged':
                 this.updateCachedModel(this.editor);
                 break;
@@ -515,7 +539,7 @@ class ContentModelCachePlugin implements PluginWithState&lt;ContentModelCachePlu
     };
 &nbsp;
     private invalidateCache() {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>sInShadowEdit()) {
+        if (!this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>sInShadowEdit()) {
             this.state.cachedModel = undefined;
             this.state.cachedSelection = undefined;
         }
@@ -568,7 +592,7 @@ export function createContentModelCachePlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jan 24 2024 20:23:05 GMT+0000 (Coordinated Universal Time)
+                at Thu Jan 25 2024 18:10:04 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
