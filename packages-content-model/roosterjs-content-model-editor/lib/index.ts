@@ -4,8 +4,6 @@ export {
     SetContent,
     InsertNode,
     GetContent,
-    GetStyleBasedFormatState,
-    EnsureTypeInContainer,
 } from './publicTypes/ContentModelEditorCore';
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
 export { ContextMenuPluginState } from './publicTypes/ContextMenuPluginState';

@@ -2,7 +2,6 @@ import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
 import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import { getPendableFormatState } from './utils/getPendableFormatState';
 import {
     newEventToOldEvent,
     oldEventToNewEvent,
@@ -12,6 +11,7 @@ import {
     createModelFromHtml,
     isBold,
     redo,
+    retrieveModelFormatState,
     StandaloneEditor,
     transformColor,
     undo,
@@ -90,7 +90,12 @@ import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type { DOMEventRecord, Rect } from 'roosterjs-content-model-types';
+import type {
+    ContentModelFormatState,
+    DOMEventRecord,
+    DOMSelection,
+    Rect,
+} from 'roosterjs-content-model-types';
 
 /**
  * Editor for Content Model.
@@ -904,38 +909,53 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     }
 
     /**
+     * @deprecated
      * Get style based format state from current selection, including font name/size and colors
      */
     getStyleBasedFormatState(node?: Node): StyleBasedFormatState {
-        if (!node) {
-            const range = this.getSelectionRange();
-            node = (range && Position.getStart(range).normalize().node) ?? undefined;
-        }
-        const core = this.getContentModelEditorCore();
-        const innerCore = this.getCore();
+        const format = this.retrieveFormatState(node);
 
-        return core.api.getStyleBasedFormatState(core, innerCore, node ?? null);
+        return {
+            backgroundColor: format.backgroundColor,
+            direction: format.direction,
+            fontName: format.fontName,
+            fontSize: format.fontSize,
+            fontWeight: format.fontWeight,
+            lineHeight: format.lineHeight,
+            marginBottom: format.marginBottom,
+            marginTop: format.marginTop,
+            textAlign: format.textAlign,
+            textColor: format.textColor,
+        };
     }
 
     /**
+     * @deprecated
      * Get the pendable format such as underline and bold
-     * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+     * @param forceGetStateFromDOM @deprecated If set to true, will force get the format state from DOM tree.
      * @returns The pending format state
      */
     getPendableFormatState(forceGetStateFromDOM: boolean = false): PendableFormatState {
-        const core = this.getCore();
-        return getPendableFormatState(core);
+        const format = this.retrieveFormatState();
+
+        return {
+            isBold: format.isBold,
+            isItalic: format.isItalic,
+            isStrikeThrough: format.isStrikeThrough,
+            isSubscript: format.isSubscript,
+            isSuperscript: format.isSubscript,
+            isUnderline: format.isUnderline,
+        };
     }
 
     /**
+     * @deprecated
      * Ensure user will type into a container element rather than into the editor content DIV directly
      * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
      */
     ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
-        const core = this.getContentModelEditorCore();
-        const innerCore = this.getCore();
-        core.api.ensureTypeInContainer(core, innerCore, position, keyboardEvent);
+        // No OP
     }
 
     //#endregion
@@ -999,6 +1019,28 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     getDarkColorHandler(): DarkColorHandler {
         const core = this.getContentModelEditorCore();
         return core.darkColorHandler;
+    }
+
+    private retrieveFormatState(node?: Node): ContentModelFormatState {
+        const pendingFormat = this.getPendingFormat();
+        const result: ContentModelFormatState = {};
+        let selection: DOMSelection | undefined;
+
+        if (node) {
+            const range = this.getDocument().createRange();
+
+            range.selectNode(node);
+            selection = {
+                type: 'range',
+                range: range,
+            };
+        }
+
+        const model = this.createContentModel('reducedModel', selection);
+
+        retrieveModelFormatState(model, pendingFormat, result);
+
+        return result;
     }
 
     /**

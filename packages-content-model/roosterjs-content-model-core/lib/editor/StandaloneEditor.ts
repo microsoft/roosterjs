@@ -84,7 +84,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
     createContentModel(
-        option?: DomToModelOption,
+        option?: DomToModelOption | 'reducedModel',
         selectionOverride?: DOMSelection
     ): ContentModelDocument {
         const core = this.getCore();

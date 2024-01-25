@@ -1,4 +1,5 @@
 import { cloneModel } from '../publicApi/model/cloneModel';
+import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import {
     createDomToModelContext,
     createDomToModelContextWithConfig,
@@ -32,7 +33,13 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
                   editorContext,
                   core.domToModelSettings.builtIn,
                   core.domToModelSettings.customized,
-                  option
+                  option == 'reducedModel'
+                      ? {
+                            processorOverride: {
+                                child: reducedModelChildProcessor,
+                            },
+                        }
+                      : option
               )
             : createDomToModelContextWithConfig(core.domToModelSettings.calculated, editorContext);
 

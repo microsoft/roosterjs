@@ -32,7 +32,7 @@ export interface IStandaloneEditor {
      * @param selectionOverride When specified, use this selection to override existing selection inside editor
      */
     createContentModel(
-        option?: DomToModelOption,
+        option?: DomToModelOption | 'reducedModel',
         selectionOverride?: DOMSelection
     ): ContentModelDocument;
 

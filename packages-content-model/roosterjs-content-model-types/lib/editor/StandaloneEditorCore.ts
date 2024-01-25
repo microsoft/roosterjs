@@ -37,7 +37,7 @@ export type CreateEditorContext = (core: StandaloneEditorCore, saveIndex: boolea
  */
 export type CreateContentModel = (
     core: StandaloneEditorCore,
-    option?: DomToModelOption,
+    option?: DomToModelOption | 'reducedModel',
     selectionOverride?: DOMSelection
 ) => ContentModelDocument;
 

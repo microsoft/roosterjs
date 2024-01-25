@@ -1,11 +1,9 @@
+import { extractBorderValues } from '../../publicApi/domUtils/borderValues';
+import { getClosestAncestorBlockGroupIndex } from '../../publicApi/model/getClosestAncestorBlockGroupIndex';
+import { isBold } from '../../publicApi/model/isBold';
+import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
-import {
-    extractBorderValues,
-    getClosestAncestorBlockGroupIndex,
-    isBold,
-    iterateSelections,
-    updateTableMetadata,
-} from 'roosterjs-content-model-core';
+import { updateTableMetadata } from '../../metadata/updateTableMetadata';
 import type {
     ContentModelFormatState,
     ContentModelBlock,
@@ -21,6 +19,7 @@ import type {
 
 /**
  * @internal
+ * Retrieve current format from Content Model
  */
 export function retrieveModelFormatState(
     model: ContentModelDocument,
