@@ -1,4 +1,5 @@
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
+import { createDOMHelper } from './DOMHelperImpl';
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
 import {
@@ -49,6 +50,7 @@ export function createStandaloneEditorCore(
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),
+        domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
         zoomScale: (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1,

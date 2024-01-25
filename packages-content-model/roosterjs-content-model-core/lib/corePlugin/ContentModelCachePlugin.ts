@@ -85,6 +85,14 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
         }
 
         switch (event.eventType) {
+            case 'keyDown':
+            case 'input':
+                if (!this.state.textMutationObserver) {
+                    // When updating cache is not enabled, need to clear the cache to make sure other plugins can get an up-to-date content model
+                    this.invalidateCache();
+                }
+                break;
+
             case 'selectionChanged':
                 this.updateCachedModel(this.editor);
                 break;
