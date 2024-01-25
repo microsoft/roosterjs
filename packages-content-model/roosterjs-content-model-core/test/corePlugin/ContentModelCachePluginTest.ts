@@ -98,7 +98,10 @@ describe('ContentModelCachePlugin', () => {
                 } as any,
             });
 
-            expect(plugin.getState()).toEqual({});
+            expect(plugin.getState()).toEqual({
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
         });
 
         it('Other key without selection', () => {
@@ -109,7 +112,10 @@ describe('ContentModelCachePlugin', () => {
                 } as any,
             });
 
-            expect(plugin.getState()).toEqual({});
+            expect(plugin.getState()).toEqual({
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
         });
 
         it('Other key with collapsed selection', () => {
@@ -127,7 +133,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedSelection: { type: 'range', range: { collapsed: true } as any },
+                cachedModel: undefined,
+                cachedSelection: undefined,
             });
         });
 
@@ -146,10 +153,8 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedSelection: {
-                    type: 'range',
-                    range: { collapsed: false } as any,
-                },
+                cachedModel: undefined,
+                cachedSelection: undefined,
             });
         });
 
@@ -178,8 +183,6 @@ describe('ContentModelCachePlugin', () => {
 
         it('No cached range, no cached model', () => {
             const state = plugin.getState();
-            state.cachedModel = undefined;
-            state.cachedSelection = undefined;
 
             const selection = 'MockedRange' as any;
             getDOMSelectionSpy.and.returnValue(selection);

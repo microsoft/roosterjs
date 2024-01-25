@@ -14,6 +14,9 @@ import type { CreateContentModel } from 'roosterjs-content-model-types';
  * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
+    // Flush all mutations if any, so that we can get an up-to-date Content Model
+    core.cache.textMutationObserver?.flushMutations();
+
     let cachedModel = selectionOverride ? null : core.cache.cachedModel;
 
     if (cachedModel && core.lifecycle.shadowEditFragment) {

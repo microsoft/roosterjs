@@ -24,16 +24,21 @@ class TextMutationObserverImpl implements TextMutationObserver {
     }
 
     flushMutations() {
-        this.observer.takeRecords();
+        const mutations = this.observer.takeRecords();
+
+        this.onMutationInternal(mutations);
     }
 
     private onMutationInternal = (mutations: MutationRecord[]) => {
         const firstTarget = mutations[0]?.target;
-        const isTextChangeOnly = mutations.every(
-            mutation => mutation.type == 'characterData' && mutation.target == firstTarget
-        );
 
-        this.onMutation(isTextChangeOnly);
+        if (firstTarget) {
+            const isTextChangeOnly = mutations.every(
+                mutation => mutation.type == 'characterData' && mutation.target == firstTarget
+            );
+
+            this.onMutation(isTextChangeOnly);
+        }
     };
 }
 
