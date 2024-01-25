@@ -368,6 +368,31 @@ describe('StandaloneEditor', () => {
         expect(() => editor.takeSnapshot()).toThrow();
     });
 
+    it('getDOMHelper', () => {
+        const div = document.createElement('div');
+        const mockedDOMHelper = 'DOMHELPER' as any;
+        const resetSpy = jasmine.createSpy('reset');
+        const mockedCore = {
+            plugins: [],
+            domHelper: mockedDOMHelper,
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new StandaloneEditor(div);
+        const domHelper = editor.getDOMHelper();
+
+        expect(domHelper).toBe(mockedDOMHelper);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.takeSnapshot()).toThrow();
+    });
+
     it('restoreSnapshot', () => {
         const div = document.createElement('div');
         const mockedSnapshot = 'SNAPSHOT' as any;

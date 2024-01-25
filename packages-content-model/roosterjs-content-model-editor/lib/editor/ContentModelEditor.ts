@@ -955,12 +955,14 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     ) {
         const core = this.getCore();
 
-        transformColor(
-            node,
-            true /*includeSelf*/,
-            direction == ColorTransformDirection.DarkToLight ? 'darkToLight' : 'lightToDark',
-            core.darkColorHandler
-        );
+        if (core.lifecycle.isDarkMode) {
+            transformColor(
+                node,
+                true /*includeSelf*/,
+                direction == ColorTransformDirection.DarkToLight ? 'darkToLight' : 'lightToDark',
+                core.darkColorHandler
+            );
+        }
     }
 
     /**
