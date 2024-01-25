@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.37% </span>
+                <span class="strong">97.56% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>37/38</span>
+                <span class='fraction'>40/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.66% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>26/29</span>
+                <span class='fraction'>27/30</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.06% </span>
+                <span class="strong">97.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/34</span>
+                <span class='fraction'>36/37</span>
             </div>
         
             
@@ -130,7 +130,16 @@
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -139,18 +148,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">211x</span>
+<span class="cline-any cline-yes">219x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">315x</span>
+<span class="cline-any cline-yes">331x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">188x</span>
-<span class="cline-any cline-yes">188x</span>
+<span class="cline-any cline-yes">196x</span>
+<span class="cline-any cline-yes">196x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">188x</span>
-<span class="cline-any cline-yes">153x</span>
-<span class="cline-any cline-yes">153x</span>
+<span class="cline-any cline-yes">196x</span>
+<span class="cline-any cline-yes">161x</span>
+<span class="cline-any cline-yes">161x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">153x</span>
+<span class="cline-any cline-yes">161x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-yes">66x</span>
@@ -168,16 +177,19 @@
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">188x</span>
+<span class="cline-any cline-yes">196x</span>
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">188x</span>
+<span class="cline-any cline-yes">196x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,6 +216,9 @@
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
+&nbsp;
+// According to https://developer.mozilla.org/en-US/docs/Glossary/CSS_pixel, 1in = 96px
+const PixelPerInch = 96;
 &nbsp;
 /**
  * Parse unit value with its unit
@@ -239,6 +254,9 @@ export function parseValueWithUnit(
                 break;
             case '%':
                 result = (getFontSize(currentSizePxOrElement) * num) / 100;
+                break;
+            case 'in':
+                result = num * PixelPerInch;
                 break;
             default:
                 // TODO: Support more unit if need
@@ -283,7 +301,7 @@ function pxToPt(px: number) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jan 25 2024 21:07:39 GMT+0000 (Coordinated Universal Time)
+                at Thu Jan 25 2024 22:05:46 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
