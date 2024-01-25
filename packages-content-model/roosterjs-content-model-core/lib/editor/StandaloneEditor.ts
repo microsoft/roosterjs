@@ -8,6 +8,7 @@ import type {
     ContentModelSegmentFormat,
     DarkColorHandler,
     DOMEventRecord,
+    DOMHelper,
     DOMSelection,
     DomToModelOption,
     EditorEnvironment,
@@ -156,6 +157,13 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     getPendingFormat(): ContentModelSegmentFormat | null {
         return this.getCore().format.pendingFormat?.format ?? null;
+    }
+
+    /**
+     * Get a DOM Helper object to help access DOM tree in editor
+     */
+    getDOMHelper(): DOMHelper {
+        return this.getCore().domHelper;
     }
 
     /**
