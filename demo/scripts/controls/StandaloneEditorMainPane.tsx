@@ -22,6 +22,7 @@ import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import {
     ContentModelAutoFormatPlugin,
     ContentModelEditPlugin,
+    TableEditPlugin,
 } from 'roosterjs-content-model-plugins';
 import {
     ContentModelSegmentFormat,
@@ -101,6 +102,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentAutoFormatPlugin: ContentModelAutoFormatPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
+    private tableEditPlugin: TableEditPlugin;
     private snapshots: Snapshots<Snapshot>;
 
     constructor(props: {}) {
@@ -124,6 +126,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.contentAutoFormatPlugin = new ContentModelAutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
+        this.tableEditPlugin = new TableEditPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -215,6 +218,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             plugins={[
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
+                                this.tableEditPlugin,
                                 this.contentModelEditPlugin,
                                 this.contentAutoFormatPlugin,
                             ]}

@@ -201,12 +201,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             this.sampleEntityPlugin,
         ];
 
-        for (let i = 0; i < plugins.length; i++) {
-            if (plugins[i]?.getName() == 'TableResize') {
-                plugins.splice(i, 1);
-            }
-        }
-
         if (this.state.showSidePane || this.state.popoutWindow) {
             arrayPush(plugins, this.getSidePanePlugins());
         }
