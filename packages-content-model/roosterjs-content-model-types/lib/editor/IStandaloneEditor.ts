@@ -1,4 +1,4 @@
-import type { PluginEvent } from 'roosterjs-editor-types';
+import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
 import type { PluginEventType } from '../event/PluginEventType';
 import type { PasteType } from '../enum/PasteType';
@@ -90,6 +90,11 @@ export interface IStandaloneEditor {
      * @returns True if editor is disposed, otherwise false
      */
     isDisposed(): boolean;
+
+    /**
+     * Get a DOM Helper object to help access DOM tree in editor
+     */
+    getDOMHelper(): DOMHelper;
 
     /**
      * Get document which contains this editor
