@@ -5,7 +5,6 @@ import { createEditorCore } from '../../lib/editor/createEditorCore';
 describe('createEditorCore', () => {
     const mockedSizeTransformer = 'TRANSFORMER' as any;
     const mockedEditPluginState = 'EDITSTATE' as any;
-    const mockedContextMenuPluginState = 'CONTEXTMENUSTATE' as any;
     const mockedInnerHandler = 'INNER' as any;
     const mockedDarkHandler = 'DARK' as any;
 
@@ -18,7 +17,6 @@ describe('createEditorCore', () => {
             {},
             {
                 edit: mockedEditPluginState,
-                contextMenu: mockedContextMenuPluginState,
             },
             mockedInnerHandler,
             mockedSizeTransformer
@@ -30,7 +28,6 @@ describe('createEditorCore', () => {
             customData: {},
             experimentalFeatures: [],
             edit: mockedEditPluginState,
-            contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
             darkColorHandler: mockedDarkHandler,
         });
@@ -53,7 +50,6 @@ describe('createEditorCore', () => {
             },
             {
                 edit: mockedEditPluginState,
-                contextMenu: mockedContextMenuPluginState,
             },
             mockedInnerHandler,
             mockedSizeTransformer
@@ -65,7 +61,6 @@ describe('createEditorCore', () => {
             customData: {},
             experimentalFeatures: mockedFeatures,
             edit: mockedEditPluginState,
-            contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
             darkColorHandler: mockedDarkHandler,
         });

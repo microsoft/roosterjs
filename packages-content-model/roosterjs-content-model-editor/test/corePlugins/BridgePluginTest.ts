@@ -1,4 +1,3 @@
-import * as ContextMenuPlugin from '../../lib/corePlugins/ContextMenuPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as eventConverter from '../../lib/editor/utils/eventConverter';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
@@ -14,9 +13,6 @@ describe('BridgePlugin', () => {
         } as any;
     }
     beforeEach(() => {
-        spyOn(ContextMenuPlugin, 'createContextMenuPlugin').and.returnValue(
-            createMockedPlugin('contextMenu')
-        );
         spyOn(EditPlugin, 'createEditPlugin').and.returnValue(createMockedPlugin('edit'));
         spyOn(NormalizeTablePlugin, 'createNormalizeTablePlugin').and.returnValue(
             createMockedPlugin('normalizeTable')
@@ -54,7 +50,6 @@ describe('BridgePlugin', () => {
 
         expect(plugin.getCorePluginState()).toEqual({
             edit: 'edit',
-            contextMenu: 'contextMenu',
         } as any);
 
         plugin.setOuterEditor(mockedEditor);

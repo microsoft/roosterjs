@@ -1,41 +1,38 @@
-import { ContextMenuPluginState } from '../../lib/publicTypes/ContextMenuPluginState';
-import { createContextMenuPlugin } from '../../lib/corePlugins/ContextMenuPlugin';
-import { IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { createContextMenuPlugin } from '../../lib/corePlugin/ContextMenuPlugin';
+import {
+    ContextMenuPluginState,
+    DOMEventRecord,
+    IStandaloneEditor,
+    PluginWithState,
+} from 'roosterjs-content-model-types';
 
 describe('ContextMenu handle other event', () => {
     let plugin: PluginWithState<ContextMenuPluginState>;
     let addEventListener: jasmine.Spy;
     let removeEventListener: jasmine.Spy;
-    let triggerPluginEvent: jasmine.Spy;
     let eventMap: Record<string, any>;
     let getElementAtCursorSpy: jasmine.Spy;
-    let triggerContentChangedEventSpy: jasmine.Spy;
-    let editor: IEditor & IStandaloneEditor;
+    let triggerEventSpy: jasmine.Spy;
+    let editor: IStandaloneEditor;
 
     beforeEach(() => {
         addEventListener = jasmine.createSpy('addEventListener');
         removeEventListener = jasmine.createSpy('.removeEventListener');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
-        triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEvent');
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
 
-        editor = <IEditor & IStandaloneEditor>(<any>{
+        editor = <IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
             }),
-            triggerPluginEvent,
             getEnvironment: () => ({}),
-            addDomEventHandler: (name: string, handler: Function) => {
-                eventMap = {
-                    [name]: {
-                        beforeDispatch: handler,
-                    },
-                };
+            getDOMSelection: () => ({} as any),
+            attachDomEvent: (handlers: Record<string, DOMEventRecord>) => {
+                eventMap = handlers;
             },
             getElementAtCursor: getElementAtCursorSpy,
-            triggerContentChangedEvent: triggerContentChangedEventSpy,
+            triggerEvent: triggerEventSpy,
         });
     });
 
@@ -50,7 +47,7 @@ describe('ContextMenu handle other event', () => {
         } as any;
 
         plugin = createContextMenuPlugin({
-            legacyPlugins: [mockedPlugin1, mockedPlugin2],
+            plugins: [mockedPlugin1, mockedPlugin2],
         });
         plugin.initialize(editor);
 
@@ -65,7 +62,6 @@ describe('ContextMenu handle other event', () => {
         plugin = createContextMenuPlugin({});
         plugin.initialize(editor);
 
-        editor.getContentSearcherOfCursor = () => null!;
         const state = plugin.getState();
         const mockedItems1 = ['Item1', 'Item2'];
         const mockedItems2 = ['Item3', 'Item4'];
@@ -80,12 +76,13 @@ describe('ContextMenu handle other event', () => {
         ];
 
         const mockedEvent = {
+            button: 2,
             target: {},
         };
 
         eventMap.contextmenu.beforeDispatch(mockedEvent);
 
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContextMenu, {
+        expect(triggerEventSpy).toHaveBeenCalledWith('contextMenu', {
             rawEvent: mockedEvent,
             items: ['Item1', 'Item2', null, 'Item3', 'Item4'],
         });

@@ -1,3 +1,4 @@
+import type { ContextMenuPluginState } from '../pluginState/ContextMenuPluginState';
 import type { PluginWithState } from './PluginWithState';
 import type { CopyPastePluginState } from '../pluginState/CopyPastePluginState';
 import type { UndoPluginState } from '../pluginState/UndoPluginState';
@@ -46,6 +47,11 @@ export interface StandaloneEditorCorePlugins {
      * Undo plugin provides the ability to undo/redo
      */
     readonly undo: PluginWithState<UndoPluginState>;
+
+    /**
+     * Undo plugin provides the ability get context menu items and trigger ContextMenu event
+     */
+    readonly contextMenu: PluginWithState<ContextMenuPluginState>;
 
     /**
      * Lifecycle plugin handles editor initialization and disposing

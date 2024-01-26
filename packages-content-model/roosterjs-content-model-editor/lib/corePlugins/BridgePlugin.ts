@@ -1,4 +1,3 @@
-import { createContextMenuPlugin } from './ContextMenuPlugin';
 import { createEditPlugin } from './EditPlugin';
 import { createEntityDelimiterPlugin } from './EntityDelimiterPlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
@@ -12,8 +11,9 @@ import type {
 import type {
     EditorPlugin as LegacyEditorPlugin,
     PluginEvent as LegacyPluginEvent,
+    ContextMenuProvider as LegacyContextMenuProvider,
 } from 'roosterjs-editor-types';
-import type { EditorPlugin, PluginEvent } from 'roosterjs-content-model-types';
+import type { ContextMenuProvider, PluginEvent } from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 
@@ -21,15 +21,15 @@ const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
  * @internal
  * Act as a bridge between Standalone editor and Content Model editor, translate Standalone editor event type to legacy event type
  */
-export class BridgePlugin implements EditorPlugin {
+export class BridgePlugin implements ContextMenuProvider<any> {
     private legacyPlugins: LegacyEditorPlugin[];
     private corePluginState: ContentModelCorePluginState;
     private outerEditor: IContentModelEditor | null = null;
     private checkExclusivelyHandling: boolean;
+    private contextMenuProviders: LegacyContextMenuProvider<any>[];
 
     constructor(options: ContentModelEditorOptions) {
         const editPlugin = createEditPlugin();
-        const contextMenuPlugin = createContextMenuPlugin(options);
         const normalizeTablePlugin = createNormalizeTablePlugin();
         const entityDelimiterPlugin = createEntityDelimiterPlugin();
 
@@ -37,12 +37,11 @@ export class BridgePlugin implements EditorPlugin {
             editPlugin,
             ...(options.legacyPlugins ?? []).filter(x => !!x),
             entityDelimiterPlugin,
-            contextMenuPlugin,
             normalizeTablePlugin,
         ];
+        this.contextMenuProviders = this.legacyPlugins.filter(isContextMenuProvider);
         this.corePluginState = {
             edit: editPlugin.getState(),
-            contextMenu: contextMenuPlugin.getState(),
         };
         this.checkExclusivelyHandling = this.legacyPlugins.some(
             plugin => plugin.willHandleEventExclusively
@@ -137,4 +136,27 @@ export class BridgePlugin implements EditorPlugin {
             Object.assign(event, oldEventToNewEvent(oldEvent, event));
         }
     }
+
+    getContextMenuItems(target: Node): any[] {
+        const allItems: any[] = [];
+
+        this.contextMenuProviders.forEach(provider => {
+            const items = provider.getContextMenuItems(target) ?? [];
+            if (items?.length > 0) {
+                if (allItems.length > 0) {
+                    allItems.push(null);
+                }
+
+                allItems.push(...items);
+            }
+        });
+
+        return allItems;
+    }
+}
+
+function isContextMenuProvider(
+    source: LegacyEditorPlugin
+): source is LegacyContextMenuProvider<any> {
+    return !!(<LegacyContextMenuProvider<any>>source)?.getContextMenuItems;
 }
