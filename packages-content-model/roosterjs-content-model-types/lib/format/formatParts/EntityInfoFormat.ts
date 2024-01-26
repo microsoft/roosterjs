@@ -16,9 +16,4 @@ export type EntityInfoFormat = {
      * Type of this entity
      */
     entityType?: string;
-
-    /**
-     * Whether this entity is a block entity
-     */
-    isBlock?: boolean;
 };

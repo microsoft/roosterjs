@@ -25,7 +25,6 @@ export function createEntity(
             id,
             entityType: type,
             isReadonly,
-            ...(isBlock ? { isBlock } : {}),
         },
 
         wrapper,

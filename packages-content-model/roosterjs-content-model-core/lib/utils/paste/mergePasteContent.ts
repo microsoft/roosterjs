@@ -5,6 +5,7 @@ import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcesso
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
+import { pasteBlockEntityParser } from '../../override/pasteCopyBlockEntityParser';
 import { pasteDisplayFormatParser } from '../../override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../../override/pasteTextProcessor';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
@@ -55,6 +56,7 @@ export function mergePasteContent(
             },
             additionalFormatParsers: {
                 container: [containerSizeFormatParser],
+                entity: [pasteBlockEntityParser],
             },
         },
         domToModelOption

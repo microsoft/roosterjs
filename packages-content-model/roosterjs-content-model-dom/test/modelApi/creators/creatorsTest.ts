@@ -534,28 +534,6 @@ describe('Creators', () => {
         });
     });
 
-    it('createEntity, block entity', () => {
-        const id = 'entity_1';
-        const entityType = 'entity';
-        const isReadonly = true;
-        const isBlock = true;
-        const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id, isBlock);
-
-        expect(entityModel).toEqual({
-            blockType: 'Entity',
-            segmentType: 'Entity',
-            format: {},
-            entityFormat: {
-                id,
-                entityType,
-                isReadonly,
-                isBlock,
-            },
-            wrapper,
-        });
-    });
-
     it('createEntity with format', () => {
         const id = 'entity_1';
         const entityType = 'entity';
