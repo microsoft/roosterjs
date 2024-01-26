@@ -10,12 +10,55 @@ import { pasteDisplayFormatParser } from '../../../lib/override/pasteDisplayForm
 import { pasteTextProcessor } from '../../../lib/override/pasteTextProcessor';
 import {
     ContentModelDocument,
+    ContentModelFormatter,
     ContentModelSegmentFormat,
     FormatWithContentModelContext,
+    FormatWithContentModelOptions,
     InsertPoint,
+    StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
+    let formatResult: boolean | undefined;
+    let context: FormatWithContentModelContext | undefined;
+    let formatContentModel: jasmine.Spy;
+    let sourceModel: ContentModelDocument;
+    let core: StandaloneEditorCore;
+    const mockedClipboard = 'CLIPBOARD' as any;
+
+    beforeEach(() => {
+        formatResult = undefined;
+        context = undefined;
+
+        formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake(
+                (
+                    core: any,
+                    callback: ContentModelFormatter,
+                    options: FormatWithContentModelOptions
+                ) => {
+                    context = {
+                        newEntities: [],
+                        deletedEntities: [],
+                        newImages: [],
+                    };
+                    formatResult = callback(sourceModel, context);
+
+                    const changedData = options.getChangeData!();
+
+                    expect(changedData).toBe(mockedClipboard);
+                }
+            );
+
+        core = {
+            api: {
+                formatContentModel,
+            },
+            domToModelSettings: {},
+        } as any;
+    });
+
     it('merge table', () => {
         // A doc with only one table in content
         const pasteModel: ContentModelDocument = {
@@ -63,7 +106,7 @@ describe('mergePasteContent', () => {
         };
 
         // A doc with a table, and selection marker inside of it.
-        const sourceModel: ContentModelDocument = {
+        sourceModel = {
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -122,14 +165,10 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
         } as any;
 
-        const context: FormatWithContentModelContext = {
-            newEntities: [],
-            deletedEntities: [],
-            newImages: [],
-        };
+        mergePasteContent(core, eventResult, mockedClipboard);
 
-        mergePasteContent(sourceModel, context, eventResult, {});
-
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(sourceModel, pasteModel, context, {
             mergeFormat: 'none',
             mergeTable: true,
@@ -217,7 +256,8 @@ describe('mergePasteContent', () => {
 
     it('customized merge', () => {
         const pasteModel: ContentModelDocument = createContentModelDocument();
-        const sourceModel: ContentModelDocument = createContentModelDocument();
+
+        sourceModel = createContentModelDocument();
 
         const customizedMerge = jasmine.createSpy('customizedMerge');
 
@@ -230,20 +270,18 @@ describe('mergePasteContent', () => {
             customizedMerge,
         } as any;
 
-        mergePasteContent(
-            sourceModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            eventResult,
-            {}
-        );
+        mergePasteContent(core, eventResult, mockedClipboard);
 
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
         expect(mergeModelFile.mergeModel).not.toHaveBeenCalled();
         expect(customizedMerge).toHaveBeenCalledWith(sourceModel, pasteModel);
     });
 
     it('Apply current format', () => {
         const pasteModel: ContentModelDocument = createContentModelDocument();
-        const sourceModel: ContentModelDocument = createContentModelDocument();
+
+        sourceModel = createContentModelDocument();
 
         spyOn(mergeModelFile, 'mergeModel').and.callThrough();
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
@@ -253,13 +291,10 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
         } as any;
 
-        mergePasteContent(
-            sourceModel,
-            { newEntities: [], deletedEntities: [], newImages: [] },
-            eventResult,
-            {}
-        );
+        mergePasteContent(core, eventResult, mockedClipboard);
 
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
@@ -276,7 +311,8 @@ describe('mergePasteContent', () => {
             blockGroupType: 'Document',
             blocks: [],
         };
-        const targetModel: ContentModelDocument = {
+
+        sourceModel = {
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -335,25 +371,25 @@ describe('mergePasteContent', () => {
             'createDomToModelContext'
         ).and.returnValue(mockedDomToModelContext);
 
-        const context: FormatWithContentModelContext = {
-            deletedEntities: [],
-            newEntities: [],
-            newImages: [],
-        };
         const mockedDomToModelOptions = 'OPTION1' as any;
         const mockedDefaultDomToModelOptions = 'OPTIONS3' as any;
         const mockedFragment = 'FRAGMENT' as any;
 
+        (core as any).domToModelSettings = {
+            customized: mockedDomToModelOptions,
+        };
+
         mergePasteContent(
-            targetModel,
-            context,
+            core,
             {
                 fragment: mockedFragment,
                 domToModelOption: mockedDefaultDomToModelOptions,
             } as any,
-            mockedDomToModelOptions
+            mockedClipboard
         );
 
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
         expect(context).toEqual({
             deletedEntities: [],
             newEntities: [],
@@ -373,7 +409,7 @@ describe('mergePasteContent', () => {
             },
         });
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedFragment, mockedDomToModelContext);
-        expect(mergeModelSpy).toHaveBeenCalledWith(targetModel, pasteModel, context, {
+        expect(mergeModelSpy).toHaveBeenCalledWith(sourceModel, pasteModel, context, {
             mergeFormat: 'none',
             mergeTable: false,
         });
@@ -398,5 +434,48 @@ describe('mergePasteContent', () => {
             mockedDefaultDomToModelOptions
         );
         expect(mockedDomToModelContext.segmentFormat).toEqual({ lineHeight: '1pt' });
+    });
+
+    it('Preserve segment format after paste', () => {
+        const pasteModel: ContentModelDocument = createContentModelDocument();
+        const mockedFormat = {
+            fontFamily: 'Arial',
+        };
+        sourceModel = createContentModelDocument();
+
+        spyOn(mergeModelFile, 'mergeModel').and.returnValue({
+            marker: {
+                format: mockedFormat,
+            },
+        } as any);
+        spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
+
+        const eventResult = {
+            pasteType: 'normal',
+            domToModelOption: { additionalAllowedTags: [] },
+        } as any;
+
+        mergePasteContent(core, eventResult, mockedClipboard);
+
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
+        expect(context).toEqual({
+            newEntities: [],
+            newImages: [],
+            deletedEntities: [],
+            newPendingFormat: {
+                backgroundColor: '',
+                fontFamily: 'Arial',
+                fontSize: '',
+                fontWeight: '',
+                italic: false,
+                letterSpacing: '',
+                lineHeight: '',
+                strikethrough: false,
+                superOrSubScriptSequence: '',
+                textColor: '',
+                underline: false,
+            },
+        });
     });
 });
