@@ -97,6 +97,7 @@ describe('setDOMSelection', () => {
             runTest({
                 type: 'range',
                 range: {} as any,
+                isReverted: false,
             });
         });
 

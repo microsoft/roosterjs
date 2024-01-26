@@ -23,6 +23,10 @@ function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {
     const selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
     const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
 
+    console.log(
+        selection?.focusNode == range?.endContainer && selection?.focusOffset == range?.endOffset
+    );
+
     return range && core.contentDiv.contains(range.commonAncestorContainer)
         ? {
               type: 'range',

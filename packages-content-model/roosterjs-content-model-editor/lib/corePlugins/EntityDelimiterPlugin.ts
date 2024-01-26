@@ -91,7 +91,7 @@ class EntityDelimiterPlugin implements EditorPlugin {
     }
 }
 
-function preventTypeInDelimiter(delimiter: HTMLElement, editor?: IStandaloneEditor) {
+function preventTypeInDelimiter(editor?: IStandaloneEditor) {
     if (editor) {
         editor.formatContentModel(model => {
             iterateSelections(model, (_path, _, block, _segments) => {
@@ -185,19 +185,17 @@ function handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
             return;
         }
 
-        const refNode = element == node ? element.childNodes.item(selection.focusOffset) : element;
-
         let delimiter = editor.getDOMHelper().getFocusedPosition()?.container;
         if (!isNodeOfType(delimiter, 'ELEMENT_NODE')) {
-            delimiter = delimiter?.parentElement;
+            delimiter = delimiter?.parentElement ?? undefined;
         }
-        if (!delimiter) {
+        if (!delimiter || !isNodeOfType(delimiter, 'ELEMENT_NODE')) {
             return;
         }
 
         if (delimiter.firstChild?.nodeType == Node.TEXT_NODE || rawEvent.key === 'Enter') {
             removeDelimiterAttr(delimiter, false);
-            requestAnimationFrame(editor, () => preventTypeInDelimiter(delimiter, editor));
+            requestAnimationFrame(editor, () => preventTypeInDelimiter(editor));
         }
     }
 }
