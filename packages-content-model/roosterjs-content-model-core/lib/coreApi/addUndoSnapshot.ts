@@ -15,13 +15,15 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
     let snapshot: Snapshot | null = null;
 
     if (!lifecycle.shadowEditFragment) {
-        const selection = api.getDOMSelection(core);
+        // Need to create snapshot selection before retrieve innerHTML since HTML can be changed during creating selection when normalize table
+        const selection = createSnapshotSelection(core, api.getDOMSelection(core));
+        const html = contentDiv.innerHTML;
 
         snapshot = {
-            html: contentDiv.innerHTML,
+            html,
             entityStates,
             isDarkMode: !!lifecycle.isDarkMode,
-            selection: createSnapshotSelection(contentDiv, selection),
+            selection,
         };
 
         undo.snapshotsManager.addSnapshot(snapshot, !!canUndoByBackspace);
