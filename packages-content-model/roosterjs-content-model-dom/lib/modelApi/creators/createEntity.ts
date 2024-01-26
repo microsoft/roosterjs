@@ -7,7 +7,6 @@ import type { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-co
  * @param segmentFormat @optional Segment format of this entity
  * @param type @optional Type of this entity
  * @param id @optional Id of this entity
- * @param isBlock @optional Whether the entity will be a block
  */
 export function createEntity(
     wrapper: HTMLElement,
