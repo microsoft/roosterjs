@@ -72,8 +72,7 @@ export default function insertEntity(
         true /*isReadonly*/,
         undefined /*format*/,
         type,
-        undefined /*id*/,
-        isBlock
+        undefined /*id*/
     );
 
     editor.formatContentModel(
