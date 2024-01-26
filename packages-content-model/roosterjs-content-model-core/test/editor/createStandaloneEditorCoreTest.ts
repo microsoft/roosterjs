@@ -1,6 +1,7 @@
 import * as createDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
 import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
 import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
+import * as DOMHelperImpl from '../../lib/editor/DOMHelperImpl';
 import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
 import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 import {
@@ -37,6 +38,7 @@ describe('createEditorCore', () => {
     const mockedDarkColorHandler = 'DARKCOLOR' as any;
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
     const mockedModelToDomSettings = 'MODELTODOM' as any;
+    const mockedDOMHelper = 'DOMHELPER' as any;
 
     beforeEach(() => {
         spyOn(
@@ -52,6 +54,7 @@ describe('createEditorCore', () => {
         spyOn(createDefaultSettings, 'createModelToDomSettings').and.returnValue(
             mockedModelToDomSettings
         );
+        spyOn(DOMHelperImpl, 'createDOMHelper').and.returnValue(mockedDOMHelper);
     });
 
     function runTest(
@@ -92,6 +95,7 @@ describe('createEditorCore', () => {
             entity: 'entity' as any,
             selection: 'selection' as any,
             undo: 'undo' as any,
+            domHelper: mockedDOMHelper,
             disposeErrorHandler: undefined,
             zoomScale: 1,
             ...additionalResult,

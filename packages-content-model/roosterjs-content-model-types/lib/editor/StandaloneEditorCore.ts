@@ -1,3 +1,4 @@
+import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from '../pluginState/PluginState';
 import type { EditorPlugin } from './EditorPlugin';
@@ -339,6 +340,11 @@ export interface StandaloneEditorCore extends PluginState {
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
+
+    /**
+     * A helper class to provide DOM access APIs
+     */
+    readonly domHelper: DOMHelper;
 
     /**
      * A callback to be invoked when any exception is thrown during disposing editor
