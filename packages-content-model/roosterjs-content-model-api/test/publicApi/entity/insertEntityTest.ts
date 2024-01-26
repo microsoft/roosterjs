@@ -110,6 +110,101 @@ describe('insertEntity', () => {
             wrapper: wrapper,
         });
     });
+    it('block inline entity to root', () => {
+        const entity = insertEntity(editor, type, true, 'root');
+
+        expect(createElementSpy).toHaveBeenCalledWith('span');
+        expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
+        expect(appendChildSpy).not.toHaveBeenCalled();
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
+            ChangeSource.InsertEntity
+        );
+        expect(insertEntityModelSpy).toHaveBeenCalledWith(
+            model,
+            {
+                segmentType: 'Entity',
+                blockType: 'Entity',
+                format: {},
+                entityFormat: {
+                    id: undefined,
+                    entityType: type,
+                    isReadonly: true,
+                },
+                wrapper: wrapper,
+            },
+            'root',
+            true,
+            undefined,
+            context
+        );
+        expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
+        expect(normalizeContentModelSpy).toHaveBeenCalled();
+
+        expect(entity).toEqual({
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            entityFormat: {
+                id: undefined,
+                entityType: type,
+                isReadonly: true,
+            },
+            wrapper: wrapper,
+        });
+    });
+
+    it('block inline entity with more options', () => {
+        const range = { range: 'RangeEx' } as any;
+        const contentNode = 'ContentNode' as any;
+        const entity = insertEntity(editor, type, true, range, {
+            contentNode: contentNode,
+            focusAfterEntity: true,
+            skipUndoSnapshot: true,
+            wrapperDisplay: 'none',
+        });
+
+        expect(createElementSpy).toHaveBeenCalledWith('span');
+        expect(setPropertySpy).toHaveBeenCalledWith('display', 'none');
+        expect(appendChildSpy).toHaveBeenCalledWith(contentNode);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
+            ChangeSource.InsertEntity
+        );
+
+        expect(insertEntityModelSpy).toHaveBeenCalledWith(
+            model,
+            {
+                segmentType: 'Entity',
+                blockType: 'Entity',
+                format: {},
+                entityFormat: {
+                    id: undefined,
+                    entityType: type,
+                    isReadonly: true,
+                },
+                wrapper: wrapper,
+            },
+            'focus',
+            true,
+            true,
+            context
+        );
+        expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
+        expect(normalizeContentModelSpy).toHaveBeenCalled();
+
+        expect(entity).toEqual({
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            entityFormat: {
+                id: undefined,
+                entityType: type,
+                isReadonly: true,
+            },
+            wrapper: wrapper,
+        });
+    });
 
     it('In dark mode', () => {
         isDarkModeSpy.and.returnValue(true);

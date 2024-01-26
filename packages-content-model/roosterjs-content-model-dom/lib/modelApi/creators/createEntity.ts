@@ -14,8 +14,7 @@ export function createEntity(
     isReadonly: boolean = true,
     segmentFormat?: ContentModelSegmentFormat,
     type?: string,
-    id?: string,
-    isBlock?: boolean
+    id?: string
 ): ContentModelEntity {
     return {
         segmentType: 'Entity',
@@ -26,7 +25,6 @@ export function createEntity(
             entityType: type,
             isReadonly,
         },
-
         wrapper,
     };
 }

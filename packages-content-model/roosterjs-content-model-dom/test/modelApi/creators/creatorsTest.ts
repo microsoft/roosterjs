@@ -517,9 +517,8 @@ describe('Creators', () => {
         const id = 'entity_1';
         const entityType = 'entity';
         const isReadonly = true;
-        const isBlock = false;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id, isBlock);
+        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
