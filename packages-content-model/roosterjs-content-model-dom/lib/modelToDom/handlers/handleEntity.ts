@@ -14,7 +14,7 @@ import type {
  * @internal
  */
 export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
-    doc,
+    _,
     parent,
     entityModel,
     context,
@@ -26,10 +26,6 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
 
     refNode = reuseCachedElement(parent, wrapper, refNode);
     context.onNodeCreated?.(entityModel, wrapper);
-
-    if (context.addDelimiterForEntity && entityFormat.isReadonly) {
-        addDelimiterForEntity(doc, wrapper, context);
-    }
 
     return refNode;
 };

@@ -6,7 +6,6 @@ import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
 const ENTITY_INFO_NAME = '_Entity';
 const ENTITY_TYPE_PREFIX = '_EType_';
 const ENTITY_ID_PREFIX = '_EId_';
-const ENTITY_IS_BLOCK = '_EBlock';
 const ENTITY_READONLY_PREFIX = '_EReadonly_';
 const ZERO_WIDTH_SPACE = '\u200B';
 const DELIMITER_BEFORE = 'entityDelimiterBefore';
@@ -45,8 +44,6 @@ export function parseEntityClassName(
         format.id = className.substring(ENTITY_ID_PREFIX.length);
     } else if (className.indexOf(ENTITY_READONLY_PREFIX) == 0) {
         format.isReadonly = className.substring(ENTITY_READONLY_PREFIX.length) == '1';
-    } else if (className == ENTITY_IS_BLOCK) {
-        format.isBlock = true;
     }
 }
 
@@ -60,9 +57,7 @@ export function generateEntityClassNames(format: ContentModelEntityFormat): stri
         ? ''
         : `${ENTITY_INFO_NAME} ${ENTITY_TYPE_PREFIX}${format.entityType ?? ''} ${
               format.id ? `${ENTITY_ID_PREFIX}${format.id} ` : ''
-          }${ENTITY_READONLY_PREFIX}${format.isReadonly ? '1' : '0'}${
-              format.isBlock ? ' ' + ENTITY_IS_BLOCK : ''
-          }`;
+          }${ENTITY_READONLY_PREFIX}${format.isReadonly ? '1' : '0'}`;
 }
 
 /**

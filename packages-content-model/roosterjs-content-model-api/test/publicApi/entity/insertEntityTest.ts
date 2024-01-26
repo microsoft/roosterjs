@@ -110,7 +110,6 @@ describe('insertEntity', () => {
             wrapper: wrapper,
         });
     });
-
     it('block inline entity to root', () => {
         const entity = insertEntity(editor, type, true, 'root');
 
@@ -131,7 +130,6 @@ describe('insertEntity', () => {
                     id: undefined,
                     entityType: type,
                     isReadonly: true,
-                    isBlock: true,
                 },
                 wrapper: wrapper,
             },
@@ -151,7 +149,6 @@ describe('insertEntity', () => {
                 id: undefined,
                 entityType: type,
                 isReadonly: true,
-                isBlock: true,
             },
             wrapper: wrapper,
         });
@@ -185,7 +182,6 @@ describe('insertEntity', () => {
                     id: undefined,
                     entityType: type,
                     isReadonly: true,
-                    isBlock: true,
                 },
                 wrapper: wrapper,
             },
@@ -205,7 +201,6 @@ describe('insertEntity', () => {
                 id: undefined,
                 entityType: type,
                 isReadonly: true,
-                isBlock: true,
             },
             wrapper: wrapper,
         });
