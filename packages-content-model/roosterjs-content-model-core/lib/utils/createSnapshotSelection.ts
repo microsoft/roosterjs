@@ -1,18 +1,12 @@
 import { isElementOfType, isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
-import type {
-    DOMSelection,
-    SnapshotSelection,
-    StandaloneEditorCore,
-} from 'roosterjs-content-model-types';
+import type { SnapshotSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function createSnapshotSelection(
-    core: StandaloneEditorCore,
-    selection: DOMSelection | null
-): SnapshotSelection {
+export function createSnapshotSelection(core: StandaloneEditorCore): SnapshotSelection {
     const { contentDiv, api } = core;
+    const selection = api.getDOMSelection(core);
 
     // Normalize tables to ensure they have TBODY element between TABLE and TR so that the selection path will include correct values
     if (selection?.type == 'range') {
