@@ -1,14 +1,6 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import {
-    createBr,
-    createContentModelDocument,
-    createParagraph,
-    createSelectionMarker,
-    setColor,
-} from 'roosterjs-content-model-dom';
+import { setColor } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
-    ContentModelSegmentFormat,
     IStandaloneEditor,
     LifecyclePluginState,
     PluginEvent,
@@ -26,7 +18,6 @@ const DefaultBackColor = '#ffffff';
 class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     private editor: IStandaloneEditor | null = null;
     private state: LifecyclePluginState;
-    private initialModel: ContentModelDocument;
     private initializer: (() => void) | null = null;
     private disposer: (() => void) | null = null;
     private adjustColor: () => void;
@@ -37,9 +28,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * @param contentDiv The editor content DIV
      */
     constructor(options: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
-        this.initialModel =
-            options.initialModel ?? this.createInitModel(options.defaultSegmentFormat);
-
         // Make the container editable and set its selection styles
         if (contentDiv.getAttribute(ContentEditableAttributeName) === null) {
             this.initializer = () => {
@@ -76,12 +64,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      */
     initialize(editor: IStandaloneEditor) {
         this.editor = editor;
-
-        this.editor.setContentModel(this.initialModel, { ignoreSelection: true });
-
-        // Initial model is only used once. After that we can just clean it up to make sure we don't cache anything useless
-        // including the cached DOM element inside the model.
-        this.initialModel = createContentModelDocument();
 
         // Set content DIV to be editable
         this.initializer?.();
@@ -149,16 +131,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
                 darkColorHandler
             );
         }
-    }
-
-    private createInitModel(format?: ContentModelSegmentFormat) {
-        const model = createContentModelDocument(format);
-        const paragraph = createParagraph(false /*isImplicit*/, undefined /*blockFormat*/, format);
-
-        paragraph.segments.push(createSelectionMarker(format), createBr(format));
-        model.blocks.push(paragraph);
-
-        return model;
     }
 }
 
