@@ -64,20 +64,6 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
         return this.state;
     }
 
-    private getFocusedNode(editor: IStandaloneEditor) {
-        const selection = editor.getDOMSelection();
-
-        if (selection) {
-            if (selection.type == 'range') {
-                selection.range.collapse(true /*toStart*/);
-            }
-
-            return getSelectionRootNode(selection) || null;
-        } else {
-            return null;
-        }
-    }
-
     private onContextMenuEvent = (e: Event) => {
         if (this.editor) {
             const allItems: any[] = [];
@@ -110,6 +96,20 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
             });
         }
     };
+
+    private getFocusedNode(editor: IStandaloneEditor) {
+        const selection = editor.getDOMSelection();
+
+        if (selection) {
+            if (selection.type == 'range') {
+                selection.range.collapse(true /*toStart*/);
+            }
+
+            return getSelectionRootNode(selection) || null;
+        } else {
+            return null;
+        }
+    }
 }
 
 function isContextMenuProvider(source: unknown): source is ContextMenuProvider<any> {

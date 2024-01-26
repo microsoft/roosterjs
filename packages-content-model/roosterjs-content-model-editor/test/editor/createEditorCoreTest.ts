@@ -17,6 +17,7 @@ describe('createEditorCore', () => {
             {},
             {
                 edit: mockedEditPluginState,
+                contextMenuProviders: [],
             },
             mockedInnerHandler,
             mockedSizeTransformer
@@ -28,6 +29,7 @@ describe('createEditorCore', () => {
             customData: {},
             experimentalFeatures: [],
             edit: mockedEditPluginState,
+            contextMenuProviders: [],
             sizeTransformer: mockedSizeTransformer,
             darkColorHandler: mockedDarkHandler,
         });
@@ -37,6 +39,7 @@ describe('createEditorCore', () => {
     it('With additional plugins', () => {
         const mockedPlugin1 = 'P1' as any;
         const mockedPlugin2 = 'P2' as any;
+        const mockedPlugin3 = 'P3' as any;
         const mockedFeatures = 'FEATURES' as any;
         const mockedCoreApi = {
             a: 'b',
@@ -50,6 +53,7 @@ describe('createEditorCore', () => {
             },
             {
                 edit: mockedEditPluginState,
+                contextMenuProviders: [mockedPlugin3],
             },
             mockedInnerHandler,
             mockedSizeTransformer
@@ -59,6 +63,7 @@ describe('createEditorCore', () => {
             api: { ...coreApiMap, a: 'b' } as any,
             originalApi: { ...coreApiMap },
             customData: {},
+            contextMenuProviders: [mockedPlugin3],
             experimentalFeatures: mockedFeatures,
             edit: mockedEditPluginState,
             sizeTransformer: mockedSizeTransformer,

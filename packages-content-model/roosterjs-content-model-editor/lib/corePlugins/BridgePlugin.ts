@@ -26,7 +26,6 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     private corePluginState: ContentModelCorePluginState;
     private outerEditor: IContentModelEditor | null = null;
     private checkExclusivelyHandling: boolean;
-    private contextMenuProviders: LegacyContextMenuProvider<any>[];
 
     constructor(options: ContentModelEditorOptions) {
         const editPlugin = createEditPlugin();
@@ -39,9 +38,9 @@ export class BridgePlugin implements ContextMenuProvider<any> {
             entityDelimiterPlugin,
             normalizeTablePlugin,
         ];
-        this.contextMenuProviders = this.legacyPlugins.filter(isContextMenuProvider);
         this.corePluginState = {
             edit: editPlugin.getState(),
+            contextMenuProviders: this.legacyPlugins.filter(isContextMenuProvider),
         };
         this.checkExclusivelyHandling = this.legacyPlugins.some(
             plugin => plugin.willHandleEventExclusively
@@ -137,10 +136,15 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         }
     }
 
+    /**
+     * A callback to return context menu items
+     * @param target Target node that triggered a ContextMenu event
+     * @returns An array of context menu items, or null means no items needed
+     */
     getContextMenuItems(target: Node): any[] {
         const allItems: any[] = [];
 
-        this.contextMenuProviders.forEach(provider => {
+        this.corePluginState.contextMenuProviders.forEach(provider => {
             const items = provider.getContextMenuItems(target) ?? [];
             if (items?.length > 0) {
                 if (allItems.length > 0) {
