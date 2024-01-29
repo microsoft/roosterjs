@@ -27,6 +27,7 @@ export {
     generateEntityClassNames,
     addDelimiters,
 } from './domUtils/entityUtils';
+export { getFocusedPosition } from './domUtils/getFocusedPosition';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 

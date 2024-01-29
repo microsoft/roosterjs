@@ -32,6 +32,7 @@ export function createSnapshotSelection(
                 type: 'range',
                 start: getPath(range.startContainer, range.startOffset, contentDiv),
                 end: getPath(range.endContainer, range.endOffset, contentDiv),
+                isReverted: !!selection.isReverted,
             };
 
         default:
@@ -39,6 +40,7 @@ export function createSnapshotSelection(
                 type: 'range',
                 start: [],
                 end: [],
+                isReverted: false,
             };
     }
 }

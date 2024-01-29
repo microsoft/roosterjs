@@ -1,3 +1,4 @@
+import { isSelectionReverted } from 'roosterjs-content-model-dom/lib/domUtils/isSelectionReverted';
 import type {
     DOMSelection,
     GetDOMSelection,
@@ -26,7 +27,8 @@ function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {
     return range && core.contentDiv.contains(range.commonAncestorContainer)
         ? {
               type: 'range',
-              range: range,
+              range,
+              isReverted: isSelectionReverted(selection),
           }
         : null;
 }

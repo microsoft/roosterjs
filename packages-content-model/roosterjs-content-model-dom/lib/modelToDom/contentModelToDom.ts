@@ -1,5 +1,6 @@
 import toArray from '../domUtils/toArray';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
+import { isSelectionReverted } from '../domUtils/isSelectionReverted';
 import type {
     ContentModelDocument,
     DOMSelection,
@@ -27,6 +28,7 @@ export function contentModelToDom(
     onNodeCreated?: OnNodeCreated
 ): DOMSelection | null {
     context.onNodeCreated = onNodeCreated;
+    context.regularSelection.isReverted = isSelectionReverted(doc.getSelection());
 
     context.modelHandlers.blockGroupChildren(doc, root, model, context);
 
@@ -39,7 +41,7 @@ export function contentModelToDom(
 
 function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSelection | null {
     const {
-        regularSelection: { start, end },
+        regularSelection: { start, end, isReverted },
         tableSelection,
         imageSelection,
     } = context;
@@ -61,6 +63,7 @@ function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSe
         return {
             type: 'range',
             range,
+            isReverted: !!isReverted,
         };
     } else if (tableSelection) {
         return tableSelection;

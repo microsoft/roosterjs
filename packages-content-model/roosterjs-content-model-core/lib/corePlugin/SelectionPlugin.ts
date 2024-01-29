@@ -155,6 +155,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             editor.setDOMSelection({
                 type: 'range',
                 range: range,
+                isReverted: false,
             });
         }
     }

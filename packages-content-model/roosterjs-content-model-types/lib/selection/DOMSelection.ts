@@ -28,6 +28,12 @@ export interface RangeSelection extends SelectionBase<'range'> {
      * The DOM Range of this selection
      */
     range: Range;
+
+    /**
+     * Whether the selection was from left to right (in document order) or
+     * right to left (reverse of document order)
+     */
+    isReverted: boolean;
 }
 
 /**

@@ -261,6 +261,7 @@ export { ContentModelFormatState } from './parameter/ContentModelFormatState';
 export { ImageFormatState } from './parameter/ImageFormatState';
 export { Border } from './parameter/Border';
 export { InsertEntityOptions } from './parameter/InsertEntityOptions';
+export { Position } from './parameter/Position';
 export {
     DeleteSelectionContext,
     DeleteSelectionResult,
