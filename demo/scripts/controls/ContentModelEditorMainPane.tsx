@@ -31,9 +31,11 @@ import { ContentModelRibbon } from './ribbonButtons/contentModel/ContentModelRib
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { ContentModelSegmentFormat, Snapshots } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
+import { darkMode } from './ribbonButtons/contentModel/darkMode';
 import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
 import { decreaseIndentButton } from './ribbonButtons/contentModel/decreaseIndentButton';
 import { EditorPlugin } from 'roosterjs-editor-types';
+import { exportContent } from './ribbonButtons/contentModel/export';
 import { fontButton } from './ribbonButtons/contentModel/fontButton';
 import { fontSizeButton } from './ribbonButtons/contentModel/fontSizeButton';
 import { formatPainterButton } from './ribbonButtons/contentModel/formatPainterButton';
@@ -76,6 +78,7 @@ import { textColorButton } from './ribbonButtons/contentModel/textColorButton';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
+import { zoom } from './ribbonButtons/contentModel/zoom';
 import {
     spaceAfterButton,
     spaceBeforeButton,
@@ -236,6 +239,9 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         spaceBeforeButton,
         spaceAfterButton,
         pasteButton,
+        darkMode,
+        zoom,
+        exportContent,
     ];
 
     constructor(props: {}) {
@@ -289,6 +295,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
 
     renderRibbon(isPopout: boolean) {
         const buttons = isPopout ? this.buttons : this.buttons.concat([popout]);
+
         return (
             <ContentModelRibbon
                 buttons={buttons}

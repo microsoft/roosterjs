@@ -26,8 +26,10 @@ import { clearFormatButton } from './ribbonButtons/contentModel/clearFormatButto
 import { codeButton } from './ribbonButtons/contentModel/codeButton';
 import { ContentModelRibbon } from './ribbonButtons/contentModel/ContentModelRibbon';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
+import { darkMode } from './ribbonButtons/contentModel/darkMode';
 import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
 import { decreaseIndentButton } from './ribbonButtons/contentModel/decreaseIndentButton';
+import { exportContent } from './ribbonButtons/contentModel/export';
 import { fontButton } from './ribbonButtons/contentModel/fontButton';
 import { fontSizeButton } from './ribbonButtons/contentModel/fontSizeButton';
 import { formatPainterButton } from './ribbonButtons/contentModel/formatPainterButton';
@@ -72,6 +74,7 @@ import { textColorButton } from './ribbonButtons/contentModel/textColorButton';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
+import { zoom } from './ribbonButtons/contentModel/zoom';
 import {
     ContentModelSegmentFormat,
     IStandaloneEditor,
@@ -227,6 +230,9 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         spaceBeforeButton,
         spaceAfterButton,
         pasteButton,
+        darkMode,
+        zoom,
+        exportContent,
     ];
 
     constructor(props: {}) {
