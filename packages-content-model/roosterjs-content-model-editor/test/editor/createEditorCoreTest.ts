@@ -5,7 +5,6 @@ import { createEditorCore } from '../../lib/editor/createEditorCore';
 describe('createEditorCore', () => {
     const mockedSizeTransformer = 'TRANSFORMER' as any;
     const mockedEditPluginState = 'EDITSTATE' as any;
-    const mockedContextMenuPluginState = 'CONTEXTMENUSTATE' as any;
     const mockedInnerHandler = 'INNER' as any;
     const mockedDarkHandler = 'DARK' as any;
 
@@ -18,7 +17,7 @@ describe('createEditorCore', () => {
             {},
             {
                 edit: mockedEditPluginState,
-                contextMenu: mockedContextMenuPluginState,
+                contextMenuProviders: [],
             },
             mockedInnerHandler,
             mockedSizeTransformer
@@ -30,7 +29,7 @@ describe('createEditorCore', () => {
             customData: {},
             experimentalFeatures: [],
             edit: mockedEditPluginState,
-            contextMenu: mockedContextMenuPluginState,
+            contextMenuProviders: [],
             sizeTransformer: mockedSizeTransformer,
             darkColorHandler: mockedDarkHandler,
         });
@@ -40,6 +39,7 @@ describe('createEditorCore', () => {
     it('With additional plugins', () => {
         const mockedPlugin1 = 'P1' as any;
         const mockedPlugin2 = 'P2' as any;
+        const mockedPlugin3 = 'P3' as any;
         const mockedFeatures = 'FEATURES' as any;
         const mockedCoreApi = {
             a: 'b',
@@ -53,7 +53,7 @@ describe('createEditorCore', () => {
             },
             {
                 edit: mockedEditPluginState,
-                contextMenu: mockedContextMenuPluginState,
+                contextMenuProviders: [mockedPlugin3],
             },
             mockedInnerHandler,
             mockedSizeTransformer
@@ -63,9 +63,9 @@ describe('createEditorCore', () => {
             api: { ...coreApiMap, a: 'b' } as any,
             originalApi: { ...coreApiMap },
             customData: {},
+            contextMenuProviders: [mockedPlugin3],
             experimentalFeatures: mockedFeatures,
             edit: mockedEditPluginState,
-            contextMenu: mockedContextMenuPluginState,
             sizeTransformer: mockedSizeTransformer,
             darkColorHandler: mockedDarkHandler,
         });

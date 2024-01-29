@@ -25,6 +25,7 @@ describe('createEditorCore', () => {
     const mockedEntityPlugin = createMockedPlugin('entity');
     const mockedSelectionPlugin = createMockedPlugin('selection');
     const mockedUndoPlugin = createMockedPlugin('undo');
+    const mockedContextMenuPlugin = createMockedPlugin('contextMenu');
     const mockedPlugins = {
         cache: mockedCachePlugin,
         format: mockedFormatPlugin,
@@ -34,6 +35,7 @@ describe('createEditorCore', () => {
         entity: mockedEntityPlugin,
         selection: mockedSelectionPlugin,
         undo: mockedUndoPlugin,
+        contextMenu: mockedContextMenuPlugin,
     };
     const mockedDarkColorHandler = 'DARKCOLOR' as any;
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
@@ -76,6 +78,7 @@ describe('createEditorCore', () => {
                 mockedSelectionPlugin,
                 mockedEntityPlugin,
                 mockedUndoPlugin,
+                mockedContextMenuPlugin,
                 mockedLifeCyclePlugin,
             ],
             environment: {
@@ -95,6 +98,7 @@ describe('createEditorCore', () => {
             entity: 'entity' as any,
             selection: 'selection' as any,
             undo: 'undo' as any,
+            contextMenu: 'contextMenu' as any,
             domHelper: mockedDOMHelper,
             disposeErrorHandler: undefined,
             zoomScale: 1,
@@ -166,6 +170,7 @@ describe('createEditorCore', () => {
                 mockedPlugin1,
                 mockedPlugin2,
                 mockedUndoPlugin,
+                mockedContextMenuPlugin,
                 mockedLifeCyclePlugin,
             ],
             darkColorHandler: mockedDarkColorHandler,

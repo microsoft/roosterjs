@@ -39,6 +39,7 @@ export function createStandaloneEditorCore(
             corePlugins.entity,
             ...(options.plugins ?? []).filter(x => !!x),
             corePlugins.undo,
+            corePlugins.contextMenu,
             corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(contentDiv),
@@ -88,6 +89,7 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins): PluginState {
         lifecycle: corePlugins.lifecycle.getState(),
         entity: corePlugins.entity.getState(),
         selection: corePlugins.selection.getState(),
+        contextMenu: corePlugins.contextMenu.getState(),
         undo: corePlugins.undo.getState(),
     };
 }
