@@ -1,4 +1,4 @@
-import { isSelectionReverted } from 'roosterjs-content-model-dom/lib/domUtils/isSelectionReverted';
+import { isSelectionReverted } from 'roosterjs-content-model-dom';
 import type {
     DOMSelection,
     GetDOMSelection,
