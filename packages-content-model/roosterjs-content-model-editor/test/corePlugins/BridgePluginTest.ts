@@ -1,4 +1,3 @@
-import * as ContextMenuPlugin from '../../lib/corePlugins/ContextMenuPlugin';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as eventConverter from '../../lib/editor/utils/eventConverter';
 import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
@@ -14,9 +13,6 @@ describe('BridgePlugin', () => {
         } as any;
     }
     beforeEach(() => {
-        spyOn(ContextMenuPlugin, 'createContextMenuPlugin').and.returnValue(
-            createMockedPlugin('contextMenu')
-        );
         spyOn(EditPlugin, 'createEditPlugin').and.returnValue(createMockedPlugin('edit'));
         spyOn(NormalizeTablePlugin, 'createNormalizeTablePlugin').and.returnValue(
             createMockedPlugin('normalizeTable')
@@ -54,7 +50,7 @@ describe('BridgePlugin', () => {
 
         expect(plugin.getCorePluginState()).toEqual({
             edit: 'edit',
-            contextMenu: 'contextMenu',
+            contextMenuProviders: [],
         } as any);
 
         plugin.setOuterEditor(mockedEditor);
@@ -260,5 +256,82 @@ describe('BridgePlugin', () => {
         expect(eventConverter.newEventToOldEvent).toHaveBeenCalledWith(mockedEvent);
 
         plugin.dispose();
+    });
+
+    it('Context Menu provider', () => {
+        const initializeSpy = jasmine.createSpy('initialize');
+        const onPluginEventSpy1 = jasmine.createSpy('onPluginEvent1');
+        const onPluginEventSpy2 = jasmine.createSpy('onPluginEvent2');
+        const disposeSpy = jasmine.createSpy('dispose');
+        const queryElementsSpy = jasmine.createSpy('queryElement').and.returnValue([]);
+        const getContextMenuItemsSpy1 = jasmine
+            .createSpy('getContextMenuItems 1')
+            .and.returnValue(['item1', 'item2']);
+        const getContextMenuItemsSpy2 = jasmine
+            .createSpy('getContextMenuItems 2')
+            .and.returnValue(['item3', 'item4']);
+
+        const mockedPlugin1 = {
+            initialize: initializeSpy,
+            onPluginEvent: onPluginEventSpy1,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsSpy1,
+        } as any;
+        const mockedPlugin2 = {
+            initialize: initializeSpy,
+            onPluginEvent: onPluginEventSpy2,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsSpy2,
+        } as any;
+        const mockedEditor = {
+            queryElements: queryElementsSpy,
+        } as any;
+
+        const plugin = new BridgePlugin({
+            legacyPlugins: [mockedPlugin1, mockedPlugin2],
+        });
+        expect(initializeSpy).not.toHaveBeenCalled();
+        expect(onPluginEventSpy1).not.toHaveBeenCalled();
+        expect(onPluginEventSpy2).not.toHaveBeenCalled();
+        expect(disposeSpy).not.toHaveBeenCalled();
+
+        expect(plugin.getCorePluginState()).toEqual({
+            edit: 'edit',
+            contextMenuProviders: [mockedPlugin1, mockedPlugin2],
+        } as any);
+
+        plugin.setOuterEditor(mockedEditor);
+
+        expect(initializeSpy).toHaveBeenCalledTimes(0);
+        expect(onPluginEventSpy1).toHaveBeenCalledTimes(0);
+        expect(onPluginEventSpy2).toHaveBeenCalledTimes(0);
+        expect(disposeSpy).not.toHaveBeenCalled();
+
+        plugin.initialize();
+
+        expect(initializeSpy).toHaveBeenCalledTimes(2);
+        expect(onPluginEventSpy1).toHaveBeenCalledTimes(1);
+        expect(onPluginEventSpy2).toHaveBeenCalledTimes(1);
+        expect(disposeSpy).not.toHaveBeenCalled();
+
+        expect(initializeSpy).toHaveBeenCalledWith(mockedEditor);
+        expect(onPluginEventSpy1).toHaveBeenCalledWith({
+            eventType: PluginEventType.EditorReady,
+        });
+        expect(onPluginEventSpy2).toHaveBeenCalledWith({
+            eventType: PluginEventType.EditorReady,
+        });
+
+        const mockedNode = 'NODE' as any;
+
+        const items = plugin.getContextMenuItems(mockedNode);
+
+        expect(items).toEqual(['item1', 'item2', null, 'item3', 'item4']);
+        expect(getContextMenuItemsSpy1).toHaveBeenCalledWith(mockedNode);
+        expect(getContextMenuItemsSpy2).toHaveBeenCalledWith(mockedNode);
+
+        plugin.dispose();
+
+        expect(disposeSpy).toHaveBeenCalledTimes(2);
     });
 });

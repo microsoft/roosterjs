@@ -1,4 +1,4 @@
-import type { ContextMenuProvider } from 'roosterjs-editor-types';
+import type { ContextMenuProvider } from '../editor/ContextMenuProvider';
 
 /**
  * The state object for DOMEventPlugin
