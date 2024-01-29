@@ -1,3 +1,4 @@
+import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
 import * as createStandaloneEditorCore from '../../lib/editor/createStandaloneEditorCore';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
@@ -6,6 +7,8 @@ import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 describe('StandaloneEditor', () => {
     let createEditorCoreSpy: jasmine.Spy;
     let updateKnownColorSpy: jasmine.Spy;
+    let setContentModelSpy: jasmine.Spy;
+    let createEmptyModelSpy: jasmine.Spy;
 
     beforeEach(() => {
         updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
@@ -13,10 +16,15 @@ describe('StandaloneEditor', () => {
             createStandaloneEditorCore,
             'createStandaloneEditorCore'
         ).and.callThrough();
+        setContentModelSpy = jasmine.createSpy('setContentModel');
+        createEmptyModelSpy = spyOn(createEmptyModel, 'createEmptyModel');
     });
 
     it('ctor and dispose, no options', () => {
         const div = document.createElement('div');
+
+        createEmptyModelSpy.and.callThrough();
+
         const editor = new StandaloneEditor(div);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(div, {});
@@ -25,6 +33,7 @@ describe('StandaloneEditor', () => {
         expect(editor.isDarkMode()).toBeFalse();
         expect(editor.isInIME()).toBeFalse();
         expect(editor.isInShadowEdit()).toBeFalse();
+        expect(createEmptyModelSpy).toHaveBeenCalledWith(undefined);
 
         editor.dispose();
 
@@ -48,13 +57,20 @@ describe('StandaloneEditor', () => {
             initialize: initSpy2,
             dispose: disposeSpy2,
         } as any;
-
+        const setContentModelSpy = jasmine.createSpy('setContentModel');
         const disposeErrorHandlerSpy = jasmine.createSpy('disposeErrorHandler');
+        const mockedInitialModel = 'INITMODEL' as any;
         const options = {
             plugins: [mockedPlugin1, mockedPlugin2],
             disposeErrorHandler: disposeErrorHandlerSpy,
             inDarkMode: true,
+            initialModel: mockedInitialModel,
+            coreApiOverride: {
+                setContentModel: setContentModelSpy,
+            },
         };
+
+        createEmptyModelSpy.and.callThrough();
 
         const editor = new StandaloneEditor(div, options);
 
@@ -64,6 +80,12 @@ describe('StandaloneEditor', () => {
         expect(editor.isDarkMode()).toBeTrue();
         expect(editor.isInIME()).toBeFalse();
         expect(editor.isInShadowEdit()).toBeFalse();
+        expect(createEmptyModelSpy).not.toHaveBeenCalled();
+        expect(setContentModelSpy).toHaveBeenCalledWith(
+            jasmine.anything() /*core*/,
+            mockedInitialModel,
+            { ignoreSelection: true }
+        );
 
         expect(initSpy1).toHaveBeenCalledWith(editor);
         expect(initSpy2).toHaveBeenCalledWith(editor);
@@ -99,6 +121,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 createContentModel: createContentModelSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -128,52 +151,6 @@ describe('StandaloneEditor', () => {
         expect(resetSpy).toHaveBeenCalledWith();
     });
 
-    it('setContentModel', () => {
-        const div = document.createElement('div');
-        const setContentModelSpy = jasmine.createSpy('setContentModel');
-        const resetSpy = jasmine.createSpy('reset');
-        const mockedCore = {
-            plugins: [],
-            darkColorHandler: {
-                updateKnownColor: updateKnownColorSpy,
-                reset: resetSpy,
-            },
-            api: {
-                setContentModel: setContentModelSpy,
-            },
-        } as any;
-
-        createEditorCoreSpy.and.returnValue(mockedCore);
-
-        const mockedModel = 'MODEL' as any;
-        const editor = new StandaloneEditor(div);
-
-        editor.setContentModel(mockedModel);
-
-        expect(setContentModelSpy).toHaveBeenCalledWith(
-            mockedCore,
-            mockedModel,
-            undefined,
-            undefined
-        );
-
-        const mockedOptions = 'OPTIONS' as any;
-        const mockedOnNodeCreated = 'ONNODECREATED' as any;
-
-        editor.setContentModel(mockedModel, mockedOptions, mockedOnNodeCreated);
-
-        expect(setContentModelSpy).toHaveBeenCalledWith(
-            mockedCore,
-            mockedModel,
-            mockedOptions,
-            mockedOnNodeCreated
-        );
-
-        editor.dispose();
-        expect(resetSpy).toHaveBeenCalledWith();
-        expect(() => editor.setContentModel(mockedModel)).toThrow();
-    });
-
     it('getEnvironment', () => {
         const div = document.createElement('div');
         const mockedEnvironment = 'ENVIRONMENT' as any;
@@ -185,6 +162,7 @@ describe('StandaloneEditor', () => {
                 reset: resetSpy,
             },
             environment: mockedEnvironment,
+            api: { setContentModel: setContentModelSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -215,6 +193,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 getDOMSelection: getDOMSelectionSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -245,6 +224,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 setDOMSelection: setDOMSelectionSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -279,6 +259,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 formatContentModel: formatContentModelSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -314,6 +295,9 @@ describe('StandaloneEditor', () => {
                 reset: resetSpy,
             },
             format: {},
+            api: {
+                setContentModel: setContentModelSpy,
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -351,6 +335,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 addUndoSnapshot: addUndoSnapshotSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -379,6 +364,7 @@ describe('StandaloneEditor', () => {
                 updateKnownColor: updateKnownColorSpy,
                 reset: resetSpy,
             },
+            api: { setContentModel: setContentModelSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -406,6 +392,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 restoreUndoSnapshot: restoreUndoSnapshotSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -434,6 +421,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 focus: focusSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -462,6 +450,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 hasFocus: hasFocusSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -496,6 +485,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 triggerEvent: triggerEventSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -541,6 +531,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 attachDomEvent: attachDomEventSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -571,7 +562,9 @@ describe('StandaloneEditor', () => {
             },
             undo: {
                 snapshotsManager: mockedSnapshotManager,
+                setContentModel: setContentModelSpy,
             },
+            api: { setContentModel: setContentModelSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -604,6 +597,7 @@ describe('StandaloneEditor', () => {
             lifecycle: {},
             api: {
                 switchShadowEdit: switchShadowEditSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -644,6 +638,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 paste: pasteSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
@@ -677,6 +672,7 @@ describe('StandaloneEditor', () => {
         const mockedCore = {
             plugins: [],
             darkColorHandler: mockedColorHandler,
+            api: { setContentModel: setContentModelSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -708,6 +704,7 @@ describe('StandaloneEditor', () => {
                 reset: resetSpy,
             },
             contentDiv: div,
+            api: { setContentModel: setContentModelSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -745,6 +742,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 triggerEvent: triggerEventSpy,
+                setContentModel: setContentModelSpy,
             },
         } as any;
 
