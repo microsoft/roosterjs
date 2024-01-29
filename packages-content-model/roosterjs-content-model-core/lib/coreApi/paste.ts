@@ -1,4 +1,3 @@
-import { ChangeSource } from '../constants/ChangeSource';
 import { cloneModel } from '../publicApi/model/cloneModel';
 import { convertInlineCss } from '../utils/paste/convertInlineCss';
 import { createPasteFragment } from '../utils/paste/createPasteFragment';
@@ -38,49 +37,37 @@ export const paste: Paste = (
         clipboardData.modelBeforePaste = cloneModel(core.api.createContentModel(core), CloneOption);
     }
 
-    core.api.formatContentModel(
-        core,
-        (model, context) => {
-            // 1. Prepare variables
-            const doc = createDOMFromHtml(clipboardData.rawHtml, core.trustedHTMLHandler);
+    // 1. Prepare variables
+    const doc = createDOMFromHtml(clipboardData.rawHtml, core.trustedHTMLHandler);
 
-            // 2. Handle HTML from clipboard
-            const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
+    // 2. Handle HTML from clipboard
+    const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
 
-            // 3. Create target fragment
-            const sourceFragment = createPasteFragment(
-                core.contentDiv.ownerDocument,
-                clipboardData,
-                pasteType,
-                (clipboardData.rawHtml == clipboardData.html
-                    ? doc
-                    : createDOMFromHtml(clipboardData.html, core.trustedHTMLHandler)
-                )?.body
-            );
-
-            // 4. Trigger BeforePaste event to allow plugins modify the fragment
-            const eventResult = generatePasteOptionFromPlugins(
-                core,
-                clipboardData,
-                sourceFragment,
-                htmlFromClipboard,
-                pasteType
-            );
-
-            // 5. Convert global CSS to inline CSS
-            convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
-
-            // 6. Merge pasted content into main Content Model
-            mergePasteContent(model, context, eventResult, core.domToModelSettings.customized);
-
-            return true;
-        },
-        {
-            changeSource: ChangeSource.Paste,
-            getChangeData: () => clipboardData,
-            apiName: 'paste',
-        }
+    // 3. Create target fragment
+    const sourceFragment = createPasteFragment(
+        core.contentDiv.ownerDocument,
+        clipboardData,
+        pasteType,
+        (clipboardData.rawHtml == clipboardData.html
+            ? doc
+            : createDOMFromHtml(clipboardData.html, core.trustedHTMLHandler)
+        )?.body
     );
+
+    // 4. Trigger BeforePaste event to allow plugins modify the fragment
+    const eventResult = generatePasteOptionFromPlugins(
+        core,
+        clipboardData,
+        sourceFragment,
+        htmlFromClipboard,
+        pasteType
+    );
+
+    // 5. Convert global CSS to inline CSS
+    convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
+
+    // 6. Merge pasted content into main Content Model
+    mergePasteContent(core, eventResult, clipboardData);
 };
 
 function createDOMFromHtml(

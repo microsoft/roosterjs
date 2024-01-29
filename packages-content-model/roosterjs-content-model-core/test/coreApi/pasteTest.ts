@@ -17,9 +17,6 @@ import {
     ClipboardData,
     ContentModelDocument,
     DomToModelOption,
-    ContentModelFormatter,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
     IStandaloneEditor,
     BeforePasteEvent,
     PluginEvent,
@@ -35,13 +32,8 @@ describe('Paste ', () => {
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let mockedMergeModel: ContentModelDocument;
-    let getFocusedPosition: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
-    let mergeModelSpy: jasmine.Spy;
-    let formatResult: boolean | undefined;
-    let context: FormatWithContentModelContext | undefined;
 
-    const mockedPos = 'POS' as any;
     const mockedCloneModel = 'CloneModel' as any;
 
     let div: HTMLDivElement;
@@ -68,9 +60,8 @@ describe('Paste ', () => {
 
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         focus = jasmine.createSpy('focus');
-        getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-        mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => {
+        spyOn(mergeModelFile, 'mergeModel').and.callFake(() => {
             mockedModel = mockedMergeModel;
             return null;
         });
@@ -82,25 +73,6 @@ describe('Paste ', () => {
                 },
             } as any,
         ]);
-        const formatContentModel = jasmine
-            .createSpy('formatContentModel')
-            .and.callFake(
-                (
-                    core: any,
-                    callback: ContentModelFormatter,
-                    options: FormatWithContentModelOptions
-                ) => {
-                    context = {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    };
-                    formatResult = callback(mockedModel, context);
-                }
-            );
-
-        formatResult = undefined;
-        context = undefined;
 
         editor = new StandaloneEditor(div, {
             plugins: [new ContentModelPastePlugin()],
@@ -108,7 +80,7 @@ describe('Paste ', () => {
                 focus,
                 createContentModel,
                 getVisibleViewport,
-                formatContentModel,
+                //                formatContentModel,
             },
         });
 
@@ -124,61 +96,13 @@ describe('Paste ', () => {
     it('Execute', () => {
         editor.pasteFromClipboard(clipboardData);
 
-        expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);
     });
 
     it('Execute | As plain text', () => {
         editor.pasteFromClipboard(clipboardData, 'asPlainText');
 
-        expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);
-    });
-
-    it('Preserve segment format after paste', () => {
-        const mockedNode = 'Node' as any;
-        const mockedOffset = 'Offset' as any;
-        const mockedFormat = {
-            fontFamily: 'Arial',
-        };
-        clipboardData.rawHtml =
-            '<span style="font-size: 100px; background-color: black">test</span>';
-        getFocusedPosition.and.returnValue({
-            node: mockedNode,
-            offset: mockedOffset,
-        });
-        mergeModelSpy.and.returnValue({
-            marker: {
-                format: mockedFormat,
-            },
-        });
-
-        editor.pasteFromClipboard(clipboardData);
-
-        editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
-
-        expect(context).toEqual({
-            newEntities: [],
-            newImages: [],
-            deletedEntities: [],
-            newPendingFormat: {
-                backgroundColor: '',
-                fontFamily: 'Arial',
-                fontSize: '',
-                fontWeight: '',
-                italic: false,
-                letterSpacing: '',
-                lineHeight: '',
-                strikethrough: false,
-                superOrSubScriptSequence: '',
-                textColor: '',
-                underline: false,
-            },
-        });
     });
 });
 
