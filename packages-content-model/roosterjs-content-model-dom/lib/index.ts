@@ -15,7 +15,6 @@ export { isBlockElement } from './domToModel/utils/isBlockElement';
 
 export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
-export { isSelectionReverted } from './domUtils/isSelectionReverted';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';
 export { default as toArray } from './domUtils/toArray';
@@ -28,7 +27,6 @@ export {
     generateEntityClassNames,
     addDelimiters,
 } from './domUtils/entityUtils';
-export { getFocusedPosition } from './domUtils/getFocusedPosition';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 
