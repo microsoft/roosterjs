@@ -65,6 +65,7 @@ describe('createSnapshotSelection - Range selection', () => {
             type: 'range',
             start: [],
             end: [],
+            isReverted: false,
         });
     });
 
@@ -78,12 +79,14 @@ describe('createSnapshotSelection - Range selection', () => {
         const result = createSnapshotSelection(div, {
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         expect(result).toEqual({
             type: 'range',
             start: [0, 2],
             end: [0, 4],
+            isReverted: false,
         });
     });
 
@@ -97,12 +100,14 @@ describe('createSnapshotSelection - Range selection', () => {
         const result = createSnapshotSelection(div, {
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         expect(result).toEqual({
             type: 'range',
             start: [0, 0, 2],
             end: [0, 0, 4],
+            isReverted: false,
         });
     });
 
@@ -116,12 +121,14 @@ describe('createSnapshotSelection - Range selection', () => {
         const result = createSnapshotSelection(div, {
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         expect(result).toEqual({
             type: 'range',
             start: [0, 0, 1],
             end: [1, 0, 0],
+            isReverted: false,
         });
     });
 
@@ -138,12 +145,14 @@ describe('createSnapshotSelection - Range selection', () => {
         const result = createSnapshotSelection(div, {
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         expect(result).toEqual({
             type: 'range',
             start: [0, 7],
             end: [0, 12],
+            isReverted: false,
         });
     });
 
@@ -168,12 +177,14 @@ describe('createSnapshotSelection - Range selection', () => {
         const result = createSnapshotSelection(div, {
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         expect(result).toEqual({
             type: 'range',
             start: [1, 0, 7],
             end: [2, 7],
+            isReverted: false,
         });
     });
 });

@@ -41,6 +41,7 @@ describe('delimiterProcessor', () => {
         context.selection = {
             type: 'range',
             range: createRange(text, 0, span2, 0),
+            isReverted: false,
         };
 
         delimiterProcessor(doc, span, context);
@@ -82,6 +83,7 @@ describe('delimiterProcessor', () => {
         context.selection = {
             type: 'range',
             range: createRange(text1, 2, text2, 3),
+            isReverted: false,
         };
 
         delimiterProcessor(doc, span, context);
