@@ -273,6 +273,7 @@ describe('createSnapshotSelection - Normalize Table', () => {
             type: 'range',
             start: startPath,
             end: endPath,
+            isReverted: false,
         });
         expect(div.innerHTML).toBe(output);
 
