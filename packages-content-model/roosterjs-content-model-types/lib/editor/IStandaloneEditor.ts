@@ -126,21 +126,6 @@ export interface IStandaloneEditor {
     setDarkModeState(isDarkMode?: boolean): void;
 
     /**
-     * Get current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @returns current zoom scale number
-     */
-    getZoomScale(): number;
-
-    /**
-     * Set current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     */
-    setZoomScale(scale: number): void;
-
-    /**
      * Add a single undo snapshot to undo stack
      */
     takeSnapshot(): Snapshot | null;
@@ -205,6 +190,7 @@ export interface IStandaloneEditor {
      * Dispose this editor, dispose all plugins and custom data
      */
     dispose(): void;
+
     /**
      * Check if focus is in editor now
      * @returns true if focus is in editor, otherwise false
