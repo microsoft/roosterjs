@@ -45,6 +45,7 @@ describe('reducedModelChildProcessor', () => {
             range: {
                 commonAncestorContainer: span,
             } as any,
+            isReverted: false,
         };
 
         reducedModelChildProcessor(doc, div, context);
@@ -87,6 +88,7 @@ describe('reducedModelChildProcessor', () => {
             range: {
                 commonAncestorContainer: span2,
             } as any,
+            isReverted: false,
         };
 
         reducedModelChildProcessor(doc, div, context);
@@ -129,6 +131,7 @@ describe('reducedModelChildProcessor', () => {
             range: {
                 commonAncestorContainer: span2,
             } as any,
+            isReverted: false,
         };
 
         reducedModelChildProcessor(doc, div, context);
@@ -198,6 +201,7 @@ describe('reducedModelChildProcessor', () => {
             range: {
                 commonAncestorContainer: span2,
             } as any,
+            isReverted: false,
         };
 
         reducedModelChildProcessor(doc, div1, context);
@@ -245,6 +249,7 @@ describe('reducedModelChildProcessor', () => {
             range: {
                 commonAncestorContainer: div.querySelector('#selection') as HTMLElement,
             } as any,
+            isReverted: false,
         };
 
         reducedModelChildProcessor(doc, div, context);

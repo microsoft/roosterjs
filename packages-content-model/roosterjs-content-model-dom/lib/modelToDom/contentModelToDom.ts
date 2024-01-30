@@ -56,6 +56,7 @@ function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSe
         return {
             type: 'range',
             range,
+            isReverted: false,
         };
     } else if (tableSelection) {
         return tableSelection;

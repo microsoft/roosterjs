@@ -26,7 +26,21 @@ function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {
     return range && core.contentDiv.contains(range.commonAncestorContainer)
         ? {
               type: 'range',
-              range: range,
+              range,
+              isReverted: isSelectionReverted(selection),
           }
         : null;
+}
+
+function isSelectionReverted(selection: Selection | null | undefined): boolean {
+    if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        return (
+            !range.collapsed &&
+            selection.focusNode != range.endContainer &&
+            selection.focusOffset != range.endOffset
+        );
+    }
+
+    return false;
 }

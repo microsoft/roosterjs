@@ -1,5 +1,6 @@
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
 import getFormatState from '../../../lib/publicApi/format/getFormatState';
+import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { ContentModelFormatState } from 'roosterjs-content-model-types';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from 'roosterjs-content-model-core/lib/override/reducedModelChildProcessor';
@@ -8,7 +9,6 @@ import {
     createDomToModelContext,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 const selectedNodeId = 'Selected';
 
@@ -50,6 +50,7 @@ describe('getFormatState', () => {
                         range: {
                             commonAncestorContainer: selectedNode,
                         } as any,
+                        isReverted: false,
                     };
                 }
 

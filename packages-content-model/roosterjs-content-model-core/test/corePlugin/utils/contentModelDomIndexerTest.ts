@@ -200,6 +200,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node, 2),
+            isReverted: false,
         };
 
         const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
@@ -213,6 +214,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node, 2),
+            isReverted: false,
         };
         const paragraph = createParagraph();
         const segment = createText('');
@@ -259,6 +261,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node, 1, node, 3),
+            isReverted: false,
         };
         const paragraph = createParagraph();
         const segment = createText('');
@@ -309,6 +312,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node1, 2, node2, 3),
+            isReverted: false,
         };
         const paragraph = createParagraph();
         const oldSegment1 = createText('');
@@ -378,6 +382,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node1, 2, parent, 2),
+            isReverted: false,
         };
         const paragraph = createParagraph();
         const oldSegment1 = createText('');
@@ -521,6 +526,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(parent, 1),
+            isReverted: false,
         };
         const paragraph = createParagraph();
         const segment = createBr({ fontFamily: 'Arial' });
@@ -548,10 +554,12 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const oldRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node, 2),
+            isReverted: false,
         };
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node, 1, node, 3),
+            isReverted: false,
         };
         const paragraph = createParagraph();
         const oldSegment1 = createText('te');
@@ -597,10 +605,12 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const oldRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node, 1, node, 3),
+            isReverted: false,
         };
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node, 2),
+            isReverted: false,
         };
         const paragraph = createParagraph();
         const oldSegment1: ContentModelSegment = {

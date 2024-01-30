@@ -27,6 +27,7 @@ export function createSnapshotSelection(core: StandaloneEditorCore): SnapshotSel
                 {
                     type: 'range',
                     range: newRange,
+                    isReverted: !!selection.isReverted,
                 },
                 true /*skipSelectionChangedEvent*/
             );
@@ -57,6 +58,7 @@ export function createSnapshotSelection(core: StandaloneEditorCore): SnapshotSel
                 type: 'range',
                 start: getPath(range.startContainer, range.startOffset, contentDiv),
                 end: getPath(range.endContainer, range.endOffset, contentDiv),
+                isReverted: !!selection.isReverted,
             };
 
         default:
@@ -64,6 +66,7 @@ export function createSnapshotSelection(core: StandaloneEditorCore): SnapshotSel
                 type: 'range',
                 start: [],
                 end: [],
+                isReverted: false,
             };
     }
 }
