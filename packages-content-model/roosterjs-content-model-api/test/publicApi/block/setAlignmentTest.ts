@@ -416,12 +416,10 @@ describe('setAlignment', () => {
 
 describe('setAlignment in table', () => {
     let editor: IStandaloneEditor;
-    let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
     let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        createContentModel = jasmine.createSpy('createContentModel');
         triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
@@ -430,7 +428,6 @@ describe('setAlignment in table', () => {
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
-            createContentModel,
             isDarkMode: () => false,
             triggerEvent,
             getVisibleViewport,
@@ -444,8 +441,6 @@ describe('setAlignment in table', () => {
     ) {
         const model = createContentModelDocument();
         model.blocks.push(table);
-
-        createContentModel.and.returnValue(model);
 
         editor.formatContentModel = jasmine
             .createSpy('formatContentModel')
@@ -821,19 +816,16 @@ describe('setAlignment in table', () => {
 
 describe('setAlignment in list', () => {
     let editor: IStandaloneEditor;
-    let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
     let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        createContentModel = jasmine.createSpy('createContentModel');
         triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
-            createContentModel,
             isDarkMode: () => false,
             triggerEvent,
             getVisibleViewport,
@@ -848,7 +840,6 @@ describe('setAlignment in list', () => {
         const model = createContentModelDocument();
         model.blocks.push(list);
 
-        createContentModel.and.returnValue(model);
         let result: boolean | undefined;
 
         editor.formatContentModel = jasmine

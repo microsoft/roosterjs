@@ -37,7 +37,7 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
         if (e.eventType == PluginEventType.ContentChanged && e.source == 'RefreshModel') {
             this.getComponent(component => {
                 // TODO: Port to use IStandaloneEditor and remove type cast here
-                const model = (this.editor as IContentModelEditor).createContentModel();
+                const model = (this.editor as IContentModelEditor).getContentModelCopy('connected');
                 component.setContentModel(model);
                 setCurrentContentModel(model);
             });
@@ -72,7 +72,7 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     private onModelChange = () => {
         this.getComponent(component => {
             // TODO: Port to use IStandaloneEditor and remove type cast here
-            const model = (this.editor as IContentModelEditor).createContentModel();
+            const model = (this.editor as IContentModelEditor).getContentModelCopy('connected');
             component.setContentModel(model);
             setCurrentContentModel(model);
         });
