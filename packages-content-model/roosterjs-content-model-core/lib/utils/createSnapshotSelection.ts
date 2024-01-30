@@ -27,6 +27,7 @@ export function createSnapshotSelection(core: StandaloneEditorCore): SnapshotSel
                 {
                     type: 'range',
                     range: newRange,
+                    isReverted: !!selection.isReverted,
                 },
                 true /*skipSelectionChangedEvent*/
             );
