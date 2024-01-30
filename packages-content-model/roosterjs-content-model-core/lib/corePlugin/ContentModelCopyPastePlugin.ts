@@ -124,12 +124,15 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
             }
 
             const tempDiv = this.getTempDiv(this.editor.getDocument());
+            const context = createModelToDomContext();
+
+            context.onNodeCreated = onNodeCreated;
+
             const selectionForCopy = contentModelToDom(
                 tempDiv.ownerDocument,
                 tempDiv,
                 pasteModel,
-                createModelToDomContext(),
-                onNodeCreated
+                context
             );
 
             let newRange: Range | null = selectionForCopy

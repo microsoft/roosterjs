@@ -6,7 +6,7 @@ import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
 const mockedEditorContext = 'EDITORCONTEXT' as any;
-const mockedContext = 'CONTEXT' as any;
+const mockedContext = { name: 'CONTEXT' } as any;
 const mockedDiv = { ownerDocument: mockedDoc } as any;
 const mockedConfig = 'CONFIG' as any;
 
@@ -68,8 +68,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
         expect(core.cache.cachedSelection).toBe(mockedRange);
@@ -93,8 +92,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
     });
@@ -121,8 +119,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
     });
@@ -145,8 +142,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
     });
@@ -178,8 +174,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(core.selection.selection).toBe(mockedRange);
@@ -212,8 +207,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(core.selection.selection).toBe(mockedRange);
@@ -242,8 +236,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(core.selection.selection).toBe(null);
