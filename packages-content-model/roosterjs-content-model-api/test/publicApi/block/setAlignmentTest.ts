@@ -8,7 +8,7 @@ import {
     ContentModelListItem,
     ContentModelTable,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('setAlignment', () => {
@@ -449,15 +449,13 @@ describe('setAlignment in table', () => {
 
         editor.formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         setAlignment(editor, alignment);
 
@@ -853,16 +851,14 @@ describe('setAlignment in list', () => {
 
         editor.formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    result = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                        rawEvent: options.rawEvent,
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                result = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                    rawEvent: options.rawEvent,
+                });
+            });
 
         setAlignment(editor, alignment);
 

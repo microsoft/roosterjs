@@ -5,7 +5,7 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
 import {
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelGeneralBlock,
     ContentModelGeneralSegment,
     ContentModelParagraph,
@@ -327,7 +327,7 @@ describe('generalProcessor', () => {
         spyOn(createGeneralSegment, 'createGeneralSegment').and.returnValue(segment);
 
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,

@@ -1,4 +1,4 @@
-import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
+import { formatSegment } from '../utils/formatSegment';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -8,7 +8,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 export default function toggleItalic(editor: IStandaloneEditor) {
     editor.focus();
 
-    formatSegmentWithContentModel(
+    formatSegment(
         editor,
         'toggleItalic',
         (format, isTurningOn) => {

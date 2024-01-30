@@ -1,4 +1,4 @@
-import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
+import { formatSegment } from '../utils/formatSegment';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { setFontSizeInternal } from './setFontSize';
 import type {
@@ -24,7 +24,7 @@ const MAX_FONT_SIZE = 1000;
 export default function changeFontSize(editor: IStandaloneEditor, change: 'increase' | 'decrease') {
     editor.focus();
 
-    formatSegmentWithContentModel(
+    formatSegment(
         editor,
         'changeFontSize',
         (format, _, __, paragraph) => changeFontSizeInternal(change, format, paragraph),

@@ -13,8 +13,8 @@ import type { DomToModelOption } from '../context/DomToModelOption';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type {
     ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../parameter/FormatWithContentModelOptions';
+    FormatContentModelOptions,
+} from '../parameter/FormatContentModelOptions';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
@@ -59,12 +59,9 @@ export interface IStandaloneEditor {
      * to do format change. Then according to the return value, write back the modified content model into editor.
      * If there is cached model, it will be used and updated.
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
-    formatContentModel(
-        formatter: ContentModelFormatter,
-        options?: FormatWithContentModelOptions
-    ): void;
+    formatContentModel(formatter: ContentModelFormatter, options?: FormatContentModelOptions): void;
 
     /**
      * Get pending format of editor if any, or return null

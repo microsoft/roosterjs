@@ -13,7 +13,7 @@ import type {
     DOMSelection,
     DomToModelOption,
     EditorEnvironment,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
     IStandaloneEditor,
     PasteType,
     PluginEventData,
@@ -127,11 +127,11 @@ export class StandaloneEditor implements IStandaloneEditor {
      * to do format change. Then according to the return value, write back the modified content model into editor.
      * If there is cached model, it will be used and updated.
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
     formatContentModel(
         formatter: ContentModelFormatter,
-        options?: FormatWithContentModelOptions
+        options?: FormatContentModelOptions
     ): void {
         const core = this.getCore();
 

@@ -1,4 +1,4 @@
-import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
+import { formatSegment } from '../utils/formatSegment';
 import type {
     ContentModelParagraph,
     ContentModelSegmentFormat,
@@ -13,7 +13,7 @@ import type {
 export default function setFontSize(editor: IStandaloneEditor, fontSize: string) {
     editor.focus();
 
-    formatSegmentWithContentModel(
+    formatSegment(
         editor,
         'setFontSize',
         (format, _, __, paragraph) => setFontSizeInternal(fontSize, format, paragraph),

@@ -4,15 +4,15 @@ import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('toggleNumbering', () => {
     let editor = ({} as any) as IStandaloneEditor;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
-    let context: FormatWithContentModelContext;
+    let context: FormatContentModelContext;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -22,17 +22,15 @@ describe('toggleNumbering', () => {
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    context = {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                        rawEvent: options.rawEvent,
-                    };
-                    callback(mockedModel, context);
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                context = {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                    rawEvent: options.rawEvent,
+                };
+                callback(mockedModel, context);
+            });
 
         editor = ({
             focus,

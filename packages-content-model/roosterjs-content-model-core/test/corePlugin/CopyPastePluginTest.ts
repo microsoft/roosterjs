@@ -13,7 +13,7 @@ import {
     ContentModelDocument,
     DOMSelection,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
     IStandaloneEditor,
     DOMEventRecord,
     ClipboardData,
@@ -23,10 +23,10 @@ import {
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
-    createContentModelCopyPastePlugin,
+    createCopyPastePlugin,
     onNodeCreated,
     preprocessTable,
-} from '../../lib/corePlugin/ContentModelCopyPastePlugin';
+} from '../../lib/corePlugin/CopyPastePlugin';
 
 const modelValue = 'model' as any;
 const pasteModelValue = 'pasteModelValue' as any;
@@ -35,9 +35,9 @@ const deleteResultValue = 'deleteResult' as any;
 
 const allowedCustomPasteType = ['Test'];
 
-describe('ContentModelCopyPastePlugin.Ctor', () => {
+describe('CopyPastePlugin.Ctor', () => {
     it('Ctor without options', () => {
-        const plugin = createContentModelCopyPastePlugin({});
+        const plugin = createCopyPastePlugin({});
         const state = plugin.getState();
 
         expect(state).toEqual({
@@ -47,7 +47,7 @@ describe('ContentModelCopyPastePlugin.Ctor', () => {
     });
 
     it('Ctor with options', () => {
-        const plugin = createContentModelCopyPastePlugin({
+        const plugin = createCopyPastePlugin({
             allowedCustomPasteType,
         });
         const state = plugin.getState();
@@ -59,7 +59,7 @@ describe('ContentModelCopyPastePlugin.Ctor', () => {
     });
 });
 
-describe('ContentModelCopyPastePlugin |', () => {
+describe('CopyPastePlugin |', () => {
     let editor: IStandaloneEditor = null!;
     let plugin: PluginWithState<CopyPastePluginState>;
     let domEvents: Record<string, DOMEventRecord> = {};
@@ -107,20 +107,18 @@ describe('ContentModelCopyPastePlugin |', () => {
         mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    modelResult = createContentModelSpy();
-                    formatResult = callback(modelResult!, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                modelResult = createContentModelSpy();
+                formatResult = callback(modelResult!, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         spyOn(addRangeToSelection, 'addRangeToSelection');
 
-        plugin = createContentModelCopyPastePlugin({
+        plugin = createCopyPastePlugin({
             allowedCustomPasteType,
         });
         plugin.getState().tempDiv = div;

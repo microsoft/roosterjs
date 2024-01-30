@@ -1,11 +1,11 @@
-import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
+import { formatParagraph } from '../../../lib/publicApi/utils/formatParagraph';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelFormatter,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
@@ -13,10 +13,10 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('formatParagraphWithContentModel', () => {
+describe('formatParagraph', () => {
     let editor: IStandaloneEditor;
     let model: ContentModelDocument;
-    let context: FormatWithContentModelContext;
+    let context: FormatContentModelContext;
 
     const mockedContainer = 'C' as any;
     const mockedOffset = 'O' as any;
@@ -28,18 +28,16 @@ describe('formatParagraphWithContentModel', () => {
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    context = {
-                        newEntities: [],
-                        newImages: [],
-                        deletedEntities: [],
-                        rawEvent: options.rawEvent,
-                    };
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                context = {
+                    newEntities: [],
+                    newImages: [],
+                    deletedEntities: [],
+                    rawEvent: options.rawEvent,
+                };
 
-                    callback(model, context);
-                }
-            );
+                callback(model, context);
+            });
 
         editor = ({
             getFocusedPosition: () => ({ node: mockedContainer, offset: mockedOffset }),
@@ -50,11 +48,7 @@ describe('formatParagraphWithContentModel', () => {
     it('empty doc', () => {
         model = createContentModelDocument();
 
-        formatParagraphWithContentModel(
-            editor,
-            apiName,
-            paragraph => (paragraph.format.backgroundColor = 'red')
-        );
+        formatParagraph(editor, apiName, paragraph => (paragraph.format.backgroundColor = 'red'));
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -72,11 +66,7 @@ describe('formatParagraphWithContentModel', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        formatParagraphWithContentModel(
-            editor,
-            apiName,
-            paragraph => (paragraph.format.backgroundColor = 'red')
-        );
+        formatParagraph(editor, apiName, paragraph => (paragraph.format.backgroundColor = 'red'));
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -110,7 +100,7 @@ describe('formatParagraphWithContentModel', () => {
             paragraph.format.backgroundColor = 'red';
         };
 
-        formatParagraphWithContentModel(editor, apiName, callback);
+        formatParagraph(editor, apiName, callback);
 
         expect(context).toEqual({
             newEntities: [],

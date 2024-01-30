@@ -1,5 +1,5 @@
 import type { TableSelectionCoordinates } from '../selection/TableSelectionCoordinates';
-import type { EntityState } from './FormatWithContentModelContext';
+import type { EntityState } from './FormatContentModelContext';
 import type { SelectionType } from '../selection/DOMSelection';
 
 /**

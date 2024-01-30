@@ -4,7 +4,7 @@ import {
     ContentModelDocument,
     ContentModelLink,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     addLink,
@@ -31,17 +31,15 @@ describe('adjustLinkSelection', () => {
 
         formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    model = createContentModel();
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                model = createContentModel();
 
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+                formatResult = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         editor = ({
             formatContentModel,

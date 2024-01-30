@@ -1,5 +1,5 @@
 import { createParagraphDecorator } from 'roosterjs-content-model-dom';
-import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
+import { formatParagraph } from '../utils/formatParagraph';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -16,7 +16,7 @@ export default function setParagraphMargin(
 ) {
     editor.focus();
 
-    formatParagraphWithContentModel(editor, 'setParagraphMargin', para => {
+    formatParagraph(editor, 'setParagraphMargin', para => {
         if (!para.decorator) {
             para.decorator = createParagraphDecorator('p');
         }

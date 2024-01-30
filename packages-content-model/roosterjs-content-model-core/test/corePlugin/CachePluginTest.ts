@@ -1,16 +1,16 @@
 import * as textMutationObserver from '../../lib/corePlugin/utils/textMutationObserver';
-import { contentModelDomIndexer } from '../../lib/corePlugin/utils/contentModelDomIndexer';
-import { createContentModelCachePlugin } from '../../lib/corePlugin/ContentModelCachePlugin';
+import { createCachePlugin } from '../../lib/corePlugin/CachePlugin';
+import { domIndexerImpl } from '../../lib/corePlugin/utils/domIndexerImpl';
 import {
-    ContentModelCachePluginState,
-    ContentModelDomIndexer,
+    CachePluginState,
+    DomIndexer,
     IStandaloneEditor,
     PluginWithState,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 
-describe('ContentModelCachePlugin', () => {
-    let plugin: PluginWithState<ContentModelCachePluginState>;
+describe('CachePlugin', () => {
+    let plugin: PluginWithState<CachePluginState>;
     let editor: IStandaloneEditor;
 
     let addEventListenerSpy: jasmine.Spy;
@@ -18,7 +18,7 @@ describe('ContentModelCachePlugin', () => {
     let getDOMSelectionSpy: jasmine.Spy;
     let reconcileSelectionSpy: jasmine.Spy;
     let isInShadowEditSpy: jasmine.Spy;
-    let domIndexer: ContentModelDomIndexer;
+    let domIndexer: DomIndexer;
     let contentDiv: HTMLDivElement;
 
     function init(option: StandaloneEditorOptions) {
@@ -45,7 +45,7 @@ describe('ContentModelCachePlugin', () => {
             },
         } as any) as IStandaloneEditor;
 
-        plugin = createContentModelCachePlugin(option, contentDiv);
+        plugin = createCachePlugin(option, contentDiv);
         plugin.initialize(editor);
     }
 
@@ -75,7 +75,7 @@ describe('ContentModelCachePlugin', () => {
             });
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
             expect(plugin.getState()).toEqual({
-                domIndexer: contentModelDomIndexer,
+                domIndexer: domIndexerImpl,
                 textMutationObserver: mockedObserver,
             });
             expect(startObservingSpy).toHaveBeenCalledTimes(1);

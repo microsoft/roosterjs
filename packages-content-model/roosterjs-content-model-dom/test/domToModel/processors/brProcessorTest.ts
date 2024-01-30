@@ -3,7 +3,7 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import {
     ContentModelBr,
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelParagraph,
     DomToModelContext,
 } from 'roosterjs-content-model-types';
@@ -69,7 +69,7 @@ describe('brProcessor', () => {
         const doc = createContentModelDocument();
         const br = document.createElement('br');
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,
