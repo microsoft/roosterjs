@@ -1,5 +1,4 @@
-import type { ContextMenuPluginState } from './ContextMenuPluginState';
-import type { EditPluginState } from 'roosterjs-editor-types';
+import type { ContextMenuProvider, EditPluginState } from 'roosterjs-editor-types';
 
 /**
  * Core plugin state for Content Model Editor
@@ -11,7 +10,7 @@ export interface ContentModelCorePluginState {
     readonly edit: EditPluginState;
 
     /**
-     * Plugin state of ContextMenuPlugin
+     * Context Menu providers
      */
-    readonly contextMenu: ContextMenuPluginState;
+    readonly contextMenuProviders: ContextMenuProvider<any>[];
 }

@@ -1,11 +1,5 @@
-import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
-import {
-    changeElementTag,
-    getTagOfNode,
-    moveChildNodes,
-    safeInstanceOf,
-    toArray,
-} from 'roosterjs-editor-dom';
+import { changeElementTag, safeInstanceOf, toArray } from 'roosterjs-editor-dom';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
@@ -19,8 +13,6 @@ import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types'
  * new table is inserted, to make sure the selection path we created is correct.
  */
 class NormalizeTablePlugin implements EditorPlugin {
-    private editor: IEditor | null = null;
-
     /**
      * Get a friendly name of this plugin
      */
@@ -34,18 +26,14 @@ class NormalizeTablePlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
-        this.editor = editor;
-    }
+    initialize(editor: IEditor) {}
 
     /**
      * The last method that editor will call to a plugin before it is disposed.
      * Plugin can take this chance to clear the reference to editor. After this method is
      * called, plugin should not call to any editor method since it will result in error.
      */
-    dispose() {
-        this.editor = null;
-    }
+    dispose() {}
 
     /**
      * Core method for a plugin. Once an event happens in editor, editor will call this
@@ -55,115 +43,11 @@ class NormalizeTablePlugin implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
-            case PluginEventType.EditorReady:
-            case PluginEventType.ContentChanged:
-                if (this.editor) {
-                    this.normalizeTables(this.editor.queryElements('table'));
-                }
-                break;
-
-            case PluginEventType.BeforePaste:
-                this.normalizeTables(toArray(event.fragment.querySelectorAll('table')));
-                break;
-
-            case PluginEventType.MouseDown:
-                this.normalizeTableFromEvent(event.rawEvent);
-                break;
-
-            case PluginEventType.KeyDown:
-                if (event.rawEvent.shiftKey) {
-                    this.normalizeTableFromEvent(event.rawEvent);
-                }
-                break;
-
             case PluginEventType.ExtractContentWithDom:
                 normalizeListsForExport(event.clonedRoot);
                 break;
         }
     }
-
-    private normalizeTableFromEvent(event: KeyboardEvent | MouseEvent) {
-        const table = this.editor?.getElementAtCursor('table', event.target as Node);
-
-        if (table) {
-            this.normalizeTables([<HTMLTableElement>table]);
-        }
-    }
-
-    private normalizeTables(tables: HTMLTableElement[]) {
-        if (this.editor && tables.length > 0) {
-            const rangeEx = this.editor.getSelectionRangeEx();
-            const { startContainer, endContainer, startOffset, endOffset } =
-                (rangeEx?.type == SelectionRangeTypes.Normal && rangeEx.ranges[0]) || {};
-
-            const isChanged = normalizeTables(tables);
-
-            if (isChanged) {
-                if (
-                    startContainer &&
-                    endContainer &&
-                    typeof startOffset === 'number' &&
-                    typeof endOffset === 'number'
-                ) {
-                    this.editor.select(startContainer, startOffset, endContainer, endOffset);
-                } else if (
-                    rangeEx?.type == SelectionRangeTypes.TableSelection &&
-                    rangeEx.coordinates
-                ) {
-                    this.editor.select(rangeEx.table, rangeEx.coordinates);
-                }
-            }
-        }
-    }
-}
-
-function normalizeTables(tables: HTMLTableElement[]) {
-    let isDOMChanged = false;
-    tables.forEach(table => {
-        let tbody: HTMLTableSectionElement | null = null;
-
-        for (let child = table.firstChild; child; child = child.nextSibling) {
-            const tag = getTagOfNode(child);
-            switch (tag) {
-                case 'TR':
-                    if (!tbody) {
-                        tbody = table.ownerDocument.createElement('tbody');
-                        table.insertBefore(tbody, child);
-                    }
-
-                    tbody.appendChild(child);
-                    child = tbody;
-                    isDOMChanged = true;
-
-                    break;
-                case 'TBODY':
-                    if (tbody) {
-                        moveChildNodes(tbody, child, true /*keepExistingChildren*/);
-                        child.parentNode?.removeChild(child);
-                        child = tbody;
-                        isDOMChanged = true;
-                    } else {
-                        tbody = child as HTMLTableSectionElement;
-                    }
-                    break;
-                default:
-                    tbody = null;
-                    break;
-            }
-        }
-
-        const colgroups = table.querySelectorAll('colgroup');
-        const thead = table.querySelector('thead');
-        if (thead) {
-            colgroups.forEach(colgroup => {
-                if (!thead.contains(colgroup)) {
-                    thead.appendChild(colgroup);
-                }
-            });
-        }
-    });
-
-    return isDOMChanged;
 }
 
 function normalizeListsForExport(root: ParentNode) {
