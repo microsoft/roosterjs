@@ -12,4 +12,3 @@ export { ContentModelCorePluginState } from './publicTypes/ContentModelCorePlugi
 export { ContentModelBeforePasteEvent } from './publicTypes/ContentModelBeforePasteEvent';
 
 export { ContentModelEditor } from './editor/ContentModelEditor';
-export { isContentModelEditor } from './editor/isContentModelEditor';

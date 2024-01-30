@@ -1,9 +1,11 @@
 import * as React from 'react';
+import ContentModelRibbonButton from '../../ribbonButtons/contentModel/ContentModelRibbonButton';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { ContentModelDocumentView } from '../../contentModel/components/model/ContentModelDocumentView';
+import { ContentModelRibbon } from '../../ribbonButtons/contentModel/ContentModelRibbon';
+import { ContentModelRibbonPlugin } from '../../ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { exportButton } from './buttons/exportButton';
 import { refreshButton } from './buttons/refreshButton';
-import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 const styles = require('./ContentModelPane.scss');
@@ -13,14 +15,14 @@ export interface ContentModelPaneState {
 }
 
 export interface ContentModelPaneProps extends ContentModelPaneState, SidePaneElementProps {
-    ribbonPlugin: RibbonPlugin;
+    ribbonPlugin: ContentModelRibbonPlugin;
 }
 
 export default class ContentModelPane extends React.Component<
     ContentModelPaneProps,
     ContentModelPaneState
 > {
-    private contentModelButtons: RibbonButton<any>[];
+    private contentModelButtons: ContentModelRibbonButton<any>[];
 
     constructor(props: ContentModelPaneProps) {
         super(props);
@@ -41,7 +43,10 @@ export default class ContentModelPane extends React.Component<
     render() {
         return (
             <>
-                <Ribbon buttons={this.contentModelButtons} plugin={this.props.ribbonPlugin} />
+                <ContentModelRibbon
+                    buttons={this.contentModelButtons}
+                    plugin={this.props.ribbonPlugin}
+                />
                 <div className={styles.contentModel}>
                     {this.state.model ? <ContentModelDocumentView doc={this.state.model} /> : null}
                 </div>
