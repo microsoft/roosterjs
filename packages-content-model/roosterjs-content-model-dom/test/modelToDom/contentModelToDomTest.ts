@@ -21,7 +21,6 @@ describe('contentModelToDom', () => {
                 block: null,
                 segment: null,
             },
-            isReverted: false,
         });
     });
 
@@ -44,7 +43,6 @@ describe('contentModelToDom', () => {
                 block: parent.firstChild,
                 segment: parent.firstChild!.firstChild,
             },
-            isReverted: false,
         });
     });
 

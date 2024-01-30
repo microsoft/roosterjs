@@ -34,12 +34,6 @@ export interface ModelToDomRegularSelection {
      * Current navigating position
      */
     current: ModelToDomBlockAndSegmentNode;
-
-    /**
-     * Whether the selection was from left to right (in document order) or
-     * right to left (reverse of document order)
-     */
-    isReverted?: boolean;
 }
 
 /**

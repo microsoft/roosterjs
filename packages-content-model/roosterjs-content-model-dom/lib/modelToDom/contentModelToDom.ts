@@ -27,7 +27,6 @@ export function contentModelToDom(
     onNodeCreated?: OnNodeCreated
 ): DOMSelection | null {
     context.onNodeCreated = onNodeCreated;
-    context.regularSelection.isReverted = isSelectionReverted(doc.getSelection());
 
     context.modelHandlers.blockGroupChildren(doc, root, model, context);
 
@@ -40,7 +39,7 @@ export function contentModelToDom(
 
 function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSelection | null {
     const {
-        regularSelection: { start, end, isReverted },
+        regularSelection: { start, end },
         tableSelection,
         imageSelection,
     } = context;
@@ -62,7 +61,7 @@ function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSe
         return {
             type: 'range',
             range,
-            isReverted: !!isReverted,
+            isReverted: false,
         };
     } else if (tableSelection) {
         return tableSelection;
@@ -111,17 +110,4 @@ function calcPosition(
     }
 
     return result;
-}
-
-function isSelectionReverted(selection: Selection | null | undefined): boolean {
-    if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        return (
-            !range.collapsed &&
-            selection.focusNode != range.endContainer &&
-            selection.focusOffset != range.endOffset
-        );
-    }
-
-    return false;
 }
