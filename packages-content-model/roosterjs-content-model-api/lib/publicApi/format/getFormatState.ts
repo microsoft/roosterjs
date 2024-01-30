@@ -1,4 +1,4 @@
-import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
+import { retrieveModelFormatState } from 'roosterjs-content-model-core';
 import type { IStandaloneEditor, ContentModelFormatState } from 'roosterjs-content-model-types';
 
 /**
