@@ -7,6 +7,10 @@ class DOMHelperImpl implements DOMHelper {
     queryElements(selector: string): HTMLElement[] {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
     }
+
+    getTextContent(): string {
+        return this.contentDiv.textContent || '';
+    }
 }
 
 /**

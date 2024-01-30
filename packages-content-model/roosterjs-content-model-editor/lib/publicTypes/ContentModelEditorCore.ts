@@ -4,7 +4,6 @@ import type {
     CustomData,
     ExperimentalFeatures,
     ContentMetadata,
-    GetContentMode,
     InsertOption,
     NodePosition,
     StyleBasedFormatState,
@@ -27,19 +26,6 @@ export type SetContent = (
     triggerContentChangedEvent: boolean,
     metadata?: ContentMetadata
 ) => void;
-
-/**
- * Get current editor content as HTML string
- * @param core The ContentModelEditorCore object
- * @param innerCore The StandaloneEditorCore object
- * @param mode specify what kind of HTML content to retrieve
- * @returns HTML string representing current editor content
- */
-export type GetContent = (
-    core: ContentModelEditorCore,
-    innerCore: StandaloneEditorCore,
-    mode: GetContentMode
-) => string;
 
 /**
  * Insert a DOM node into editor content
@@ -103,15 +89,6 @@ export interface ContentModelCoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
-
-    /**
-     * Get current editor content as HTML string
-     * @param core The ContentModelEditorCore object
-     * @param innerCore The StandaloneEditorCore object
-     * @param mode specify what kind of HTML content to retrieve
-     * @returns HTML string representing current editor content
-     */
-    getContent: GetContent;
 
     /**
      * Get style based format state from current selection, including font name/size and colors

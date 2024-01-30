@@ -10,6 +10,7 @@ import {
 } from './utils/eventConverter';
 import {
     createModelFromHtml,
+    exportContent,
     isBold,
     redo,
     StandaloneEditor,
@@ -90,7 +91,15 @@ import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type { DOMEventRecord, Rect } from 'roosterjs-content-model-types';
+import type { DOMEventRecord, ExportContentMode, Rect } from 'roosterjs-content-model-types';
+
+const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
+    [GetContentMode.CleanHTML]: 'HTML',
+    [GetContentMode.PlainText]: 'PlainText',
+    [GetContentMode.PlainTextFast]: 'PlainTextFast',
+    [GetContentMode.RawHTMLOnly]: 'HTML',
+    [GetContentMode.RawHTMLWithSelection]: 'HTML',
+};
 
 /**
  * Editor for Content Model.
@@ -298,10 +307,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @returns HTML string representing current editor content
      */
     getContent(mode: GetContentMode | CompatibleGetContentMode = GetContentMode.CleanHTML): string {
-        const core = this.getContentModelEditorCore();
-        const innerCore = this.getCore();
-
-        return core.api.getContent(core, innerCore, mode as GetContentMode);
+        return exportContent(this, GetContentModeMap[mode]);
     }
 
     /**

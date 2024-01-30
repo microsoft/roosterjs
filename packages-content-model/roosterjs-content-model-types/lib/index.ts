@@ -86,6 +86,7 @@ export { PasteType } from './enum/PasteType';
 export { BorderOperations } from './enum/BorderOperations';
 export { DeleteResult } from './enum/DeleteResult';
 export { InsertEntityPosition } from './enum/InsertEntityPosition';
+export { ExportContentMode } from './enum/ExportContentMode';
 
 export { ContentModelBlock } from './block/ContentModelBlock';
 export { ContentModelParagraph } from './block/ContentModelParagraph';

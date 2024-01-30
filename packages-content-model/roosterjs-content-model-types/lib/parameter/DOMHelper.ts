@@ -19,4 +19,9 @@ export interface DOMHelper {
      * @returns HTML Element array of the query result
      */
     queryElements(selector: string): HTMLElement[];
+
+    /**
+     * Get plain text content of editor using textContent property
+     */
+    getTextContent(): string;
 }
