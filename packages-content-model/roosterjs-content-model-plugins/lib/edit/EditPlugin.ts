@@ -13,7 +13,7 @@ import type {
  * 1. Delete Key
  * 2. Backspace Key
  */
-export class ContentModelEditPlugin implements EditorPlugin {
+export class EditPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
 
     /**

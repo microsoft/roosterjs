@@ -13,16 +13,13 @@ import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
 import RibbonPlugin from './ribbonButtons/contentModel/RibbonPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
+import { AutoFormatPlugin, EditPlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { Snapshots } from 'roosterjs-editor-types';
 import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
-import {
-    ContentModelAutoFormatPlugin,
-    ContentModelEditPlugin,
-} from 'roosterjs-content-model-plugins';
 import {
     ContentModelSegmentFormat,
     IStandaloneEditor,
@@ -96,9 +93,9 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private eventViewPlugin: ContentModelEventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
-    private contentModelEditPlugin: ContentModelEditPlugin;
+    private contentModelEditPlugin: EditPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
-    private contentAutoFormatPlugin: ContentModelAutoFormatPlugin;
+    private contentAutoFormatPlugin: AutoFormatPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private snapshots: Snapshots<Snapshot>;
@@ -120,8 +117,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
-        this.contentModelEditPlugin = new ContentModelEditPlugin();
-        this.contentAutoFormatPlugin = new ContentModelAutoFormatPlugin();
+        this.contentModelEditPlugin = new EditPlugin();
+        this.contentAutoFormatPlugin = new AutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.state = {

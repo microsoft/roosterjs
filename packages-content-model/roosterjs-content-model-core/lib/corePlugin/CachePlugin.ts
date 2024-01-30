@@ -17,7 +17,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
     private state: CachePluginState;
 
     /**
-     * Construct a new instance of ContentModelEditPlugin class
+     * Construct a new instance of CachePlugin class
      * @param option The editor option
      * @param contentDiv The editor content DIV
      */

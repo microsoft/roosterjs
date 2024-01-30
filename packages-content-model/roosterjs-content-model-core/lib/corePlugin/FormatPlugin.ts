@@ -24,7 +24,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
     private state: FormatPluginState;
 
     /**
-     * Construct a new instance of ContentModelEditPlugin class
+     * Construct a new instance of FormatPlugin class
      * @param option The editor option
      */
     constructor(option: StandaloneEditorOptions) {

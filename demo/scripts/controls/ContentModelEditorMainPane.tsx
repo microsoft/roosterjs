@@ -16,6 +16,7 @@ import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
+import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { ContentModelSegmentFormat, Snapshots } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
@@ -23,11 +24,6 @@ import { EditorPlugin } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
-import {
-    ContentModelAutoFormatPlugin,
-    ContentModelEditPlugin,
-    ContentModelPastePlugin,
-} from 'roosterjs-content-model-plugins';
 import {
     ContentModelEditor,
     ContentModelEditorOptions,
@@ -100,15 +96,15 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private eventViewPlugin: ContentModelEventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
-    private contentModelEditPlugin: ContentModelEditPlugin;
-    private contentModelAutoFormatPlugin: ContentModelAutoFormatPlugin;
+    private contentModelEditPlugin: EditPlugin;
+    private contentModelAutoFormatPlugin: AutoFormatPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
-    private pastePlugin: ContentModelPastePlugin;
+    private pastePlugin: PastePlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
     private snapshots: Snapshots;
 
@@ -129,13 +125,13 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
-        this.contentModelEditPlugin = new ContentModelEditPlugin();
-        this.contentModelAutoFormatPlugin = new ContentModelAutoFormatPlugin();
+        this.contentModelEditPlugin = new EditPlugin();
+        this.contentModelAutoFormatPlugin = new AutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
-        this.pastePlugin = new ContentModelPastePlugin();
+        this.pastePlugin = new PastePlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',

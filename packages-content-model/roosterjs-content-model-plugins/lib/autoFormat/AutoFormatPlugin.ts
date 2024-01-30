@@ -33,7 +33,7 @@ const DefaultOptions: Required<AutoFormatOptions> = {
  * Auto Format plugin handles auto formatting, such as transforming * characters into a bullet list.
  * It can be customized with options to enable or disable auto list features.
  */
-export class ContentModelAutoFormatPlugin implements EditorPlugin {
+export class AutoFormatPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
 
     /**
