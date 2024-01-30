@@ -11,8 +11,6 @@ import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFor
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
-import type { ModelToDomOption } from '../context/ModelToDomOption';
-import type { OnNodeCreated } from '../context/ModelToDomSettings';
 import type {
     ContentModelFormatter,
     FormatWithContentModelOptions,
@@ -36,18 +34,6 @@ export interface IStandaloneEditor {
         option?: DomToModelOption,
         selectionOverride?: DOMSelection
     ): ContentModelDocument;
-
-    /**
-     * Set content with content model
-     * @param model The content model to set
-     * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
-     */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ): DOMSelection | null;
 
     /**
      * Get current running environment, such as if editor is running on Mac

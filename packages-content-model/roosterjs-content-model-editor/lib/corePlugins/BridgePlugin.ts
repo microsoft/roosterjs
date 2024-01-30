@@ -1,4 +1,3 @@
-import { createContextMenuPlugin } from './ContextMenuPlugin';
 import { createEditPlugin } from './EditPlugin';
 import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
@@ -11,8 +10,9 @@ import type {
 import type {
     EditorPlugin as LegacyEditorPlugin,
     PluginEvent as LegacyPluginEvent,
+    ContextMenuProvider as LegacyContextMenuProvider,
 } from 'roosterjs-editor-types';
-import type { EditorPlugin, PluginEvent } from 'roosterjs-content-model-types';
+import type { ContextMenuProvider, PluginEvent } from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 
@@ -20,7 +20,7 @@ const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
  * @internal
  * Act as a bridge between Standalone editor and Content Model editor, translate Standalone editor event type to legacy event type
  */
-export class BridgePlugin implements EditorPlugin {
+export class BridgePlugin implements ContextMenuProvider<any> {
     private legacyPlugins: LegacyEditorPlugin[];
     private corePluginState: ContentModelCorePluginState;
     private outerEditor: IContentModelEditor | null = null;
@@ -28,18 +28,16 @@ export class BridgePlugin implements EditorPlugin {
 
     constructor(options: ContentModelEditorOptions) {
         const editPlugin = createEditPlugin();
-        const contextMenuPlugin = createContextMenuPlugin(options);
         const normalizeTablePlugin = createNormalizeTablePlugin();
 
         this.legacyPlugins = [
             editPlugin,
             ...(options.legacyPlugins ?? []).filter(x => !!x),
-            contextMenuPlugin,
             normalizeTablePlugin,
         ];
         this.corePluginState = {
             edit: editPlugin.getState(),
-            contextMenu: contextMenuPlugin.getState(),
+            contextMenuProviders: this.legacyPlugins.filter(isContextMenuProvider),
         };
         this.checkExclusivelyHandling = this.legacyPlugins.some(
             plugin => plugin.willHandleEventExclusively
@@ -134,4 +132,32 @@ export class BridgePlugin implements EditorPlugin {
             Object.assign(event, oldEventToNewEvent(oldEvent, event));
         }
     }
+
+    /**
+     * A callback to return context menu items
+     * @param target Target node that triggered a ContextMenu event
+     * @returns An array of context menu items, or null means no items needed
+     */
+    getContextMenuItems(target: Node): any[] {
+        const allItems: any[] = [];
+
+        this.corePluginState.contextMenuProviders.forEach(provider => {
+            const items = provider.getContextMenuItems(target) ?? [];
+            if (items?.length > 0) {
+                if (allItems.length > 0) {
+                    allItems.push(null);
+                }
+
+                allItems.push(...items);
+            }
+        });
+
+        return allItems;
+    }
+}
+
+function isContextMenuProvider(
+    source: LegacyEditorPlugin
+): source is LegacyContextMenuProvider<any> {
+    return !!(<LegacyContextMenuProvider<any>>source)?.getContextMenuItems;
 }

@@ -1,3 +1,4 @@
+import { ChangeSource } from '../../constants/ChangeSource';
 import { containerSizeFormatParser } from '../../override/containerSizeFormatParser';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createPasteEntityProcessor } from '../../override/pasteEntityProcessor';
@@ -11,10 +12,10 @@ import { pasteTextProcessor } from '../../override/pasteTextProcessor';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
     BeforePasteEvent,
+    ClipboardData,
     ContentModelDocument,
     ContentModelSegmentFormat,
-    DomToModelOption,
-    FormatWithContentModelContext,
+    StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
 const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
@@ -35,52 +36,66 @@ const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
  * @internal
  */
 export function mergePasteContent(
-    model: ContentModelDocument,
-    context: FormatWithContentModelContext,
+    core: StandaloneEditorCore,
     eventResult: BeforePasteEvent,
-    defaultDomToModelOptions: DomToModelOption
+    clipboardData: ClipboardData
 ) {
     const { fragment, domToModelOption, customizedMerge, pasteType } = eventResult;
-    const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
-    const domToModelContext = createDomToModelContext(
-        undefined /*editorContext*/,
-        defaultDomToModelOptions,
-        {
-            processorOverride: {
-                '#text': pasteTextProcessor,
-                entity: createPasteEntityProcessor(domToModelOption),
-                '*': createPasteGeneralProcessor(domToModelOption),
-            },
-            formatParserOverride: {
-                display: pasteDisplayFormatParser,
-            },
-            additionalFormatParsers: {
-                container: [containerSizeFormatParser],
-                entity: [pasteBlockEntityParser],
-            },
+
+    core.api.formatContentModel(
+        core,
+        (model, context) => {
+            const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
+            const domToModelContext = createDomToModelContext(
+                undefined /*editorContext*/,
+                core.domToModelSettings.customized,
+                {
+                    processorOverride: {
+                        '#text': pasteTextProcessor,
+                        entity: createPasteEntityProcessor(domToModelOption),
+                        '*': createPasteGeneralProcessor(domToModelOption),
+                    },
+                    formatParserOverride: {
+                        display: pasteDisplayFormatParser,
+                    },
+                    additionalFormatParsers: {
+                        container: [containerSizeFormatParser],
+                        entity: [pasteBlockEntityParser],
+                    },
+                },
+                domToModelOption
+            );
+
+            domToModelContext.segmentFormat = selectedSegment
+                ? getSegmentTextFormat(selectedSegment)
+                : {};
+
+            const pasteModel = domToContentModel(fragment, domToModelContext);
+            const mergeOption: MergeModelOption = {
+                mergeFormat: pasteType == 'mergeFormat' ? 'keepSourceEmphasisFormat' : 'none',
+                mergeTable: shouldMergeTable(pasteModel),
+            };
+
+            const insertPoint = customizedMerge
+                ? customizedMerge(model, pasteModel)
+                : mergeModel(model, pasteModel, context, mergeOption);
+
+            if (insertPoint) {
+                context.newPendingFormat = {
+                    ...EmptySegmentFormat,
+                    ...model.format,
+                    ...insertPoint.marker.format,
+                };
+            }
+
+            return true;
         },
-        domToModelOption
+        {
+            changeSource: ChangeSource.Paste,
+            getChangeData: () => clipboardData,
+            apiName: 'paste',
+        }
     );
-
-    domToModelContext.segmentFormat = selectedSegment ? getSegmentTextFormat(selectedSegment) : {};
-
-    const pasteModel = domToContentModel(fragment, domToModelContext);
-    const mergeOption: MergeModelOption = {
-        mergeFormat: pasteType == 'mergeFormat' ? 'keepSourceEmphasisFormat' : 'none',
-        mergeTable: shouldMergeTable(pasteModel),
-    };
-
-    const insertPoint = customizedMerge
-        ? customizedMerge(model, pasteModel)
-        : mergeModel(model, pasteModel, context, mergeOption);
-
-    if (insertPoint) {
-        context.newPendingFormat = {
-            ...EmptySegmentFormat,
-            ...model.format,
-            ...insertPoint.marker.format,
-        };
-    }
 }
 
 function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined {

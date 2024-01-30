@@ -246,6 +246,7 @@ export {
     GenericPluginState,
     PluginState,
 } from './pluginState/PluginState';
+export { ContextMenuPluginState } from './pluginState/ContextMenuPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {

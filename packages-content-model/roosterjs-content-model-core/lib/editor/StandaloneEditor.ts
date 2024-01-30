@@ -1,4 +1,5 @@
 import { ChangeSource } from '../constants/ChangeSource';
+import { createEmptyModel } from 'roosterjs-content-model-dom';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import { transformColor } from '../publicApi/color/transformColor';
@@ -15,8 +16,6 @@ import type {
     EditorEnvironment,
     FormatWithContentModelOptions,
     IStandaloneEditor,
-    ModelToDomOption,
-    OnNodeCreated,
     PasteType,
     PluginEvent,
     PluginEventData,
@@ -49,7 +48,10 @@ export class StandaloneEditor implements IStandaloneEditor {
 
         onBeforeInitializePlugins?.();
 
-        this.getCore().plugins.forEach(plugin => plugin.initialize(this));
+        const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
+
+        this.core.api.setContentModel(this.core, initialModel, { ignoreSelection: true });
+        this.core.plugins.forEach(plugin => plugin.initialize(this));
     }
 
     /**
@@ -93,22 +95,6 @@ export class StandaloneEditor implements IStandaloneEditor {
         const core = this.getCore();
 
         return core.api.createContentModel(core, option, selectionOverride);
-    }
-
-    /**
-     * Set content with content model
-     * @param model The content model to set
-     * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
-     */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ): DOMSelection | null {
-        const core = this.getCore();
-
-        return core.api.setContentModel(core, model, option, onNodeCreated);
     }
 
     /**

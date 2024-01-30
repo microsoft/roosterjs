@@ -110,7 +110,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
         const selection = this.editor.getDOMSelection();
 
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
-            const model = this.editor.createContentModel(undefined /* option */, selection);
+            const model = this.editor.createContentModel();
             const cacheProcessor = this.editor.isDarkMode() ? this.processEntityColor : false;
 
             const pasteModel = cloneModel(model, {

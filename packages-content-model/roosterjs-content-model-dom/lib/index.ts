@@ -47,6 +47,7 @@ export { createGeneralBlock } from './modelApi/creators/createGeneralBlock';
 export { createEntity } from './modelApi/creators/createEntity';
 export { createDivider } from './modelApi/creators/createDivider';
 export { createListLevel } from './modelApi/creators/createListLevel';
+export { createEmptyModel } from './modelApi/creators/createEmptyModel';
 
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';

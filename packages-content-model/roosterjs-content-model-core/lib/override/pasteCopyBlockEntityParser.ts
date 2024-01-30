@@ -13,8 +13,11 @@ const ONE_HUNDRED_PERCENT = '100%';
  * @internal
  */
 export const onCreateCopyEntityNode: OnNodeCreated = (model, node) => {
+    const entityModel = model as ContentModelEntity;
     if (
-        (model as ContentModelEntity)?.wrapper &&
+        entityModel &&
+        entityModel.wrapper &&
+        entityModel.segmentType == 'Entity' &&
         isNodeOfType(node, 'ELEMENT_NODE') &&
         isElementOfType(node, 'span') &&
         node.style.width == ONE_HUNDRED_PERCENT &&

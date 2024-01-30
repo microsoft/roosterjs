@@ -124,7 +124,7 @@ export function getRotateHTML({
                     className: ImageEditElementClass.RotateHandle,
                     style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${
                         handleLeft + ROTATE_WIDTH
-                    }px;cursor:move;top:${-ROTATE_SIZE}px;`,
+                    }px;cursor:move;top:${-ROTATE_SIZE}px;line-height: 0px;`,
                     children: [getRotateIconHTML(borderColor)],
                 },
             ],

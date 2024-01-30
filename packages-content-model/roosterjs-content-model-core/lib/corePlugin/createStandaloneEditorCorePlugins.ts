@@ -1,6 +1,7 @@
 import { createContentModelCachePlugin } from './ContentModelCachePlugin';
 import { createContentModelCopyPastePlugin } from './ContentModelCopyPastePlugin';
 import { createContentModelFormatPlugin } from './ContentModelFormatPlugin';
+import { createContextMenuPlugin } from './ContextMenuPlugin';
 import { createDOMEventPlugin } from './DOMEventPlugin';
 import { createEntityPlugin } from './EntityPlugin';
 import { createLifecyclePlugin } from './LifecyclePlugin';
@@ -28,6 +29,7 @@ export function createStandaloneEditorCorePlugins(
         lifecycle: createLifecyclePlugin(options, contentDiv),
         entity: createEntityPlugin(),
         selection: createSelectionPlugin(options),
+        contextMenu: createContextMenuPlugin(options),
         undo: createUndoPlugin(options),
     };
 }
