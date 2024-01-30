@@ -89,6 +89,7 @@ describe('createSnapshotSelection - Range selection', () => {
             type: 'range',
             start: [],
             end: [],
+            isReverted: false,
         });
     });
 
@@ -102,6 +103,7 @@ describe('createSnapshotSelection - Range selection', () => {
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         const result = createSnapshotSelection(core);
@@ -110,6 +112,7 @@ describe('createSnapshotSelection - Range selection', () => {
             type: 'range',
             start: [0, 2],
             end: [0, 4],
+            isReverted: false,
         });
     });
 
@@ -123,6 +126,7 @@ describe('createSnapshotSelection - Range selection', () => {
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         const result = createSnapshotSelection(core);
@@ -131,6 +135,7 @@ describe('createSnapshotSelection - Range selection', () => {
             type: 'range',
             start: [0, 0, 2],
             end: [0, 0, 4],
+            isReverted: false,
         });
     });
 
@@ -144,6 +149,7 @@ describe('createSnapshotSelection - Range selection', () => {
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         const result = createSnapshotSelection(core);
@@ -152,6 +158,7 @@ describe('createSnapshotSelection - Range selection', () => {
             type: 'range',
             start: [0, 0, 1],
             end: [1, 0, 0],
+            isReverted: false,
         });
     });
 
@@ -168,6 +175,7 @@ describe('createSnapshotSelection - Range selection', () => {
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         const result = createSnapshotSelection(core);
@@ -176,6 +184,7 @@ describe('createSnapshotSelection - Range selection', () => {
             type: 'range',
             start: [0, 7],
             end: [0, 12],
+            isReverted: false,
         });
     });
 
@@ -200,6 +209,7 @@ describe('createSnapshotSelection - Range selection', () => {
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
             range: range,
+            isReverted: false,
         });
 
         const result = createSnapshotSelection(core);
@@ -208,6 +218,7 @@ describe('createSnapshotSelection - Range selection', () => {
             type: 'range',
             start: [1, 0, 7],
             end: [2, 7],
+            isReverted: false,
         });
     });
 });
@@ -262,6 +273,7 @@ describe('createSnapshotSelection - Normalize Table', () => {
             type: 'range',
             start: startPath,
             end: endPath,
+            isReverted: false,
         });
         expect(div.innerHTML).toBe(output);
 

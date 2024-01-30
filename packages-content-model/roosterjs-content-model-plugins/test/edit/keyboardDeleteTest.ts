@@ -537,6 +537,7 @@ describe('keyboardDelete', () => {
                 startContainer: document.createTextNode('test'),
                 startOffset: 2,
             } as any) as Range,
+            isReverted: false,
         };
         const editor = {
             formatContentModel: formatWithContentModelSpy,
@@ -558,6 +559,7 @@ describe('keyboardDelete', () => {
                 startContainer: document.createTextNode('test'),
                 startOffset: 2,
             } as any) as Range,
+            isReverted: false,
         };
         const editor = {
             formatContentModel: formatWithContentModelSpy,
@@ -579,6 +581,7 @@ describe('keyboardDelete', () => {
                 startContainer: document.createTextNode('test'),
                 startOffset: 0,
             } as any) as Range,
+            isReverted: false,
         };
 
         const editor = {
@@ -602,6 +605,7 @@ describe('keyboardDelete', () => {
                 startContainer: document.createTextNode('test'),
                 startOffset: 4,
             } as any) as Range,
+            isReverted: false,
         };
 
         const editor = {

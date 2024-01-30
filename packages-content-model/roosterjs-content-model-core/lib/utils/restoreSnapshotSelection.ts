@@ -22,6 +22,7 @@ export function restoreSnapshotSelection(core: StandaloneEditorCore, snapshot: S
                 domSelection = {
                     type: 'range',
                     range,
+                    isReverted: snapshotSelection.isReverted,
                 };
                 break;
             case 'table':

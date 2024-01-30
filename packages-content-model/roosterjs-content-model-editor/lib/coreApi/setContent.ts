@@ -99,6 +99,7 @@ function convertMetadataToDOMSelection(
             return {
                 type: 'range',
                 range: createRange(contentDiv, metadata.start, metadata.end),
+                isReverted: false,
             };
         case SelectionRangeTypes.TableSelection:
             const table = queryElements(contentDiv, '#' + metadata.tableId)[0] as HTMLTableElement;
