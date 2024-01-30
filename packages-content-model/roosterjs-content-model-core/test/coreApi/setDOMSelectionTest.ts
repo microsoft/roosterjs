@@ -97,6 +97,7 @@ describe('setDOMSelection', () => {
             runTest({
                 type: 'range',
                 range: {} as any,
+                isReverted: false,
             });
         });
 
@@ -124,6 +125,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             (core.selection.selectionStyleNode!.sheet!.cssRules as any) = ['Rule1', 'Rule2'];
@@ -146,7 +148,11 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(
+                doc,
+                mockedRange,
+                false /* isReverted */
+            );
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).toHaveBeenCalledTimes(2);
             expect(deleteRuleSpy).toHaveBeenCalledWith(1);
@@ -178,7 +184,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -188,6 +194,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             querySelectorAllSpy.and.returnValue([]);
@@ -201,7 +208,7 @@ describe('setDOMSelection', () => {
                 selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).not.toHaveBeenCalled();
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -211,6 +218,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             querySelectorAllSpy.and.returnValue([]);
@@ -231,7 +239,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -241,6 +249,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -262,7 +271,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -272,6 +281,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -295,7 +305,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -305,6 +315,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -328,7 +339,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId_1');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();

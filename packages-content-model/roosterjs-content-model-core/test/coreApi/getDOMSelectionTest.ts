@@ -62,12 +62,23 @@ describe('getDOMSelection', () => {
 
     it('no cached selection, range selection is in editor', () => {
         const mockedElement = 'ELEMENT' as any;
+        const mockedElementOffset = 'MOCKED_ELEMENT_OFFSET' as any;
+        const secondaryMockedElement = 'ELEMENT_2' as any;
+        const secondaryMockedElementOffset = 'MOCKED_ELEMENT_OFFSET_2' as any;
         const mockedRange = {
             commonAncestorContainer: mockedElement,
+            startContainer: mockedElement,
+            startOffset: mockedElementOffset,
+            endContainer: secondaryMockedElement,
+            endOffset: secondaryMockedElementOffset,
         } as any;
+        const setBaseAndExtendSpy = jasmine.createSpy('setBaseAndExtendSpy');
         const mockedSelection = {
             rangeCount: 1,
             getRangeAt: () => mockedRange,
+            setBaseAndExtend: setBaseAndExtendSpy,
+            focusNode: secondaryMockedElement,
+            focusOffset: secondaryMockedElementOffset,
         };
 
         getSelectionSpy.and.returnValue(mockedSelection);
@@ -79,6 +90,42 @@ describe('getDOMSelection', () => {
         expect(result).toEqual({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
+        });
+    });
+
+    it('no cached selection, range selection is in editor, isReverted', () => {
+        const mockedElement = 'ELEMENT' as any;
+        const mockedElementOffset = 'MOCKED_ELEMENT_OFFSET' as any;
+        const secondaryMockedElement = 'ELEMENT_2' as any;
+        const secondaryMockedElementOffset = 'MOCKED_ELEMENT_OFFSET_2' as any;
+        const mockedRange = {
+            commonAncestorContainer: mockedElement,
+            startContainer: mockedElement,
+            startOffset: mockedElementOffset,
+            endContainer: secondaryMockedElement,
+            endOffset: secondaryMockedElementOffset,
+            collapsed: false,
+        } as any;
+        const setBaseAndExtendSpy = jasmine.createSpy('setBaseAndExtendSpy');
+        const mockedSelection = {
+            rangeCount: 1,
+            getRangeAt: () => mockedRange,
+            setBaseAndExtend: setBaseAndExtendSpy,
+            focusNode: mockedElement,
+            focusOffset: mockedElementOffset,
+        };
+
+        getSelectionSpy.and.returnValue(mockedSelection);
+        containsSpy.and.returnValue(true);
+        hasFocusSpy.and.returnValue(true);
+
+        const result = getDOMSelection(core);
+
+        expect(result).toEqual({
+            type: 'range',
+            range: mockedRange,
+            isReverted: true,
         });
     });
 
@@ -124,20 +171,31 @@ describe('getDOMSelection', () => {
     });
 
     it('has cached range selection, editor has focus', () => {
+        const mockedElement = 'ELEMENT' as any;
+        const mockedElementOffset = 'MOCKED_ELEMENT_OFFSET' as any;
+        const secondaryMockedElement = 'ELEMENT_2' as any;
+        const secondaryMockedElementOffset = 'MOCKED_ELEMENT_OFFSET_2' as any;
+        const mockedRange = {
+            commonAncestorContainer: mockedElement,
+            startContainer: mockedElement,
+            startOffset: mockedElementOffset,
+            endContainer: secondaryMockedElement,
+            endOffset: secondaryMockedElementOffset,
+        } as any;
+        const setBaseAndExtendSpy = jasmine.createSpy('setBaseAndExtendSpy');
+        const mockedSelectionObj = {
+            rangeCount: 1,
+            getRangeAt: () => mockedRange,
+            setBaseAndExtend: setBaseAndExtendSpy,
+            focusNode: secondaryMockedElement,
+            focusOffset: secondaryMockedElementOffset,
+        };
         const mockedSelection = {
             type: 'range',
         } as any;
-        const mockedElement = 'ELEMENT' as any;
-        const mockedRange = {
-            commonAncestorContainer: mockedElement,
-        } as any;
-        const mockedSelectionNew = {
-            rangeCount: 1,
-            getRangeAt: () => mockedRange,
-        };
 
         core.selection.selection = mockedSelection;
-        getSelectionSpy.and.returnValue(mockedSelectionNew);
+        getSelectionSpy.and.returnValue(mockedSelectionObj);
 
         hasFocusSpy.and.returnValue(true);
         containsSpy.and.returnValue(true);
@@ -147,6 +205,47 @@ describe('getDOMSelection', () => {
         expect(result).toEqual({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
+        });
+    });
+
+    it('has cached range selection, editor has focus, reverted', () => {
+        const mockedElement = 'ELEMENT' as any;
+        const mockedElementOffset = 'MOCKED_ELEMENT_OFFSET' as any;
+        const secondaryMockedElement = 'ELEMENT_2' as any;
+        const secondaryMockedElementOffset = 'MOCKED_ELEMENT_OFFSET_2' as any;
+        const mockedRange = {
+            commonAncestorContainer: mockedElement,
+            startContainer: mockedElement,
+            startOffset: mockedElementOffset,
+            endContainer: secondaryMockedElement,
+            endOffset: secondaryMockedElementOffset,
+            collapsed: false,
+        } as any;
+        const setBaseAndExtendSpy = jasmine.createSpy('setBaseAndExtendSpy');
+        const mockedSelectionObj = {
+            rangeCount: 1,
+            getRangeAt: () => mockedRange,
+            setBaseAndExtend: setBaseAndExtendSpy,
+            focusNode: mockedElement,
+            focusOffset: mockedElementOffset,
+        };
+        const mockedSelection = {
+            type: 'range',
+        } as any;
+
+        core.selection.selection = mockedSelection;
+        getSelectionSpy.and.returnValue(mockedSelectionObj);
+
+        hasFocusSpy.and.returnValue(true);
+        containsSpy.and.returnValue(true);
+
+        const result = getDOMSelection(core);
+
+        expect(result).toEqual({
+            type: 'range',
+            range: mockedRange,
+            isReverted: true,
         });
     });
 
@@ -180,6 +279,7 @@ describe('getDOMSelection', () => {
         expect(result).toEqual({
             type: 'range',
             range: mockedNewSelection,
+            isReverted: false,
         });
     });
 });

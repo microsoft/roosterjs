@@ -384,6 +384,7 @@ describe('textProcessor', () => {
                 endOffset: 2,
                 collapsed: true,
             } as any,
+            isReverted: false,
         };
 
         textProcessor(doc, text, context);
@@ -616,6 +617,7 @@ describe('textProcessor', () => {
         context.selection = {
             type: 'range',
             range: createRange(text, 2),
+            isReverted: false,
         };
 
         textProcessor(doc, text, context);
@@ -660,6 +662,7 @@ describe('textProcessor', () => {
         context.selection = {
             type: 'range',
             range: createRange(text, 1, text, 3),
+            isReverted: false,
         };
 
         textProcessor(doc, text, context);
@@ -745,6 +748,7 @@ describe('textProcessor', () => {
                 startOffset: 2,
                 endOffset: 2,
             } as any,
+            isReverted: false,
         };
         context.pendingFormat = {
             format: {
@@ -803,6 +807,7 @@ describe('textProcessor', () => {
                 startOffset: 1,
                 endOffset: 3,
             } as any,
+            isReverted: false,
         };
         context.pendingFormat = {
             format: {
@@ -863,6 +868,7 @@ describe('textProcessor', () => {
                 startOffset: 2,
                 endOffset: 2,
             } as any,
+            isReverted: false,
         };
         context.pendingFormat = {
             format: {

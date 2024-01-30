@@ -211,8 +211,7 @@ describe('CopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                { ...createModelToDomContext(), onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -259,8 +258,7 @@ describe('CopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                { ...createModelToDomContext(), onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -303,8 +301,7 @@ describe('CopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                { ...createModelToDomContext(), onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -375,8 +372,7 @@ describe('CopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                { ...createModelToDomContext(), onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -450,8 +446,7 @@ describe('CopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                { ...createModelToDomContext(), onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -500,8 +495,7 @@ describe('CopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                { ...createModelToDomContext(), onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
@@ -549,8 +543,7 @@ describe('CopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                { ...createModelToDomContext(), onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);

@@ -1,10 +1,12 @@
-import { RibbonButton } from 'roosterjs-react';
+import ContentModelRibbonButton from '../../../ribbonButtons/contentModel/ContentModelRibbonButton';
 
-export const refreshButton: RibbonButton<'buttonNameRefresh'> = {
+export const refreshButton: ContentModelRibbonButton<'buttonNameRefresh'> = {
     key: 'buttonNameRefresh',
     unlocalizedText: 'Refresh',
     iconName: 'Refresh',
     onClick: editor => {
-        editor.triggerContentChangedEvent('RefreshModel');
+        editor.triggerEvent('contentChanged', {
+            source: 'RefreshModel',
+        });
     },
 };

@@ -23,12 +23,13 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
           )
         : createModelToDomContextWithConfig(core.modelToDomSettings.calculated, editorContext);
 
+    modelToDomContext.onNodeCreated = onNodeCreated;
+
     const selection = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
         model,
-        modelToDomContext,
-        onNodeCreated
+        modelToDomContext
     );
 
     if (!core.lifecycle.shadowEditFragment) {
