@@ -7,6 +7,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const MIN_HEIGHT = 22;
+const MIN_WIDTH = 30;
 
 /**
  * Normalize a Content Model table, make sure:
@@ -75,6 +76,8 @@ export function normalizeTable(
     for (let i = 0; i < columns; i++) {
         if (table.widths[i] === undefined) {
             table.widths[i] = getTableCellWidth(columns);
+        } else if (table.widths[i] < MIN_WIDTH) {
+            table.widths[i] = MIN_WIDTH;
         }
     }
 
