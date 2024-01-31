@@ -174,9 +174,4 @@ export interface ContentModelFormatState {
      * Whether editor is in dark mode
      */
     isDarkMode?: boolean;
-
-    /**
-     * Current zoom scale of editor
-     */
-    zoomScale?: number;
 }

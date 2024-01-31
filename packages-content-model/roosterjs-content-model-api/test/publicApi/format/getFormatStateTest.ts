@@ -76,7 +76,6 @@ describe('getFormatState', () => {
                 canUndo: false,
                 canRedo: false,
                 isDarkMode: false,
-                zoomScale: 1,
             }
         );
         expect(result).toEqual(expectedFormat);
@@ -90,7 +89,7 @@ describe('getFormatState', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            { canUndo: false, canRedo: false, isDarkMode: false, zoomScale: 1 }
+            { canUndo: false, canRedo: false, isDarkMode: false }
         );
     });
 
@@ -115,7 +114,7 @@ describe('getFormatState', () => {
                     },
                 ],
             },
-            { canUndo: false, canRedo: false, isDarkMode: false, zoomScale: 1 }
+            { canUndo: false, canRedo: false, isDarkMode: false }
         );
     });
 
@@ -140,7 +139,7 @@ describe('getFormatState', () => {
                     },
                 ],
             },
-            { canUndo: false, canRedo: false, isDarkMode: false, zoomScale: 1 }
+            { canUndo: false, canRedo: false, isDarkMode: false }
         );
     });
 
@@ -175,7 +174,7 @@ describe('getFormatState', () => {
                     },
                 ],
             },
-            { canUndo: false, canRedo: false, isDarkMode: false, zoomScale: 1 }
+            { canUndo: false, canRedo: false, isDarkMode: false }
         );
     });
 });
