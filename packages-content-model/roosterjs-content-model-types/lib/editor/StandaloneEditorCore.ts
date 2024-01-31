@@ -352,14 +352,6 @@ export interface StandaloneEditorCore extends PluginState {
      * @param error The error object we got
      */
     readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
-
-    /**
-     * @deprecated Will be removed soon.
-     * Current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     */
-    zoomScale: number;
 }
 
 /**

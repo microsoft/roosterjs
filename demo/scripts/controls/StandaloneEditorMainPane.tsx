@@ -354,7 +354,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             experimentalFeatures={this.state.initState.experimentalFeatures}
                             snapshots={this.snapshotPlugin.getSnapshots()}
                             trustedHTMLHandler={trustedHTMLHandler}
-                            zoomScale={this.state.scale}
                             initialContent={this.content}
                             editorCreator={this.state.editorCreator}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
