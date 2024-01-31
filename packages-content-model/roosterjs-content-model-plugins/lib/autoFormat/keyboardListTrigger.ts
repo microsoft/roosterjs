@@ -1,5 +1,6 @@
 import { getListTypeStyle } from './utils/getListTypeStyle';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
+import { normalizeContentModel } from 'roosterjs-content-model-dom/lib';
 import { setListStartNumber, setListStyle, setListType } from 'roosterjs-content-model-api';
 import type { ContentModelDocument, IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -26,6 +27,7 @@ export function keyboardListTrigger(
             const { listType, styleType, index } = listStyleType;
             triggerList(editor, model, listType, styleType, index);
             rawEvent.preventDefault();
+            normalizeContentModel(model);
             return true;
         }
         return false;
