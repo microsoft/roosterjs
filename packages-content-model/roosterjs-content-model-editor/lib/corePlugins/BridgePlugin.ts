@@ -1,6 +1,5 @@
 import { createEditPlugin } from './EditPlugin';
 import { createEntityDelimiterPlugin } from './EntityDelimiterPlugin';
-import { createNormalizeTablePlugin } from './NormalizeTablePlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
@@ -29,14 +28,12 @@ export class BridgePlugin implements ContextMenuProvider<any> {
 
     constructor(options: ContentModelEditorOptions) {
         const editPlugin = createEditPlugin();
-        const normalizeTablePlugin = createNormalizeTablePlugin();
         const entityDelimiterPlugin = createEntityDelimiterPlugin();
 
         this.legacyPlugins = [
             editPlugin,
             ...(options.legacyPlugins ?? []).filter(x => !!x),
             entityDelimiterPlugin,
-            normalizeTablePlugin,
         ];
         this.corePluginState = {
             edit: editPlugin.getState(),
