@@ -1,4 +1,6 @@
+import { ChangeSource } from 'roosterjs-content-model-core';
 import { keyboardListTrigger } from './keyboardListTrigger';
+import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type {
     EditorPlugin,
     IStandaloneEditor,
@@ -78,6 +80,16 @@ export class ContentModelAutoFormatPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
+                // This is workaround and will be removed once we have a ported auto list for content model
+                case 'contentChanged':
+                    if (
+                        event.source == ChangeSource.Format &&
+                        event.formatApiName == 'autoToggleList'
+                    ) {
+                        const model = this.editor.createContentModel();
+                        normalizeContentModel(model);
+                    }
+                    break;
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
