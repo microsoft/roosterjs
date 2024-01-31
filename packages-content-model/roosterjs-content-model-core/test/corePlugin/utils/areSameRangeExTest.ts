@@ -28,6 +28,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             {
                 type: 'range',
@@ -37,6 +38,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             true
         );
@@ -88,6 +90,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             {
                 type: 'table',
@@ -111,6 +114,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             {
                 type: 'image',
@@ -148,6 +152,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             {
                 type: 'range',
@@ -157,6 +162,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             false
         );
@@ -172,6 +178,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             {
                 type: 'range',
@@ -181,6 +188,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             false
         );
@@ -196,6 +204,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             {
                 type: 'range',
@@ -205,6 +214,7 @@ describe('areSameSelection', () => {
                     startOffset: 3,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             false
         );
@@ -220,6 +230,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset,
                 } as any,
+                isReverted: false,
             },
             {
                 type: 'range',
@@ -229,6 +240,7 @@ describe('areSameSelection', () => {
                     startOffset,
                     endOffset: 4,
                 } as any,
+                isReverted: false,
             },
             false
         );

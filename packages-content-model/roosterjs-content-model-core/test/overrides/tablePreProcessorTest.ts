@@ -64,6 +64,7 @@ describe('tablePreProcessor', () => {
             range: {
                 commonAncestorContainer: txt,
             } as any,
+            isReverted: false,
         };
 
         tablePreProcessor(group, table, context);

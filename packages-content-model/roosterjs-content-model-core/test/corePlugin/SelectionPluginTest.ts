@@ -248,6 +248,7 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
         });
     });
 
@@ -463,6 +464,7 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
         });
     });
 
@@ -500,6 +502,7 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
         });
     });
 

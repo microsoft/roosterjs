@@ -14,6 +14,7 @@ describe('getSelectionRootNode', () => {
             range: {
                 commonAncestorContainer: mockedRoot,
             } as any,
+            isReverted: false,
         });
 
         expect(root).toBe(mockedRoot);

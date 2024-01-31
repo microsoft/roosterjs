@@ -50,6 +50,7 @@ describe('getFormatState', () => {
                         range: {
                             commonAncestorContainer: selectedNode,
                         } as any,
+                        isReverted: false,
                     };
                 }
 
