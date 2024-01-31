@@ -90,7 +90,7 @@ import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type { DOMEventRecord, Rect } from 'roosterjs-content-model-types';
+import type { DOMEventRecord } from 'roosterjs-content-model-types';
 
 /**
  * Editor for Content Model.
@@ -713,13 +713,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     //#region Misc
 
     /**
-     * Get the scroll container of the editor
-     */
-    getScrollContainer(): HTMLElement {
-        return this.getCore().domEvent.scrollContainer;
-    }
-
-    /**
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
@@ -982,15 +975,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      */
     getSizeTransformer(): SizeTransformer {
         return this.getContentModelEditorCore().sizeTransformer;
-    }
-
-    /**
-     * Retrieves the rect of the visible viewport of the editor.
-     */
-    getVisibleViewport(): Rect | null {
-        const core = this.getCore();
-
-        return core.api.getVisibleViewport(core);
     }
 
     /**
