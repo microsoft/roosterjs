@@ -1,9 +1,7 @@
-import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
+import { createElement, DragAndDropHelper, normalizeRect } from '../../../pluginUtils';
 import { getFirstSelectedTable, normalizeTable } from 'roosterjs-content-model-core';
 import type { ContentModelTable, IStandaloneEditor, Rect } from 'roosterjs-content-model-types';
 import type TableEditFeature from './TableEditorFeature';
-import type { CreateElementData } from 'roosterjs-editor-types';
 
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -18,10 +16,6 @@ export default function createTableResizer(
     isRTL: boolean,
     onStart: () => void,
     onEnd: () => false,
-    onShowHelperElement?: (
-        elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement
 ): TableEditFeature | null {
@@ -35,12 +29,10 @@ export default function createTableResizer(
     const zoomScale = editor.getZoomScale();
     const createElementData = {
         tag: 'div',
-        style: `position: fixed; cursor: ${
+        style: `background-color: red; position: fixed; cursor: ${
             isRTL ? 'ne' : 'nw'
         }-resize; user-select: none; border: 1px solid #808080`,
     };
-
-    onShowHelperElement?.(createElementData, 'TableResizer');
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 
@@ -71,7 +63,8 @@ export default function createTableResizer(
             onDragging,
             onDragEnd,
         },
-        zoomScale
+        zoomScale,
+        editor.getEnvironment().isMobileOrTablet
     );
 
     return { node: table, div, featureHandler };
@@ -229,7 +222,7 @@ function isTableBottomVisible(
     contentDiv?: EventTarget | null
 ): boolean {
     const visibleViewport = editor.getVisibleViewport();
-    if (contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') && visibleViewport && rect) {
+    if (contentDiv instanceof HTMLElement && visibleViewport && rect) {
         const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
 
         return (

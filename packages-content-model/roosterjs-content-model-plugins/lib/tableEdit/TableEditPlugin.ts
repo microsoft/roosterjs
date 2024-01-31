@@ -1,14 +1,11 @@
 import TableEditor from './editors/TableEditor';
-import { contains, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
+import { normalizeRect } from '../pluginUtils';
 import type {
     EditorPlugin,
     IStandaloneEditor,
     PluginEvent,
     Rect,
 } from 'roosterjs-content-model-types';
-
-//May be removed or ported, as it is only used in onShowHelperElement
-import type { CreateElementData } from 'roosterjs-editor-types';
 
 const TABLE_RESIZER_LENGTH = 12;
 
@@ -23,20 +20,11 @@ export default class TableEditPlugin implements EditorPlugin {
 
     /**
      * Construct a new instance of TableResize plugin
-     * @param onShowHelperElement An optional callback to allow customize helper element of table resizing.
-     * To customize the helper element, add this callback and change the attributes of elementData then it
-     * will be picked up by TableResize code
      * @param anchorContainerSelector An optional selector string to specify the container to host the plugin.
      * The container must not be affected by transform: scale(), otherwise the position calculation will be wrong.
      * If not specified, the plugin will be inserted in document.body
      */
-    constructor(
-        private onShowHelperElement?: (
-            elementData: CreateElementData,
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-        ) => void,
-        private anchorContainerSelector?: string
-    ) {}
+    constructor(private anchorContainerSelector?: string) {}
 
     /**
      * Get a friendly name of this plugin
@@ -60,11 +48,11 @@ export default class TableEditPlugin implements EditorPlugin {
 
     private onMouseOut = ({ relatedTarget, currentTarget }: MouseEvent) => {
         if (
-            safeInstanceOf(relatedTarget, 'HTMLElement') &&
-            safeInstanceOf(currentTarget, 'HTMLElement') &&
+            relatedTarget instanceof HTMLElement &&
+            currentTarget instanceof HTMLElement &&
             this.tableEditor &&
             !this.tableEditor.isOwnedElement(relatedTarget) &&
-            !contains(currentTarget, relatedTarget)
+            !currentTarget.contains(relatedTarget)
         ) {
             this.setTableEditor(null);
         }
@@ -153,8 +141,7 @@ export default class TableEditPlugin implements EditorPlugin {
                 this.editor,
                 table,
                 this.invalidateTableRects,
-                this.onShowHelperElement,
-                safeInstanceOf(container, 'HTMLElement') ? container : undefined,
+                container instanceof HTMLElement ? container : undefined,
                 event?.currentTarget
             );
         }

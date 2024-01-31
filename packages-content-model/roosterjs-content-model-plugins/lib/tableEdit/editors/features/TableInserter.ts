@@ -1,8 +1,7 @@
-import { createElement, getIntersectedRect, normalizeRect } from 'roosterjs-editor-dom';
+import { createElement, getIntersectedRect, normalizeRect } from '../../../pluginUtils';
 import { editTable } from 'roosterjs-content-model-api';
-import type Disposable from '../../../pluginUtils/Disposable';
+import type { CreateElementData, Disposable } from '../../../pluginUtils';
 import type TableEditFeature from './TableEditorFeature';
-import type { CreateElementData } from 'roosterjs-editor-types';
 import type { IStandaloneEditor, TableSelection } from 'roosterjs-content-model-types';
 
 const INSERTER_COLOR = '#4A4A4A';
@@ -21,10 +20,6 @@ export default function createTableInserter(
     isHorizontal: boolean,
     onInsert: () => void,
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
-    onShowHelperElement?: (
-        elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void,
     anchorContainer?: HTMLElement
 ): TableEditFeature | null {
     const tdRect = normalizeRect(td.getBoundingClientRect());
@@ -41,8 +36,6 @@ export default function createTableInserter(
             'red' //editor.getDefaultFormat().backgroundColor || 'white'
             // TODO: Fix this
         );
-
-        onShowHelperElement?.(createElementData, 'TableInserter');
 
         const div = createElement(createElementData, document) as HTMLDivElement;
 

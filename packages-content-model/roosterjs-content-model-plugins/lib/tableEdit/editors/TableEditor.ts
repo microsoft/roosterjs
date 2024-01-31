@@ -1,13 +1,10 @@
 import createCellResizer from './features/CellResizer';
 import createTableInserter from './features/TableInserter';
+import createTableMover from './features/TableMover';
 import createTableResizer from './features/TableResizer';
-import createTableSelector from './features/TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './features/TableEditorFeature';
-import { contains, getComputedStyle, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
+import { normalizeRect } from '../../pluginUtils';
 import type { IStandaloneEditor, TableSelection } from 'roosterjs-content-model-types';
-
-//May be removed or ported, as it is only used in onShowHelperElement
-import type { CreateElementData } from 'roosterjs-editor-types';
 
 const INSERTER_HOVER_OFFSET = 6;
 const enum TOP_OR_SIDE {
@@ -38,8 +35,8 @@ const enum TOP_OR_SIDE {
  * 2 - Hover area to show insert row button
  * 3 - Hover area to show vertical resizing bar
  * 4 - Hover area to show horizontal resizing bar
- * 5 - Hover area to show whole table resize button
- * 6 - Hover area to show whole table selector button
+ * 5 - Hover area to show whole table resize handle
+ * 6 - Hover area to show whole table mover handle
  *
  * When set a different current table or change current TD, we need to update these areas
  */
@@ -55,8 +52,8 @@ export default class TableEditor {
     // 5 - Resize whole table
     private tableResizer: TableEditFeature | null = null;
 
-    // 6 - Select whole table
-    private tableSelector: TableEditFeature | null = null;
+    // 6 - Move as well as select whole table
+    private tableMover: TableEditFeature | null = null;
 
     private isRTL: boolean;
     private range: Range | null = null;
@@ -66,14 +63,10 @@ export default class TableEditor {
         private editor: IStandaloneEditor,
         public readonly table: HTMLTableElement,
         private onChanged: () => void,
-        private onShowHelperElement?: (
-            elementData: CreateElementData,
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-        ) => void,
         private anchorContainer?: HTMLElement,
         private contentDiv?: EventTarget | null
     ) {
-        this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
+        this.isRTL = table.style.direction == 'rtl';
         this.setEditorFeatures();
         this.isCurrentlyEditing = false;
     }
@@ -82,7 +75,7 @@ export default class TableEditor {
         this.disposeTableResizer();
         this.disposeCellResizers();
         this.disposeTableInserter();
-        this.disposeTableSelector();
+        this.disposeTableMover();
     }
 
     isEditing(): boolean {
@@ -92,14 +85,14 @@ export default class TableEditor {
     isOwnedElement(node: Node) {
         return [
             this.tableResizer,
-            this.tableSelector,
+            this.tableMover,
             this.horizontalInserter,
             this.verticalInserter,
             this.horizontalResizer,
             this.verticalResizer,
         ]
             .filter(feature => !!feature?.div)
-            .some(feature => contains(feature?.div, node, true /* treatSameNodeAsContain */));
+            .some(feature => feature?.div == node);
     }
 
     onMouseMove(x: number, y: number) {
@@ -188,19 +181,18 @@ export default class TableEditor {
             }
         }
 
-        // Create Selector and Resizer
+        // Create Mover and Resizer
         this.setEditorFeatures();
     }
 
     private setEditorFeatures() {
-        if (!this.tableSelector) {
-            this.tableSelector = createTableSelector(
+        if (!this.tableMover) {
+            this.tableMover = createTableMover(
                 this.table,
                 this.editor,
                 this.isRTL,
                 this.onSelect,
                 this.getOnMouseOut,
-                this.onShowHelperElement,
                 this.contentDiv,
                 this.anchorContainer
             );
@@ -213,7 +205,6 @@ export default class TableEditor {
                 this.isRTL,
                 this.onStartTableResize,
                 this.onFinishEditing,
-                this.onShowHelperElement,
                 this.contentDiv,
                 this.anchorContainer
             );
@@ -226,25 +217,24 @@ export default class TableEditor {
         }
 
         if (!this.horizontalResizer && td) {
-            const zoomScale = this.editor.getZoomScale();
             this.horizontalResizer = createCellResizer(
+                this.editor,
                 td,
-                zoomScale,
+                this.table,
                 this.isRTL,
                 true /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
-                this.onShowHelperElement,
                 this.anchorContainer
             );
             this.verticalResizer = createCellResizer(
+                this.editor,
                 td,
-                zoomScale,
+                this.table,
                 this.isRTL,
                 false /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
-                this.onShowHelperElement,
                 this.anchorContainer
             );
         }
@@ -269,7 +259,6 @@ export default class TableEditor {
                 !!isHorizontal,
                 this.onInserted,
                 this.getOnMouseOut,
-                this.onShowHelperElement,
                 this.anchorContainer
             );
             if (isHorizontal) {
@@ -309,10 +298,10 @@ export default class TableEditor {
         }
     }
 
-    private disposeTableSelector() {
-        if (this.tableSelector) {
-            disposeTableEditFeature(this.tableSelector);
-            this.tableSelector = null;
+    private disposeTableMover() {
+        if (this.tableMover) {
+            disposeTableEditFeature(this.tableMover);
+            this.tableMover = null;
         }
     }
 
@@ -383,9 +372,9 @@ export default class TableEditor {
             if (
                 feature &&
                 ev.relatedTarget != feature &&
-                safeInstanceOf(this.contentDiv, 'HTMLElement') &&
-                safeInstanceOf(ev.relatedTarget, 'HTMLElement') &&
-                !contains(this.contentDiv, ev.relatedTarget, true /* treatSameNodeAsContain */)
+                this.contentDiv instanceof HTMLElement &&
+                ev.relatedTarget instanceof HTMLElement &&
+                !(this.contentDiv == ev.relatedTarget)
             ) {
                 this.dispose();
             }
