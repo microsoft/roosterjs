@@ -3,6 +3,7 @@ import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createContentModelDocument, createEntity } from '../../../roosterjs-content-model-dom/lib';
 import { createEntityPlugin } from '../../lib/corePlugin/EntityPlugin';
 import {
+    ContentModelDocument,
     DarkColorHandler,
     EntityPluginState,
     IStandaloneEditor,
@@ -12,15 +13,20 @@ import {
 describe('EntityPlugin', () => {
     let editor: IStandaloneEditor;
     let plugin: PluginWithState<EntityPluginState>;
-    let createContentModelSpy: jasmine.Spy;
+    let formatContentModelSpy: jasmine.Spy;
     let triggerPluginEventSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
     let isNodeInEditorSpy: jasmine.Spy;
     let transformColorSpy: jasmine.Spy;
     let mockedDarkColorHandler: DarkColorHandler;
+    let mockedModel: ContentModelDocument;
 
     beforeEach(() => {
-        createContentModelSpy = jasmine.createSpy('createContentModel');
+        formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: Function) => {
+                callback(mockedModel);
+            });
         triggerPluginEventSpy = jasmine.createSpy('triggerEvent');
         isDarkModeSpy = jasmine.createSpy('isDarkMode');
         isNodeInEditorSpy = jasmine.createSpy('isNodeInEditor');
@@ -28,7 +34,7 @@ describe('EntityPlugin', () => {
         mockedDarkColorHandler = 'COLOR' as any;
 
         editor = {
-            createContentModel: createContentModelSpy,
+            formatContentModel: formatContentModelSpy,
             triggerEvent: triggerPluginEventSpy,
             isDarkMode: isDarkModeSpy,
             getDOMHelper: () => ({
@@ -50,7 +56,7 @@ describe('EntityPlugin', () => {
 
     describe('EditorReady event', () => {
         it('empty doc', () => {
-            createContentModelSpy.and.returnValue(createContentModelDocument());
+            mockedModel = createContentModelDocument();
 
             plugin.onPluginEvent({
                 eventType: 'editorReady',
@@ -70,7 +76,7 @@ describe('EntityPlugin', () => {
 
             doc.blocks.push(entity);
 
-            createContentModelSpy.and.returnValue(doc);
+            mockedModel = doc;
 
             plugin.onPluginEvent({
                 eventType: 'editorReady',
@@ -110,7 +116,7 @@ describe('EntityPlugin', () => {
 
             doc.blocks.push(entity);
 
-            createContentModelSpy.and.returnValue(doc);
+            mockedModel = doc;
             triggerPluginEventSpy.and.returnValue({
                 shouldPersist: true,
             });
@@ -155,7 +161,7 @@ describe('EntityPlugin', () => {
 
             doc.blocks.push(entity);
 
-            createContentModelSpy.and.returnValue(doc);
+            mockedModel = doc;
 
             plugin.onPluginEvent({
                 eventType: 'contentChanged',
@@ -195,7 +201,7 @@ describe('EntityPlugin', () => {
 
             doc.blocks.push(entity);
 
-            createContentModelSpy.and.returnValue(doc);
+            mockedModel = doc;
             isDarkModeSpy.and.returnValue(true);
 
             plugin.onPluginEvent({
@@ -242,7 +248,7 @@ describe('EntityPlugin', () => {
 
             doc.blocks.push(entity);
 
-            createContentModelSpy.and.returnValue(doc);
+            mockedModel = doc;
             const state = plugin.getState();
 
             const wrapper2 = document.createElement('div');
@@ -300,7 +306,7 @@ describe('EntityPlugin', () => {
         it('Do not trigger event for already deleted entity', () => {
             const doc = createContentModelDocument();
 
-            createContentModelSpy.and.returnValue(doc);
+            mockedModel = doc;
             const state = plugin.getState();
 
             const wrapper2 = document.createElement('div');
@@ -334,7 +340,7 @@ describe('EntityPlugin', () => {
 
             doc.blocks.push(entity);
 
-            createContentModelSpy.and.returnValue(doc);
+            mockedModel = doc;
             const state = plugin.getState();
 
             state.entityMap['Entity1'] = {
@@ -521,7 +527,7 @@ describe('EntityPlugin', () => {
                 isReadonly: true,
             });
             doc.blocks.push(entity);
-            createContentModelSpy.and.returnValue(doc);
+            mockedModel = doc;
 
             state.entityMap[id] = {
                 element: wrapper,
