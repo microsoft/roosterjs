@@ -1,7 +1,13 @@
+import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { keyboardListTrigger } from '../../lib/autoFormat/keyboardListTrigger';
 
 describe('keyboardListTrigger', () => {
+    let normalizeContentModelSpy: jasmine.Spy;
+    beforeEach(() => {
+        normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
+    });
+
     function runTest(
         input: ContentModelDocument,
         expectedModel: ContentModelDocument,
@@ -31,6 +37,12 @@ describe('keyboardListTrigger', () => {
             shouldSearchForBullet,
             shouldSearchForNumbering
         );
+
+        if (expectedResult) {
+            expect(normalizeContentModelSpy).toHaveBeenCalled();
+        } else {
+            expect(normalizeContentModelSpy).not.toHaveBeenCalled();
+        }
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         expect(input).toEqual(expectedModel);
@@ -187,7 +199,7 @@ describe('keyboardListTrigger', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: 'test',
+                                        text: ' test',
                                         format: {},
                                     },
                                 ],
