@@ -2,8 +2,9 @@ import createCellResizer from './features/CellResizer';
 import createTableInserter from './features/TableInserter';
 import createTableMover from './features/TableMover';
 import createTableResizer from './features/TableResizer';
-import TableEditFeature, { disposeTableEditFeature } from './features/TableEditorFeature';
+import { disposeTableEditFeature } from './features/TableEditorFeature';
 import { normalizeRect } from '../../pluginUtils';
+import type TableEditFeature from './features/TableEditorFeature';
 import type { IStandaloneEditor, TableSelection } from 'roosterjs-content-model-types';
 
 const INSERTER_HOVER_OFFSET = 6;
