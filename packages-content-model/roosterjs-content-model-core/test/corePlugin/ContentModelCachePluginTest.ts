@@ -123,6 +123,7 @@ describe('ContentModelCachePlugin', () => {
             state.cachedSelection = {
                 type: 'range',
                 range: { collapsed: true } as any,
+                isReverted: false,
             };
 
             plugin.onPluginEvent({
@@ -143,6 +144,7 @@ describe('ContentModelCachePlugin', () => {
             state.cachedSelection = {
                 type: 'range',
                 range: { collapsed: false } as any,
+                isReverted: false,
             };
 
             plugin.onPluginEvent({

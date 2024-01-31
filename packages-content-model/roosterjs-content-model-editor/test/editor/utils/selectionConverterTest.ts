@@ -25,6 +25,7 @@ describe('convertRangeExToDomSelection', () => {
         expect(result).toEqual({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
         });
     });
 
@@ -120,6 +121,7 @@ describe('convertDomSelectionToRangeEx', () => {
         const result = convertDomSelectionToRangeEx({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
         });
 
         expect(result).toEqual({

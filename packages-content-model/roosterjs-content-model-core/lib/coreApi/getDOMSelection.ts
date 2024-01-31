@@ -8,15 +8,15 @@ import type {
  * @internal
  */
 export const getDOMSelection: GetDOMSelection = core => {
-    const selection = core.selection.selection;
+    if (core.lifecycle.shadowEditFragment) {
+        return null;
+    } else {
+        const selection = core.selection.selection;
 
-    return core.lifecycle.shadowEditFragment
-        ? null // 1. In shadow editor, always return null
-        : selection && selection.type != 'range'
-        ? selection // 2. Editor has Table Selection or Image Selection, use it
-        : core.api.hasFocus(core)
-        ? getNewSelection(core) // 3. Not Table/Image selection, and editor has focus, pull a latest selection from DOM
-        : selection; // 4. Fallback to cached selection for all other cases
+        return selection && (selection.type != 'range' || !core.api.hasFocus(core))
+            ? selection
+            : getNewSelection(core);
+    }
 };
 
 function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {
@@ -26,7 +26,21 @@ function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {
     return range && core.contentDiv.contains(range.commonAncestorContainer)
         ? {
               type: 'range',
-              range: range,
+              range,
+              isReverted: isSelectionReverted(selection),
           }
         : null;
+}
+
+function isSelectionReverted(selection: Selection | null | undefined): boolean {
+    if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        return (
+            !range.collapsed &&
+            selection.focusNode != range.endContainer &&
+            selection.focusOffset != range.endOffset
+        );
+    }
+
+    return false;
 }

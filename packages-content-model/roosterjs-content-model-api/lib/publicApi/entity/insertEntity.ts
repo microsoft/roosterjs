@@ -9,7 +9,6 @@ import type {
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
-const BlockEntityTag = 'div';
 const InlineEntityTag = 'span';
 
 /**
@@ -58,10 +57,11 @@ export default function insertEntity(
     options?: InsertEntityOptions
 ): ContentModelEntity | null {
     const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot } = options || {};
-    const wrapper = editor.getDocument().createElement(isBlock ? BlockEntityTag : InlineEntityTag);
-    const display = wrapperDisplay ?? (isBlock ? undefined : 'inline-block');
-
-    wrapper.style.setProperty('display', display || null);
+    const wrapper = editor.getDocument().createElement(InlineEntityTag);
+    if (isBlock) {
+        wrapper.style.width = '100%';
+    }
+    wrapper.style.setProperty('display', wrapperDisplay ?? ('inline-block' || null));
 
     if (contentNode) {
         wrapper.appendChild(contentNode);

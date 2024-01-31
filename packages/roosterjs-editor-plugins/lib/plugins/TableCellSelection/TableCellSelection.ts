@@ -4,9 +4,9 @@ import { handleKeyDownEvent } from './keyUtils/handleKeyDownEvent';
 import { handleKeyUpEvent } from './keyUtils/handleKeyUpEvent';
 import { handleMouseDownEvent } from './mouseUtils/handleMouseDownEvent';
 import { handleScrollEvent } from './mouseUtils/handleScrollEvent';
-import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 import type { TableCellSelectionState } from './TableCellSelectionState';
-import type { EditorPlugin, IEditor, PluginEvent, TableSelection } from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * TableCellSelectionPlugin help highlight table cells
@@ -14,7 +14,6 @@ import type { EditorPlugin, IEditor, PluginEvent, TableSelection } from 'rooster
 export default class TableCellSelection implements EditorPlugin {
     private editor: IEditor | null = null;
     private state: TableCellSelectionState | null;
-    private shadowEditCoordinatesBackup: TableSelection | null = null;
 
     constructor() {
         this.state = {
@@ -62,12 +61,6 @@ export default class TableCellSelection implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor && this.state) {
             switch (event.eventType) {
-                case PluginEventType.EnteredShadowEdit:
-                    this.handleEnteredShadowEdit(this.state, this.editor);
-                    break;
-                case PluginEventType.LeavingShadowEdit:
-                    this.handleLeavingShadowEdit(this.state, this.editor);
-                    break;
                 case PluginEventType.MouseDown:
                     if (!this.state.startedSelection) {
                         handleMouseDownEvent(event, this.state, this.editor);
@@ -98,27 +91,6 @@ export default class TableCellSelection implements EditorPlugin {
                     this.editor.select(null);
                     break;
             }
-        }
-    }
-
-    private handleLeavingShadowEdit(state: TableCellSelectionState, editor: IEditor) {
-        if (state.firstTable && state.tableSelection && state.firstTable) {
-            const table = editor.queryElements('#' + state.firstTable.id);
-            if (table.length == 1) {
-                state.firstTable = table[0] as HTMLTableElement;
-                editor.select(state.firstTable, this.shadowEditCoordinatesBackup);
-                this.shadowEditCoordinatesBackup = null;
-            }
-        }
-    }
-
-    private handleEnteredShadowEdit(state: TableCellSelectionState, editor: IEditor) {
-        const selection = editor.getSelectionRangeEx();
-        if (selection.type == SelectionRangeTypes.TableSelection) {
-            this.shadowEditCoordinatesBackup = selection.coordinates ?? null;
-            state.firstTable = selection.table;
-            state.tableSelection = true;
-            editor.select(selection.table, null);
         }
     }
 }

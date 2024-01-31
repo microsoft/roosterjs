@@ -1,4 +1,5 @@
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
+import { createDOMHelper } from './DOMHelperImpl';
 import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
 import { standaloneCoreApiMap } from './standaloneCoreApiMap';
 import {
@@ -38,6 +39,7 @@ export function createStandaloneEditorCore(
             corePlugins.entity,
             ...(options.plugins ?? []).filter(x => !!x),
             corePlugins.undo,
+            corePlugins.contextMenu,
             corePlugins.lifecycle,
         ],
         environment: createEditorEnvironment(contentDiv),
@@ -49,6 +51,7 @@ export function createStandaloneEditorCore(
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),
+        domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
         zoomScale: (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1,
@@ -102,6 +105,7 @@ function getPluginState(corePlugins: StandaloneEditorCorePlugins): PluginState {
         lifecycle: corePlugins.lifecycle.getState(),
         entity: corePlugins.entity.getState(),
         selection: corePlugins.selection.getState(),
+        contextMenu: corePlugins.contextMenu.getState(),
         undo: corePlugins.undo.getState(),
     };
 }

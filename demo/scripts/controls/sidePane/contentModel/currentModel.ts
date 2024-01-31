@@ -1,23 +1,11 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { IEditor } from 'roosterjs-editor-types';
 
-const CurrentContentModelHolderKey = '_CurrentContentModelHolder';
+let currentModel: ContentModelDocument | null = null;
 
-interface CurrentContentModelHolder {
-    model: ContentModelDocument | null;
+export function getCurrentContentModel(): ContentModelDocument | null {
+    return currentModel;
 }
 
-function getCurrentModelHolder(editor: IEditor) {
-    return editor.getCustomData(
-        CurrentContentModelHolderKey,
-        () => <CurrentContentModelHolder>{ model: null }
-    );
-}
-
-export function getCurrentContentModel(editor: IEditor): ContentModelDocument | null {
-    return getCurrentModelHolder(editor).model;
-}
-
-export function setCurrentContentModel(editor: IEditor, model: ContentModelDocument | null) {
-    getCurrentModelHolder(editor).model = model;
+export function setCurrentContentModel(model: ContentModelDocument | null) {
+    currentModel = model;
 }

@@ -821,13 +821,11 @@ describe('setAlignment in table', () => {
 
 describe('setAlignment in list', () => {
     let editor: IStandaloneEditor;
-    let setContentModel: jasmine.Spy<IStandaloneEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
     let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
         triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
@@ -835,7 +833,6 @@ describe('setAlignment in list', () => {
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
             createContentModel,
             isDarkMode: () => false,
             triggerEvent,

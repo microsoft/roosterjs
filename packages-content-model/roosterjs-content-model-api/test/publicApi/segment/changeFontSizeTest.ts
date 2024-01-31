@@ -342,6 +342,7 @@ describe('changeFontSize', () => {
         const model = domToContentModel(div, createDomToModelContext(undefined), {
             type: 'range',
             range: createRange(sub),
+            isReverted: false,
         });
 
         let formatResult: boolean | undefined;
