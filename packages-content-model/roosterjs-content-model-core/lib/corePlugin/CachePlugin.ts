@@ -1,8 +1,8 @@
 import { areSameSelection } from './utils/areSameSelection';
-import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
 import { createTextMutationObserver } from './utils/textMutationObserver';
+import { domIndexerImpl } from './utils/domIndexerImpl';
 import type {
-    ContentModelCachePluginState,
+    CachePluginState,
     IStandaloneEditor,
     PluginEvent,
     PluginWithState,
@@ -12,19 +12,19 @@ import type {
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
-class ContentModelCachePlugin implements PluginWithState<ContentModelCachePluginState> {
+class CachePlugin implements PluginWithState<CachePluginState> {
     private editor: IStandaloneEditor | null = null;
-    private state: ContentModelCachePluginState;
+    private state: CachePluginState;
 
     /**
-     * Construct a new instance of ContentModelEditPlugin class
+     * Construct a new instance of CachePlugin class
      * @param option The editor option
      * @param contentDiv The editor content DIV
      */
     constructor(option: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
         this.state = option.cacheModel
             ? {
-                  domIndexer: contentModelDomIndexer,
+                  domIndexer: domIndexerImpl,
                   textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
               }
             : {};
@@ -69,7 +69,7 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
     /**
      * Get plugin state object
      */
-    getState(): ContentModelCachePluginState {
+    getState(): CachePluginState {
         return this.state;
     }
 
@@ -164,13 +164,13 @@ class ContentModelCachePlugin implements PluginWithState<ContentModelCachePlugin
 
 /**
  * @internal
- * Create a new instance of ContentModelCachePlugin class.
+ * Create a new instance of CachePlugin class.
  * @param option The editor option
  * @param contentDiv The editor content DIV
  */
-export function createContentModelCachePlugin(
+export function createCachePlugin(
     option: StandaloneEditorOptions,
     contentDiv: HTMLDivElement
-): PluginWithState<ContentModelCachePluginState> {
-    return new ContentModelCachePlugin(option, contentDiv);
+): PluginWithState<CachePluginState> {
+    return new CachePlugin(option, contentDiv);
 }

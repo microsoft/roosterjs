@@ -1,6 +1,6 @@
 import type { ContentModelParagraph } from '../block/ContentModelParagraph';
 import type { DeleteResult } from '../enum/DeleteResult';
-import type { FormatWithContentModelContext } from './FormatWithContentModelContext';
+import type { FormatContentModelContext } from './FormatContentModelContext';
 import type { InsertPoint } from '../selection/InsertPoint';
 import type { TableSelectionContext } from '../selection/TableSelectionContext';
 
@@ -36,7 +36,7 @@ export interface DeleteSelectionContext extends DeleteSelectionResult {
     /**
      * Format context provided by formatContentModel API
      */
-    formatContext?: FormatWithContentModelContext;
+    formatContext?: FormatContentModelContext;
 }
 
 /**

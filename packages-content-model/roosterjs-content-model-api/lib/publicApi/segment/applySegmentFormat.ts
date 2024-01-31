@@ -1,4 +1,4 @@
-import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
+import { formatSegment } from '../utils/formatSegment';
 import type { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -10,7 +10,7 @@ export default function applySegmentFormat(
     editor: IStandaloneEditor,
     newFormat: ContentModelSegmentFormat
 ) {
-    formatSegmentWithContentModel(
+    formatSegment(
         editor,
         'applySegmentFormat',
         format => {

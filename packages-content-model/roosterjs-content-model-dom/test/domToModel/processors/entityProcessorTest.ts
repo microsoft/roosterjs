@@ -3,7 +3,7 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { entityProcessor } from '../../../lib/domToModel/processors/entityProcessor';
 import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
 import {
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelEntity,
     ContentModelParagraph,
     DomToModelContext,
@@ -253,7 +253,7 @@ describe('entityProcessor', () => {
         setEntityElementClasses(span, 'entity', true, 'entity_1');
 
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,

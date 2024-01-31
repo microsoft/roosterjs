@@ -1,16 +1,13 @@
 import * as toggleModelBlockQuote from '../../../lib/modelApi/block/toggleModelBlockQuote';
 import toggleBlockQuote from '../../../lib/publicApi/block/toggleBlockQuote';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
-import {
-    ContentModelFormatter,
-    FormatWithContentModelContext,
-} from 'roosterjs-content-model-types';
+import { ContentModelFormatter, FormatContentModelContext } from 'roosterjs-content-model-types';
 
 describe('toggleBlockQuote', () => {
     const fakeModel: any = { a: 'b' };
     let editor: IStandaloneEditor;
     let formatContentModelSpy: jasmine.Spy;
-    let context: FormatWithContentModelContext;
+    let context: FormatContentModelContext;
 
     beforeEach(() => {
         context = undefined!;

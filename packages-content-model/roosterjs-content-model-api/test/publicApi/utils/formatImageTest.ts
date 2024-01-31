@@ -1,10 +1,10 @@
-import formatImageWithContentModel from '../../../lib/publicApi/utils/formatImageWithContentModel';
+import formatImage from '../../../lib/publicApi/utils/formatImage';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelImage,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     addSegment,
@@ -13,7 +13,7 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('formatImageWithContentModel', () => {
+describe('formatImage', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
@@ -23,7 +23,7 @@ describe('formatImageWithContentModel', () => {
         segmentTestForPluginEvent(
             'apiTest',
             editor => {
-                formatImageWithContentModel(editor, 'apiTest', callback);
+                formatImage(editor, 'apiTest', callback);
             },
             model,
             result,
@@ -204,7 +204,7 @@ function segmentTestForPluginEvent(
     let formatResult: boolean | undefined;
     const formatContentModel = jasmine
         .createSpy('formatContentModel')
-        .and.callFake((callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+        .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
             expect(options.apiName).toBe(apiName);
             formatResult = callback(model, {
                 newEntities: [],

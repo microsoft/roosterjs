@@ -1,7 +1,7 @@
 import type {
     ContentModelBlock,
     EntityRemovalOperation,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -17,7 +17,7 @@ export function deleteBlock(
     blocks: ContentModelBlock[],
     blockToDelete: ContentModelBlock,
     replacement?: ContentModelBlock,
-    context?: FormatWithContentModelContext,
+    context?: FormatContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
     const index = blocks.indexOf(blockToDelete);

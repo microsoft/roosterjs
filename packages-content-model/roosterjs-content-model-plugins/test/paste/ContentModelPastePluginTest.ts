@@ -5,7 +5,7 @@ import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContent
 import * as setProcessor from '../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
 import { BeforePasteEvent, IStandaloneEditor } from 'roosterjs-content-model-types';
-import { ContentModelPastePlugin } from '../../lib/paste/ContentModelPastePlugin';
+import { PastePlugin } from '../../lib/paste/PastePlugin';
 import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
 
 const trustedHTMLHandler = (val: string) => val;
@@ -25,10 +25,10 @@ describe('Content Model Paste Plugin Test', () => {
     let event: BeforePasteEvent;
 
     describe('onPluginEvent', () => {
-        let plugin = new ContentModelPastePlugin();
+        let plugin = new PastePlugin();
 
         beforeEach(() => {
-            plugin = new ContentModelPastePlugin();
+            plugin = new PastePlugin();
 
             event = {
                 eventType: 'beforePaste',
