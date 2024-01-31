@@ -1,11 +1,9 @@
 import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
-import * as cloneModelFile from '../../lib/publicApi/model/cloneModel';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as deleteSelectionsFile from '../../lib/publicApi/selection/deleteSelection';
 import * as extractClipboardItemsFile from '../../lib/utils/extractClipboardItems';
 import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
@@ -67,7 +65,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
     let selectionValue: DOMSelection;
     let getDOMSelectionSpy: jasmine.Spy;
-    let createContentModelSpy: jasmine.Spy;
+    let getContentModelCopySpy: jasmine.Spy;
     let triggerPluginEventSpy: jasmine.Spy;
     let focusSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
@@ -75,8 +73,6 @@ describe('ContentModelCopyPastePlugin |', () => {
 
     let isDisposed: jasmine.Spy;
     let pasteSpy: jasmine.Spy;
-    let cloneModelSpy: jasmine.Spy;
-    let transformColorSpy: jasmine.Spy;
     let getVisibleViewportSpy: jasmine.Spy;
     let formatResult: boolean | undefined;
     let modelResult: ContentModelDocument | undefined;
@@ -90,9 +86,9 @@ describe('ContentModelCopyPastePlugin |', () => {
         getDOMSelectionSpy = jasmine
             .createSpy('getDOMSelection')
             .and.callFake(() => selectionValue);
-        createContentModelSpy = jasmine
-            .createSpy('createContentModelSpy')
-            .and.returnValue(modelValue);
+        getContentModelCopySpy = jasmine
+            .createSpy('getContentModelCopy')
+            .and.returnValue(pasteModelValue);
         triggerPluginEventSpy = jasmine.createSpy('triggerPluginEventSpy');
         focusSpy = jasmine.createSpy('focusSpy');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
@@ -100,16 +96,12 @@ describe('ContentModelCopyPastePlugin |', () => {
         isDisposed = jasmine.createSpy('isDisposed');
         getVisibleViewportSpy = jasmine.createSpy('getVisibleViewport');
 
-        cloneModelSpy = spyOn(cloneModelFile, 'cloneModel').and.callFake(
-            (model: any) => pasteModelValue
-        );
-        transformColorSpy = spyOn(transformColor, 'transformColor');
         mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
                 (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    modelResult = createContentModelSpy();
+                    modelResult = modelValue;
                     formatResult = callback(modelResult!, {
                         newEntities: [],
                         deletedEntities: [],
@@ -128,7 +120,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             attachDomEvent: (eventMap: Record<string, DOMEventRecord>) => {
                 domEvents = eventMap;
             },
-            createContentModel: (options: any) => createContentModelSpy(options),
+            getContentModelCopy: (options: any) => getContentModelCopySpy(options),
             triggerEvent(eventType: any, data: any, broadcast: any) {
                 triggerPluginEventSpy(eventType, data, broadcast);
                 return data;
@@ -173,7 +165,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 range: { collapsed: true } as any,
             };
 
-            createContentModelSpy.and.callThrough();
+            getContentModelCopySpy.and.callThrough();
             triggerPluginEventSpy.and.callThrough();
             focusSpy.and.callThrough();
             setDOMSelectionSpy.and.callThrough();
@@ -181,7 +173,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.copy.beforeDispatch?.(<Event>{});
 
             expect(getDOMSelectionSpy).toHaveBeenCalled();
-            expect(createContentModelSpy).not.toHaveBeenCalled();
+            expect(getContentModelCopySpy).not.toHaveBeenCalled();
             expect(triggerPluginEventSpy).not.toHaveBeenCalled();
             expect(focusSpy).not.toHaveBeenCalled();
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
@@ -215,7 +207,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
-            expect(createContentModelSpy).toHaveBeenCalled();
+            expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
             expect(focusSpy).toHaveBeenCalled();
@@ -262,7 +254,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
-            expect(createContentModelSpy).toHaveBeenCalled();
+            expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
             expect(focusSpy).toHaveBeenCalled();
@@ -305,7 +297,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
-            expect(createContentModelSpy).toHaveBeenCalled();
+            expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(focusSpy).toHaveBeenCalled();
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
@@ -341,29 +333,6 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             editor.isDarkMode = () => true;
 
-            cloneModelSpy.and.callFake((model, options) => {
-                expect(model).toEqual(modelValue);
-                expect(typeof options.includeCachedElement).toBe('function');
-
-                const cloneCache = options.includeCachedElement(wrapper, 'cache');
-                const cloneEntity = options.includeCachedElement(wrapper, 'entity');
-
-                expect(cloneCache).toBeUndefined();
-                expect(cloneEntity.outerHTML).toBe(
-                    '<span class="_Entity _EType_Entity _EId_Entity _EReadonly_1" contenteditable="false" style="color: inherit; background-color: inherit;"></span>'
-                );
-                expect(cloneEntity).not.toBe(wrapper);
-                expect(transformColorSpy).toHaveBeenCalledTimes(1);
-                expect(transformColorSpy).toHaveBeenCalledWith(
-                    cloneEntity,
-                    true,
-                    'darkToLight',
-                    mockedDarkColorHandler
-                );
-
-                return pasteModelValue;
-            });
-
             // Act
             domEvents.copy.beforeDispatch?.(<Event>{});
 
@@ -376,11 +345,10 @@ describe('ContentModelCopyPastePlugin |', () => {
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
-            expect(createContentModelSpy).toHaveBeenCalled();
+            expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(focusSpy).toHaveBeenCalled();
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
-            expect(cloneModelSpy).toHaveBeenCalledTimes(1);
 
             // On Cut Spy
             expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -397,7 +365,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 range: { collapsed: true } as any,
             };
 
-            createContentModelSpy.and.callThrough();
+            getContentModelCopySpy.and.callThrough();
             triggerPluginEventSpy.and.callThrough();
             focusSpy.and.callThrough();
             setDOMSelectionSpy.and.callThrough();
@@ -407,7 +375,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
-            expect(createContentModelSpy).not.toHaveBeenCalled();
+            expect(getContentModelCopySpy).not.toHaveBeenCalled();
             expect(triggerPluginEventSpy).not.toHaveBeenCalled();
             expect(focusSpy).not.toHaveBeenCalled();
             expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -450,7 +418,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
-            expect(createContentModelSpy).toHaveBeenCalled();
+            expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(focusSpy).toHaveBeenCalled();
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
@@ -499,7 +467,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
-            expect(createContentModelSpy).toHaveBeenCalled();
+            expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
             expect(focusSpy).toHaveBeenCalled();
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
@@ -547,7 +515,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
-            expect(createContentModelSpy).toHaveBeenCalled();
+            expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(focusSpy).toHaveBeenCalled();
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);

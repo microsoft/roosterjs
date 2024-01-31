@@ -313,7 +313,6 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
                 eventType: 'zoomChanged',
                 eventDataCache: input.eventDataCache,
                 newZoomScale: input.newZoomScale,
-                oldZoomScale: input.oldZoomScale,
             };
 
         default:
@@ -524,7 +523,8 @@ export function newEventToOldEvent(input: NewEvent, refEvent?: OldEvent): OldEve
                 eventType: PluginEventType.ZoomChanged,
                 eventDataCache: input.eventDataCache,
                 newZoomScale: input.newZoomScale,
-                oldZoomScale: input.oldZoomScale,
+                oldZoomScale:
+                    refEvent?.eventType == PluginEventType.ZoomChanged ? refEvent.oldZoomScale : 1, // In new ZoomChangedEvent we don't really have oldZoomScale. So if we can't get it, just use 1 instead
             };
 
         default:

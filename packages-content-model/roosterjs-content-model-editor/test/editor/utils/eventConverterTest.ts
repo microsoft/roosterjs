@@ -623,7 +623,6 @@ describe('oldEventToNewEvent', () => {
                 eventType: 'zoomChanged',
                 eventDataCache: mockedDataCache,
                 newZoomScale: mockedNewZoomScale,
-                oldZoomScale: mockedOldZoomScale,
             }
         );
     });
@@ -1212,6 +1211,25 @@ describe('newEventToOldEvent', () => {
 
     it('ZoomChanged', () => {
         const mockedNewZoomScale = 'NEWSCALE' as any;
+
+        runTest(
+            {
+                eventType: 'zoomChanged',
+                eventDataCache: mockedDataCache,
+                newZoomScale: mockedNewZoomScale,
+            },
+            undefined,
+            {
+                eventType: PluginEventType.ZoomChanged,
+                eventDataCache: mockedDataCache,
+                newZoomScale: mockedNewZoomScale,
+                oldZoomScale: 1,
+            }
+        );
+    });
+
+    it('ZoomChanged with ref', () => {
+        const mockedNewZoomScale = 'NEWSCALE' as any;
         const mockedOldZoomScale = 'OLDSCALE' as any;
 
         runTest(
@@ -1219,9 +1237,13 @@ describe('newEventToOldEvent', () => {
                 eventType: 'zoomChanged',
                 eventDataCache: mockedDataCache,
                 newZoomScale: mockedNewZoomScale,
+            },
+            {
+                eventType: PluginEventType.ZoomChanged,
+                eventDataCache: mockedDataCache,
+                newZoomScale: mockedNewZoomScale,
                 oldZoomScale: mockedOldZoomScale,
             },
-            undefined,
             {
                 eventType: PluginEventType.ZoomChanged,
                 eventDataCache: mockedDataCache,
