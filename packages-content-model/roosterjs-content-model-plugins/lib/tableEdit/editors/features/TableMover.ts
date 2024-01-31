@@ -1,26 +1,22 @@
-import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
+import { createElement, DragAndDropHelper, normalizeRect } from '../../../pluginUtils';
+import type { DragAndDropHandler } from '../../../pluginUtils';
 import type { IStandaloneEditor, Rect } from 'roosterjs-content-model-types';
-import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type TableEditorFeature from './TableEditorFeature';
-import type { CreateElementData } from 'roosterjs-editor-types';
 
-const TABLE_SELECTOR_LENGTH = 12;
-const TABLE_SELECTOR_ID = '_Table_Selector';
+const TABLE_MOVER_LENGTH = 12;
+const TABLE_MOVER_ID = '_Table_Mover';
 
 /**
  * @internal
+ * Contains the function to select whole table
+ * Moving behavior not implemented yet
  */
-export default function createTableSelector(
+export default function createTableMover(
     table: HTMLTableElement,
     editor: IStandaloneEditor,
     isRTL: boolean,
     onFinishDragging: (table: HTMLTableElement) => void,
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
-    onShowHelperElement?: (
-        elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement
 ): TableEditorFeature | null {
@@ -34,20 +30,19 @@ export default function createTableSelector(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
+        style:
+            'background-color: red; position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
     };
-
-    onShowHelperElement?.(createElementData, 'TableSelector');
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 
-    div.id = TABLE_SELECTOR_ID;
-    div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
-    div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
+    div.id = TABLE_MOVER_ID;
+    div.style.width = `${TABLE_MOVER_LENGTH}px`;
+    div.style.height = `${TABLE_MOVER_LENGTH}px`;
 
     (anchorContainer || document.body).appendChild(div);
 
-    const context: TableSelectorContext = {
+    const context: TableMoverContext = {
         table,
         zoomScale,
         rect,
@@ -56,14 +51,14 @@ export default function createTableSelector(
 
     setDivPosition(context, div);
 
-    const onDragEnd = (context: TableSelectorContext, event: MouseEvent): false => {
+    const onDragEnd = (context: TableMoverContext, event: MouseEvent): false => {
         if (event.target == div) {
             onFinishDragging(context.table);
         }
         return false;
     };
 
-    const featureHandler = new TableSelectorFeature(
+    const featureHandler = new TableMoverFeature(
         div,
         context,
         setDivPosition,
@@ -77,29 +72,29 @@ export default function createTableSelector(
     return { div, featureHandler, node: table };
 }
 
-interface TableSelectorContext {
+interface TableMoverContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
     isRTL: boolean;
 }
 
-interface TableSelectorInitValue {
+interface TableMoverInitValue {
     event: MouseEvent;
 }
 
-class TableSelectorFeature extends DragAndDropHelper<TableSelectorContext, TableSelectorInitValue> {
+class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverInitValue> {
     private onMouseOut: ((ev: MouseEvent) => void) | null;
 
     constructor(
         private div: HTMLElement,
-        context: TableSelectorContext,
+        context: TableMoverContext,
         onSubmit: (
-            context: TableSelectorContext,
+            context: TableMoverContext,
             trigger: HTMLElement,
             container?: HTMLElement
         ) => void,
-        handler: DragAndDropHandler<TableSelectorContext, TableSelectorInitValue>,
+        handler: DragAndDropHandler<TableMoverContext, TableMoverInitValue>,
         zoomScale: number,
         getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
         forceMobile?: boolean | undefined,
@@ -119,11 +114,11 @@ class TableSelectorFeature extends DragAndDropHelper<TableSelectorContext, Table
     }
 }
 
-function setDivPosition(context: TableSelectorContext, trigger: HTMLElement) {
+function setDivPosition(context: TableMoverContext, trigger: HTMLElement) {
     const { rect } = context;
     if (rect) {
-        trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
-        trigger.style.left = `${rect.left - TABLE_SELECTOR_LENGTH - 2}px`;
+        trigger.style.top = `${rect.top - TABLE_MOVER_LENGTH}px`;
+        trigger.style.left = `${rect.left - TABLE_MOVER_LENGTH - 2}px`;
     }
 }
 
@@ -133,7 +128,7 @@ function isTableTopVisible(
     contentDiv?: EventTarget | null
 ): boolean {
     const visibleViewport = editor.getVisibleViewport();
-    if (contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') && visibleViewport && rect) {
+    if (contentDiv instanceof HTMLElement && visibleViewport && rect) {
         const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
 
         return !!containerRect && containerRect.top <= rect.top && visibleViewport.top <= rect.top;
