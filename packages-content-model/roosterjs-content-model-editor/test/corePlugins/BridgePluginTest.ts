@@ -1,6 +1,5 @@
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as eventConverter from '../../lib/editor/utils/eventConverter';
-import * as NormalizeTablePlugin from '../../lib/corePlugins/NormalizeTablePlugin';
 import { BridgePlugin } from '../../lib/corePlugins/BridgePlugin';
 import { PluginEventType } from 'roosterjs-editor-types';
 
@@ -14,9 +13,6 @@ describe('BridgePlugin', () => {
     }
     beforeEach(() => {
         spyOn(EditPlugin, 'createEditPlugin').and.returnValue(createMockedPlugin('edit'));
-        spyOn(NormalizeTablePlugin, 'createNormalizeTablePlugin').and.returnValue(
-            createMockedPlugin('normalizeTable')
-        );
     });
 
     it('Ctor and init', () => {
