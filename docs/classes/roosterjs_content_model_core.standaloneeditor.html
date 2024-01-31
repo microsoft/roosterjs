@@ -106,11 +106,11 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#attachdomevent" class="tsd-kind-icon">attach<wbr>Dom<wbr>Event</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#createcontentmodel" class="tsd-kind-icon">create<wbr>Content<wbr>Model</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#dispose" class="tsd-kind-icon">dispose</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#focus" class="tsd-kind-icon">focus</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#formatcontentmodel" class="tsd-kind-icon">format<wbr>Content<wbr>Model</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#getcolormanager" class="tsd-kind-icon">get<wbr>Color<wbr>Manager</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#getcontentmodelcopy" class="tsd-kind-icon">get<wbr>Content<wbr>Model<wbr>Copy</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="roosterjs_content_model_core.standaloneeditor.html#getcore" class="tsd-kind-icon">get<wbr>Core</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#getdomhelper" class="tsd-kind-icon">getDOMHelper</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_core.standaloneeditor.html#getdomselection" class="tsd-kind-icon">getDOMSelection</a></li>
@@ -152,7 +152,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L33">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L35">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -208,7 +208,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#attachdomevent">attachDomEvent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L227">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:227</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L252">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:252</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -242,41 +242,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createcontentmodel" class="tsd-anchor"></a>
-					<h3>create<wbr>Content<wbr>Model</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Content<wbr>Model<span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a>, selectionOverride<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#createcontentmodel">createContentModel</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L89">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:89</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Create Content Model from DOM tree in this editor</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> option: <a href="../interfaces/roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The option to customize the behavior of DOM to Content Model conversion</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> selectionOverride: <a href="../modules/roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="dispose" class="tsd-anchor"></a>
 					<h3>dispose</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -287,7 +252,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#dispose">dispose</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L58">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L60">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:60</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -310,7 +275,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#focus">focus</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L185">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L210">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:210</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -333,7 +298,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#formatcontentmodel">formatContentModel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L132">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L157">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:157</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -374,7 +339,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getcolormanager">getColorManager</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L329">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:329</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L354">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:354</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -383,6 +348,48 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_types.darkcolorhandler.html" class="tsd-signature-type" data-tsd-kind="Interface">DarkColorHandler</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getcontentmodelcopy" class="tsd-anchor"></a>
+					<h3>get<wbr>Content<wbr>Model<wbr>Copy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Content<wbr>Model<wbr>Copy<span class="tsd-signature-symbol">(</span>mode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;connected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;reduced&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getcontentmodelcopy">getContentModelCopy</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L99">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:99</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create Content Model from DOM tree in this editor</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>mode: <span class="tsd-signature-type">&quot;connected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;reduced&quot;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>What kind of Content Model we want. Currently we support the following values:</p>
+										<ul>
+											<li>connected: Returns a connect Content Model object. &quot;Connected&quot; means if there is any entity inside editor, the returned Content Model will
+												contain the same wrapper element for entity. This option should only be used in some special cases. In most cases we should use &quot;disconnected&quot;
+											to get a fully disconnected Content Model so that any change to the model will not impact editor content.</li>
+											<li>disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won&#39;t impact the editor content.
+												If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
+											If editor is in dark mode, the cloned entity will be converted back to light mode.</li>
+											<li>reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
+											instead to improve performance. This is mostly used for retrieve current format state.</li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -396,7 +403,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L393">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:393</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L418">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:418</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -422,7 +429,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getdomhelper">getDOMHelper</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L151">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L176">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:176</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -445,7 +452,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getdomselection">getDOMSelection</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L108">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L133">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -468,7 +475,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getdocument">getDocument</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L178">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L203">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:203</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -492,7 +499,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getenvironment">getEnvironment</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L101">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:101</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L126">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:126</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -515,7 +522,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getpendingformat">getPendingFormat</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L144">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:144</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L169">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:169</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -538,7 +545,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getsnapshotsmanager">getSnapshotsManager</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L235">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:235</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L260">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:260</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -561,7 +568,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#gettrustedhtmlhandler">getTrustedHTMLHandler</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L385">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:385</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L410">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:410</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -587,7 +594,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#getzoomscale">getZoomScale</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L349">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:349</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L374">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:374</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -613,7 +620,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#hasfocus">hasFocus</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L194">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L219">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:219</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -637,7 +644,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#isdarkmode">isDarkMode</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L245">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:245</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L270">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:270</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -661,7 +668,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#isdisposed">isDisposed</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L81">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L83">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:83</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -685,7 +692,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#isinime">isInIME</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L283">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:283</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L308">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:308</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -709,7 +716,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#isinshadowedit">isInShadowEdit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L290">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:290</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L315">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:315</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -732,7 +739,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#isnodeineditor">isNodeInEditor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L337">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:337</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L362">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:362</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -764,7 +771,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#pastefromclipboard">pasteFromClipboard</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L320">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:320</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L345">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:345</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -802,7 +809,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#restoresnapshot">restoreSnapshot</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L168">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:168</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L193">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:193</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -834,7 +841,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#setdomselection">setDOMSelection</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L118">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L143">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:143</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -866,7 +873,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#setdarkmodestate">setDarkModeState</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L253">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:253</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L278">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:278</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -898,7 +905,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#setzoomscale">setZoomScale</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L359">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:359</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L384">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:384</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -932,7 +939,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#startshadowedit">startShadowEdit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L302">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:302</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L327">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:327</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -960,7 +967,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#stopshadowedit">stopShadowEdit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L310">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:310</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L335">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:335</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -983,7 +990,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#takesnapshot">takeSnapshot</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L158">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:158</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L183">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:183</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1006,7 +1013,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html">IStandaloneEditor</a>.<a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html#triggerevent">triggerEvent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d073bf7/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L208">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/3d93112/packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts#L233">packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts:233</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1120,9 +1127,6 @@
 								<a href="roosterjs_content_model_core.standaloneeditor.html#attachdomevent" class="tsd-kind-icon">attach<wbr>Dom<wbr>Event</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_content_model_core.standaloneeditor.html#createcontentmodel" class="tsd-kind-icon">create<wbr>Content<wbr>Model</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_content_model_core.standaloneeditor.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -1133,6 +1137,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_content_model_core.standaloneeditor.html#getcolormanager" class="tsd-kind-icon">get<wbr>Color<wbr>Manager</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_content_model_core.standaloneeditor.html#getcontentmodelcopy" class="tsd-kind-icon">get<wbr>Content<wbr>Model<wbr>Copy</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 								<a href="roosterjs_content_model_core.standaloneeditor.html#getcore" class="tsd-kind-icon">get<wbr>Core</a>
