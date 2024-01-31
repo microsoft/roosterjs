@@ -44,10 +44,7 @@ export const zoom: ContentModelRibbonButton<ZoomButtonStringKey> = {
         // Let main pane know this state change so that it can be persisted when pop out/pop in
         MainPaneBase.getInstance().setScale(zoomScale);
 
-        editor.triggerEvent('zoomChanged', {
-            newZoomScale: zoomScale,
-            oldZoomScale: 1, // Hack, we don't know the old value so use 1 instead
-        });
+        editor.triggerEvent('zoomChanged', { newZoomScale: zoomScale });
 
         return true;
     },

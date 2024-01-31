@@ -1003,7 +1003,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 this.triggerEvent(
                     'zoomChanged',
                     {
-                        oldZoomScale: oldValue,
                         newZoomScale: scale,
                     },
                     true /*broadcast*/
