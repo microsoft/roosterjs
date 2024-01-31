@@ -126,13 +126,15 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
 
         super(contentDiv, standaloneEditorOptions, () => {
             const core = this.getCore();
+            const sizeTransformer: SizeTransformer = size =>
+                size / this.getDOMHelper().calculateZoomScale();
 
             // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
             this.contentModelEditorCore = createEditorCore(
                 options,
                 corePluginState,
                 core.darkColorHandler,
-                size => size / this.getCore().zoomScale
+                sizeTransformer
             );
 
             bridgePlugin.setOuterEditor(this);
@@ -989,6 +991,38 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 feature as ExperimentalFeatures
             ) >= 0
         );
+    }
+
+    /**
+     * Get current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @returns current zoom scale number
+     */
+    getZoomScale(): number {
+        return this.getDOMHelper().calculateZoomScale();
+    }
+
+    /**
+     * Set current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
+     */
+    setZoomScale(scale: number): void {
+        if (scale > 0 && scale <= 10) {
+            const oldValue = this.getZoomScale();
+
+            if (oldValue != scale) {
+                this.triggerEvent(
+                    'zoomChanged',
+                    {
+                        newZoomScale: scale,
+                    },
+                    true /*broadcast*/
+                );
+            }
+        }
     }
 
     /**

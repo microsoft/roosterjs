@@ -13,7 +13,6 @@ export default function getFormatState(editor: IStandaloneEditor): ContentModelF
         canUndo: manager.hasNewContent || manager.canMove(-1),
         canRedo: manager.canMove(1),
         isDarkMode: editor.isDarkMode(),
-        zoomScale: editor.getZoomScale(),
     };
 
     retrieveModelFormatState(model, pendingFormat, result);
