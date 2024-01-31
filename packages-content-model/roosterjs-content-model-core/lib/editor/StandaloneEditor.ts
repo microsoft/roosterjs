@@ -331,16 +331,6 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Check if the given DOM node is in editor
-     * @param node The node to check
-     */
-    isNodeInEditor(node: Node): boolean {
-        const core = this.getCore();
-
-        return core.contentDiv.contains(node);
-    }
-
-    /**
      * Get current zoom scale, default value is 1
      * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
      * to let editor behave correctly especially for those mouse drag/drop behaviors
