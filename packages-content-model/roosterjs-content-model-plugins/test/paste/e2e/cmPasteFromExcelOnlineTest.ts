@@ -1,6 +1,5 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { expectEqual, initEditor } from './testUtils';
-import { tableProcessor } from 'roosterjs-content-model-dom';
 import type { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_ExcelOnline_E2E';
@@ -33,11 +32,7 @@ describe(ID, () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
         editor.pasteFromClipboard(clipboardData);
-        editor.createContentModel({
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        editor.getContentModelCopy('connected');
 
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
@@ -58,11 +53,7 @@ describe(ID, () => {
 
         editor.pasteFromClipboard(CD);
 
-        const model = editor.createContentModel({
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',

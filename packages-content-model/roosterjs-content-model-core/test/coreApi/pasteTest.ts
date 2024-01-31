@@ -12,11 +12,9 @@ import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/Word
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 import { PastePlugin } from 'roosterjs-content-model-plugins/lib/paste/PastePlugin';
 import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
-import { tableProcessor } from 'roosterjs-content-model-dom';
 import {
     ClipboardData,
     ContentModelDocument,
-    DomToModelOption,
     IStandaloneEditor,
     BeforePasteEvent,
     PluginEvent,
@@ -313,11 +311,7 @@ describe('Paste with clipboardData', () => {
 
         editor.pasteFromClipboard(clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',
@@ -370,11 +364,7 @@ describe('Paste with clipboardData', () => {
 
         editor.pasteFromClipboard(clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',
@@ -414,11 +404,7 @@ describe('Paste with clipboardData', () => {
 
         editor.pasteFromClipboard(clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',
