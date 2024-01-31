@@ -310,7 +310,7 @@ export default class TableEditor {
         this.editor.focus();
 
         if (this.range) {
-            this.editor.setDOMSelection({ type: 'range', range: this.range });
+            this.editor.setDOMSelection({ type: 'range', range: this.range, isReverted: false });
         }
 
         this.editor.takeSnapshot(); // Pass in an empty callback to make sure ContentChangedEvent is triggered
