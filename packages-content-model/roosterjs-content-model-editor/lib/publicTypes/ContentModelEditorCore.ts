@@ -5,8 +5,6 @@ import type {
     ExperimentalFeatures,
     ContentMetadata,
     InsertOption,
-    NodePosition,
-    StyleBasedFormatState,
     SizeTransformer,
     DarkColorHandler,
 } from 'roosterjs-editor-types';
@@ -41,34 +39,6 @@ export type InsertNode = (
 ) => boolean;
 
 /**
- * Get style based format state from current selection, including font name/size and colors
- * @param core The ContentModelEditorCore objects
- * @param innerCore The StandaloneEditorCore object
- * @param node The node to get style from
- */
-export type GetStyleBasedFormatState = (
-    core: ContentModelEditorCore,
-    innerCore: StandaloneEditorCore,
-    node: Node | null
-) => StyleBasedFormatState;
-
-/**
- * Ensure user will type into a container element rather than into the editor content DIV directly
- * @param core The ContentModelEditorCore object.
- * @param innerCore The StandaloneEditorCore object
- * @param position The position that user is about to type to
- * @param keyboardEvent Optional keyboard event object
- * @param deprecated Deprecated parameter, not used
- */
-export type EnsureTypeInContainer = (
-    core: ContentModelEditorCore,
-    innerCore: StandaloneEditorCore,
-    position: NodePosition,
-    keyboardEvent?: KeyboardEvent,
-    deprecated?: boolean
-) => void;
-
-/**
  * Core API map for Content Model editor
  */
 export interface ContentModelCoreApiMap {
@@ -89,24 +59,6 @@ export interface ContentModelCoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
-
-    /**
-     * Get style based format state from current selection, including font name/size and colors
-     * @param core The ContentModelEditorCore objects
-     * @param innerCore The StandaloneEditorCore object
-     * @param node The node to get style from
-     */
-    getStyleBasedFormatState: GetStyleBasedFormatState;
-
-    /**
-     * Ensure user will type into a container element rather than into the editor content DIV directly
-     * @param core The EditorCore object.
-     * @param innerCore The StandaloneEditorCore object
-     * @param position The position that user is about to type to
-     * @param keyboardEvent Optional keyboard event object
-     * @param deprecated Deprecated parameter, not used
-     */
-    ensureTypeInContainer: EnsureTypeInContainer;
 }
 
 /**
