@@ -54,7 +54,6 @@ export function createStandaloneEditorCore(
         domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
-        zoomScale: (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1,
     };
 }
 

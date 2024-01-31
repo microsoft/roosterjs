@@ -39,7 +39,7 @@ export default function ContentModelRooster(props: ContentModelRoosterProps) {
     const editor = React.useRef<IStandaloneEditor | null>(null);
     const theme = useTheme();
 
-    const { focusOnInit, editorCreator, zoomScale, inDarkMode, plugins, legacyPlugins } = props;
+    const { focusOnInit, editorCreator, inDarkMode, plugins, legacyPlugins } = props;
 
     React.useEffect(() => {
         if (editorDiv.current) {
@@ -70,12 +70,6 @@ export default function ContentModelRooster(props: ContentModelRoosterProps) {
     React.useEffect(() => {
         editor.current?.setDarkModeState(!!inDarkMode);
     }, [inDarkMode]);
-
-    React.useEffect(() => {
-        if (zoomScale) {
-            editor.current?.setZoomScale(zoomScale);
-        }
-    }, [zoomScale]);
 
     const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
     return <div ref={editorDiv} tabIndex={0} {...(divProps || {})}></div>;

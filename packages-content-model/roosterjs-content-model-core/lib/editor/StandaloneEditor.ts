@@ -356,42 +356,6 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Get current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @returns current zoom scale number
-     */
-    getZoomScale(): number {
-        return this.getCore().zoomScale;
-    }
-
-    /**
-     * Set current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
-     */
-    setZoomScale(scale: number): void {
-        const core = this.getCore();
-
-        if (scale > 0 && scale <= 10) {
-            const oldValue = core.zoomScale;
-            core.zoomScale = scale;
-
-            if (oldValue != scale) {
-                this.triggerEvent(
-                    'zoomChanged',
-                    {
-                        oldZoomScale: oldValue,
-                        newZoomScale: scale,
-                    },
-                    true /*broadcast*/
-                );
-            }
-        }
-    }
-
-    /**
      * Get a function to convert HTML string to trusted HTML string.
      * By default it will just return the input HTML directly. To override this behavior,
      * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler

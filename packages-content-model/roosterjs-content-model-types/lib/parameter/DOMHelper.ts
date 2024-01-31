@@ -25,4 +25,9 @@ export interface DOMHelper {
      * @returns HTML Element array of the query result
      */
     queryElements(selector: string): HTMLElement[];
+
+    /**
+     * Calculate current zoom scale of editor
+     */
+    calculateZoomScale(): number;
 }
