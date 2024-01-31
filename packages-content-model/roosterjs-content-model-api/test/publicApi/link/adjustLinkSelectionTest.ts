@@ -18,24 +18,19 @@ import {
 
 describe('adjustLinkSelection', () => {
     let editor: IStandaloneEditor;
-    let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
     let formatContentModel: jasmine.Spy;
     let formatResult: boolean | undefined;
-    let model: ContentModelDocument | undefined;
+    let mockedModel: ContentModelDocument;
 
     beforeEach(() => {
-        createContentModel = jasmine.createSpy('createContentModel');
-
-        model = undefined;
+        mockedModel = undefined;
         formatResult = undefined;
 
         formatContentModel = jasmine
             .createSpy('formatContentModel')
             .and.callFake(
                 (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    model = createContentModel();
-
-                    formatResult = callback(model, {
+                    formatResult = callback(mockedModel, {
                         newEntities: [],
                         deletedEntities: [],
                         newImages: [],
@@ -54,7 +49,7 @@ describe('adjustLinkSelection', () => {
         expectedText: string,
         expectedUrl: string | null
     ) {
-        createContentModel.and.returnValue(model);
+        mockedModel = model;
 
         const [text, url] = adjustLinkSelection(editor);
 
