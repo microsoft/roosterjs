@@ -1,4 +1,3 @@
-import { Browser } from 'roosterjs-editor-dom';
 import type Disposable from '../Disposable';
 import type DragAndDropHandler from './DragAndDropHandler';
 
@@ -91,10 +90,7 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         private zoomScale: number,
         forceMobile?: boolean
     ) {
-        this.dndMouse =
-            forceMobile || Browser.isMobileOrTablet
-                ? MOUSE_EVENT_INFO_MOBILE
-                : MOUSE_EVENT_INFO_DESKTOP;
+        this.dndMouse = forceMobile ? MOUSE_EVENT_INFO_MOBILE : MOUSE_EVENT_INFO_DESKTOP;
         trigger.addEventListener(this.dndMouse.MOUSEDOWN, this.onMouseDown);
     }
 
