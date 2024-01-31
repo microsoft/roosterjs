@@ -126,13 +126,8 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
 
         super(contentDiv, standaloneEditorOptions, () => {
             const core = this.getCore();
-            const sizeTransformer: SizeTransformer = size => {
-                const innerCore = this.getCore();
-                const zoomScale =
-                    innerCore.api.createEditorContext(core, false /*saveIndex*/).zoomScale ?? 1;
-
-                return size / zoomScale;
-            };
+            const sizeTransformer: SizeTransformer = size =>
+                size / this.getDOMHelper().calculateZoomScale();
 
             // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
             this.contentModelEditorCore = createEditorCore(
@@ -991,9 +986,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @returns current zoom scale number
      */
     getZoomScale(): number {
-        const core = this.getCore();
-        const editorContext = core.api.createEditorContext(core, false /*saveIndex*/);
-        return editorContext.zoomScale ?? 1;
+        return this.getDOMHelper().calculateZoomScale();
     }
 
     /**
