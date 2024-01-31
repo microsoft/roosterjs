@@ -24,4 +24,9 @@ export interface DOMHelper {
      * Get plain text content of editor using textContent property
      */
     getTextContent(): string;
+
+    /**
+     * Calculate current zoom scale of editor
+     */
+    calculateZoomScale(): number;
 }

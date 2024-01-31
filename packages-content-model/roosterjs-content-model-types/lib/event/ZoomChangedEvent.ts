@@ -7,11 +7,6 @@ import type { BasePluginEvent } from './BasePluginEvent';
  */
 export interface ZoomChangedEvent extends BasePluginEvent<'zoomChanged'> {
     /**
-     * Zoom scale value before this change
-     */
-    oldZoomScale: number;
-
-    /**
      * Zoom scale value after this change
      */
     newZoomScale: number;
