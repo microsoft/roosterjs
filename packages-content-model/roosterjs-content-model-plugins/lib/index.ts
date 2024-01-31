@@ -4,4 +4,4 @@ export {
     ContentModelAutoFormatPlugin,
     AutoFormatOptions,
 } from './autoFormat/ContentModelAutoFormatPlugin';
-export { TableEditPlugin } from './tableEdit/index';
+export { TableEditPlugin } from './tableEdit/TableEditPlugin';

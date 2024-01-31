@@ -2,6 +2,7 @@ import { getObjectKeys, isNodeOfType } from 'roosterjs-content-model-dom';
 import type CreateElementData from './CreateElementData';
 
 /**
+ * @internal
  * Create DOM element from the given CreateElementData
  * @param elementData The CreateElementData or an index of a known CreateElementData used for creating this element
  * @param document The document to create the element from

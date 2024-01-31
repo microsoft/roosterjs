@@ -1,6 +1,8 @@
-import { createElement, DragAndDropHelper, normalizeRect } from '../../../pluginUtils';
+import createElement from '../../../pluginUtils/CreateElement/createElement';
+import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
 import { getFirstSelectedTable, normalizeTable } from 'roosterjs-content-model-core';
-import type { DragAndDropHandler } from '../../../pluginUtils';
+import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ContentModelTable, IStandaloneEditor } from 'roosterjs-content-model-types';
 import type TableEditFeature from './TableEditorFeature';
 

@@ -1,6 +1,9 @@
-import { createElement, getIntersectedRect, normalizeRect } from '../../../pluginUtils';
+import createElement from '../../../pluginUtils/CreateElement/createElement';
+import getIntersectedRect from '../../../pluginUtils/Rect/getIntersectedRect';
+import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
 import { editTable } from 'roosterjs-content-model-api';
-import type { CreateElementData, Disposable } from '../../../pluginUtils';
+import type CreateElementData from '../../../pluginUtils/CreateElement/CreateElementData';
+import type Disposable from '../../../pluginUtils/Disposable';
 import type TableEditFeature from './TableEditorFeature';
 import type { IStandaloneEditor, TableSelection } from 'roosterjs-content-model-types';
 

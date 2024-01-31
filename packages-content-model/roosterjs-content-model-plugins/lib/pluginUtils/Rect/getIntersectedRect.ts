@@ -21,7 +21,7 @@ import type { Rect } from 'roosterjs-content-model-types';
     +-------------------------+
         |                 |
         +-----------------+
-
+ * @internal
  * @param elements Elements to use.
  * @param additionalRects additional rects to use
  * @returns If the Rect is valid return the rect, if not, return null.

@@ -1,6 +1,7 @@
 import type { Rect } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
  * We validate that and only return a rect when the passed in ClientRect is valid
  */

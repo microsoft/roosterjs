@@ -1,5 +1,5 @@
+import normalizeRect from '../pluginUtils/Rect/normalizeRect';
 import TableEditor from './editors/TableEditor';
-import { normalizeRect } from '../pluginUtils';
 import type {
     EditorPlugin,
     IStandaloneEditor,
@@ -12,7 +12,7 @@ const TABLE_RESIZER_LENGTH = 12;
 /**
  * TableEdit plugin, provides the ability to resize a table by drag-and-drop
  */
-export default class TableEditPlugin implements EditorPlugin {
+export class TableEditPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
     private onMouseMoveDisposer: (() => void) | null = null;
     private tableRectMap: { table: HTMLTableElement; rect: Rect }[] | null = null;
