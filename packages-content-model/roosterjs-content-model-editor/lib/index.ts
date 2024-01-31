@@ -3,7 +3,6 @@ export {
     ContentModelCoreApiMap,
     SetContent,
     InsertNode,
-    GetContent,
     GetStyleBasedFormatState,
     EnsureTypeInContainer,
 } from './publicTypes/ContentModelEditorCore';

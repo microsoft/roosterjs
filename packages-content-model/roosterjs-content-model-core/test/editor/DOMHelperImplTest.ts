@@ -32,4 +32,16 @@ describe('DOMHelperImpl', () => {
         expect(result).toEqual(mockedResult);
         expect(querySelectorAllSpy).toHaveBeenCalledWith(mockedSelector);
     });
+
+    it('getTextContent', () => {
+        const mockedTextContent = 'TEXT';
+        const mockedDiv: HTMLDivElement = {
+            textContent: mockedTextContent,
+        } as any;
+        const domHelper = createDOMHelper(mockedDiv);
+
+        const result = domHelper.getTextContent();
+
+        expect(result).toBe(mockedTextContent);
+    });
 });

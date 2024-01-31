@@ -11,6 +11,10 @@ class DOMHelperImpl implements DOMHelper {
     isNodeInEditor(node: Node): boolean {
         return this.contentDiv.contains(node);
     }
+
+    getTextContent(): string {
+        return this.contentDiv.textContent || '';
+    }
 }
 
 /**
