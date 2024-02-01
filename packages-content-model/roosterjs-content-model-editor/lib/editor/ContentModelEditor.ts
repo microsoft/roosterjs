@@ -155,19 +155,21 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     dispose(): void {
         super.dispose();
 
-        const core = this.getContentModelEditorCore();
+        const core = this.contentModelEditorCore;
 
-        getObjectKeys(core.customData).forEach(key => {
-            const data = core.customData[key];
+        if (core) {
+            getObjectKeys(core.customData).forEach(key => {
+                const data = core.customData[key];
 
-            if (data && data.disposer) {
-                data.disposer(data.value);
-            }
+                if (data && data.disposer) {
+                    data.disposer(data.value);
+                }
 
-            delete core.customData[key];
-        });
+                delete core.customData[key];
+            });
 
-        this.contentModelEditorCore = undefined;
+            this.contentModelEditorCore = undefined;
+        }
     }
 
     /**
