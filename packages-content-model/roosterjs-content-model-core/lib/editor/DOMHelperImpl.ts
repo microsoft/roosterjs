@@ -8,12 +8,12 @@ class DOMHelperImpl implements DOMHelper {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
     }
 
-    isNodeInEditor(node: Node): boolean {
-        return this.contentDiv.contains(node);
-    }
-
     getTextContent(): string {
         return this.contentDiv.textContent || '';
+    }
+
+    isNodeInEditor(node: Node): boolean {
+        return this.contentDiv.contains(node);
     }
 
     calculateZoomScale(): number {

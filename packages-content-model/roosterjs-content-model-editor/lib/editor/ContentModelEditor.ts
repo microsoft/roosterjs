@@ -91,8 +91,8 @@ import type {
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
 import type {
-    DOMEventRecord,
     ContentModelFormatState,
+    DOMEventRecord,
     ExportContentMode,
     Rect,
 } from 'roosterjs-content-model-types';

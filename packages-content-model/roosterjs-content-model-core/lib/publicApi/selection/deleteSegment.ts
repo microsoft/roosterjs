@@ -83,8 +83,6 @@ export function deleteSegment(
                 segments.splice(index, 1);
                 return true;
             } else {
-                // No op if a general segment is not selected, let browser handle general segment
-                // TODO: Need to revisit this
                 return false;
             }
     }

@@ -123,8 +123,6 @@ export function retrieveModelFormatState(
                     firstTableContext = tableContext;
                 }
             }
-
-            // TODO: Support Code block in format state for Content Model
         },
         {
             includeListFormatHolder: 'never',
@@ -162,8 +160,6 @@ function retrieveSegmentFormat(
     mergeValue(result, 'backgroundColor', mergedFormat.backgroundColor, isFirst);
     mergeValue(result, 'textColor', mergedFormat.textColor, isFirst);
     mergeValue(result, 'fontWeight', mergedFormat.fontWeight, isFirst);
-
-    //TODO: handle block owning segments with different line-heights
     mergeValue(result, 'lineHeight', mergedFormat.lineHeight, isFirst);
 }
 
