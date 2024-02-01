@@ -16,16 +16,19 @@ export function wrapBlockStep1<T extends ContentModelBlockGroup & ContentModelBl
     step1Result: WrapBlockStep1Result<T>[],
     parent: ContentModelBlockGroup | null,
     blockToWrap: ContentModelBlock,
-    creator: () => T,
-    canMerge: (target: ContentModelBlock) => target is T
+    creator: (isRtl: boolean) => T,
+    canMerge: (isRtl: boolean, target: ContentModelBlock) => target is T
 ) {
     const index = parent?.blocks.indexOf(blockToWrap) ?? -1;
 
     if (parent && index >= 0) {
         parent.blocks.splice(index, 1);
 
-        const prevBlock = parent.blocks[index - 1];
-        const wrapper = canMerge(prevBlock) ? prevBlock : createAndAdd(parent, index, creator);
+        const prevBlock: ContentModelBlock = parent.blocks[index - 1];
+        const isRtl = blockToWrap.format.direction == 'rtl';
+        const wrapper = canMerge(isRtl, prevBlock)
+            ? prevBlock
+            : createAndAdd(parent, index, creator, isRtl);
 
         setParagraphNotImplicit(blockToWrap);
         addBlock(wrapper, blockToWrap);
@@ -40,13 +43,14 @@ export function wrapBlockStep1<T extends ContentModelBlockGroup & ContentModelBl
  */
 export function wrapBlockStep2<T extends ContentModelBlockGroup & ContentModelBlock>(
     step1Result: WrapBlockStep1Result<T>[],
-    canMerge: (target: ContentModelBlock, current: T) => target is T
+    canMerge: (isRtl: boolean, target: ContentModelBlock, current: T) => target is T
 ) {
     step1Result.forEach(({ parent, wrapper }) => {
         const index = parent.blocks.indexOf(wrapper);
         const nextBlock = parent.blocks[index + 1];
+        const isRtl = wrapper.format.direction == 'rtl';
 
-        if (index >= 0 && canMerge(nextBlock, wrapper)) {
+        if (index >= 0 && canMerge(isRtl, nextBlock, wrapper)) {
             wrapper.blocks.forEach(setParagraphNotImplicit);
             wrapper.blocks.push(...nextBlock.blocks);
             parent.blocks.splice(index + 1, 1);
@@ -57,9 +61,10 @@ export function wrapBlockStep2<T extends ContentModelBlockGroup & ContentModelBl
 function createAndAdd<T extends ContentModelBlockGroup & ContentModelBlock>(
     parent: ContentModelBlockGroup,
     index: number,
-    creator: () => T
+    creator: (isRtl: boolean) => T,
+    isRtl: boolean
 ): T {
-    const block = creator();
+    const block = creator(isRtl);
 
     parent.blocks.splice(index, 0, block);
     return block;
