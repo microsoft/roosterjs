@@ -68,8 +68,6 @@ export function iterateSelections(
 ): void {
     const internalCallback: IterateSelectionsCallback = (path, tableContext, block, segments) => {
         if (!!(block as ContentModelBlockWithCache)?.cachedElement) {
-            // TODO: This is a temporary solution. A better solution would be making all results from iterationSelection() to be readonly,
-            // use a util function to change it to be editable before edit them where we clear its cached element
             delete (block as ContentModelBlockWithCache).cachedElement;
         }
 
