@@ -39,14 +39,8 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(
-        contentDiv: HTMLDivElement,
-        options: StandaloneEditorOptions = {},
-        onBeforeInitializePlugins?: () => void
-    ) {
+    constructor(contentDiv: HTMLDivElement, options: StandaloneEditorOptions = {}) {
         this.core = createStandaloneEditorCore(contentDiv, options);
-
-        onBeforeInitializePlugins?.();
 
         const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
 

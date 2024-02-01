@@ -35,40 +35,42 @@ describe('BridgePlugin', () => {
         const mockedEditor = {
             queryElements: queryElementsSpy,
         } as any;
-
-        const plugin = new BridgePlugin({
-            legacyPlugins: [mockedPlugin1, mockedPlugin2],
-        });
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin(
+            {
+                legacyPlugins: [mockedPlugin1, mockedPlugin2],
+            },
+            onInitializeSpy
+        );
         expect(initializeSpy).not.toHaveBeenCalled();
         expect(onPluginEventSpy1).not.toHaveBeenCalled();
         expect(onPluginEventSpy2).not.toHaveBeenCalled();
         expect(disposeSpy).not.toHaveBeenCalled();
-
-        expect(plugin.getCorePluginState()).toEqual({
-            edit: 'edit',
-            contextMenuProviders: [],
-        } as any);
-
-        plugin.setOuterEditor(mockedEditor);
-
-        expect(initializeSpy).toHaveBeenCalledTimes(0);
-        expect(onPluginEventSpy1).toHaveBeenCalledTimes(0);
-        expect(onPluginEventSpy2).toHaveBeenCalledTimes(0);
-        expect(disposeSpy).not.toHaveBeenCalled();
+        expect(onInitializeSpy).not.toHaveBeenCalled();
 
         plugin.initialize();
 
+        expect(onInitializeSpy).toHaveBeenCalledWith({
+            edit: 'edit',
+            contextMenuProviders: [],
+        } as any);
         expect(initializeSpy).toHaveBeenCalledTimes(2);
+        expect(disposeSpy).not.toHaveBeenCalled();
+        expect(initializeSpy).toHaveBeenCalledWith(mockedEditor);
+        expect(onPluginEventSpy1).not.toHaveBeenCalled();
+        expect(onPluginEventSpy2).not.toHaveBeenCalled();
+
+        plugin.onPluginEvent({ eventType: 'editorReady' });
+
         expect(onPluginEventSpy1).toHaveBeenCalledTimes(1);
         expect(onPluginEventSpy2).toHaveBeenCalledTimes(1);
-        expect(disposeSpy).not.toHaveBeenCalled();
-
-        expect(initializeSpy).toHaveBeenCalledWith(mockedEditor);
         expect(onPluginEventSpy1).toHaveBeenCalledWith({
             eventType: PluginEventType.EditorReady,
+            eventDataCache: undefined,
         });
         expect(onPluginEventSpy2).toHaveBeenCalledWith({
             eventType: PluginEventType.EditorReady,
+            eventDataCache: undefined,
         });
 
         plugin.dispose();
@@ -97,15 +99,17 @@ describe('BridgePlugin', () => {
             dispose: disposeSpy,
         } as any;
         const mockedEditor = 'EDITOR' as any;
-        const plugin = new BridgePlugin({
-            legacyPlugins: [mockedPlugin1, mockedPlugin2],
-        });
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin(
+            {
+                legacyPlugins: [mockedPlugin1, mockedPlugin2],
+            },
+            onInitializeSpy
+        );
 
         spyOn(eventConverter, 'newEventToOldEvent').and.callFake(newEvent => {
             return ('NEW_' + newEvent) as any;
         });
-
-        plugin.setOuterEditor(mockedEditor);
 
         const mockedEvent = {} as any;
         const result = plugin.willHandleEventExclusively(mockedEvent);
@@ -144,9 +148,13 @@ describe('BridgePlugin', () => {
         } as any;
 
         const mockedEditor = 'EDITOR' as any;
-        const plugin = new BridgePlugin({
-            legacyPlugins: [mockedPlugin1, mockedPlugin2],
-        });
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin(
+            {
+                legacyPlugins: [mockedPlugin1, mockedPlugin2],
+            },
+            onInitializeSpy
+        );
 
         spyOn(eventConverter, 'newEventToOldEvent').and.callFake(newEvent => {
             return {
@@ -159,8 +167,6 @@ describe('BridgePlugin', () => {
                 data: oldEvent.data,
             } as any;
         });
-
-        plugin.setOuterEditor(mockedEditor);
 
         const mockedEvent = {
             eventType: 'newEvent',
@@ -218,9 +224,13 @@ describe('BridgePlugin', () => {
         } as any;
 
         const mockedEditor = 'EDITOR' as any;
-        const plugin = new BridgePlugin({
-            legacyPlugins: [mockedPlugin1, mockedPlugin2],
-        });
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin(
+            {
+                legacyPlugins: [mockedPlugin1, mockedPlugin2],
+            },
+            onInitializeSpy
+        );
 
         spyOn(eventConverter, 'newEventToOldEvent').and.callFake(newEvent => {
             return {
@@ -228,8 +238,6 @@ describe('BridgePlugin', () => {
                 eventDataCache: newEvent.eventDataCache,
             } as any;
         });
-
-        plugin.setOuterEditor(mockedEditor);
 
         const mockedEvent = {
             eventType: 'newEvent',
@@ -283,39 +291,42 @@ describe('BridgePlugin', () => {
             queryElements: queryElementsSpy,
         } as any;
 
-        const plugin = new BridgePlugin({
-            legacyPlugins: [mockedPlugin1, mockedPlugin2],
-        });
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin(
+            {
+                legacyPlugins: [mockedPlugin1, mockedPlugin2],
+            },
+            onInitializeSpy
+        );
         expect(initializeSpy).not.toHaveBeenCalled();
         expect(onPluginEventSpy1).not.toHaveBeenCalled();
         expect(onPluginEventSpy2).not.toHaveBeenCalled();
         expect(disposeSpy).not.toHaveBeenCalled();
 
-        expect(plugin.getCorePluginState()).toEqual({
+        plugin.initialize();
+
+        expect(onInitializeSpy).toHaveBeenCalledWith({
             edit: 'edit',
             contextMenuProviders: [mockedPlugin1, mockedPlugin2],
         } as any);
-
-        plugin.setOuterEditor(mockedEditor);
-
-        expect(initializeSpy).toHaveBeenCalledTimes(0);
+        expect(initializeSpy).toHaveBeenCalledTimes(2);
         expect(onPluginEventSpy1).toHaveBeenCalledTimes(0);
         expect(onPluginEventSpy2).toHaveBeenCalledTimes(0);
         expect(disposeSpy).not.toHaveBeenCalled();
+        expect(initializeSpy).toHaveBeenCalledWith(mockedEditor);
 
-        plugin.initialize();
+        plugin.onPluginEvent({ eventType: 'editorReady' });
 
-        expect(initializeSpy).toHaveBeenCalledTimes(2);
         expect(onPluginEventSpy1).toHaveBeenCalledTimes(1);
         expect(onPluginEventSpy2).toHaveBeenCalledTimes(1);
         expect(disposeSpy).not.toHaveBeenCalled();
-
-        expect(initializeSpy).toHaveBeenCalledWith(mockedEditor);
         expect(onPluginEventSpy1).toHaveBeenCalledWith({
             eventType: PluginEventType.EditorReady,
+            eventDataCache: undefined,
         });
         expect(onPluginEventSpy2).toHaveBeenCalledWith({
             eventType: PluginEventType.EditorReady,
+            eventDataCache: undefined,
         });
 
         const mockedNode = 'NODE' as any;

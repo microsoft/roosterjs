@@ -119,7 +119,22 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        const bridgePlugin = new BridgePlugin(options);
+        const bridgePlugin = new BridgePlugin(options, corePluginState => {
+            const core = this.getCore();
+            const sizeTransformer: SizeTransformer = size =>
+                size / this.getDOMHelper().calculateZoomScale();
+
+            // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
+            this.contentModelEditorCore = createEditorCore(
+                options,
+                corePluginState,
+                core.darkColorHandler,
+                sizeTransformer
+            );
+
+            return this;
+        });
+
         const plugins = [bridgePlugin, ...(options.plugins ?? [])];
         const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
@@ -136,23 +151,8 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             plugins,
             initialModel,
         };
-        const corePluginState = bridgePlugin.getCorePluginState();
 
-        super(contentDiv, standaloneEditorOptions, () => {
-            const core = this.getCore();
-            const sizeTransformer: SizeTransformer = size =>
-                size / this.getDOMHelper().calculateZoomScale();
-
-            // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
-            this.contentModelEditorCore = createEditorCore(
-                options,
-                corePluginState,
-                core.darkColorHandler,
-                sizeTransformer
-            );
-
-            bridgePlugin.setOuterEditor(this);
-        });
+        super(contentDiv, standaloneEditorOptions);
     }
 
     /**

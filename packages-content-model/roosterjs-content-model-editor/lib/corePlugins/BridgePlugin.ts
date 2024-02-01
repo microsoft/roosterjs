@@ -1,16 +1,13 @@
 import { createEditPlugin } from './EditPlugin';
 import { createEntityDelimiterPlugin } from './EntityDelimiterPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
-import { PluginEventType } from 'roosterjs-editor-types';
 import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
-import type {
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from '../publicTypes/IContentModelEditor';
+import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import type {
     EditorPlugin as LegacyEditorPlugin,
     PluginEvent as LegacyPluginEvent,
     ContextMenuProvider as LegacyContextMenuProvider,
+    IEditor as ILegacyEditor,
 } from 'roosterjs-editor-types';
 import type { ContextMenuProvider, PluginEvent } from 'roosterjs-content-model-types';
 
@@ -23,10 +20,12 @@ const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 export class BridgePlugin implements ContextMenuProvider<any> {
     private legacyPlugins: LegacyEditorPlugin[];
     private corePluginState: ContentModelCorePluginState;
-    private outerEditor: IContentModelEditor | null = null;
     private checkExclusivelyHandling: boolean;
 
-    constructor(options: ContentModelEditorOptions) {
+    constructor(
+        options: ContentModelEditorOptions,
+        private onInitialize: (pluginState: ContentModelCorePluginState) => ILegacyEditor
+    ) {
         const editPlugin = createEditPlugin();
         const entityDelimiterPlugin = createEntityDelimiterPlugin();
 
@@ -52,35 +51,13 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     }
 
     /**
-     * Get core plugin state
-     */
-    getCorePluginState(): ContentModelCorePluginState {
-        return this.corePluginState;
-    }
-
-    /**
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
     initialize() {
-        if (this.outerEditor) {
-            const editor = this.outerEditor;
+        const outerEditor = this.onInitialize(this.corePluginState);
 
-            this.legacyPlugins.forEach(plugin => plugin.initialize(editor));
-
-            this.legacyPlugins.forEach(plugin =>
-                plugin.onPluginEvent?.({
-                    eventType: PluginEventType.EditorReady,
-                })
-            );
-        }
-    }
-
-    /**
-     * Initialize all inner plugins with Content Model Editor
-     */
-    setOuterEditor(editor: IContentModelEditor) {
-        this.outerEditor = editor;
+        this.legacyPlugins.forEach(plugin => plugin.initialize(outerEditor));
     }
 
     /**
