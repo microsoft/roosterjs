@@ -780,38 +780,6 @@ describe('StandaloneEditor', () => {
         expect(() => editor.getColorManager()).toThrow();
     });
 
-    it('isNodeInEditor', () => {
-        const mockedResult = 'RESULT' as any;
-        const containsSpy = jasmine.createSpy('contains').and.returnValue(mockedResult);
-        const resetSpy = jasmine.createSpy('reset');
-        const div = {
-            contains: containsSpy,
-        } as any;
-        const mockedCore = {
-            plugins: [],
-            darkColorHandler: {
-                updateKnownColor: updateKnownColorSpy,
-                reset: resetSpy,
-            },
-            contentDiv: div,
-            api: { setContentModel: setContentModelSpy },
-        } as any;
-
-        createEditorCoreSpy.and.returnValue(mockedCore);
-
-        const editor = new StandaloneEditor(div);
-        const mockedNode = 'NODE' as any;
-
-        const result = editor.isNodeInEditor(mockedNode);
-
-        expect(result).toBe(mockedResult);
-        expect(containsSpy).toHaveBeenCalledWith(mockedNode);
-
-        editor.dispose();
-        expect(resetSpy).toHaveBeenCalledWith();
-        expect(() => editor.isNodeInEditor(mockedNode)).toThrow();
-    });
-
     it('dark mode', () => {
         const transformColorSpy = spyOn(transformColor, 'transformColor');
         const triggerEventSpy = jasmine.createSpy('triggerEvent').and.callFake((core, event) => {
