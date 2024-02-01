@@ -1,7 +1,6 @@
 export {
     ContentModelEditorCore,
     ContentModelCoreApiMap,
-    SetContent,
     InsertNode,
     GetContent,
 } from './publicTypes/ContentModelEditorCore';
