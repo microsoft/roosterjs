@@ -1,3 +1,4 @@
+import { keyboardAdjustList } from './keyboardAdjustList';
 import { keyboardListTrigger } from './keyboardListTrigger';
 import type {
     EditorPlugin,
@@ -94,6 +95,9 @@ export class ContentModelAutoFormatPlugin implements EditorPlugin {
                     if (autoBullet || autoNumbering) {
                         keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
                     }
+                    break;
+                case 'Enter':
+                    keyboardAdjustList(editor, rawEvent);
                     break;
             }
         }

@@ -43,24 +43,30 @@ const identifyNumberingType = (text: string, previousListStyle?: number) => {
         return NumberingTypes.Decimal;
     } else if (/[a-z]+/g.test(text)) {
         if (
-            (previousListStyle != undefined &&
+            (previousListStyle === NumberingTypes.LowerRoman &&
                 lowerRomanTypes.indexOf(previousListStyle) > -1 &&
                 lowerRomanNumbers.indexOf(text[0]) > -1) ||
             (!previousListStyle && text === 'i')
         ) {
             return NumberingTypes.LowerRoman;
-        } else if (previousListStyle || (!previousListStyle && text === 'a')) {
+        } else if (
+            previousListStyle === NumberingTypes.LowerAlpha ||
+            (!previousListStyle && text === 'a')
+        ) {
             return NumberingTypes.LowerAlpha;
         }
     } else if (/[A-Z]+/g.test(text)) {
         if (
-            (previousListStyle != undefined &&
+            (previousListStyle == NumberingTypes.UpperRoman &&
                 upperRomanTypes.indexOf(previousListStyle) > -1 &&
                 upperRomanNumbers.indexOf(text[0]) > -1) ||
             (!previousListStyle && text === 'I')
         ) {
             return NumberingTypes.UpperRoman;
-        } else if (previousListStyle || (!previousListStyle && text === 'A')) {
+        } else if (
+            previousListStyle == NumberingTypes.UpperAlpha ||
+            (!previousListStyle && text === 'A')
+        ) {
             return NumberingTypes.UpperAlpha;
         }
     }
@@ -140,20 +146,23 @@ export function getNumberingListStyle(
     //The index is always the characters before the last character
     const listIndex = isDoubleParenthesis ? trigger.slice(1, -1) : trigger.slice(0, -1);
     const index = getIndex(listIndex);
+    const isContinuosList = numberingTriggers.indexOf(listIndex) < 0;
 
     if (
         !index ||
         index < 1 ||
-        (!previousListIndex && numberingTriggers.indexOf(listIndex) < 0) ||
-        (previousListIndex &&
-            numberingTriggers.indexOf(listIndex) < 0 &&
-            !canAppendList(index, previousListIndex))
+        (!previousListIndex && isContinuosList) ||
+        (previousListIndex && isContinuosList && !canAppendList(index, previousListIndex))
     ) {
         return undefined;
     }
 
     const numberingType = isValidNumbering(listIndex)
-        ? identifyNumberingListType(trigger, isDoubleParenthesis, previousListStyle)
+        ? identifyNumberingListType(
+              trigger,
+              isDoubleParenthesis,
+              isContinuosList ? previousListStyle : undefined
+          )
         : undefined;
     return numberingType;
 }
