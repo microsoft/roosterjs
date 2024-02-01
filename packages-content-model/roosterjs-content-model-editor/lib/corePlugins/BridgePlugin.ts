@@ -1,15 +1,25 @@
+import { coreApiMap } from '../coreApi/coreApiMap';
+import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
 import { createEntityDelimiterPlugin } from './EntityDelimiterPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
+import type {
+    ContentModelCoreApiMap,
+    ContentModelEditorCore,
+} from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
-import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import type {
     EditorPlugin as LegacyEditorPlugin,
     PluginEvent as LegacyPluginEvent,
     ContextMenuProvider as LegacyContextMenuProvider,
     IEditor as ILegacyEditor,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
-import type { ContextMenuProvider, PluginEvent } from 'roosterjs-content-model-types';
+import type {
+    ContextMenuProvider,
+    IStandaloneEditor,
+    PluginEvent,
+} from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 
@@ -23,17 +33,15 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     private checkExclusivelyHandling: boolean;
 
     constructor(
-        options: ContentModelEditorOptions,
-        private onInitialize: (pluginState: ContentModelCorePluginState) => ILegacyEditor
+        private onInitialize: (core: ContentModelEditorCore) => ILegacyEditor,
+        legacyPlugins: LegacyEditorPlugin[] = [],
+        private legacyCoreApiOverride?: Partial<ContentModelCoreApiMap>,
+        private experimentalFeatures: ExperimentalFeatures[] = []
     ) {
         const editPlugin = createEditPlugin();
         const entityDelimiterPlugin = createEntityDelimiterPlugin();
 
-        this.legacyPlugins = [
-            editPlugin,
-            ...(options.legacyPlugins ?? []).filter(x => !!x),
-            entityDelimiterPlugin,
-        ];
+        this.legacyPlugins = [editPlugin, ...legacyPlugins.filter(x => !!x), entityDelimiterPlugin];
         this.corePluginState = {
             edit: editPlugin.getState(),
             contextMenuProviders: this.legacyPlugins.filter(isContextMenuProvider),
@@ -54,8 +62,8 @@ export class BridgePlugin implements ContextMenuProvider<any> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize() {
-        const outerEditor = this.onInitialize(this.corePluginState);
+    initialize(editor: IStandaloneEditor) {
+        const outerEditor = this.onInitialize(this.createEditorCore(editor));
 
         this.legacyPlugins.forEach(plugin => plugin.initialize(outerEditor));
     }
@@ -130,6 +138,20 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         });
 
         return allItems;
+    }
+
+    private createEditorCore(editor: IStandaloneEditor): ContentModelEditorCore {
+        const core: ContentModelEditorCore = {
+            api: { ...coreApiMap, ...this.legacyCoreApiOverride },
+            originalApi: coreApiMap,
+            customData: {},
+            experimentalFeatures: this.experimentalFeatures ?? [],
+            sizeTransformer: size => size / editor.getDOMHelper().calculateZoomScale(),
+            darkColorHandler: createDarkColorHandler(editor.getColorManager()),
+            ...this.corePluginState,
+        };
+
+        return core;
     }
 }
 

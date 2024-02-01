@@ -1,6 +1,5 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import {
     newEventToOldEvent,
@@ -119,21 +118,16 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        const bridgePlugin = new BridgePlugin(options, corePluginState => {
-            const core = this.getCore();
-            const sizeTransformer: SizeTransformer = size =>
-                size / this.getDOMHelper().calculateZoomScale();
+        const bridgePlugin = new BridgePlugin(
+            core => {
+                this.contentModelEditorCore = core;
 
-            // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
-            this.contentModelEditorCore = createEditorCore(
-                options,
-                corePluginState,
-                core.darkColorHandler,
-                sizeTransformer
-            );
-
-            return this;
-        });
+                return this;
+            },
+            options.legacyPlugins,
+            options.legacyCoreApiOverride,
+            options.experimentalFeatures
+        );
 
         const plugins = [bridgePlugin, ...(options.plugins ?? [])];
         const initContent = options.initialContent ?? contentDiv.innerHTML;
