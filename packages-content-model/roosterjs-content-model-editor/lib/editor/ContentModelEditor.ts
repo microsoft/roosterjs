@@ -323,10 +323,39 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     setContent(content: string, triggerContentChangedEvent: boolean = true) {
-        const core = this.getContentModelEditorCore();
-        const innerCore = this.getCore();
+        const core = this.getCore();
+        const { contentDiv, api, trustedHTMLHandler, lifecycle, darkColorHandler } = core;
 
-        core.api.setContent(core, innerCore, content, triggerContentChangedEvent);
+        api.triggerEvent(
+            core,
+            {
+                eventType: 'beforeSetContent',
+                newContent: content,
+            },
+            true /*broadcast*/
+        );
+
+        const newModel = createModelFromHtml(
+            content,
+            core.domToModelSettings.customized,
+            trustedHTMLHandler,
+            core.format.defaultFormat
+        );
+
+        api.setContentModel(core, newModel);
+
+        if (triggerContentChangedEvent) {
+            api.triggerEvent(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    source: ChangeSource.SetContent,
+                },
+                false /*broadcast*/
+            );
+        } else if (lifecycle.isDarkMode) {
+            transformColor(contentDiv, false /*includeSelf*/, 'lightToDark', darkColorHandler);
+        }
     }
 
     /**

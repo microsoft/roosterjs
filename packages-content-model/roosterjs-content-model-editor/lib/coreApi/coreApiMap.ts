@@ -1,5 +1,4 @@
 import { insertNode } from './insertNode';
-import { setContent } from './setContent';
 import type { ContentModelCoreApiMap } from '../publicTypes/ContentModelEditorCore';
 
 /**
@@ -7,5 +6,4 @@ import type { ContentModelCoreApiMap } from '../publicTypes/ContentModelEditorCo
  */
 export const coreApiMap: ContentModelCoreApiMap = {
     insertNode,
-    setContent,
 };
