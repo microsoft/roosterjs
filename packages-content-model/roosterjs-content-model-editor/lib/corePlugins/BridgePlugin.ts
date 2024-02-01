@@ -14,6 +14,7 @@ import type {
     ContextMenuProvider as LegacyContextMenuProvider,
     IEditor as ILegacyEditor,
     ExperimentalFeatures,
+    SizeTransformer,
 } from 'roosterjs-editor-types';
 import type {
     ContextMenuProvider,
@@ -141,18 +142,24 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     }
 
     private createEditorCore(editor: IStandaloneEditor): ContentModelEditorCore {
-        const core: ContentModelEditorCore = {
+        return {
             api: { ...coreApiMap, ...this.legacyCoreApiOverride },
             originalApi: coreApiMap,
             customData: {},
             experimentalFeatures: this.experimentalFeatures ?? [],
-            sizeTransformer: size => size / editor.getDOMHelper().calculateZoomScale(),
+            sizeTransformer: createSizeTransformer(editor),
             darkColorHandler: createDarkColorHandler(editor.getColorManager()),
             ...this.corePluginState,
         };
-
-        return core;
     }
+}
+
+/**
+ * @internal Export for test only. This function is only used for compatibility from older build
+
+ */
+export function createSizeTransformer(editor: IStandaloneEditor): SizeTransformer {
+    return size => size / editor.getDOMHelper().calculateZoomScale();
 }
 
 function isContextMenuProvider(
