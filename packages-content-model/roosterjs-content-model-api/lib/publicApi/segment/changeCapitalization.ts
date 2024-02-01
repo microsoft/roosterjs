@@ -40,7 +40,6 @@ export default function changeCapitalization(
                     break;
 
                 case 'sentence':
-                    // TODO: Add rules on punctuation for internationalization - TASK 104769
                     const punctuationMarks = '[\\.\\!\\?]';
                     // Find a match of a word character either:
                     // - At the beginning of a string with or without preceding whitespace, for

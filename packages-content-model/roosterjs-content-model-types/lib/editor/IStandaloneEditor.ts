@@ -167,12 +167,6 @@ export interface IStandaloneEditor {
     stopShadowEdit(): void;
 
     /**
-     * Check if the given DOM node is in editor
-     * @param node The node to check
-     */
-    isNodeInEditor(node: Node): boolean;
-
-    /**
      * Paste into editor using a clipboardData object
      * @param clipboardData Clipboard data retrieved from clipboard
      * @param pasteType Type of paste

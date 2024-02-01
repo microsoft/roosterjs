@@ -277,7 +277,9 @@ describe('FormatPlugin for default format', () => {
         contentDiv = document.createElement('div');
 
         editor = ({
-            isNodeInEditor: (e: Node) => contentDiv != e && contentDiv.contains(e),
+            getDOMHelper: () => ({
+                isNodeInEditor: (e: Node) => contentDiv != e && contentDiv.contains(e),
+            }),
             getDOMSelection,
             getPendingFormat: getPendingFormatSpy,
             cacheContentModel: cacheContentModelSpy,

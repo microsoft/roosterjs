@@ -20,7 +20,7 @@ export function applyDefaultFormat(
     if (posContainer) {
         let node: Node | null = posContainer;
 
-        while (node && editor.isNodeInEditor(node)) {
+        while (node && editor.getDOMHelper().isNodeInEditor(node)) {
             if (isNodeOfType(node, 'ELEMENT_NODE')) {
                 if (node.getAttribute?.('style')) {
                     return;

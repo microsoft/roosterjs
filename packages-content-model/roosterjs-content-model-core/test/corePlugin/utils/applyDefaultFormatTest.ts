@@ -64,7 +64,9 @@ describe('applyDefaultFormat', () => {
             );
 
         editor = {
-            isNodeInEditor: () => true,
+            getDOMHelper: () => ({
+                isNodeInEditor: () => true,
+            }),
             getDOMSelection: getDOMSelectionSpy,
             formatContentModel: formatContentModelSpy,
             takeSnapshot: takeSnapshotSpy,

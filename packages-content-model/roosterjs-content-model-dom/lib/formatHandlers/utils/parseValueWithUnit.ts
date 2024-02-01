@@ -41,9 +41,6 @@ export function parseValueWithUnit(
             case 'in':
                 result = num * PixelPerInch;
                 break;
-            default:
-                // TODO: Support more unit if need
-                break;
         }
     }
 

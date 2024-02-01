@@ -22,7 +22,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.state = {
             selection: null,
             selectionStyleNode: null,
-            imageSelectionBorderColor: options.imageSelectionBorderColor, // TODO: Move to Selection core plugin
+            imageSelectionBorderColor: options.imageSelectionBorderColor,
         };
     }
 
