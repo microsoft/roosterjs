@@ -38,7 +38,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelFormat';
+        return 'Format';
     }
 
     /**

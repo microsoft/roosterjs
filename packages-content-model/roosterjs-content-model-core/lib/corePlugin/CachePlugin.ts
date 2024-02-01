@@ -34,7 +34,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelCache';
+        return 'Cache';
     }
 
     /**

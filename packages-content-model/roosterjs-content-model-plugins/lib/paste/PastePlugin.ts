@@ -40,7 +40,7 @@ export class PastePlugin implements EditorPlugin {
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelPaste';
+        return 'Paste';
     }
 
     /**
