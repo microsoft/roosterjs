@@ -57,7 +57,7 @@ function shouldInputWithContentModel(
         return (
             selection.type != 'range' ||
             (!selection.range.collapsed && !rawEvent.isComposing && !isInIME)
-        ); // TODO: Also handle Enter key even selection is collapsed
+        );
     } else {
         return false;
     }

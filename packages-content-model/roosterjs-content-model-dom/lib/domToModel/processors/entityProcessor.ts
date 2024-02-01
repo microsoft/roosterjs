@@ -23,7 +23,6 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
 
             parseFormat(element, context.formatParsers.entity, entityModel.entityFormat, context);
 
-            // TODO: Need to handle selection for editable entity
             if (context.isInSelection) {
                 entityModel.isSelected = true;
             }

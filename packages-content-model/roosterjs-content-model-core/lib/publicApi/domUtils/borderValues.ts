@@ -29,7 +29,7 @@ export function extractBorderValues(combinedBorder?: string): Border {
         } else if (BorderSizeRegex.test(v) && !result.width) {
             result.width = v;
         } else if (v && !result.color) {
-            result.color = v; // TODO: Do we need to use a regex to match all possible colors?
+            result.color = v;
         }
     });
 

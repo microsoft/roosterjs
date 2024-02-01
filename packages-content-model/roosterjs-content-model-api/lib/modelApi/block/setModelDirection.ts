@@ -56,7 +56,6 @@ function internalSetDirection(
         format.direction = direction;
 
         // Adjust margin when change direction
-        // TODO: make margin and padding direction-aware, like what we did for textAlign. So no need to adjust them here
         const marginLeft = format.marginLeft;
         const paddingLeft = format.paddingLeft;
 
