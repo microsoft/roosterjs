@@ -1,4 +1,5 @@
 import { deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
+import { handleEnterOnList } from './handleEnterOnList';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { DOMSelection, IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -13,7 +14,11 @@ export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent
 
         editor.formatContentModel(
             (model, context) => {
-                const result = deleteSelection(model, [], context);
+                const result = deleteSelection(
+                    model,
+                    shouldHandleEnterKey(selection, rawEvent) ? [handleEnterOnList] : [],
+                    context
+                );
 
                 // We have deleted selection then we will let browser to handle the input.
                 // With this combined operation, we don't wan to mass up the cached model so clear it
@@ -56,9 +61,19 @@ function shouldInputWithContentModel(
     ) {
         return (
             selection.type != 'range' ||
-            (!selection.range.collapsed && !rawEvent.isComposing && !isInIME)
-        ); // TODO: Also handle Enter key even selection is collapsed
+            (!selection.range.collapsed && !rawEvent.isComposing && !isInIME) ||
+            shouldHandleEnterKey(selection, rawEvent)
+        );
     } else {
         return false;
     }
 }
+
+const shouldHandleEnterKey = (selection: DOMSelection | null, rawEvent: KeyboardEvent) => {
+    return (
+        selection &&
+        selection.type == 'range' &&
+        selection.range.collapsed &&
+        rawEvent.key == 'Enter'
+    );
+};

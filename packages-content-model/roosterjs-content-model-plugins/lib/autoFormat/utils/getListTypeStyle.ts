@@ -1,3 +1,4 @@
+import { findListItemsInSameThread } from 'roosterjs-content-model-api/lib/modelApi/list/findListItemsInSameThread';
 import { getNumberingListStyle } from './getNumberingListStyle';
 
 import type {
@@ -48,7 +49,7 @@ export function getListTypeStyle(
             return { listType: 'UL', styleType: bulletType };
         } else if (shouldSearchForNumbering) {
             const previousList = getPreviousListLevel(model, paragraph);
-            const previousIndex = getPreviousListIndex(model);
+            const previousIndex = getPreviousListIndex(model, previousList);
             const previousListStyle = getPreviousListStyle(previousList);
             const numberingType = getNumberingListStyle(
                 listMarker,
@@ -59,7 +60,10 @@ export function getListTypeStyle(
                 return {
                     listType: 'OL',
                     styleType: numberingType,
-                    index: previousListStyle === numberingType ? previousIndex + 1 : undefined,
+                    index:
+                        previousListStyle === numberingType && previousIndex
+                            ? previousIndex + 1
+                            : undefined,
                 };
             }
         }
@@ -67,16 +71,11 @@ export function getListTypeStyle(
     return undefined;
 }
 
-const getPreviousListIndex = (model: ContentModelDocument) => {
-    const blocks = getOperationalBlocks(model, ['ListItem'], ['TableCell']);
-    return blocks.reduce((acc, { block, parent }) => {
-        parent.blocks.forEach(b => {
-            if (isBlockGroupOfType<ContentModelListItem>(b, 'ListItem')) {
-                acc++;
-            }
-        });
-        return acc;
-    }, 0);
+const getPreviousListIndex = (
+    model: ContentModelDocument,
+    previousListItem?: ContentModelListItem
+) => {
+    return previousListItem ? findListItemsInSameThread(model, previousListItem).length : undefined;
 };
 
 const getPreviousListLevel = (model: ContentModelDocument, paragraph: ContentModelParagraph) => {
