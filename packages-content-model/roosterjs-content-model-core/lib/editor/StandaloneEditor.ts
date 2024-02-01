@@ -356,16 +356,6 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Check if the given DOM node is in editor
-     * @param node The node to check
-     */
-    isNodeInEditor(node: Node): boolean {
-        const core = this.getCore();
-
-        return core.contentDiv.contains(node);
-    }
-
-    /**
      * Get a function to convert HTML string to trusted HTML string.
      * By default it will just return the input HTML directly. To override this behavior,
      * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler

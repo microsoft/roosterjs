@@ -1,11 +1,9 @@
+import { extractBorderValues } from '../domUtils/borderValues';
+import { getClosestAncestorBlockGroupIndex } from '../model/getClosestAncestorBlockGroupIndex';
+import { isBold } from '../model/isBold';
+import { iterateSelections } from '../selection/iterateSelections';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
-import {
-    extractBorderValues,
-    getClosestAncestorBlockGroupIndex,
-    isBold,
-    iterateSelections,
-    updateTableMetadata,
-} from 'roosterjs-content-model-core';
+import { updateTableMetadata } from '../../metadata/updateTableMetadata';
 import type {
     ContentModelFormatState,
     ContentModelBlock,
@@ -20,7 +18,10 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Retrieve format state from the given Content Model
+ * @param model The Content Model to retrieve format state from
+ * @param pendingFormat Existing pending format, if any
+ * @param formatState Existing format state object, used for receiving the result
  */
 export function retrieveModelFormatState(
     model: ContentModelDocument,
@@ -122,8 +123,6 @@ export function retrieveModelFormatState(
                     firstTableContext = tableContext;
                 }
             }
-
-            // TODO: Support Code block in format state for Content Model
         },
         {
             includeListFormatHolder: 'never',
@@ -161,8 +160,6 @@ function retrieveSegmentFormat(
     mergeValue(result, 'backgroundColor', mergedFormat.backgroundColor, isFirst);
     mergeValue(result, 'textColor', mergedFormat.textColor, isFirst);
     mergeValue(result, 'fontWeight', mergedFormat.fontWeight, isFirst);
-
-    //TODO: handle block owning segments with different line-heights
     mergeValue(result, 'lineHeight', mergedFormat.lineHeight, isFirst);
 }
 

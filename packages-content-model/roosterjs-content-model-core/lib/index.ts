@@ -48,6 +48,8 @@ export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
 export { transformColor } from './publicApi/color/transformColor';
 
+export { retrieveModelFormatState } from './publicApi/format/retrieveModelFormatState';
+
 export { updateImageMetadata } from './metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './metadata/updateTableMetadata';
