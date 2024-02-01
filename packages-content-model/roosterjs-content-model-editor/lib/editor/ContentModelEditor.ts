@@ -153,8 +153,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * Dispose this editor, dispose all plugins and custom data
      */
     dispose(): void {
-        super.dispose();
-
         const core = this.contentModelEditorCore;
 
         if (core) {
@@ -170,6 +168,8 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
 
             this.contentModelEditorCore = undefined;
         }
+
+        super.dispose();
     }
 
     /**
