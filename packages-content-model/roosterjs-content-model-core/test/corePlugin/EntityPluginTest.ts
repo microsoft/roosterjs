@@ -37,7 +37,9 @@ describe('EntityPlugin', () => {
             formatContentModel: formatContentModelSpy,
             triggerEvent: triggerPluginEventSpy,
             isDarkMode: isDarkModeSpy,
-            isNodeInEditor: isNodeInEditorSpy,
+            getDOMHelper: () => ({
+                isNodeInEditor: isNodeInEditorSpy,
+            }),
             getColorManager: () => mockedDarkColorHandler,
         } as any;
         plugin = createEntityPlugin();

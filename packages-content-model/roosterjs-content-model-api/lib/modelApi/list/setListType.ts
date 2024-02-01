@@ -88,8 +88,6 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                         }
                     );
 
-                    // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
-                    // TODO: Do we need to keep the CSS styles applied to original DIV?
                     if (block.blockType == 'Paragraph') {
                         block.isImplicit = true;
                     }
