@@ -20,7 +20,7 @@ export class EditPlugin implements EditorPlugin {
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelEdit';
+        return 'Edit';
     }
 
     /**

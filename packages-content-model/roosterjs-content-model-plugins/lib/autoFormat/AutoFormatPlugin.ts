@@ -47,7 +47,7 @@ export class AutoFormatPlugin implements EditorPlugin {
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelAutoFormat';
+        return 'AutoFormat';
     }
 
     /**

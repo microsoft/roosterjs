@@ -54,7 +54,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'ContentModelCopyPaste';
+        return 'CopyPaste';
     }
 
     /**
