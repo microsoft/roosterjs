@@ -51,6 +51,7 @@ export { createEmptyModel } from './modelApi/creators/createEmptyModel';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
+export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';

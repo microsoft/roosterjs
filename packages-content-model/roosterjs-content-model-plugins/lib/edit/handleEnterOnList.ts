@@ -4,7 +4,9 @@ import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core'
 import {
     createListItem,
     createParagraph,
-    createSelectionMarker,
+    setParagraphNotImplicit,
+    normalizeParagraph,
+    createBr,
 } from 'roosterjs-content-model-dom';
 
 /**
@@ -28,6 +30,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
             newListItem.blocks.push(newParagraph);
             listParent.blocks.splice(listIndex + 1, 0, newListItem);
             context.deleteResult = 'range';
+            context.formatContext?.rawEvent?.preventDefault();
         }
     }
 };
@@ -35,7 +38,18 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
 const createNewParagraph = (insertPoint: InsertPoint) => {
     const { paragraph, marker } = insertPoint;
     const newParagraph = createParagraph(false, paragraph.format, paragraph.segmentFormat);
-    const selectionMarker = createSelectionMarker(marker.format);
-    paragraph.segments.push(selectionMarker);
+    const markerIndex = paragraph.segments.indexOf(marker);
+    const segments = paragraph.segments.splice(
+        markerIndex,
+        paragraph.segments.length - markerIndex
+    );
+
+    setParagraphNotImplicit(paragraph);
+    newParagraph.segments.push(...segments);
+    if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
+        paragraph.segments.push(createBr(marker.format));
+    }
+
+    normalizeParagraph(newParagraph);
     return newParagraph;
 };
