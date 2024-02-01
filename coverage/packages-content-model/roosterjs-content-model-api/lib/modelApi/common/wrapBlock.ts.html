@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/23</span>
+                <span class='fraction'>25/25</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
@@ -123,7 +123,12 @@
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,19 +149,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -167,11 +175,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -184,10 +193,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addBlock, setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 import type { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
@@ -207,16 +217,19 @@ export function wrapBlockStep1&lt;T extends ContentModelBlockGroup &amp; Content
     step1Result: WrapBlockStep1Result&lt;T&gt;[],
     parent: ContentModelBlockGroup | null,
     blockToWrap: ContentModelBlock,
-    creator: () =&gt; T,
-    canMerge: (target: ContentModelBlock) =&gt; target is T
+    creator: (isRtl: boolean) =&gt; T,
+    canMerge: (isRtl: boolean, target: ContentModelBlock) =&gt; target is T
 ) {
     const index = parent?.blocks.indexOf(blockToWrap) ?? -1;
 &nbsp;
     if (parent &amp;&amp; index &gt;= 0) {
         parent.blocks.splice(index, 1);
 &nbsp;
-        const prevBlock = parent.blocks[index - 1];
-        const wrapper = canMerge(prevBlock) ? prevBlock : createAndAdd(parent, index, creator);
+        const prevBlock: ContentModelBlock = parent.blocks[index - 1];
+        const isRtl = blockToWrap.format.direction == 'rtl';
+        const wrapper = canMerge(isRtl, prevBlock)
+            ? prevBlock
+            : createAndAdd(parent, index, creator, isRtl);
 &nbsp;
         setParagraphNotImplicit(blockToWrap);
         addBlock(wrapper, blockToWrap);
@@ -231,13 +244,14 @@ export function wrapBlockStep1&lt;T extends ContentModelBlockGroup &amp; Content
  */
 export function wrapBlockStep2&lt;T extends ContentModelBlockGroup &amp; ContentModelBlock&gt;(
     step1Result: WrapBlockStep1Result&lt;T&gt;[],
-    canMerge: (target: ContentModelBlock, current: T) =&gt; target is T
+    canMerge: (isRtl: boolean, target: ContentModelBlock, current: T) =&gt; target is T
 ) {
     step1Result.forEach(({ parent, wrapper }) =&gt; {
         const index = parent.blocks.indexOf(wrapper);
         const nextBlock = parent.blocks[index + 1];
+        const isRtl = wrapper.format.direction == 'rtl';
 &nbsp;
-        if (index &gt;= 0 &amp;&amp; canMerge(nextBlock, wrapper)) {
+        if (index &gt;= 0 &amp;&amp; canMerge(isRtl, nextBlock, wrapper)) {
             wrapper.blocks.forEach(setParagraphNotImplicit);
             wrapper.blocks.push(...nextBlock.blocks);
             parent.blocks.splice(index + 1, 1);
@@ -248,9 +262,10 @@ export function wrapBlockStep2&lt;T extends ContentModelBlockGroup &amp; Content
 function createAndAdd&lt;T extends ContentModelBlockGroup &amp; ContentModelBlock&gt;(
     parent: ContentModelBlockGroup,
     index: number,
-    creator: () =&gt; T
+    creator: (isRtl: boolean) =&gt; T,
+    isRtl: boolean
 ): T {
-    const block = creator();
+    const block = creator(isRtl);
 &nbsp;
     parent.blocks.splice(index, 0, block);
     return block;
@@ -262,7 +277,7 @@ function createAndAdd&lt;T extends ContentModelBlockGroup &amp; ContentModelBloc
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Feb 01 2024 16:54:18 GMT+0000 (Coordinated Universal Time)
+                at Thu Feb 01 2024 17:04:15 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
