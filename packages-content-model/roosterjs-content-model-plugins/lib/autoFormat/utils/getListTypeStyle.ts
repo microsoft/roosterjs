@@ -1,4 +1,3 @@
-import { getIndex } from './getIndex';
 import { getNumberingListStyle } from './getNumberingListStyle';
 
 import type {
@@ -48,20 +47,18 @@ export function getListTypeStyle(
         if (bulletType && shouldSearchForBullet) {
             return { listType: 'UL', styleType: bulletType };
         } else if (shouldSearchForNumbering) {
-            const previousList = getPreviousListLevel(model, paragraph);
+            const { previousIndex, previousList } = getPreviousListLevel(model, paragraph);
             const previousListStyle = getPreviousListStyle(previousList);
             const numberingType = getNumberingListStyle(
                 listMarker,
-                previousList?.format?.listStyleType
-                    ? getIndex(previousList.format.listStyleType)
-                    : undefined,
+                previousIndex,
                 previousListStyle
             );
             if (numberingType) {
                 return {
                     listType: 'OL',
                     styleType: numberingType,
-                    index: previousList?.format?.listStyleType ? getIndex(listMarker) : undefined,
+                    index: previousIndex + 1,
                 };
             }
         }
@@ -75,6 +72,7 @@ const getPreviousListLevel = (model: ContentModelDocument, paragraph: ContentMod
     const listBlock = blocks.filter(({ block, parent }) => {
         return parent.blocks.indexOf(paragraph) > -1;
     })[0];
+
     if (listBlock) {
         const length = listBlock.parent.blocks.length;
         for (let i = length - 1; i > -1; i--) {
@@ -85,7 +83,17 @@ const getPreviousListLevel = (model: ContentModelDocument, paragraph: ContentMod
             }
         }
     }
-    return listItem;
+
+    const index = blocks.reduce((acc, { block, parent }) => {
+        parent.blocks.forEach(b => {
+            if (isBlockGroupOfType<ContentModelListItem>(b, 'ListItem')) {
+                acc++;
+            }
+        });
+        return acc;
+    }, 0);
+
+    return { previousList: listItem, previousIndex: index };
 };
 
 const getPreviousListStyle = (list?: ContentModelListItem) => {
