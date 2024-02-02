@@ -26,6 +26,7 @@ export {
     parseEntityClassName,
     generateEntityClassNames,
     addDelimiters,
+    isEntityDelimiter,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
