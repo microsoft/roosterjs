@@ -6,7 +6,6 @@ import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
 import { containerSizeFormatParser } from '../../../lib/override/containerSizeFormatParser';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
-import { pasteBlockEntityParser } from '../../../lib/override/pasteCopyBlockEntityParser';
 import { pasteDisplayFormatParser } from '../../../lib/override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../../../lib/override/pasteTextProcessor';
 import {
@@ -430,7 +429,6 @@ describe('mergePasteContent', () => {
                 },
                 additionalFormatParsers: {
                     container: [containerSizeFormatParser],
-                    entity: [pasteBlockEntityParser],
                 },
             },
             mockedDefaultDomToModelOptions
