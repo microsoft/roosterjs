@@ -110,11 +110,12 @@ describe('insertEntity', () => {
             wrapper: wrapper,
         });
     });
+
     it('block inline entity to root', () => {
         const entity = insertEntity(editor, type, true, 'root');
 
-        expect(createElementSpy).toHaveBeenCalledWith('span');
-        expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
+        expect(createElementSpy).toHaveBeenCalledWith('div');
+        expect(setPropertySpy).toHaveBeenCalledWith('display', null);
         expect(appendChildSpy).not.toHaveBeenCalled();
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
@@ -164,7 +165,7 @@ describe('insertEntity', () => {
             wrapperDisplay: 'none',
         });
 
-        expect(createElementSpy).toHaveBeenCalledWith('span');
+        expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'none');
         expect(appendChildSpy).toHaveBeenCalledWith(contentNode);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);

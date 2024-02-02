@@ -38,6 +38,9 @@ export function deleteBlock(
                 : undefined;
 
             if (operation !== undefined) {
+                const wrapper = blockToDelete.wrapper;
+
+                wrapper.parentNode?.removeChild(wrapper);
                 replacement ? blocks.splice(index, 1, replacement) : blocks.splice(index, 1);
                 context?.deletedEntities.push({
                     entity: blockToDelete,
