@@ -1,3 +1,4 @@
+import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
 import * as insertEntityModel from '../../../lib/modelApi/entity/insertEntityModel';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import insertEntity from '../../../lib/publicApi/entity/insertEntity';
@@ -23,6 +24,7 @@ describe('insertEntity', () => {
     let insertEntityModelSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
     let normalizeContentModelSpy: jasmine.Spy;
+    let addDelimiterSpy: jasmine.Spy;
 
     const type = 'Entity';
     const apiName = 'insertEntity';
@@ -44,6 +46,9 @@ describe('insertEntity', () => {
                 setProperty: setPropertySpy,
             },
             appendChild: appendChildSpy,
+            classList: {
+                add: () => {},
+            },
         } as any;
 
         formatWithContentModelSpy = jasmine
@@ -65,6 +70,8 @@ describe('insertEntity', () => {
             isDarkMode: isDarkModeSpy,
             formatContentModel: formatWithContentModelSpy,
         } as any;
+
+        spyOn(entityUtils, 'addDelimiters').and.returnValue([]);
     });
 
     it('insert inline entity to top', () => {

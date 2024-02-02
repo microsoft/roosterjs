@@ -1,4 +1,4 @@
-import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
+import { addDelimiters, isBlockElement, isNodeOfType } from 'roosterjs-content-model-dom';
 import type {
     ContentModelEntity,
     EntityInfoFormat,
@@ -19,12 +19,13 @@ export const onCreateCopyEntityNode: OnNodeCreated = (model, node) => {
         entityModel.wrapper &&
         entityModel.segmentType == 'Entity' &&
         isNodeOfType(node, 'ELEMENT_NODE') &&
-        isElementOfType(node, 'span') &&
-        node.style.width == ONE_HUNDRED_PERCENT &&
-        node.style.display == 'inline-block'
+        isBlockElement(entityModel.wrapper)
     ) {
         node.classList.add(BLOCK_ENTITY_CLASS);
-        node.style.display = 'block';
+        const innerEntity = node.querySelector('._Entity');
+        if (innerEntity) {
+            node.style.display = 'block';
+        }
     }
 };
 
@@ -33,8 +34,13 @@ export const onCreateCopyEntityNode: OnNodeCreated = (model, node) => {
  */
 export const pasteBlockEntityParser: FormatParser<EntityInfoFormat> = (_, element) => {
     if (element.classList.contains(BLOCK_ENTITY_CLASS)) {
-        element.style.display = 'inline-block';
-        element.style.width = ONE_HUNDRED_PERCENT;
         element.classList.remove(BLOCK_ENTITY_CLASS);
+
+        const innerEntity = element.querySelector('._Entity');
+        if (isNodeOfType(innerEntity, 'ELEMENT_NODE')) {
+            innerEntity.style.display = 'inline-block';
+            innerEntity.style.width = ONE_HUNDRED_PERCENT;
+            addDelimiters(element.ownerDocument, innerEntity);
+        }
     }
 };

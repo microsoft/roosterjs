@@ -1,5 +1,5 @@
+import { addDelimiters, createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { ChangeSource } from 'roosterjs-content-model-core';
-import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
 import type {
     ContentModelEntity,
@@ -10,6 +10,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const InlineEntityTag = 'span';
+const BlockEntityTag = 'div';
 
 /**
  * Insert an entity into editor
@@ -57,17 +58,31 @@ export default function insertEntity(
     options?: InsertEntityOptions
 ): ContentModelEntity | null {
     const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot } = options || {};
-    const wrapper = editor.getDocument().createElement(InlineEntityTag);
-    if (isBlock) {
-        wrapper.style.width = '100%';
-    }
-    wrapper.style.setProperty('display', wrapperDisplay ?? ('inline-block' || null));
+    const document = editor.getDocument();
+    const wrapper = document.createElement(isBlock ? BlockEntityTag : InlineEntityTag);
+    const display = wrapperDisplay ?? (isBlock ? undefined : 'inline-block');
+    wrapper.style.setProperty('display', display || null);
+    const isReadonly = !isBlock;
 
-    if (contentNode) {
+    if (isBlock) {
+        const wrapper2 = editor.getDocument().createElement(InlineEntityTag);
+        wrapper2.style.width = '100%';
+        wrapper2.style.display = 'inline-block';
+        wrapper2.contentEditable = 'false';
+        wrapper2.classList.add('_Entity');
+        wrapper.appendChild(wrapper2);
+        wrapper.contentEditable = 'true';
+
+        addDelimiters(document, wrapper2);
+
+        if (contentNode) {
+            wrapper2.appendChild(contentNode);
+        }
+    } else if (contentNode) {
         wrapper.appendChild(contentNode);
     }
 
-    const entityModel = createEntity(wrapper, true /*isReadonly*/, undefined /*format*/, type);
+    const entityModel = createEntity(wrapper, isReadonly, undefined /*format*/, type);
 
     editor.formatContentModel(
         (model, context) => {
