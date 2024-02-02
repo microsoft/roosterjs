@@ -1,4 +1,10 @@
 import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core';
+import {
+    createListItem,
+    createListLevel,
+    createParagraph,
+    normalizeParagraph,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockGroup,
     ContentModelListItem,
@@ -6,14 +12,6 @@ import type {
     InsertPoint,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
-
-import {
-    createListItem,
-    createParagraph,
-    setParagraphNotImplicit,
-    normalizeParagraph,
-    createBr,
-} from 'roosterjs-content-model-dom';
 
 /**
  * @internal
@@ -32,13 +30,12 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         if (listItem && listItem.blockGroupType === 'ListItem') {
             const listParent = path[index + 1];
             if (isEmptyListItem(listItem)) {
-                listItem.levels.pop();
+                listItem.levels = [];
             } else {
                 createNewListItem(context, listItem, listParent);
             }
-
-            context.deleteResult = 'range';
             context.formatContext?.rawEvent?.preventDefault();
+            context.deleteResult = 'range';
         }
     }
 };
@@ -47,9 +44,8 @@ const isEmptyListItem = (listItem: ContentModelListItem) => {
     return (
         listItem.blocks.length === 1 &&
         listItem.blocks[0].blockType === 'Paragraph' &&
-        listItem.blocks[0].segments.length === 2 &&
-        listItem.blocks[0].segments[0].segmentType === 'SelectionMarker' &&
-        listItem.blocks[0].segments[1].segmentType === 'Br'
+        listItem.blocks[0].segments.length === 1 &&
+        listItem.blocks[0].segments[0].segmentType === 'SelectionMarker'
     );
 };
 
@@ -61,27 +57,38 @@ const createNewListItem = (
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
     const newParagraph = createNewParagraph(insertPoint);
-    const newListItem = createListItem(listItem.levels, listItem.format);
+    const levels = createNewListLevel(listItem);
+    const newListItem = createListItem(levels, listItem.format);
     newListItem.blocks.push(newParagraph);
     listParent.blocks.splice(listIndex + 1, 0, newListItem);
 };
 
+const createNewListLevel = (listItem: ContentModelListItem) => {
+    return listItem.levels.map(level => {
+        return createListLevel(
+            level.listType,
+            {
+                ...level.format,
+                startNumberOverride: level.format.startNumberOverride
+                    ? level.format.startNumberOverride + 1
+                    : undefined,
+            },
+            level.dataset
+        );
+    });
+};
+
 const createNewParagraph = (insertPoint: InsertPoint) => {
     const { paragraph, marker } = insertPoint;
-    const newParagraph = createParagraph(false, paragraph.format, paragraph.segmentFormat);
+    const newParagraph = createParagraph(true, paragraph.format, paragraph.segmentFormat);
     const markerIndex = paragraph.segments.indexOf(marker);
     const segments = paragraph.segments.splice(
         markerIndex,
         paragraph.segments.length - markerIndex
     );
 
-    setParagraphNotImplicit(paragraph);
     newParagraph.segments.push(...segments);
-    if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
-        paragraph.segments.push(createBr(marker.format));
-    }
 
     normalizeParagraph(newParagraph);
-
     return newParagraph;
 };
