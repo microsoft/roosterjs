@@ -25,6 +25,12 @@ export interface RangeSnapshotSelection extends SnapshotSelectionBase<'range'> {
      * End path of selection
      */
     end: number[];
+
+    /**
+     * Whether the selection was from left to right (in document order) or
+     * right to left (reverse of document order)
+     */
+    isReverted: boolean;
 }
 
 /**

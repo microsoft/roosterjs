@@ -24,6 +24,7 @@ export function convertRangeExToDomSelection(
                 ? {
                       type: 'range',
                       range: rangeEx.ranges[0],
+                      isReverted: false,
                   }
                 : null;
 

@@ -1,5 +1,4 @@
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
-import { NodePosition } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -26,7 +25,6 @@ export function segmentTestCommon(
         });
     const editor = ({
         focus: jasmine.createSpy(),
-        getFocusedPosition: () => null as NodePosition,
         getPendingFormat: () => null as any,
         formatContentModel,
     } as any) as IStandaloneEditor;

@@ -160,6 +160,7 @@ describe('generalProcessor', () => {
                 endOffset: 3,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
 
         childProcessor.and.callFake(originalChildProcessor);
@@ -227,6 +228,7 @@ describe('generalProcessor', () => {
                 endOffset: 3,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
         context.isInSelection = true;
 

@@ -1,10 +1,14 @@
 import { getFormatState } from 'roosterjs-editor-api';
-import { getObjectKeys } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
+import { insertLink } from '../component/buttons/insertLink';
+
+import { getObjectKeys, isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
+
 import type RibbonButton from '../type/RibbonButton';
 import type RibbonPlugin from '../type/RibbonPlugin';
+
 import type { FormatState, IEditor, PluginEvent } from 'roosterjs-editor-types';
-import type { LocalizedStrings, UIUtilities } from '../../common/index';
+import type { LocalizedStrings, UIUtilities, RibbonPluginOptions } from '../../common/index';
 
 /**
  * A plugin to connect format ribbon component and the editor
@@ -15,12 +19,16 @@ class RibbonPluginImpl implements RibbonPlugin {
     private timer = 0;
     private formatState: FormatState | null = null;
     private uiUtilities: UIUtilities | null = null;
+    private options: RibbonPluginOptions | undefined;
 
     /**
      * Construct a new instance of RibbonPlugin object
      * @param delayUpdateTime The time to wait before refresh the button when user do some editing operation in editor
+     * @param options The options for ribbon plugin to allow insert link on hot key press.
      */
-    constructor(private delayUpdateTime: number = 200) {}
+    constructor(private delayUpdateTime: number = 200, options?: RibbonPluginOptions) {
+        this.options = options;
+    }
 
     /**
      * Get a friendly name of this plugin
@@ -57,6 +65,16 @@ class RibbonPluginImpl implements RibbonPlugin {
                 break;
 
             case PluginEventType.KeyDown:
+                if (
+                    event.rawEvent.key == 'k' &&
+                    isCtrlOrMetaPressed(event.rawEvent) &&
+                    !event.rawEvent.altKey &&
+                    this.options?.allowInsertLinkHotKey
+                ) {
+                    this.handleButtonClick(insertLink, 'insertLinkTitle', undefined);
+                    event.rawEvent.preventDefault();
+                }
+                break;
             case PluginEventType.MouseUp:
                 this.delayUpdate();
                 break;
@@ -89,6 +107,20 @@ class RibbonPluginImpl implements RibbonPlugin {
      * @param strings The localized string map for this button
      */
     onButtonClick<T extends string>(
+        button: RibbonButton<T>,
+        key: T,
+        strings?: LocalizedStrings<T>
+    ) {
+        this.handleButtonClick(button, key, strings);
+    }
+
+    /**
+     * Common method to handle button clicks
+     * @param button The button that is clicked
+     * @param key Key of child menu item that is clicked if any
+     * @param strings The localized string map for this button
+     */
+    private handleButtonClick<T extends string>(
         button: RibbonButton<T>,
         key: T,
         strings?: LocalizedStrings<T>
@@ -173,7 +205,11 @@ class RibbonPluginImpl implements RibbonPlugin {
 /**
  * Create a new instance of RibbonPlugin object
  * @param delayUpdateTime The time to wait before refresh the button when user do some editing operation in editor
+ * @param options The options for ribbon plugin to allow insert link on hot key press.
  */
-export default function createRibbonPlugin(delayUpdateTime?: number): RibbonPlugin {
-    return new RibbonPluginImpl(delayUpdateTime);
+export default function createRibbonPlugin(
+    delayUpdateTime?: number,
+    options?: RibbonPluginOptions
+): RibbonPlugin {
+    return new RibbonPluginImpl(delayUpdateTime, options);
 }

@@ -17,7 +17,11 @@ describe('parseValueWithUnit with element', () => {
             const input = value + unit;
             const result = parseValueWithUnit(input, mockedElement);
 
-            expect(result).toBe(results[i], input);
+            if (Number.isNaN(results[i])) {
+                expect(result).toBeNaN();
+            } else {
+                expect(Math.abs(result - results[i])).toBeLessThan(1e-3, input);
+            }
         });
     }
 
@@ -70,6 +74,10 @@ describe('parseValueWithUnit with element', () => {
 
         expect(result).toBe(16);
     });
+
+    it('in to px', () => {
+        runTest('in', [0, 96, 105.6, -105.6]);
+    });
 });
 
 describe('parseValueWithUnit with number', () => {
@@ -78,7 +86,11 @@ describe('parseValueWithUnit with number', () => {
             const input = value + unit;
             const result = parseValueWithUnit(input, 20);
 
-            expect(result).toBe(results[i], input);
+            if (Number.isNaN(results[i])) {
+                expect(result).toBeNaN();
+            } else {
+                expect(Math.abs(result - results[i])).toBeLessThan(1e-3, input);
+            }
         });
     }
 
@@ -126,5 +138,9 @@ describe('parseValueWithUnit with number', () => {
         const result = parseValueWithUnit('16pt', undefined, 'pt');
 
         expect(result).toBe(16);
+    });
+
+    it('in to px', () => {
+        runTest('in', [0, 96, 105.6, -105.6]);
     });
 });

@@ -1,7 +1,6 @@
 import * as processPastedContentWacComponents from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
-import { ClipboardData, DomToModelOption, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
-import { tableProcessor } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_From_WORD_Online_E2E';
 
@@ -38,11 +37,7 @@ describe(ID, () => {
         ).and.callThrough();
 
         editor.pasteFromClipboard(clipboardData);
-        editor.createContentModel({
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        editor.getContentModelCopy('connected');
 
         expect(
             processPastedContentWacComponents.processPastedContentWacComponents
@@ -55,11 +50,7 @@ describe(ID, () => {
 
         editor.pasteFromClipboard(clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',

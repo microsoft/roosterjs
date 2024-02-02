@@ -70,6 +70,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
         api.setDOMSelection(innerCore, {
             type: 'range',
             range: createRange(new Position(position)),
+            isReverted: false,
         });
     }
 };

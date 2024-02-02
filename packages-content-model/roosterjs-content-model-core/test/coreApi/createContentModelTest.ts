@@ -52,7 +52,7 @@ describe('createContentModel', () => {
 
         const model = createContentModel(core);
 
-        expect(createEditorContext).toHaveBeenCalledWith(core);
+        expect(createEditorContext).toHaveBeenCalledWith(core, true);
         expect(getDOMSelection).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedContext, undefined);
         expect(model).toBe(mockedModel);
@@ -200,5 +200,25 @@ describe('createContentModel with selection', () => {
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
             type: 'table',
         } as any);
+    });
+
+    it('Flush mutation before create model', () => {
+        const cachedModel = 'MODEL1' as any;
+        const updatedModel = 'MODEL2' as any;
+        const flushMutationsSpy = jasmine.createSpy('flushMutations').and.callFake(() => {
+            core.cache.cachedModel = updatedModel;
+        });
+
+        core.cache.cachedModel = cachedModel;
+        core.lifecycle = {};
+
+        core.cache.textMutationObserver = {
+            flushMutations: flushMutationsSpy,
+        } as any;
+
+        const model = createContentModel(core);
+
+        expect(model).toBe(updatedModel);
+        expect(flushMutationsSpy).toHaveBeenCalledTimes(1);
     });
 });

@@ -30,7 +30,6 @@ export class ContentModelEditPlugin implements EditorPlugin {
      * @param editor The editor object
      */
     initialize(editor: IStandaloneEditor) {
-        // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor;
     }
 

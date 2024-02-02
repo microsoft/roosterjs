@@ -2,7 +2,7 @@ import * as createGeneralBlock from '../lib/modelApi/creators/createGeneralBlock
 import { contentModelToDom } from '../lib/modelToDom/contentModelToDom';
 import { createDomToModelContext, createModelToDomContext } from '../lib';
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
-import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
+import { expectHtml } from './testUtils';
 import {
     ContentModelBlockFormat,
     ContentModelDocument,

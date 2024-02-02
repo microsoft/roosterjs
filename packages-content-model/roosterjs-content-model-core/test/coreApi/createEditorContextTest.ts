@@ -7,7 +7,8 @@ describe('createEditorContext', () => {
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
-        const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+        const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
+        const domIndexer = 'DOMINDEXER' as any;
 
         const div = {
             ownerDocument: {
@@ -15,7 +16,6 @@ describe('createEditorContext', () => {
                     getComputedStyle: getComputedStyleSpy,
                 },
             },
-            getBoundingClientRect: getBoundingClientRectSpy,
         };
 
         const core = ({
@@ -27,10 +27,15 @@ describe('createEditorContext', () => {
                 defaultFormat,
             },
             darkColorHandler,
-            cache: {},
+            cache: {
+                domIndexer: domIndexer,
+            },
+            domHelper: {
+                calculateZoomScale: calculateZoomScaleSpy,
+            },
         } as any) as StandaloneEditorCore;
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -40,6 +45,7 @@ describe('createEditorContext', () => {
             allowCacheElement: true,
             domIndexer: undefined,
             pendingFormat: undefined,
+            zoomScale: 1,
         });
     });
 
@@ -48,7 +54,7 @@ describe('createEditorContext', () => {
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
-        const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+        const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
         const domIndexer = 'DOMINDEXER' as any;
 
         const div = {
@@ -57,7 +63,6 @@ describe('createEditorContext', () => {
                     getComputedStyle: getComputedStyleSpy,
                 },
             },
-            getBoundingClientRect: getBoundingClientRectSpy,
         };
 
         const core = ({
@@ -72,9 +77,12 @@ describe('createEditorContext', () => {
             cache: {
                 domIndexer,
             },
+            domHelper: {
+                calculateZoomScale: calculateZoomScaleSpy,
+            },
         } as any) as StandaloneEditorCore;
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, true);
 
         expect(context).toEqual({
             isDarkMode,
@@ -84,6 +92,7 @@ describe('createEditorContext', () => {
             allowCacheElement: true,
             domIndexer,
             pendingFormat: undefined,
+            zoomScale: 1,
         });
     });
 
@@ -93,7 +102,7 @@ describe('createEditorContext', () => {
         const darkColorHandler = 'DARKHANDLER' as any;
         const mockedPendingFormat = 'PENDINGFORMAT' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
-        const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+        const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
 
         const div = {
             ownerDocument: {
@@ -101,7 +110,6 @@ describe('createEditorContext', () => {
                     getComputedStyle: getComputedStyleSpy,
                 },
             },
-            getBoundingClientRect: getBoundingClientRectSpy,
         };
 
         const core = ({
@@ -115,9 +123,12 @@ describe('createEditorContext', () => {
             },
             darkColorHandler,
             cache: {},
+            domHelper: {
+                calculateZoomScale: calculateZoomScaleSpy,
+            },
         } as any) as StandaloneEditorCore;
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -127,6 +138,7 @@ describe('createEditorContext', () => {
             allowCacheElement: true,
             domIndexer: undefined,
             pendingFormat: mockedPendingFormat,
+            zoomScale: 1,
         });
     });
 });
@@ -135,14 +147,14 @@ describe('createEditorContext - checkZoomScale', () => {
     let core: StandaloneEditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
-    let getBoundingClientRectSpy: jasmine.Spy;
+    let calculateZoomScaleSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
     const darkColorHandler = 'DARKHANDLER' as any;
 
     beforeEach(() => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
-        getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+        calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale');
 
         div = {
             ownerDocument: {
@@ -150,7 +162,6 @@ describe('createEditorContext - checkZoomScale', () => {
                     getComputedStyle: getComputedStyleSpy,
                 },
             },
-            getBoundingClientRect: getBoundingClientRectSpy,
         };
         core = ({
             contentDiv: div,
@@ -162,36 +173,16 @@ describe('createEditorContext - checkZoomScale', () => {
             },
             darkColorHandler,
             cache: {},
+            domHelper: {
+                calculateZoomScale: calculateZoomScaleSpy,
+            },
         } as any) as StandaloneEditorCore;
     });
 
-    it('Zoom scale = 1', () => {
-        div.offsetWidth = 100;
-        getBoundingClientRectSpy.and.returnValue({
-            width: 100,
-        });
-
-        const context = createEditorContext(core);
-
-        expect(context).toEqual({
-            isDarkMode,
-            defaultFormat,
-            darkColorHandler,
-            addDelimiterForEntity: true,
-            zoomScale: 1,
-            allowCacheElement: true,
-            domIndexer: undefined,
-            pendingFormat: undefined,
-        });
-    });
-
     it('Zoom scale = 2', () => {
-        div.offsetWidth = 50;
-        getBoundingClientRectSpy.and.returnValue({
-            width: 100,
-        });
+        calculateZoomScaleSpy.and.returnValue(2);
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -204,48 +195,26 @@ describe('createEditorContext - checkZoomScale', () => {
             pendingFormat: undefined,
         });
     });
-
-    it('Zoom scale = 0.5', () => {
-        div.offsetWidth = 200;
-        getBoundingClientRectSpy.and.returnValue({
-            width: 100,
-        });
-
-        const context = createEditorContext(core);
-
-        expect(context).toEqual({
-            isDarkMode,
-            defaultFormat,
-            darkColorHandler,
-            addDelimiterForEntity: true,
-            zoomScale: 0.5,
-            allowCacheElement: true,
-            domIndexer: undefined,
-            pendingFormat: undefined,
-        });
-    });
 });
 
 describe('createEditorContext - checkRootDir', () => {
     let core: StandaloneEditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
-    let getBoundingClientRectSpy: jasmine.Spy;
+    let calculateZoomScaleSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
     const darkColorHandler = 'DARKHANDLER' as any;
 
     beforeEach(() => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
-        getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
-
+        calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
         div = {
             ownerDocument: {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
             },
-            getBoundingClientRect: getBoundingClientRectSpy,
         };
         core = ({
             contentDiv: div,
@@ -257,6 +226,9 @@ describe('createEditorContext - checkRootDir', () => {
             },
             darkColorHandler,
             cache: {},
+            domHelper: {
+                calculateZoomScale: calculateZoomScaleSpy,
+            },
         } as any) as StandaloneEditorCore;
     });
 
@@ -265,7 +237,7 @@ describe('createEditorContext - checkRootDir', () => {
             direction: 'ltr',
         });
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -275,6 +247,7 @@ describe('createEditorContext - checkRootDir', () => {
             allowCacheElement: true,
             domIndexer: undefined,
             pendingFormat: undefined,
+            zoomScale: 1,
         });
     });
 
@@ -283,7 +256,7 @@ describe('createEditorContext - checkRootDir', () => {
             direction: 'rtl',
         });
 
-        const context = createEditorContext(core);
+        const context = createEditorContext(core, false);
 
         expect(context).toEqual({
             isDarkMode,
@@ -294,6 +267,7 @@ describe('createEditorContext - checkRootDir', () => {
             allowCacheElement: true,
             domIndexer: undefined,
             pendingFormat: undefined,
+            zoomScale: 1,
         });
     });
 });

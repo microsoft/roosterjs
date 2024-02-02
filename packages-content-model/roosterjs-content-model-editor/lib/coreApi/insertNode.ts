@@ -172,6 +172,7 @@ export const insertNode: InsertNode = (core, innerCore, node, option) => {
                 api.setDOMSelection(innerCore, {
                     type: 'range',
                     range: rangeToRestore,
+                    isReverted: false,
                 });
             }
 

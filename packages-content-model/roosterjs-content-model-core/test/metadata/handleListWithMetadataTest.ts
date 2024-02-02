@@ -1,4 +1,4 @@
-import { expectHtml, itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
 import { handleList } from 'roosterjs-content-model-dom/lib/modelToDom/handlers/handleList';
 import { ModelToDomContext } from 'roosterjs-content-model-types';
 import {
@@ -118,7 +118,7 @@ describe('handleList with metadata', () => {
         });
     });
 
-    itChromeOnly('Context has OL, single OL list item, do not reuse existing OL element', () => {
+    it('Context has OL, single OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
             createListLevel('OL', {}, { editingInfo: JSON.stringify({ orderedStyleType: 2 }) }),
@@ -150,7 +150,7 @@ describe('handleList with metadata', () => {
         });
     });
 
-    itChromeOnly('Context has OL, 2 level OL list item, reuse existing OL element', () => {
+    it('Context has OL, 2 level OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
             createListLevel('OL'),
@@ -187,7 +187,7 @@ describe('handleList with metadata', () => {
         });
     });
 
-    itChromeOnly('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
+    it('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
             createListLevel(
@@ -209,9 +209,10 @@ describe('handleList with metadata', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe(
-            '<div><ol></ol><ol start="2" data-editing-info="{&quot;unorderedStyleType&quot;:3}" style="list-style-type: decimal;"><ol start="1" style="list-style-type: lower-alpha;"></ol></ol></div>'
-        );
+        expectHtml(parent.outerHTML, [
+            '<div><ol></ol><ol start="2" data-editing-info="{&quot;unorderedStyleType&quot;:3}" style="list-style-type: decimal;"><ol start="1" style="list-style-type: lower-alpha;"></ol></ol></div>',
+            '<div><ol></ol><ol start="2" style="list-style-type: decimal;" data-editing-info="{&quot;unorderedStyleType&quot;:3}"><ol start="1" style="list-style-type: lower-alpha;"></ol></ol></div>',
+        ]);
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 0],
             nodeStack: [

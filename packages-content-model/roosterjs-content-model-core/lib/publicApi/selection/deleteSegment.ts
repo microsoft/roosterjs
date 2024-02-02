@@ -48,6 +48,9 @@ export function deleteSegment(
                 ? 'removeFromEnd'
                 : undefined;
             if (operation !== undefined) {
+                const wrapper = segmentToDelete.wrapper;
+
+                wrapper.parentNode?.removeChild(wrapper);
                 segments.splice(index, 1);
                 context?.deletedEntities.push({
                     entity: segmentToDelete,
@@ -83,8 +86,6 @@ export function deleteSegment(
                 segments.splice(index, 1);
                 return true;
             } else {
-                // No op if a general segment is not selected, let browser handle general segment
-                // TODO: Need to revisit this
                 return false;
             }
     }

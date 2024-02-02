@@ -13,7 +13,7 @@ import type { SetContentModel } from 'roosterjs-content-model-types';
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
  */
 export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
-    const editorContext = core.api.createEditorContext(core);
+    const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
     const modelToDomContext = option
         ? createModelToDomContext(
               editorContext,
@@ -23,12 +23,13 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
           )
         : createModelToDomContextWithConfig(core.modelToDomSettings.calculated, editorContext);
 
+    modelToDomContext.onNodeCreated = onNodeCreated;
+
     const selection = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
         model,
-        modelToDomContext,
-        onNodeCreated
+        modelToDomContext
     );
 
     if (!core.lifecycle.shadowEditFragment) {
@@ -36,10 +37,12 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
 
         if (!option?.ignoreSelection && selection) {
             core.api.setDOMSelection(core, selection);
-        } else if (!selection || selection.type !== 'range') {
+        } else {
             core.selection.selection = selection;
         }
 
+        // Clear pending mutations since we will use our latest model object to replace existing cache
+        core.cache.textMutationObserver?.flushMutations();
         core.cache.cachedModel = model;
     }
 

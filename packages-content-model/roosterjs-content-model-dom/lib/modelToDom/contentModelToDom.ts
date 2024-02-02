@@ -5,7 +5,6 @@ import type {
     DOMSelection,
     ModelToDomBlockAndSegmentNode,
     ModelToDomContext,
-    OnNodeCreated,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,18 +15,14 @@ import type {
  * won't be touched.
  * @param model The content model document to generate DOM tree from
  * @param context The context object for Content Model to DOM conversion
- * @param onNodeCreated Callback invoked when a DOM node is created
  * @returns The selection range created in DOM tree from this model, or null when there is no selection
  */
 export function contentModelToDom(
     doc: Document,
     root: Node,
     model: ContentModelDocument,
-    context: ModelToDomContext,
-    onNodeCreated?: OnNodeCreated
+    context: ModelToDomContext
 ): DOMSelection | null {
-    context.onNodeCreated = onNodeCreated;
-
     context.modelHandlers.blockGroupChildren(doc, root, model, context);
 
     const range = extractSelectionRange(doc, context);
@@ -61,6 +56,7 @@ function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSe
         return {
             type: 'range',
             range,
+            isReverted: false,
         };
     } else if (tableSelection) {
         return tableSelection;

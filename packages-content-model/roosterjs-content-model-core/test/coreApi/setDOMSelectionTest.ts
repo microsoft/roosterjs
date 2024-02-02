@@ -1,6 +1,4 @@
 import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
-import { createElement } from 'roosterjs-editor-dom';
-import { CreateElementData } from 'roosterjs-editor-types';
 import { DOMSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../lib/coreApi/setDOMSelection';
 
@@ -99,6 +97,7 @@ describe('setDOMSelection', () => {
             runTest({
                 type: 'range',
                 range: {} as any,
+                isReverted: false,
             });
         });
 
@@ -126,6 +125,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             (core.selection.selectionStyleNode!.sheet!.cssRules as any) = ['Rule1', 'Rule2'];
@@ -148,7 +148,11 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(
+                doc,
+                mockedRange,
+                false /* isReverted */
+            );
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).toHaveBeenCalledTimes(2);
             expect(deleteRuleSpy).toHaveBeenCalledWith(1);
@@ -180,7 +184,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -190,6 +194,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             querySelectorAllSpy.and.returnValue([]);
@@ -203,7 +208,7 @@ describe('setDOMSelection', () => {
                 selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).not.toHaveBeenCalled();
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -213,6 +218,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             querySelectorAllSpy.and.returnValue([]);
@@ -233,7 +239,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -243,6 +249,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -264,7 +271,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -274,6 +281,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -297,7 +305,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -307,6 +315,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -330,7 +339,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId_1');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -666,41 +675,29 @@ describe('setDOMSelection', () => {
         });
 
         it('Select TH and TR in the same row', () => {
+            const table = document.createElement('table');
+            const tr1 = document.createElement('tr');
+            const th1 = document.createElement('th');
+            const td1 = document.createElement('td');
+            const tr2 = document.createElement('tr');
+            const th2 = document.createElement('th');
+            const td2 = document.createElement('td');
+
+            th1.appendChild(document.createTextNode('test'));
+            td1.appendChild(document.createTextNode('test'));
+            tr1.appendChild(th1);
+            tr1.appendChild(td1);
+
+            th2.appendChild(document.createTextNode('test'));
+            td2.appendChild(document.createTextNode('test'));
+            tr2.appendChild(th2);
+            tr2.appendChild(td2);
+
+            table.appendChild(tr1);
+            table.appendChild(tr2);
+
             runTest(
-                createElement(
-                    {
-                        tag: 'table',
-                        children: [
-                            {
-                                tag: 'TR',
-                                children: [
-                                    {
-                                        tag: 'TH',
-                                        children: ['test'],
-                                    },
-                                    {
-                                        tag: 'TD',
-                                        children: ['test'],
-                                    },
-                                ],
-                            },
-                            {
-                                tag: 'TR',
-                                children: [
-                                    {
-                                        tag: 'TH',
-                                        children: ['test'],
-                                    },
-                                    {
-                                        tag: 'TD',
-                                        children: ['test'],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    document
-                ) as HTMLTableElement,
+                table,
                 0,
                 0,
                 0,
@@ -773,41 +770,32 @@ describe('setDOMSelection', () => {
 });
 
 function buildTable(tbody: boolean, thead: boolean = false, tfoot: boolean = false) {
-    const getElement = (tag: string): CreateElementData => {
-        return {
-            tag,
-            children: [
-                {
-                    tag: 'TR',
-                    children: [
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                    ],
-                },
-                {
-                    tag: 'TR',
-                    children: [
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                    ],
-                },
-            ],
-        };
+    const getElement = (tag: string) => {
+        const container = document.createElement(tag);
+        const tr1 = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        const tr2 = document.createElement('tr');
+        const td3 = document.createElement('td');
+        const td4 = document.createElement('td');
+
+        td1.appendChild(document.createTextNode('test'));
+        td2.appendChild(document.createTextNode('test'));
+        tr1.appendChild(td1);
+        tr1.appendChild(td2);
+
+        td3.appendChild(document.createTextNode('test'));
+        td4.appendChild(document.createTextNode('test'));
+        tr2.appendChild(td3);
+        tr2.appendChild(td4);
+
+        container.appendChild(tr1);
+        container.appendChild(tr2);
+
+        return container;
     };
 
-    const children: (string | CreateElementData)[] = [];
+    const children: HTMLElement[] = [];
     if (thead) {
         children.push(getElement('thead'));
     }
@@ -818,41 +806,31 @@ function buildTable(tbody: boolean, thead: boolean = false, tfoot: boolean = fal
         children.push(getElement('tfoot'));
     }
     if (children.length === 0) {
-        children.push(
-            {
-                tag: 'TR',
-                children: [
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                ],
-            },
-            {
-                tag: 'TR',
-                children: [
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                ],
-            }
-        );
+        const tr1 = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        const tr2 = document.createElement('tr');
+        const td3 = document.createElement('td');
+        const td4 = document.createElement('td');
+
+        td1.appendChild(document.createTextNode('test'));
+        td2.appendChild(document.createTextNode('test'));
+        tr1.appendChild(td1);
+        tr1.appendChild(td2);
+
+        td3.appendChild(document.createTextNode('test'));
+        td4.appendChild(document.createTextNode('test'));
+        tr2.appendChild(td3);
+        tr2.appendChild(td4);
+
+        children.push(tr1, tr2);
     }
 
-    return createElement(
-        {
-            tag: 'table',
-            children,
-        },
-        document
-    ) as HTMLTableElement;
+    const table = document.createElement('table');
+
+    children.forEach(node => {
+        table.appendChild(node);
+    });
+
+    return table;
 }

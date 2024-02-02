@@ -9,17 +9,12 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
-import { tableProcessor } from 'roosterjs-content-model-dom';
+import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 import {
     ClipboardData,
     ContentModelDocument,
-    DomToModelOption,
-    ContentModelFormatter,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
     IStandaloneEditor,
     BeforePasteEvent,
     PluginEvent,
@@ -35,14 +30,8 @@ describe('Paste ', () => {
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let mockedMergeModel: ContentModelDocument;
-    let getFocusedPosition: jasmine.Spy;
-    let getContent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
-    let mergeModelSpy: jasmine.Spy;
-    let formatResult: boolean | undefined;
-    let context: FormatWithContentModelContext | undefined;
 
-    const mockedPos = 'POS' as any;
     const mockedCloneModel = 'CloneModel' as any;
 
     let div: HTMLDivElement;
@@ -69,10 +58,8 @@ describe('Paste ', () => {
 
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         focus = jasmine.createSpy('focus');
-        getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
-        getContent = jasmine.createSpy('getContent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
-        mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => {
+        spyOn(mergeModelFile, 'mergeModel').and.callFake(() => {
             mockedModel = mockedMergeModel;
             return null;
         });
@@ -84,36 +71,14 @@ describe('Paste ', () => {
                 },
             } as any,
         ]);
-        const formatContentModel = jasmine
-            .createSpy('formatContentModel')
-            .and.callFake(
-                (
-                    core: any,
-                    callback: ContentModelFormatter,
-                    options: FormatWithContentModelOptions
-                ) => {
-                    context = {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    };
-                    formatResult = callback(mockedModel, context);
-                }
-            );
 
-        formatResult = undefined;
-        context = undefined;
-
-        editor = new ContentModelEditor(div, {
+        editor = new StandaloneEditor(div, {
             plugins: [new ContentModelPastePlugin()],
             coreApiOverride: {
                 focus,
                 createContentModel,
                 getVisibleViewport,
-                formatContentModel,
-            },
-            legacyCoreApiOverride: {
-                getContent,
+                //                formatContentModel,
             },
         });
 
@@ -129,72 +94,24 @@ describe('Paste ', () => {
     it('Execute', () => {
         editor.pasteFromClipboard(clipboardData);
 
-        expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);
     });
 
     it('Execute | As plain text', () => {
         editor.pasteFromClipboard(clipboardData, 'asPlainText');
 
-        expect(formatResult).toBeTrue();
         expect(mockedModel).toEqual(mockedMergeModel);
-    });
-
-    it('Preserve segment format after paste', () => {
-        const mockedNode = 'Node' as any;
-        const mockedOffset = 'Offset' as any;
-        const mockedFormat = {
-            fontFamily: 'Arial',
-        };
-        clipboardData.rawHtml =
-            '<span style="font-size: 100px; background-color: black">test</span>';
-        getFocusedPosition.and.returnValue({
-            node: mockedNode,
-            offset: mockedOffset,
-        });
-        mergeModelSpy.and.returnValue({
-            marker: {
-                format: mockedFormat,
-            },
-        });
-
-        editor.pasteFromClipboard(clipboardData);
-
-        editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
-
-        expect(context).toEqual({
-            newEntities: [],
-            newImages: [],
-            deletedEntities: [],
-            newPendingFormat: {
-                backgroundColor: '',
-                fontFamily: 'Arial',
-                fontSize: '',
-                fontWeight: '',
-                italic: false,
-                letterSpacing: '',
-                lineHeight: '',
-                strikethrough: false,
-                superOrSubScriptSequence: '',
-                textColor: '',
-                underline: false,
-            },
-        });
     });
 });
 
 describe('paste with content model & paste plugin', () => {
-    let editor: ContentModelEditor | undefined;
+    let editor: StandaloneEditor | undefined;
     let div: HTMLDivElement | undefined;
 
     beforeEach(() => {
         div = document.createElement('div');
         document.body.appendChild(div);
-        editor = new ContentModelEditor(div, {
+        editor = new StandaloneEditor(div, {
             plugins: [new ContentModelPastePlugin()],
         });
         spyOn(addParserF, 'default').and.callThrough();
@@ -220,7 +137,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wordDesktop');
         spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
@@ -231,7 +148,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wacComponents');
         spyOn(WacComponents, 'processPastedContentWacComponents').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
@@ -242,7 +159,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelOnline');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
@@ -253,7 +170,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelDesktop');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
@@ -264,7 +181,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
         spyOn(PPT, 'processPastedContentFromPowerPoint').and.callThrough();
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
@@ -276,7 +193,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wordDesktop');
         spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -287,7 +204,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wacComponents');
         spyOn(WacComponents, 'processPastedContentWacComponents').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -298,7 +215,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelOnline');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -309,7 +226,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelDesktop');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -320,7 +237,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
         spyOn(PPT, 'processPastedContentFromPowerPoint').and.callThrough();
 
-        editor?.paste(clipboardData, true /* pasteAsText */);
+        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.default).toHaveBeenCalledTimes(0);
@@ -341,7 +258,7 @@ describe('paste with content model & paste plugin', () => {
         };
 
         let eventChecker: BeforePasteEvent = <any>{};
-        editor = new ContentModelEditor(div!, {
+        editor = new StandaloneEditor(div!, {
             plugins: [
                 {
                     initialize: () => {},
@@ -356,7 +273,7 @@ describe('paste with content model & paste plugin', () => {
             ],
         });
 
-        editor?.paste(clipboardData);
+        editor?.pasteFromClipboard(clipboardData);
 
         expect(eventChecker?.clipboardData).toEqual(clipboardData);
         expect(eventChecker?.htmlBefore).toBeTruthy();
@@ -394,11 +311,7 @@ describe('Paste with clipboardData', () => {
 
         editor.pasteFromClipboard(clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',
@@ -451,11 +364,7 @@ describe('Paste with clipboardData', () => {
 
         editor.pasteFromClipboard(clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',
@@ -495,11 +404,7 @@ describe('Paste with clipboardData', () => {
 
         editor.pasteFromClipboard(clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',

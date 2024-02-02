@@ -184,6 +184,7 @@ export {
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { ContentModelDomIndexer } from './context/ContentModelDomIndexer';
+export { TextMutationObserver } from './context/TextMutationObserver';
 
 export { DefinitionType } from './metadata/DefinitionType';
 export {
@@ -245,6 +246,7 @@ export {
     GenericPluginState,
     PluginState,
 } from './pluginState/PluginState';
+export { ContextMenuPluginState } from './pluginState/ContextMenuPluginState';
 
 export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
@@ -283,6 +285,7 @@ export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
 export { TrustedHTMLHandler } from './parameter/TrustedHTMLHandler';
 export { Rect } from './parameter/Rect';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
+export { DOMHelper } from './parameter/DOMHelper';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

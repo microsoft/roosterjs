@@ -138,6 +138,7 @@ describe('restoreSnapshotSelection', () => {
                 type: 'range',
                 start: [],
                 end: [],
+                isReverted: false,
             };
             const snapshot: Snapshot = {
                 selection: snapshotSelection,
@@ -148,6 +149,7 @@ describe('restoreSnapshotSelection', () => {
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledTimes(1);
             expect(setEndSpy).toHaveBeenCalledTimes(1);
@@ -163,6 +165,7 @@ describe('restoreSnapshotSelection', () => {
                 type: 'range',
                 start: [1, 0],
                 end: [1, 1],
+                isReverted: false,
             };
             const snapshot: Snapshot = {
                 selection: snapshotSelection,
@@ -174,6 +177,7 @@ describe('restoreSnapshotSelection', () => {
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledTimes(1);
             expect(setEndSpy).toHaveBeenCalledTimes(1);
@@ -189,6 +193,7 @@ describe('restoreSnapshotSelection', () => {
                 type: 'range',
                 start: [1, 0, 0],
                 end: [1, 1, 0],
+                isReverted: false,
             };
             const snapshot: Snapshot = {
                 selection: snapshotSelection,
@@ -201,6 +206,7 @@ describe('restoreSnapshotSelection', () => {
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledTimes(1);
             expect(setEndSpy).toHaveBeenCalledTimes(1);
@@ -216,6 +222,7 @@ describe('restoreSnapshotSelection', () => {
                 type: 'range',
                 start: [1, 0, 0, 1],
                 end: [1, 0, 2, 3],
+                isReverted: false,
             };
             const snapshot: Snapshot = {
                 selection: snapshotSelection,
@@ -227,6 +234,7 @@ describe('restoreSnapshotSelection', () => {
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledTimes(1);
             expect(setEndSpy).toHaveBeenCalledTimes(1);
@@ -241,6 +249,7 @@ describe('restoreSnapshotSelection', () => {
                 type: 'range',
                 start: [0, 0, 0, 1],
                 end: [0, 2, 2, 3],
+                isReverted: false,
             };
             const snapshot: Snapshot = {
                 selection: snapshotSelection,
@@ -253,6 +262,7 @@ describe('restoreSnapshotSelection', () => {
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledTimes(1);
             expect(setEndSpy).toHaveBeenCalledTimes(1);
