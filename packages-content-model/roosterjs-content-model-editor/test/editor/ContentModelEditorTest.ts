@@ -36,7 +36,7 @@ describe('ContentModelEditor', () => {
             },
         });
 
-        const model = editor.createContentModel();
+        const model = editor.getContentModelCopy('connected');
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
@@ -73,7 +73,7 @@ describe('ContentModelEditor', () => {
             },
         });
 
-        const model = editor.createContentModel();
+        const model = editor.getContentModelCopy('connected');
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
@@ -103,7 +103,7 @@ describe('ContentModelEditor', () => {
             },
             onPluginEvent: event => {
                 if (event.eventType == PluginEventType.EditorReady) {
-                    model = pluginEditor.createContentModel();
+                    model = pluginEditor.getContentModelCopy('connected');
                 }
             },
         };
@@ -144,7 +144,7 @@ describe('ContentModelEditor', () => {
 
         spyOn(domToContentModel, 'domToContentModel');
 
-        const model = editor.createContentModel();
+        const model = editor.getContentModelCopy('connected');
 
         expect(model).toBe(cachedModel);
         expect(domToContentModel.domToContentModel).not.toHaveBeenCalled();
@@ -177,7 +177,7 @@ describe('ContentModelEditor', () => {
             },
         });
 
-        const model = editor.createContentModel();
+        const model = editor.getContentModelCopy('connected');
 
         expect(model.format).toEqual({
             fontWeight: 'bold',

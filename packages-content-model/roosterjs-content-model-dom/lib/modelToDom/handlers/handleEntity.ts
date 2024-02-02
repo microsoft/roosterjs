@@ -7,7 +7,6 @@ import type {
     ContentModelBlockHandler,
     ContentModelEntity,
     ContentModelSegmentHandler,
-    ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -54,7 +53,7 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     if (context.addDelimiterForEntity && entityFormat.isReadonly) {
-        const [after, before] = addDelimiterForEntity(doc, wrapper, context);
+        const [after, before] = addDelimiters(doc, wrapper);
 
         newSegments?.push(after, before);
         context.regularSelection.current.segment = after;
@@ -64,17 +63,3 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 
     context.onNodeCreated?.(entityModel, wrapper);
 };
-
-function addDelimiterForEntity(doc: Document, wrapper: HTMLElement, context: ModelToDomContext) {
-    const [after, before] = addDelimiters(doc, wrapper);
-
-    const format = {
-        ...context.pendingFormat?.format,
-        ...context.defaultFormat,
-    };
-
-    applyFormat(after, context.formatAppliers.segment, format, context);
-    applyFormat(before, context.formatAppliers.segment, format, context);
-
-    return [after, before];
-}

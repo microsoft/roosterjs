@@ -3,6 +3,12 @@
  */
 export interface DOMHelper {
     /**
+     * Check if the given DOM node is in editor
+     * @param node The node to check
+     */
+    isNodeInEditor(node: Node): boolean;
+
+    /**
      * Query HTML elements in editor by tag name.
      * Be careful of this function since it will also return element under entity.
      * @param tag Tag name of the element to query
@@ -19,4 +25,9 @@ export interface DOMHelper {
      * @returns HTML Element array of the query result
      */
     queryElements(selector: string): HTMLElement[];
+
+    /**
+     * Calculate current zoom scale of editor
+     */
+    calculateZoomScale(): number;
 }
