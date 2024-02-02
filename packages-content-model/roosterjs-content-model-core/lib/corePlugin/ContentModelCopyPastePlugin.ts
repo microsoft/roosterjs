@@ -5,7 +5,7 @@ import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from '../utils/extractClipboardItems';
 import { getSelectedCells } from '../publicApi/table/getSelectedCells';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
-
+import { onCreateCopyEntityNode } from '../override/pasteCopyBlockEntityParser';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -299,13 +299,14 @@ function domSelectionToRange(doc: Document, selection: DOMSelection): Range | nu
  * @internal
  * Exported only for unit testing
  */
-export const onNodeCreated: OnNodeCreated = (_, node): void => {
+export const onNodeCreated: OnNodeCreated = (model, node): void => {
     if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'table')) {
         wrap(node.ownerDocument, node, 'div');
     }
     if (isNodeOfType(node, 'ELEMENT_NODE') && !node.isContentEditable) {
         node.removeAttribute('contenteditable');
     }
+    onCreateCopyEntityNode(model, node);
 };
 
 /**
