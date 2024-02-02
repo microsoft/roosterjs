@@ -14,11 +14,7 @@ export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent
 
         editor.formatContentModel(
             (model, context) => {
-                const result = deleteSelection(
-                    model,
-                    shouldHandleEnterKey(selection, rawEvent) ? [handleEnterOnList] : [],
-                    context
-                );
+                const result = deleteSelection(model, getInputSteps(selection, rawEvent), context);
 
                 // We have deleted selection then we will let browser to handle the input.
                 // With this combined operation, we don't wan to mass up the cached model so clear it
@@ -46,6 +42,10 @@ export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent
 
         return true;
     }
+}
+
+function getInputSteps(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
+    return shouldHandleEnterKey(selection, rawEvent) ? [handleEnterOnList] : [];
 }
 
 function shouldInputWithContentModel(

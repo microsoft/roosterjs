@@ -1,5 +1,5 @@
-import { DeleteSelectionStep, InsertPoint } from 'roosterjs-content-model-types';
 import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core';
+import type { DeleteSelectionStep, InsertPoint } from 'roosterjs-content-model-types';
 
 import {
     createListItem,
