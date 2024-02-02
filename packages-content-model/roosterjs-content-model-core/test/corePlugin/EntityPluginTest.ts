@@ -1,3 +1,4 @@
+import * as DelimiterUtils from '../../lib/corePlugin/utils/entityDelimiterUtils';
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { createContentModelDocument, createEntity } from '../../../roosterjs-content-model-dom/lib';
@@ -47,6 +48,9 @@ describe('EntityPlugin', () => {
     });
 
     describe('EditorReady event', () => {
+        beforeEach(() => {
+            spyOn(DelimiterUtils, 'handleDelimiterContentChangedEvent').and.callFake(() => {});
+        });
         it('empty doc', () => {
             createContentModelSpy.and.returnValue(createContentModelDocument());
 
@@ -59,6 +63,7 @@ describe('EntityPlugin', () => {
                 entityMap: {},
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('Doc with entity', () => {
@@ -99,6 +104,7 @@ describe('EntityPlugin', () => {
                 state: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('Doc with entity, can persist', () => {
@@ -142,10 +148,14 @@ describe('EntityPlugin', () => {
                 state: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
     });
 
     describe('ContentChanged event', () => {
+        beforeEach(() => {
+            spyOn(DelimiterUtils, 'handleDelimiterContentChangedEvent').and.callFake(() => {});
+        });
         it('No changedEntity param', () => {
             const wrapper = document.createElement('div');
             const entity = createEntity(wrapper, true, undefined, 'Entity1');
@@ -184,6 +194,7 @@ describe('EntityPlugin', () => {
                 state: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('New entity in dark mode', () => {
@@ -231,6 +242,7 @@ describe('EntityPlugin', () => {
                 'lightToDark',
                 mockedDarkColorHandler
             );
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('No changedEntity param, has deleted entity', () => {
@@ -293,6 +305,7 @@ describe('EntityPlugin', () => {
                 state: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('Do not trigger event for already deleted entity', () => {
@@ -323,6 +336,7 @@ describe('EntityPlugin', () => {
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(0);
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('Add back a deleted entity', () => {
@@ -368,6 +382,7 @@ describe('EntityPlugin', () => {
                 state: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('Has changedEntities parameter', () => {
@@ -444,6 +459,7 @@ describe('EntityPlugin', () => {
                 state: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('Handle conflict id', () => {
@@ -502,6 +518,7 @@ describe('EntityPlugin', () => {
                 state: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
 
         it('With content state', () => {
@@ -547,6 +564,7 @@ describe('EntityPlugin', () => {
                 },
                 state: entityState,
             });
+            expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
     });
 
