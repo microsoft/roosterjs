@@ -1,5 +1,11 @@
 import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core';
-import type { DeleteSelectionStep, InsertPoint } from 'roosterjs-content-model-types';
+import type {
+    ContentModelBlockGroup,
+    ContentModelListItem,
+    DeleteSelectionStep,
+    InsertPoint,
+    ValidDeleteSelectionContext,
+} from 'roosterjs-content-model-types';
 
 import {
     createListItem,
@@ -21,18 +27,43 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
             ['FormatContainer', 'ListItem'],
             ['TableCell']
         );
+
         const listItem = path[index];
         if (listItem && listItem.blockGroupType === 'ListItem') {
             const listParent = path[index + 1];
-            const listIndex = listParent.blocks.indexOf(listItem);
-            const newParagraph = createNewParagraph(insertPoint);
-            const newListItem = createListItem(listItem.levels, listItem.format);
-            newListItem.blocks.push(newParagraph);
-            listParent.blocks.splice(listIndex + 1, 0, newListItem);
+            if (isEmptyListItem(listItem)) {
+                listItem.levels.pop();
+            } else {
+                createNewListItem(context, listItem, listParent);
+            }
+
             context.deleteResult = 'range';
             context.formatContext?.rawEvent?.preventDefault();
         }
     }
+};
+
+const isEmptyListItem = (listItem: ContentModelListItem) => {
+    return (
+        listItem.blocks.length === 1 &&
+        listItem.blocks[0].blockType === 'Paragraph' &&
+        listItem.blocks[0].segments.length === 2 &&
+        listItem.blocks[0].segments[0].segmentType === 'SelectionMarker' &&
+        listItem.blocks[0].segments[1].segmentType === 'Br'
+    );
+};
+
+const createNewListItem = (
+    context: ValidDeleteSelectionContext,
+    listItem: ContentModelListItem,
+    listParent: ContentModelBlockGroup
+) => {
+    const { insertPoint } = context;
+    const listIndex = listParent.blocks.indexOf(listItem);
+    const newParagraph = createNewParagraph(insertPoint);
+    const newListItem = createListItem(listItem.levels, listItem.format);
+    newListItem.blocks.push(newParagraph);
+    listParent.blocks.splice(listIndex + 1, 0, newListItem);
 };
 
 const createNewParagraph = (insertPoint: InsertPoint) => {
@@ -51,5 +82,6 @@ const createNewParagraph = (insertPoint: InsertPoint) => {
     }
 
     normalizeParagraph(newParagraph);
+
     return newParagraph;
 };

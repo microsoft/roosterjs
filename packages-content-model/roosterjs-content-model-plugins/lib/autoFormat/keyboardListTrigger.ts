@@ -1,5 +1,6 @@
 import { getListTypeStyle } from './utils/getListTypeStyle';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
+import { normalizeContentModel } from 'roosterjs-content-model-dom/lib';
 import { setListStartNumber, setListStyle, setListType } from 'roosterjs-content-model-api';
 
 import type { ContentModelDocument, IStandaloneEditor } from 'roosterjs-content-model-types';
@@ -13,31 +14,26 @@ export function keyboardListTrigger(
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ) {
-    editor.formatContentModel(
-        (model, _context) => {
-            const listStyleType = getListTypeStyle(
-                model,
-                shouldSearchForBullet,
-                shouldSearchForNumbering
-            );
-            if (listStyleType) {
-                const segmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, false);
-                if (segmentsAndParagraphs[0] && segmentsAndParagraphs[0][1]) {
-                    segmentsAndParagraphs[0][1].segments.splice(0, 1);
-                }
-                const { listType, styleType, index } = listStyleType;
-                triggerList(editor, model, listType, styleType, index);
-
-                return true;
+    editor.formatContentModel((model, _context) => {
+        const listStyleType = getListTypeStyle(
+            model,
+            shouldSearchForBullet,
+            shouldSearchForNumbering
+        );
+        if (listStyleType) {
+            normalizeContentModel(model);
+            const segmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, false);
+            if (segmentsAndParagraphs[0] && segmentsAndParagraphs[0][1]) {
+                segmentsAndParagraphs[0][1].segments.splice(0, 1);
             }
-            return false;
-        },
-        {
-            apiName: 'keyboardListTrigger',
-            changeSource: 'keyboard',
-            onNodeCreated: node => {},
+            const { listType, styleType, index } = listStyleType;
+            triggerList(editor, model, listType, styleType, index);
+
+            rawEvent.preventDefault();
+            return true;
         }
-    );
+        return false;
+    });
 }
 
 const triggerList = (

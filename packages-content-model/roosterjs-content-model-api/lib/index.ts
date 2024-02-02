@@ -41,3 +41,4 @@ export { default as setParagraphMargin } from './publicApi/block/setParagraphMar
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
 export { setListType } from './modelApi/list/setListType';
+export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';

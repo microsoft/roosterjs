@@ -1,6 +1,5 @@
-import { findListItemsInSameThread } from 'roosterjs-content-model-api/lib/modelApi/list/findListItemsInSameThread';
+import { findListItemsInSameThread } from 'roosterjs-content-model-api';
 import { getNumberingListStyle } from './getNumberingListStyle';
-
 import type {
     ContentModelDocument,
     ContentModelListItem,
@@ -61,7 +60,9 @@ export function getListTypeStyle(
                     listType: 'OL',
                     styleType: numberingType,
                     index:
-                        previousListStyle === numberingType && previousIndex
+                        !isNewList(listMarker) &&
+                        previousListStyle === numberingType &&
+                        previousIndex
                             ? previousIndex + 1
                             : undefined,
                 };
@@ -79,16 +80,13 @@ const getPreviousListIndex = (
 };
 
 const getPreviousListLevel = (model: ContentModelDocument, paragraph: ContentModelParagraph) => {
-    const blocks = getOperationalBlocks(model, ['ListItem'], ['TableCell']);
+    const blocks = getOperationalBlocks(model, ['ListItem'], ['TableCell'])[0];
     let listItem: ContentModelListItem | undefined = undefined;
-    const listBlock = blocks.filter(({ block, parent }) => {
-        return parent.blocks.indexOf(paragraph) > -1;
-    })[0];
+    const listBlockIndex = blocks.parent.blocks.indexOf(paragraph);
 
-    if (listBlock) {
-        const length = listBlock.parent.blocks.length;
-        for (let i = length - 1; i > -1; i--) {
-            const item = listBlock.parent.blocks[i];
+    if (listBlockIndex > -1) {
+        for (let i = listBlockIndex - 1; i > -1; i--) {
+            const item = blocks.parent.blocks[i];
             if (isBlockGroupOfType<ContentModelListItem>(item, 'ListItem')) {
                 listItem = item;
                 break;
@@ -113,4 +111,10 @@ const bulletListType: Record<string, number> = {
     '=>': BulletListType.UnfilledArrow,
     '>': BulletListType.ShortArrow,
     '—': BulletListType.Hyphen,
+};
+
+const isNewList = (listMarker: string) => {
+    const marker = listMarker.replace(/[^\w\s]/g, '');
+    const pattern = /^[1aAiI]$/;
+    return pattern.test(marker);
 };

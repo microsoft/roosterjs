@@ -5,7 +5,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Search for all list items in the same thread as the current list item
  */
 export function findListItemsInSameThread(
     model: ContentModelDocument,
