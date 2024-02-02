@@ -4,8 +4,12 @@ import type {
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
-const DefaultQuoteFormat: ContentModelFormatContainerFormat = {
-    borderLeft: '3px solid rgb(200, 200, 200)', // TODO: Support RTL
+const DefaultQuoteFormatLtr: ContentModelFormatContainerFormat = {
+    borderLeft: '3px solid rgb(200, 200, 200)',
+    textColor: 'rgb(102, 102, 102)',
+};
+const DefaultQuoteFormatRtl: ContentModelFormatContainerFormat = {
+    borderRight: '3px solid rgb(200, 200, 200)',
     textColor: 'rgb(102, 102, 102)',
 };
 const BuildInQuoteFormat: ContentModelFormatContainerFormat = {
@@ -13,7 +17,6 @@ const BuildInQuoteFormat: ContentModelFormatContainerFormat = {
     marginBottom: '1em',
     marginLeft: '40px',
     marginRight: '40px',
-    paddingLeft: '10px',
 };
 
 /**
@@ -25,11 +28,19 @@ const BuildInQuoteFormat: ContentModelFormatContainerFormat = {
  */
 export default function toggleBlockQuote(
     editor: IStandaloneEditor,
-    quoteFormat: ContentModelFormatContainerFormat = DefaultQuoteFormat
+    quoteFormat?: ContentModelFormatContainerFormat,
+    quoteFormatRtl?: ContentModelFormatContainerFormat
 ) {
-    const fullQuoteFormat = {
+    const fullQuoteFormatLtr: ContentModelFormatContainerFormat = {
         ...BuildInQuoteFormat,
-        ...quoteFormat,
+        paddingLeft: '10px',
+        ...(quoteFormat ?? DefaultQuoteFormatLtr),
+    };
+    const fullQuoteFormatRtl: ContentModelFormatContainerFormat = {
+        ...BuildInQuoteFormat,
+        paddingRight: '10px',
+        direction: 'rtl',
+        ...(quoteFormatRtl ?? quoteFormat ?? DefaultQuoteFormatRtl),
     };
 
     editor.focus();
@@ -38,7 +49,7 @@ export default function toggleBlockQuote(
         (model, context) => {
             context.newPendingFormat = 'preserve';
 
-            return toggleModelBlockQuote(model, fullQuoteFormat);
+            return toggleModelBlockQuote(model, fullQuoteFormatLtr, fullQuoteFormatRtl);
         },
         {
             apiName: 'toggleBlockQuote',

@@ -11,7 +11,7 @@ describe('toggleModelBlockQuote', () => {
     it('empty model', () => {
         const doc = createContentModelDocument();
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -27,7 +27,7 @@ describe('toggleModelBlockQuote', () => {
         para.segments.push(text);
         doc.blocks.push(para);
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -56,7 +56,7 @@ describe('toggleModelBlockQuote', () => {
         doc.blocks.push(para);
         text.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -99,7 +99,7 @@ describe('toggleModelBlockQuote', () => {
         text1.isSelected = true;
         text2.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -140,6 +140,99 @@ describe('toggleModelBlockQuote', () => {
         });
     });
 
+    it('Has multiple selection, with RTL, do not merge', () => {
+        const doc = createContentModelDocument();
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const para2 = createParagraph();
+        const text2 = createText('test2');
+        const para3 = createParagraph();
+        const text3 = createText('test3');
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+
+        para2.format.direction = 'rtl';
+
+        doc.blocks.push(para1, para2, para3);
+        text1.isSelected = true;
+        text2.isSelected = true;
+        text3.isSelected = true;
+
+        toggleModelBlockQuote(doc, {}, { direction: 'rtl' });
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test1',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    format: {
+                        direction: 'rtl',
+                    },
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {
+                                direction: 'rtl',
+                            },
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test2',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test3',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
     it('Has single selection, merge before', () => {
         const doc = createContentModelDocument();
         const para1 = createParagraph();
@@ -155,7 +248,7 @@ describe('toggleModelBlockQuote', () => {
         doc.blocks.push(para2);
         text2.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -210,7 +303,7 @@ describe('toggleModelBlockQuote', () => {
         doc.blocks.push(quote);
         text1.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -271,7 +364,7 @@ describe('toggleModelBlockQuote', () => {
         doc.blocks.push(quote3);
         text2.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -343,7 +436,7 @@ describe('toggleModelBlockQuote', () => {
         doc.blocks.push(quote3);
         text2.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -436,7 +529,7 @@ describe('toggleModelBlockQuote', () => {
         text2.isSelected = true;
         text3.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -512,7 +605,7 @@ describe('toggleModelBlockQuote', () => {
 
         text1.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -575,7 +668,7 @@ describe('toggleModelBlockQuote', () => {
         text1.isSelected = true;
         text2.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -637,7 +730,7 @@ describe('toggleModelBlockQuote', () => {
 
         text2.isSelected = true;
 
-        toggleModelBlockQuote(doc, {});
+        toggleModelBlockQuote(doc, {}, {});
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
