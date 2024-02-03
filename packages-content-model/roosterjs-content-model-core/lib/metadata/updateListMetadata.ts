@@ -1,7 +1,11 @@
 import { BulletListType } from '../constants/BulletListType';
-import { createNumberDefinition, createObjectDefinition } from './definitionCreators';
 import { getObjectKeys, updateMetadata } from 'roosterjs-content-model-dom';
 import { NumberingListType } from '../constants/NumberingListType';
+import {
+    createBooleanDefinition,
+    createNumberDefinition,
+    createObjectDefinition,
+} from './definitionCreators';
 import type {
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
@@ -123,6 +127,7 @@ const listMetadataDefinition = createObjectDefinition<ListMetadataFormat>(
             BulletListType.Min,
             BulletListType.Max
         ),
+        applyListStyleFromLevel: createBooleanDefinition(true /*isOptional*/),
     },
     true /** isOptional */,
     true /** allowNull */
@@ -133,15 +138,19 @@ function shouldApplyToItem(listStyleType: string) {
 }
 
 function getRawListStyleType(listType: 'OL' | 'UL', metadata: ListMetadataFormat, depth: number) {
-    const { orderedStyleType, unorderedStyleType } = metadata;
+    const { orderedStyleType, unorderedStyleType, applyListStyleFromLevel } = metadata;
     if (listType == 'OL') {
-        return orderedStyleType === undefined
+        return typeof orderedStyleType == 'number'
+            ? OrderedMap[orderedStyleType]
+            : applyListStyleFromLevel
             ? DefaultOrderedListStyles[depth % DefaultOrderedListStyles.length]
-            : OrderedMap[orderedStyleType];
+            : undefined;
     } else {
-        return unorderedStyleType === undefined
+        return typeof unorderedStyleType == 'number'
+            ? UnorderedMap[unorderedStyleType]
+            : applyListStyleFromLevel
             ? DefaultUnorderedListStyles[depth % DefaultUnorderedListStyles.length]
-            : UnorderedMap[unorderedStyleType];
+            : undefined;
     }
 }
 
