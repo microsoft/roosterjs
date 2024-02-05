@@ -283,8 +283,13 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
                     levels: [
-                        { listType: 'OL', dataset: {}, format: {} },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -344,9 +349,9 @@ describe('indent', () => {
                             },
                             format: {
                                 startNumberOverride: 2,
+                                marginLeft: '40px',
                             },
                         },
-                        { listType: 'OL', dataset: {}, format: {} },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -502,8 +507,13 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
                     levels: [
-                        { listType: 'UL', dataset: {}, format: {} },
-                        { listType: 'UL', dataset: {}, format: {} },
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
                     ],
                     blocks: [para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -550,8 +560,13 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
                     levels: [
-                        { listType: 'OL', dataset: {}, format: {} },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
                     ],
                     blocks: [para1],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -561,8 +576,13 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
                     levels: [
-                        { listType: 'UL', dataset: {}, format: {} },
-                        { listType: 'UL', dataset: {}, format: {} },
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
                     ],
                     blocks: [para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -888,7 +908,13 @@ describe('outdent', () => {
                             },
                             format: {
                                 startNumberOverride: 1,
+                                marginLeft: '0px',
                             },
+                        },
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                 },

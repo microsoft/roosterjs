@@ -1,5 +1,6 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
 import * as keyboardInput from '../../lib/edit/keyboardInput';
+import * as keyboardTab from '../../lib/edit/keyboardTab';
 import { ContentModelEditPlugin } from '../../lib/edit/ContentModelEditPlugin';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -18,10 +19,12 @@ describe('ContentModelEditPlugin', () => {
     describe('onPluginEvent', () => {
         let keyboardDeleteSpy: jasmine.Spy;
         let keyboardInputSpy: jasmine.Spy;
+        let keyboardTabSpy: jasmine.Spy;
 
         beforeEach(() => {
             keyboardDeleteSpy = spyOn(keyboardDelete, 'keyboardDelete');
             keyboardInputSpy = spyOn(keyboardInput, 'keyboardInput');
+            keyboardTabSpy = spyOn(keyboardTab, 'keyboardTab');
         });
 
         it('Backspace', () => {
@@ -52,6 +55,22 @@ describe('ContentModelEditPlugin', () => {
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
+        });
+
+        it('Tab', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { key: 'Tab' } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardInputSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
         });
 
         it('Other key', () => {

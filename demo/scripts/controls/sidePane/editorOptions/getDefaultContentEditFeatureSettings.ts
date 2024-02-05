@@ -11,5 +11,16 @@ export default function getDefaultContentEditFeatureSettings(): ContentEditFeatu
         }, <ContentEditFeatureSettings>{}),
         indentWhenAltShiftRight: false,
         outdentWhenAltShiftLeft: false,
+        autoBullet: false,
+        indentWhenTab: false,
+        outdentWhenShiftTab: false,
+        outdentWhenBackspaceOnEmptyFirstLine: false,
+        outdentWhenEnterOnEmptyLine: false,
+        mergeInNewLineWhenBackspaceOnFirstChar: false,
+        maintainListChain: false,
+        maintainListChainWhenDelete: false,
+        autoNumberingList: false,
+        autoBulletList: false,
+        mergeListOnBackspaceAfterList: false,
     };
 }

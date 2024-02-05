@@ -1,6 +1,8 @@
 import { createListLevel, parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
 import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-core';
 import type {
+    ContentModelBlockFormat,
     ContentModelDocument,
     ContentModelListItem,
     ContentModelListLevel,
@@ -25,30 +27,40 @@ export function setModelIndentation(
 
     paragraphOrListItem.forEach(({ block }) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-            if (isIndent) {
-                const lastLevel = block.levels[block.levels.length - 1];
-                const newLevel: ContentModelListLevel = createListLevel(
-                    lastLevel?.listType || 'UL',
-                    lastLevel?.format
-                );
-
-                // New level is totally new, no need to have these attributes for now
-                delete newLevel.format.startNumberOverride;
-
-                block.levels.push(newLevel);
+            if (isFirstItemSelected(model, block)) {
+                if (!isIndent && block.levels.length == 1) {
+                    block.levels.pop();
+                } else {
+                    const level = block.levels[0];
+                    const { format } = level;
+                    const newValue = calculateMarginValue(format, isIndent, length);
+                    const isRtl = format.direction == 'rtl';
+                    if (isRtl) {
+                        level.format.marginRight = newValue + 'px';
+                    } else {
+                        level.format.marginLeft = newValue + 'px';
+                    }
+                }
             } else {
-                block.levels.pop();
+                if (isIndent) {
+                    const lastLevel = block.levels[block.levels.length - 1];
+                    const newLevel: ContentModelListLevel = createListLevel(
+                        lastLevel?.listType || 'UL',
+                        lastLevel?.format
+                    );
+
+                    // New level is totally new, no need to have these attributes for now
+                    delete newLevel.format.startNumberOverride;
+
+                    block.levels.push(newLevel);
+                } else {
+                    block.levels.pop();
+                }
             }
         } else if (block) {
             const { format } = block;
-            const { marginLeft, marginRight, direction } = format;
-            const isRtl = direction == 'rtl';
-            const originalValue = parseValueWithUnit(isRtl ? marginRight : marginLeft);
-            let newValue = (isIndent ? Math.ceil : Math.floor)(originalValue / length) * length;
-
-            if (newValue == originalValue) {
-                newValue = Math.max(newValue + length * (isIndent ? 1 : -1), 0);
-            }
+            const newValue = calculateMarginValue(format, isIndent, length);
+            const isRtl = format.direction == 'rtl';
 
             if (isRtl) {
                 format.marginRight = newValue + 'px';
@@ -59,4 +71,29 @@ export function setModelIndentation(
     });
 
     return paragraphOrListItem.length > 0;
+}
+
+function isFirstItemSelected(model: ContentModelDocument, listItem: ContentModelListItem) {
+    const thread = findListItemsInSameThread(model, listItem);
+    return thread[0].blocks.some(block => {
+        if (block.blockType == 'Paragraph') {
+            return block.segments.some(segment => segment.isSelected);
+        }
+    });
+}
+
+function calculateMarginValue(
+    format: ContentModelBlockFormat,
+    isIndent: boolean,
+    length: number = IndentStepInPixel
+) {
+    const { marginLeft, marginRight, direction } = format;
+    const isRtl = direction == 'rtl';
+    const originalValue = parseValueWithUnit(isRtl ? marginRight : marginLeft);
+    let newValue = (isIndent ? Math.ceil : Math.floor)(originalValue / length) * length;
+
+    if (newValue == originalValue) {
+        newValue = Math.max(newValue + length * (isIndent ? 1 : -1), 0);
+    }
+    return newValue;
 }

@@ -1,5 +1,6 @@
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
+import { keyboardTab } from './keyboardTab';
 import type {
     EditorPlugin,
     IStandaloneEditor,
@@ -12,6 +13,7 @@ import type {
  * This includes:
  * 1. Delete Key
  * 2. Backspace Key
+ * 3. Tab Key
  */
 export class ContentModelEditPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
@@ -70,7 +72,8 @@ export class ContentModelEditPlugin implements EditorPlugin {
                     keyboardDelete(editor, rawEvent);
                     break;
 
-                case 'Enter':
+                case 'Tab':
+                    keyboardTab(editor, rawEvent);
                 default:
                     keyboardInput(editor, rawEvent);
                     break;
