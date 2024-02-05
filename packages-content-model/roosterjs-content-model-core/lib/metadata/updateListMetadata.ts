@@ -185,16 +185,18 @@ export const listItemMetadataApplier: MetadataApplier<
             const listType = context.listFormat.nodeStack[depth + 1].listType ?? 'OL';
             const listStyleType = getRawListStyleType(listType, metadata ?? {}, depth);
 
-            if (listStyleType && shouldApplyToItem(listStyleType)) {
-                format.listStyleType =
-                    listType == 'OL'
-                        ? getOrderedListStyleValue(
-                              listStyleType,
-                              context.listFormat.threadItemCounts[depth]
-                          )
-                        : listStyleType;
-            } else {
-                delete format.listStyleType;
+            if (listStyleType) {
+                if (shouldApplyToItem(listStyleType)) {
+                    format.listStyleType =
+                        listType == 'OL'
+                            ? getOrderedListStyleValue(
+                                  listStyleType,
+                                  context.listFormat.threadItemCounts[depth]
+                              )
+                            : listStyleType;
+                } else {
+                    delete format.listStyleType;
+                }
             }
         }
     },
@@ -215,10 +217,12 @@ export const listLevelMetadataApplier: MetadataApplier<
             const listType = context.listFormat.nodeStack[depth + 1].listType ?? 'OL';
             const listStyleType = getRawListStyleType(listType, metadata ?? {}, depth);
 
-            if (listStyleType && !shouldApplyToItem(listStyleType)) {
-                format.listStyleType = listStyleType;
-            } else {
-                delete format.listStyleType;
+            if (listStyleType) {
+                if (!shouldApplyToItem(listStyleType)) {
+                    format.listStyleType = listStyleType;
+                } else {
+                    delete format.listStyleType;
+                }
             }
         }
     },
