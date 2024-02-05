@@ -74,6 +74,7 @@ export class ContentModelEditPlugin implements EditorPlugin {
 
                 case 'Tab':
                     keyboardTab(editor, rawEvent);
+                    break;
                 default:
                     keyboardInput(editor, rawEvent);
                     break;
