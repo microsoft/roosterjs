@@ -58,7 +58,7 @@ const createNewListItem = (
     const listIndex = listParent.blocks.indexOf(listItem);
     const newParagraph = createNewParagraph(insertPoint);
     const levels = createNewListLevel(listItem);
-    const newListItem = createListItem(levels, listItem.format);
+    const newListItem = createListItem(levels, insertPoint.marker.format);
     newListItem.blocks.push(newParagraph);
     listParent.blocks.splice(listIndex + 1, 0, newListItem);
 };

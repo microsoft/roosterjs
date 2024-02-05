@@ -485,10 +485,9 @@ describe('handleEnterOnList', () => {
                             format: {
                                 marginTop: '0px',
                                 marginBottom: '0px',
-                                listStyleType: 'decimal',
                             },
                             dataset: {
-                                editingInfo: '{"orderedStyleType":1}',
+                                editingInfo: '{"orderedStyleType":3}',
                             },
                         },
                     ],
@@ -497,7 +496,9 @@ describe('handleEnterOnList', () => {
                         isSelected: true,
                         format: {},
                     },
-                    format: {},
+                    format: {
+                        listStyleType: '"1) "',
+                    },
                 },
                 {
                     blockType: 'BlockGroup',
@@ -508,7 +509,7 @@ describe('handleEnterOnList', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: 'test ',
+                                    text: 'test',
                                     format: {},
                                 },
                             ],
@@ -521,10 +522,9 @@ describe('handleEnterOnList', () => {
                             format: {
                                 marginTop: '0px',
                                 marginBottom: '0px',
-                                listStyleType: 'decimal',
                             },
                             dataset: {
-                                editingInfo: '{"orderedStyleType":1}',
+                                editingInfo: '{"orderedStyleType":3}',
                             },
                         },
                     ],
@@ -533,7 +533,9 @@ describe('handleEnterOnList', () => {
                         isSelected: true,
                         format: {},
                     },
-                    format: {},
+                    format: {
+                        listStyleType: '"2) "',
+                    },
                 },
                 {
                     blockType: 'Paragraph',
@@ -557,11 +559,6 @@ describe('handleEnterOnList', () => {
                                     text: 'test',
                                     format: {},
                                 },
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
                             ],
                             format: {},
                             isImplicit: true,
@@ -576,7 +573,7 @@ describe('handleEnterOnList', () => {
                                 marginBottom: '0px',
                             },
                             dataset: {
-                                editingInfo: '{"orderedStyleType":3}',
+                                editingInfo: '{"orderedStyleType":10}',
                             },
                         },
                     ],
@@ -586,7 +583,49 @@ describe('handleEnterOnList', () => {
                         format: {},
                     },
                     format: {
-                        listStyleType: '"1) "',
+                        listStyleType: '"A) "',
+                    },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                marginTop: '0px',
+                                marginBottom: '0px',
+                            },
+                            dataset: {
+                                editingInfo: '{"orderedStyleType":10}',
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {
+                        listStyleType: '"B) "',
                     },
                 },
             ],
@@ -619,10 +658,9 @@ describe('handleEnterOnList', () => {
                             format: {
                                 marginTop: '0px',
                                 marginBottom: '0px',
-                                listStyleType: 'decimal',
                             },
                             dataset: {
-                                editingInfo: '{"orderedStyleType":1}',
+                                editingInfo: '{"orderedStyleType":3}',
                             },
                         },
                     ],
@@ -631,7 +669,9 @@ describe('handleEnterOnList', () => {
                         isSelected: true,
                         format: {},
                     },
-                    format: {},
+                    format: {
+                        listStyleType: '"1) "',
+                    },
                 },
                 {
                     blockType: 'BlockGroup',
@@ -655,10 +695,9 @@ describe('handleEnterOnList', () => {
                             format: {
                                 marginTop: '0px',
                                 marginBottom: '0px',
-                                listStyleType: 'decimal',
                             },
                             dataset: {
-                                editingInfo: '{"orderedStyleType":1}',
+                                editingInfo: '{"orderedStyleType":3}',
                             },
                         },
                     ],
@@ -667,7 +706,9 @@ describe('handleEnterOnList', () => {
                         isSelected: true,
                         format: {},
                     },
-                    format: {},
+                    format: {
+                        listStyleType: '"2) "',
+                    },
                 },
                 {
                     blockType: 'Paragraph',
@@ -705,7 +746,7 @@ describe('handleEnterOnList', () => {
                                 marginBottom: '0px',
                             },
                             dataset: {
-                                editingInfo: '{"orderedStyleType":3}',
+                                editingInfo: '{"orderedStyleType":10}',
                             },
                         },
                     ],
@@ -715,7 +756,44 @@ describe('handleEnterOnList', () => {
                         format: {},
                     },
                     format: {
-                        listStyleType: '"1) "',
+                        listStyleType: '"A) "',
+                    },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                marginTop: '0px',
+                                marginBottom: '0px',
+                            },
+                            dataset: {
+                                editingInfo: '{"orderedStyleType":10}',
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {
+                        listStyleType: '"B) "',
                     },
                 },
                 {
@@ -741,10 +819,10 @@ describe('handleEnterOnList', () => {
                             format: {
                                 marginTop: '0px',
                                 marginBottom: '0px',
-                                startNumberOverride: 2,
+                                startNumberOverride: undefined,
                             },
                             dataset: {
-                                editingInfo: '{"orderedStyleType":3}',
+                                editingInfo: '{"orderedStyleType":10}',
                             },
                         },
                     ],
