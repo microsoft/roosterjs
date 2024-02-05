@@ -457,4 +457,651 @@ describe('keyboardListTrigger', () => {
             false
         );
     });
+
+    it('trigger continued numbering list between lists', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"1) "',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"2) "',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: '3)',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    startNumberOverride: 1,
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":10}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"A) "',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":10}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"B) "',
+                        },
+                    },
+                ],
+                format: {},
+            },
+
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"1) "',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"2) "',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        isSelected: true,
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    startNumberOverride: 3,
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                    direction: undefined,
+                                    textAlign: undefined,
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {
+                                fontFamily: undefined,
+                                fontSize: undefined,
+                                textColor: undefined,
+                            },
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    startNumberOverride: 1,
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":10}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"A) "',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":10}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"B) "',
+                        },
+                    },
+                ],
+                format: {},
+            },
+            true
+        );
+    });
+
+    it('trigger a new numbering list after a numbering list', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"1) "',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"2) "',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'A)',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"1) "',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"2) "',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        isSelected: true,
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    startNumberOverride: 1,
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                    direction: undefined,
+                                    textAlign: undefined,
+                                },
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":10}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {
+                                fontFamily: undefined,
+                                fontSize: undefined,
+                                textColor: undefined,
+                            },
+                        },
+                        format: {},
+                    },
+                ],
+                format: {},
+            },
+            true
+        );
+    });
 });

@@ -1,5 +1,5 @@
 import { deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
-import { handleEnterOnList } from './handleEnterOnList';
+import { handleEnterOnList } from './inputSteps/handleEnterOnList';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { DOMSelection, IStandaloneEditor } from 'roosterjs-content-model-types';
 
