@@ -11,6 +11,5 @@ export default function getDefaultContentEditFeatureSettings(): ContentEditFeatu
         }, <ContentEditFeatureSettings>{}),
         indentWhenAltShiftRight: true,
         outdentWhenAltShiftLeft: true,
-        moveBetweenDelimitersFeature: false,
     };
 }

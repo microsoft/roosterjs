@@ -17,7 +17,7 @@ export const onCreateCopyEntityNode: OnNodeCreated = (model, node) => {
     if (
         entityModel &&
         entityModel.wrapper &&
-        entityModel.segmentType == 'Entity' &&
+        entityModel.blockType == 'Entity' &&
         isNodeOfType(node, 'ELEMENT_NODE') &&
         isBlockElement(entityModel.wrapper)
     ) {

@@ -1,3 +1,4 @@
+import * as entityUtilsFile from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
 import { ContentModelEntity } from 'roosterjs-content-model-types';
 import {
     onCreateCopyEntityNode,
@@ -6,21 +7,23 @@ import {
 
 describe('onCreateCopyEntityNode', () => {
     it('handle', () => {
+        const div = document.createElement('div');
         const span = document.createElement('span');
         span.style.width = '100%';
         span.style.display = 'inline-block';
+        div.appendChild(span);
         const modelEntity: ContentModelEntity = {
             entityFormat: {},
             format: {},
-            wrapper: span,
+            wrapper: div,
             segmentType: 'Entity',
             blockType: 'Entity',
         };
 
-        onCreateCopyEntityNode(modelEntity, span);
+        onCreateCopyEntityNode(modelEntity, div);
 
-        expect(span.style.display).toEqual('block');
-        expect(span.classList.contains('_EBlock')).toBeTrue();
+        expect(span.style.display).toEqual('inline-block');
+        expect(div.classList.contains('_EBlock')).toBeTrue();
     });
 
     it('Dont handle, no 100% width', () => {
@@ -60,20 +63,27 @@ describe('onCreateCopyEntityNode', () => {
 
 describe('pasteBlockEntityParser', () => {
     it('handle', () => {
+        const div = document.createElement('div');
         const span = document.createElement('span');
-        span.classList.add('_EBlock');
+        div.appendChild(span);
+        div.classList.add('_EBlock');
+        span.classList.add('_Entity');
+        spyOn(entityUtilsFile, 'addDelimiters');
 
-        pasteBlockEntityParser({}, span, <any>{}, {});
+        pasteBlockEntityParser({}, div, <any>{}, {});
 
         expect(span.style.width).toEqual('100%');
         expect(span.style.display).toEqual('inline-block');
-        expect(span.classList.contains('_EBlock')).toBeFalse();
+        expect(div.classList.contains('_EBlock')).toBeFalse();
+        expect(entityUtilsFile.addDelimiters).toHaveBeenCalled();
     });
 
     it('Dont handle', () => {
+        const div = document.createElement('div');
         const span = document.createElement('span');
+        div.appendChild(span);
 
-        pasteBlockEntityParser({}, span, <any>{}, {});
+        pasteBlockEntityParser({}, div, <any>{}, {});
 
         expect(span.style.width).not.toEqual('100%');
         expect(span.style.display).not.toEqual('inline-block');

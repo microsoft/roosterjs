@@ -24,7 +24,6 @@ describe('insertEntity', () => {
     let insertEntityModelSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
     let normalizeContentModelSpy: jasmine.Spy;
-    let addDelimiterSpy: jasmine.Spy;
 
     const type = 'Entity';
     const apiName = 'insertEntity';
@@ -122,7 +121,7 @@ describe('insertEntity', () => {
 
         expect(createElementSpy).toHaveBeenCalledWith('span');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
-        expect(appendChildSpy).not.toHaveBeenCalled();
+        expect(appendChildSpy).toHaveBeenCalledTimes(1);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
             ChangeSource.InsertEntity
@@ -136,7 +135,7 @@ describe('insertEntity', () => {
                 entityFormat: {
                     id: undefined,
                     entityType: type,
-                    isReadonly: true,
+                    isReadonly: false,
                 },
                 wrapper: wrapper,
             },
@@ -155,7 +154,7 @@ describe('insertEntity', () => {
             entityFormat: {
                 id: undefined,
                 entityType: type,
-                isReadonly: true,
+                isReadonly: false,
             },
             wrapper: wrapper,
         });
@@ -171,7 +170,7 @@ describe('insertEntity', () => {
             wrapperDisplay: 'none',
         });
 
-        expect(createElementSpy).toHaveBeenCalledWith('span');
+        expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'none');
         expect(appendChildSpy).toHaveBeenCalledWith(contentNode);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
@@ -188,7 +187,7 @@ describe('insertEntity', () => {
                 entityFormat: {
                     id: undefined,
                     entityType: type,
-                    isReadonly: true,
+                    isReadonly: false,
                 },
                 wrapper: wrapper,
             },
@@ -207,7 +206,7 @@ describe('insertEntity', () => {
             entityFormat: {
                 id: undefined,
                 entityType: type,
-                isReadonly: true,
+                isReadonly: false,
             },
             wrapper: wrapper,
         });

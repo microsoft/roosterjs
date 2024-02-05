@@ -2,6 +2,7 @@ import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import type {
     ContentModelBlockGroup,
+    ContentModelFormatter,
     ContentModelParagraph,
     IStandaloneEditor,
     KeyDownEvent,
@@ -26,18 +27,9 @@ const INLINE_ENTITY_SELECTOR = 'span.' + ENTITY_INFO_NAME;
 /**
  * @internal exported only for unit test
  */
-export function preventTypeInDelimiter(
-    node: HTMLElement,
-    editor: IStandaloneEditor,
-    handleAsEnterKey: boolean
-) {
-    const isNodeEntity = isEntityElement(node);
-    const isAfter = isNodeEntity ? undefined : node.classList.contains(DELIMITER_AFTER);
-    const entitySibling = isNodeEntity
-        ? node
-        : isAfter
-        ? node.previousElementSibling
-        : node.nextElementSibling;
+export function preventTypeInDelimiter(node: HTMLElement, editor: IStandaloneEditor) {
+    const isAfter = node.classList.contains(DELIMITER_AFTER);
+    const entitySibling = isAfter ? node.previousElementSibling : node.nextElementSibling;
     if (entitySibling && isEntityElement(entitySibling)) {
         removeInvalidDelimiters(
             [entitySibling.previousElementSibling, entitySibling.nextElementSibling].filter(
@@ -45,50 +37,15 @@ export function preventTypeInDelimiter(
             ) as HTMLElement[]
         );
         editor.formatContentModel(model => {
-            let blockWithSelection: ContentModelParagraph | undefined;
-            let parent: ContentModelBlockGroup | undefined;
-            iterateSelections(model, (path, _, block, _segments) => {
+            iterateSelections(model, (_path, _tableContext, block, _segments) => {
                 if (block?.blockType == 'Paragraph') {
-                    if (block.isImplicit) {
-                        delete block.isImplicit;
-                    }
-
                     block.segments.forEach(segment => {
                         if (segment.segmentType == 'Text') {
                             segment.text = segment.text.replace(ZERO_WIDTH_SPACE, '');
                         }
                     });
-
-                    if (handleAsEnterKey) {
-                        blockWithSelection = block;
-                        parent = path[path.length - 1];
-                    }
                 }
             });
-
-            if (
-                blockWithSelection &&
-                !blockWithSelection.segments.some(w => w.segmentType == 'Entity') &&
-                parent &&
-                isAfter == false
-            ) {
-                const paragraph = createParagraph(
-                    false,
-                    blockWithSelection.format,
-                    blockWithSelection.segmentFormat
-                );
-                const indexBlock = parent.blocks.indexOf(blockWithSelection);
-                const selectionMarker = blockWithSelection.segments.find(
-                    w => w.segmentType == 'SelectionMarker'
-                );
-                if (selectionMarker) {
-                    const index = blockWithSelection.segments.indexOf(selectionMarker);
-                    blockWithSelection.segments.splice(index, 1);
-                    paragraph.segments.push(selectionMarker);
-                }
-                paragraph.segments.push(createBr());
-                parent.blocks.splice(indexBlock + 1, 0, paragraph);
-            }
             return true;
         });
     }
@@ -183,82 +140,104 @@ export function handleDelimiterContentChangedEvent(editor: IStandaloneEditor) {
  */
 export function handleDelimiterKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
     const selection = editor.getDOMSelection();
+
     const { rawEvent } = event;
     if (!selection || selection.type != 'range') {
         return;
     }
     const isEnter = rawEvent.key === 'Enter';
-    if (
-        selection.range.collapsed &&
-        (isCharacterValue(rawEvent) ||
-            isEnter ||
-            rawEvent.key === 'ArrowRight' ||
-            rawEvent.key === 'ArrowLeft')
-    ) {
+    if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
         const node = getFocusedElement(selection);
-        if (node && (isEntityDelimiter(node) || isEntityElement(node))) {
-            switch (rawEvent.key) {
-                case 'ArrowRight':
-                case 'ArrowLeft':
-                    handleArrowEvent(editor, event, node);
-                    break;
-                case 'Enter':
-                default:
-                    if (
-                        isEnter &&
-                        (node.classList.contains(DELIMITER_AFTER) ||
-                            node.classList.contains(DELIMITER_BEFORE))
-                    ) {
-                        removeDelimiterAttr(node);
-                    }
+        if (node && isEntityDelimiter(node)) {
+            const wrappedInEntity = node.closest('div.' + ENTITY_INFO_NAME);
+            if (wrappedInEntity) {
+                const isAfter = node.classList.contains(DELIMITER_AFTER);
 
+                if (isAfter) {
+                    selection.range.setStartAfter(wrappedInEntity);
+                } else {
+                    selection.range.setStartBefore(wrappedInEntity);
+                }
+                selection.range.collapse(true /* toStart */);
+
+                if (isEnter) {
+                    event.rawEvent.preventDefault();
+                }
+
+                editor.formatContentModel(handleKeyDownInBlockDelimiter, {
+                    selectionOverride: {
+                        type: 'range',
+                        isReverted: false,
+                        range: selection.range,
+                    },
+                });
+            } else {
+                if (isEnter) {
+                    event.rawEvent.preventDefault();
+                    editor.formatContentModel(handleEnterInlineEntity);
+                } else {
                     editor
                         .getDocument()
                         .defaultView?.requestAnimationFrame(() =>
-                            preventTypeInDelimiter(node, editor, isEnter)
+                            preventTypeInDelimiter(node, editor)
                         );
-                    break;
+                }
             }
         }
     }
 }
-function handleArrowEvent(editor: IStandaloneEditor, event: KeyDownEvent, element: HTMLElement) {
-    const isRTL = editor.getDocument().defaultView?.getComputedStyle(element).direction === 'rtl';
-    const shouldCheckBefore = isRTL == (event.rawEvent.key === 'ArrowLeft');
 
-    if (
-        shouldCheckBefore
-            ? !element.classList.contains(DELIMITER_BEFORE)
-            : !element.classList.contains(DELIMITER_AFTER)
-    ) {
-        return;
-    }
-    let isChanged = false;
-    editor.formatContentModel(model => {
-        iterateSelections(model, (_path, _tableContext, block) => {
-            if (block?.blockType == 'Paragraph') {
-                const selectionMarker = block.segments.find(
-                    s => s.segmentType == 'SelectionMarker'
-                );
-                if (selectionMarker) {
-                    const index = block.segments.indexOf(selectionMarker);
-                    const indexToInsert = shouldCheckBefore ? index + 1 : index - 1;
-                    if (indexToInsert > block.segments.length - 1 || indexToInsert < 0) {
-                        return;
-                    }
-                    block.segments.splice(index, 1);
-                    block.segments.splice(
-                        shouldCheckBefore ? index + 1 : index - 1,
-                        0,
-                        selectionMarker
-                    );
-                    isChanged = true;
-                }
-            }
-        });
-        return isChanged;
+/**
+ * @internal Exported Only for unit test
+ * @returns
+ */
+export const handleKeyDownInBlockDelimiter: ContentModelFormatter = model => {
+    iterateSelections(model, (_path, _tableContext, block) => {
+        if (block?.blockType == 'Paragraph') {
+            delete block.isImplicit;
+            block.segments.unshift(createBr());
+        }
     });
-    if (isChanged) {
-        event.rawEvent.preventDefault();
+    return true;
+};
+
+/**
+ * @internal Exported Only for unit test
+ * @returns
+ */
+export const handleEnterInlineEntity: ContentModelFormatter = model => {
+    let selectionBlock: ContentModelParagraph | undefined;
+    let selectionBlockParent: ContentModelBlockGroup | undefined;
+
+    iterateSelections(model, (path, _tableContext, block) => {
+        if (block?.blockType == 'Paragraph') {
+            selectionBlock = block;
+            selectionBlockParent = path[path.length - 1];
+        }
+    });
+
+    if (selectionBlock && selectionBlockParent) {
+        const selectionMarker = selectionBlock.segments.find(
+            segment => segment.segmentType == 'SelectionMarker'
+        );
+        if (selectionMarker) {
+            const markerIndex = selectionBlock.segments.indexOf(selectionMarker);
+            const segmentsAfterMarker = selectionBlock.segments.splice(markerIndex);
+
+            const newPara = createParagraph(
+                false,
+                selectionBlock.format,
+                selectionBlock.segmentFormat,
+                selectionBlock.decorator
+            );
+            newPara.segments.push(...segmentsAfterMarker);
+
+            const selectionBlockIndex = selectionBlockParent.blocks.indexOf(selectionBlock);
+            if (selectionBlockIndex >= 0) {
+                selectionBlockParent.blocks.splice(selectionBlockIndex + 1, 0, newPara);
+            }
+        }
     }
-}
+
+    return true;
+};

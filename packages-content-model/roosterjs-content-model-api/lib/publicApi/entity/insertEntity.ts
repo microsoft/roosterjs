@@ -64,10 +64,10 @@ export default function insertEntity(
     wrapper.style.setProperty('display', display || null);
     const isReadonly = !isBlock;
 
-    if (isBlock) {
+    if (isBlock && display == undefined) {
         const wrapper2 = editor.getDocument().createElement(InlineEntityTag);
-        wrapper2.style.width = '100%';
-        wrapper2.style.display = 'inline-block';
+        wrapper2.style.setProperty('width', '100%');
+        wrapper2.style.setProperty('display', 'inline-block');
         wrapper2.contentEditable = 'false';
         wrapper2.classList.add('_Entity');
         wrapper.appendChild(wrapper2);
