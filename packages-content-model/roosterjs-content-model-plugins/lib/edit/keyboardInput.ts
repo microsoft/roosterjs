@@ -1,4 +1,5 @@
 import { deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
+import { handleShiftTab } from './handleShiftTab';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { DOMSelection, IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -7,13 +8,14 @@ import type { DOMSelection, IStandaloneEditor } from 'roosterjs-content-model-ty
  */
 export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
+    const isShiftTab = shouldHandleShiftTab(rawEvent, selection);
 
-    if (shouldInputWithContentModel(selection, rawEvent, editor.isInIME())) {
+    if (shouldInputWithContentModel(selection, rawEvent, editor.isInIME()) || isShiftTab) {
         editor.takeSnapshot();
 
         editor.formatContentModel(
             (model, context) => {
-                const result = deleteSelection(model, [], context);
+                const result = deleteSelection(model, isShiftTab ? [handleShiftTab] : [], context);
 
                 // We have deleted selection then we will let browser to handle the input.
                 // With this combined operation, we don't wan to mass up the cached model so clear it
@@ -61,4 +63,13 @@ function shouldInputWithContentModel(
     } else {
         return false;
     }
+}
+
+function shouldHandleShiftTab(rawEvent: KeyboardEvent, selection: DOMSelection | null) {
+    return (
+        rawEvent.key == 'Tab' &&
+        selection &&
+        selection?.type == 'range' &&
+        selection.range.collapsed
+    );
 }

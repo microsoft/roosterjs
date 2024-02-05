@@ -9,7 +9,7 @@ export default function getDefaultContentEditFeatureSettings(): ContentEditFeatu
             settings[key] = !allFeatures[key].defaultDisabled;
             return settings;
         }, <ContentEditFeatureSettings>{}),
-        indentWhenAltShiftRight: true,
-        outdentWhenAltShiftLeft: true,
+        indentWhenAltShiftRight: false,
+        outdentWhenAltShiftLeft: false,
     };
 }
