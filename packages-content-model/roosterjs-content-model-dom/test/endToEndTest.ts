@@ -2066,6 +2066,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                     },
                 ],
             },
+            'test',
             '<ol start="1"><ol start="1" style="list-style-type: &quot;1) &quot;;"><li>test</li></ol></ol>'
         );
     });
