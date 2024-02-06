@@ -1,5 +1,5 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import { FormatWithContentModelContext, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { FormatContentModelContext, IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
@@ -39,7 +39,7 @@ describe('handleKeyboardEventResult', () => {
         const mockedModel = 'MODEL' as any;
         const which = 'WHICH' as any;
         (<any>mockedEvent).which = which;
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
@@ -66,7 +66,7 @@ describe('handleKeyboardEventResult', () => {
 
     it('notDeleted', () => {
         const mockedModel = 'MODEL' as any;
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
@@ -91,7 +91,7 @@ describe('handleKeyboardEventResult', () => {
 
     it('range', () => {
         const mockedModel = 'MODEL' as any;
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             newEntities: [],
             deletedEntities: [],
             newImages: [],
@@ -118,7 +118,7 @@ describe('handleKeyboardEventResult', () => {
 
     it('nothingToDelete', () => {
         const mockedModel = 'MODEL' as any;
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             newEntities: [],
             deletedEntities: [],
             newImages: [],

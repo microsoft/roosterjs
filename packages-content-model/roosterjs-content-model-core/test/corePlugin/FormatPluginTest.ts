@@ -1,5 +1,5 @@
 import * as applyPendingFormat from '../../lib/corePlugin/utils/applyPendingFormat';
-import { createContentModelFormatPlugin } from '../../lib/corePlugin/ContentModelFormatPlugin';
+import { createFormatPlugin } from '../../lib/corePlugin/FormatPlugin';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     addSegment,
@@ -7,7 +7,7 @@ import {
     createSelectionMarker,
 } from 'roosterjs-content-model-dom';
 
-describe('ContentModelFormatPlugin', () => {
+describe('FormatPlugin', () => {
     const mockedFormat = {
         fontSize: '10px',
     };
@@ -21,7 +21,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
         } as any) as IStandaloneEditor;
-        const plugin = createContentModelFormatPlugin({});
+        const plugin = createFormatPlugin({});
         plugin.initialize(editor);
 
         plugin.onPluginEvent({
@@ -43,7 +43,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IStandaloneEditor;
-        const plugin = createContentModelFormatPlugin({});
+        const plugin = createFormatPlugin({});
         const model = createContentModelDocument();
 
         const state = plugin.getState();
@@ -80,7 +80,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IStandaloneEditor;
-        const plugin = createContentModelFormatPlugin({});
+        const plugin = createFormatPlugin({});
         plugin.initialize(editor);
 
         const state = plugin.getState();
@@ -114,7 +114,7 @@ describe('ContentModelFormatPlugin', () => {
             triggerEvent,
             getVisibleViewport,
         } as any) as IStandaloneEditor;
-        const plugin = createContentModelFormatPlugin({});
+        const plugin = createFormatPlugin({});
         const state = plugin.getState();
 
         state.pendingFormat = {
@@ -144,7 +144,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
         } as any) as IStandaloneEditor;
 
-        const plugin = createContentModelFormatPlugin({});
+        const plugin = createFormatPlugin({});
         plugin.initialize(editor);
 
         const state = plugin.getState();
@@ -176,7 +176,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
         } as any) as IStandaloneEditor;
 
-        const plugin = createContentModelFormatPlugin({});
+        const plugin = createFormatPlugin({});
         const state = plugin.getState();
 
         state.pendingFormat = {
@@ -204,7 +204,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             cacheContentModel: () => {},
         } as any) as IStandaloneEditor;
-        const plugin = createContentModelFormatPlugin({});
+        const plugin = createFormatPlugin({});
 
         const state = plugin.getState();
 
@@ -234,7 +234,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IStandaloneEditor;
-        const plugin = createContentModelFormatPlugin({});
+        const plugin = createFormatPlugin({});
         const state = plugin.getState();
 
         state.pendingFormat = {
@@ -258,7 +258,7 @@ describe('ContentModelFormatPlugin', () => {
     });
 });
 
-describe('ContentModelFormatPlugin for default format', () => {
+describe('FormatPlugin for default format', () => {
     let editor: IStandaloneEditor;
     let contentDiv: HTMLDivElement;
     let getDOMSelection: jasmine.Spy;
@@ -289,7 +289,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Collapsed range, text input, under editor directly', () => {
-        const plugin = createContentModelFormatPlugin({
+        const plugin = createFormatPlugin({
             defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
@@ -345,7 +345,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Expanded range, text input, under editor directly', () => {
-        const plugin = createContentModelFormatPlugin({
+        const plugin = createFormatPlugin({
             defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
@@ -398,7 +398,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Collapsed range, IME input, under editor directly', () => {
-        const plugin = createContentModelFormatPlugin({
+        const plugin = createFormatPlugin({
             defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
@@ -453,7 +453,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Collapsed range, other input, under editor directly', () => {
-        const plugin = createContentModelFormatPlugin({
+        const plugin = createFormatPlugin({
             defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
@@ -504,7 +504,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Collapsed range, normal input, not under editor directly, no style', () => {
-        const plugin = createContentModelFormatPlugin({
+        const plugin = createFormatPlugin({
             defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },
@@ -561,7 +561,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     });
 
     it('Collapsed range, text input, under editor directly, has pending format', () => {
-        const plugin = createContentModelFormatPlugin({
+        const plugin = createFormatPlugin({
             defaultSegmentFormat: {
                 fontFamily: 'Arial',
             },

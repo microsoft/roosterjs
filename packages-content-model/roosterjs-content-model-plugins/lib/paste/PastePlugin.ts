@@ -26,7 +26,7 @@ import type {
  * 4. Content copied from Power Point
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export class ContentModelPastePlugin implements EditorPlugin {
+export class PastePlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
 
     /**
@@ -40,7 +40,7 @@ export class ContentModelPastePlugin implements EditorPlugin {
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelPaste';
+        return 'Paste';
     }
 
     /**

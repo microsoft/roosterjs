@@ -23,7 +23,7 @@ export interface PendingFormat {
 /**
  * Plugin state for ContentModelFormatPlugin
  */
-export interface ContentModelFormatPluginState {
+export interface FormatPluginState {
     /**
      * Default format of this editor
      */

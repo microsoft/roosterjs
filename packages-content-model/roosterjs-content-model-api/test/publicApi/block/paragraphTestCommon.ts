@@ -2,7 +2,7 @@ import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 export function paragraphTestCommon(
@@ -15,7 +15,7 @@ export function paragraphTestCommon(
     let formatResult: boolean | undefined;
     const formatContentModel = jasmine
         .createSpy('formatContentModel')
-        .and.callFake((callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+        .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
             formatResult = callback(model, {
                 newEntities: [],
                 deletedEntities: [],
