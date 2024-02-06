@@ -7,7 +7,7 @@ import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagrap
 import { handleSegment as originalHandleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
 import {
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentHandler,
@@ -576,7 +576,7 @@ describe('handleParagraph', () => {
         };
         const onSegmentSpy = jasmine.createSpy('onSegment');
         const onParagraphSpy = jasmine.createSpy('onParagraph');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: onParagraphSpy,
             onSegment: onSegmentSpy,
             onTable: null!,
@@ -619,7 +619,7 @@ describe('handleParagraph', () => {
         };
         const onSegmentSpy = jasmine.createSpy('onSegment');
         const onParagraphSpy = jasmine.createSpy('onParagraph');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: onParagraphSpy,
             onSegment: onSegmentSpy,
             onTable: null!,

@@ -18,7 +18,7 @@ export class PasteCode extends SimplePluginCode {
 
 export class ContentModelPasteCode extends SimplePluginCode {
     constructor() {
-        super('ContentModelPastePlugin', 'roosterjsContentModel');
+        super('PastePlugin', 'roosterjsContentModel');
     }
 }
 

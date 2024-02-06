@@ -183,7 +183,7 @@ export {
 } from './context/ContentModelHandler';
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
-export { ContentModelDomIndexer } from './context/ContentModelDomIndexer';
+export { DomIndexer } from './context/DomIndexer';
 export { TextMutationObserver } from './context/TextMutationObserver';
 
 export { DefinitionType } from './metadata/DefinitionType';
@@ -227,11 +227,8 @@ export { EditorPlugin } from './editor/EditorPlugin';
 export { PluginWithState } from './editor/PluginWithState';
 export { ContextMenuProvider } from './editor/ContextMenuProvider';
 
-export { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
-export {
-    ContentModelFormatPluginState,
-    PendingFormat,
-} from './pluginState/ContentModelFormatPluginState';
+export { CachePluginState } from './pluginState/CachePluginState';
+export { FormatPluginState, PendingFormat } from './pluginState/FormatPluginState';
 export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
@@ -252,12 +249,12 @@ export { EditorEnvironment } from './parameter/EditorEnvironment';
 export {
     EntityState,
     DeletedEntity,
-    FormatWithContentModelContext,
-} from './parameter/FormatWithContentModelContext';
+    FormatContentModelContext,
+} from './parameter/FormatContentModelContext';
 export {
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
     ContentModelFormatter,
-} from './parameter/FormatWithContentModelOptions';
+} from './parameter/FormatContentModelOptions';
 export { ContentModelFormatState } from './parameter/ContentModelFormatState';
 export { ImageFormatState } from './parameter/ImageFormatState';
 export { Border } from './parameter/Border';
