@@ -1990,4 +1990,52 @@ describe('End to end test for DOM => Model', () => {
             '<table><tbody><tr><td style="width: 150px;">a</td><td style="width: 150px;">b</td><td style="width: 120px;">c</td></tr></tbody></table>'
         );
     });
+
+    it('list with list style', () => {
+        runTest(
+            '<ol><ol style="list-style-type: &quot;1) &quot;;"><li>test</li></ol></ol>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                isImplicit: true,
+                                format: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {},
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: { listStyleType: '"1) "' },
+                                dataset: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            '<ol start="1"><ol start="1" style="list-style-type: &quot;1) &quot;;"><li>test</li></ol></ol>'
+        );
+    });
 });
