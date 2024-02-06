@@ -1,7 +1,7 @@
 import type { DarkColorHandler } from './DarkColorHandler';
-import type { ContentModelDomIndexer } from './ContentModelDomIndexer';
+import type { DomIndexer } from './DomIndexer';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import type { PendingFormat } from '../pluginState/ContentModelFormatPluginState';
+import type { PendingFormat } from '../pluginState/FormatPluginState';
 
 /**
  * An editor context interface used by ContentModel PAI
@@ -51,5 +51,5 @@ export interface EditorContext {
     /**
      * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
      */
-    domIndexer?: ContentModelDomIndexer;
+    domIndexer?: DomIndexer;
 }

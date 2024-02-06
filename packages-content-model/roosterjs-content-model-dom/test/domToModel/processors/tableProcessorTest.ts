@@ -8,7 +8,7 @@ import { createTableCell } from '../../../lib/modelApi/creators/createTableCell'
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 import {
     ContentModelBlock,
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelTable,
     DomToModelContext,
     ElementProcessor,
@@ -285,7 +285,7 @@ describe('tableProcessor', () => {
         const doc = createContentModelDocument();
         const div = document.createElement('div');
         const onTableSpy = jasmine.createSpy('onTable');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: null!,
             onTable: onTableSpy,
