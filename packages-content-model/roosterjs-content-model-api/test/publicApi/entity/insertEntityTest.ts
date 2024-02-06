@@ -119,9 +119,10 @@ describe('insertEntity', () => {
     it('block inline entity to root', () => {
         const entity = insertEntity(editor, type, true, 'root');
 
-        expect(createElementSpy).toHaveBeenCalledWith('span');
+        expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
-        expect(appendChildSpy).toHaveBeenCalledTimes(1);
+        expect(setPropertySpy).toHaveBeenCalledWith('width', '100%');
+        expect(appendChildSpy).toHaveBeenCalledTimes(0);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
             ChangeSource.InsertEntity
@@ -135,7 +136,7 @@ describe('insertEntity', () => {
                 entityFormat: {
                     id: undefined,
                     entityType: type,
-                    isReadonly: false,
+                    isReadonly: true,
                 },
                 wrapper: wrapper,
             },
@@ -154,7 +155,7 @@ describe('insertEntity', () => {
             entityFormat: {
                 id: undefined,
                 entityType: type,
-                isReadonly: false,
+                isReadonly: true,
             },
             wrapper: wrapper,
         });
@@ -172,6 +173,8 @@ describe('insertEntity', () => {
 
         expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'none');
+        expect(setPropertySpy).not.toHaveBeenCalledWith('display', 'inline-block');
+        expect(setPropertySpy).not.toHaveBeenCalledWith('width', '100%');
         expect(appendChildSpy).toHaveBeenCalledWith(contentNode);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
@@ -187,7 +190,7 @@ describe('insertEntity', () => {
                 entityFormat: {
                     id: undefined,
                     entityType: type,
-                    isReadonly: false,
+                    isReadonly: true,
                 },
                 wrapper: wrapper,
             },
@@ -206,7 +209,7 @@ describe('insertEntity', () => {
             entityFormat: {
                 id: undefined,
                 entityType: type,
-                isReadonly: false,
+                isReadonly: true,
             },
             wrapper: wrapper,
         });

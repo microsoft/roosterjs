@@ -25,6 +25,7 @@ describe('EntityDelimiterUtils |', () => {
         mockedEditor = (<any>{
             getDOMHelper: () => ({
                 queryElements: queryElementsSpy,
+                isNodeInEditor: () => true,
             }),
         }) as Partial<IStandaloneEditor>;
     });
@@ -68,7 +69,7 @@ describe('EntityDelimiterUtils |', () => {
             handleDelimiterContentChangedEvent(mockedEditor);
 
             expect(queryElementsSpy).toHaveBeenCalledTimes(2);
-            expect(div.childElementCount).toEqual(0);
+            expect(div.firstElementChild?.childElementCount).toEqual(0);
         });
 
         it('add delimiters', () => {
@@ -105,7 +106,7 @@ describe('EntityDelimiterUtils |', () => {
             handleDelimiterContentChangedEvent(mockedEditor);
 
             expect(queryElementsSpy).toHaveBeenCalledTimes(2);
-            expect(div.childElementCount).toEqual(3);
+            expect(entityWrapper.parentElement!.childElementCount).toEqual(3);
         });
 
         it('Remove delimiter info', () => {
@@ -147,7 +148,7 @@ describe('EntityDelimiterUtils |', () => {
             handleDelimiterContentChangedEvent(mockedEditor);
 
             expect(queryElementsSpy).toHaveBeenCalledTimes(2);
-            expect(div.childElementCount).toEqual(3);
+            expect(entityWrapper.parentElement!.childElementCount).toEqual(4);
             expect(invalidDelimiter && entityUtils.isEntityDelimiter(invalidDelimiter)).toBeFalsy();
         });
     });
@@ -159,7 +160,7 @@ describe('EntityDelimiterUtils |', () => {
             mockedSelection = undefined!;
             rafSpy = jasmine.createSpy('requestAnimationFrame');
             formatContentModelSpy = jasmine.createSpy('formatContentModel');
-            mockedEditor = {
+            mockedEditor = (<any>{
                 getDOMSelection: () => mockedSelection,
                 getDocument: () =>
                     <any>{
@@ -168,7 +169,11 @@ describe('EntityDelimiterUtils |', () => {
                         },
                     },
                 formatContentModel: formatContentModelSpy,
-            } as Partial<IStandaloneEditor>;
+                getDOMHelper: () => ({
+                    queryElements: queryElementsSpy,
+                    isNodeInEditor: () => true,
+                }),
+            }) as Partial<IStandaloneEditor>;
             spyOn(DelimiterFile, 'preventTypeInDelimiter').and.callThrough();
         });
 
@@ -298,7 +303,7 @@ describe('EntityDelimiterUtils |', () => {
             el.appendChild(text);
             parent.appendChild(el);
             el.classList.add('entityDelimiterBefore');
-            div.classList.add('_Entity');
+            div.classList.add('blockEntityContainer');
             div.appendChild(parent);
 
             const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
@@ -353,7 +358,7 @@ describe('EntityDelimiterUtils |', () => {
             el.appendChild(text);
             parent.appendChild(el);
             el.classList.add('entityDelimiterAfter');
-            div.classList.add('_Entity');
+            div.classList.add('blockEntityContainer');
             div.appendChild(parent);
 
             const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
@@ -408,7 +413,7 @@ describe('EntityDelimiterUtils |', () => {
             el.appendChild(text);
             parent.appendChild(el);
             el.classList.add('entityDelimiterBefore');
-            div.classList.add('_Entity');
+            div.classList.add('blockEntityContainer');
             div.appendChild(parent);
 
             const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
@@ -463,7 +468,7 @@ describe('EntityDelimiterUtils |', () => {
             el.appendChild(text);
             parent.appendChild(el);
             el.classList.add('entityDelimiterAfter');
-            div.classList.add('_Entity');
+            div.classList.add('blockEntityContainer');
             div.appendChild(parent);
 
             const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
@@ -529,7 +534,7 @@ describe('preventTypeInDelimiter', () => {
 
     it('handle delimiter after entity', () => {
         const entityWrapper = document.createElement('span');
-        entityWrapper.className = '_Entity';
+        entityWrapper.className = 'blockEntityContainer';
 
         mockedModel = {
             blockGroupType: 'Document',
@@ -607,7 +612,7 @@ describe('preventTypeInDelimiter', () => {
 
     it('handle delimiter before entity', () => {
         const entityWrapper = document.createElement('span');
-        entityWrapper.className = '_Entity';
+        entityWrapper.className = 'blockEntityContainer';
 
         mockedModel = {
             blockGroupType: 'Document',

@@ -149,14 +149,17 @@ export function handleDelimiterKeyDownEvent(editor: IStandaloneEditor, event: Ke
     if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
         const node = getFocusedElement(selection);
         if (node && isEntityDelimiter(node)) {
-            const wrappedInEntity = node.closest('div.' + ENTITY_INFO_NAME);
-            if (wrappedInEntity) {
+            const blockEntityContainer = node.closest('.blockEntityContainer');
+            if (
+                blockEntityContainer &&
+                editor.getDOMHelper().isNodeInEditor(blockEntityContainer)
+            ) {
                 const isAfter = node.classList.contains(DELIMITER_AFTER);
 
                 if (isAfter) {
-                    selection.range.setStartAfter(wrappedInEntity);
+                    selection.range.setStartAfter(blockEntityContainer);
                 } else {
-                    selection.range.setStartBefore(wrappedInEntity);
+                    selection.range.setStartBefore(blockEntityContainer);
                 }
                 selection.range.collapse(true /* toStart */);
 

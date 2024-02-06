@@ -1,5 +1,5 @@
-import { addDelimiters, createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { ChangeSource } from 'roosterjs-content-model-core';
+import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
 import type {
     ContentModelEntity,
@@ -62,27 +62,17 @@ export default function insertEntity(
     const wrapper = document.createElement(isBlock ? BlockEntityTag : InlineEntityTag);
     const display = wrapperDisplay ?? (isBlock ? undefined : 'inline-block');
     wrapper.style.setProperty('display', display || null);
-    const isReadonly = !isBlock;
 
-    if (isBlock && display == undefined) {
-        const wrapper2 = editor.getDocument().createElement(InlineEntityTag);
-        wrapper2.style.setProperty('width', '100%');
-        wrapper2.style.setProperty('display', 'inline-block');
-        wrapper2.contentEditable = 'false';
-        wrapper2.classList.add('_Entity');
-        wrapper.appendChild(wrapper2);
-        wrapper.contentEditable = 'true';
+    if (display == undefined && isBlock) {
+        wrapper.style.setProperty('width', '100%');
+        wrapper.style.setProperty('display', 'inline-block');
+    }
 
-        addDelimiters(document, wrapper2);
-
-        if (contentNode) {
-            wrapper2.appendChild(contentNode);
-        }
-    } else if (contentNode) {
+    if (contentNode) {
         wrapper.appendChild(contentNode);
     }
 
-    const entityModel = createEntity(wrapper, isReadonly, undefined /*format*/, type);
+    const entityModel = createEntity(wrapper, true /* isReadonly */, undefined /*format*/, type);
 
     editor.formatContentModel(
         (model, context) => {

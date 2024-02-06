@@ -14,7 +14,7 @@ import type {
  * @internal
  */
 export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
-    _,
+    doc,
     parent,
     entityModel,
     context,
@@ -24,7 +24,21 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
 
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
-    refNode = reuseCachedElement(parent, wrapper, refNode);
+    const isCursorAroundEntity =
+        wrapper.style.display == 'inline-block' && wrapper.style.width == '100%';
+    const isContained = wrapper.parentElement?.classList.contains('blockEntityContainer');
+    const elementToReuse = isContained && isCursorAroundEntity ? wrapper.parentElement! : wrapper;
+
+    refNode = reuseCachedElement(parent, elementToReuse, refNode);
+
+    if (isCursorAroundEntity) {
+        if (!isContained) {
+            const element = wrap(doc, wrapper, 'div');
+            element.classList.add('blockEntityContainer');
+        }
+        addDelimiterForEntity(doc, wrapper, context);
+    }
+
     context.onNodeCreated?.(entityModel, wrapper);
 
     return refNode;
