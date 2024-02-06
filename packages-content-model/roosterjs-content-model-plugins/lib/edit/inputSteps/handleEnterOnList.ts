@@ -34,22 +34,13 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
             const listParent = path[index + 1];
             if (isEmptyListItem(listItem)) {
                 listItem.levels.pop();
-            } else if (!isSelectionMarker(listItem)) {
+            } else {
                 createNewListItem(context, listItem, listParent);
             }
             context.formatContext?.rawEvent?.preventDefault();
             context.deleteResult = 'range';
         }
     }
-};
-
-const isSelectionMarker = (listItem: ContentModelListItem) => {
-    return (
-        listItem.blocks.length === 1 &&
-        listItem.blocks[0].blockType === 'Paragraph' &&
-        listItem.blocks[0].segments.length === 1 &&
-        listItem.blocks[0].segments[0].segmentType === 'SelectionMarker'
-    );
 };
 
 const isEmptyListItem = (listItem: ContentModelListItem) => {
