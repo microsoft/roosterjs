@@ -1,5 +1,9 @@
 import { createListLevel, parseValueWithUnit } from 'roosterjs-content-model-dom';
-import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-core';
+import {
+    getOperationalBlocks,
+    isBlockGroupOfType,
+    updateListMetadata,
+} from 'roosterjs-content-model-core';
 import type {
     ContentModelDocument,
     ContentModelListItem,
@@ -31,6 +35,12 @@ export function setModelIndentation(
                     lastLevel?.listType || 'UL',
                     lastLevel?.format
                 );
+
+                updateListMetadata(newLevel, metadata => {
+                    metadata = metadata || {};
+                    metadata.applyListStyleFromLevel = true;
+                    return metadata;
+                });
 
                 // New level is totally new, no need to have these attributes for now
                 delete newLevel.format.startNumberOverride;
