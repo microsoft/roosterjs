@@ -1,9 +1,11 @@
 import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core';
 import {
+    createBr,
     createListItem,
     createListLevel,
     createParagraph,
     normalizeParagraph,
+    setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockGroup,
@@ -40,8 +42,9 @@ const isEmptyListItem = (listItem: ContentModelListItem) => {
     return (
         listItem.blocks.length === 1 &&
         listItem.blocks[0].blockType === 'Paragraph' &&
-        listItem.blocks[0].segments.length === 1 &&
-        listItem.blocks[0].segments[0].segmentType === 'SelectionMarker'
+        listItem.blocks[0].segments.length === 2 &&
+        listItem.blocks[0].segments[0].segmentType === 'SelectionMarker' &&
+        listItem.blocks[0].segments[1].segmentType === 'Br'
     );
 };
 
@@ -79,11 +82,18 @@ const createNewParagraph = (insertPoint: InsertPoint) => {
         paragraph.format,
         paragraph.segmentFormat
     );
+
     const markerIndex = paragraph.segments.indexOf(marker);
     const segments = paragraph.segments.splice(
         markerIndex,
         paragraph.segments.length - markerIndex
     );
+
+    setParagraphNotImplicit(paragraph);
+
+    if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
+        paragraph.segments.push(createBr(marker.format));
+    }
 
     newParagraph.segments.push(...segments);
 

@@ -54,7 +54,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -89,9 +88,12 @@ describe('handleEnterOnList', () => {
                                     isSelected: true,
                                     format: {},
                                 },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -134,7 +136,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -170,7 +171,6 @@ describe('handleEnterOnList', () => {
                             format: {},
                         },
                     ],
-                    isImplicit: false,
                     format: {},
                 },
             ],
@@ -207,7 +207,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -250,7 +249,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -292,8 +290,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -346,7 +342,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -390,7 +385,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -425,9 +419,12 @@ describe('handleEnterOnList', () => {
                                     isSelected: true,
                                     format: {},
                                 },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -476,7 +473,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -561,7 +557,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -649,7 +644,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -734,7 +728,6 @@ describe('handleEnterOnList', () => {
                                 },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
@@ -808,9 +801,12 @@ describe('handleEnterOnList', () => {
                                     isSelected: true,
                                     format: {},
                                 },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
                             ],
                             format: {},
-                            isImplicit: true,
                         },
                     ],
                     levels: [
