@@ -284,7 +284,11 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [
                         { listType: 'OL', dataset: {}, format: {} },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -346,7 +350,11 @@ describe('indent', () => {
                                 startNumberOverride: 2,
                             },
                         },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -384,7 +392,11 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [
                         { listType: 'OL', dataset: {}, format: {} },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -433,7 +445,11 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [
                         { listType: 'OL', dataset: {}, format: {} },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para1, para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -444,7 +460,11 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [
                         { listType: 'OL', dataset: {}, format: {} },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -492,7 +512,11 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [
                         { listType: 'OL', dataset: {}, format: {} },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para1, para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -503,7 +527,11 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [
                         { listType: 'UL', dataset: {}, format: {} },
-                        { listType: 'UL', dataset: {}, format: {} },
+                        {
+                            listType: 'UL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -551,7 +579,11 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [
                         { listType: 'OL', dataset: {}, format: {} },
-                        { listType: 'OL', dataset: {}, format: {} },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para1],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -562,7 +594,11 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [
                         { listType: 'UL', dataset: {}, format: {} },
-                        { listType: 'UL', dataset: {}, format: {} },
+                        {
+                            listType: 'UL',
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            format: {},
+                        },
                     ],
                     blocks: [para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
