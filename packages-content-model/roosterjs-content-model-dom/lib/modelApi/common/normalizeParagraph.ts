@@ -6,6 +6,7 @@ import { normalizeAllSegments } from './normalizeSegment';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
 
 /**
+ * @param paragraph The paragraph to normalize
  * Normalize a paragraph. If it is empty, add a BR segment to make sure it can insert content
  */
 export function normalizeParagraph(paragraph: ContentModelParagraph) {

@@ -80,19 +80,26 @@ const getPreviousListIndex = (
 };
 
 const getPreviousListLevel = (model: ContentModelDocument, paragraph: ContentModelParagraph) => {
-    const blocks = getOperationalBlocks(model, ['ListItem'], ['TableCell'])[0];
+    const blocks = getOperationalBlocks<ContentModelListItem>(
+        model,
+        ['ListItem'],
+        ['TableCell']
+    )[0];
     let listItem: ContentModelListItem | undefined = undefined;
-    const listBlockIndex = blocks.parent.blocks.indexOf(paragraph);
+    if (blocks) {
+        const listBlockIndex = blocks.parent.blocks.indexOf(paragraph);
 
-    if (listBlockIndex > -1) {
-        for (let i = listBlockIndex - 1; i > -1; i--) {
-            const item = blocks.parent.blocks[i];
-            if (isBlockGroupOfType<ContentModelListItem>(item, 'ListItem')) {
-                listItem = item;
-                break;
+        if (listBlockIndex > -1) {
+            for (let i = listBlockIndex - 1; i > -1; i--) {
+                const item = blocks.parent.blocks[i];
+                if (isBlockGroupOfType<ContentModelListItem>(item, 'ListItem')) {
+                    listItem = item;
+                    break;
+                }
             }
         }
     }
+
     return listItem;
 };
 

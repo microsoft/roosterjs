@@ -17,20 +17,16 @@ import type {
  * @internal
  */
 export const handleEnterOnList: DeleteSelectionStep = context => {
-    if (context.deleteResult == 'notDeleted') {
+    if (context.deleteResult == 'nothingToDelete' || context.deleteResult == 'notDeleted') {
         const { insertPoint } = context;
         const { path } = insertPoint;
-        const index = getClosestAncestorBlockGroupIndex(
-            path,
-            ['FormatContainer', 'ListItem'],
-            ['TableCell']
-        );
+        const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
         const listItem = path[index];
         if (listItem && listItem.blockGroupType === 'ListItem') {
             const listParent = path[index + 1];
             if (isEmptyListItem(listItem)) {
-                listItem.levels = [];
+                listItem.levels.pop();
             } else {
                 createNewListItem(context, listItem, listParent);
             }
@@ -69,9 +65,7 @@ const createNewListLevel = (listItem: ContentModelListItem) => {
             level.listType,
             {
                 ...level.format,
-                startNumberOverride: level.format.startNumberOverride
-                    ? level.format.startNumberOverride + 1
-                    : undefined,
+                startNumberOverride: undefined,
             },
             level.dataset
         );
@@ -80,7 +74,11 @@ const createNewListLevel = (listItem: ContentModelListItem) => {
 
 const createNewParagraph = (insertPoint: InsertPoint) => {
     const { paragraph, marker } = insertPoint;
-    const newParagraph = createParagraph(true, paragraph.format, paragraph.segmentFormat);
+    const newParagraph = createParagraph(
+        false /*isImplicit*/,
+        paragraph.format,
+        paragraph.segmentFormat
+    );
     const markerIndex = paragraph.segments.indexOf(marker);
     const segments = paragraph.segments.splice(
         markerIndex,
