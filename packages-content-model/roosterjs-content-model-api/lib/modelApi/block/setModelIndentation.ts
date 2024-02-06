@@ -42,10 +42,14 @@ export function setModelIndentation(
                 const { format } = level;
                 const newValue = calculateMarginValue(format, isIndent, length);
                 const isRtl = format.direction == 'rtl';
-                if (isRtl) {
-                    level.format.marginRight = newValue + 'px';
+                if (!isIndent && newValue == 0) {
+                    block.levels.pop();
                 } else {
-                    level.format.marginLeft = newValue + 'px';
+                    if (isRtl) {
+                        level.format.marginRight = newValue + 'px';
+                    } else {
+                        level.format.marginLeft = newValue + 'px';
+                    }
                 }
             } else {
                 if (isIndent) {
