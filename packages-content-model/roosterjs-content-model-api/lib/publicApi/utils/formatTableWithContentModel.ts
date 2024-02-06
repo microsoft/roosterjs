@@ -18,7 +18,11 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Invoke a callback to format the selected table using Content Model
+ * @param editor The editor object
+ * @param apiName Name of API this calling this function. This is mostly for logging.
+ * @param callback The callback to format the table. It will be called with current selected table. If no table is selected, it will not be called.
+ * @param selectionOverride Override the current selection. If we want to format a table even currently it is not selected, we can use this parameter to override current selection
  */
 export function formatTableWithContentModel(
     editor: IStandaloneEditor,
