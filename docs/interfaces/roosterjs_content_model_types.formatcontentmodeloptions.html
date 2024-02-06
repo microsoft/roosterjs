@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentModelCachePluginState | RoosterJs API Reference</title>
+	<title>FormatContentModelOptions | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.contentmodelcachepluginstate.html">ContentModelCachePluginState</a>
+					<a href="roosterjs_content_model_types.formatcontentmodeloptions.html">FormatContentModelOptions</a>
 				</li>
 			</ul>
-			<h1>Interface ContentModelCachePluginState</h1>
+			<h1>Interface FormatContentModelOptions</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Plugin state for ContentModelEditPlugin</p>
+						<p>Options for API formatWithContentModel</p>
 					</div>
 				</div>
 			</section>
@@ -77,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ContentModelCachePluginState</span>
+						<span class="target">FormatContentModelOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -88,10 +88,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelcachepluginstate.html#cachedmodel" class="tsd-kind-icon">cached<wbr>Model</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelcachepluginstate.html#cachedselection" class="tsd-kind-icon">cached<wbr>Selection</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelcachepluginstate.html#domindexer" class="tsd-kind-icon">dom<wbr>Indexer</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelcachepluginstate.html#textmutationobserver" class="tsd-kind-icon">text<wbr>Mutation<wbr>Observer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodeloptions.html#apiname" class="tsd-kind-icon">api<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodeloptions.html#changesource" class="tsd-kind-icon">change<wbr>Source</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodeloptions.html#getchangedata" class="tsd-kind-icon">get<wbr>Change<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodeloptions.html#onnodecreated" class="tsd-kind-icon">on<wbr>Node<wbr>Created</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodeloptions.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodeloptions.html#selectionoverride" class="tsd-kind-icon">selection<wbr>Override</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,67 +102,116 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cachedmodel" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cached<wbr>Model</h3>
-					<div class="tsd-signature tsd-kind-icon">cached<wbr>Model<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></div>
+					<a name="apiname" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> api<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">api<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelCachePluginState.ts#L18">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelCachePluginState.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts#L13">packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>When reuse Content Model is allowed, we cache the Content Model object here after created</p>
+							<p>Name of the format API</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cachedselection" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cached<wbr>Selection</h3>
-					<div class="tsd-signature tsd-kind-icon">cached<wbr>Selection<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a></div>
+					<a name="changesource" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> change<wbr>Source</h3>
+					<div class="tsd-signature tsd-kind-icon">change<wbr>Source<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelCachePluginState.ts#L13">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelCachePluginState.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts#L23">packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Cached selection</p>
+							<p>Change source used for triggering a ContentChanged event. @default ChangeSource.Format.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="domindexer" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> dom<wbr>Indexer</h3>
-					<div class="tsd-signature tsd-kind-icon">dom<wbr>Indexer<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.contentmodeldomindexer.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDomIndexer</a></div>
+					<a name="getchangedata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> get<wbr>Change<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">get<wbr>Change<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelCachePluginState.ts#L23">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelCachePluginState.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts#L35">packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts:35</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-interface">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<div class="tsd-comment tsd-typography">
+											<div class="lead">
+												<p>Optional callback to get an object used for change data in ContentChangedEvent</p>
+											</div>
+										</div>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="onnodecreated" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Node<wbr>Created</h3>
+					<div class="tsd-signature tsd-kind-icon">on<wbr>Node<wbr>Created<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#onnodecreated" class="tsd-signature-type" data-tsd-kind="Type alias">OnNodeCreated</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts#L30">packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An optional callback that will be called when a DOM node is created</p>
+						</div>
 						<dl class="tsd-comment-tags">
-							<dt>optional</dt>
-							<dd><p>Indexer for content model, to help build backward relationship from DOM node to Content Model</p>
+							<dt>param</dt>
+							<dd><p>The related Content Model element</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>The node created for this model element</p>
 							</dd>
 						</dl>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="textmutationobserver" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> text<wbr>Mutation<wbr>Observer</h3>
-					<div class="tsd-signature tsd-kind-icon">text<wbr>Mutation<wbr>Observer<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.textmutationobserver.html" class="tsd-signature-type" data-tsd-kind="Interface">TextMutationObserver</a></div>
+					<a name="rawevent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> raw<wbr>Event</h3>
+					<div class="tsd-signature tsd-kind-icon">raw<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Event</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelCachePluginState.ts#L28">packages-content-model/roosterjs-content-model-types/lib/pluginState/ContentModelCachePluginState.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts#L18">packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>optional</dt>
-							<dd><p>A wrapper of MutationObserver to help detect text changes in editor</p>
-							</dd>
-						</dl>
+						<div class="lead">
+							<p>Raw event object that triggers this call</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="selectionoverride" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> selection<wbr>Override</h3>
+					<div class="tsd-signature tsd-kind-icon">selection<wbr>Override<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts#L40">packages-content-model/roosterjs-content-model-types/lib/parameter/FormatContentModelOptions.ts:40</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>When specified, use this selection range to override current selection inside editor</p>
+						</div>
 					</div>
 				</section>
 			</section>
@@ -226,19 +277,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.contentmodelcachepluginstate.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Cache<wbr>Plugin<wbr>State</a>
+						<a href="roosterjs_content_model_types.formatcontentmodeloptions.html" class="tsd-kind-icon">Format<wbr>Content<wbr>Model<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelcachepluginstate.html#cachedmodel" class="tsd-kind-icon">cached<wbr>Model</a>
+								<a href="roosterjs_content_model_types.formatcontentmodeloptions.html#apiname" class="tsd-kind-icon">api<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelcachepluginstate.html#cachedselection" class="tsd-kind-icon">cached<wbr>Selection</a>
+								<a href="roosterjs_content_model_types.formatcontentmodeloptions.html#changesource" class="tsd-kind-icon">change<wbr>Source</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelcachepluginstate.html#domindexer" class="tsd-kind-icon">dom<wbr>Indexer</a>
+								<a href="roosterjs_content_model_types.formatcontentmodeloptions.html#getchangedata" class="tsd-kind-icon">get<wbr>Change<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelcachepluginstate.html#textmutationobserver" class="tsd-kind-icon">text<wbr>Mutation<wbr>Observer</a>
+								<a href="roosterjs_content_model_types.formatcontentmodeloptions.html#onnodecreated" class="tsd-kind-icon">on<wbr>Node<wbr>Created</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.formatcontentmodeloptions.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.formatcontentmodeloptions.html#selectionoverride" class="tsd-kind-icon">selection<wbr>Override</a>
 							</li>
 						</ul>
 					</li>

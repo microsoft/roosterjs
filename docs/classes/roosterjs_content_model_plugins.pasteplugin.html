@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentModelAutoFormatPlugin | RoosterJs API Reference</title>
+	<title>PastePlugin | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_plugins.html">roosterjs-content-model-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html">ContentModelAutoFormatPlugin</a>
+					<a href="roosterjs_content_model_plugins.pasteplugin.html">PastePlugin</a>
 				</li>
 			</ul>
-			<h1>Class ContentModelAutoFormatPlugin</h1>
+			<h1>Class PastePlugin</h1>
 		</div>
 	</div>
 </header>
@@ -69,8 +69,14 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Auto Format plugin handles auto formatting, such as transforming * characters into a bullet list.
-						It can be customized with options to enable or disable auto list features.</p>
+						<p>Paste plugin, handles BeforePaste event and reformat some special content, including:</p>
+						<ol>
+							<li>Content copied from Word</li>
+							<li>Content copied from Excel</li>
+							<li>Content copied from Word Online or OneNote Online</li>
+							<li>Content copied from Power Point
+							(This class is still under development, and may still be changed in the future with some breaking changes)</li>
+						</ol>
 					</div>
 				</div>
 			</section>
@@ -78,7 +84,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ContentModelAutoFormatPlugin</span>
+						<span class="target">PastePlugin</span>
 					</li>
 				</ul>
 			</section>
@@ -95,16 +101,16 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.pasteplugin.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.pasteplugin.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.pasteplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.pasteplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.pasteplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
@@ -116,29 +122,30 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Content<wbr>Model<wbr>Auto<wbr>Format<wbr>Plugin<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#autoformatoptions" class="tsd-signature-type" data-tsd-kind="Type alias">AutoFormatOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html" class="tsd-signature-type" data-tsd-kind="Class">ContentModelAutoFormatPlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Paste<wbr>Plugin<span class="tsd-signature-symbol">(</span>allowExcelNoBorderTable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_plugins.pasteplugin.html" class="tsd-signature-type" data-tsd-kind="Class">PastePlugin</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts#L37">packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts#L30">packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts:30</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct a new instance of Paste class</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>options: <a href="../modules/roosterjs_content_model_plugins.html#autoformatoptions" class="tsd-signature-type" data-tsd-kind="Type alias">AutoFormatOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> allowExcelNoBorderTable: <span class="tsd-signature-type">boolean</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:</p>
-										<ul>
-											<li>autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.</li>
-											<li>autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.</li>
-										</ul>
+										<p>Allow table copied from Excel without border</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html" class="tsd-signature-type" data-tsd-kind="Class">ContentModelAutoFormatPlugin</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_content_model_plugins.pasteplugin.html" class="tsd-signature-type" data-tsd-kind="Class">PastePlugin</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -156,7 +163,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts#L68">packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts#L61">packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -181,7 +188,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts#L49">packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts#L42">packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -204,7 +211,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts#L59">packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts#L52">packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -238,7 +245,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1902f0/packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts#L78">packages-content-model/roosterjs-content-model-plugins/lib/autoFormat/ContentModelAutoFormatPlugin.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/90437f3/packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts#L71">packages-content-model/roosterjs-content-model-plugins/lib/paste/PastePlugin.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -321,36 +328,36 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_content_model_plugins.autoformatplugin.html" class="tsd-kind-icon">Auto<wbr>Format<wbr>Plugin</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_content_model_plugins.editplugin.html" class="tsd-kind-icon">Edit<wbr>Plugin</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Auto<wbr>Format<wbr>Plugin</a>
+						<a href="roosterjs_content_model_plugins.pasteplugin.html" class="tsd-kind-icon">Paste<wbr>Plugin</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="roosterjs_content_model_plugins.pasteplugin.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_content_model_plugins.pasteplugin.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_content_model_plugins.pasteplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#initialize" class="tsd-kind-icon">initialize</a>
+								<a href="roosterjs_content_model_plugins.pasteplugin.html#initialize" class="tsd-kind-icon">initialize</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_content_model_plugins.contentmodelautoformatplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
+								<a href="roosterjs_content_model_plugins.pasteplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.contentmodeleditplugin.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Edit<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.contentmodelpasteplugin.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Paste<wbr>Plugin</a>
-					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="../modules/roosterjs_content_model_plugins.html#autoformatoptions" class="tsd-kind-icon">Auto<wbr>Format<wbr>Options</a>
 					</li>
