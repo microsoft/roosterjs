@@ -29,7 +29,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
         const listItem = path[index];
-        console;
+
         if (listItem && listItem.blockGroupType === 'ListItem') {
             const listParent = path[index + 1];
             if (isEmptyListItem(listItem)) {
