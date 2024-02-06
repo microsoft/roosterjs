@@ -244,7 +244,7 @@ describe('handleListItem with metadata', () => {
         handleListItem(document, parent, listItem, context, null);
 
         const expectedResult = [
-            '<div><ol start="1" style="list-style-type: decimal; flex-direction: column; display: flex;"><li style="align-self: center;"></li></ol></div>',
+            '<div><ol start="1" style="flex-direction: column; display: flex;"><li style="align-self: center;"></li></ol></div>',
         ];
 
         expectHtml(parent.outerHTML, expectedResult);
@@ -257,9 +257,7 @@ describe('handleListItem with metadata', () => {
                 {
                     node: parent.firstChild as HTMLOListElement,
                     listType: 'OL',
-                    format: {
-                        listStyleType: 'decimal',
-                    },
+                    format: {},
                     dataset: {},
                 },
             ],

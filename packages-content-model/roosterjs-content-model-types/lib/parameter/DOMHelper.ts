@@ -35,4 +35,17 @@ export interface DOMHelper {
      * Calculate current zoom scale of editor
      */
     calculateZoomScale(): number;
+
+    /**
+     * Set DOM attribute of editor content DIV
+     * @param name Name of the attribute
+     * @param value Value of the attribute
+     */
+    setDomAttribute(name: string, value: string | null): void;
+
+    /**
+     * Get DOM attribute of editor content DIV, null if there is no such attribute.
+     * @param name Name of the attribute
+     */
+    getDomAttribute(name: string): string | null;
 }

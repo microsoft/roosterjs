@@ -868,11 +868,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param value Value of the attribute
      */
     setEditorDomAttribute(name: string, value: string | null) {
-        if (value === null) {
-            this.getCore().contentDiv.removeAttribute(name);
-        } else {
-            this.getCore().contentDiv.setAttribute(name, value);
-        }
+        this.getDOMHelper().setDomAttribute(name, value);
     }
 
     /**
@@ -880,7 +876,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param name Name of the attribute
      */
     getEditorDomAttribute(name: string): string | null {
-        return this.getCore().contentDiv.getAttribute(name);
+        return this.getDOMHelper().getDomAttribute(name);
     }
 
     /**
