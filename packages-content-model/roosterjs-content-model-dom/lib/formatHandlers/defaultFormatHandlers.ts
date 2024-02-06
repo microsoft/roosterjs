@@ -204,6 +204,7 @@ export const defaultFormatKeysPerCategory: {
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
     entity: ['entity'],
+    general: ['textColor', 'backgroundColor'], // General model still need to do color transformation in dark mode
 };
 
 /**

@@ -131,7 +131,7 @@ describe('handleBlock', () => {
         expect(parent.innerHTML).toBe('<span></span>');
         expect(parent.firstChild).not.toBe(element);
         expect(context.regularSelection.current.segment).toBe(parent.firstChild!.firstChild);
-        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
 
         runTestWithRefNode(block, '<span></span><br>');
     });
