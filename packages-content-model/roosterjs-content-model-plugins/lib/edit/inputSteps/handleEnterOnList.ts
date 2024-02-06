@@ -19,23 +19,37 @@ import type {
  * @internal
  */
 export const handleEnterOnList: DeleteSelectionStep = context => {
-    if (context.deleteResult == 'nothingToDelete' || context.deleteResult == 'notDeleted') {
+    if (
+        context.deleteResult == 'nothingToDelete' ||
+        context.deleteResult == 'notDeleted' ||
+        context.deleteResult == 'range'
+    ) {
         const { insertPoint } = context;
         const { path } = insertPoint;
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
         const listItem = path[index];
+        console;
         if (listItem && listItem.blockGroupType === 'ListItem') {
             const listParent = path[index + 1];
             if (isEmptyListItem(listItem)) {
                 listItem.levels.pop();
-            } else {
+            } else if (!isSelectionMarker(listItem)) {
                 createNewListItem(context, listItem, listParent);
             }
             context.formatContext?.rawEvent?.preventDefault();
             context.deleteResult = 'range';
         }
     }
+};
+
+const isSelectionMarker = (listItem: ContentModelListItem) => {
+    return (
+        listItem.blocks.length === 1 &&
+        listItem.blocks[0].blockType === 'Paragraph' &&
+        listItem.blocks[0].segments.length === 1 &&
+        listItem.blocks[0].segments[0].segmentType === 'SelectionMarker'
+    );
 };
 
 const isEmptyListItem = (listItem: ContentModelListItem) => {
