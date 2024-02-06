@@ -1,4 +1,4 @@
-import formatImage from '../utils/formatImage';
+import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -10,7 +10,7 @@ import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-mod
 export default function setImageAltText(editor: IStandaloneEditor, altText: string) {
     editor.focus();
 
-    formatImage(editor, 'setImageAltText', (image: ContentModelImage) => {
+    formatImageWithContentModel(editor, 'setImageAltText', (image: ContentModelImage) => {
         image.alt = altText;
     });
 }

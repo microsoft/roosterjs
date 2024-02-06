@@ -4,7 +4,7 @@ import type { ContentModelParagraph, IStandaloneEditor } from 'roosterjs-content
 /**
  * @internal
  */
-export function formatParagraph(
+export function formatParagraphWithContentModel(
     editor: IStandaloneEditor,
     apiName: string,
     setStyleCallback: (paragraph: ContentModelParagraph) => void

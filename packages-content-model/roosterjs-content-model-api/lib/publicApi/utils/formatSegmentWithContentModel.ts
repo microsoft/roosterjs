@@ -10,7 +10,7 @@ import type {
 /**
  * @internal
  */
-export function formatSegment(
+export function formatSegmentWithContentModel(
     editor: IStandaloneEditor,
     apiName: string,
     toggleStyleCallback: (

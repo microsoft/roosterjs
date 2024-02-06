@@ -1,5 +1,5 @@
 import { createSelectionMarker } from 'roosterjs-content-model-dom';
-import { formatSegment } from '../utils/formatSegment';
+import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { setSelection } from 'roosterjs-content-model-core';
 import type { ContentModelParagraph, IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -17,7 +17,7 @@ export default function setBackgroundColor(
     let lastParagraph: ContentModelParagraph | null = null;
     let lastSegmentIndex: number = -1;
 
-    formatSegment(
+    formatSegmentWithContentModel(
         editor,
         'setBackgroundColor',
         (format, _, segment, paragraph) => {

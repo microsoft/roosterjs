@@ -1,4 +1,4 @@
-import { formatSegment } from '../utils/formatSegment';
+import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -9,7 +9,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 export default function setFontName(editor: IStandaloneEditor, fontName: string) {
     editor.focus();
 
-    formatSegment(
+    formatSegmentWithContentModel(
         editor,
         'setFontName',
         (format, _, segment) => {

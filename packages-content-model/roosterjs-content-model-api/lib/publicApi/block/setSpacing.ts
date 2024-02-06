@@ -1,4 +1,4 @@
-import { formatParagraph } from '../utils/formatParagraph';
+import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -9,7 +9,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 export default function setSpacing(editor: IStandaloneEditor, spacing: number | string) {
     editor.focus();
 
-    formatParagraph(editor, 'setSpacing', paragraph => {
+    formatParagraphWithContentModel(editor, 'setSpacing', paragraph => {
         paragraph.format.lineHeight = spacing.toString();
         paragraph.segments.forEach(segment => {
             if (segment.format.lineHeight) {

@@ -1,5 +1,5 @@
 import applyImageBorderFormat from '../../modelApi/image/applyImageBorderFormat';
-import formatImage from '../utils/formatImage';
+import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import type { Border, ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -16,7 +16,7 @@ export default function setImageBorder(
 ) {
     editor.focus();
 
-    formatImage(editor, 'setImageBorder', (image: ContentModelImage) => {
+    formatImageWithContentModel(editor, 'setImageBorder', (image: ContentModelImage) => {
         applyImageBorderFormat(image, border, borderRadius);
     });
 }
