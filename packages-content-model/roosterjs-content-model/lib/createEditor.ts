@@ -1,4 +1,4 @@
-import { ContentModelEditPlugin, ContentModelPastePlugin } from 'roosterjs-content-model-plugins';
+import { EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
 import { StandaloneEditor } from 'roosterjs-content-model-core';
 import type {
     ContentModelDocument,
@@ -20,11 +20,7 @@ export function createEditor(
     additionalPlugins?: EditorPlugin[],
     initialModel?: ContentModelDocument
 ): IStandaloneEditor {
-    const plugins = [
-        new ContentModelPastePlugin(),
-        new ContentModelEditPlugin(),
-        ...(additionalPlugins ?? []),
-    ];
+    const plugins = [new PastePlugin(), new EditPlugin(), ...(additionalPlugins ?? [])];
 
     const options: StandaloneEditorOptions = {
         plugins: plugins,

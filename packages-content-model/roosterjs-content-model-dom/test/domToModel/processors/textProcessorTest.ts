@@ -9,7 +9,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 import {
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelParagraph,
     ContentModelText,
     DomToModelContext,
@@ -572,7 +572,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument();
         const text = document.createTextNode('test');
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,
@@ -606,7 +606,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument();
         const text = document.createTextNode('test');
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,
@@ -651,7 +651,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument();
         const text = document.createTextNode('test');
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,
