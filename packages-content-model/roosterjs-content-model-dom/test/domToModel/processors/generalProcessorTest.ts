@@ -50,6 +50,32 @@ describe('generalProcessor', () => {
         expect(childProcessor).toHaveBeenCalledWith(block, div, context);
     });
 
+    it('Process a DIV element with color', () => {
+        const doc = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.color = 'red';
+        div.style.backgroundColor = 'green';
+
+        generalProcessor(doc, div, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'General',
+                    element: div,
+                    blocks: [],
+                    format: {
+                        textColor: 'red',
+                        backgroundColor: 'green',
+                    },
+                },
+            ],
+        });
+    });
+
     it('Process a SPAN element', () => {
         const doc = createContentModelDocument();
         const span = document.createElement('span');
@@ -81,6 +107,40 @@ describe('generalProcessor', () => {
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
         expect(childProcessor).toHaveBeenCalledTimes(1);
         expect(childProcessor).toHaveBeenCalledWith(segment, span, context);
+    });
+
+    it('Process a SPAN element with color', () => {
+        const doc = createContentModelDocument();
+        const span = document.createElement('span');
+
+        span.style.color = 'red';
+        span.style.backgroundColor = 'green';
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'General',
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            element: span,
+                            blocks: [],
+                            format: {
+                                textColor: 'red',
+                                backgroundColor: 'green',
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
     });
 
     it('Process a SPAN element with format', () => {
