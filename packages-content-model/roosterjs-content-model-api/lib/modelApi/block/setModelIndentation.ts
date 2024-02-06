@@ -25,21 +25,22 @@ export function setModelIndentation(
     );
     const isIndent = indentation == 'indent';
 
-    paragraphOrListItem.forEach(({ block }) => {
+    paragraphOrListItem.forEach(({ block }, index) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-            if (isFirstItemSelected(model, block)) {
-                if (!isIndent && block.levels.length == 1) {
-                    block.levels.pop();
+            const thread = findListItemsInSameThread(model, block);
+            const firstItem = thread[0];
+            if (
+                isFirstItemSelected(firstItem) &&
+                !(index == 0 && thread.length == 1 && firstItem.levels.length > 1)
+            ) {
+                const level = block.levels[0];
+                const { format } = level;
+                const newValue = calculateMarginValue(format, isIndent, length);
+                const isRtl = format.direction == 'rtl';
+                if (isRtl) {
+                    level.format.marginRight = newValue + 'px';
                 } else {
-                    const level = block.levels[0];
-                    const { format } = level;
-                    const newValue = calculateMarginValue(format, isIndent, length);
-                    const isRtl = format.direction == 'rtl';
-                    if (isRtl) {
-                        level.format.marginRight = newValue + 'px';
-                    } else {
-                        level.format.marginLeft = newValue + 'px';
-                    }
+                    level.format.marginLeft = newValue + 'px';
                 }
             } else {
                 if (isIndent) {
@@ -73,9 +74,8 @@ export function setModelIndentation(
     return paragraphOrListItem.length > 0;
 }
 
-function isFirstItemSelected(model: ContentModelDocument, listItem: ContentModelListItem) {
-    const thread = findListItemsInSameThread(model, listItem);
-    return thread[0].blocks.some(block => {
+function isFirstItemSelected(listItem: ContentModelListItem) {
+    return listItem.blocks.some(block => {
         if (block.blockType == 'Paragraph') {
             return block.segments.some(segment => segment.isSelected);
         }

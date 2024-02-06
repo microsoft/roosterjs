@@ -69,7 +69,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(keyboardInputSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
         });
 

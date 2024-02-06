@@ -863,7 +863,15 @@ describe('outdent', () => {
             blocks: [
                 {
                     ...listItem,
-                    levels: [],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '0px',
+                            },
+                        },
+                    ],
                 },
             ],
         });
@@ -908,13 +916,7 @@ describe('outdent', () => {
                             },
                             format: {
                                 startNumberOverride: 1,
-                                marginLeft: '0px',
                             },
-                        },
-                        {
-                            listType: 'UL',
-                            dataset: {},
-                            format: {},
                         },
                     ],
                 },
@@ -953,7 +955,15 @@ describe('outdent', () => {
             blocks: [
                 {
                     ...listItem,
-                    levels: [],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '0px',
+                            },
+                        },
+                    ],
                 },
                 {
                     blockType: 'Paragraph',
