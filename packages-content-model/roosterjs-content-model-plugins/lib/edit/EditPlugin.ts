@@ -130,7 +130,6 @@ export class EditPlugin implements EditorPlugin {
                 break;
         }
 
-        console.log('handleBeforeInputEvent', handled);
         if (handled) {
             rawEvent.preventDefault();
         }
