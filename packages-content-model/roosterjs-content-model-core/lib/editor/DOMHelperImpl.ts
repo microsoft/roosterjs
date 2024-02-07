@@ -24,6 +24,18 @@ class DOMHelperImpl implements DOMHelper {
             ? Math.round((originalWidth / visualWidth) * 100) / 100
             : 1;
     }
+
+    setDomAttribute(name: string, value: string | null) {
+        if (value === null) {
+            this.contentDiv.removeAttribute(name);
+        } else {
+            this.contentDiv.setAttribute(name, value);
+        }
+    }
+
+    getDomAttribute(name: string): string | null {
+        return this.contentDiv.getAttribute(name);
+    }
 }
 
 /**

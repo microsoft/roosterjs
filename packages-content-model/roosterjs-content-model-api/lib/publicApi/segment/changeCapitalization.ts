@@ -1,4 +1,4 @@
-import { formatSegment } from '../utils/formatSegment';
+import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -16,7 +16,7 @@ export default function changeCapitalization(
 ) {
     editor.focus();
 
-    formatSegment(editor, 'changeCapitalization', (_, __, segment) => {
+    formatSegmentWithContentModel(editor, 'changeCapitalization', (_, __, segment) => {
         if (segment?.segmentType == 'Text') {
             switch (capitalization) {
                 case 'lowerCase':

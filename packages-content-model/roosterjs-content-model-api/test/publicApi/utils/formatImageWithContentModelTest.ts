@@ -1,4 +1,4 @@
-import formatImage from '../../../lib/publicApi/utils/formatImage';
+import formatImageWithContentModel from '../../../lib/publicApi/utils/formatImageWithContentModel';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
@@ -13,7 +13,7 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('formatImage', () => {
+describe('formatImageWithContentModel', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
@@ -23,7 +23,7 @@ describe('formatImage', () => {
         segmentTestForPluginEvent(
             'apiTest',
             editor => {
-                formatImage(editor, 'apiTest', callback);
+                formatImageWithContentModel(editor, 'apiTest', callback);
             },
             model,
             result,

@@ -1,4 +1,4 @@
-import { formatParagraph } from '../utils/formatParagraph';
+import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import type {
     ContentModelParagraphDecorator,
     IStandaloneEditor,
@@ -26,7 +26,7 @@ export default function setHeadingLevel(
 ) {
     editor.focus();
 
-    formatParagraph(editor, 'setHeadingLevel', para => {
+    formatParagraphWithContentModel(editor, 'setHeadingLevel', para => {
         const tagName =
             headingLevel > 0
                 ? (('h' + headingLevel) as HeadingLevelTags | null)

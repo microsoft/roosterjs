@@ -1,15 +1,15 @@
-import { formatSegment } from './formatSegment';
+import { formatSegmentWithContentModel } from './formatSegmentWithContentModel';
 import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export default function formatImage(
+export default function formatImageWithContentModel(
     editor: IStandaloneEditor,
     apiName: string,
     callback: (segment: ContentModelImage) => void
 ) {
-    formatSegment(
+    formatSegmentWithContentModel(
         editor,
         apiName,
         (_, __, segment) => {

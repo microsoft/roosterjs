@@ -1,4 +1,4 @@
-import formatImage from '../utils/formatImage';
+import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -14,7 +14,7 @@ export default function setImageBoxShadow(
 ) {
     editor.focus();
 
-    formatImage(editor, 'setImageBoxShadow', (image: ContentModelImage) => {
+    formatImageWithContentModel(editor, 'setImageBoxShadow', (image: ContentModelImage) => {
         image.format.boxShadow = boxShadow;
         if (margin) {
             image.format.marginBottom = margin;

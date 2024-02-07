@@ -1,4 +1,4 @@
-import { formatParagraph } from '../../../lib/publicApi/utils/formatParagraph';
+import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
@@ -13,7 +13,7 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('formatParagraph', () => {
+describe('formatParagraphWithContentModel', () => {
     let editor: IStandaloneEditor;
     let model: ContentModelDocument;
     let context: FormatContentModelContext;
@@ -48,7 +48,11 @@ describe('formatParagraph', () => {
     it('empty doc', () => {
         model = createContentModelDocument();
 
-        formatParagraph(editor, apiName, paragraph => (paragraph.format.backgroundColor = 'red'));
+        formatParagraphWithContentModel(
+            editor,
+            apiName,
+            paragraph => (paragraph.format.backgroundColor = 'red')
+        );
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -66,7 +70,11 @@ describe('formatParagraph', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        formatParagraph(editor, apiName, paragraph => (paragraph.format.backgroundColor = 'red'));
+        formatParagraphWithContentModel(
+            editor,
+            apiName,
+            paragraph => (paragraph.format.backgroundColor = 'red')
+        );
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -100,7 +108,7 @@ describe('formatParagraph', () => {
             paragraph.format.backgroundColor = 'red';
         };
 
-        formatParagraph(editor, apiName, callback);
+        formatParagraphWithContentModel(editor, apiName, callback);
 
         expect(context).toEqual({
             newEntities: [],

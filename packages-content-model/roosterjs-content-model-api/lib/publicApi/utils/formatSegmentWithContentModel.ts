@@ -7,10 +7,11 @@ import type {
     ContentModelSegmentFormat,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
+
 /**
  * @internal
  */
-export function formatSegment(
+export function formatSegmentWithContentModel(
     editor: IStandaloneEditor,
     apiName: string,
     toggleStyleCallback: (

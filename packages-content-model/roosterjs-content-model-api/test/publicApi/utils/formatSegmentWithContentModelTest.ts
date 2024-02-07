@@ -1,4 +1,4 @@
-import { formatSegment } from '../../../lib/publicApi/utils/formatSegment';
+import { formatSegmentWithContentModel } from '../../../lib/publicApi/utils/formatSegmentWithContentModel';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
@@ -14,7 +14,7 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('formatSegment', () => {
+describe('formatSegmentWithContentModelWithContentModel', () => {
     let editor: IStandaloneEditor;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
@@ -55,7 +55,7 @@ describe('formatSegment', () => {
                 format.fontFamily = 'test';
             });
 
-        formatSegment(editor, apiName, callback);
+        formatSegmentWithContentModel(editor, apiName, callback);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -82,7 +82,7 @@ describe('formatSegment', () => {
                 format.fontFamily = 'test';
             });
 
-        formatSegment(editor, apiName, callback);
+        formatSegmentWithContentModel(editor, apiName, callback);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -129,7 +129,12 @@ describe('formatSegment', () => {
             .createSpy()
             .and.callFake(format => (format.fontFamily = 'test'));
 
-        formatSegment(editor, apiName, toggleStyleCallback, segmentHasStyleCallback);
+        formatSegmentWithContentModel(
+            editor,
+            apiName,
+            toggleStyleCallback,
+            segmentHasStyleCallback
+        );
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -185,7 +190,12 @@ describe('formatSegment', () => {
             .createSpy()
             .and.callFake(format => (format.fontFamily = 'test'));
 
-        formatSegment(editor, apiName, toggleStyleCallback, segmentHasStyleCallback);
+        formatSegmentWithContentModel(
+            editor,
+            apiName,
+            toggleStyleCallback,
+            segmentHasStyleCallback
+        );
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -251,7 +261,7 @@ describe('formatSegment', () => {
                 format.fontFamily = 'test';
             });
 
-        formatSegment(editor, apiName, callback);
+        formatSegmentWithContentModel(editor, apiName, callback);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
