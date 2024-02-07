@@ -95,7 +95,6 @@ import type {
     ContentModelFormatState,
     DOMEventRecord,
     ExportContentMode,
-    Rect,
 } from 'roosterjs-content-model-types';
 
 const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
