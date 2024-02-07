@@ -53,7 +53,7 @@ function shouldInputWithContentModel(
     rawEvent: KeyboardEvent,
     isInIME: boolean
 ) {
-    if (!selection || isInIME) {
+    if (!selection || isInIME || rawEvent.isComposing) {
         return false; // Nothing to delete
     } else if (
         !isModifierKey(rawEvent) &&
@@ -61,7 +61,7 @@ function shouldInputWithContentModel(
     ) {
         return (
             selection.type != 'range' ||
-            (!selection.range.collapsed && !rawEvent.isComposing) ||
+            !selection.range.collapsed ||
             shouldHandleEnterKey(selection, rawEvent)
         );
     } else {
