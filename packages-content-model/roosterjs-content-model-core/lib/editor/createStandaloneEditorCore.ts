@@ -61,8 +61,19 @@ function createEditorEnvironment(contentDiv: HTMLElement): EditorEnvironment {
     const navigator = contentDiv.ownerDocument.defaultView?.navigator;
     const userAgent = navigator?.userAgent ?? '';
     const appVersion = navigator?.appVersion ?? '';
-    let isMobileOrTablet = false;
 
+    return {
+        isMac: appVersion.indexOf('Mac') != -1,
+        isAndroid: /android/i.test(userAgent),
+        isSafari:
+            userAgent.indexOf('Safari') >= 0 &&
+            userAgent.indexOf('Chrome') < 0 &&
+            userAgent.indexOf('Android') < 0,
+        isMobileOrTablet: getIsMobileOrTablet(userAgent),
+    };
+}
+
+function getIsMobileOrTablet(userAgent: string) {
     // Reference: http://detectmobilebrowsers.com/
     // The default regex on the website doesn't consider tablet.
     // To support tablet, add |android|ipad|playbook|silk to the first regex according to the info in /about page
@@ -74,18 +85,9 @@ function createEditorEnvironment(contentDiv: HTMLElement): EditorEnvironment {
             userAgent.substring(0, 4)
         )
     ) {
-        isMobileOrTablet = true;
+        return true;
     }
-
-    return {
-        isMac: appVersion.indexOf('Mac') != -1,
-        isAndroid: /android/i.test(userAgent),
-        isSafari:
-            userAgent.indexOf('Safari') >= 0 &&
-            userAgent.indexOf('Chrome') < 0 &&
-            userAgent.indexOf('Android') < 0,
-        isMobileOrTablet,
-    };
+    return false;
 }
 
 /**
