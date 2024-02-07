@@ -5,7 +5,7 @@ import { keyboardInput } from '../../lib/edit/keyboardInput';
 import {
     ContentModelDocument,
     ContentModelFormatter,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
@@ -18,7 +18,7 @@ describe('keyboardInput', () => {
     let isInIMESpy: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let normalizeContentModelSpy: jasmine.Spy;
-    let mockedContext: FormatWithContentModelContext;
+    let mockedContext: FormatContentModelContext;
     let formatResult: boolean | undefined;
 
     beforeEach(() => {

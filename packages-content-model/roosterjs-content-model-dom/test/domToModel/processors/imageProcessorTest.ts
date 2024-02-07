@@ -2,7 +2,7 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { imageProcessor } from '../../../lib/domToModel/processors/imageProcessor';
 import {
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelImage,
     ContentModelParagraph,
     DomToModelContext,
@@ -318,7 +318,7 @@ describe('imageProcessor', () => {
         const doc = createContentModelDocument();
         const img = document.createElement('img');
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,

@@ -9,8 +9,8 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ContentModelPastePlugin } from 'roosterjs-content-model-plugins/lib/paste/ContentModelPastePlugin';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
+import { PastePlugin } from 'roosterjs-content-model-plugins/lib/paste/PastePlugin';
 import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 import {
     ClipboardData,
@@ -73,7 +73,7 @@ describe('Paste ', () => {
         ]);
 
         editor = new StandaloneEditor(div, {
-            plugins: [new ContentModelPastePlugin()],
+            plugins: [new PastePlugin()],
             coreApiOverride: {
                 focus,
                 createContentModel,
@@ -112,7 +112,7 @@ describe('paste with content model & paste plugin', () => {
         div = document.createElement('div');
         document.body.appendChild(div);
         editor = new StandaloneEditor(div, {
-            plugins: [new ContentModelPastePlugin()],
+            plugins: [new PastePlugin()],
         });
         spyOn(addParserF, 'default').and.callThrough();
         spyOn(setProcessorF, 'setProcessor').and.callThrough();
