@@ -1,6 +1,6 @@
 import * as createGeneralBlock from '../lib/modelApi/creators/createGeneralBlock';
 import { contentModelToDom } from '../lib/modelToDom/contentModelToDom';
-import { createDomToModelContext, createModelToDomContext } from '../lib';
+import { contentModelToText, createDomToModelContext, createModelToDomContext } from '../lib';
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
 import { expectHtml } from './testUtils';
 import {
@@ -9,12 +9,12 @@ import {
     ContentModelGeneralBlock,
 } from 'roosterjs-content-model-types';
 
-describe('End to end test for DOM => Model', () => {
+describe('End to end test for DOM => Model => DOM/TEXT', () => {
     function runTest(
         html: string,
         expectedModel: ContentModelDocument,
-        expectedHtml: string,
-        expectedHTMLFirefox?: string
+        expectedText: string,
+        ...expectedHtml: string[]
     ) {
         const div1 = document.createElement('div');
         div1.innerHTML = html;
@@ -26,12 +26,10 @@ describe('End to end test for DOM => Model', () => {
         const div2 = document.createElement('div');
 
         contentModelToDom(document, div2, model, createModelToDomContext());
-        const possibleHTML = [
-            expectedHtml, //chrome or firefox
-            expectedHTMLFirefox, //firefox
-        ];
+        const text = contentModelToText(model);
 
-        expectHtml(div2.innerHTML, possibleHTML);
+        expect(text).toBe(expectedText);
+        expectHtml(div2.innerHTML, expectedHtml);
     }
 
     it('List with margin', () => {
@@ -126,6 +124,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            '1\r\n2',
             '<ul style="margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
         );
     });
@@ -223,6 +222,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            '1\r\na\r\nb\r\n2',
             '<ol start="1"><li>1</li><ol start="1"><li>a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
         );
     });
@@ -297,6 +297,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa\nbb\r\ncc\ndd\r\nee',
             '<div style="white-space: pre;">aa\nbb</div><pre><div>cc\ndd</div></pre><blockquote>ee</blockquote>'
         );
     });
@@ -357,6 +358,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'test1\r\ntest2',
             '<pre><div>test1</div></pre><pre><div>test2</div></pre>'
         );
     });
@@ -412,6 +414,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa\r\nbb\r\ncc',
             '<span style="background-color: red;"><b>aa</b></span><div><b>bb</b></div><span style="background-color: red;"><b>cc</b></span>'
         );
     });
@@ -492,6 +495,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa\r\nbb\r\ncc',
             '<span style="background-color: red;"><b>aa</b></span><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><span style="background-color: red;"><b>cc</b></span>'
         );
     });
@@ -581,6 +585,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa\r\nbb\r\ncc',
             '<div style="background-color: red; display: block;"><b>aa</b><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
         );
     });
@@ -634,6 +639,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa\r\naa',
             '<blockquote style="margin: 20px;">aa</blockquote><div style="margin: 0px 20px;">aa</div>'
         );
     });
@@ -666,6 +672,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa',
             '<div style="margin: 20px; display: block;"><b>aa</b></div>'
         );
     });
@@ -714,6 +721,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaa\r\nbbb',
             '<p>aaa</p><p>bbb</p>'
         );
     });
@@ -766,6 +774,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaa\r\nbbb',
             '<p style="margin: 0px;">aaa</p><p style="margin: 0px;">bbb</p>'
         );
     });
@@ -837,6 +846,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa\r\nbb\r\ncc',
             '<h1>aa</h1><h2>bb</h2><h3 style="margin: 50px;">cc</h3>'
         );
     });
@@ -864,6 +874,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'test',
             '<h1 style="font-size: 40px;">test</h1>'
         );
     });
@@ -933,6 +944,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaa\nbbb\r\naaa\nbb',
             '<pre><div>aaa\nbbb</div></pre><pre><div><span style="font-size: 20px;">aaa\nbb</span></div></pre>'
         );
     });
@@ -999,6 +1011,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaabbbccc\r\naaabbbccc',
             '<div>aaa<code>bbb</code>ccc</div><div>aaa<a href="#">bbb</a>ccc</div>'
         );
     });
@@ -1111,6 +1124,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaaa\r\nbbbbbb\r\ncccc\r\naaaa\r\nbbbbbb\r\ncccc',
             '<div><span style="color: red;">aaaa</span></div><blockquote style="padding-left: 10px; border-left: 3px solid rgb(200, 200, 200);"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</span></div></blockquote><div><span style="color: red;">cccc</span></div><div><span style="color: red;">aaaa</span></div><div style="margin-right: 40px; margin-left: 40px;"><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</span></div><div><span style="color: red;">cccc</span></div>'
         );
     });
@@ -1178,6 +1192,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaa\r\nbbb\r\nccc',
             '<div style="margin-left: 40px;">aaa</div><pre style="margin-left: 40px;"><div>bbb</div></pre><div style="margin-left: 40px;">ccc</div>'
         );
     });
@@ -1219,6 +1234,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaa\r\nbbb',
             '<div style="margin-left: 40px;">aaa</div><div style="margin: 0px 50px 0px 90px;">bbb</div>'
         );
     });
@@ -1258,6 +1274,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'test1\r\ntest2',
             '<div align="center" style="background-color: red;">test1</div>test2',
             '<div style="background-color: red;" align="center">test1</div>test2'
         );
@@ -1359,6 +1376,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'test1\r\ntest2\r\ntest3',
             '<center>test1<table><tbody><tr><td>test2</td></tr></tbody></table><div align="right">test3</div></center>'
         );
 
@@ -1444,6 +1462,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaa\r\nbbb\r\nccc\r\nddd\r\neee',
             '<div style="text-align: center;">aaa</div><div align="right">bbb<div>ccc</div>ddd</div><div style="text-align: center;">eee</div>'
         );
     });
@@ -1471,6 +1490,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'test',
             '<div><sub><u><s>test</s></u></sub></div>'
         );
     });
@@ -1519,6 +1539,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            '',
             '<div align="center"><table style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
         );
     });
@@ -1552,6 +1573,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'test',
             '<span style="color: red;"><a href="#" style="color: red; display: block;">test</a></span>',
             '<span style="color: red;"><a style="color: red; display: block;" href="#">test</a></span>'
         );
@@ -1587,6 +1609,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'test',
             '<div><b><i><u><s><s>test</s></s></u></i></b></div>'
         );
     });
@@ -1624,6 +1647,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaabbb\r\nccc\r\ndddeeee',
             'aaa<b>bbb</b><div><b>ccc</b></div><b>ddd</b>eeee'
         );
     });
@@ -1651,6 +1675,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'www.bing.com',
             '<div><sup><a href="http://www.bing.com">www.bing.com</a></sup></div>'
         );
     });
@@ -1701,6 +1726,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aaa\r\nbbb',
             '<p style="margin-left: 40px;">aaa</p><p style="margin-left: 40px;">bbb</p>'
         );
     });
@@ -1747,6 +1773,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'beforetestafter',
             '<a href="#">before</a><span style="color: red;"><a href="#" style="color: red;">test</a></span><a href="#">after</a>'
         );
     });
@@ -1775,6 +1802,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa\r\nbb\r\ncc',
             '<div style="text-indent: 20px;">aa</div><div style="text-indent: 20px;">bb</div>cc'
         );
     });
@@ -1803,6 +1831,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'aa\r\nbb\r\ncc',
             '<div style="text-indent: 20px;">aa</div>bb<div style="text-indent: 40px;">cc</div>'
         );
     });
@@ -1895,6 +1924,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'a\r\nb\r\nc',
             '<table><tbody><tr><td style="width: 100px;">a</td><td style="width: 150px;">b</td><td style="width: 120px;">c</td></tr></tbody></table>'
         );
     });
@@ -1987,6 +2017,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'a\r\nb\r\nc',
             '<table><tbody><tr><td style="width: 150px;">a</td><td style="width: 150px;">b</td><td style="width: 120px;">c</td></tr></tbody></table>'
         );
     });
@@ -2035,6 +2066,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
+            'test',
             '<ol start="1"><ol start="1" style="list-style-type: &quot;1) &quot;;"><li>test</li></ol></ol>'
         );
     });

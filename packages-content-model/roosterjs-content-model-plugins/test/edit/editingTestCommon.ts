@@ -1,7 +1,7 @@
 import {
     ContentModelDocument,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
@@ -18,7 +18,7 @@ export function editingTestCommon(
 
     const formatContentModel = jasmine
         .createSpy('formatContentModel')
-        .and.callFake((callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+        .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
             expect(options.apiName).toBe(apiName);
             formatResult = callback(model, {
                 newEntities: [],

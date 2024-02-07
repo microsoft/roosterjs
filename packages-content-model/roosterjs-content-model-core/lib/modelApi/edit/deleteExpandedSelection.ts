@@ -9,7 +9,7 @@ import type {
     ContentModelParagraph,
     ContentModelSelectionMarker,
     DeleteSelectionContext,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     InsertPoint,
     TableSelectionContext,
 } from 'roosterjs-content-model-types';
@@ -33,7 +33,7 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  */
 export function deleteExpandedSelection(
     model: ContentModelDocument,
-    formatContext?: FormatWithContentModelContext
+    formatContext?: FormatContentModelContext
 ): DeleteSelectionContext {
     const context: DeleteSelectionContext = {
         deleteResult: 'notDeleted',
