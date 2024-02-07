@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">29.97% </span>
+                <span class="strong">29.81% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>95/317</span>
+                <span class='fraction'>93/312</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">8.45% </span>
+                <span class="strong">8.7% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/71</span>
+                <span class='fraction'>6/69</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30.07% </span>
+                <span class="strong">29.9% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>92/306</span>
+                <span class='fraction'>90/301</span>
             </div>
         
             
@@ -1149,24 +1149,7 @@
 <a name='L1090'></a><a href='#L1090'>1090</a>
 <a name='L1091'></a><a href='#L1091'>1091</a>
 <a name='L1092'></a><a href='#L1092'>1092</a>
-<a name='L1093'></a><a href='#L1093'>1093</a>
-<a name='L1094'></a><a href='#L1094'>1094</a>
-<a name='L1095'></a><a href='#L1095'>1095</a>
-<a name='L1096'></a><a href='#L1096'>1096</a>
-<a name='L1097'></a><a href='#L1097'>1097</a>
-<a name='L1098'></a><a href='#L1098'>1098</a>
-<a name='L1099'></a><a href='#L1099'>1099</a>
-<a name='L1100'></a><a href='#L1100'>1100</a>
-<a name='L1101'></a><a href='#L1101'>1101</a>
-<a name='L1102'></a><a href='#L1102'>1102</a>
-<a name='L1103'></a><a href='#L1103'>1103</a>
-<a name='L1104'></a><a href='#L1104'>1104</a>
-<a name='L1105'></a><a href='#L1105'>1105</a>
-<a name='L1106'></a><a href='#L1106'>1106</a>
-<a name='L1107'></a><a href='#L1107'>1107</a>
-<a name='L1108'></a><a href='#L1108'>1108</a>
-<a name='L1109'></a><a href='#L1109'>1109</a>
-<a name='L1110'></a><a href='#L1110'>1110</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L1093'></a><a href='#L1093'>1093</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1237,7 +1220,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1925,13 +1907,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2233,15 +2208,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2372,7 +2338,6 @@ import type {
     ContentModelFormatState,
     DOMEventRecord,
     ExportContentMode,
-    Rect,
 } from 'roosterjs-content-model-types';
 &nbsp;
 const GetContentModeMap: Record&lt;GetContentMode, ExportContentMode&gt; = {
@@ -3032,13 +2997,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     //#region Misc
 &nbsp;
     /**
-     * Get the scroll container of the editor
-     */
-<span class="fstat-no" title="function not covered" >    getScrollContainer(</span>): HTMLElement {
-<span class="cstat-no" title="statement not covered" >        return this.getCore().domEvent.scrollContainer;</span>
-    }
-&nbsp;
-    /**
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
@@ -3346,15 +3304,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     }
 &nbsp;
     /**
-     * Retrieves the rect of the visible viewport of the editor.
-     */
-<span class="fstat-no" title="function not covered" >    getVisibleViewport(</span>): Rect | null {
-        const core = <span class="cstat-no" title="statement not covered" >this.getCore();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        return core.api.getVisibleViewport(core);</span>
-    }
-&nbsp;
-    /**
      * Get a darkColorHandler object for this editor.
      */
 <span class="fstat-no" title="function not covered" >    getDarkColorHandler(</span>): DarkColorHandler {
@@ -3391,7 +3340,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Feb 07 2024 17:25:49 GMT+0000 (Coordinated Universal Time)
+                at Wed Feb 07 2024 21:03:14 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
