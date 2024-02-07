@@ -3,7 +3,7 @@ import { applyPendingFormat } from './utils/applyPendingFormat';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import type {
-    ContentModelFormatPluginState,
+    FormatPluginState,
     IStandaloneEditor,
     PluginEvent,
     PluginWithState,
@@ -14,17 +14,17 @@ import type {
 const ProcessKey = 'Process';
 
 /**
- * ContentModelFormat plugins helps editor to do formatting on top of content model.
+ * FormatPlugin plugins helps editor to do formatting on top of content model.
  * This includes:
  * 1. Handle pending format changes when selection is collapsed
  */
-class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPluginState> {
+class FormatPlugin implements PluginWithState<FormatPluginState> {
     private editor: IStandaloneEditor | null = null;
     private hasDefaultFormat = false;
-    private state: ContentModelFormatPluginState;
+    private state: FormatPluginState;
 
     /**
-     * Construct a new instance of ContentModelEditPlugin class
+     * Construct a new instance of FormatPlugin class
      * @param option The editor option
      */
     constructor(option: StandaloneEditorOptions) {
@@ -38,7 +38,7 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelFormat';
+        return 'Format';
     }
 
     /**
@@ -67,7 +67,7 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
     /**
      * Get plugin state object
      */
-    getState(): ContentModelFormatPluginState {
+    getState(): FormatPluginState {
         return this.state;
     }
 
@@ -156,11 +156,11 @@ class ContentModelFormatPlugin implements PluginWithState<ContentModelFormatPlug
 
 /**
  * @internal
- * Create a new instance of ContentModelFormatPlugin.
+ * Create a new instance of FormatPlugin.
  * @param option The editor option
  */
-export function createContentModelFormatPlugin(
+export function createFormatPlugin(
     option: StandaloneEditorOptions
-): PluginWithState<ContentModelFormatPluginState> {
-    return new ContentModelFormatPlugin(option);
+): PluginWithState<FormatPluginState> {
+    return new FormatPlugin(option);
 }

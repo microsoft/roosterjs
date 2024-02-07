@@ -8,7 +8,7 @@ import type { DOMSelection } from '../selection/DOMSelection';
  * Represents an indexer object which provides methods to help build backward relationship
  * from DOM node to Content Model
  */
-export interface ContentModelDomIndexer {
+export interface DomIndexer {
     /**
      * Invoked when processing a segment
      * @param segmentNode The new DOM node for this segment

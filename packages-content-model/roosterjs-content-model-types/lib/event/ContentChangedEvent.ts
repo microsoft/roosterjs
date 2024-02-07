@@ -1,6 +1,6 @@
 import type { AnnounceData } from '../parameter/AnnounceData';
 import type { BasePluginEvent } from './BasePluginEvent';
-import type { EntityState } from '../parameter/FormatWithContentModelContext';
+import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
