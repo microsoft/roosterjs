@@ -75,6 +75,7 @@ export class EditPlugin implements EditorPlugin {
                 case 'Tab':
                     keyboardTab(editor, rawEvent);
                     break;
+                case 'Enter':
                 default:
                     keyboardInput(editor, rawEvent);
                     break;
