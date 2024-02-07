@@ -58,7 +58,7 @@ describe('EditPlugin', () => {
         });
 
         it('Tab', () => {
-            const plugin = new ContentModelEditPlugin();
+            const plugin = new EditPlugin();
             const rawEvent = { key: 'Tab' } as any;
 
             plugin.initialize(editor);
