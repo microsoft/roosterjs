@@ -14,7 +14,7 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('formatSegmentWithContentModelWithContentModel', () => {
+describe('formatSegment', () => {
     let editor: IStandaloneEditor;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
