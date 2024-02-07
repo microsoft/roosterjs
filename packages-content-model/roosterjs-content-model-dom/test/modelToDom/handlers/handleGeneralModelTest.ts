@@ -60,7 +60,21 @@ describe('handleBlockGroup', () => {
             group,
             context
         );
-        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
+    });
+
+    it('General block with color', () => {
+        const child = document.createElement('span');
+        const group = createGeneralBlock(child);
+
+        group.format.textColor = 'red';
+        group.format.backgroundColor = 'green';
+
+        handleGeneralBlock(document, parent, group, context, null);
+
+        expect(parent.outerHTML).toBe(
+            '<div><span style="color: red; background-color: green;"></span></div>'
+        );
     });
 
     it('General segment: empty element', () => {
@@ -87,6 +101,20 @@ describe('handleBlockGroup', () => {
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalled();
+    });
+
+    it('General segment: element with color', () => {
+        const child = document.createElement('span');
+        const group = createGeneralSegment(child);
+
+        group.format.textColor = 'red';
+        group.format.textColor = 'green';
+
+        handleGeneralSegment(document, parent, group, context, []);
+
+        expect(parent.outerHTML).toBe(
+            '<div><span style="color: green;"><span style="color: green;"></span></span></div>'
+        );
     });
 
     it('General segment: element with child', () => {
@@ -199,7 +227,7 @@ describe('handleBlockGroup', () => {
             group,
             context
         );
-        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
         expect(result).toBe(br);
         expect(group.element).toBe(clonedChild);
     });
