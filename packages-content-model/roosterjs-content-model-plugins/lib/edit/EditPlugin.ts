@@ -1,4 +1,3 @@
-import { Keys } from 'roosterjs-editor-types';
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
 import type {
@@ -7,6 +6,9 @@ import type {
     KeyDownEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
+
+const BACKSPACE_KEY = 8;
+const DELETE_KEY = 46;
 
 /**
  * ContentModel edit plugins helps editor to do editing operation on top of content model.
@@ -113,8 +115,8 @@ export class EditPlugin implements EditorPlugin {
                     editor,
                     new KeyboardEvent('keydown', {
                         key: 'Backspace',
-                        keyCode: Keys.BACKSPACE,
-                        which: Keys.BACKSPACE,
+                        keyCode: BACKSPACE_KEY,
+                        which: BACKSPACE_KEY,
                     })
                 );
                 break;
@@ -123,8 +125,8 @@ export class EditPlugin implements EditorPlugin {
                     editor,
                     new KeyboardEvent('keydown', {
                         key: 'Delete',
-                        keyCode: Keys.DELETE,
-                        which: Keys.DELETE,
+                        keyCode: DELETE_KEY,
+                        which: DELETE_KEY,
                     })
                 );
                 break;
