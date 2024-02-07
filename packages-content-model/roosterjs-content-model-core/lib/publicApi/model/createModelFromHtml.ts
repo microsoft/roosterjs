@@ -1,4 +1,8 @@
-import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
+import {
+    createDomToModelContext,
+    createEmptyModel,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -18,7 +22,7 @@ export function createModelFromHtml(
     options?: DomToModelOption,
     trustedHTMLHandler?: TrustedHTMLHandler,
     defaultSegmentFormat?: ContentModelSegmentFormat
-): ContentModelDocument | undefined {
+): ContentModelDocument {
     const doc = new DOMParser().parseFromString(trustedHTMLHandler?.(html) ?? html, 'text/html');
 
     return doc?.body
@@ -31,5 +35,5 @@ export function createModelFromHtml(
                   options
               )
           )
-        : undefined;
+        : createEmptyModel(defaultSegmentFormat);
 }
