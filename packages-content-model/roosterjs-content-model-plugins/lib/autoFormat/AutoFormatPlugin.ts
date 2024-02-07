@@ -1,6 +1,4 @@
-import { keyboardDelete } from './keyboardDelete';
-import { keyboardInput } from './keyboardInput';
-import { keyboardTab } from './keyboardTab';
+import { keyboardListTrigger } from './keyboardListTrigger';
 import type {
     EditorPlugin,
     IStandaloneEditor,
@@ -9,20 +7,47 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * ContentModel edit plugins helps editor to do editing operation on top of content model.
- * This includes:
- * 1. Delete Key
- * 2. Backspace Key
- * 3. Tab Key
+ * Options to customize the Content Model Auto Format Plugin
  */
-export class ContentModelEditPlugin implements EditorPlugin {
+export type AutoFormatOptions = {
+    /**
+     * When true, after type *, ->, -, --, => , —, > and space key a type of bullet list will be triggered. @default true
+     */
+    autoBullet: boolean;
+
+    /**
+     * When true, after type 1, A, a, i, I followed by ., ), - or between () and space key a type of numbering list will be triggered. @default true
+     */
+    autoNumbering: boolean;
+};
+
+/**
+ * @internal
+ */
+const DefaultOptions: Required<AutoFormatOptions> = {
+    autoBullet: true,
+    autoNumbering: true,
+};
+
+/**
+ * Auto Format plugin handles auto formatting, such as transforming * characters into a bullet list.
+ * It can be customized with options to enable or disable auto list features.
+ */
+export class AutoFormatPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
+
+    /**
+     * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
+     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
+     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
+     */
+    constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
     /**
      * Get name of this plugin
      */
     getName() {
-        return 'ContentModelEdit';
+        return 'AutoFormat';
     }
 
     /**
@@ -62,21 +87,13 @@ export class ContentModelEditPlugin implements EditorPlugin {
 
     private handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
-
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
-                case 'Backspace':
-                case 'Delete':
-                    // Use our API to handle BACKSPACE/DELETE key.
-                    // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
-                    keyboardDelete(editor, rawEvent);
-                    break;
-
-                case 'Tab':
-                    keyboardTab(editor, rawEvent);
-                    break;
-                default:
-                    keyboardInput(editor, rawEvent);
+                case ' ':
+                    const { autoBullet, autoNumbering } = this.options;
+                    if (autoBullet || autoNumbering) {
+                        keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
+                    }
                     break;
             }
         }

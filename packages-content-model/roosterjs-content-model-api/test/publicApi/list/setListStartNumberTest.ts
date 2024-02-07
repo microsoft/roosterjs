@@ -2,7 +2,7 @@ import setListStartNumber from '../../../lib/publicApi/list/setListStartNumber';
 import {
     ContentModelDocument,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('setListStartNumber', () => {
@@ -13,18 +13,16 @@ describe('setListStartNumber', () => {
     ) {
         let formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    expect(options.apiName).toBe('setListStartNumber');
-                    const result = callback(input, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toBe('setListStartNumber');
+                const result = callback(input, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
 
-                    expect(result).toBe(expectedResult);
-                }
-            );
+                expect(result).toBe(expectedResult);
+            });
 
         setListStartNumber(
             {

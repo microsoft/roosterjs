@@ -7,6 +7,7 @@ import type {
     ContentModelSegmentFormat,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
+
 /**
  * @internal
  */

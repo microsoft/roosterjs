@@ -12,15 +12,15 @@ import {
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
     InsertPoint,
     StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
     let formatResult: boolean | undefined;
-    let context: FormatWithContentModelContext | undefined;
+    let context: FormatContentModelContext | undefined;
     let formatContentModel: jasmine.Spy;
     let sourceModel: ContentModelDocument;
     let core: StandaloneEditorCore;
@@ -36,7 +36,7 @@ describe('mergePasteContent', () => {
                 (
                     core: any,
                     callback: ContentModelFormatter,
-                    options: FormatWithContentModelOptions
+                    options: FormatContentModelOptions
                 ) => {
                     context = {
                         newEntities: [],

@@ -5,7 +5,7 @@ import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('clearFormat', () => {
@@ -13,12 +13,10 @@ describe('clearFormat', () => {
         const model = ('Model' as any) as ContentModelDocument;
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    expect(options.apiName).toEqual('clearFormat');
-                    callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toEqual('clearFormat');
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
+            });
 
         const editor = ({
             focus: () => {},

@@ -1,10 +1,10 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
 import * as keyboardInput from '../../lib/edit/keyboardInput';
 import * as keyboardTab from '../../lib/edit/keyboardTab';
-import { ContentModelEditPlugin } from '../../lib/edit/ContentModelEditPlugin';
+import { EditPlugin } from '../../lib/edit/EditPlugin';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 
-describe('ContentModelEditPlugin', () => {
+describe('EditPlugin', () => {
     let editor: IStandaloneEditor;
 
     beforeEach(() => {
@@ -28,7 +28,7 @@ describe('ContentModelEditPlugin', () => {
         });
 
         it('Backspace', () => {
-            const plugin = new ContentModelEditPlugin();
+            const plugin = new EditPlugin();
             const rawEvent = { key: 'Backspace' } as any;
 
             plugin.initialize(editor);
@@ -43,7 +43,7 @@ describe('ContentModelEditPlugin', () => {
         });
 
         it('Delete', () => {
-            const plugin = new ContentModelEditPlugin();
+            const plugin = new EditPlugin();
             const rawEvent = { key: 'Delete' } as any;
 
             plugin.initialize(editor);
@@ -74,7 +74,7 @@ describe('ContentModelEditPlugin', () => {
         });
 
         it('Other key', () => {
-            const plugin = new ContentModelEditPlugin();
+            const plugin = new EditPlugin();
             const rawEvent = { which: 41, key: 'A' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
@@ -92,7 +92,7 @@ describe('ContentModelEditPlugin', () => {
         });
 
         it('Default prevented', () => {
-            const plugin = new ContentModelEditPlugin();
+            const plugin = new EditPlugin();
             const rawEvent = { key: 'Delete', defaultPrevented: true } as any;
 
             plugin.initialize(editor);
@@ -106,7 +106,7 @@ describe('ContentModelEditPlugin', () => {
         });
 
         it('Trigger entity event first', () => {
-            const plugin = new ContentModelEditPlugin();
+            const plugin = new EditPlugin();
             const wrapper = 'WRAPPER' as any;
 
             plugin.initialize(editor);

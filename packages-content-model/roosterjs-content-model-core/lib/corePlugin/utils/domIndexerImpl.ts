@@ -2,13 +2,13 @@ import { createSelectionMarker, createText, isNodeOfType } from 'roosterjs-conte
 import { setSelection } from '../../publicApi/selection/setSelection';
 import type {
     ContentModelDocument,
-    ContentModelDomIndexer,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSelectionMarker,
     ContentModelTable,
     ContentModelTableRow,
     ContentModelText,
+    DomIndexer,
     DOMSelection,
     Selectable,
 } from 'roosterjs-content-model-types';
@@ -268,9 +268,9 @@ function reconcileTextSelection(
 
 /**
  * @internal
- * Implementation of ContentModelDomIndexer
+ * Implementation of DomIndexer
  */
-export const contentModelDomIndexer: ContentModelDomIndexer = {
+export const domIndexerImpl: DomIndexer = {
     onSegment,
     onParagraph,
     onTable,
