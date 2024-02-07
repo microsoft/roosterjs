@@ -3,6 +3,9 @@ const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
 // According to https://developer.mozilla.org/en-US/docs/Glossary/CSS_pixel, 1in = 96px
 const PixelPerInch = 96;
 
+const RootRelatedUnits = ['rcap', 'rch', 'rem', 'rex', 'ric', 'rlh'];
+const DefaultRootFontSize = 16;
+
 /**
  * Parse unit value with its unit
  * @param value The source value to parse
@@ -29,7 +32,6 @@ export function parseValueWithUnit(
                 result = ptToPx(num);
                 break;
             case 'em':
-            case 'rem':
                 result = getFontSize(currentSizePxOrElement) * num;
                 break;
             case 'ex':
@@ -40,6 +42,23 @@ export function parseValueWithUnit(
                 break;
             case 'in':
                 result = num * PixelPerInch;
+                break;
+            case 'rem':
+                if (currentSizePxOrElement && typeof currentSizePxOrElement != 'number') {
+                    const doc = currentSizePxOrElement.ownerDocument;
+                    const htmlRoot = doc.querySelector('html');
+                    const computedFontSize =
+                        htmlRoot && doc.defaultView?.getComputedStyle(htmlRoot).fontSize;
+                    const rootFontSizeInPx =
+                        htmlRoot &&
+                        computedFontSize &&
+                        RootRelatedUnits.every(unit => computedFontSize.indexOf(unit) == -1)
+                            ? parseValueWithUnit(computedFontSize)
+                            : DefaultRootFontSize;
+                    result = rootFontSizeInPx * num;
+                } else {
+                    result = DefaultRootFontSize * num;
+                }
                 break;
         }
     }

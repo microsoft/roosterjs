@@ -9,6 +9,7 @@ describe('parseValueWithUnit with element', () => {
                         fontSize: '15pt',
                     }),
                 },
+                querySelector: () => mockedElement,
             },
             offsetWidth: 1000,
         } as any) as HTMLElement;
