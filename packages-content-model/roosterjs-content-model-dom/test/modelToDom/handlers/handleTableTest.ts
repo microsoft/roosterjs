@@ -4,7 +4,7 @@ import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
 import {
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelTable,
     ContentModelTableRow,
     ModelToDomContext,
@@ -596,7 +596,7 @@ describe('handleTable', () => {
             dataset: {},
         };
         const onTableSpy = jasmine.createSpy('onTable');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: null!,
             onTable: onTableSpy,

@@ -1,6 +1,6 @@
 import * as setSelection from '../../../lib/publicApi/selection/setSelection';
-import { contentModelDomIndexer } from '../../../lib/corePlugin/utils/contentModelDomIndexer';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
+import { domIndexerImpl } from '../../../lib/corePlugin/utils/domIndexerImpl';
 import {
     ContentModelDocument,
     ContentModelSegment,
@@ -17,13 +17,13 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('contentModelDomIndexer.onSegment', () => {
+describe('domIndexerImpl.onSegment', () => {
     it('onSegment', () => {
         const node = {} as any;
         const paragraph = 'Paragraph' as any;
         const segment = 'Segment' as any;
 
-        contentModelDomIndexer.onSegment(node, paragraph, [segment]);
+        domIndexerImpl.onSegment(node, paragraph, [segment]);
 
         expect(node).toEqual({
             __roosterjsContentModel: { paragraph: 'Paragraph', segments: ['Segment'] },
@@ -31,11 +31,11 @@ describe('contentModelDomIndexer.onSegment', () => {
     });
 });
 
-describe('contentModelDomIndexer.onParagraph', () => {
+describe('domIndexerImpl.onParagraph', () => {
     it('Paragraph, no child', () => {
         const node = document.createElement('div');
 
-        contentModelDomIndexer.onParagraph(node);
+        domIndexerImpl.onParagraph(node);
 
         expect(node.outerHTML).toBe('<div></div>');
     });
@@ -52,7 +52,7 @@ describe('contentModelDomIndexer.onParagraph', () => {
         };
         node.appendChild(text);
 
-        contentModelDomIndexer.onParagraph(node);
+        domIndexerImpl.onParagraph(node);
 
         expect(text.__roosterjsContentModel).toEqual({
             paragraph,
@@ -87,7 +87,7 @@ describe('contentModelDomIndexer.onParagraph', () => {
         node.appendChild(text2);
         node.appendChild(text3);
 
-        contentModelDomIndexer.onParagraph(node);
+        domIndexerImpl.onParagraph(node);
 
         expect(text1.__roosterjsContentModel).toEqual({
             paragraph,
@@ -139,7 +139,7 @@ describe('contentModelDomIndexer.onParagraph', () => {
         node.appendChild(text3);
         node.appendChild(text4);
 
-        contentModelDomIndexer.onParagraph(node);
+        domIndexerImpl.onParagraph(node);
 
         expect(text1.__roosterjsContentModel).toEqual({
             paragraph,
@@ -161,7 +161,7 @@ describe('contentModelDomIndexer.onParagraph', () => {
     });
 });
 
-describe('contentModelDomIndexer.onTable', () => {
+describe('domIndexerImpl.onTable', () => {
     it('onTable', () => {
         const node = {} as any;
         const rows = 'ROWS' as any;
@@ -169,7 +169,7 @@ describe('contentModelDomIndexer.onTable', () => {
             rows: rows,
         } as any;
 
-        contentModelDomIndexer.onTable(node, table);
+        domIndexerImpl.onTable(node, table);
 
         expect(node).toEqual({
             __roosterjsContentModel: { tableRows: rows },
@@ -177,7 +177,7 @@ describe('contentModelDomIndexer.onTable', () => {
     });
 });
 
-describe('contentModelDomIndexer.reconcileSelection', () => {
+describe('domIndexerImpl.reconcileSelection', () => {
     let setSelectionSpy: jasmine.Spy;
     let model: ContentModelDocument;
 
@@ -189,7 +189,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
     it('no old range, fake range', () => {
         const newRangeEx = {} as any;
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         expect(result).toBeFalse();
         expect(setSelectionSpy).not.toHaveBeenCalled();
@@ -203,7 +203,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
             isReverted: false,
         };
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         expect(result).toBeFalse();
         expect(setSelectionSpy).not.toHaveBeenCalled();
@@ -220,9 +220,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const segment = createText('');
 
         paragraph.segments.push(segment);
-        contentModelDomIndexer.onSegment(node, paragraph, [segment]);
+        domIndexerImpl.onSegment(node, paragraph, [segment]);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         const segment1: ContentModelSegment = {
             segmentType: 'Text',
@@ -267,9 +267,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const segment = createText('');
 
         paragraph.segments.push(segment);
-        contentModelDomIndexer.onSegment(node, paragraph, [segment]);
+        domIndexerImpl.onSegment(node, paragraph, [segment]);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         const segment1: ContentModelSegment = {
             segmentType: 'Text',
@@ -319,11 +319,11 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const oldSegment2 = createText('');
 
         paragraph.segments.push(oldSegment1, oldSegment2);
-        contentModelDomIndexer.onSegment(node1, paragraph, [oldSegment1]);
-        contentModelDomIndexer.onSegment(node2, paragraph, [oldSegment2]);
+        domIndexerImpl.onSegment(node1, paragraph, [oldSegment1]);
+        domIndexerImpl.onSegment(node2, paragraph, [oldSegment2]);
         model.blocks.push(paragraph);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         const segment1: ContentModelSegment = {
             segmentType: 'Text',
@@ -389,11 +389,11 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const oldSegment2 = createBr();
 
         paragraph.segments.push(oldSegment1, oldSegment2);
-        contentModelDomIndexer.onSegment(node1, paragraph, [oldSegment1]);
-        contentModelDomIndexer.onSegment(node2, paragraph, [oldSegment2]);
+        domIndexerImpl.onSegment(node1, paragraph, [oldSegment1]);
+        domIndexerImpl.onSegment(node2, paragraph, [oldSegment2]);
         model.blocks.push(paragraph);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         const segment1: ContentModelSegment = {
             segmentType: 'Text',
@@ -445,10 +445,10 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const oldSegment1 = createImage('test');
 
         paragraph.segments.push(oldSegment1);
-        contentModelDomIndexer.onSegment(node1, paragraph, [oldSegment1]);
+        domIndexerImpl.onSegment(node1, paragraph, [oldSegment1]);
         model.blocks.push(paragraph);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         expect(result).toBeFalse();
         expect(node1.__roosterjsContentModel).toEqual({
@@ -501,10 +501,10 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         tableModel.rows[1].cells.push(cell10, cell11, cell12);
         tableModel.rows[2].cells.push(cell20, cell21, cell22);
 
-        contentModelDomIndexer.onTable(node1, tableModel);
+        domIndexerImpl.onTable(node1, tableModel);
         model.blocks.push(tableModel);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         expect(result).toBeFalse();
         expect(node1.__roosterjsContentModel).toEqual({
@@ -532,9 +532,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const segment = createBr({ fontFamily: 'Arial' });
 
         paragraph.segments.push(segment);
-        contentModelDomIndexer.onSegment(node, paragraph, [segment]);
+        domIndexerImpl.onSegment(node, paragraph, [segment]);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
         expect(result).toBeTrue();
         expect(node.__roosterjsContentModel).toEqual({
@@ -566,9 +566,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         const oldSegment2 = createText('st');
 
         paragraph.segments.push(oldSegment1, createSelectionMarker(), oldSegment2);
-        contentModelDomIndexer.onSegment(node, paragraph, [oldSegment1, oldSegment2]);
+        domIndexerImpl.onSegment(node, paragraph, [oldSegment1, oldSegment2]);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx, oldRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx, oldRangeEx);
 
         const segment1: ContentModelSegment = {
             segmentType: 'Text',
@@ -631,9 +631,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         };
 
         paragraph.segments.push(oldSegment1, oldSegment2, oldSegment3);
-        contentModelDomIndexer.onSegment(node, paragraph, [oldSegment1, oldSegment2, oldSegment3]);
+        domIndexerImpl.onSegment(node, paragraph, [oldSegment1, oldSegment2, oldSegment3]);
 
-        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx, oldRangeEx);
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx, oldRangeEx);
 
         const segment1 = createText('te');
         const segment2 = createText('st');

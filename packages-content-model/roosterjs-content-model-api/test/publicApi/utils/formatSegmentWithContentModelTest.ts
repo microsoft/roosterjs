@@ -4,8 +4,8 @@ import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     ContentModelFormatter,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
@@ -14,13 +14,13 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('formatSegmentWithContentModel', () => {
+describe('formatSegment', () => {
     let editor: IStandaloneEditor;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
     let formatContentModel: jasmine.Spy;
     let formatResult: boolean | undefined;
-    let context: FormatWithContentModelContext | undefined;
+    let context: FormatContentModelContext | undefined;
 
     const apiName = 'mockedApi';
 
@@ -31,16 +31,14 @@ describe('formatSegmentWithContentModel', () => {
 
         formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    context = {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    };
-                    formatResult = callback(model, context);
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                context = {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                };
+                formatResult = callback(model, context);
+            });
 
         editor = ({
             focus,

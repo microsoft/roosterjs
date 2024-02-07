@@ -4,8 +4,8 @@ import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('toggleBullet', () => {
@@ -13,7 +13,7 @@ describe('toggleBullet', () => {
     let formatContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
-    let context: FormatWithContentModelContext;
+    let context: FormatContentModelContext;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -21,17 +21,15 @@ describe('toggleBullet', () => {
         context = undefined!;
         formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    context = {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                        rawEvent: options.rawEvent,
-                    };
-                    callback(mockedModel, context);
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                context = {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                    rawEvent: options.rawEvent,
+                };
+                callback(mockedModel, context);
+            });
         focus = jasmine.createSpy('focus');
 
         editor = ({

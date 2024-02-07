@@ -1,7 +1,4 @@
-export { ContentModelPastePlugin } from './paste/ContentModelPastePlugin';
-export { ContentModelEditPlugin } from './edit/ContentModelEditPlugin';
-export {
-    ContentModelAutoFormatPlugin,
-    AutoFormatOptions,
-} from './autoFormat/ContentModelAutoFormatPlugin';
 export { TableEditPlugin } from './tableEdit/TableEditPlugin';
+export { PastePlugin } from './paste/PastePlugin';
+export { EditPlugin } from './edit/EditPlugin';
+export { AutoFormatPlugin, AutoFormatOptions } from './autoFormat/AutoFormatPlugin';

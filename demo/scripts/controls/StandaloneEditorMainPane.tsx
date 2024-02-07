@@ -17,6 +17,7 @@ import { alignCenterButton } from './ribbonButtons/contentModel/alignCenterButto
 import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyButton';
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
+import { AutoFormatPlugin, EditPlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -165,9 +166,9 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private eventViewPlugin: ContentModelEventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
-    private contentModelEditPlugin: ContentModelEditPlugin;
+    private contentModelEditPlugin: EditPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
-    private contentAutoFormatPlugin: ContentModelAutoFormatPlugin;
+    private contentAutoFormatPlugin: AutoFormatPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private tableEditPlugin: TableEditPlugin;
@@ -254,8 +255,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
-        this.contentModelEditPlugin = new ContentModelEditPlugin();
-        this.contentAutoFormatPlugin = new ContentModelAutoFormatPlugin();
+        this.contentModelEditPlugin = new EditPlugin();
+        this.contentAutoFormatPlugin = new AutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.tableEditPlugin = new TableEditPlugin();

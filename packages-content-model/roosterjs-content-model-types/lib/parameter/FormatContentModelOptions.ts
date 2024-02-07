@@ -1,12 +1,12 @@
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
-import type { FormatWithContentModelContext } from './FormatWithContentModelContext';
+import type { FormatContentModelContext } from './FormatContentModelContext';
 import type { OnNodeCreated } from '../context/ModelToDomSettings';
 
 /**
  * Options for API formatWithContentModel
  */
-export interface FormatWithContentModelOptions {
+export interface FormatContentModelOptions {
     /**
      * Name of the format API
      */
@@ -48,5 +48,5 @@ export interface FormatWithContentModelOptions {
  */
 export type ContentModelFormatter = (
     model: ContentModelDocument,
-    context: FormatWithContentModelContext
+    context: FormatContentModelContext
 ) => boolean;

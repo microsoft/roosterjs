@@ -4,6 +4,7 @@ import { addSegment } from '../../modelApi/common/addSegment';
 import { createGeneralBlock } from '../../modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../modelApi/creators/createGeneralSegment';
 import { isBlockElement } from '../utils/isBlockElement';
+import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 import type { ElementProcessor } from 'roosterjs-content-model-types';
 
@@ -20,6 +21,8 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
         },
         () => {
             addBlock(group, block);
+
+            parseFormat(element, context.formatParsers.general, block.format, context);
 
             context.elementProcessors.child(block, element, context);
         }
@@ -45,6 +48,8 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
                 'empty' /*clearFormat, General segment will include all properties and styles when generate back to HTML, so no need to carry over existing segment format*/,
         },
         () => {
+            parseFormat(element, context.formatParsers.general, segment.format, context);
+
             context.elementProcessors.child(segment, element, context);
         }
     );
