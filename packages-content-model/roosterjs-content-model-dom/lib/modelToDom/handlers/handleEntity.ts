@@ -25,7 +25,9 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     const isCursorAroundEntity =
-        wrapper.style.display == 'inline-block' && wrapper.style.width == '100%';
+        context.addDelimiterForEntity &&
+        wrapper.style.display == 'inline-block' &&
+        wrapper.style.width == '100%';
     const isContained = wrapper.parentElement?.classList.contains('blockEntityContainer');
     const elementToReuse = isContained && isCursorAroundEntity ? wrapper.parentElement! : wrapper;
 
@@ -68,7 +70,7 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     if (context.addDelimiterForEntity && entityFormat.isReadonly) {
-        const [after, before] = addDelimiterForEntity(doc, wrapper, context);
+        const [after, before] = addDelimiters(doc, wrapper);
 
         newSegments?.push(after, before);
         context.regularSelection.current.segment = after;
@@ -81,14 +83,11 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 
 function addDelimiterForEntity(doc: Document, wrapper: HTMLElement, context: ModelToDomContext) {
     const [after, before] = addDelimiters(doc, wrapper);
-
     const format = {
         ...context.pendingFormat?.format,
         ...context.defaultFormat,
     };
-
     applyFormat(after, context.formatAppliers.segment, format, context);
     applyFormat(before, context.formatAppliers.segment, format, context);
-
     return [after, before];
 }

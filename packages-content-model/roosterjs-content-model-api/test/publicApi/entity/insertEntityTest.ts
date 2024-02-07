@@ -5,13 +5,13 @@ import insertEntity from '../../../lib/publicApi/entity/insertEntity';
 import { ChangeSource } from 'roosterjs-content-model-core';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('insertEntity', () => {
     let editor: IStandaloneEditor;
-    let context: FormatWithContentModelContext;
+    let context: FormatContentModelContext;
     let wrapper: HTMLElement;
     const model = 'MockedModel' as any;
 
@@ -52,7 +52,7 @@ describe('insertEntity', () => {
 
         formatWithContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake((formatter: Function, options: FormatWithContentModelOptions) => {
+            .and.callFake((formatter: Function, options: FormatContentModelOptions) => {
                 formatter(model, context);
             });
 
@@ -116,6 +116,7 @@ describe('insertEntity', () => {
             wrapper: wrapper,
         });
     });
+
     it('block inline entity to root', () => {
         const entity = insertEntity(editor, type, true, 'root');
 

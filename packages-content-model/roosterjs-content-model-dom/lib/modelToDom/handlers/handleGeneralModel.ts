@@ -1,3 +1,4 @@
+import { applyFormat } from '../utils/applyFormat';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
@@ -19,13 +20,15 @@ export const handleGeneralBlock: ContentModelBlockHandler<ContentModelGeneralBlo
     context,
     refNode
 ) => {
-    let node: Node = group.element;
+    let node: HTMLElement = group.element;
 
     if (refNode && node.parentNode == parent) {
         refNode = reuseCachedElement(parent, node, refNode);
     } else {
-        node = node.cloneNode();
+        node = node.cloneNode() as HTMLElement;
         group.element = node as HTMLElement;
+
+        applyFormat(node, context.formatAppliers.general, group.format, context);
 
         parent.insertBefore(node, refNode);
     }
@@ -54,6 +57,8 @@ export const handleGeneralSegment: ContentModelSegmentHandler<ContentModelGenera
         const element = wrap(doc, node, 'span');
 
         handleSegmentCommon(doc, node, element, group, context, segmentNodes);
+        applyFormat(node, context.formatAppliers.general, group.format, context);
+
         context.onNodeCreated?.(group, node);
     }
 

@@ -61,6 +61,7 @@ export default function insertEntity(
     const document = editor.getDocument();
     const wrapper = document.createElement(isBlock ? BlockEntityTag : InlineEntityTag);
     const display = wrapperDisplay ?? (isBlock ? undefined : 'inline-block');
+
     wrapper.style.setProperty('display', display || null);
 
     if (display == undefined && isBlock) {
