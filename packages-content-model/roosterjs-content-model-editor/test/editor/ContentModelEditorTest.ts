@@ -1,6 +1,4 @@
-import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
-import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/utils/findAllEntities';
 import { ContentModelEditor } from '../../lib/editor/ContentModelEditor';
@@ -38,7 +36,7 @@ describe('ContentModelEditor', () => {
             },
         });
 
-        const model = editor.createContentModel();
+        const model = editor.getContentModelCopy('connected');
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
@@ -75,7 +73,7 @@ describe('ContentModelEditor', () => {
             },
         });
 
-        const model = editor.createContentModel();
+        const model = editor.getContentModelCopy('connected');
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
@@ -88,80 +86,6 @@ describe('ContentModelEditor', () => {
             mockedConfig,
             editorContext
         );
-    });
-
-    it('setContentModel with normal selection', () => {
-        const mockedRange = {
-            type: 'range',
-            range: document.createRange(),
-        } as any;
-        const mockedModel = 'MockedModel' as any;
-        const mockedContext = 'MockedContext' as any;
-        const mockedConfig = 'MockedConfig' as any;
-
-        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedRange);
-        spyOn(createModelToDomContext, 'createModelToDomContextWithConfig').and.returnValue(
-            mockedContext
-        );
-        spyOn(createModelToDomContext, 'createModelToDomConfig').and.returnValue(mockedConfig);
-
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
-
-        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
-
-        const selection = editor.setContentModel(mockedModel);
-
-        expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(2);
-        expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
-            document,
-            div,
-            mockedModel,
-            mockedContext,
-            undefined
-        );
-        expect(createModelToDomContext.createModelToDomContextWithConfig).toHaveBeenCalledWith(
-            mockedConfig,
-            editorContext
-        );
-        expect(selection).toBe(mockedRange);
-    });
-
-    it('setContentModel', () => {
-        const mockedRange = {
-            type: 'range',
-            range: document.createRange(),
-        } as any;
-        const mockedModel = 'MockedModel' as any;
-        const mockedContext = 'MockedContext' as any;
-        const mockedConfig = 'MockedConfig' as any;
-
-        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedRange);
-        spyOn(createModelToDomContext, 'createModelToDomContextWithConfig').and.returnValue(
-            mockedContext
-        );
-        spyOn(createModelToDomContext, 'createModelToDomConfig').and.returnValue(mockedConfig);
-
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
-
-        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
-
-        const selection = editor.setContentModel(mockedModel);
-
-        expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(2);
-        expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
-            document,
-            div,
-            mockedModel,
-            mockedContext,
-            undefined
-        );
-        expect(createModelToDomContext.createModelToDomContextWithConfig).toHaveBeenCalledWith(
-            mockedConfig,
-            editorContext
-        );
-        expect(selection).toBe(mockedRange);
     });
 
     it('createContentModel in EditorReady event', () => {
@@ -179,7 +103,7 @@ describe('ContentModelEditor', () => {
             },
             onPluginEvent: event => {
                 if (event.eventType == PluginEventType.EditorReady) {
-                    model = pluginEditor.createContentModel();
+                    model = pluginEditor.getContentModelCopy('connected');
                 }
             },
         };
@@ -220,7 +144,7 @@ describe('ContentModelEditor', () => {
 
         spyOn(domToContentModel, 'domToContentModel');
 
-        const model = editor.createContentModel();
+        const model = editor.getContentModelCopy('connected');
 
         expect(model).toBe(cachedModel);
         expect(domToContentModel.domToContentModel).not.toHaveBeenCalled();
@@ -253,7 +177,7 @@ describe('ContentModelEditor', () => {
             },
         });
 
-        const model = editor.createContentModel();
+        const model = editor.getContentModelCopy('connected');
 
         expect(model.format).toEqual({
             fontWeight: 'bold',

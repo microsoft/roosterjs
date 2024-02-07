@@ -1,3 +1,4 @@
+import type { ContextMenuPluginState } from '../pluginState/ContextMenuPluginState';
 import type { PluginWithState } from './PluginWithState';
 import type { CopyPastePluginState } from '../pluginState/CopyPastePluginState';
 import type { UndoPluginState } from '../pluginState/UndoPluginState';
@@ -5,8 +6,8 @@ import type { SelectionPluginState } from '../pluginState/SelectionPluginState';
 import type { EntityPluginState } from '../pluginState/EntityPluginState';
 import type { LifecyclePluginState } from '../pluginState/LifecyclePluginState';
 import type { DOMEventPluginState } from '../pluginState/DOMEventPluginState';
-import type { ContentModelCachePluginState } from '../pluginState/ContentModelCachePluginState';
-import type { ContentModelFormatPluginState } from '../pluginState/ContentModelFormatPluginState';
+import type { CachePluginState } from '../pluginState/CachePluginState';
+import type { FormatPluginState } from '../pluginState/FormatPluginState';
 
 /**
  * Core plugins for standalone editor
@@ -15,12 +16,12 @@ export interface StandaloneEditorCorePlugins {
     /**
      * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
      */
-    readonly cache: PluginWithState<ContentModelCachePluginState>;
+    readonly cache: PluginWithState<CachePluginState>;
 
     /**
      * ContentModelFormat plugins helps editor to do formatting on top of content model.
      */
-    readonly format: PluginWithState<ContentModelFormatPluginState>;
+    readonly format: PluginWithState<FormatPluginState>;
 
     /**
      * Copy and paste plugin for handling onCopy and onPaste event
@@ -46,6 +47,11 @@ export interface StandaloneEditorCorePlugins {
      * Undo plugin provides the ability to undo/redo
      */
     readonly undo: PluginWithState<UndoPluginState>;
+
+    /**
+     * Undo plugin provides the ability get context menu items and trigger ContextMenu event
+     */
+    readonly contextMenu: PluginWithState<ContextMenuPluginState>;
 
     /**
      * Lifecycle plugin handles editor initialization and disposing

@@ -1,6 +1,7 @@
 import * as createDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
 import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
 import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
+import * as DOMHelperImpl from '../../lib/editor/DOMHelperImpl';
 import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
 import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
 import {
@@ -24,6 +25,7 @@ describe('createEditorCore', () => {
     const mockedEntityPlugin = createMockedPlugin('entity');
     const mockedSelectionPlugin = createMockedPlugin('selection');
     const mockedUndoPlugin = createMockedPlugin('undo');
+    const mockedContextMenuPlugin = createMockedPlugin('contextMenu');
     const mockedPlugins = {
         cache: mockedCachePlugin,
         format: mockedFormatPlugin,
@@ -33,10 +35,12 @@ describe('createEditorCore', () => {
         entity: mockedEntityPlugin,
         selection: mockedSelectionPlugin,
         undo: mockedUndoPlugin,
+        contextMenu: mockedContextMenuPlugin,
     };
     const mockedDarkColorHandler = 'DARKCOLOR' as any;
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
     const mockedModelToDomSettings = 'MODELTODOM' as any;
+    const mockedDOMHelper = 'DOMHELPER' as any;
 
     beforeEach(() => {
         spyOn(
@@ -52,6 +56,7 @@ describe('createEditorCore', () => {
         spyOn(createDefaultSettings, 'createModelToDomSettings').and.returnValue(
             mockedModelToDomSettings
         );
+        spyOn(DOMHelperImpl, 'createDOMHelper').and.returnValue(mockedDOMHelper);
     });
 
     function runTest(
@@ -73,6 +78,7 @@ describe('createEditorCore', () => {
                 mockedSelectionPlugin,
                 mockedEntityPlugin,
                 mockedUndoPlugin,
+                mockedContextMenuPlugin,
                 mockedLifeCyclePlugin,
             ],
             environment: {
@@ -92,8 +98,9 @@ describe('createEditorCore', () => {
             entity: 'entity' as any,
             selection: 'selection' as any,
             undo: 'undo' as any,
+            contextMenu: 'contextMenu' as any,
+            domHelper: mockedDOMHelper,
             disposeErrorHandler: undefined,
-            zoomScale: 1,
             ...additionalResult,
         });
 
@@ -146,7 +153,6 @@ describe('createEditorCore', () => {
             getDarkColor: mockedGetDarkColor,
             trustedHTMLHandler: mockedTrustHtmlHandler,
             disposeErrorHandler: mockedDisposeErrorHandler,
-            zoomScale: 2,
         } as any;
 
         runTest(mockedDiv, mockedOptions, {
@@ -162,37 +168,17 @@ describe('createEditorCore', () => {
                 mockedPlugin1,
                 mockedPlugin2,
                 mockedUndoPlugin,
+                mockedContextMenuPlugin,
                 mockedLifeCyclePlugin,
             ],
             darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: mockedTrustHtmlHandler,
             disposeErrorHandler: mockedDisposeErrorHandler,
-            zoomScale: 2,
         });
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
             mockedGetDarkColor,
-            undefined
-        );
-    });
-
-    it('Invalid zoom scale', () => {
-        const mockedDiv = {
-            ownerDocument: {},
-            attributes: {
-                a: 'b',
-            },
-        } as any;
-        const mockedOptions = {
-            zoomScale: -1,
-        } as any;
-
-        runTest(mockedDiv, mockedOptions, {});
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback,
             undefined
         );
     });
@@ -210,9 +196,7 @@ describe('createEditorCore', () => {
                 a: 'b',
             },
         } as any;
-        const mockedOptions = {
-            zoomScale: -1,
-        } as any;
+        const mockedOptions = {} as any;
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
@@ -242,9 +226,7 @@ describe('createEditorCore', () => {
                 a: 'b',
             },
         } as any;
-        const mockedOptions = {
-            zoomScale: -1,
-        } as any;
+        const mockedOptions = {} as any;
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
@@ -274,9 +256,7 @@ describe('createEditorCore', () => {
                 a: 'b',
             },
         } as any;
-        const mockedOptions = {
-            zoomScale: -1,
-        } as any;
+        const mockedOptions = {} as any;
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
@@ -306,9 +286,7 @@ describe('createEditorCore', () => {
                 a: 'b',
             },
         } as any;
-        const mockedOptions = {
-            zoomScale: -1,
-        } as any;
+        const mockedOptions = {} as any;
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
@@ -338,9 +316,7 @@ describe('createEditorCore', () => {
                 a: 'b',
             },
         } as any;
-        const mockedOptions = {
-            zoomScale: -1,
-        } as any;
+        const mockedOptions = {} as any;
 
         runTest(mockedDiv, mockedOptions, {
             environment: {

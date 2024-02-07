@@ -201,4 +201,24 @@ describe('createContentModel with selection', () => {
             type: 'table',
         } as any);
     });
+
+    it('Flush mutation before create model', () => {
+        const cachedModel = 'MODEL1' as any;
+        const updatedModel = 'MODEL2' as any;
+        const flushMutationsSpy = jasmine.createSpy('flushMutations').and.callFake(() => {
+            core.cache.cachedModel = updatedModel;
+        });
+
+        core.cache.cachedModel = cachedModel;
+        core.lifecycle = {};
+
+        core.cache.textMutationObserver = {
+            flushMutations: flushMutationsSpy,
+        } as any;
+
+        const model = createContentModel(core);
+
+        expect(model).toBe(updatedModel);
+        expect(flushMutationsSpy).toHaveBeenCalledTimes(1);
+    });
 });

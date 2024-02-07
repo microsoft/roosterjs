@@ -1,7 +1,7 @@
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { expectHtml } from '../../testUtils';
 import { handleImage } from '../../../lib/modelToDom/handlers/handleImage';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import {
     ContentModelBlock,
     ContentModelBlockHandler,
@@ -25,14 +25,14 @@ describe('handleSegment', () => {
 
     function runTest(
         segment: ContentModelImage,
-        expectedInnerHTML: string,
+        expectedInnerHTML: string[],
         expectedCreateBlockFromContentModelCalledTimes: number
     ) {
         parent = document.createElement('div');
 
         handleImage(document, parent, segment, context, []);
 
-        expect(parent.innerHTML).toBe(expectedInnerHTML);
+        expectHtml(parent.innerHTML, expectedInnerHTML);
         expect(handleBlock).toHaveBeenCalledTimes(expectedCreateBlockFromContentModelCalledTimes);
     }
 
@@ -44,7 +44,7 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        runTest(segment, '<span><img src="http://test.com/test"></span>', 0);
+        runTest(segment, ['<span><img src="http://test.com/test"></span>'], 0);
 
         expect(context.imageSelection).toBeUndefined();
     });
@@ -58,7 +58,7 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        runTest(segment, '<span><img src="http://test.com/test"></span>', 0);
+        runTest(segment, ['<span><img src="http://test.com/test"></span>'], 0);
 
         expect(context.imageSelection!.image.src).toBe('http://test.com/test');
     });
@@ -73,7 +73,7 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        runTest(segment, '<span><img src="http://test.com/test" alt="a" title="b"></span>', 0);
+        runTest(segment, ['<span><img src="http://test.com/test" alt="a" title="b"></span>'], 0);
     });
 
     it('image segment with link', () => {
@@ -85,10 +85,10 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        runTest(segment, '<span><a href="/test"><img src="http://test.com/test"></a></span>', 0);
+        runTest(segment, ['<span><a href="/test"><img src="http://test.com/test"></a></span>'], 0);
     });
 
-    itChromeOnly('image segment with size', () => {
+    it('image segment with size', () => {
         const segment: ContentModelImage = {
             segmentType: 'Image',
             src: 'http://test.com/test',
@@ -99,7 +99,10 @@ describe('handleSegment', () => {
 
         runTest(
             segment,
-            '<span><a href="/test"><img src="http://test.com/test" width="100" height="200" style="width: 100px; height: 200px;"></a></span>',
+            [
+                '<span><a href="/test"><img src="http://test.com/test" width="100" height="200" style="width: 100px; height: 200px;"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px;" width="100" height="200"></a></span>',
+            ],
             0
         );
     });
@@ -117,7 +120,7 @@ describe('handleSegment', () => {
 
         runTest(
             segment,
-            '<span><a href="/test"><img src="http://test.com/test" data-a="b"></a></span>',
+            ['<span><a href="/test"><img src="http://test.com/test" data-a="b"></a></span>'],
             0
         );
     });
@@ -133,7 +136,7 @@ describe('handleSegment', () => {
 
         spyOn(stackFormat, 'stackFormat').and.callThrough();
 
-        runTest(segment, '<span><a href="/test"><img src="http://test.com/test"></a></span>', 0);
+        runTest(segment, ['<span><a href="/test"><img src="http://test.com/test"></a></span>'], 0);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');

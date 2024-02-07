@@ -1,16 +1,13 @@
 import * as toggleModelBlockQuote from '../../../lib/modelApi/block/toggleModelBlockQuote';
 import toggleBlockQuote from '../../../lib/publicApi/block/toggleBlockQuote';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
-import {
-    ContentModelFormatter,
-    FormatWithContentModelContext,
-} from 'roosterjs-content-model-types';
+import { ContentModelFormatter, FormatContentModelContext } from 'roosterjs-content-model-types';
 
 describe('toggleBlockQuote', () => {
     const fakeModel: any = { a: 'b' };
     let editor: IStandaloneEditor;
     let formatContentModelSpy: jasmine.Spy;
-    let context: FormatWithContentModelContext;
+    let context: FormatContentModelContext;
 
     beforeEach(() => {
         context = undefined!;
@@ -39,15 +36,28 @@ describe('toggleBlockQuote', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledTimes(1);
-        expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(fakeModel, {
-            marginTop: '1em',
-            marginBottom: '1em',
-            marginLeft: '40px',
-            marginRight: '40px',
-            paddingLeft: '10px',
-            a: 'b',
-            c: 'd',
-        } as any);
+        expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(
+            fakeModel,
+            {
+                marginTop: '1em',
+                marginBottom: '1em',
+                marginLeft: '40px',
+                marginRight: '40px',
+                paddingLeft: '10px',
+                a: 'b',
+                c: 'd',
+            } as any,
+            {
+                marginTop: '1em',
+                marginBottom: '1em',
+                marginLeft: '40px',
+                marginRight: '40px',
+                paddingRight: '10px',
+                direction: 'rtl',
+                a: 'b',
+                c: 'd',
+            } as any
+        );
         expect(context).toEqual({
             newEntities: [],
             newImages: [],
@@ -63,15 +73,28 @@ describe('toggleBlockQuote', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledTimes(1);
-        expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(fakeModel, {
-            marginTop: '1em',
-            marginBottom: '1em',
-            marginLeft: '40px',
-            marginRight: '40px',
-            paddingLeft: '10px',
-            lineHeight: '2',
-            textColor: 'red',
-        } as any);
+        expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(
+            fakeModel,
+            {
+                marginTop: '1em',
+                marginBottom: '1em',
+                marginLeft: '40px',
+                marginRight: '40px',
+                paddingLeft: '10px',
+                lineHeight: '2',
+                textColor: 'red',
+            } as any,
+            {
+                marginTop: '1em',
+                marginBottom: '1em',
+                marginLeft: '40px',
+                marginRight: '40px',
+                paddingRight: '10px',
+                lineHeight: '2',
+                textColor: 'red',
+                direction: 'rtl',
+            }
+        );
         expect(context).toEqual({
             newEntities: [],
             newImages: [],

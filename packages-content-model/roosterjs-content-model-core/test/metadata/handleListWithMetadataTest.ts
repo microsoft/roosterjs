@@ -1,4 +1,4 @@
-import { expectHtml, itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
 import { handleList } from 'roosterjs-content-model-dom/lib/modelToDom/handlers/handleList';
 import { ModelToDomContext } from 'roosterjs-content-model-types';
 import {
@@ -46,7 +46,7 @@ describe('handleList with metadata', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ul style="list-style-type: disc;"></ul></div>');
+        expect(parent.outerHTML).toBe('<div><ul></ul></div>');
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [
@@ -57,9 +57,7 @@ describe('handleList with metadata', () => {
                     listType: 'UL',
                     node: parent.firstChild as HTMLElement,
                     dataset: {},
-                    format: {
-                        listStyleType: 'disc',
-                    },
+                    format: {},
                 },
             ],
         });
@@ -69,9 +67,7 @@ describe('handleList with metadata', () => {
         const listItem = createListItem([createListLevel('OL')]);
 
         handleList(document, parent, listItem, context, null);
-        const possibleResults = [
-            '<div><ol start="1" style="list-style-type: decimal;"></ol></div>',
-        ];
+        const possibleResults = ['<div><ol start="1"></ol></div>'];
 
         expectHtml(parent.outerHTML, possibleResults);
         expect(context.listFormat).toEqual({
@@ -84,9 +80,7 @@ describe('handleList with metadata', () => {
                     listType: 'OL',
                     node: parent.firstChild as HTMLElement,
                     dataset: {},
-                    format: {
-                        listStyleType: 'decimal',
-                    },
+                    format: {},
                 },
             ],
         });
@@ -118,7 +112,7 @@ describe('handleList with metadata', () => {
         });
     });
 
-    itChromeOnly('Context has OL, single OL list item, do not reuse existing OL element', () => {
+    it('Context has OL, single OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
             createListLevel('OL', {}, { editingInfo: JSON.stringify({ orderedStyleType: 2 }) }),
@@ -150,7 +144,7 @@ describe('handleList with metadata', () => {
         });
     });
 
-    itChromeOnly('Context has OL, 2 level OL list item, reuse existing OL element', () => {
+    it('Context has OL, 2 level OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
             createListLevel('OL'),
@@ -187,7 +181,7 @@ describe('handleList with metadata', () => {
         });
     });
 
-    itChromeOnly('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
+    it('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
             createListLevel(
@@ -209,9 +203,10 @@ describe('handleList with metadata', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe(
-            '<div><ol></ol><ol start="2" data-editing-info="{&quot;unorderedStyleType&quot;:3}" style="list-style-type: decimal;"><ol start="1" style="list-style-type: lower-alpha;"></ol></ol></div>'
-        );
+        expectHtml(parent.outerHTML, [
+            '<div><ol></ol><ol start="2" data-editing-info="{&quot;unorderedStyleType&quot;:3}" style="list-style-type: decimal;"><ol start="1" style="list-style-type: lower-alpha;"></ol></ol></div>',
+            '<div><ol></ol><ol start="2" data-editing-info="{&quot;unorderedStyleType&quot;:3}"><ol start="1"></ol></ol></div>',
+        ]);
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 0],
             nodeStack: [
@@ -222,17 +217,13 @@ describe('handleList with metadata', () => {
                     listType: 'OL',
                     node: existingOL.nextSibling as HTMLElement,
                     dataset: { editingInfo: JSON.stringify({ unorderedStyleType: 3 }) },
-                    format: {
-                        listStyleType: 'decimal',
-                    },
+                    format: {},
                 },
                 {
                     listType: 'OL',
                     node: (existingOL.nextSibling as HTMLElement).firstChild as HTMLElement,
                     dataset: {},
-                    format: {
-                        listStyleType: 'lower-alpha',
-                    },
+                    format: {},
                 },
             ],
         });
@@ -286,9 +277,7 @@ describe('handleList with metadata', () => {
         ];
 
         handleList(document, parent, listItem, context, null);
-        const possibleResults = [
-            '<div><ul><ol></ol></ul><ol start="2" style="list-style-type: decimal;"></ol></div>',
-        ];
+        const possibleResults = ['<div><ul><ol></ol></ul><ol start="2"></ol></div>'];
 
         expectHtml(parent.outerHTML, possibleResults);
 
@@ -302,9 +291,7 @@ describe('handleList with metadata', () => {
                     listType: 'OL',
                     node: existingOL1.nextSibling as HTMLElement,
                     dataset: {},
-                    format: {
-                        listStyleType: 'decimal',
-                    },
+                    format: {},
                 },
             ],
         });
@@ -330,9 +317,7 @@ describe('handleList with metadata', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        const possibleResults = [
-            '<div><ul><ol></ol><ol start="3" style="list-style-type: lower-alpha;"></ol></ul></div>',
-        ];
+        const possibleResults = ['<div><ul><ol></ol><ol start="3"></ol></ul></div>'];
 
         expectHtml(parent.outerHTML, possibleResults);
 
@@ -352,7 +337,6 @@ describe('handleList with metadata', () => {
                     dataset: {},
                     format: {
                         startNumberOverride: 3,
-                        listStyleType: 'lower-alpha',
                     },
                 },
             ],
@@ -376,7 +360,7 @@ describe('handleList with metadata', () => {
         handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe(
-            '<div><ul style="margin: 3px 2px 4px 1px; padding: 7px 6px 8px 5px; list-style-type: disc;"></ul></div>'
+            '<div><ul style="margin: 3px 2px 4px 1px; padding: 7px 6px 8px 5px;"></ul></div>'
         );
     });
 });

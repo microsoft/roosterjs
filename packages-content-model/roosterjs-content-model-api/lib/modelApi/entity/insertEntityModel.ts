@@ -16,7 +16,7 @@ import type {
     ContentModelEntity,
     ContentModelParagraph,
     DeleteSelectionResult,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     InsertEntityPosition,
 } from 'roosterjs-content-model-types';
 
@@ -29,7 +29,7 @@ export function insertEntityModel(
     position: InsertEntityPosition,
     isBlock: boolean,
     focusAfterEntity?: boolean,
-    context?: FormatWithContentModelContext
+    context?: FormatContentModelContext
 ) {
     let blockParent: ContentModelBlockGroup | undefined;
     let blockIndex = -1;

@@ -5,8 +5,8 @@ import {
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
     IStandaloneEditor,
     InsertPoint,
 } from 'roosterjs-content-model-types';
@@ -28,7 +28,7 @@ describe('applyDefaultFormat', () => {
     let takeSnapshotSpy: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
 
-    let context: FormatWithContentModelContext | undefined;
+    let context: FormatContentModelContext | undefined;
     let model: ContentModelDocument;
 
     let formatResult: boolean | undefined;
@@ -52,7 +52,7 @@ describe('applyDefaultFormat', () => {
         formatContentModelSpy = jasmine
             .createSpy('formatContentModelSpy')
             .and.callFake(
-                (formatter: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                (formatter: ContentModelFormatter, options: FormatContentModelOptions) => {
                     context = {
                         deletedEntities: [],
                         newEntities: [],
@@ -64,7 +64,9 @@ describe('applyDefaultFormat', () => {
             );
 
         editor = {
-            isNodeInEditor: () => true,
+            getDOMHelper: () => ({
+                isNodeInEditor: () => true,
+            }),
             getDOMSelection: getDOMSelectionSpy,
             formatContentModel: formatContentModelSpy,
             takeSnapshot: takeSnapshotSpy,

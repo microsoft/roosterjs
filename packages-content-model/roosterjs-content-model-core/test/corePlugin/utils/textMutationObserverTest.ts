@@ -110,6 +110,25 @@ describe('TextMutationObserverImpl', () => {
             window.setTimeout(resolve, 10);
         });
 
+        expect(onMutation).toHaveBeenCalledWith(true);
+    });
+
+    it('flush mutation without change', async () => {
+        const div = document.createElement('div');
+        const text = document.createTextNode('test');
+
+        div.appendChild(text);
+
+        const onMutation = jasmine.createSpy('onMutation');
+        const observer = TextMutationObserver.createTextMutationObserver(div, onMutation);
+
+        observer.startObserving();
+        observer.flushMutations();
+
+        await new Promise<void>(resolve => {
+            window.setTimeout(resolve, 10);
+        });
+
         expect(onMutation).not.toHaveBeenCalled();
     });
 });

@@ -2,7 +2,7 @@ import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     DeleteResult,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
@@ -15,7 +15,7 @@ export function handleKeyboardEventResult(
     model: ContentModelDocument,
     rawEvent: KeyboardEvent,
     result: DeleteResult,
-    context: FormatWithContentModelContext
+    context: FormatContentModelContext
 ): boolean {
     context.skipUndoSnapshot = true;
     context.clearModelCache = false;

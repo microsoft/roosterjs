@@ -1,5 +1,5 @@
 import type { TableSelectionCoordinates } from '../selection/TableSelectionCoordinates';
-import type { EntityState } from './FormatWithContentModelContext';
+import type { EntityState } from './FormatContentModelContext';
 import type { SelectionType } from '../selection/DOMSelection';
 
 /**
@@ -25,6 +25,12 @@ export interface RangeSnapshotSelection extends SnapshotSelectionBase<'range'> {
      * End path of selection
      */
     end: number[];
+
+    /**
+     * Whether the selection was from left to right (in document order) or
+     * right to left (reverse of document order)
+     */
+    isReverted: boolean;
 }
 
 /**

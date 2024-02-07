@@ -5,7 +5,7 @@ import {
     ContentModelDocument,
     ContentModelLink,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     addSegment,
@@ -37,15 +37,13 @@ describe('insertLink', () => {
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                formatResult = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         editor.formatContentModel = formatContentModel;
 
@@ -396,6 +394,47 @@ describe('insertLink', () => {
                                     underline: false,
                                 },
                             },
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Invalid url', () => {
+        const doc = createContentModelDocument();
+        addSegment(doc, createSelectionMarker());
+
+        const url = 'javasc\nript:onC\nlick()';
+        let formatResult: boolean | undefined;
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                formatResult = callback(doc, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
+
+        editor.formatContentModel = formatContentModel;
+
+        insertLink(editor, url);
+
+        expect(formatContentModel).toHaveBeenCalledTimes(0);
+        expect(formatResult).toBeFalsy();
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
                             isSelected: true,
                         },
                     ],

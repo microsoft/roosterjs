@@ -1,3 +1,4 @@
+import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from '../pluginState/PluginState';
 import type { EditorPlugin } from './EditorPlugin';
@@ -5,7 +6,7 @@ import type { ClipboardData } from '../parameter/ClipboardData';
 import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
-import type { EntityState } from '../parameter/FormatWithContentModelContext';
+import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -19,8 +20,8 @@ import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
 import type {
     ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../parameter/FormatWithContentModelOptions';
+    FormatContentModelOptions,
+} from '../parameter/FormatContentModelOptions';
 
 /**
  * Create a EditorContext object used by ContentModel API
@@ -80,12 +81,12 @@ export type SetDOMSelection = (
  * If there is cached model, it will be used and updated.
  * @param core The StandaloneEditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
- * @param options More options, see FormatWithContentModelOptions
+ * @param options More options, see FormatContentModelOptions
  */
 export type FormatContentModel = (
     core: StandaloneEditorCore,
     formatter: ContentModelFormatter,
-    options?: FormatWithContentModelOptions
+    options?: FormatContentModelOptions
 ) => void;
 
 /**
@@ -217,7 +218,7 @@ export interface StandaloneCoreApiMap {
      * If there is cached model, it will be used and updated.
      * @param core The StandaloneEditorCore object
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
     formatContentModel: FormatContentModel;
 
@@ -341,19 +342,16 @@ export interface StandaloneEditorCore extends PluginState {
     readonly trustedHTMLHandler: TrustedHTMLHandler;
 
     /**
+     * A helper class to provide DOM access APIs
+     */
+    readonly domHelper: DOMHelper;
+
+    /**
      * A callback to be invoked when any exception is thrown during disposing editor
      * @param plugin The plugin that causes exception
      * @param error The error object we got
      */
     readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
-
-    /**
-     * @deprecated Will be removed soon.
-     * Current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     */
-    zoomScale: number;
 }
 
 /**

@@ -39,11 +39,13 @@ export const zoom: ContentModelRibbonButton<ZoomButtonStringKey> = {
     },
     onClick: (editor, key) => {
         const zoomScale = DropDownValues[key as keyof typeof DropDownItems];
-        editor.setZoomScale(zoomScale);
         editor.focus();
 
         // Let main pane know this state change so that it can be persisted when pop out/pop in
         MainPaneBase.getInstance().setScale(zoomScale);
+
+        editor.triggerEvent('zoomChanged', { newZoomScale: zoomScale });
+
         return true;
     },
 };

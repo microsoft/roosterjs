@@ -1,3 +1,4 @@
+import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
 import type { PluginEventType } from '../event/PluginEventType';
 import type { PasteType } from '../enum/PasteType';
@@ -8,14 +9,11 @@ import type { Snapshot } from '../parameter/Snapshot';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { DOMSelection } from '../selection/DOMSelection';
-import type { DomToModelOption } from '../context/DomToModelOption';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
-import type { ModelToDomOption } from '../context/ModelToDomOption';
-import type { OnNodeCreated } from '../context/ModelToDomSettings';
 import type {
     ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../parameter/FormatWithContentModelOptions';
+    FormatContentModelOptions,
+} from '../parameter/FormatContentModelOptions';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
@@ -26,27 +24,17 @@ import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 export interface IStandaloneEditor {
     /**
      * Create Content Model from DOM tree in this editor
-     * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),
-     * otherwise it will create Content Model for the whole content in editor.
-     * @param option The options to customize the behavior of DOM to Content Model conversion
-     * @param selectionOverride When specified, use this selection to override existing selection inside editor
+     * @param mode What kind of Content Model we want. Currently we support the following values:
+     * - connected: Returns a connect Content Model object. "Connected" means if there is any entity inside editor, the returned Content Model will
+     * contain the same wrapper element for entity. This option should only be used in some special cases. In most cases we should use "disconnected"
+     * to get a fully disconnected Content Model so that any change to the model will not impact editor content.
+     * - disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won't impact the editor content.
+     * If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
+     * If editor is in dark mode, the cloned entity will be converted back to light mode.
+     * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
+     * instead to improve performance. This is mostly used for retrieve current format state.
      */
-    createContentModel(
-        option?: DomToModelOption,
-        selectionOverride?: DOMSelection
-    ): ContentModelDocument;
-
-    /**
-     * Set content with content model
-     * @param model The content model to set
-     * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
-     */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ): DOMSelection | null;
+    getContentModelCopy(mode: 'connected' | 'disconnected' | 'reduced'): ContentModelDocument;
 
     /**
      * Get current running environment, such as if editor is running on Mac
@@ -72,12 +60,9 @@ export interface IStandaloneEditor {
      * to do format change. Then according to the return value, write back the modified content model into editor.
      * If there is cached model, it will be used and updated.
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
-    formatContentModel(
-        formatter: ContentModelFormatter,
-        options?: FormatWithContentModelOptions
-    ): void;
+    formatContentModel(formatter: ContentModelFormatter, options?: FormatContentModelOptions): void;
 
     /**
      * Get pending format of editor if any, or return null
@@ -89,6 +74,11 @@ export interface IStandaloneEditor {
      * @returns True if editor is disposed, otherwise false
      */
     isDisposed(): boolean;
+
+    /**
+     * Get a DOM Helper object to help access DOM tree in editor
+     */
+    getDOMHelper(): DOMHelper;
 
     /**
      * Get document which contains this editor
@@ -134,21 +124,6 @@ export interface IStandaloneEditor {
     setDarkModeState(isDarkMode?: boolean): void;
 
     /**
-     * Get current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @returns current zoom scale number
-     */
-    getZoomScale(): number;
-
-    /**
-     * Set current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     */
-    setZoomScale(scale: number): void;
-
-    /**
      * Add a single undo snapshot to undo stack
      */
     takeSnapshot(): Snapshot | null;
@@ -192,12 +167,6 @@ export interface IStandaloneEditor {
     stopShadowEdit(): void;
 
     /**
-     * Check if the given DOM node is in editor
-     * @param node The node to check
-     */
-    isNodeInEditor(node: Node): boolean;
-
-    /**
      * Paste into editor using a clipboardData object
      * @param clipboardData Clipboard data retrieved from clipboard
      * @param pasteType Type of paste
@@ -213,6 +182,7 @@ export interface IStandaloneEditor {
      * Dispose this editor, dispose all plugins and custom data
      */
     dispose(): void;
+
     /**
      * Check if focus is in editor now
      * @returns true if focus is in editor, otherwise false

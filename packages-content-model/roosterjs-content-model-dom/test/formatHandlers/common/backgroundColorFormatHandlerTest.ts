@@ -2,7 +2,7 @@ import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
-import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { expectHtml } from '../../testUtils';
 import {
     BackgroundColorFormat,
     DomToModelContext,

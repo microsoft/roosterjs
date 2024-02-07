@@ -1,6 +1,10 @@
 import { ChangeSource } from '../constants/ChangeSource';
+import { cloneModel } from '../publicApi/model/cloneModel';
+import { createEmptyModel, tableProcessor } from 'roosterjs-content-model-dom';
 import { createStandaloneEditorCore } from './createStandaloneEditorCore';
+import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import { transformColor } from '../publicApi/color/transformColor';
+import type { CachedElementHandler } from '../publicApi/model/cloneModel';
 import type {
     ClipboardData,
     ContentModelDocument,
@@ -8,13 +12,11 @@ import type {
     ContentModelSegmentFormat,
     DarkColorHandler,
     DOMEventRecord,
+    DOMHelper,
     DOMSelection,
-    DomToModelOption,
     EditorEnvironment,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
     IStandaloneEditor,
-    ModelToDomOption,
-    OnNodeCreated,
     PasteType,
     PluginEventData,
     PluginEventFromType,
@@ -46,7 +48,10 @@ export class StandaloneEditor implements IStandaloneEditor {
 
         onBeforeInitializePlugins?.();
 
-        this.getCore().plugins.forEach(plugin => plugin.initialize(this));
+        const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
+
+        this.core.api.setContentModel(this.core, initialModel, { ignoreSelection: true });
+        this.core.plugins.forEach(plugin => plugin.initialize(this));
     }
 
     /**
@@ -81,31 +86,38 @@ export class StandaloneEditor implements IStandaloneEditor {
 
     /**
      * Create Content Model from DOM tree in this editor
-     * @param option The option to customize the behavior of DOM to Content Model conversion
+     * @param mode What kind of Content Model we want. Currently we support the following values:
+     * - connected: Returns a connect Content Model object. "Connected" means if there is any entity inside editor, the returned Content Model will
+     * contain the same wrapper element for entity. This option should only be used in some special cases. In most cases we should use "disconnected"
+     * to get a fully disconnected Content Model so that any change to the model will not impact editor content.
+     * - disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won't impact the editor content.
+     * If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
+     * If editor is in dark mode, the cloned entity will be converted back to light mode.
+     * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
+     * instead to improve performance. This is mostly used for retrieve current format state.
      */
-    createContentModel(
-        option?: DomToModelOption,
-        selectionOverride?: DOMSelection
-    ): ContentModelDocument {
+    getContentModelCopy(mode: 'connected' | 'disconnected' | 'reduced'): ContentModelDocument {
         const core = this.getCore();
 
-        return core.api.createContentModel(core, option, selectionOverride);
-    }
+        switch (mode) {
+            case 'connected':
+                return core.api.createContentModel(core, {
+                    processorOverride: {
+                        table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
+                    },
+                });
 
-    /**
-     * Set content with content model
-     * @param model The content model to set
-     * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
-     */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ): DOMSelection | null {
-        const core = this.getCore();
-
-        return core.api.setContentModel(core, model, option, onNodeCreated);
+            case 'disconnected':
+                return cloneModel(core.api.createContentModel(core), {
+                    includeCachedElement: this.cloneOptionCallback,
+                });
+            case 'reduced':
+                return core.api.createContentModel(core, {
+                    processorOverride: {
+                        child: reducedModelChildProcessor,
+                    },
+                });
+        }
     }
 
     /**
@@ -140,11 +152,11 @@ export class StandaloneEditor implements IStandaloneEditor {
      * to do format change. Then according to the return value, write back the modified content model into editor.
      * If there is cached model, it will be used and updated.
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
     formatContentModel(
         formatter: ContentModelFormatter,
-        options?: FormatWithContentModelOptions
+        options?: FormatContentModelOptions
     ): void {
         const core = this.getCore();
 
@@ -156,6 +168,13 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     getPendingFormat(): ContentModelSegmentFormat | null {
         return this.getCore().format.pendingFormat?.format ?? null;
+    }
+
+    /**
+     * Get a DOM Helper object to help access DOM tree in editor
+     */
+    getDOMHelper(): DOMHelper {
+        return this.getCore().domHelper;
     }
 
     /**
@@ -337,52 +356,6 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Check if the given DOM node is in editor
-     * @param node The node to check
-     */
-    isNodeInEditor(node: Node): boolean {
-        const core = this.getCore();
-
-        return core.contentDiv.contains(node);
-    }
-
-    /**
-     * Get current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @returns current zoom scale number
-     */
-    getZoomScale(): number {
-        return this.getCore().zoomScale;
-    }
-
-    /**
-     * Set current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
-     */
-    setZoomScale(scale: number): void {
-        const core = this.getCore();
-
-        if (scale > 0 && scale <= 10) {
-            const oldValue = core.zoomScale;
-            core.zoomScale = scale;
-
-            if (oldValue != scale) {
-                this.triggerEvent(
-                    'zoomChanged',
-                    {
-                        oldZoomScale: oldValue,
-                        newZoomScale: scale,
-                    },
-                    true /*broadcast*/
-                );
-            }
-        }
-    }
-
-    /**
      * Get a function to convert HTML string to trusted HTML string.
      * By default it will just return the input HTML directly. To override this behavior,
      * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
@@ -402,4 +375,23 @@ export class StandaloneEditor implements IStandaloneEditor {
         }
         return this.core;
     }
+
+    private cloneOptionCallback: CachedElementHandler = (node, type) => {
+        if (type == 'cache') {
+            return undefined;
+        }
+
+        const result = node.cloneNode(true /*deep*/) as HTMLElement;
+
+        if (this.isDarkMode()) {
+            const colorHandler = this.getColorManager();
+
+            transformColor(result, true /*includeSelf*/, 'darkToLight', colorHandler);
+
+            result.style.color = result.style.color || 'inherit';
+            result.style.backgroundColor = result.style.backgroundColor || 'inherit';
+        }
+
+        return result;
+    };
 }

@@ -1,5 +1,4 @@
 import * as PastePluginFile from '../../lib/paste/Excel/processPastedContentFromExcel';
-import { Browser } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { processPastedContentFromExcel } from '../../lib/paste/Excel/processPastedContentFromExcel';
@@ -46,7 +45,7 @@ describe('processPastedContentFromExcelTest', () => {
         );
 
         //Assert
-        if (expected && Browser.isChrome) {
+        if (expected) {
             expect(div.innerHTML.replace(' ', '')).toBe(expected.replace(' ', ''));
         }
 
@@ -357,9 +356,7 @@ describe('Do not run scenarios', () => {
         }
         moveChildNodes(div, fragment1);
 
-        if (Browser.isChrome) {
-            expect(div.innerHTML).toEqual(result);
-        }
+        expect(div.innerHTML).toEqual(result);
     }
 
     it('excel is modified', () => {

@@ -121,6 +121,7 @@ describe('childProcessor', () => {
                 endOffset: 0,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
         context.pendingFormat = {
             format: {
@@ -166,6 +167,7 @@ describe('childProcessor', () => {
                 endOffset: 0,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
         context.pendingFormat = {
             format: {
@@ -218,6 +220,7 @@ describe('childProcessor', () => {
                 endOffset: 2,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -253,6 +256,7 @@ describe('childProcessor', () => {
                 endOffset: 1,
                 collapsed: true,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -288,6 +292,7 @@ describe('childProcessor', () => {
                 endOffset: 10,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -323,6 +328,7 @@ describe('childProcessor', () => {
                 endOffset: 5,
                 collapsed: true,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -357,6 +363,7 @@ describe('childProcessor', () => {
                 endOffset: 5,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -403,6 +410,7 @@ describe('childProcessor', () => {
                 endOffset: 0,
                 collapsed: true,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);

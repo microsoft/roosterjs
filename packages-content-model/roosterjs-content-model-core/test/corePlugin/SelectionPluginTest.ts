@@ -248,6 +248,7 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
         });
     });
 
@@ -463,6 +464,7 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
         });
     });
 
@@ -500,6 +502,7 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'range',
             range: mockedRange,
+            isReverted: false,
         });
     });
 
@@ -567,5 +570,239 @@ describe('SelectionPlugin handle image selection', () => {
 
         expect(stopPropagationSpy).not.toHaveBeenCalled();
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+    });
+});
+
+describe('SelectionPlugin on Safari', () => {
+    let disposer: jasmine.Spy;
+    let createElementSpy: jasmine.Spy;
+    let appendChildSpy: jasmine.Spy;
+    let attachDomEvent: jasmine.Spy;
+    let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
+    let getDocumentSpy: jasmine.Spy;
+    let hasFocusSpy: jasmine.Spy;
+    let isInShadowEditSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let editor: IStandaloneEditor;
+
+    beforeEach(() => {
+        disposer = jasmine.createSpy('disposer');
+        createElementSpy = jasmine.createSpy('createElement').and.returnValue(MockedStyleNode);
+        appendChildSpy = jasmine.createSpy('appendChild');
+        attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
+        removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
+        getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            createElement: createElementSpy,
+            head: {
+                appendChild: appendChildSpy,
+            },
+            addEventListener: addEventListenerSpy,
+            removeEventListener: removeEventListenerSpy,
+        });
+        hasFocusSpy = jasmine.createSpy('hasFocus');
+        isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: true,
+            }),
+            hasFocus: hasFocusSpy,
+            isInShadowEdit: isInShadowEditSpy,
+            getDOMSelection: getDOMSelectionSpy,
+        } as any) as IStandaloneEditor;
+    });
+
+    it('init and dispose', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+
+        plugin.initialize(editor);
+
+        expect(state).toEqual({
+            selection: null,
+            selectionStyleNode: MockedStyleNode,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(attachDomEvent).toHaveBeenCalled();
+        expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
+        expect(removeEventListenerSpy).not.toHaveBeenCalled();
+        expect(disposer).not.toHaveBeenCalled();
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+
+        plugin.dispose();
+
+        expect(removeEventListenerSpy).toHaveBeenCalledWith('selectionchange', onSelectionChange);
+        expect(disposer).toHaveBeenCalled();
+    });
+
+    it('onSelectionChange when editor has focus, no selection, not in shadow edit', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = 'OLDSELECTION' as any;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(null);
+
+        onSelectionChange();
+
+        expect(state).toEqual({
+            selection: mockedOldSelection,
+            selectionStyleNode: MockedStyleNode,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange when editor has focus, range selection, not in shadow edit', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = 'OLDSELECTION' as any;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'range',
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+
+        onSelectionChange();
+
+        expect(state).toEqual({
+            selection: mockedNewSelection,
+            selectionStyleNode: MockedStyleNode,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange when editor has focus, table selection, not in shadow edit', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = 'OLDSELECTION' as any;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'table',
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+
+        onSelectionChange();
+
+        expect(state).toEqual({
+            selection: mockedOldSelection,
+            selectionStyleNode: MockedStyleNode,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange when editor has focus, image selection, not in shadow edit', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = 'OLDSELECTION' as any;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'image',
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+
+        onSelectionChange();
+
+        expect(state).toEqual({
+            selection: mockedOldSelection,
+            selectionStyleNode: MockedStyleNode,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange when editor has focus, is in shadow edit', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = 'OLDSELECTION' as any;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'range',
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(true);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+
+        onSelectionChange();
+
+        expect(state).toEqual({
+            selection: mockedOldSelection,
+            selectionStyleNode: MockedStyleNode,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('onSelectionChange when editor does not have focus', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = 'OLDSELECTION' as any;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'range',
+        } as any;
+
+        hasFocusSpy.and.returnValue(false);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+
+        onSelectionChange();
+
+        expect(state).toEqual({
+            selection: mockedOldSelection,
+            selectionStyleNode: MockedStyleNode,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
     });
 });

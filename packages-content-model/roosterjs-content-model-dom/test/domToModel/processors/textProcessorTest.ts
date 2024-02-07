@@ -4,12 +4,12 @@ import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createRange } from 'roosterjs-editor-dom';
+import { createRange } from '../../testUtils';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 import {
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelParagraph,
     ContentModelText,
     DomToModelContext,
@@ -384,6 +384,7 @@ describe('textProcessor', () => {
                 endOffset: 2,
                 collapsed: true,
             } as any,
+            isReverted: false,
         };
 
         textProcessor(doc, text, context);
@@ -571,7 +572,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument();
         const text = document.createTextNode('test');
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,
@@ -605,7 +606,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument();
         const text = document.createTextNode('test');
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,
@@ -616,6 +617,7 @@ describe('textProcessor', () => {
         context.selection = {
             type: 'range',
             range: createRange(text, 2),
+            isReverted: false,
         };
 
         textProcessor(doc, text, context);
@@ -649,7 +651,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument();
         const text = document.createTextNode('test');
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,
@@ -660,6 +662,7 @@ describe('textProcessor', () => {
         context.selection = {
             type: 'range',
             range: createRange(text, 1, text, 3),
+            isReverted: false,
         };
 
         textProcessor(doc, text, context);
@@ -745,6 +748,7 @@ describe('textProcessor', () => {
                 startOffset: 2,
                 endOffset: 2,
             } as any,
+            isReverted: false,
         };
         context.pendingFormat = {
             format: {
@@ -803,6 +807,7 @@ describe('textProcessor', () => {
                 startOffset: 1,
                 endOffset: 3,
             } as any,
+            isReverted: false,
         };
         context.pendingFormat = {
             format: {
@@ -863,6 +868,7 @@ describe('textProcessor', () => {
                 startOffset: 2,
                 endOffset: 2,
             } as any,
+            isReverted: false,
         };
         context.pendingFormat = {
             format: {

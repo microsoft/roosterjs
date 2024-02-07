@@ -97,7 +97,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         let node: Node | null = rawEvent.target as Node;
 
         if (isClicking && this.editor) {
-            while (node && this.editor.isNodeInEditor(node)) {
+            while (node && this.editor.getDOMHelper().isNodeInEditor(node)) {
                 if (isEntityElement(node)) {
                     this.triggerEvent(editor, node as HTMLElement, 'click', rawEvent);
                     break;
@@ -175,7 +175,10 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
     private getChangedEntities(editor: IStandaloneEditor): ChangedEntity[] {
         const result: ChangedEntity[] = [];
 
-        findAllEntities(editor.createContentModel(), result);
+        editor.formatContentModel(model => {
+            findAllEntities(model, result);
+            return false;
+        });
 
         getObjectKeys(this.state.entityMap).forEach(id => {
             const entry = this.state.entityMap[id];

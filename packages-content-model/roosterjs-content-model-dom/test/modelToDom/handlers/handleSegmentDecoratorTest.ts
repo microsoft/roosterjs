@@ -1,5 +1,5 @@
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { expectHtml } from '../../testUtils';
 import { handleSegmentDecorator } from '../../../lib/modelToDom/handlers/handleSegmentDecorator';
 import {
     ContentModelCode,

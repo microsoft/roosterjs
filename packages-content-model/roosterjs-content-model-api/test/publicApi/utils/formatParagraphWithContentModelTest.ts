@@ -4,8 +4,8 @@ import {
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelFormatter,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
@@ -16,7 +16,7 @@ import {
 describe('formatParagraphWithContentModel', () => {
     let editor: IStandaloneEditor;
     let model: ContentModelDocument;
-    let context: FormatWithContentModelContext;
+    let context: FormatContentModelContext;
 
     const mockedContainer = 'C' as any;
     const mockedOffset = 'O' as any;
@@ -28,18 +28,16 @@ describe('formatParagraphWithContentModel', () => {
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    context = {
-                        newEntities: [],
-                        newImages: [],
-                        deletedEntities: [],
-                        rawEvent: options.rawEvent,
-                    };
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                context = {
+                    newEntities: [],
+                    newImages: [],
+                    deletedEntities: [],
+                    rawEvent: options.rawEvent,
+                };
 
-                    callback(model, context);
-                }
-            );
+                callback(model, context);
+            });
 
         editor = ({
             getFocusedPosition: () => ({ node: mockedContainer, offset: mockedOffset }),

@@ -1,8 +1,8 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
-import { createRibbonPlugin, RibbonPlugin } from 'roosterjs-react';
+import { ContentModelRibbonPlugin } from '../../ribbonButtons/contentModel/ContentModelRibbonPlugin';
+import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -10,17 +10,17 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     ContentModelPane,
     ContentModelPaneProps
 > {
-    private contentModelRibbon: RibbonPlugin;
+    private contentModelRibbon: ContentModelRibbonPlugin;
 
     constructor() {
         super(ContentModelPane, 'contentModel', 'Content Model (Under development)');
-        this.contentModelRibbon = createRibbonPlugin();
+        this.contentModelRibbon = new ContentModelRibbonPlugin();
     }
 
     initialize(editor: IEditor): void {
         super.initialize(editor);
 
-        this.contentModelRibbon.initialize(editor);
+        this.contentModelRibbon.initialize(editor as IContentModelEditor); // Temporarily use IContentModelEditor here. TODO: Port side pane to use IStandaloneEditor
         editor.getDocument().addEventListener('selectionchange', this.onModelChangeFromSelection);
     }
 
@@ -36,11 +36,10 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.ContentChanged && e.source == 'RefreshModel') {
             this.getComponent(component => {
-                const model = isContentModelEditor(this.editor)
-                    ? this.editor.createContentModel()
-                    : null;
+                // TODO: Port to use IStandaloneEditor and remove type cast here
+                const model = (this.editor as IContentModelEditor).getContentModelCopy('connected');
                 component.setContentModel(model);
-                setCurrentContentModel(this.editor, model);
+                setCurrentContentModel(model);
             });
         } else if (
             e.eventType == PluginEventType.Input ||
@@ -49,7 +48,7 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
             this.onModelChange();
         }
 
-        this.contentModelRibbon.onPluginEvent(e);
+        // this.contentModelRibbon.onPluginEvent(e);
     }
 
     getInnerRibbonPlugin() {
@@ -72,11 +71,10 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
 
     private onModelChange = () => {
         this.getComponent(component => {
-            const model = isContentModelEditor(this.editor)
-                ? this.editor.createContentModel()
-                : null;
+            // TODO: Port to use IStandaloneEditor and remove type cast here
+            const model = (this.editor as IContentModelEditor).getContentModelCopy('connected');
             component.setContentModel(model);
-            setCurrentContentModel(this.editor, model);
+            setCurrentContentModel(model);
         });
     };
 }

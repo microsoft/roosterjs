@@ -1,7 +1,6 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { expectEqual, initEditor } from './testUtils';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
-import { tableProcessor } from 'roosterjs-content-model-dom';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import type { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_Excel_E2E';
@@ -30,25 +29,21 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
-    itChromeOnly('E2E', () => {
+    it('E2E', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
         editor.pasteFromClipboard(clipboardData);
-        editor.createContentModel({});
+        editor.getContentModelCopy('connected');
 
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 
-    itChromeOnly('E2E paste as image', () => {
+    it('E2E paste as image', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
         editor.pasteFromClipboard(clipboardData, 'asImage');
 
-        const model = editor.createContentModel({
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -107,11 +102,7 @@ describe(ID, () => {
 
         editor.pasteFromClipboard(CD);
 
-        const model = editor.createContentModel({
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',

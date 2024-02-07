@@ -1,9 +1,8 @@
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
-import { NodePosition } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 export function segmentTestCommon(
@@ -16,7 +15,7 @@ export function segmentTestCommon(
     let formatResult: boolean | undefined;
     const formatContentModel = jasmine
         .createSpy('formatContentModel')
-        .and.callFake((callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+        .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
             expect(options.apiName).toBe(apiName);
             formatResult = callback(model, {
                 newEntities: [],
@@ -26,7 +25,6 @@ export function segmentTestCommon(
         });
     const editor = ({
         focus: jasmine.createSpy(),
-        getFocusedPosition: () => null as NodePosition,
         getPendingFormat: () => null as any,
         formatContentModel,
     } as any) as IStandaloneEditor;

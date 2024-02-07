@@ -8,7 +8,7 @@ import {
     ContentModelListItem,
     ContentModelTable,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('setAlignment', () => {
@@ -416,12 +416,10 @@ describe('setAlignment', () => {
 
 describe('setAlignment in table', () => {
     let editor: IStandaloneEditor;
-    let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
     let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        createContentModel = jasmine.createSpy('createContentModel');
         triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
@@ -430,7 +428,6 @@ describe('setAlignment in table', () => {
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
-            createContentModel,
             isDarkMode: () => false,
             triggerEvent,
             getVisibleViewport,
@@ -445,19 +442,15 @@ describe('setAlignment in table', () => {
         const model = createContentModelDocument();
         model.blocks.push(table);
 
-        createContentModel.and.returnValue(model);
-
         editor.formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         setAlignment(editor, alignment);
 
@@ -821,22 +814,16 @@ describe('setAlignment in table', () => {
 
 describe('setAlignment in list', () => {
     let editor: IStandaloneEditor;
-    let setContentModel: jasmine.Spy<IStandaloneEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
     let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
         triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
             isDarkMode: () => false,
             triggerEvent,
             getVisibleViewport,
@@ -851,21 +838,18 @@ describe('setAlignment in list', () => {
         const model = createContentModelDocument();
         model.blocks.push(list);
 
-        createContentModel.and.returnValue(model);
         let result: boolean | undefined;
 
         editor.formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    result = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                        rawEvent: options.rawEvent,
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                result = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                    rawEvent: options.rawEvent,
+                });
+            });
 
         setAlignment(editor, alignment);
 

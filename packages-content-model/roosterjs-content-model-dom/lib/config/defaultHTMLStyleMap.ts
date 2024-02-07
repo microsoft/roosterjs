@@ -77,7 +77,7 @@ export const defaultHTMLStyleMap: DefaultStyleMap = {
     },
     main: blockElement,
     nav: blockElement,
-    ol: blockElement,
+    ol: { ...blockElement, paddingInlineStart: '40px' },
     p: {
         display: 'block',
         marginTop: '1em',
@@ -121,5 +121,5 @@ export const defaultHTMLStyleMap: DefaultStyleMap = {
     u: {
         textDecoration: 'underline',
     },
-    ul: blockElement,
+    ul: { ...blockElement, paddingInlineStart: '40px' },
 };
