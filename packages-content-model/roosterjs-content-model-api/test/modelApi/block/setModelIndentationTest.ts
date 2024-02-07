@@ -643,6 +643,77 @@ describe('indent', () => {
         });
         expect(result).toBeTrue();
     });
+
+    it('Group with list with first item selected', () => {
+        const group = createContentModelDocument();
+        const listItem = createListItem([createListLevel('UL')]);
+        const listItem2 = createListItem([createListLevel('UL')]);
+        const listItem3 = createListItem([createListLevel('UL')]);
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const text3 = createText('test3');
+        text1.isSelected = true;
+        text2.isSelected = true;
+        text3.isSelected = true;
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+        listItem.blocks.push(para1);
+        listItem2.blocks.push(para2);
+        listItem3.blocks.push(para3);
+        group.blocks.push(listItem);
+        group.blocks.push(listItem2);
+        group.blocks.push(listItem3);
+
+        const result = setModelIndentation(group, 'indent');
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    ...listItem,
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
+                    ],
+                },
+                {
+                    ...listItem2,
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
+                    ],
+                },
+                {
+                    ...listItem3,
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+
+        expect(result).toBeTrue();
+    });
 });
 
 describe('outdent', () => {

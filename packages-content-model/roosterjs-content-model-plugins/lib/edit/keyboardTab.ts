@@ -31,7 +31,14 @@ export function keyboardTab(editor: IStandaloneEditor, rawEvent: KeyboardEvent) 
 }
 
 function shouldHandleTab(rawEvent: KeyboardEvent, selection: DOMSelection | null) {
-    return rawEvent.key == 'Tab' && selection && selection?.type == 'range';
+    return (
+        (rawEvent.key == 'Tab' ||
+            (rawEvent.shiftKey &&
+                (rawEvent.altKey || rawEvent.metaKey) &&
+                (rawEvent.key == 'ArrowRight' || rawEvent.key == 'ArrowLeft'))) &&
+        selection &&
+        selection?.type == 'range'
+    );
 }
 
 function isMarkerAtStartOfBlock(listItem: ContentModelListItem) {

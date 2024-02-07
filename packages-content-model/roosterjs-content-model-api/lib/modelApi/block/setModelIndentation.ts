@@ -8,6 +8,7 @@ import {
 
 import type {
     ContentModelBlockFormat,
+    ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelListItem,
     ContentModelListLevel,
@@ -30,19 +31,20 @@ export function setModelIndentation(
     );
     const isIndent = indentation == 'indent';
 
-    paragraphOrListItem.forEach(({ block }, index) => {
+    paragraphOrListItem.forEach(({ block, parent }, index) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             const thread = findListItemsInSameThread(model, block);
             const firstItem = thread[0];
-            if (
-                isFirstItemSelected(firstItem) &&
-                !(index == 0 && thread.length == 1 && firstItem.levels.length > 1)
-            ) {
+
+            if (isSelected(firstItem) && firstItem.levels.length == 1) {
                 const level = block.levels[0];
                 const { format } = level;
+                const { marginLeft, marginRight } = format;
                 const newValue = calculateMarginValue(format, isIndent, length);
                 const isRtl = format.direction == 'rtl';
-                if (!isIndent && newValue == 0) {
+                const originalValue = parseValueWithUnit(isRtl ? marginRight : marginLeft);
+
+                if (!isIndent && originalValue == 0) {
                     block.levels.pop();
                 } else {
                     if (isRtl) {
@@ -51,7 +53,7 @@ export function setModelIndentation(
                         level.format.marginLeft = newValue + 'px';
                     }
                 }
-            } else {
+            } else if (block.levels.length == 1 || !multilevelSelection(model, block, parent)) {
                 if (isIndent) {
                     const lastLevel = block.levels[block.levels.length - 1];
                     const newLevel: ContentModelListLevel = createListLevel(
@@ -89,12 +91,35 @@ export function setModelIndentation(
     return paragraphOrListItem.length > 0;
 }
 
-function isFirstItemSelected(listItem: ContentModelListItem) {
+function isSelected(listItem: ContentModelListItem) {
     return listItem.blocks.some(block => {
         if (block.blockType == 'Paragraph') {
             return block.segments.some(segment => segment.isSelected);
         }
     });
+}
+
+function multilevelSelection(
+    model: ContentModelDocument,
+    listItem: ContentModelListItem,
+    parent: ContentModelBlockGroup
+) {
+    const listIndex = parent.blocks.indexOf(listItem);
+    for (let i = listIndex - 1; i >= 0; i--) {
+        const block = parent.blocks[i];
+        if (
+            isBlockGroupOfType<ContentModelListItem>(block, 'ListItem') &&
+            block.levels.length == 1 &&
+            isSelected(block)
+        ) {
+            const firstItem = findListItemsInSameThread(model, block)[0];
+            return isSelected(firstItem);
+        }
+
+        if (!isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
+            return false;
+        }
+    }
 }
 
 function calculateMarginValue(
