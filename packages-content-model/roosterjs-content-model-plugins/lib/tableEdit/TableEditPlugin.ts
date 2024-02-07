@@ -1,5 +1,6 @@
 import normalizeRect from '../pluginUtils/Rect/normalizeRect';
 import TableEditor from './editors/TableEditor';
+import { isNodeOfType } from 'roosterjs-content-model-dom/lib';
 import type {
     EditorPlugin,
     IStandaloneEditor,
@@ -47,12 +48,14 @@ export class TableEditPlugin implements EditorPlugin {
     }
 
     private onMouseOut = ({ relatedTarget, currentTarget }: MouseEvent) => {
+        const relatedTargetNode = relatedTarget as Node;
+        const currentTargetNode = currentTarget as Node;
         if (
-            relatedTarget instanceof HTMLElement &&
-            currentTarget instanceof HTMLElement &&
+            isNodeOfType(relatedTargetNode, 'ELEMENT_NODE') &&
+            isNodeOfType(currentTargetNode, 'ELEMENT_NODE') &&
             this.tableEditor &&
-            !this.tableEditor.isOwnedElement(relatedTarget) &&
-            !currentTarget.contains(relatedTarget)
+            !this.tableEditor.isOwnedElement(relatedTargetNode) &&
+            !currentTargetNode.contains(relatedTargetNode)
         ) {
             this.setTableEditor(null);
         }
@@ -134,14 +137,14 @@ export class TableEditPlugin implements EditorPlugin {
 
         if (!this.tableEditor && table && this.editor && table.rows.length > 0) {
             const container = this.anchorContainerSelector
-                ? this.editor.getDocument().querySelector(this.anchorContainerSelector)
+                ? this.editor.getDOMHelper().queryElements(this.anchorContainerSelector)[0]
                 : undefined;
 
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
                 this.invalidateTableRects,
-                container instanceof HTMLElement ? container : undefined,
+                isNodeOfType(container as Node, 'ELEMENT_NODE') ? container : undefined,
                 event?.currentTarget
             );
         }
@@ -160,8 +163,8 @@ export class TableEditPlugin implements EditorPlugin {
         if (!this.tableRectMap && this.editor) {
             this.tableRectMap = [];
 
-            const tables = this.editor.getDocument().getElementsByTagName('table');
-            Array.from(tables).forEach(table => {
+            const tables = this.editor.getDOMHelper().queryElements('table');
+            tables.forEach(table => {
                 if (table.isContentEditable) {
                     const rect = normalizeRect(table.getBoundingClientRect());
                     if (rect && this.tableRectMap) {

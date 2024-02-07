@@ -67,7 +67,7 @@ export default class TableEditor {
         private anchorContainer?: HTMLElement,
         private contentDiv?: EventTarget | null
     ) {
-        this.isRTL = table.style.direction == 'rtl';
+        this.isRTL = editor.getDocument().defaultView?.getComputedStyle(table).direction == 'rtl';
         this.setEditorFeatures();
         this.isCurrentlyEditing = false;
     }

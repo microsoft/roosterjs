@@ -1,11 +1,14 @@
 import createElement from '../../../pluginUtils/CreateElement/createElement';
 import getIntersectedRect from '../../../pluginUtils/Rect/getIntersectedRect';
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
-import { editTable } from 'roosterjs-content-model-api';
+import { formatTableWithContentModel } from 'roosterjs-content-model-api';
+import { insertTableColumn } from 'roosterjs-content-model-api/lib/modelApi/table/insertTableColumn';
+import { insertTableRow } from 'roosterjs-content-model-api/lib/modelApi/table/insertTableRow';
+import { isElementOfType } from 'roosterjs-content-model-dom/lib';
 import type CreateElementData from '../../../pluginUtils/CreateElement/CreateElementData';
 import type Disposable from '../../../pluginUtils/Disposable';
 import type TableEditFeature from './TableEditorFeature';
-import type { IStandaloneEditor, TableSelection } from 'roosterjs-content-model-types';
+import type { IStandaloneEditor } from 'roosterjs-content-model-types';
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';
@@ -108,7 +111,7 @@ class TableInsertHandler implements Disposable {
         // Get cell coordinates
         const columnIndex = this.td.cellIndex;
         const row =
-            this.td.parentElement instanceof HTMLTableRowElement
+            this.td.parentElement && isElementOfType(this.td.parentElement, 'tr')
                 ? this.td.parentElement
                 : undefined;
         const rowIndex = row?.rowIndex;
@@ -117,50 +120,26 @@ class TableInsertHandler implements Disposable {
             return;
         }
 
-        // Take snapshot before selection change
-        this.editor.takeSnapshot();
-
-        // Select cell to make insertion
-        this.editor.setDOMSelection({
-            type: 'table',
-            firstColumn: columnIndex,
-            firstRow: rowIndex,
-            lastColumn: columnIndex,
-            lastRow: rowIndex,
-            table: this.table,
-        });
-
-        // Insert row or column, skip snapshot as it was already taken
-        editTable(
+        // Insert row or column
+        formatTableWithContentModel(
             this.editor,
-            this.isHorizontal ? 'insertBelow' : 'insertRight',
-            true /* skipSnapshot */
+            'editTablePlugin',
+            tableModel => {
+                this.isHorizontal
+                    ? insertTableRow(tableModel, 'insertBelow')
+                    : insertTableColumn(tableModel, 'insertRight');
+            }, // Select cell to make insertion
+            {
+                type: 'table',
+                firstColumn: columnIndex,
+                firstRow: rowIndex,
+                lastColumn: columnIndex,
+                lastRow: rowIndex,
+                table: this.table,
+            }
         );
 
         this.onInsert();
-
-        // Select newly inserted row or column
-        // TODO: Not working for last row/column insertion, table size not updated
-        if (row?.cells) {
-            const inserted: TableSelection = this.isHorizontal
-                ? {
-                      type: 'table',
-                      firstColumn: 0,
-                      firstRow: rowIndex + 1,
-                      lastColumn: row.cells.length - 1,
-                      lastRow: rowIndex + 1,
-                      table: this.table,
-                  }
-                : {
-                      type: 'table',
-                      firstColumn: columnIndex + 1,
-                      firstRow: 0,
-                      lastColumn: columnIndex + 1,
-                      lastRow: this.table.rows.length - 1,
-                      table: this.table,
-                  };
-            this.editor.setDOMSelection(inserted);
-        }
     };
 }
 
