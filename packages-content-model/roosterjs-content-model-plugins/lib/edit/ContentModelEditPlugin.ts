@@ -1,3 +1,4 @@
+import { Keys } from 'roosterjs-editor-types';
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
 import type {
@@ -15,6 +16,8 @@ import type {
  */
 export class ContentModelEditPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
+    private disposer: (() => void) | null = null;
+    private shouldHandleNextInputEvent = false;
 
     /**
      * Get name of this plugin
@@ -31,6 +34,11 @@ export class ContentModelEditPlugin implements EditorPlugin {
      */
     initialize(editor: IStandaloneEditor) {
         this.editor = editor;
+        this.disposer = this.editor.attachDomEvent({
+            beforeinput: {
+                beforeDispatch: e => this.handleBeforeInputEvent(editor, e),
+            },
+        });
     }
 
     /**
@@ -40,6 +48,8 @@ export class ContentModelEditPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+        this.disposer?.();
+        this.disposer = null;
     }
 
     /**
@@ -70,11 +80,59 @@ export class ContentModelEditPlugin implements EditorPlugin {
                     keyboardDelete(editor, rawEvent);
                     break;
 
+                case 'Unidentified':
+                    if (editor.getEnvironment().isAndroid) {
+                        this.shouldHandleNextInputEvent = true;
+                    }
+                    break;
+
                 case 'Enter':
                 default:
                     keyboardInput(editor, rawEvent);
                     break;
             }
+        }
+    }
+
+    private handleBeforeInputEvent(editor: IStandaloneEditor, rawEvent: Event) {
+        // Some Android IMEs doesn't fire correct keydown event for BACKSPACE/DELETE key
+        // Here we translate input event to BACKSPACE/DELETE keydown event to be compatible with existing logic
+        if (
+            !this.shouldHandleNextInputEvent ||
+            !(rawEvent instanceof InputEvent) ||
+            rawEvent.defaultPrevented
+        ) {
+            return;
+        }
+        this.shouldHandleNextInputEvent = false;
+
+        let handled = false;
+        switch (rawEvent.inputType) {
+            case 'deleteContentBackward':
+                handled = keyboardDelete(
+                    editor,
+                    new KeyboardEvent('keydown', {
+                        key: 'Backspace',
+                        keyCode: Keys.BACKSPACE,
+                        which: Keys.BACKSPACE,
+                    })
+                );
+                break;
+            case 'deleteContentForward':
+                handled = keyboardDelete(
+                    editor,
+                    new KeyboardEvent('keydown', {
+                        key: 'Delete',
+                        keyCode: Keys.DELETE,
+                        which: Keys.DELETE,
+                    })
+                );
+                break;
+        }
+
+        console.log('handleBeforeInputEvent', handled);
+        if (handled) {
+            rawEvent.preventDefault();
         }
     }
 }
