@@ -43,7 +43,7 @@ export interface DeletedEntity {
 /**
  * Context object for API formatWithContentModel
  */
-export interface FormatWithContentModelContext {
+export interface FormatContentModelContext {
     /**
      * New entities added during the format process
      */

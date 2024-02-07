@@ -5,7 +5,7 @@ import { deleteSelection } from '../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from '../utils/extractClipboardItems';
 import { getSelectedCells } from '../publicApi/table/getSelectedCells';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
-import { onCreateCopyEntityNode } from '../override/pasteCopyBlockEntityParser';
+
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -34,7 +34,7 @@ import type {
 /**
  * Copy and paste plugin for handling onCopy and onPaste event
  */
-class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginState> {
+class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: IStandaloneEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
@@ -54,7 +54,7 @@ class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginStat
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'ContentModelCopyPaste';
+        return 'CopyPaste';
     }
 
     /**
@@ -299,14 +299,13 @@ function domSelectionToRange(doc: Document, selection: DOMSelection): Range | nu
  * @internal
  * Exported only for unit testing
  */
-export const onNodeCreated: OnNodeCreated = (model, node): void => {
+export const onNodeCreated: OnNodeCreated = (_, node): void => {
     if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'table')) {
         wrap(node.ownerDocument, node, 'div');
     }
     if (isNodeOfType(node, 'ELEMENT_NODE') && !node.isContentEditable) {
         node.removeAttribute('contenteditable');
     }
-    onCreateCopyEntityNode(model, node);
 };
 
 /**
@@ -333,11 +332,11 @@ export function preprocessTable(table: ContentModelTable) {
 
 /**
  * @internal
- * Create a new instance of ContentModelCopyPastePlugin
+ * Create a new instance of CopyPastePlugin
  * @param option The editor option
  */
-export function createContentModelCopyPastePlugin(
+export function createCopyPastePlugin(
     option: StandaloneEditorOptions
 ): PluginWithState<CopyPastePluginState> {
-    return new ContentModelCopyPastePlugin(option);
+    return new CopyPastePlugin(option);
 }

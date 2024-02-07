@@ -4,7 +4,7 @@ import type {
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -18,7 +18,7 @@ import type {
 export function deleteSelection(
     model: ContentModelDocument,
     additionalSteps: (DeleteSelectionStep | null)[] = [],
-    formatContext?: FormatWithContentModelContext
+    formatContext?: FormatContentModelContext
 ): DeleteSelectionResult {
     const context = deleteExpandedSelection(model, formatContext);
 

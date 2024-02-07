@@ -308,6 +308,111 @@ describe('listItemMetadataApplier', () => {
         });
     });
 
+    it('Has metadata, has start number, apply list style from level, no existing style', () => {
+        context.listFormat.threadItemCounts = [2];
+        context.listFormat.nodeStack = [
+            {
+                node: {} as Node,
+            },
+            {
+                node: {} as Node,
+            },
+        ];
+
+        listItemMetadataApplier.applierFunction(
+            {
+                applyListStyleFromLevel: true,
+            },
+            format,
+            context
+        );
+
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [2],
+            nodeStack: [
+                {
+                    node: {} as Node,
+                },
+                {
+                    node: {} as Node,
+                },
+            ],
+        });
+        expect(format).toEqual({});
+    });
+
+    it('Has metadata, has start number, apply list style from level, has existing style', () => {
+        context.listFormat.threadItemCounts = [2];
+        context.listFormat.nodeStack = [
+            {
+                node: {} as Node,
+            },
+            {
+                node: {} as Node,
+            },
+        ];
+
+        format.listStyleType = 'test';
+
+        listItemMetadataApplier.applierFunction(
+            {
+                applyListStyleFromLevel: true,
+            },
+            format,
+            context
+        );
+
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [2],
+            nodeStack: [
+                {
+                    node: {} as Node,
+                },
+                {
+                    node: {} as Node,
+                },
+            ],
+        });
+        expect(format).toEqual({});
+    });
+
+    it('Has metadata, has start number, do not apply list style from level, has existing style', () => {
+        context.listFormat.threadItemCounts = [2];
+        context.listFormat.nodeStack = [
+            {
+                node: {} as Node,
+            },
+            {
+                node: {} as Node,
+            },
+        ];
+
+        format.listStyleType = 'test';
+
+        listItemMetadataApplier.applierFunction(
+            {
+                applyListStyleFromLevel: false,
+            },
+            format,
+            context
+        );
+
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [2],
+            nodeStack: [
+                {
+                    node: {} as Node,
+                },
+                {
+                    node: {} as Node,
+                },
+            ],
+        });
+        expect(format).toEqual({
+            listStyleType: 'test',
+        });
+    });
+
     it('UL has metadata', () => {
         context.listFormat.nodeStack = [
             {
@@ -658,6 +763,115 @@ describe('listLevelMetadataApplier', () => {
             ],
         });
         expect(format).toEqual({});
+    });
+
+    it('Has metadata, has start number, apply list style from level, no existing style', () => {
+        context.listFormat.threadItemCounts = [2];
+        context.listFormat.nodeStack = [
+            {
+                node: {} as Node,
+            },
+            {
+                node: {} as Node,
+            },
+        ];
+
+        listLevelMetadataApplier.applierFunction(
+            {
+                applyListStyleFromLevel: true,
+            },
+            format,
+            context
+        );
+
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [2],
+            nodeStack: [
+                {
+                    node: {} as Node,
+                },
+                {
+                    node: {} as Node,
+                },
+            ],
+        });
+        expect(format).toEqual({
+            listStyleType: 'decimal',
+        });
+    });
+
+    it('Has metadata, has start number, apply list style from level, has existing style', () => {
+        context.listFormat.threadItemCounts = [2];
+        context.listFormat.nodeStack = [
+            {
+                node: {} as Node,
+            },
+            {
+                node: {} as Node,
+            },
+        ];
+
+        format.listStyleType = 'test';
+
+        listLevelMetadataApplier.applierFunction(
+            {
+                applyListStyleFromLevel: true,
+            },
+            format,
+            context
+        );
+
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [2],
+            nodeStack: [
+                {
+                    node: {} as Node,
+                },
+                {
+                    node: {} as Node,
+                },
+            ],
+        });
+        expect(format).toEqual({
+            listStyleType: 'decimal',
+        });
+    });
+
+    it('Has metadata, has start number, do not apply list style from level, has existing style', () => {
+        context.listFormat.threadItemCounts = [2];
+        context.listFormat.nodeStack = [
+            {
+                node: {} as Node,
+            },
+            {
+                node: {} as Node,
+            },
+        ];
+
+        format.listStyleType = 'test';
+
+        listLevelMetadataApplier.applierFunction(
+            {
+                applyListStyleFromLevel: false,
+            },
+            format,
+            context
+        );
+
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [2],
+            nodeStack: [
+                {
+                    node: {} as Node,
+                },
+                {
+                    node: {} as Node,
+                },
+            ],
+        });
+        expect(format).toEqual({
+            listStyleType: 'test',
+        });
     });
 
     it('UL has metadata', () => {

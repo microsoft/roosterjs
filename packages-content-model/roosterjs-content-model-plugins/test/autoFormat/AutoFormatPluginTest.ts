@@ -1,5 +1,5 @@
 import * as keyboardTrigger from '../../lib/autoFormat/keyboardListTrigger';
-import { ContentModelAutoFormatPlugin } from '../../lib/autoFormat/ContentModelAutoFormatPlugin';
+import { AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
 import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { KeyDownEvent } from 'roosterjs-content-model-types';
 
@@ -28,7 +28,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             shouldCallTrigger: boolean,
             options?: { autoBullet: boolean; autoNumbering: boolean }
         ) {
-            const plugin = new ContentModelAutoFormatPlugin(options);
+            const plugin = new AutoFormatPlugin(options);
             plugin.initialize(editor);
 
             plugin.onPluginEvent(event);

@@ -6,22 +6,21 @@ import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
 import { containerSizeFormatParser } from '../../../lib/override/containerSizeFormatParser';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
-import { pasteBlockEntityParser } from '../../../lib/override/pasteCopyBlockEntityParser';
 import { pasteDisplayFormatParser } from '../../../lib/override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../../../lib/override/pasteTextProcessor';
 import {
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
     InsertPoint,
     StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
     let formatResult: boolean | undefined;
-    let context: FormatWithContentModelContext | undefined;
+    let context: FormatContentModelContext | undefined;
     let formatContentModel: jasmine.Spy;
     let sourceModel: ContentModelDocument;
     let core: StandaloneEditorCore;
@@ -37,7 +36,7 @@ describe('mergePasteContent', () => {
                 (
                     core: any,
                     callback: ContentModelFormatter,
-                    options: FormatWithContentModelOptions
+                    options: FormatContentModelOptions
                 ) => {
                     context = {
                         newEntities: [],
@@ -430,7 +429,6 @@ describe('mergePasteContent', () => {
                 },
                 additionalFormatParsers: {
                     container: [containerSizeFormatParser],
-                    entity: [pasteBlockEntityParser],
                 },
             },
             mockedDefaultDomToModelOptions
