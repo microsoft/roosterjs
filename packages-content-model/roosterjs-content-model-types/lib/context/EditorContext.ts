@@ -57,5 +57,5 @@ export interface EditorContext {
     /**
      * Root document format.
      */
-    rootDocumentFormat: Partial<RootDocumentFormat>;
+    rootDocumentFormat?: Partial<RootDocumentFormat>;
 }

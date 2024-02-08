@@ -50,13 +50,13 @@ export function parseValueWithUnit(
                     const doc = currentSizePxOrElement.ownerDocument;
                     let htmlRoot: HTMLHtmlElement | null | undefined;
                     const computedFontSize =
-                        context?.rootDocumentFormat.fontSize ||
+                        context?.rootDocumentFormat?.fontSize ||
                         (((htmlRoot = doc.querySelector('html')) &&
                             htmlRoot &&
                             doc.defaultView?.getComputedStyle(htmlRoot).fontSize) ??
                             DefaultRootFontSize + 'px');
 
-                    if (context && !context.rootDocumentFormat.fontSize) {
+                    if (context?.rootDocumentFormat && !context.rootDocumentFormat.fontSize) {
                         context.rootDocumentFormat.fontSize = computedFontSize;
                     }
 

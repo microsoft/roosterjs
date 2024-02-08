@@ -31,7 +31,6 @@ export function createModelFromHtml(
               createDomToModelContext(
                   {
                       defaultFormat: defaultSegmentFormat,
-                      rootDocumentFormat: {},
                   },
                   options
               )
