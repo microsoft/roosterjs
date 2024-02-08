@@ -21,11 +21,7 @@ import {
  * @param editor The editor instance
  * @param operation The table operation to apply
  */
-export default function editTable(
-    editor: IStandaloneEditor,
-    operation: TableOperation,
-    skipSnapshot?: boolean
-) {
+export default function editTable(editor: IStandaloneEditor, operation: TableOperation) {
     editor.focus();
 
     formatTableWithContentModel(editor, 'editTable', tableModel => {
