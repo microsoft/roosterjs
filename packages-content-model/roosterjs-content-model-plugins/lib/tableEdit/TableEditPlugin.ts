@@ -1,6 +1,6 @@
 import normalizeRect from '../pluginUtils/Rect/normalizeRect';
 import TableEditor from './editors/TableEditor';
-import { isNodeOfType } from 'roosterjs-content-model-dom/lib';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type {
     EditorPlugin,
     IStandaloneEditor,
