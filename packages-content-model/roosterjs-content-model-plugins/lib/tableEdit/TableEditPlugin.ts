@@ -104,7 +104,7 @@ export class TableEditPlugin implements EditorPlugin {
         const y = e.pageY - editorWindow.scrollY;
         let currentTable: HTMLTableElement | null = null;
 
-        //Fint table in range of mouse
+        //Find table in range of mouse
         if (this.tableRectMap) {
             for (let i = this.tableRectMap.length - 1; i >= 0; i--) {
                 const { table, rect } = this.tableRectMap[i];

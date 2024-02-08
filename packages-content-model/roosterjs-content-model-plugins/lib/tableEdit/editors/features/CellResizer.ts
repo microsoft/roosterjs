@@ -26,7 +26,7 @@ export default function createCellResizer(
         tag: 'div',
         style: `position: fixed; cursor: ${isHorizontal ? 'row' : 'col'}-resize; user-select: none`,
     };
-    const zoomScale = editor.getZoomScale();
+    const zoomScale = editor.getDOMHelper().calculateZoomScale();
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 
@@ -107,7 +107,7 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
     });
 
     // Get the table content model
-    const cmTable = getFirstSelectedTable(editor.createContentModel())[0];
+    const cmTable = getFirstSelectedTable(editor.getContentModelCopy('disconnected'))[0];
 
     // Restore selection
     editor.setDOMSelection(selection);

@@ -28,7 +28,7 @@ export default function createTableMover(
         return null;
     }
 
-    const zoomScale = editor.getZoomScale();
+    const zoomScale = editor.getDOMHelper().calculateZoomScale();
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
