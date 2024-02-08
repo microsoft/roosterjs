@@ -1,4 +1,4 @@
-import { FontSizeFormat } from '../format/formatParts/FontSizeFormat';
+import type { FontSizeFormat } from '../format/formatParts/FontSizeFormat';
 
 /**
  * The current Root document format
