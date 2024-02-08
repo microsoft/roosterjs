@@ -1,17 +1,25 @@
+import { coreApiMap } from '../coreApi/coreApiMap';
+import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
 import type {
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from '../publicTypes/IContentModelEditor';
+    ContentModelCoreApiMap,
+    ContentModelEditorCore,
+} from '../publicTypes/ContentModelEditorCore';
+import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
 import type {
     EditorPlugin as LegacyEditorPlugin,
     PluginEvent as LegacyPluginEvent,
     ContextMenuProvider as LegacyContextMenuProvider,
+    IEditor as ILegacyEditor,
+    ExperimentalFeatures,
+    SizeTransformer,
 } from 'roosterjs-editor-types';
-import type { ContextMenuProvider, PluginEvent } from 'roosterjs-content-model-types';
+import type {
+    ContextMenuProvider,
+    IStandaloneEditor,
+    PluginEvent,
+} from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 
@@ -22,13 +30,17 @@ const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 export class BridgePlugin implements ContextMenuProvider<any> {
     private legacyPlugins: LegacyEditorPlugin[];
     private corePluginState: ContentModelCorePluginState;
-    private outerEditor: IContentModelEditor | null = null;
     private checkExclusivelyHandling: boolean;
 
-    constructor(options: ContentModelEditorOptions) {
+    constructor(
+        private onInitialize: (core: ContentModelEditorCore) => ILegacyEditor,
+        legacyPlugins: LegacyEditorPlugin[] = [],
+        private legacyCoreApiOverride?: Partial<ContentModelCoreApiMap>,
+        private experimentalFeatures: ExperimentalFeatures[] = []
+    ) {
         const editPlugin = createEditPlugin();
 
-        this.legacyPlugins = [editPlugin, ...(options.legacyPlugins ?? []).filter(x => !!x)];
+        this.legacyPlugins = [editPlugin, ...legacyPlugins.filter(x => !!x)];
         this.corePluginState = {
             edit: editPlugin.getState(),
             contextMenuProviders: this.legacyPlugins.filter(isContextMenuProvider),
@@ -46,35 +58,13 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     }
 
     /**
-     * Get core plugin state
-     */
-    getCorePluginState(): ContentModelCorePluginState {
-        return this.corePluginState;
-    }
-
-    /**
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize() {
-        if (this.outerEditor) {
-            const editor = this.outerEditor;
+    initialize(editor: IStandaloneEditor) {
+        const outerEditor = this.onInitialize(this.createEditorCore(editor));
 
-            this.legacyPlugins.forEach(plugin => plugin.initialize(editor));
-
-            this.legacyPlugins.forEach(plugin =>
-                plugin.onPluginEvent?.({
-                    eventType: PluginEventType.EditorReady,
-                })
-            );
-        }
-    }
-
-    /**
-     * Initialize all inner plugins with Content Model Editor
-     */
-    setOuterEditor(editor: IContentModelEditor) {
-        this.outerEditor = editor;
+        this.legacyPlugins.forEach(plugin => plugin.initialize(outerEditor));
     }
 
     /**
@@ -148,6 +138,26 @@ export class BridgePlugin implements ContextMenuProvider<any> {
 
         return allItems;
     }
+
+    private createEditorCore(editor: IStandaloneEditor): ContentModelEditorCore {
+        return {
+            api: { ...coreApiMap, ...this.legacyCoreApiOverride },
+            originalApi: coreApiMap,
+            customData: {},
+            experimentalFeatures: this.experimentalFeatures ?? [],
+            sizeTransformer: createSizeTransformer(editor),
+            darkColorHandler: createDarkColorHandler(editor.getColorManager()),
+            ...this.corePluginState,
+        };
+    }
+}
+
+/**
+ * @internal Export for test only. This function is only used for compatibility from older build
+
+ */
+export function createSizeTransformer(editor: IStandaloneEditor): SizeTransformer {
+    return size => size / editor.getDOMHelper().calculateZoomScale();
 }
 
 function isContextMenuProvider(

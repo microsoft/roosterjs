@@ -6,10 +6,7 @@ const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/
 const VARIABLE_PREFIX = 'var(';
 const COLOR_VAR_PREFIX = 'darkColor';
 
-/**
- * @internal
- */
-export class DarkColorHandlerImpl implements DarkColorHandler {
+class DarkColorHandlerImpl implements DarkColorHandler {
     constructor(private innerHandler: StandaloneDarkColorHandler) {}
 
     /**

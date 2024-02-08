@@ -1,5 +1,6 @@
 export { domToContentModel } from './domToModel/domToContentModel';
 export { contentModelToDom } from './modelToDom/contentModelToDom';
+export { contentModelToText } from './modelToText/contentModelToText';
 
 export {
     childProcessor,
