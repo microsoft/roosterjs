@@ -1,9 +1,11 @@
 import createElement from '../../../pluginUtils/CreateElement/createElement';
 import getIntersectedRect from '../../../pluginUtils/Rect/getIntersectedRect';
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
-import { formatTableWithContentModel } from 'roosterjs-content-model-api';
-import { insertTableColumn } from 'roosterjs-content-model-api/lib/modelApi/table/insertTableColumn';
-import { insertTableRow } from 'roosterjs-content-model-api/lib/modelApi/table/insertTableRow';
+import {
+    formatTableWithContentModel,
+    insertTableColumn,
+    insertTableRow,
+} from 'roosterjs-content-model-api';
 import { isElementOfType } from 'roosterjs-content-model-dom';
 import type CreateElementData from '../../../pluginUtils/CreateElement/CreateElementData';
 import type Disposable from '../../../pluginUtils/Disposable';

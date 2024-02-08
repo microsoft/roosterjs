@@ -6,7 +6,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Insert a column to the table
  */
 export function insertTableColumn(
     table: ContentModelTable,

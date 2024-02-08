@@ -6,7 +6,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Insert a row to the table
  */
 export function insertTableRow(table: ContentModelTable, operation: TableVerticalInsertOperation) {
     const sel = getSelectedCells(table);
