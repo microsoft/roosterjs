@@ -16,6 +16,7 @@ import type {
 } from '../parameter/FormatContentModelOptions';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
+import type { Rect } from '../parameter/Rect';
 
 /**
  * An interface of standalone Content Model editor.
@@ -196,4 +197,14 @@ export interface IStandaloneEditor {
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler;
+
+    /**
+     * Get the scroll container of the editor
+     */
+    getScrollContainer(): HTMLElement;
+
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null;
 }
