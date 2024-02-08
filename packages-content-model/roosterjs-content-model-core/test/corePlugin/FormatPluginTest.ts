@@ -39,7 +39,6 @@ describe('FormatPlugin', () => {
         const editor = ({
             focus: jasmine.createSpy('focus'),
             createContentModel: () => model,
-            isInIME: () => false,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
         } as any) as IStandaloneEditor;

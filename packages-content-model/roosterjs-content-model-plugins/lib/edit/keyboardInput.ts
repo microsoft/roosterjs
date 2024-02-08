@@ -8,7 +8,7 @@ import type { DOMSelection, IStandaloneEditor } from 'roosterjs-content-model-ty
 export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
 
-    if (shouldInputWithContentModel(selection, rawEvent, editor.isInIME())) {
+    if (shouldInputWithContentModel(selection, rawEvent)) {
         editor.takeSnapshot();
 
         editor.formatContentModel(
@@ -43,21 +43,14 @@ export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent
     }
 }
 
-function shouldInputWithContentModel(
-    selection: DOMSelection | null,
-    rawEvent: KeyboardEvent,
-    isInIME: boolean
-) {
+function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
     if (!selection) {
         return false; // Nothing to delete
     } else if (
         !isModifierKey(rawEvent) &&
         (rawEvent.key == 'Enter' || rawEvent.key == 'Space' || rawEvent.key.length == 1)
     ) {
-        return (
-            selection.type != 'range' ||
-            (!selection.range.collapsed && !rawEvent.isComposing && !isInIME)
-        );
+        return selection.type != 'range' || (!selection.range.collapsed && !rawEvent.isComposing);
     } else {
         return false;
     }

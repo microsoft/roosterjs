@@ -7,8 +7,13 @@ import type {
     DOMEventRecord,
     StandaloneEditorOptions,
     PluginWithState,
-    PluginEventType,
 } from 'roosterjs-content-model-types';
+
+const KeyboardEventNameMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
+    keydown: 'keyDown',
+    keyup: 'keyUp',
+    keypress: 'keyPress',
+};
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -60,9 +65,10 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
         > = {
             // 1. Keyboard event
-            keypress: this.getEventHandler('keyPress'),
-            keydown: this.getEventHandler('keyDown'),
-            keyup: this.getEventHandler('keyUp'),
+            keypress: { beforeDispatch: this.onKeyboard },
+            keydown: { beforeDispatch: this.onKeyboard },
+            keyup: { beforeDispatch: this.onKeyboard },
+            input: { beforeDispatch: this.onInput },
 
             // 2. Mouse event
             mousedown: { beforeDispatch: this.onMouseDown },
@@ -74,9 +80,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             // 4. Drag and Drop event
             dragstart: { beforeDispatch: this.onDragStart },
             drop: { beforeDispatch: this.onDrop },
-
-            // 5. Input event
-            input: this.getEventHandler('input'),
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -140,28 +143,33 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         });
     };
 
-    private getEventHandler(eventType: PluginEventType): DOMEventRecord {
-        const beforeDispatch = (event: Event) =>
-            eventType == 'input'
-                ? this.onInputEvent(<InputEvent>event)
-                : this.onKeyboardEvent(<KeyboardEvent>event);
-
-        return {
-            pluginEventType: eventType,
-            beforeDispatch,
-        };
-    }
-
-    private onKeyboardEvent = (event: KeyboardEvent) => {
+    private onKeyboard = (event: KeyboardEvent) => {
         if (isCharacterValue(event) || isCursorMovingKey(event)) {
             // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
             // since editor already handles these keys and no need to propagate to parents
             event.stopPropagation();
         }
+
+        const eventName: 'keyDown' | 'keyUp' | 'keyPress' = KeyboardEventNameMap[event.type];
+
+        // In Safari, isComposing will be undefined but isInIME() works
+        if (eventName && !event.isComposing && !this.state.isInIME) {
+            this.editor?.triggerEvent(eventName, {
+                rawEvent: event,
+            });
+        }
     };
 
-    private onInputEvent = (event: InputEvent) => {
+    private onInput = (e: Event) => {
+        const event = e as InputEvent;
         event.stopPropagation();
+
+        // In Safari, isComposing will be undefined but isInIME() works
+        if (!event.isComposing && !this.state.isInIME) {
+            this.editor?.triggerEvent('input', {
+                rawEvent: event,
+            });
+        }
     };
 
     private onMouseDown = (event: MouseEvent) => {

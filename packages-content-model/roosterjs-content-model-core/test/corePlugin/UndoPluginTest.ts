@@ -14,7 +14,6 @@ describe('UndoPlugin', () => {
     let createSnapshotsManagerSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let canUndoAutoCompleteSpy: jasmine.Spy;
-    let isInIMESpy: jasmine.Spy;
     let takeSnapshotSpy: jasmine.Spy;
     let undoSpy: jasmine.Spy;
     let clearRedoSpy: jasmine.Spy;
@@ -24,7 +23,6 @@ describe('UndoPlugin', () => {
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         canUndoAutoCompleteSpy = jasmine.createSpy('canUndoAutoComplete');
-        isInIMESpy = jasmine.createSpy('isInIME');
         canMoveSpy = jasmine.createSpy('canMove');
         takeSnapshotSpy = jasmine.createSpy('takeUndoSnapshot');
         undoSpy = spyOn(undo, 'undo');
@@ -44,7 +42,6 @@ describe('UndoPlugin', () => {
 
         editor = {
             getDOMSelection: getDOMSelectionSpy,
-            isInIME: isInIMESpy,
             takeSnapshot: takeSnapshotSpy,
         } as any;
     });

@@ -84,17 +84,6 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
 
         switch (event.eventType) {
             case 'input':
-                const env = this.editor.getEnvironment();
-
-                // In Safari, isComposing will be undefined but isInIME() works
-                // For Android, we can skip checking isComposing since this property is not always reliable in all IME,
-                // and we have tested without this check it can still work correctly
-                if (env.isAndroid || (!event.rawEvent.isComposing && !this.editor.isInIME())) {
-                    this.checkAndApplyPendingFormat(event.rawEvent.data);
-                }
-
-                break;
-
             case 'compositionEnd':
                 this.checkAndApplyPendingFormat(event.rawEvent.data);
                 break;
