@@ -17,7 +17,7 @@ import { alignCenterButton } from './ribbonButtons/contentModel/alignCenterButto
 import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyButton';
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
-import { AutoFormatPlugin, EditPlugin } from 'roosterjs-content-model-plugins';
+import { AutoFormatPlugin, EditPlugin, TableEditPlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -76,11 +76,6 @@ import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
-import {
-    ContentModelAutoFormatPlugin,
-    ContentModelEditPlugin,
-    TableEditPlugin,
-} from 'roosterjs-content-model-plugins';
 import {
     ContentModelSegmentFormat,
     IStandaloneEditor,
