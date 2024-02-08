@@ -249,6 +249,9 @@ export default class ContentModelEventViewPane extends React.Component<
             case PluginEventType.BeforeKeyboardEditing:
                 return <span>Key code={event.rawEvent.which}</span>;
 
+            case PluginEventType.Input:
+                return <span>Input type={event.rawEvent.inputType}</span>;
+
             default:
                 return null;
         }
