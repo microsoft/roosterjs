@@ -36,11 +36,13 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IStandaloneEditor) {
         this.editor = editor;
-        this.disposer = this.editor.attachDomEvent({
-            beforeinput: {
-                beforeDispatch: e => this.handleBeforeInputEvent(editor, e),
-            },
-        });
+        if (editor.getEnvironment().isAndroid) {
+            this.disposer = this.editor.attachDomEvent({
+                beforeinput: {
+                    beforeDispatch: e => this.handleBeforeInputEvent(editor, e),
+                },
+            });
+        }
     }
 
     /**
