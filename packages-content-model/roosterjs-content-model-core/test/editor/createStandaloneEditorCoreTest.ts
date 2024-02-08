@@ -85,6 +85,7 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: false,
+                isMobileOrTablet: false,
             },
             darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: defaultTrustHtmlHandler,
@@ -203,6 +204,7 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: true,
                 isSafari: false,
+                isMobileOrTablet: true,
             },
         });
 
@@ -233,6 +235,7 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: true,
                 isSafari: false,
+                isMobileOrTablet: true,
             },
         });
 
@@ -263,6 +266,7 @@ describe('createEditorCore', () => {
                 isMac: true,
                 isAndroid: false,
                 isSafari: false,
+                isMobileOrTablet: false,
             },
         });
 
@@ -293,6 +297,7 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: true,
+                isMobileOrTablet: false,
             },
         });
 
@@ -323,6 +328,7 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isSafari: false,
+                isMobileOrTablet: false,
             },
         });
 
