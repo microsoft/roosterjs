@@ -10,6 +10,8 @@ import type {
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
+const BlockEntityContainer = '_E_EBlockEntityContainer';
+
 /**
  * @internal
  */
@@ -28,7 +30,7 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
         context.addDelimiterForEntity &&
         wrapper.style.display == 'inline-block' &&
         wrapper.style.width == '100%';
-    const isContained = wrapper.parentElement?.classList.contains('blockEntityContainer');
+    const isContained = wrapper.parentElement?.classList.contains(BlockEntityContainer);
     const elementToReuse = isContained && isCursorAroundEntity ? wrapper.parentElement! : wrapper;
 
     refNode = reuseCachedElement(parent, elementToReuse, refNode);
@@ -36,7 +38,7 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
     if (isCursorAroundEntity) {
         if (!isContained) {
             const element = wrap(doc, wrapper, 'div');
-            element.classList.add('blockEntityContainer');
+            element.classList.add(BlockEntityContainer);
         }
         addDelimiterForEntity(doc, wrapper, context);
     }

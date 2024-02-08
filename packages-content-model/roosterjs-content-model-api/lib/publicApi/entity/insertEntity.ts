@@ -9,8 +9,8 @@ import type {
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
-const InlineEntityTag = 'span';
 const BlockEntityTag = 'div';
+const InlineEntityTag = 'span';
 
 /**
  * Insert an entity into editor

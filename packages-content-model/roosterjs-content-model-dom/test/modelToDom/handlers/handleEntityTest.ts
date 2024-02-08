@@ -68,7 +68,7 @@ describe('handleEntity', () => {
         handleEntityBlock(document, parent, entityModel, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<div class="blockEntityContainer"><span class="entityDelimiterBefore">​</span><div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false" style="display: inline-block; width: 100%;"></div><span class="entityDelimiterAfter">​</span></div>'
+            '<div class="_E_EBlockEntityContainer"><span class="entityDelimiterBefore">​</span><div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false" style="display: inline-block; width: 100%;"></div><span class="entityDelimiterAfter">​</span></div>'
         );
         expect(div.outerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false" style="display: inline-block; width: 100%;"></div>'

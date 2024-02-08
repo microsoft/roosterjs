@@ -15,7 +15,8 @@ import {
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
-const ZERO_WIDTH_SPACE = '\u200B';
+const ZeroWidthSpace = '\u200B';
+const BlockEntityContainer = '_E_EBlockEntityContainer';
 
 describe('EntityDelimiterUtils |', () => {
     let queryElementsSpy: jasmine.Spy;
@@ -149,7 +150,9 @@ describe('EntityDelimiterUtils |', () => {
 
             expect(queryElementsSpy).toHaveBeenCalledTimes(2);
             expect(entityWrapper.parentElement!.childElementCount).toEqual(4);
-            expect(invalidDelimiter && entityUtils.isEntityDelimiter(invalidDelimiter)).toBeFalsy();
+            expect(
+                invalidDelimiter && entityUtils.isEntityDelimiter(<any>invalidDelimiter)
+            ).toBeFalsy();
         });
     });
 
@@ -303,7 +306,7 @@ describe('EntityDelimiterUtils |', () => {
             el.appendChild(text);
             parent.appendChild(el);
             el.classList.add('entityDelimiterBefore');
-            div.classList.add('blockEntityContainer');
+            div.classList.add(BlockEntityContainer);
             div.appendChild(parent);
 
             const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
@@ -358,7 +361,7 @@ describe('EntityDelimiterUtils |', () => {
             el.appendChild(text);
             parent.appendChild(el);
             el.classList.add('entityDelimiterAfter');
-            div.classList.add('blockEntityContainer');
+            div.classList.add(BlockEntityContainer);
             div.appendChild(parent);
 
             const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
@@ -413,7 +416,7 @@ describe('EntityDelimiterUtils |', () => {
             el.appendChild(text);
             parent.appendChild(el);
             el.classList.add('entityDelimiterBefore');
-            div.classList.add('blockEntityContainer');
+            div.classList.add(BlockEntityContainer);
             div.appendChild(parent);
 
             const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
@@ -468,7 +471,7 @@ describe('EntityDelimiterUtils |', () => {
             el.appendChild(text);
             parent.appendChild(el);
             el.classList.add('entityDelimiterAfter');
-            div.classList.add('blockEntityContainer');
+            div.classList.add(BlockEntityContainer);
             div.appendChild(parent);
 
             const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
@@ -534,7 +537,7 @@ describe('preventTypeInDelimiter', () => {
 
     it('handle delimiter after entity', () => {
         const entityWrapper = document.createElement('span');
-        entityWrapper.className = 'blockEntityContainer';
+        entityWrapper.className = BlockEntityContainer;
 
         mockedModel = {
             blockGroupType: 'Document',
@@ -546,7 +549,7 @@ describe('preventTypeInDelimiter', () => {
                         {
                             segmentType: 'Text',
                             format: {},
-                            text: 'a' + ZERO_WIDTH_SPACE,
+                            text: 'a' + ZeroWidthSpace,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -612,7 +615,7 @@ describe('preventTypeInDelimiter', () => {
 
     it('handle delimiter before entity', () => {
         const entityWrapper = document.createElement('span');
-        entityWrapper.className = 'blockEntityContainer';
+        entityWrapper.className = BlockEntityContainer;
 
         mockedModel = {
             blockGroupType: 'Document',
@@ -623,7 +626,7 @@ describe('preventTypeInDelimiter', () => {
                         {
                             segmentType: 'Text',
                             format: {},
-                            text: ZERO_WIDTH_SPACE + 'Test',
+                            text: ZeroWidthSpace + 'Test',
                         },
                         {
                             segmentType: 'SelectionMarker',

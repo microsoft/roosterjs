@@ -65,12 +65,12 @@ export function generateEntityClassNames(format: ContentModelEntityFormat): stri
  * @param node the node to check
  * @return true if it is a delimiter
  */
-export function isEntityDelimiter(node: Node): node is HTMLElement {
+export function isEntityDelimiter(element: HTMLElement): boolean {
     return (
-        isNodeOfType(node, 'ELEMENT_NODE') &&
-        isElementOfType(node, 'span') &&
-        (node.classList.contains(DELIMITER_AFTER) || node.classList.contains(DELIMITER_BEFORE)) &&
-        node.textContent === ZERO_WIDTH_SPACE
+        isElementOfType(element, 'span') &&
+        (element.classList.contains(DELIMITER_AFTER) ||
+            element.classList.contains(DELIMITER_BEFORE)) &&
+        element.textContent === ZERO_WIDTH_SPACE
     );
 }
 

@@ -17,18 +17,20 @@ import {
     isNodeOfType,
 } from 'roosterjs-content-model-dom';
 
-const DELIMITER_BEFORE = 'entityDelimiterBefore';
-const DELIMITER_AFTER = 'entityDelimiterAfter';
-const DELIMITER_SELECTOR = '.' + DELIMITER_AFTER + ',.' + DELIMITER_BEFORE;
-const ZERO_WIDTH_SPACE = '\u200B';
-const ENTITY_INFO_NAME = '_Entity';
-const INLINE_ENTITY_SELECTOR = 'span.' + ENTITY_INFO_NAME;
+const DelimiterBefore = 'entityDelimiterBefore';
+const DelimiterAfter = 'entityDelimiterAfter';
+const DelimiterSelector = '.' + DelimiterAfter + ',.' + DelimiterBefore;
+const ZeroWidthSpace = '\u200B';
+const EntityInfoName = '_Entity';
+const InlineEntitySelector = 'span.' + EntityInfoName;
+const BlockEntityContainer = '_E_EBlockEntityContainer';
+const BlockEntityContainerSelector = '.' + BlockEntityContainer;
 
 /**
  * @internal exported only for unit test
  */
 export function preventTypeInDelimiter(node: HTMLElement, editor: IStandaloneEditor) {
-    const isAfter = node.classList.contains(DELIMITER_AFTER);
+    const isAfter = node.classList.contains(DelimiterAfter);
     const entitySibling = isAfter ? node.previousElementSibling : node.nextElementSibling;
     if (entitySibling && isEntityElement(entitySibling)) {
         removeInvalidDelimiters(
@@ -41,7 +43,7 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IStandaloneEdi
                 if (block?.blockType == 'Paragraph') {
                     block.segments.forEach(segment => {
                         if (segment.segmentType == 'Text') {
-                            segment.text = segment.text.replace(ZERO_WIDTH_SPACE, '');
+                            segment.text = segment.text.replace(ZeroWidthSpace, '');
                         }
                     });
                 }
@@ -69,8 +71,11 @@ function removeNode(el: Node | undefined | null) {
 
 function removeInvalidDelimiters(nodes: Element[] | NodeListOf<Element>) {
     nodes.forEach(node => {
+        if (!isNodeOfType(node, 'ELEMENT_NODE')) {
+            return;
+        }
         if (isEntityDelimiter(node)) {
-            const sibling = node.classList.contains(DELIMITER_BEFORE)
+            const sibling = node.classList.contains(DelimiterBefore)
                 ? node.nextElementSibling
                 : node.previousElementSibling;
             if (!(isNodeOfType(sibling, 'ELEMENT_NODE') && isEntityElement(sibling))) {
@@ -87,17 +92,17 @@ function removeDelimiterAttr(node: Element | undefined | null, checkEntity: bool
         return;
     }
 
-    const isAfter = node.classList.contains(DELIMITER_AFTER);
+    const isAfter = node.classList.contains(DelimiterAfter);
     const entitySibling = isAfter ? node.previousElementSibling : node.nextElementSibling;
     if (checkEntity && entitySibling && isEntityElement(entitySibling)) {
         return;
     }
 
-    node.classList.remove(DELIMITER_AFTER, DELIMITER_BEFORE);
+    node.classList.remove(DelimiterAfter, DelimiterBefore);
 
     node.normalize();
     node.childNodes.forEach(cn => {
-        const index = cn.textContent?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
+        const index = cn.textContent?.indexOf(ZeroWidthSpace) ?? -1;
         if (index >= 0) {
             const range = new Range();
             range.setStart(cn, index);
@@ -112,7 +117,7 @@ function getFocusedElement(selection: RangeSelection): HTMLElement | null {
     let node: Node | null = isReverted ? range.startContainer : range.endContainer;
     const offset = isReverted ? range.startOffset : range.endOffset;
     if (!isNodeOfType(node, 'ELEMENT_NODE')) {
-        if (node.textContent != ZERO_WIDTH_SPACE && (node.textContent || '').length == offset) {
+        if (node.textContent != ZeroWidthSpace && (node.textContent || '').length == offset) {
             node = node.nextSibling ?? node.parentElement?.nextElementSibling ?? null;
         } else {
             node = node?.parentElement ?? null;
@@ -131,8 +136,8 @@ function getFocusedElement(selection: RangeSelection): HTMLElement | null {
  */
 export function handleDelimiterContentChangedEvent(editor: IStandaloneEditor) {
     const helper = editor.getDOMHelper();
-    removeInvalidDelimiters(helper.queryElements(DELIMITER_SELECTOR));
-    addDelimitersIfNeeded(helper.queryElements(INLINE_ENTITY_SELECTOR));
+    removeInvalidDelimiters(helper.queryElements(DelimiterSelector));
+    addDelimitersIfNeeded(helper.queryElements(InlineEntitySelector));
 }
 
 /**
@@ -149,12 +154,12 @@ export function handleDelimiterKeyDownEvent(editor: IStandaloneEditor, event: Ke
     if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
         const node = getFocusedElement(selection);
         if (node && isEntityDelimiter(node)) {
-            const blockEntityContainer = node.closest('.blockEntityContainer');
+            const blockEntityContainer = node.closest(BlockEntityContainerSelector);
             if (
                 blockEntityContainer &&
                 editor.getDOMHelper().isNodeInEditor(blockEntityContainer)
             ) {
-                const isAfter = node.classList.contains(DELIMITER_AFTER);
+                const isAfter = node.classList.contains(DelimiterAfter);
 
                 if (isAfter) {
                     selection.range.setStartAfter(blockEntityContainer);
