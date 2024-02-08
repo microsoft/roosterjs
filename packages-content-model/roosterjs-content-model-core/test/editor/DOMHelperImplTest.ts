@@ -33,6 +33,18 @@ describe('DOMHelperImpl', () => {
         expect(querySelectorAllSpy).toHaveBeenCalledWith(mockedSelector);
     });
 
+    it('getTextContent', () => {
+        const mockedTextContent = 'TEXT';
+        const mockedDiv: HTMLDivElement = {
+            textContent: mockedTextContent,
+        } as any;
+        const domHelper = createDOMHelper(mockedDiv);
+
+        const result = domHelper.getTextContent();
+
+        expect(result).toBe(mockedTextContent);
+    });
+
     it('calculateZoomScale 1', () => {
         const mockedDiv = {
             getBoundingClientRect: () => ({
