@@ -4,7 +4,7 @@ import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
 import { formatTableWithContentModel } from 'roosterjs-content-model-api';
 import { insertTableColumn } from 'roosterjs-content-model-api/lib/modelApi/table/insertTableColumn';
 import { insertTableRow } from 'roosterjs-content-model-api/lib/modelApi/table/insertTableRow';
-import { isElementOfType } from 'roosterjs-content-model-dom/lib';
+import { isElementOfType } from 'roosterjs-content-model-dom';
 import type CreateElementData from '../../../pluginUtils/CreateElement/CreateElementData';
 import type Disposable from '../../../pluginUtils/Disposable';
 import type TableEditFeature from './TableEditorFeature';
