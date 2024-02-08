@@ -6,8 +6,6 @@ import type { ContentModelTable, IStandaloneEditor, Rect } from 'roosterjs-conte
 import type TableEditFeature from './TableEditorFeature';
 
 const TABLE_RESIZER_LENGTH = 12;
-const MIN_CELL_WIDTH = 30;
-const MIN_CELL_HEIGHT = 20;
 
 /**
  * @internal
@@ -28,7 +26,7 @@ export default function createTableResizer(
     }
 
     const document = table.ownerDocument;
-    const zoomScale = editor.getZoomScale();
+    const zoomScale = editor.getDOMHelper().calculateZoomScale();
     const createElementData = {
         tag: 'div',
         style: `background-color: red; position: fixed; cursor: ${
@@ -85,6 +83,8 @@ interface DragAndDropContext {
 
 interface DragAndDropInitValue {
     originalRect: DOMRect;
+    originalHeights: number[];
+    originalWidths: number[];
     cmTable: ContentModelTable | undefined;
 }
 
@@ -107,14 +107,26 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent) {
     });
 
     // Get the table content model
-    const cmTable = getFirstSelectedTable(editor.createContentModel());
+    const cmTable = getFirstSelectedTable(editor.getContentModelCopy('disconnected'))[0];
 
     // Restore selection
     editor.setDOMSelection(selection);
 
+    // Save original widths and heights
+    const heights: number[] = [];
+    cmTable?.rows.forEach(row => {
+        heights.push(row.height);
+    });
+    const widths: number[] = [];
+    cmTable?.widths.forEach(width => {
+        widths.push(width);
+    });
+
     return {
         originalRect: table.getBoundingClientRect(),
-        cmTable: cmTable[0],
+        cmTable,
+        originalHeights: heights ?? [],
+        originalWidths: widths ?? [],
     };
 }
 
@@ -125,58 +137,53 @@ function onDragging(
     deltaX: number,
     deltaY: number
 ) {
-    const { isRTL, zoomScale, editor, table } = context;
-    const { originalRect, cmTable } = initValue;
+    const { isRTL, zoomScale, table } = context;
+    const { originalRect, originalHeights, originalWidths, cmTable } = initValue;
 
     const ratioX = 1.0 + (deltaX / originalRect.width) * zoomScale * (isRTL ? -1 : 1);
     const ratioY = 1.0 + (deltaY / originalRect.height) * zoomScale;
     const shouldResizeX = Math.abs(ratioX - 1.0) > 1e-3;
     const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
 
-    //TODO: Changes while dragging not updating on editor
+    // If the width of some external table is fixed, we need to make it resizable
+    table.style.setProperty('width', null);
+    // If the height of some external table is fixed, we need to make it resizable
+    table.style.setProperty('height', null);
+
+    // Assign new widths and heights to the CM table
     if (cmTable && cmTable.rows && (shouldResizeX || shouldResizeY)) {
-        editor.formatContentModel(
-            (model, context) => {
-                context.skipUndoSnapshot = true;
-
-                for (let i = 0; i < cmTable.rows.length; i++) {
-                    for (let j = 0; j < cmTable.rows[i].cells.length; j++) {
-                        const cell = cmTable.rows[i].cells[j];
-                        if (cell) {
-                            if (shouldResizeX) {
-                                // the width of some external table is fixed, we need to make it resizable
-                                // TODO: maybe move outside or eliminate
-                                table.style.setProperty('width', null);
-                                const newWidth = ((cmTable.widths[j] ?? 0) * ratioX) / zoomScale;
-                                cell.format.useBorderBox = true;
-                                if (newWidth >= MIN_CELL_WIDTH) {
-                                    cmTable.widths[j] = newWidth;
-                                }
-                            }
-
-                            if (shouldResizeY) {
-                                // the height of some external table is fixed, we need to make it resizable
-                                // TODO: maybe move outside or eliminate
-                                table.style.setProperty('height', null);
-                                if (j == 0) {
-                                    const newHeight =
-                                        ((cmTable.rows[i].height ?? 0) * ratioY) / zoomScale;
-                                    if (newHeight >= MIN_CELL_HEIGHT) {
-                                        cmTable.rows[i].height = newHeight;
-                                    }
-                                }
-                            }
-                        }
+        for (let i = 0; i < cmTable.rows.length; i++) {
+            for (let j = 0; j < cmTable.rows[i].cells.length; j++) {
+                const cell = cmTable.rows[i].cells[j];
+                if (cell) {
+                    if (shouldResizeX && i == 0) {
+                        cmTable.widths[j] = ((originalWidths[j] ?? 0) * ratioX) / zoomScale;
+                    }
+                    if (shouldResizeY && j == 0) {
+                        cmTable.rows[i].height = ((originalHeights[i] ?? 0) * ratioY) / zoomScale;
                     }
                 }
-
-                normalizeTable(cmTable, model.format);
-                return true;
-            },
-            {
-                apiName: 'tableResize',
             }
-        );
+        }
+
+        // Normalize the table
+        normalizeTable(cmTable);
+
+        // Writeback CM Table size changes to DOM Table
+        for (let row = 0; row < table.rows.length; row++) {
+            const tableRow = table.rows[row];
+
+            if (tableRow.cells.length == 0) {
+                // Skip empty row
+                continue;
+            }
+
+            for (let col = 0; col < tableRow.cells.length; col++) {
+                const td = tableRow.cells[col];
+                td.style.width = cmTable.widths[col] + 'px';
+                td.style.height = cmTable.rows[row].height + 'px';
+            }
+        }
         return true;
     } else {
         return false;
