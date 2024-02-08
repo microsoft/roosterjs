@@ -53,12 +53,12 @@ describe('parseValueWithUnit with element', () => {
     });
 
     it('rem with root using root based style', () => {
-        const results = [0, 16, 17.6, -17.6];
+        const results = [0, 32, 35.2, -35.2];
         const mockedElement = ({
             ownerDocument: {
                 defaultView: {
                     getComputedStyle: () => ({
-                        fontSize: '15rem',
+                        fontSize: '2rem',
                     }),
                 },
                 querySelector: () => mockedElement,
@@ -68,13 +68,21 @@ describe('parseValueWithUnit with element', () => {
 
         ['0', '1', '1.1', '-1.1'].forEach((value, i) => {
             const input = value + 'rem';
-            const result = parseValueWithUnit(input, mockedElement);
+            const context = <any>{
+                rootDocumentFormat: {},
+            };
+            const result = parseValueWithUnit(input, mockedElement, 'px', context);
 
             if (Number.isNaN(results[i])) {
                 expect(result).toBeNaN();
             } else {
                 expect(result).toEqual(results[i], input);
             }
+            expect(context).toEqual({
+                rootDocumentFormat: {
+                    fontSize: '2rem',
+                },
+            });
         });
     });
 

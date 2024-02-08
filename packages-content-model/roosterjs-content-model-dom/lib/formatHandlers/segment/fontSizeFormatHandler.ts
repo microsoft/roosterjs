@@ -1,6 +1,6 @@
 import { isSuperOrSubScript } from './superOrSubScriptFormatHandler';
 import { parseValueWithUnit } from '../utils/parseValueWithUnit';
-import type { FontSizeFormat } from 'roosterjs-content-model-types';
+import type { EditorContext, FontSizeFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
 /**
@@ -18,7 +18,8 @@ export const fontSizeFormatHandler: FormatHandler<FontSizeFormat> = {
                 format.fontSize = normalizeFontSize(
                     fontSize,
                     context.segmentFormat.fontSize,
-                    element
+                    element,
+                    context
                 );
             } else if (defaultStyle.fontSize) {
                 format.fontSize = fontSize;
@@ -47,7 +48,8 @@ const KnownFontSizes: Record<string, string> = {
 function normalizeFontSize(
     fontSize: string,
     contextFont: string | undefined,
-    element: HTMLElement
+    element: HTMLElement,
+    context: EditorContext
 ): string | undefined {
     const knownFontSize = KnownFontSizes[fontSize];
 
@@ -66,7 +68,8 @@ function normalizeFontSize(
             const existingFontSize = parseValueWithUnit(
                 contextFont,
                 fontSize.endsWith('rem') ? element : undefined /*element*/,
-                'px'
+                'px',
+                context
             );
 
             if (existingFontSize) {
@@ -76,7 +79,7 @@ function normalizeFontSize(
                     case 'larger':
                         return Math.round((existingFontSize * 600) / 5) / 100 + 'px';
                     default:
-                        return parseValueWithUnit(fontSize, existingFontSize, 'px') + 'px';
+                        return parseValueWithUnit(fontSize, existingFontSize, 'px', context) + 'px';
                 }
             }
         }

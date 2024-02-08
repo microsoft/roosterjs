@@ -1,9 +1,10 @@
+import type { EditorContext } from 'roosterjs-content-model-types';
+
 const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
 
 // According to https://developer.mozilla.org/en-US/docs/Glossary/CSS_pixel, 1in = 96px
 const PixelPerInch = 96;
 
-const RootRelatedUnits = ['rcap', 'rch', 'rem', 'rex', 'ric', 'rlh'];
 const DefaultRootFontSize = 16;
 
 /**
@@ -15,7 +16,8 @@ const DefaultRootFontSize = 16;
 export function parseValueWithUnit(
     value: string = '',
     currentSizePxOrElement?: number | HTMLElement,
-    resultUnit: 'px' | 'pt' = 'px'
+    resultUnit: 'px' | 'pt' = 'px',
+    context?: EditorContext
 ): number {
     const match = MarginValueRegex.exec(value);
     let result = 0;
@@ -46,15 +48,24 @@ export function parseValueWithUnit(
             case 'rem':
                 if (currentSizePxOrElement && typeof currentSizePxOrElement != 'number') {
                     const doc = currentSizePxOrElement.ownerDocument;
-                    const htmlRoot = doc.querySelector('html');
+                    let htmlRoot: HTMLHtmlElement | null | undefined;
                     const computedFontSize =
-                        htmlRoot && doc.defaultView?.getComputedStyle(htmlRoot).fontSize;
-                    const rootFontSizeInPx =
-                        htmlRoot &&
-                        computedFontSize &&
-                        RootRelatedUnits.every(unit => computedFontSize.indexOf(unit) == -1)
-                            ? parseValueWithUnit(computedFontSize)
-                            : DefaultRootFontSize;
+                        context?.rootDocumentFormat.fontSize ||
+                        (((htmlRoot = doc.querySelector('html')) &&
+                            htmlRoot &&
+                            doc.defaultView?.getComputedStyle(htmlRoot).fontSize) ??
+                            DefaultRootFontSize + 'px');
+
+                    if (context && !context.rootDocumentFormat.fontSize) {
+                        context.rootDocumentFormat.fontSize = computedFontSize;
+                    }
+
+                    const rootFontSizeInPx = parseValueWithUnit(
+                        computedFontSize,
+                        DefaultRootFontSize,
+                        'px',
+                        context
+                    );
                     result = rootFontSizeInPx * num;
                 } else {
                     result = DefaultRootFontSize * num;

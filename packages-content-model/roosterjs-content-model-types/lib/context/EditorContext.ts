@@ -1,3 +1,4 @@
+import type { RootDocumentFormat } from './RootDocumentFormat';
 import type { DarkColorHandler } from './DarkColorHandler';
 import type { DomIndexer } from './DomIndexer';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
@@ -52,4 +53,9 @@ export interface EditorContext {
      * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
      */
     domIndexer?: DomIndexer;
+
+    /**
+     * Root document format.
+     */
+    rootDocumentFormat: Partial<RootDocumentFormat>;
 }

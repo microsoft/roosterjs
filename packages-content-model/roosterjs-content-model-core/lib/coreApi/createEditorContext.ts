@@ -16,6 +16,7 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         allowCacheElement: true,
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
+        rootDocumentFormat: {},
     };
 
     checkRootRtl(contentDiv, context);
