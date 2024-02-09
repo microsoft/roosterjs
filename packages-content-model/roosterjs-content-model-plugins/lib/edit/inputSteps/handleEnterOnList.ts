@@ -24,23 +24,38 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         context.deleteResult == 'notDeleted' ||
         context.deleteResult == 'range'
     ) {
-        const { insertPoint } = context;
+        const { insertPoint, formatContext } = context;
         const { path } = insertPoint;
+        const rawEvent = formatContext?.rawEvent as KeyboardEvent | undefined;
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
         const listItem = path[index];
 
         if (listItem && listItem.blockGroupType === 'ListItem') {
             const listParent = path[index + 1];
-            if (isEmptyListItem(listItem)) {
-                listItem.levels.pop();
+            if (rawEvent?.shiftKey) {
+                insertParagraphAfterListItem(listParent, listItem, insertPoint);
             } else {
-                createNewListItem(context, listItem, listParent);
+                if (isEmptyListItem(listItem)) {
+                    listItem.levels.pop();
+                } else {
+                    createNewListItem(context, listItem, listParent);
+                }
             }
-            context.formatContext?.rawEvent?.preventDefault();
+            rawEvent?.preventDefault();
             context.deleteResult = 'range';
         }
     }
+};
+
+const insertParagraphAfterListItem = (
+    listParent: ContentModelBlockGroup,
+    listItem: ContentModelListItem,
+    insertPoint: InsertPoint
+) => {
+    const paragraph = createNewParagraph(insertPoint);
+    const index = listParent.blocks.indexOf(listItem);
+    listParent.blocks.splice(index + 1, 0, paragraph);
 };
 
 const isEmptyListItem = (listItem: ContentModelListItem) => {
@@ -94,13 +109,13 @@ const createNewParagraph = (insertPoint: InsertPoint) => {
         paragraph.segments.length - markerIndex
     );
 
+    newParagraph.segments.push(...segments);
+
     setParagraphNotImplicit(paragraph);
 
     if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
         paragraph.segments.push(createBr(marker.format));
     }
-
-    newParagraph.segments.push(...segments);
 
     normalizeParagraph(newParagraph);
     return newParagraph;

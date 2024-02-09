@@ -6,7 +6,7 @@ import {
 } from 'roosterjs-content-model-types';
 
 export function editingTestCommon(
-    apiName: string,
+    apiName: string | undefined,
     executionCallback: (editor: IStandaloneEditor) => void,
     model: ContentModelDocument,
     result: ContentModelDocument,
@@ -30,6 +30,8 @@ export function editingTestCommon(
 
     const editor = ({
         triggerEvent,
+        takeSnapshot: () => {},
+        isInIME: () => false,
         getEnvironment: () => ({}),
         formatContentModel,
     } as any) as IStandaloneEditor;
