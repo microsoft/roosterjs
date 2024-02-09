@@ -3,6 +3,7 @@ import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/crea
 import * as createStandaloneEditorCore from '../../lib/editor/createStandaloneEditorCore';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
+import { Rect, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
 import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 import { tableProcessor } from 'roosterjs-content-model-dom';
@@ -862,5 +863,64 @@ describe('StandaloneEditor', () => {
         expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.isDarkMode()).toThrow();
         expect(() => editor.setDarkModeState()).toThrow();
+    });
+
+    it('getScrollContainer', () => {
+        const div = document.createElement('div');
+        const mockedScrollContainer = 'SCROLLCONTAINER' as any;
+        const resetSpy = jasmine.createSpy('reset');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: { setContentModel: setContentModelSpy },
+            domEvent: { scrollContainer: mockedScrollContainer },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new StandaloneEditor(div);
+
+        const result = editor.getScrollContainer();
+
+        expect(result).toBe(mockedScrollContainer);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.getScrollContainer()).toThrow();
+    });
+
+    it('getVisibleViewport', () => {
+        const div = document.createElement('div');
+        const mockedScrollContainer: Rect = { top: 0, bottom: 100, left: 0, right: 100 };
+        const resetSpy = jasmine.createSpy('reset');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+                getVisibleViewport: (core: StandaloneEditorCore) => {
+                    return mockedScrollContainer;
+                },
+            },
+            domEvent: { scrollContainer: mockedScrollContainer },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new StandaloneEditor(div);
+
+        const result = editor.getVisibleViewport();
+
+        expect(result).toBe(mockedScrollContainer);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.getVisibleViewport()).toThrow();
     });
 });

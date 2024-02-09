@@ -65,7 +65,7 @@ describe('keyboardDelete', () => {
 
                 const result = keyboardDelete(editor, mockedEvent);
 
-                expect(result).toBeTrue();
+                expect(result).toBe(expectedDelete == 'range' || expectedDelete == 'singleChar');
             },
             input,
             expectedResult,
@@ -589,9 +589,8 @@ describe('keyboardDelete', () => {
             getDOMSelection: () => range,
         } as any;
 
-        const result = keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent);
 
-        expect(result).toBeTrue();
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -613,9 +612,8 @@ describe('keyboardDelete', () => {
             getDOMSelection: () => range,
         } as any;
 
-        const result = keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent);
 
-        expect(result).toBeTrue();
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
 });
