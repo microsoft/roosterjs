@@ -50,7 +50,7 @@ describe('keyboardTab', () => {
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         if (indent) {
-            expect(setModelIndentationSpy).toHaveBeenCalledWith(editor as any, indent);
+            expect(setModelIndentationSpy).toHaveBeenCalledWith(input as any, indent);
         } else {
             expect(setModelIndentationSpy).not.toHaveBeenCalled();
         }
