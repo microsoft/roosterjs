@@ -217,7 +217,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         event.stopPropagation();
     };
 
-    private onContextMenuEvent = (event: PointerEvent) => {
+    private onContextMenuEvent = (event: MouseEvent) => {
         const allItems: any[] = [];
         const searcher = this.editor?.getContentSearcherOfCursor();
         const elementBeforeCursor = searcher?.getInlineElementBefore();
