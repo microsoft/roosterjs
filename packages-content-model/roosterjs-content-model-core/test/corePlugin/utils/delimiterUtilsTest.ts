@@ -879,6 +879,7 @@ describe('handleKeyDownInBlockDelimiter', () => {
                         },
                     ],
                     format: {},
+                    segmentFormat: {},
                 },
                 {
                     segmentType: 'Entity',
