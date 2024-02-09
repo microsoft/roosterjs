@@ -1,6 +1,6 @@
 import { applyDefaultFormat } from './utils/applyDefaultFormat';
 import { applyPendingFormat } from './utils/applyPendingFormat';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { getObjectKeys, isBlockElement, isNodeOfType } from 'roosterjs-content-model-dom';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import type {
     FormatPluginState,
@@ -104,7 +104,8 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
                     this.clearPendingFormat();
                 } else if (
                     this.hasDefaultFormat &&
-                    (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey)
+                    (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey) &&
+                    this.shouldApplyDefaultFormat(this.editor)
                 ) {
                     applyDefaultFormat(this.editor, this.state.defaultFormat);
                 }
@@ -151,6 +152,33 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
         }
 
         return result;
+    }
+
+    private shouldApplyDefaultFormat(editor: IStandaloneEditor): boolean {
+        const selection = editor.getDOMSelection();
+        const range = selection?.type == 'range' ? selection.range : null;
+        const posContainer = range?.startContainer ?? null;
+
+        if (posContainer) {
+            const domHelper = editor.getDOMHelper();
+            let element: HTMLElement | null = isNodeOfType(posContainer, 'ELEMENT_NODE')
+                ? posContainer
+                : posContainer.parentElement;
+
+            while (element?.parentElement && domHelper.isNodeInEditor(element.parentElement)) {
+                if (element.getAttribute?.('style')) {
+                    return false;
+                } else if (isBlockElement(element)) {
+                    break;
+                }
+
+                element = element.parentElement;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
