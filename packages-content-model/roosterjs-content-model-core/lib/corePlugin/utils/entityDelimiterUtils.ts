@@ -118,9 +118,9 @@ function getFocusedElement(selection: RangeSelection): HTMLElement | null {
     const offset = isReverted ? range.startOffset : range.endOffset;
     if (!isNodeOfType(node, 'ELEMENT_NODE')) {
         if (node.textContent != ZeroWidthSpace && (node.textContent || '').length == offset) {
-            node = node.nextSibling ?? node.parentElement?.nextElementSibling ?? null;
+            node = node.nextSibling ?? node.parentElement?.closest(DelimiterSelector) ?? null;
         } else {
-            node = node?.parentElement ?? null;
+            node = node?.parentElement?.closest(DelimiterSelector) ?? null;
         }
     } else {
         node = node.childNodes.length == offset ? node : node.childNodes.item(offset);
@@ -152,13 +152,11 @@ export function handleDelimiterKeyDownEvent(editor: IStandaloneEditor, event: Ke
     }
     const isEnter = rawEvent.key === 'Enter';
     if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
+        const helper = editor.getDOMHelper();
         const node = getFocusedElement(selection);
-        if (node && isEntityDelimiter(node)) {
+        if (node && isEntityDelimiter(node) && helper.isNodeInEditor(node)) {
             const blockEntityContainer = node.closest(BlockEntityContainerSelector);
-            if (
-                blockEntityContainer &&
-                editor.getDOMHelper().isNodeInEditor(blockEntityContainer)
-            ) {
+            if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
                 const isAfter = node.classList.contains(DelimiterAfter);
 
                 if (isAfter) {
@@ -199,10 +197,15 @@ export function handleDelimiterKeyDownEvent(editor: IStandaloneEditor, event: Ke
  * @internal Exported Only for unit test
  * @returns
  */
-export const handleKeyDownInBlockDelimiter: ContentModelFormatter = model => {
+export const handleKeyDownInBlockDelimiter: ContentModelFormatter = (model, context) => {
     iterateSelections(model, (_path, _tableContext, block) => {
         if (block?.blockType == 'Paragraph') {
             delete block.isImplicit;
+            const selectionMarker = block.segments.find(w => w.segmentType == 'SelectionMarker');
+            if (selectionMarker?.segmentType == 'SelectionMarker') {
+                block.segmentFormat = { ...selectionMarker.format };
+                context.newPendingFormat = { ...selectionMarker.format };
+            }
             block.segments.unshift(createBr());
         }
     });

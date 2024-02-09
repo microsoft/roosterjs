@@ -84,12 +84,19 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 };
 
 function addDelimiterForEntity(doc: Document, wrapper: HTMLElement, context: ModelToDomContext) {
+    const existingAfter = wrapper.nextElementSibling;
+    const existingBefore = wrapper.previousElementSibling;
     const [after, before] = addDelimiters(doc, wrapper);
+
     const format = {
         ...context.pendingFormat?.format,
         ...context.defaultFormat,
     };
-    applyFormat(after, context.formatAppliers.segment, format, context);
-    applyFormat(before, context.formatAppliers.segment, format, context);
+    if (existingAfter != after) {
+        applyFormat(after, context.formatAppliers.segment, format, context);
+    }
+    if (existingBefore != before) {
+        applyFormat(before, context.formatAppliers.segment, format, context);
+    }
     return [after, before];
 }
