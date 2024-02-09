@@ -89,7 +89,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -144,7 +143,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -204,7 +202,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -242,7 +239,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -371,7 +367,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -477,7 +472,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -578,7 +572,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -661,7 +654,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -736,7 +728,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -789,7 +780,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -877,7 +867,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -984,7 +973,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
@@ -1069,7 +1057,6 @@ describe('keyboardListTrigger', () => {
                                     },
                                 ],
                                 format: {},
-                                isImplicit: true,
                             },
                         ],
                         levels: [
