@@ -1,5 +1,6 @@
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
+import { keyboardTab } from './keyboardTab';
 import type {
     EditorPlugin,
     IStandaloneEditor,
@@ -15,6 +16,7 @@ const DELETE_KEY = 46;
  * This includes:
  * 1. Delete Key
  * 2. Backspace Key
+ * 3. Tab Key
  */
 export class EditPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
@@ -84,6 +86,9 @@ export class EditPlugin implements EditorPlugin {
                     keyboardDelete(editor, rawEvent);
                     break;
 
+                case 'Tab':
+                    keyboardTab(editor, rawEvent);
+                    break;
                 case 'Unidentified':
                     if (editor.getEnvironment().isAndroid) {
                         this.shouldHandleNextInputEvent = true;

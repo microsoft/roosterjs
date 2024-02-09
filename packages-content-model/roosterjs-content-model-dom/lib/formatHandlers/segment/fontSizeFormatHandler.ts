@@ -1,6 +1,6 @@
 import { isSuperOrSubScript } from './superOrSubScriptFormatHandler';
 import { parseValueWithUnit } from '../utils/parseValueWithUnit';
-import type { FontSizeFormat } from 'roosterjs-content-model-types';
+import type { EditorContext, FontSizeFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
 /**
@@ -15,7 +15,11 @@ export const fontSizeFormatHandler: FormatHandler<FontSizeFormat> = {
         // the font size will be handled by superOrSubScript handler
         if (fontSize && !isSuperOrSubScript(fontSize, verticalAlign) && fontSize != 'inherit') {
             if (element.style.fontSize) {
-                format.fontSize = normalizeFontSize(fontSize, context.segmentFormat.fontSize);
+                format.fontSize = normalizeFontSize(
+                    fontSize,
+                    context.segmentFormat.fontSize,
+                    context
+                );
             } else if (defaultStyle.fontSize) {
                 format.fontSize = fontSize;
             }
@@ -40,7 +44,11 @@ const KnownFontSizes: Record<string, string> = {
     'xxx-large': '36pt',
 };
 
-function normalizeFontSize(fontSize: string, contextFont: string | undefined): string | undefined {
+function normalizeFontSize(
+    fontSize: string,
+    contextFont: string | undefined,
+    context: EditorContext
+): string | undefined {
     const knownFontSize = KnownFontSizes[fontSize];
 
     if (knownFontSize) {
@@ -49,12 +57,17 @@ function normalizeFontSize(fontSize: string, contextFont: string | undefined): s
         fontSize == 'smaller' ||
         fontSize == 'larger' ||
         fontSize.endsWith('em') ||
-        fontSize.endsWith('%')
+        fontSize.endsWith('%') ||
+        fontSize.endsWith('rem')
     ) {
         if (!contextFont) {
             return undefined;
         } else {
-            const existingFontSize = parseValueWithUnit(contextFont, undefined /*element*/, 'px');
+            const existingFontSize = parseValueWithUnit(
+                contextFont,
+                fontSize.endsWith('rem') ? context.rootFontSize : undefined /*element*/,
+                'px'
+            );
 
             if (existingFontSize) {
                 switch (fontSize) {
