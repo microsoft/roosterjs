@@ -43,3 +43,4 @@ export { default as insertEntity } from './publicApi/entity/insertEntity';
 
 export { formatTableWithContentModel } from './publicApi/utils/formatTableWithContentModel';
 export { setListType } from './modelApi/list/setListType';
+export { setModelIndentation } from './modelApi/block/setModelIndentation';
