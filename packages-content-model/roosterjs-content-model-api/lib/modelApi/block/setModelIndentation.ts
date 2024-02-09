@@ -17,7 +17,10 @@ import type {
 const IndentStepInPixel = 40;
 
 /**
- * @internal
+ * @param model The content model to set indentation
+ * @param indentation The indentation type, 'indent' to indent, 'outdent' to outdent
+ * @param length The length of indentation in pixel, default value is 40
+ * Set indentation for selected list items or paragraphs
  */
 export function setModelIndentation(
     model: ContentModelDocument,
@@ -35,7 +38,7 @@ export function setModelIndentation(
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             const thread = findListItemsInSameThread(model, block);
             const firstItem = thread[0];
-
+            //if the first item is selected and has only one level, we should add margin to the whole list
             if (isSelected(firstItem) && firstItem.levels.length == 1) {
                 const level = block.levels[0];
                 const { format } = level;
@@ -53,7 +56,8 @@ export function setModelIndentation(
                         level.format.marginLeft = newValue + 'px';
                     }
                 }
-            } else if (block.levels.length == 1 || !multilevelSelection(model, block, parent)) {
+                //if block has only one level, there is not need to check if it is multilevel selection
+            } else if (block.levels.length == 1 || !isMultilevelSelection(model, block, parent)) {
                 if (isIndent) {
                     const lastLevel = block.levels[block.levels.length - 1];
                     const newLevel: ContentModelListLevel = createListLevel(
@@ -99,7 +103,11 @@ function isSelected(listItem: ContentModelListItem) {
     });
 }
 
-function multilevelSelection(
+/*
+ * Check if the selection has list items with different levels and the first item of the list is selected, do not create a sub list.
+ * Otherwise, the margin of the first item will be changed, and the sub list will be created, creating a unintentional margin difference between the list items.
+ */
+function isMultilevelSelection(
     model: ContentModelDocument,
     listItem: ContentModelListItem,
     parent: ContentModelBlockGroup
@@ -120,6 +128,7 @@ function multilevelSelection(
             return false;
         }
     }
+    return false;
 }
 
 function calculateMarginValue(

@@ -1,14 +1,14 @@
-import * as setIndentation from '../../../roosterjs-content-model-api/lib/publicApi/block/setIndentation';
+import * as setModelIndentation from '../../../roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { keyboardTab } from '../../lib/edit/keyboardTab';
 
 describe('keyboardTab', () => {
     let takeSnapshotSpy: jasmine.Spy;
-    let setIndentationSpy: jasmine.Spy;
+    let setModelIndentationSpy: jasmine.Spy;
 
     beforeEach(() => {
         takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
-        setIndentationSpy = spyOn(setIndentation, 'default');
+        setModelIndentationSpy = spyOn(setModelIndentation, 'setModelIndentation');
     });
 
     function runTest(
@@ -50,9 +50,9 @@ describe('keyboardTab', () => {
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         if (indent) {
-            expect(setIndentationSpy).toHaveBeenCalledWith(editor as any, indent);
+            expect(setModelIndentationSpy).toHaveBeenCalledWith(editor as any, indent);
         } else {
-            expect(setIndentationSpy).not.toHaveBeenCalled();
+            expect(setModelIndentationSpy).not.toHaveBeenCalled();
         }
     }
 

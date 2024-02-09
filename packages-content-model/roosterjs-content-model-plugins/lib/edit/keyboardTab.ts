@@ -1,10 +1,8 @@
 import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-core';
-import { setIndentation } from 'roosterjs-content-model-api';
-
+import { setModelIndentation } from 'roosterjs-content-model-api';
 import type {
     ContentModelDocument,
     ContentModelListItem,
-    DOMSelection,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
@@ -14,24 +12,15 @@ import type {
 export function keyboardTab(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
 
-    if (shouldHandleTab(rawEvent, selection)) {
+    if (selection?.type == 'range') {
         editor.takeSnapshot();
 
-        editor.formatContentModel(
-            (model, _context) => {
-                return handleTabOnList(editor, model, rawEvent);
-            },
-            {
-                rawEvent,
-            }
-        );
+        editor.formatContentModel((model, _context) => {
+            return handleTabOnList(model, rawEvent);
+        });
 
         return true;
     }
-}
-
-function shouldHandleTab(rawEvent: KeyboardEvent, selection: DOMSelection | null) {
-    return rawEvent.key == 'Tab' && selection && selection?.type == 'range';
 }
 
 function isMarkerAtStartOfBlock(listItem: ContentModelListItem) {
@@ -41,11 +30,7 @@ function isMarkerAtStartOfBlock(listItem: ContentModelListItem) {
     );
 }
 
-function handleTabOnList(
-    editor: IStandaloneEditor,
-    model: ContentModelDocument,
-    rawEvent: KeyboardEvent
-) {
+function handleTabOnList(model: ContentModelDocument, rawEvent: KeyboardEvent) {
     const blocks = getOperationalBlocks<ContentModelListItem>(model, ['ListItem'], ['TableCell']);
     const listItem = blocks[0].block;
 
@@ -53,7 +38,7 @@ function handleTabOnList(
         isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
         isMarkerAtStartOfBlock(listItem)
     ) {
-        setIndentation(editor, rawEvent.shiftKey ? 'outdent' : 'indent');
+        setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
         rawEvent.preventDefault();
         return true;
     }
