@@ -28,6 +28,7 @@ export interface ContentModelEditorOptions extends StandaloneEditorOptions {
      * Specify the enabled experimental features
      */
     experimentalFeatures?: ExperimentalFeatures[];
+
     /**
      * Legacy plugins using IEditor interface
      */

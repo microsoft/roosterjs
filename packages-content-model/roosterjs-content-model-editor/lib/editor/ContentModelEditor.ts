@@ -1,6 +1,5 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { createEditorCore } from './createEditorCore';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import {
     newEventToOldEvent,
@@ -118,7 +117,17 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        const bridgePlugin = new BridgePlugin(options);
+        const bridgePlugin = new BridgePlugin(
+            core => {
+                this.contentModelEditorCore = core;
+
+                return this;
+            },
+            options.legacyPlugins,
+            options.legacyCoreApiOverride,
+            options.experimentalFeatures
+        );
+
         const plugins = [bridgePlugin, ...(options.plugins ?? [])];
         const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
@@ -135,44 +144,31 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             plugins,
             initialModel,
         };
-        const corePluginState = bridgePlugin.getCorePluginState();
 
-        super(contentDiv, standaloneEditorOptions, () => {
-            const core = this.getCore();
-            const sizeTransformer: SizeTransformer = size =>
-                size / this.getDOMHelper().calculateZoomScale();
-
-            // Need to create Content Model Editor Core before initialize plugins since some plugins need this object
-            this.contentModelEditorCore = createEditorCore(
-                options,
-                corePluginState,
-                core.darkColorHandler,
-                sizeTransformer
-            );
-
-            bridgePlugin.setOuterEditor(this);
-        });
+        super(contentDiv, standaloneEditorOptions);
     }
 
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
     dispose(): void {
+        const core = this.contentModelEditorCore;
+
+        if (core) {
+            getObjectKeys(core.customData).forEach(key => {
+                const data = core.customData[key];
+
+                if (data && data.disposer) {
+                    data.disposer(data.value);
+                }
+
+                delete core.customData[key];
+            });
+
+            this.contentModelEditorCore = undefined;
+        }
+
         super.dispose();
-
-        const core = this.getContentModelEditorCore();
-
-        getObjectKeys(core.customData).forEach(key => {
-            const data = core.customData[key];
-
-            if (data && data.disposer) {
-                data.disposer(data.value);
-            }
-
-            delete core.customData[key];
-        });
-
-        this.contentModelEditorCore = undefined;
     }
 
     /**

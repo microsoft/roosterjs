@@ -8,6 +8,9 @@ import type {
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
+const BACKSPACE_KEY = 8;
+const DELETE_KEY = 46;
+
 /**
  * ContentModel edit plugins helps editor to do editing operation on top of content model.
  * This includes:
@@ -17,6 +20,8 @@ import type {
  */
 export class EditPlugin implements EditorPlugin {
     private editor: IStandaloneEditor | null = null;
+    private disposer: (() => void) | null = null;
+    private shouldHandleNextInputEvent = false;
 
     /**
      * Get name of this plugin
@@ -33,6 +38,13 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IStandaloneEditor) {
         this.editor = editor;
+        if (editor.getEnvironment().isAndroid) {
+            this.disposer = this.editor.attachDomEvent({
+                beforeinput: {
+                    beforeDispatch: e => this.handleBeforeInputEvent(editor, e),
+                },
+            });
+        }
     }
 
     /**
@@ -42,6 +54,8 @@ export class EditPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+        this.disposer?.();
+        this.disposer = null;
     }
 
     /**
@@ -75,11 +89,58 @@ export class EditPlugin implements EditorPlugin {
                 case 'Tab':
                     keyboardTab(editor, rawEvent);
                     break;
+                case 'Unidentified':
+                    if (editor.getEnvironment().isAndroid) {
+                        this.shouldHandleNextInputEvent = true;
+                    }
+                    break;
+
                 case 'Enter':
                 default:
                     keyboardInput(editor, rawEvent);
                     break;
             }
+        }
+    }
+
+    private handleBeforeInputEvent(editor: IStandaloneEditor, rawEvent: Event) {
+        // Some Android IMEs doesn't fire correct keydown event for BACKSPACE/DELETE key
+        // Here we translate input event to BACKSPACE/DELETE keydown event to be compatible with existing logic
+        if (
+            !this.shouldHandleNextInputEvent ||
+            !(rawEvent instanceof InputEvent) ||
+            rawEvent.defaultPrevented
+        ) {
+            return;
+        }
+        this.shouldHandleNextInputEvent = false;
+
+        let handled = false;
+        switch (rawEvent.inputType) {
+            case 'deleteContentBackward':
+                handled = keyboardDelete(
+                    editor,
+                    new KeyboardEvent('keydown', {
+                        key: 'Backspace',
+                        keyCode: BACKSPACE_KEY,
+                        which: BACKSPACE_KEY,
+                    })
+                );
+                break;
+            case 'deleteContentForward':
+                handled = keyboardDelete(
+                    editor,
+                    new KeyboardEvent('keydown', {
+                        key: 'Delete',
+                        keyCode: DELETE_KEY,
+                        which: DELETE_KEY,
+                    })
+                );
+                break;
+        }
+
+        if (handled) {
+            rawEvent.preventDefault();
         }
     }
 }
