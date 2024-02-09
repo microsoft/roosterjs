@@ -64,15 +64,17 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
         return this.state;
     }
 
-    private onContextMenuEvent = (event: PointerEvent) => {
+    private onContextMenuEvent = (e: Event) => {
         if (this.editor) {
             const allItems: any[] = [];
+            const pointerEvent = e as PointerEvent;
+
             // ContextMenu event can be triggered from mouse right click or keyboard (e.g. Shift+F10 on Windows)
             // Need to check if this is from keyboard, we need to get target node from selection because in that case
             // event.target is always the element that attached context menu event, here it will be editor content div.
             const targetNode =
-                event.button == ContextMenuButton
-                    ? (event.target as Node)
+                pointerEvent.button == ContextMenuButton
+                    ? (pointerEvent.target as Node)
                     : this.getFocusedNode(this.editor);
 
             if (targetNode) {
@@ -89,7 +91,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
             }
 
             this.editor?.triggerEvent('contextMenu', {
-                rawEvent: event,
+                rawEvent: pointerEvent,
                 items: allItems,
             });
         }
