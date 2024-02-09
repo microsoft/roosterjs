@@ -1,5 +1,6 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
 import * as keyboardInput from '../../lib/edit/keyboardInput';
+import * as keyboardTab from '../../lib/edit/keyboardTab';
 import { EditPlugin } from '../../lib/edit/EditPlugin';
 import { DOMEventRecord, IStandaloneEditor } from 'roosterjs-content-model-types';
 
@@ -38,10 +39,12 @@ describe('EditPlugin', () => {
     describe('onPluginEvent', () => {
         let keyboardDeleteSpy: jasmine.Spy;
         let keyboardInputSpy: jasmine.Spy;
+        let keyboardTabSpy: jasmine.Spy;
 
         beforeEach(() => {
             keyboardDeleteSpy = spyOn(keyboardDelete, 'keyboardDelete');
             keyboardInputSpy = spyOn(keyboardInput, 'keyboardInput');
+            keyboardTabSpy = spyOn(keyboardTab, 'keyboardTab');
         });
 
         it('Backspace', () => {
@@ -72,6 +75,22 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
+        });
+
+        it('Tab', () => {
+            const plugin = new EditPlugin();
+            const rawEvent = { key: 'Tab' } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
         });
 
         it('Other key', () => {
