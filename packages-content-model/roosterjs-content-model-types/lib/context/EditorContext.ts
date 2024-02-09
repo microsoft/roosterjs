@@ -52,4 +52,9 @@ export interface EditorContext {
      * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
      */
     domIndexer?: DomIndexer;
+
+    /**
+     * Root Font size in Px.
+     */
+    rootFontSize?: number;
 }
