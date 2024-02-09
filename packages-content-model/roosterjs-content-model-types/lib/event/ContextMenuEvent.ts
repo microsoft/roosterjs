@@ -3,7 +3,7 @@ import type { BasePluginDomEvent } from './BasePluginEvent';
 /**
  * This interface represents a PluginEvent wrapping native ContextMenu event
  */
-export interface ContextMenuEvent extends BasePluginDomEvent<'contextMenu', MouseEvent> {
+export interface ContextMenuEvent extends BasePluginDomEvent<'contextMenu', PointerEvent> {
     /**
      * A callback array to let editor retrieve context menu item related to this event.
      * Plugins can add their own getter callback to this array,
