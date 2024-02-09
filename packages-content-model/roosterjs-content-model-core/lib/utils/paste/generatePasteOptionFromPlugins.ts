@@ -2,7 +2,7 @@ import type { HtmlFromClipboard } from './retrieveHtmlInfo';
 import type {
     BeforePasteEvent,
     ClipboardData,
-    DomToModelOptionForPaste,
+    DomToModelOptionForSanitizing,
     PasteType,
     StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
@@ -17,7 +17,7 @@ export function generatePasteOptionFromPlugins(
     htmlFromClipboard: HtmlFromClipboard,
     pasteType: PasteType
 ): BeforePasteEvent {
-    const domToModelOption: DomToModelOptionForPaste = {
+    const domToModelOption: DomToModelOptionForSanitizing = {
         additionalAllowedTags: [],
         additionalDisallowedTags: [],
         additionalFormatParsers: {},

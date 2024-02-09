@@ -1,3 +1,4 @@
+import type { ValueSanitizer } from '../parameter/ValueSanitizer';
 import type {
     ElementProcessorMap,
     FormatParsers,
@@ -22,4 +23,29 @@ export interface DomToModelOption {
      * Provide additional format parsers for each format type
      */
     additionalFormatParsers?: Partial<FormatParsersPerCategory>;
+}
+
+/**
+ * Options for DOM to Content Model conversion for paste only
+ */
+export interface DomToModelOptionForSanitizing extends Required<DomToModelOption> {
+    /**
+     * Additional allowed HTML tags in lower case. Element with these tags will be preserved
+     */
+    readonly additionalAllowedTags: Lowercase<string>[];
+
+    /**
+     * Additional disallowed HTML tags in lower case. Elements with these tags will be dropped
+     */
+    readonly additionalDisallowedTags: Lowercase<string>[];
+
+    /**
+     * Additional sanitizers for CSS styles
+     */
+    readonly styleSanitizers: Record<string, ValueSanitizer>;
+
+    /**
+     * Additional sanitizers for CSS styles
+     */
+    readonly attributeSanitizers: Record<string, ValueSanitizer>;
 }

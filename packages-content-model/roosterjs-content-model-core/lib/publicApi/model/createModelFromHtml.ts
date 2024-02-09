@@ -1,10 +1,6 @@
 import { convertInlineCss, retrieveCssRules } from '../../utils/convertInlineCss';
-import {
-    createDomToModelContext,
-    createEmptyModel,
-    domToContentModel,
-    parseFormat,
-} from 'roosterjs-content-model-dom';
+import { createDomToModelContextForSanitizing } from 'roosterjs-content-model-core/lib/utils/createDomToModelContextForSanitizing';
+import { createEmptyModel, domToContentModel, parseFormat } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -30,12 +26,7 @@ export function createModelFromHtml(
         : null;
 
     if (doc?.body) {
-        const context = createDomToModelContext(
-            {
-                defaultFormat: defaultSegmentFormat,
-            },
-            options
-        );
+        const context = createDomToModelContextForSanitizing(defaultSegmentFormat, options);
         const cssRules = doc ? retrieveCssRules(doc) : [];
 
         convertInlineCss(doc, cssRules);

@@ -182,7 +182,7 @@ export {
     ContentModelSegmentHandler,
     ContentModelBlockHandler,
 } from './context/ContentModelHandler';
-export { DomToModelOption } from './context/DomToModelOption';
+export { DomToModelOption, DomToModelOptionForSanitizing } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { DomIndexer } from './context/DomIndexer';
 export { TextMutationObserver } from './context/TextMutationObserver';
@@ -289,11 +289,7 @@ export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
 export { BeforeDisposeEvent } from './event/BeforeDisposeEvent';
 export { BeforeKeyboardEditingEvent } from './event/BeforeKeyboardEditingEvent';
-export {
-    BeforePasteEvent,
-    DomToModelOptionForPaste,
-    MergePastedContentFunc,
-} from './event/BeforePasteEvent';
+export { BeforePasteEvent, MergePastedContentFunc } from './event/BeforePasteEvent';
 export { BeforeSetContentEvent } from './event/BeforeSetContentEvent';
 export { ContentChangedEvent, ChangedEntity } from './event/ContentChangedEvent';
 export { ContextMenuEvent } from './event/ContextMenuEvent';
