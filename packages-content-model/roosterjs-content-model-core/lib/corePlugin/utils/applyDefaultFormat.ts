@@ -19,8 +19,9 @@ export function applyDefaultFormat(
 
     if (posContainer) {
         let node: Node | null = posContainer;
+        const domHelper = editor.getDOMHelper();
 
-        while (node && editor.getDOMHelper().isNodeInEditor(node)) {
+        while (node?.parentNode && domHelper.isNodeInEditor(node.parentNode)) {
             if (isNodeOfType(node, 'ELEMENT_NODE')) {
                 if (node.getAttribute?.('style')) {
                     return;
