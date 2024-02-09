@@ -1,5 +1,5 @@
 import * as convertInlineCss from '../../../lib/utils/convertInlineCss';
-import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
+import * as createDomToModelContextForSanitizing from '../../../lib/utils/createDomToModelContextForSanitizing';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as parseFormat from 'roosterjs-content-model-dom/lib/domToModel/utils/parseFormat';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
@@ -89,8 +89,8 @@ describe('createModelFromHtml', () => {
             segmentFormat: 'SEGMENT',
         } as any;
         const createContextSpy = spyOn(
-            createDomToModelContext,
-            'createDomToModelContext'
+            createDomToModelContextForSanitizing,
+            'createDomToModelContextForSanitizing'
         ).and.returnValue(mockedContext);
         const parseFormatSpy = spyOn(parseFormat, 'parseFormat');
         const mockedDoc = {
@@ -131,12 +131,7 @@ describe('createModelFromHtml', () => {
             mockedContext
         );
         expect(createContextSpy).toHaveBeenCalledTimes(1);
-        expect(createContextSpy).toHaveBeenCalledWith(
-            {
-                defaultFormat: mockedDefaultSegmentFormat,
-            },
-            mockedOptions
-        );
+        expect(createContextSpy).toHaveBeenCalledWith(mockedDefaultSegmentFormat, mockedOptions);
         expect(domToContentModelSpy).toHaveBeenCalledWith('BODY' as any, mockedContext);
         expect(retrieveCssRulesSpy).toHaveBeenCalledWith(mockedDoc);
         expect(convertInlineCssSpy).toHaveBeenCalledWith(mockedDoc, mockedRules);
@@ -151,8 +146,8 @@ describe('createModelFromHtml', () => {
             segmentFormat: 'SEGMENT',
         } as any;
         const createContextSpy = spyOn(
-            createDomToModelContext,
-            'createDomToModelContext'
+            createDomToModelContextForSanitizing,
+            'createDomToModelContextForSanitizing'
         ).and.returnValue(mockedContext);
         const parseFormatSpy = spyOn(parseFormat, 'parseFormat');
         const mockedDoc = {
