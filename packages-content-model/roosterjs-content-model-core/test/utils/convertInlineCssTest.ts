@@ -1,5 +1,4 @@
-import { convertInlineCss } from '../../../lib/utils/paste/convertInlineCss';
-import { CssRule } from '../../../lib/utils/paste/retrieveHtmlInfo';
+import { convertInlineCss, CssRule } from '../../lib/utils/convertInlineCss';
 
 describe('convertInlineCss', () => {
     it('Empty DOM, empty CSS', () => {

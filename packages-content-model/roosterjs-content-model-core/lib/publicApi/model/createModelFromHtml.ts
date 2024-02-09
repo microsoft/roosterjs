@@ -25,7 +25,9 @@ export function createModelFromHtml(
     trustedHTMLHandler?: TrustedHTMLHandler,
     defaultSegmentFormat?: ContentModelSegmentFormat
 ): ContentModelDocument {
-    const doc = new DOMParser().parseFromString(trustedHTMLHandler?.(html) ?? html, 'text/html');
+    const doc = html
+        ? new DOMParser().parseFromString(trustedHTMLHandler?.(html) ?? html, 'text/html')
+        : null;
 
     if (doc?.body) {
         const context = createDomToModelContext(
