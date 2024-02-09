@@ -15,7 +15,6 @@ describe('createEditorContext', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
-                childNodes: <any>[],
             },
         };
 
@@ -64,7 +63,6 @@ describe('createEditorContext', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
-                childNodes: <any>[],
             },
         };
 
@@ -113,7 +111,6 @@ describe('createEditorContext', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
-                childNodes: <any>[],
             },
         };
 
@@ -167,7 +164,6 @@ describe('createEditorContext - checkZoomScale', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
-                childNodes: <any>[],
             },
         };
         core = ({
@@ -222,7 +218,6 @@ describe('createEditorContext - checkRootDir', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
-                childNodes: <any>[],
             },
         };
         core = ({

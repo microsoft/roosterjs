@@ -1,4 +1,4 @@
-import { isNodeOfType, parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import type {
     EditorContext,
     CreateEditorContext,
@@ -42,12 +42,6 @@ function checkRootRtl(element: HTMLElement, context: EditorContext) {
 
 function getRootComputedStyle(core: StandaloneEditorCore) {
     const document = core.contentDiv.ownerDocument;
-    let rootElement: HTMLElement | undefined;
-    document.childNodes.forEach(node => {
-        if (isNodeOfType(node, 'ELEMENT_NODE') && node.contains(core.contentDiv)) {
-            rootElement = node;
-        }
-    });
-    const rootComputedStyle = rootElement && document.defaultView?.getComputedStyle(rootElement);
+    const rootComputedStyle = document.defaultView?.getComputedStyle(document.documentElement);
     return rootComputedStyle;
 }
