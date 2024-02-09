@@ -1,5 +1,5 @@
 import { convertInlineCss, retrieveCssRules } from '../../utils/convertInlineCss';
-import { createDomToModelContextForSanitizing } from 'roosterjs-content-model-core/lib/utils/createDomToModelContextForSanitizing';
+import { createDomToModelContextForSanitizing } from '../../utils/createDomToModelContextForSanitizing';
 import { createEmptyModel, domToContentModel, parseFormat } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
