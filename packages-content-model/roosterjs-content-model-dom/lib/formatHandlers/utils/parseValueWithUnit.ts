@@ -1,5 +1,3 @@
-import type { EditorContext } from 'roosterjs-content-model-types';
-
 const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
 
 // According to https://developer.mozilla.org/en-US/docs/Glossary/CSS_pixel, 1in = 96px
@@ -16,8 +14,7 @@ const DefaultRootFontSize = 16;
 export function parseValueWithUnit(
     value: string = '',
     currentSizePxOrElement?: number | HTMLElement,
-    resultUnit: 'px' | 'pt' = 'px',
-    context?: EditorContext
+    resultUnit: 'px' | 'pt' = 'px'
 ): number {
     const match = MarginValueRegex.exec(value);
     let result = 0;
@@ -46,30 +43,7 @@ export function parseValueWithUnit(
                 result = num * PixelPerInch;
                 break;
             case 'rem':
-                if (currentSizePxOrElement && typeof currentSizePxOrElement != 'number') {
-                    const doc = currentSizePxOrElement.ownerDocument;
-                    let htmlRoot: HTMLHtmlElement | null | undefined;
-                    const computedFontSize =
-                        context?.rootDocumentFormat?.fontSize ||
-                        (((htmlRoot = doc.querySelector('html')) &&
-                            htmlRoot &&
-                            doc.defaultView?.getComputedStyle(htmlRoot).fontSize) ??
-                            DefaultRootFontSize + 'px');
-
-                    if (context?.rootDocumentFormat && !context.rootDocumentFormat.fontSize) {
-                        context.rootDocumentFormat.fontSize = computedFontSize;
-                    }
-
-                    const rootFontSizeInPx = parseValueWithUnit(
-                        computedFontSize,
-                        DefaultRootFontSize,
-                        'px',
-                        context
-                    );
-                    result = rootFontSizeInPx * num;
-                } else {
-                    result = DefaultRootFontSize * num;
-                }
+                result = (getFontSize(currentSizePxOrElement) || DefaultRootFontSize) * num;
                 break;
         }
     }

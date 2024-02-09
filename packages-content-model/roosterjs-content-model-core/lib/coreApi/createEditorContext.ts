@@ -1,4 +1,11 @@
-import type { EditorContext, CreateEditorContext } from 'roosterjs-content-model-types';
+import { isNodeOfType, parseValueWithUnit } from 'roosterjs-content-model-dom';
+import type {
+    EditorContext,
+    CreateEditorContext,
+    StandaloneEditorCore,
+} from 'roosterjs-content-model-types';
+
+const DefaultRootFontSize = 16;
 
 /**
  * @internal
@@ -16,7 +23,8 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         allowCacheElement: true,
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
-        rootDocumentFormat: {},
+        rootFontSize:
+            parseValueWithUnit(getRootComputedStyle(core)?.fontSize) || DefaultRootFontSize,
     };
 
     checkRootRtl(contentDiv, context);
@@ -30,4 +38,16 @@ function checkRootRtl(element: HTMLElement, context: EditorContext) {
     if (style?.direction == 'rtl') {
         context.isRootRtl = true;
     }
+}
+
+function getRootComputedStyle(core: StandaloneEditorCore) {
+    const document = core.contentDiv.ownerDocument;
+    let rootElement: HTMLElement | undefined;
+    document.childNodes.forEach(node => {
+        if (isNodeOfType(node, 'ELEMENT_NODE') && node.contains(core.contentDiv)) {
+            rootElement = node;
+        }
+    });
+    const rootComputedStyle = rootElement && document.defaultView?.getComputedStyle(rootElement);
+    return rootComputedStyle;
 }

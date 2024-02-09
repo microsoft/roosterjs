@@ -147,7 +147,6 @@ export {
     TextFormatApplier,
     ElementFormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
-export { RootDocumentFormat } from './context/RootDocumentFormat';
 export {
     DefaultStyleMap,
     ElementProcessorMap,

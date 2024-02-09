@@ -15,6 +15,7 @@ describe('createEditorContext', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
+                childNodes: <any>[],
             },
         };
 
@@ -46,7 +47,7 @@ describe('createEditorContext', () => {
             domIndexer: undefined,
             pendingFormat: undefined,
             zoomScale: 1,
-            rootDocumentFormat: {},
+            rootFontSize: 16,
         });
     });
 
@@ -63,6 +64,7 @@ describe('createEditorContext', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
+                childNodes: <any>[],
             },
         };
 
@@ -94,7 +96,7 @@ describe('createEditorContext', () => {
             domIndexer,
             pendingFormat: undefined,
             zoomScale: 1,
-            rootDocumentFormat: {},
+            rootFontSize: 16,
         });
     });
 
@@ -111,6 +113,7 @@ describe('createEditorContext', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
+                childNodes: <any>[],
             },
         };
 
@@ -141,7 +144,7 @@ describe('createEditorContext', () => {
             domIndexer: undefined,
             pendingFormat: mockedPendingFormat,
             zoomScale: 1,
-            rootDocumentFormat: {},
+            rootFontSize: 16,
         });
     });
 });
@@ -164,6 +167,7 @@ describe('createEditorContext - checkZoomScale', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
+                childNodes: <any>[],
             },
         };
         core = ({
@@ -196,7 +200,7 @@ describe('createEditorContext - checkZoomScale', () => {
             allowCacheElement: true,
             domIndexer: undefined,
             pendingFormat: undefined,
-            rootDocumentFormat: {},
+            rootFontSize: 16,
         });
     });
 });
@@ -218,6 +222,7 @@ describe('createEditorContext - checkRootDir', () => {
                 defaultView: {
                     getComputedStyle: getComputedStyleSpy,
                 },
+                childNodes: <any>[],
             },
         };
         core = ({
@@ -252,7 +257,7 @@ describe('createEditorContext - checkRootDir', () => {
             domIndexer: undefined,
             pendingFormat: undefined,
             zoomScale: 1,
-            rootDocumentFormat: {},
+            rootFontSize: 16,
         });
     });
 
@@ -273,7 +278,7 @@ describe('createEditorContext - checkRootDir', () => {
             domIndexer: undefined,
             pendingFormat: undefined,
             zoomScale: 1,
-            rootDocumentFormat: {},
+            rootFontSize: 16,
         });
     });
 });

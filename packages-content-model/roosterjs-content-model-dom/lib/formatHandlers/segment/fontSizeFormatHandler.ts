@@ -18,7 +18,6 @@ export const fontSizeFormatHandler: FormatHandler<FontSizeFormat> = {
                 format.fontSize = normalizeFontSize(
                     fontSize,
                     context.segmentFormat.fontSize,
-                    element,
                     context
                 );
             } else if (defaultStyle.fontSize) {
@@ -48,7 +47,6 @@ const KnownFontSizes: Record<string, string> = {
 function normalizeFontSize(
     fontSize: string,
     contextFont: string | undefined,
-    element: HTMLElement,
     context: EditorContext
 ): string | undefined {
     const knownFontSize = KnownFontSizes[fontSize];
@@ -67,9 +65,8 @@ function normalizeFontSize(
         } else {
             const existingFontSize = parseValueWithUnit(
                 contextFont,
-                fontSize.endsWith('rem') ? element : undefined /*element*/,
-                'px',
-                context
+                fontSize.endsWith('rem') ? context.rootFontSize : undefined /*element*/,
+                'px'
             );
 
             if (existingFontSize) {
@@ -79,7 +76,7 @@ function normalizeFontSize(
                     case 'larger':
                         return Math.round((existingFontSize * 600) / 5) / 100 + 'px';
                     default:
-                        return parseValueWithUnit(fontSize, existingFontSize, 'px', context) + 'px';
+                        return parseValueWithUnit(fontSize, existingFontSize, 'px') + 'px';
                 }
             }
         }
