@@ -26,6 +26,22 @@ export default function insertTable(
 ) {
     editor.focus();
 
+    // Make default table forders black and vertical align top
+    format =
+        format || editor.isDarkMode()
+            ? {
+                  topBorderColor: '#FFFFFF',
+                  bottomBorderColor: '#FFFFFF',
+                  verticalBorderColor: '#FFFFFF',
+                  verticalAlign: 'top',
+              }
+            : {
+                  topBorderColor: '#000000',
+                  bottomBorderColor: '#000000',
+                  verticalBorderColor: '#000000',
+                  verticalAlign: 'top',
+              };
+
     editor.formatContentModel(
         (model, context) => {
             const insertPosition = deleteSelection(model, [], context).insertPoint;
