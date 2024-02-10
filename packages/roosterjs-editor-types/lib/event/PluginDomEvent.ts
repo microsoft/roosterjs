@@ -78,7 +78,7 @@ export interface PluginMouseUpEvent
  */
 export interface PluginContextMenuEvent
     extends PluginContextMenuEventData,
-        PluginDomEventBase<PluginEventType.ContextMenu, MouseEvent> {}
+        PluginDomEventBase<PluginEventType.ContextMenu, PointerEvent> {}
 
 /**
  * This interface represents a PluginEvent wrapping native Mouse event
