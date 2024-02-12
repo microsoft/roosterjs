@@ -28,7 +28,7 @@ describe('EntityDelimiterUtils |', () => {
                 queryElements: queryElementsSpy,
                 isNodeInEditor: () => true,
             }),
-            getPendingFormat: <any>(() => null),
+            getPendingFormat: <any>((): any => null),
         }) as Partial<IStandaloneEditor>;
     });
 
