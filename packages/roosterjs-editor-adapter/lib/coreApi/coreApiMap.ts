@@ -1,9 +1,9 @@
 import { insertNode } from './insertNode';
-import type { ContentModelCoreApiMap } from '../publicTypes/ContentModelEditorCore';
+import type { EditorAdapterCoreApiMap } from '../publicTypes/EditorAdapterCore';
 
 /**
  * @internal
  */
-export const coreApiMap: ContentModelCoreApiMap = {
+export const coreApiMap: EditorAdapterCoreApiMap = {
     insertNode,
 };

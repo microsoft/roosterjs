@@ -86,7 +86,7 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
-import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import type { EditorAdapterCore } from '../publicTypes/EditorAdapterCore';
 import type { EditorAdapterOptions } from '../publicTypes/EditorAdapterOptions';
 import type {
     ContentModelFormatState,
@@ -109,7 +109,7 @@ const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export class EditorAdapter extends StandaloneEditor implements IEditor {
-    private contentModelEditorCore: ContentModelEditorCore | undefined;
+    private contentModelEditorCore: EditorAdapterCore | undefined;
 
     /**
      * Creates an instance of Editor
@@ -1075,10 +1075,10 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
     }
 
     /**
-     * @returns the current ContentModelEditorCore object
+     * @returns the current EditorAdapterCore object
      * @throws a standard Error if there's no core object
      */
-    private getContentModelEditorCore(): ContentModelEditorCore {
+    private getContentModelEditorCore(): EditorAdapterCore {
         if (!this.contentModelEditorCore) {
             throw new Error('Editor is already disposed');
         }

@@ -22,7 +22,7 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
 /**
  * @internal
  * Handles Pasted content when source is Word Desktop
- * @param ev ContentModelBeforePasteEvent
+ * @param ev BeforePasteEvent
  */
 export function processPastedContentFromWordDesktop(
     ev: BeforePasteEvent,

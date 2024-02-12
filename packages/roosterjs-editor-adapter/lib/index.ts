@@ -1,10 +1,9 @@
 export {
-    ContentModelEditorCore,
-    ContentModelCoreApiMap,
+    EditorAdapterCore,
+    EditorAdapterCoreApiMap,
     InsertNode,
-} from './publicTypes/ContentModelEditorCore';
+} from './publicTypes/EditorAdapterCore';
 export { EditorAdapterOptions } from './publicTypes/EditorAdapterOptions';
-export { ContentModelCorePluginState } from './publicTypes/ContentModelCorePlugins';
-export { ContentModelBeforePasteEvent } from './publicTypes/ContentModelBeforePasteEvent';
+export { BeforePasteAdapterEvent } from './publicTypes/BeforePasteAdapterEvent';
 
 export { EditorAdapter } from './editor/EditorAdapter';

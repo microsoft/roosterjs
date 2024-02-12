@@ -1,4 +1,3 @@
-import type { ContentModelCorePluginState } from './ContentModelCorePlugins';
 import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
 import type {
     CustomData,
@@ -6,28 +5,30 @@ import type {
     InsertOption,
     SizeTransformer,
     DarkColorHandler,
+    EditPluginState,
+    ContextMenuProvider,
 } from 'roosterjs-editor-types';
 
 /**
  * Insert a DOM node into editor content
- * @param core The ContentModelEditorCore object. No op if null.
+ * @param core The EditorAdapterCore object. No op if null.
  * @param innerCore The StandaloneEditorCore object
  * @param option An insert option object to specify how to insert the node
  */
 export type InsertNode = (
-    core: ContentModelEditorCore,
+    core: EditorAdapterCore,
     innerCore: StandaloneEditorCore,
     node: Node,
     option: InsertOption | null
 ) => boolean;
 
 /**
- * Core API map for Content Model editor
+ * Core API map for editor adapter
  */
-export interface ContentModelCoreApiMap {
+export interface EditorAdapterCoreApiMap {
     /**
      * Insert a DOM node into editor content
-     * @param core The ContentModelEditorCore object. No op if null.
+     * @param core The EditorAdapterCore object. No op if null.
      * @param innerCore The StandaloneEditorCore object
      * @param option An insert option object to specify how to insert the node
      */
@@ -35,18 +36,18 @@ export interface ContentModelCoreApiMap {
 }
 
 /**
- * Represents the core data structure of a Content Model editor
+ * Represents the core data structure of a editor adapter
  */
-export interface ContentModelEditorCore extends ContentModelCorePluginState {
+export interface EditorAdapterCore {
     /**
      * Core API map of this editor
      */
-    readonly api: ContentModelCoreApiMap;
+    readonly api: EditorAdapterCoreApiMap;
 
     /**
      * Original API map of this editor. Overridden core API can use API from this map to call the original version of core API.
      */
-    readonly originalApi: ContentModelCoreApiMap;
+    readonly originalApi: EditorAdapterCoreApiMap;
 
     /**
      * Custom data of this editor
@@ -63,6 +64,16 @@ export interface ContentModelEditorCore extends ContentModelCorePluginState {
      * If keep it null, editor will still use original dataset-based dark mode solution.
      */
     readonly darkColorHandler: DarkColorHandler;
+
+    /**
+     * Plugin state of EditPlugin
+     */
+    readonly edit: EditPluginState;
+
+    /**
+     * Context Menu providers
+     */
+    readonly contextMenuProviders: ContextMenuProvider<any>[];
 
     /**
      * @deprecated Use zoomScale instead
