@@ -9,6 +9,7 @@ describe('parseValueWithUnit with element', () => {
                         fontSize: '15pt',
                     }),
                 },
+                querySelector: () => mockedElement,
             },
             offsetWidth: 1000,
         } as any) as HTMLElement;
@@ -48,7 +49,19 @@ describe('parseValueWithUnit with element', () => {
     });
 
     it('rem', () => {
-        runTest('rem', [0, 20, 22, -22]);
+        const unit = 'rem';
+        const results = [0, 16, 17.6, -17.6];
+
+        ['0', '1', '1.1', '-1.1'].forEach((value, i) => {
+            const input = value + unit;
+            const result = parseValueWithUnit(input, 16);
+
+            if (Number.isNaN(results[i])) {
+                expect(result).toBeNaN();
+            } else {
+                expect(result).toEqual(results[i], input);
+            }
+        });
     });
 
     it('no unit', () => {
