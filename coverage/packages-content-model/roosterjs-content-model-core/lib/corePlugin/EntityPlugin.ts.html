@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">99.09% </span>
+                <span class="strong">97.37% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>109/110</span>
+                <span class='fraction'>111/114</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.64% </span>
+                <span class="strong">86.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>78/89</span>
+                <span class='fraction'>78/90</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">99.04% </span>
+                <span class="strong">97.22% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>103/104</span>
+                <span class='fraction'>105/108</span>
             </div>
         
             
@@ -339,8 +339,20 @@
 <a name='L280'></a><a href='#L280'>280</a>
 <a name='L281'></a><a href='#L281'>281</a>
 <a name='L282'></a><a href='#L282'>282</a>
-<a name='L283'></a><a href='#L283'>283</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -414,8 +426,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">132x</span>
-<span class="cline-any cline-yes">132x</span>
+<span class="cline-any cline-yes">133x</span>
+<span class="cline-any cline-yes">133x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -423,6 +435,8 @@
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-yes">37x</span>
@@ -511,6 +525,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">43x</span>
@@ -624,6 +640,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { findAllEntities } from './utils/findAllEntities';
 import { transformColor } from '../publicApi/color/transformColor';
 import {
+    handleDelimiterContentChangedEvent,
+    handleDelimiterKeyDownEvent,
+} from './utils/entityDelimiterUtils';
+import {
     createEntity,
     generateEntityClassNames,
     getAllEntityWrappers,
@@ -704,7 +724,9 @@ class EntityPlugin implements PluginWithState&lt;EntityPluginState&gt; {
                 case 'contentChanged':
                     this.handleContentChangedEvent(this.editor, event);
                     break;
-&nbsp;
+<span class="branch-2 cbranch-no" title="branch not covered" >                case 'keyDown':</span>
+<span class="cstat-no" title="statement not covered" >                    handleDelimiterKeyDownEvent(this.editor, event);</span>
+<span class="cstat-no" title="statement not covered" >                    break;</span>
                 case 'editorReady':
                     this.handleContentChangedEvent(this.editor);
                     break;
@@ -793,6 +815,8 @@ class EntityPlugin implements PluginWithState&lt;EntityPluginState&gt; {
                 );
             }
         });
+&nbsp;
+        handleDelimiterContentChangedEvent(editor);
     }
 &nbsp;
     private getChangedEntities(editor: IStandaloneEditor): ChangedEntity[] {
@@ -910,7 +934,7 @@ export function createEntityPlugin(): PluginWithState&lt;EntityPluginState&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Feb 12 2024 17:45:31 GMT+0000 (Coordinated Universal Time)
+                at Mon Feb 12 2024 23:53:45 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

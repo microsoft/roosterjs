@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">25.97% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>88/308</span>
+                <span class='fraction'>80/308</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">5.9% </span>
+                <span class="strong">4.26% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/305</span>
+                <span class='fraction'>13/305</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.35% </span>
+                <span class="strong">5.88% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/68</span>
+                <span class='fraction'>4/68</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.62% </span>
+                <span class="strong">25.93% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>85/297</span>
+                <span class='fraction'>77/297</span>
             </div>
         
             
@@ -1399,24 +1399,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2485,26 +2485,26 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
 <span class="cstat-no" title="statement not covered" >        return contains(this.getCore().contentDiv, &lt;Node&gt;arg);</span>
     }
 &nbsp;
-    queryElements(
+<span class="fstat-no" title="function not covered" >    queryElements(</span>
         selector: string,
-        <span class="missing-if-branch" title="else path not taken" >E</span>scopeOrCallback:
+<span class="cstat-no" title="statement not covered" >        scopeOrCallback:</span>
             | QueryScope
             | CompatibleQueryScope
             | ((node: Node) =&gt; any) = QueryScope.Body,
         callback?: (node: Node) =&gt; any
     ) {
-        const core = this.getCore();
-        const result: HTMLElement[] = [];
-        const scope = scopeOrCallback instanceof Function ?<span class="branch-0 cbranch-no" title="branch not covered" > QueryScope.Body :</span> scopeOrCallback;
-        callback = scopeOrCallback instanceof Function ? <span class="branch-0 cbranch-no" title="branch not covered" >scopeOrCallback </span>: callback;
+        const core = <span class="cstat-no" title="statement not covered" >this.getCore();</span>
+        const result: HTMLElement[] = <span class="cstat-no" title="statement not covered" >[];</span>
+        const scope = <span class="cstat-no" title="statement not covered" >scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;</span>
+<span class="cstat-no" title="statement not covered" >        callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;</span>
 &nbsp;
-        const selectionEx = scope == QueryScope.Body ? null : <span class="branch-1 cbranch-no" title="branch not covered" >this.getSelectionRangeEx();</span>
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (selectionEx) {
+        const selectionEx = <span class="cstat-no" title="statement not covered" >scope == QueryScope.Body ? null : this.getSelectionRangeEx();</span>
+<span class="cstat-no" title="statement not covered" >        if (selectionEx) {</span>
 <span class="cstat-no" title="statement not covered" >            selectionEx.ranges.forEach(<span class="fstat-no" title="function not covered" >range </span>=&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                result.push(...queryElements(core.contentDiv, selector, callback, scope, range));</span>
             });
         } else {
-            return queryElements(core.contentDiv, selector, callback, scope, undefined /* range */);
+<span class="cstat-no" title="statement not covered" >            return queryElements(core.contentDiv, selector, callback, scope, undefined /* range */);</span>
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        return result;</span>
@@ -3328,7 +3328,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Feb 12 2024 17:45:31 GMT+0000 (Coordinated Universal Time)
+                at Mon Feb 12 2024 23:53:45 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
