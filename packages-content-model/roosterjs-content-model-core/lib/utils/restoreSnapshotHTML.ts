@@ -12,6 +12,8 @@ import type {
     ContentModelEntityFormat,
 } from 'roosterjs-content-model-types';
 
+const BlockEntityContainer = '_E_EBlockEntityContainer';
+
 /**
  * @internal
  */
@@ -75,15 +77,38 @@ function tryGetEntityElement(
 ): HTMLElement | null {
     let result: HTMLElement | null = null;
 
-    if (isNodeOfType(node, 'ELEMENT_NODE') && isEntityElement(node)) {
-        const format: ContentModelEntityFormat = {};
+    if (isNodeOfType(node, 'ELEMENT_NODE')) {
+        if (isEntityElement(node)) {
+            const format: ContentModelEntityFormat = {};
 
-        node.classList.forEach(name => {
-            parseEntityClassName(name, format);
-        });
+            node.classList.forEach(name => {
+                parseEntityClassName(name, format);
+            });
 
-        result = (format.id && entityMap[format.id]?.element) || null;
+            result = (format.id && entityMap[format.id]?.element) || null;
+        } else if (isBlockEntityContainer(node)) {
+            result = tryGetEntityFromContainer(node, entityMap);
+        }
     }
 
     return result;
+}
+function isBlockEntityContainer(node: HTMLElement) {
+    return node.classList.contains(BlockEntityContainer);
+}
+
+function tryGetEntityFromContainer(
+    element: HTMLElement,
+    entityMap: Record<string, KnownEntityItem>
+): HTMLElement | null {
+    const format: ContentModelEntityFormat = {};
+    element.childNodes.forEach(node => {
+        if (isEntityElement(node) && isNodeOfType(node, 'ELEMENT_NODE')) {
+            node.classList.forEach(name => parseEntityClassName(name, format));
+        }
+    });
+
+    const parent = format.id ? entityMap[format.id]?.element.parentElement : null;
+
+    return isNodeOfType(parent, 'ELEMENT_NODE') && isBlockEntityContainer(parent) ? parent : null;
 }
