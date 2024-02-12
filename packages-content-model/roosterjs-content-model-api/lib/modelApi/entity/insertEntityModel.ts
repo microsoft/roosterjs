@@ -38,6 +38,10 @@ export function insertEntityModel(
     if (position == 'begin' || position == 'end') {
         blockParent = model;
         blockIndex = position == 'begin' ? 0 : model.blocks.length;
+
+        if (!isBlock) {
+            Object.assign(entityModel.format, model.format);
+        }
     } else if ((deleteResult = deleteSelection(model, [], context)).insertPoint) {
         const { marker, paragraph, path } = deleteResult.insertPoint;
 

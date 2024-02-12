@@ -7,8 +7,13 @@ import type {
     DOMEventRecord,
     StandaloneEditorOptions,
     PluginWithState,
-    PluginEventType,
 } from 'roosterjs-content-model-types';
+
+const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
+    keydown: 'keyDown',
+    keyup: 'keyUp',
+    keypress: 'keyPress',
+};
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -60,9 +65,10 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
         > = {
             // 1. Keyboard event
-            keypress: this.getEventHandler('keyPress'),
-            keydown: this.getEventHandler('keyDown'),
-            keyup: this.getEventHandler('keyUp'),
+            keypress: this.keyboardEventHandler,
+            keydown: this.keyboardEventHandler,
+            keyup: this.keyboardEventHandler,
+            input: this.inputEventHandler,
 
             // 2. Mouse event
             mousedown: { beforeDispatch: this.onMouseDown },
@@ -74,9 +80,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             // 4. Drag and Drop event
             dragstart: { beforeDispatch: this.onDragStart },
             drop: { beforeDispatch: this.onDrop },
-
-            // 5. Input event
-            input: this.getEventHandler('input'),
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -140,28 +143,32 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         });
     };
 
-    private getEventHandler(eventType: PluginEventType): DOMEventRecord {
-        const beforeDispatch = (event: Event) =>
-            eventType == 'input'
-                ? this.onInputEvent(<InputEvent>event)
-                : this.onKeyboardEvent(<KeyboardEvent>event);
+    private keyboardEventHandler: DOMEventRecord<KeyboardEvent> = {
+        beforeDispatch: event => {
+            const eventType = EventTypeMap[event.type];
 
-        return {
-            pluginEventType: eventType,
-            beforeDispatch,
-        };
-    }
+            if (isCharacterValue(event) || isCursorMovingKey(event)) {
+                // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
+                // since editor already handles these keys and no need to propagate to parents
+                event.stopPropagation();
+            }
 
-    private onKeyboardEvent = (event: KeyboardEvent) => {
-        if (isCharacterValue(event) || isCursorMovingKey(event)) {
-            // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
-            // since editor already handles these keys and no need to propagate to parents
-            event.stopPropagation();
-        }
+            if (this.editor && eventType && !event.isComposing && !this.state.isInIME) {
+                this.editor.triggerEvent(eventType, {
+                    rawEvent: event,
+                });
+            }
+        },
     };
 
-    private onInputEvent = (event: InputEvent) => {
-        event.stopPropagation();
+    private inputEventHandler: DOMEventRecord<Event> = {
+        beforeDispatch: event => {
+            event.stopPropagation();
+
+            this.editor?.triggerEvent('input', {
+                rawEvent: event as InputEvent,
+            });
+        },
     };
 
     private onMouseDown = (event: MouseEvent) => {

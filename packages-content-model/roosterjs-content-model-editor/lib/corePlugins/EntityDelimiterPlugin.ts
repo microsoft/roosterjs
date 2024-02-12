@@ -311,11 +311,8 @@ function handleCompositionEndEvent(editor: IEditor, event: PluginCompositionEven
 function handleKeyDownEvent(editor: IEditor, event: PluginKeyDownEvent) {
     const range = editor.getSelectionRangeEx();
     const { rawEvent } = event;
-    if (
-        range.type != SelectionRangeTypes.Normal ||
-        editor.isInIME() ||
-        event.rawEvent.isComposing
-    ) {
+
+    if (range.type != SelectionRangeTypes.Normal) {
         return;
     }
 
