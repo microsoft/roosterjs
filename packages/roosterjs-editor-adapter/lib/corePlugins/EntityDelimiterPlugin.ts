@@ -1,5 +1,4 @@
 import { isCharacterValue } from 'roosterjs-content-model-core';
-import type { IContentModelEditor } from '../publicTypes/IContentModelEditor';
 import {
     addDelimiters,
     isBlockElement,
@@ -40,7 +39,7 @@ const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
  * Entity delimiter plugin helps maintain delimiter elements around an entity so that user can put focus before/after an entity
  */
 class EntityDelimiterPlugin implements EditorPlugin {
-    private editor: IContentModelEditor | null = null;
+    private editor: IEditor | null = null;
 
     /**
      * Get a friendly name of this plugin
@@ -56,7 +55,7 @@ class EntityDelimiterPlugin implements EditorPlugin {
      * @param editor The editor object
      */
     initialize(editor: IEditor) {
-        this.editor = editor as IContentModelEditor;
+        this.editor = editor;
     }
 
     /**

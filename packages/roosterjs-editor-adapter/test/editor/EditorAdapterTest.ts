@@ -1,7 +1,7 @@
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/utils/findAllEntities';
-import { ContentModelEditor } from '../../lib/editor/ContentModelEditor';
+import { EditorAdapter } from '../../lib/editor/EditorAdapter';
 import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
@@ -13,7 +13,7 @@ const editorContext: EditorContext = {
     isDarkMode: false,
 };
 
-describe('ContentModelEditor', () => {
+describe('EditorAdapter', () => {
     it('domToContentModel', () => {
         const mockedResult = 'Result' as any;
         const mockedContext = 'MockedContext' as any;
@@ -27,7 +27,7 @@ describe('ContentModelEditor', () => {
         spyOn(findAllEntities, 'findAllEntities');
 
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
+        const editor = new EditorAdapter(div, {
             coreApiOverride: {
                 createEditorContext: jasmine
                     .createSpy('createEditorContext')
@@ -64,7 +64,7 @@ describe('ContentModelEditor', () => {
         spyOn(findAllEntities, 'findAllEntities');
 
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
+        const editor = new EditorAdapter(div, {
             coreApiOverride: {
                 createEditorContext: jasmine
                     .createSpy('createEditorContext')
@@ -107,7 +107,7 @@ describe('ContentModelEditor', () => {
                 }
             },
         };
-        const editor = new ContentModelEditor(div, {
+        const editor = new EditorAdapter(div, {
             legacyPlugins: [plugin],
         });
         editor.dispose();
@@ -137,7 +137,7 @@ describe('ContentModelEditor', () => {
 
     it('get model with cache', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
+        const editor = new EditorAdapter(div);
         const cachedModel = 'MODEL' as any;
 
         (editor as any).core.cache.cachedModel = cachedModel;
@@ -152,7 +152,7 @@ describe('ContentModelEditor', () => {
 
     it('formatContentModel', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
+        const editor = new EditorAdapter(div);
         const core = (editor as any).core;
         const formatContentModelSpy = spyOn(core.api, 'formatContentModel');
         const callback = jasmine.createSpy('callback');
@@ -165,7 +165,7 @@ describe('ContentModelEditor', () => {
 
     it('default format', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
+        const editor = new EditorAdapter(div, {
             defaultSegmentFormat: {
                 fontWeight: 'bold',
                 italic: true,
@@ -192,7 +192,7 @@ describe('ContentModelEditor', () => {
 
     it('getPendingFormat', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
+        const editor = new EditorAdapter(div);
         const core: StandaloneEditorCore = (editor as any).core;
         const mockedFormat = 'FORMAT' as any;
 
@@ -209,7 +209,7 @@ describe('ContentModelEditor', () => {
         const div = document.createElement('div');
         div.style.fontFamily = 'Arial';
 
-        const editor = new ContentModelEditor(div);
+        const editor = new EditorAdapter(div);
 
         expect(div.style.fontFamily).toBe('Arial');
 

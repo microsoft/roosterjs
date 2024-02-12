@@ -1,17 +1,11 @@
+import type { StandaloneEditorOptions } from 'roosterjs-content-model-types';
 import type { ContentModelCoreApiMap } from './ContentModelEditorCore';
-import type { EditorPlugin, ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
-import type { StandaloneEditorOptions, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { EditorPlugin, ExperimentalFeatures } from 'roosterjs-editor-types';
 
 /**
- * An interface of editor with Content Model support.
- * (This interface is still under development, and may still be changed in the future with some breaking changes)
+ * Options for editor adapter
  */
-export interface IContentModelEditor extends IEditor, IStandaloneEditor {}
-
-/**
- * Options for Content Model editor
- */
-export interface ContentModelEditorOptions extends StandaloneEditorOptions {
+export interface EditorAdapterOptions extends StandaloneEditorOptions {
     /**
      * Initial HTML content
      * Default value is whatever already inside the editor content DIV
