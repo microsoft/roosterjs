@@ -1,5 +1,5 @@
 import { cloneModel } from '../publicApi/model/cloneModel';
-import { convertInlineCss } from '../utils/paste/convertInlineCss';
+import { convertInlineCss } from '../utils/convertInlineCss';
 import { createPasteFragment } from '../utils/paste/createPasteFragment';
 import { generatePasteOptionFromPlugins } from '../utils/paste/generatePasteOptionFromPlugins';
 import { mergePasteContent } from '../utils/paste/mergePasteContent';

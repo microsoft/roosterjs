@@ -1,6 +1,6 @@
 import type { BeforePasteEvent } from 'roosterjs-editor-types';
 import type {
-    DomToModelOptionForPaste,
+    DomToModelOptionForSanitizing,
     MergePastedContentFunc,
 } from 'roosterjs-content-model-types';
 
@@ -11,7 +11,7 @@ export interface ContentModelBeforePasteEvent extends BeforePasteEvent {
     /**
      * domToModel Options to use when creating the content model from the paste fragment
      */
-    readonly domToModelOption: DomToModelOptionForPaste;
+    readonly domToModelOption: DomToModelOptionForSanitizing;
 
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor

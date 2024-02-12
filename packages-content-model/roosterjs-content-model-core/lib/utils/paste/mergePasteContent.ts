@@ -1,14 +1,10 @@
 import { ChangeSource } from '../../constants/ChangeSource';
-import { containerSizeFormatParser } from '../../override/containerSizeFormatParser';
-import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
-import { createPasteEntityProcessor } from '../../override/pasteEntityProcessor';
-import { createPasteGeneralProcessor } from '../../override/pasteGeneralProcessor';
+import { createDomToModelContextForSanitizing } from '../createDomToModelContextForSanitizing';
+import { domToContentModel } from 'roosterjs-content-model-dom';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
-import { pasteBlockEntityParser } from '../../override/pasteCopyBlockEntityParser';
-import { pasteDisplayFormatParser } from '../../override/pasteDisplayFormatParser';
-import { pasteTextProcessor } from '../../override/pasteTextProcessor';
+
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
     BeforePasteEvent,
@@ -46,23 +42,9 @@ export function mergePasteContent(
         core,
         (model, context) => {
             const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
-            const domToModelContext = createDomToModelContext(
-                undefined /*editorContext*/,
+            const domToModelContext = createDomToModelContextForSanitizing(
+                undefined /*defaultFormat*/,
                 core.domToModelSettings.customized,
-                {
-                    processorOverride: {
-                        '#text': pasteTextProcessor,
-                        entity: createPasteEntityProcessor(domToModelOption),
-                        '*': createPasteGeneralProcessor(domToModelOption),
-                    },
-                    formatParserOverride: {
-                        display: pasteDisplayFormatParser,
-                    },
-                    additionalFormatParsers: {
-                        container: [containerSizeFormatParser],
-                        entity: [pasteBlockEntityParser],
-                    },
-                },
                 domToModelOption
             );
 
