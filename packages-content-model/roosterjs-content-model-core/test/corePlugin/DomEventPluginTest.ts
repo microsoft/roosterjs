@@ -161,6 +161,37 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         expect(triggerEventSpy).toHaveBeenCalledWith('keyDown', { rawEvent: mockedEvent });
     });
 
+    it('verify keydown event within IME 1', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            type: 'keydown',
+        } as any;
+
+        plugin.getState().isInIME = true;
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
+    });
+
+    it('verify keydown event within IME 2', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            isComposing: true,
+            type: 'keydown',
+        } as any;
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
+    });
+
     it('verify input event for non-character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(false);
         const stopPropagation = jasmine.createSpy();
@@ -185,6 +216,35 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
 
         expect(stopPropagation).toHaveBeenCalled();
         expect(triggerEventSpy).toHaveBeenCalledWith('input', { rawEvent: mockedEvent });
+    });
+
+    it('verify input event for character value in IME 1', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+        } as any;
+
+        plugin.getState().isInIME = true;
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
+    });
+
+    it('verify input event for character value in IME 2', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            isComposing: true,
+        } as any;
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
     });
 });
 

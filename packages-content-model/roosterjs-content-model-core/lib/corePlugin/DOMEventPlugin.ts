@@ -165,9 +165,11 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         beforeDispatch: event => {
             event.stopPropagation();
 
-            this.editor?.triggerEvent('input', {
-                rawEvent: event as InputEvent,
-            });
+            if (this.editor && !(event as InputEvent).isComposing && !this.state.isInIME) {
+                this.editor.triggerEvent('input', {
+                    rawEvent: event as InputEvent,
+                });
+            }
         },
     };
 
