@@ -4,6 +4,7 @@ import type {
     ContentModelBlockGroup,
     ContentModelFormatter,
     ContentModelParagraph,
+    ContentModelSegmentFormat,
     IStandaloneEditor,
     KeyDownEvent,
     RangeSelection,
@@ -11,6 +12,7 @@ import type {
 import {
     addDelimiters,
     createBr,
+    createModelToDomContext,
     createParagraph,
     isEntityDelimiter,
     isEntityElement,
@@ -53,16 +55,22 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IStandaloneEdi
     }
 }
 
-function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
-    nodes.forEach(node => {
-        if (
-            isNodeOfType(node, 'ELEMENT_NODE') &&
-            isEntityElement(node) &&
-            !node.isContentEditable
-        ) {
-            addDelimiters(node.ownerDocument, node as HTMLElement);
-        }
-    });
+function addDelimitersIfNeeded(
+    nodes: Element[] | NodeListOf<Element>,
+    format: ContentModelSegmentFormat | null
+) {
+    if (nodes.length > 0) {
+        const context = createModelToDomContext();
+        nodes.forEach(node => {
+            if (
+                isNodeOfType(node, 'ELEMENT_NODE') &&
+                isEntityElement(node) &&
+                !node.isContentEditable
+            ) {
+                addDelimiters(node.ownerDocument, node as HTMLElement, format, context);
+            }
+        });
+    }
 }
 
 function removeNode(el: Node | undefined | null) {
@@ -137,7 +145,7 @@ function getFocusedElement(selection: RangeSelection): HTMLElement | null {
 export function handleDelimiterContentChangedEvent(editor: IStandaloneEditor) {
     const helper = editor.getDOMHelper();
     removeInvalidDelimiters(helper.queryElements(DelimiterSelector));
-    addDelimitersIfNeeded(helper.queryElements(InlineEntitySelector));
+    addDelimitersIfNeeded(helper.queryElements(InlineEntitySelector), editor.getPendingFormat());
 }
 
 /**

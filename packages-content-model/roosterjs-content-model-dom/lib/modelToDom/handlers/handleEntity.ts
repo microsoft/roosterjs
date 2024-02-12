@@ -6,6 +6,7 @@ import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,
     ContentModelEntity,
+    ContentModelSegmentFormat,
     ContentModelSegmentHandler,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
@@ -40,7 +41,7 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
             const element = wrap(doc, wrapper, 'div');
             element.classList.add(BlockEntityContainer);
         }
-        addDelimiterForEntity(doc, wrapper, context);
+        addDelimiters(doc, wrapper, getSegmentFormat(context), context);
     }
 
     context.onNodeCreated?.(entityModel, wrapper);
@@ -72,7 +73,7 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     if (context.addDelimiterForEntity && entityFormat.isReadonly) {
-        const [after, before] = addDelimiters(doc, wrapper);
+        const [after, before] = addDelimiters(doc, wrapper, getSegmentFormat(context), context);
 
         newSegments?.push(after, before);
         context.regularSelection.current.segment = after;
@@ -82,21 +83,11 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 
     context.onNodeCreated?.(entityModel, wrapper);
 };
-
-function addDelimiterForEntity(doc: Document, wrapper: HTMLElement, context: ModelToDomContext) {
-    const existingAfter = wrapper.nextElementSibling;
-    const existingBefore = wrapper.previousElementSibling;
-    const [after, before] = addDelimiters(doc, wrapper);
-
-    const format = {
+function getSegmentFormat(
+    context: ModelToDomContext
+): ContentModelSegmentFormat | null | undefined {
+    return {
         ...context.pendingFormat?.format,
         ...context.defaultFormat,
     };
-    if (existingAfter != after) {
-        applyFormat(after, context.formatAppliers.segment, format, context);
-    }
-    if (existingBefore != before) {
-        applyFormat(before, context.formatAppliers.segment, format, context);
-    }
-    return [after, before];
 }

@@ -1,4 +1,4 @@
-import { addDelimiters, isBlockElement, isNodeOfType } from 'roosterjs-content-model-dom';
+import { isBlockElement, isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
 import type {
     ContentModelEntity,
     EntityInfoFormat,
@@ -6,8 +6,9 @@ import type {
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
 
-const BLOCK_ENTITY_CLASS = '_EBlock';
-const ONE_HUNDRED_PERCENT = '100%';
+const BlockEntityClass = '_EBlock';
+const OneHundredPercent = '100%';
+const InlineBlock = 'inline-block';
 
 /**
  * @internal
@@ -19,13 +20,14 @@ export const onCreateCopyEntityNode: OnNodeCreated = (model, node) => {
         entityModel.wrapper &&
         entityModel.blockType == 'Entity' &&
         isNodeOfType(node, 'ELEMENT_NODE') &&
-        isBlockElement(entityModel.wrapper)
+        isElementOfType(node, 'div') &&
+        !isBlockElement(entityModel.wrapper) &&
+        entityModel.wrapper.style.display == InlineBlock &&
+        entityModel.wrapper.style.width == OneHundredPercent
     ) {
-        node.classList.add(BLOCK_ENTITY_CLASS);
-        const innerEntity = node.querySelector('._Entity');
-        if (innerEntity) {
-            node.style.display = 'block';
-        }
+        node.classList.add(BlockEntityClass);
+        node.style.display = 'block';
+        node.style.width = '';
     }
 };
 
@@ -33,14 +35,9 @@ export const onCreateCopyEntityNode: OnNodeCreated = (model, node) => {
  * @internal
  */
 export const pasteBlockEntityParser: FormatParser<EntityInfoFormat> = (_, element) => {
-    if (element.classList.contains(BLOCK_ENTITY_CLASS)) {
-        element.classList.remove(BLOCK_ENTITY_CLASS);
-
-        const innerEntity = element.querySelector('._Entity');
-        if (isNodeOfType(innerEntity, 'ELEMENT_NODE')) {
-            innerEntity.style.display = 'inline-block';
-            innerEntity.style.width = ONE_HUNDRED_PERCENT;
-            addDelimiters(element.ownerDocument, innerEntity);
-        }
+    if (element.classList.contains(BlockEntityClass)) {
+        element.classList.remove(BlockEntityClass);
+        element.style.display = InlineBlock;
+        element.style.width = OneHundredPercent;
     }
 };
