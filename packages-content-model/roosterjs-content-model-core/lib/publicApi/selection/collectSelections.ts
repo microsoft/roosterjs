@@ -124,7 +124,7 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
                     result.push({
                         parent: path[groupIndex + 1],
                         block: path[groupIndex] as T,
-                        path,
+                        path: path.slice(groupIndex + 1),
                     });
                 }
                 break;
