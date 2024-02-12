@@ -1,5 +1,39 @@
 import { toArray } from 'roosterjs-content-model-dom';
-import type { CssRule } from './retrieveHtmlInfo';
+
+/**
+ * @internal
+ */
+export interface CssRule {
+    selectors: string[];
+    text: string;
+}
+
+/**
+ * @internal
+ */
+export function retrieveCssRules(doc: Document): CssRule[] {
+    const styles = toArray(doc.querySelectorAll('style'));
+    const result: CssRule[] = [];
+
+    styles.forEach(styleNode => {
+        const sheet = styleNode.sheet as CSSStyleSheet;
+
+        for (let ruleIndex = 0; ruleIndex < sheet.cssRules.length; ruleIndex++) {
+            const rule = sheet.cssRules[ruleIndex] as CSSStyleRule;
+
+            if (rule.type == CSSRule.STYLE_RULE && rule.selectorText) {
+                result.push({
+                    selectors: rule.selectorText.split(','),
+                    text: rule.style.cssText,
+                });
+            }
+        }
+
+        styleNode.parentNode?.removeChild(styleNode);
+    });
+
+    return result;
+}
 
 /**
  * @internal
