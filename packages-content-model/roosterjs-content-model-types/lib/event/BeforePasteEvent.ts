@@ -1,35 +1,9 @@
+import type { DomToModelOptionForSanitizing } from '../context/DomToModelOption';
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { BasePluginEvent } from './BasePluginEvent';
-import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
-import type { ValueSanitizer } from '../parameter/ValueSanitizer';
-
-/**
- * Options for DOM to Content Model conversion for paste only
- */
-export interface DomToModelOptionForPaste extends Required<DomToModelOption> {
-    /**
-     * Additional allowed HTML tags in lower case. Element with these tags will be preserved
-     */
-    readonly additionalAllowedTags: Lowercase<string>[];
-
-    /**
-     * Additional disallowed HTML tags in lower case. Elements with these tags will be dropped
-     */
-    readonly additionalDisallowedTags: Lowercase<string>[];
-
-    /**
-     * Additional sanitizers for CSS styles
-     */
-    readonly styleSanitizers: Record<string, ValueSanitizer>;
-
-    /**
-     * Additional sanitizers for CSS styles
-     */
-    readonly attributeSanitizers: Record<string, ValueSanitizer>;
-}
 
 /**
  * A function type used by merging pasted content into current Content Model
@@ -79,7 +53,7 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
     /**
      * domToModel Options to use when creating the content model from the paste fragment
      */
-    readonly domToModelOption: DomToModelOptionForPaste;
+    readonly domToModelOption: DomToModelOptionForSanitizing;
 
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
