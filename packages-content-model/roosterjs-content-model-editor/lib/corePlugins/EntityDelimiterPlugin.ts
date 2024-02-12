@@ -26,6 +26,7 @@ import {
 import type {
     EditorPlugin,
     IEditor,
+    PluginCompositionEvent,
     PluginEvent,
     PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
@@ -101,6 +102,10 @@ class EntityDelimiterPlugin implements EditorPlugin {
 
                 case PluginEventType.KeyDown:
                     handleKeyDownEvent(this.editor, event);
+                    break;
+
+                case PluginEventType.CompositionEnd:
+                    handleCompositionEndEvent(this.editor, event);
                     break;
             }
         }
@@ -281,23 +286,42 @@ function handleSelectionNotCollapsed(editor: IEditor, range: Range, event: Keybo
     });
 }
 
+function getCurrentDelimiter(editor: IEditor): HTMLElement | null {
+    const position = editor.getFocusedPosition()?.normalize();
+    if (!position) {
+        return null;
+    }
+
+    const { element, node } = position;
+    const refNode = element == node ? element.childNodes.item(position.offset) : element;
+
+    return editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
+}
+
+function handleCompositionEndEvent(editor: IEditor, event: PluginCompositionEvent) {
+    const delimiter = getCurrentDelimiter(editor);
+
+    if (!delimiter) {
+        return;
+    } else if (delimiter.firstChild?.nodeType == NodeType.Text) {
+        preventTypeInDelimiter(delimiter);
+    }
+}
+
 function handleKeyDownEvent(editor: IEditor, event: PluginKeyDownEvent) {
     const range = editor.getSelectionRangeEx();
     const { rawEvent } = event;
-    if (range.type != SelectionRangeTypes.Normal) {
+    if (
+        range.type != SelectionRangeTypes.Normal ||
+        editor.isInIME() ||
+        event.rawEvent.isComposing
+    ) {
         return;
     }
 
     if (range.areAllCollapsed && (isCharacterValue(rawEvent) || rawEvent.which === Keys.ENTER)) {
-        const position = editor.getFocusedPosition()?.normalize();
-        if (!position) {
-            return;
-        }
+        const delimiter = getCurrentDelimiter(editor);
 
-        const { element, node } = position;
-        const refNode = element == node ? element.childNodes.item(position.offset) : element;
-
-        const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
         if (!delimiter) {
             return;
         }

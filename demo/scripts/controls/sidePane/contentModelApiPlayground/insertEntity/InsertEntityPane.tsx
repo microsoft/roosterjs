@@ -107,6 +107,8 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
         if (node) {
             const editor = this.props.getEditor();
 
+            editor.focus();
+
             editor.addUndoSnapshot(() => {
                 const options: InsertEntityOptions = {
                     contentNode: node,

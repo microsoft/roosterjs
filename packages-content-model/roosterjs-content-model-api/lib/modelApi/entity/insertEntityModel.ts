@@ -48,6 +48,8 @@ export function insertEntityModel(
         if (!isBlock) {
             const index = paragraph.segments.indexOf(marker);
 
+            Object.assign(entityModel.format, marker.format);
+
             if (index >= 0) {
                 paragraph.segments.splice(focusAfterEntity ? index : index + 1, 0, entityModel);
             }
