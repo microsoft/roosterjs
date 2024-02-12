@@ -1,5 +1,5 @@
-import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
 import { createListLevel, parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
 import {
     getOperationalBlocks,
     isBlockGroupOfType,
@@ -81,11 +81,11 @@ export function setModelIndentation(
                     block.levels.pop();
                 }
             }
-        } else if (block && modifiedBlocks.indexOf(block) < 0) {
+        } else if (block) {
             let currentBlock: ContentModelBlock = block;
             let currentParent: ContentModelBlockGroup = parent;
 
-            while (currentParent) {
+            while (currentParent && modifiedBlocks.indexOf(currentBlock) < 0) {
                 const index = path.indexOf(currentParent);
                 const { format } = currentBlock;
                 const newValue = calculateMarginValue(format, isIndent, length);
