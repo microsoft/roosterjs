@@ -35,7 +35,6 @@ describe('StandaloneEditor', () => {
         expect(editor.isDisposed()).toBeFalse();
         expect(editor.getDocument()).toBe(document);
         expect(editor.isDarkMode()).toBeFalse();
-        expect(editor.isInIME()).toBeFalse();
         expect(editor.isInShadowEdit()).toBeFalse();
         expect(createEmptyModelSpy).toHaveBeenCalledWith(undefined);
 
@@ -82,7 +81,6 @@ describe('StandaloneEditor', () => {
         expect(editor.isDisposed()).toBeFalse();
         expect(editor.getDocument()).toBe(document);
         expect(editor.isDarkMode()).toBeTrue();
-        expect(editor.isInIME()).toBeFalse();
         expect(editor.isInShadowEdit()).toBeFalse();
         expect(createEmptyModelSpy).not.toHaveBeenCalled();
         expect(setContentModelSpy).toHaveBeenCalledWith(

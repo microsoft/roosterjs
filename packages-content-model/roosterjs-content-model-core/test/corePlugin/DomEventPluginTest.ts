@@ -97,12 +97,15 @@ describe('DOMEventPlugin', () => {
 describe('DOMEventPlugin verify event handlers while disallow keyboard event propagation', () => {
     let eventMap: Record<string, any>;
     let plugin: PluginWithState<DOMEventPluginState>;
+    let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         const div = <any>{
             addEventListener: jasmine.createSpy('addEventListener1'),
             removeEventListener: jasmine.createSpy('removeEventListener'),
         };
+
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
 
         plugin = createDOMEventPlugin({}, div);
         plugin.initialize(<IStandaloneEditor>(<any>{
@@ -112,6 +115,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
                 return jasmine.createSpy('disposer');
             },
             getEnvironment: () => ({}),
+            triggerEvent: triggerEventSpy,
         }));
     });
 
@@ -122,10 +126,6 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
 
     it('check events are mapped', () => {
         expect(eventMap).toBeDefined();
-        expect(eventMap.keypress.pluginEventType).toBe('keyPress');
-        expect(eventMap.keydown.pluginEventType).toBe('keyDown');
-        expect(eventMap.keyup.pluginEventType).toBe('keyUp');
-        expect(eventMap.input.pluginEventType).toBe('input');
         expect(eventMap.keypress.beforeDispatch).toBeDefined();
         expect(eventMap.keydown.beforeDispatch).toBeDefined();
         expect(eventMap.keyup.beforeDispatch).toBeDefined();
@@ -150,28 +150,41 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     it('verify keydown event for character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
         const stopPropagation = jasmine.createSpy();
-        eventMap.keydown.beforeDispatch(<Event>(<any>{
+        const mockedEvent = {
             stopPropagation,
-        }));
+            type: 'keydown',
+        } as any;
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
         expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith('keyDown', { rawEvent: mockedEvent });
     });
 
     it('verify input event for non-character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(false);
         const stopPropagation = jasmine.createSpy();
-        eventMap.input.beforeDispatch(<Event>(<any>{
+        const mockedEvent = {
             stopPropagation,
-        }));
+        } as any;
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
         expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith('input', { rawEvent: mockedEvent });
     });
 
     it('verify input event for character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
         const stopPropagation = jasmine.createSpy();
-        eventMap.input.beforeDispatch(<Event>(<any>{
+        const mockedEvent = {
             stopPropagation,
-        }));
+        } as any;
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
         expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith('input', { rawEvent: mockedEvent });
     });
 });
 
