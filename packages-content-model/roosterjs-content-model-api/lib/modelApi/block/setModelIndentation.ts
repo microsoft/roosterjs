@@ -1,5 +1,5 @@
-import { createListLevel, parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
+import { createListLevel, parseValueWithUnit } from 'roosterjs-content-model-dom';
 import {
     getOperationalBlocks,
     isBlockGroupOfType,
@@ -7,6 +7,7 @@ import {
 } from 'roosterjs-content-model-core';
 
 import type {
+    ContentModelBlock,
     ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelDocument,
@@ -33,8 +34,9 @@ export function setModelIndentation(
         ['TableCell']
     );
     const isIndent = indentation == 'indent';
+    const modifiedBlocks: ContentModelBlock[] = [];
 
-    paragraphOrListItem.forEach(({ block, parent }, index) => {
+    paragraphOrListItem.forEach(({ block, parent, path }) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             const thread = findListItemsInSameThread(model, block);
             const firstItem = thread[0];
@@ -49,7 +51,7 @@ export function setModelIndentation(
 
                 if (!isIndent && originalValue == 0) {
                     block.levels.pop();
-                } else {
+                } else if (newValue !== null) {
                     if (isRtl) {
                         level.format.marginRight = newValue + 'px';
                     } else {
@@ -79,15 +81,35 @@ export function setModelIndentation(
                     block.levels.pop();
                 }
             }
-        } else if (block) {
-            const { format } = block;
-            const newValue = calculateMarginValue(format, isIndent, length);
-            const isRtl = format.direction == 'rtl';
+        } else if (block && modifiedBlocks.indexOf(block) < 0) {
+            let currentBlock: ContentModelBlock = block;
+            let currentParent: ContentModelBlockGroup = parent;
 
-            if (isRtl) {
-                format.marginRight = newValue + 'px';
-            } else {
-                format.marginLeft = newValue + 'px';
+            while (currentParent) {
+                const index = path.indexOf(currentParent);
+                const { format } = currentBlock;
+                const newValue = calculateMarginValue(format, isIndent, length);
+
+                if (newValue !== null) {
+                    const isRtl = format.direction == 'rtl';
+
+                    if (isRtl) {
+                        format.marginRight = newValue + 'px';
+                    } else {
+                        format.marginLeft = newValue + 'px';
+                    }
+
+                    modifiedBlocks.push(currentBlock);
+
+                    break;
+                } else if (currentParent.blockGroupType == 'FormatContainer' && index >= 0) {
+                    delete currentParent.cachedElement;
+
+                    currentBlock = currentParent;
+                    currentParent = path[index + 1];
+                } else {
+                    break;
+                }
             }
         }
     });
@@ -135,7 +157,7 @@ function calculateMarginValue(
     format: ContentModelBlockFormat,
     isIndent: boolean,
     length: number = IndentStepInPixel
-) {
+): number | null {
     const { marginLeft, marginRight, direction } = format;
     const isRtl = direction == 'rtl';
     const originalValue = parseValueWithUnit(isRtl ? marginRight : marginLeft);
@@ -144,5 +166,11 @@ function calculateMarginValue(
     if (newValue == originalValue) {
         newValue = Math.max(newValue + length * (isIndent ? 1 : -1), 0);
     }
-    return newValue;
+
+    if (newValue == originalValue) {
+        // Return null to let caller know nothing is changed
+        return null;
+    } else {
+        return newValue;
+    }
 }

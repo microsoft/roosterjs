@@ -33,6 +33,8 @@ export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
     switch (group.blockGroupType) {
         case 'FormatContainer':
             // Format Container of DIV is a container for style, so we always treat it as not empty
+
+            /// ?????
             return group.tagName == 'div' ? false : group.blocks.every(isBlockEmpty);
 
         case 'ListItem':
