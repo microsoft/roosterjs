@@ -1,8 +1,6 @@
-import { coreApiMap } from '../coreApi/coreApiMap';
 import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
-import type { EditorAdapterCoreApiMap, EditorAdapterCore } from '../publicTypes/EditorAdapterCore';
 import type {
     EditorPlugin as LegacyEditorPlugin,
     PluginEvent as LegacyPluginEvent,
@@ -11,6 +9,8 @@ import type {
     ExperimentalFeatures,
     SizeTransformer,
     EditPluginState,
+    CustomData,
+    DarkColorHandler,
 } from 'roosterjs-editor-types';
 import type {
     ContextMenuProvider,
@@ -19,6 +19,43 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
+
+/**
+ * @internal
+ * Represents the core data structure of a editor adapter
+ */
+export interface EditorAdapterCore {
+    /**
+     * Custom data of this editor
+     */
+    readonly customData: Record<string, CustomData>;
+
+    /**
+     * Enabled experimental features
+     */
+    readonly experimentalFeatures: ExperimentalFeatures[];
+
+    /**
+     * Dark model handler for the editor, used for variable-based solution.
+     * If keep it null, editor will still use original dataset-based dark mode solution.
+     */
+    readonly darkColorHandler: DarkColorHandler;
+
+    /**
+     * Plugin state of EditPlugin
+     */
+    readonly edit: EditPluginState;
+
+    /**
+     * Context Menu providers
+     */
+    readonly contextMenuProviders: LegacyContextMenuProvider<any>[];
+
+    /**
+     * @deprecated Use zoomScale instead
+     */
+    readonly sizeTransformer: SizeTransformer;
+}
 
 /**
  * @internal
@@ -33,7 +70,6 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     constructor(
         private onInitialize: (core: EditorAdapterCore) => ILegacyEditor,
         legacyPlugins: LegacyEditorPlugin[] = [],
-        private legacyCoreApiOverride?: Partial<EditorAdapterCoreApiMap>,
         private experimentalFeatures: ExperimentalFeatures[] = []
     ) {
         const editPlugin = createEditPlugin();
@@ -137,8 +173,6 @@ export class BridgePlugin implements ContextMenuProvider<any> {
 
     private createEditorCore(editor: IStandaloneEditor): EditorAdapterCore {
         return {
-            api: { ...coreApiMap, ...this.legacyCoreApiOverride },
-            originalApi: coreApiMap,
             customData: {},
             experimentalFeatures: this.experimentalFeatures ?? [],
             sizeTransformer: createSizeTransformer(editor),

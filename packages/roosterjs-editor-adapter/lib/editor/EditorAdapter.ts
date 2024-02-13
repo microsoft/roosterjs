@@ -1,6 +1,8 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { insertNode } from './utils/insertNode';
+import type { EditorAdapterCore } from '../corePlugins/BridgePlugin';
 import {
     newEventToOldEvent,
     oldEventToNewEvent,
@@ -86,7 +88,6 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
-import type { EditorAdapterCore } from '../publicTypes/EditorAdapterCore';
 import type { EditorAdapterOptions } from '../publicTypes/EditorAdapterOptions';
 import type {
     ContentModelFormatState,
@@ -124,7 +125,6 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                 return this;
             },
             options.legacyPlugins,
-            options.legacyCoreApiOverride,
             options.experimentalFeatures
         );
 
@@ -190,10 +190,9 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @returns true if node is inserted. Otherwise false
      */
     insertNode(node: Node, option?: InsertOption): boolean {
-        const core = this.getContentModelEditorCore();
         const innerCore = this.getCore();
 
-        return node ? core.api.insertNode(core, innerCore, node, option ?? null) : false;
+        return node ? insertNode(innerCore, node, option ?? null) : false;
     }
 
     /**

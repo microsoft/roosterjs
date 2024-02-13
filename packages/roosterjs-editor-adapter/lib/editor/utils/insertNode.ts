@@ -17,7 +17,6 @@ import {
     splitParentNode,
 } from 'roosterjs-editor-dom';
 import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
-import type { InsertNode } from '../publicTypes/EditorAdapterCore';
 
 function getInitialRange(
     core: StandaloneEditorCore,
@@ -44,10 +43,12 @@ function getInitialRange(
 /**
  * @internal
  * Insert a DOM node into editor content
- * @param core The EditorAdapterCore object. No op if null.
- * @param option An insert option object to specify how to insert the node
  */
-export const insertNode: InsertNode = (core, innerCore, node, option) => {
+export function insertNode(
+    innerCore: StandaloneEditorCore,
+    node: Node,
+    option: InsertOption | null
+) {
     option = option || {
         position: ContentPosition.SelectionStart,
         insertOnNewLine: false,
@@ -180,7 +181,7 @@ export const insertNode: InsertNode = (core, innerCore, node, option) => {
     }
 
     return true;
-};
+}
 
 function adjustInsertPositionRegionRoot(
     core: StandaloneEditorCore,
