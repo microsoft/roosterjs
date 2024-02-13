@@ -131,7 +131,7 @@ function getFocusedDelimiter(
     if (selection?.type == 'range' && selection.range.collapsed) {
         const { range, isReverted } = selection;
         const offset = isReverted ? range.startOffset : range.endOffset;
-        const expectedText = ZeroWidthSpace + stringAfterZWS;
+        const expectedText = stringAfterZWS ? ZeroWidthSpace + stringAfterZWS : ZeroWidthSpace;
 
         node = isReverted ? range.startContainer : range.endContainer;
 
