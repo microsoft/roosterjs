@@ -60,31 +60,32 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
 
             handlePendingFormat(core, context, selection);
 
+            const eventData: ContentChangedEvent = {
+                eventType: 'contentChanged',
+                contentModel: clearModelCache ? undefined : model,
+                selection: clearModelCache ? undefined : selection,
+                source: changeSource || ChangeSource.Format,
+                data: getChangeData?.(),
+                formatApiName: apiName,
+                changedEntities: getChangedEntities(context, rawEvent),
+            };
+
+            core.api.triggerEvent(core, eventData, true /*broadcast*/);
+
+            if (canUndoByBackspace && selection?.type == 'range') {
+                core.undo.posContainer = selection.range.startContainer;
+                core.undo.posOffset = selection.range.startOffset;
+            }
+
             if (shouldAddSnapshot) {
                 core.api.addUndoSnapshot(core, !!canUndoByBackspace, entityStates);
+            } else {
+                core.undo.snapshotsManager.hasNewContent = true;
             }
         } finally {
             if (!isNested) {
                 core.undo.isNested = false;
             }
-        }
-
-        const eventData: ContentChangedEvent = {
-            eventType: 'contentChanged',
-            contentModel: clearModelCache ? undefined : model,
-            selection: clearModelCache ? undefined : selection,
-            source: changeSource || ChangeSource.Format,
-            data: getChangeData?.(),
-            formatApiName: apiName,
-            changedEntities: getChangedEntities(context, rawEvent),
-        };
-
-        core.api.triggerEvent(core, eventData, true /*broadcast*/);
-
-        if (canUndoByBackspace && selection?.type == 'range') {
-            core.undo.snapshotsManager.hasNewContent = false;
-            core.undo.posContainer = selection.range.startContainer;
-            core.undo.posOffset = selection.range.startOffset;
         }
     } else {
         if (clearModelCache) {
