@@ -1,7 +1,12 @@
 import toArray from './toArray';
+import { applyFormat } from '../modelToDom/utils/applyFormat';
 import { isElementOfType } from './isElementOfType';
 import { isNodeOfType } from './isNodeOfType';
-import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
+import type {
+    ContentModelEntityFormat,
+    ContentModelSegmentFormat,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 const ENTITY_INFO_NAME = '_Entity';
 const ENTITY_TYPE_PREFIX = '_EType_';
@@ -61,7 +66,9 @@ export function generateEntityClassNames(format: ContentModelEntityFormat): stri
 }
 
 /**
- * @internal
+ * Checks whether the node provided is a Entity delimiter
+ * @param node the node to check
+ * @return true if it is a delimiter
  */
 export function isEntityDelimiter(element: HTMLElement): boolean {
     return (
@@ -75,16 +82,29 @@ export function isEntityDelimiter(element: HTMLElement): boolean {
 /**
  * Adds delimiters to the element provided. If the delimiters already exists, will not be added
  * @param element the node to add the delimiters
+ * @param format format to set to the delimiters, so when typing inside of one the format is not lost
+ * @param context Model to Dom context to use.
  */
-export function addDelimiters(doc: Document, element: HTMLElement): HTMLElement[] {
+export function addDelimiters(
+    doc: Document,
+    element: HTMLElement,
+    format?: ContentModelSegmentFormat | null,
+    context?: ModelToDomContext
+): HTMLElement[] {
     let [delimiterAfter, delimiterBefore] = getDelimiters(element);
 
     if (!delimiterAfter) {
         delimiterAfter = insertDelimiter(doc, element, true /*isAfter*/);
+        if (context && format) {
+            applyFormat(delimiterAfter, context.formatAppliers.segment, format, context);
+        }
     }
 
     if (!delimiterBefore) {
         delimiterBefore = insertDelimiter(doc, element, false /*isAfter*/);
+        if (context && format) {
+            applyFormat(delimiterBefore, context.formatAppliers.segment, format, context);
+        }
     }
 
     return [delimiterAfter, delimiterBefore];

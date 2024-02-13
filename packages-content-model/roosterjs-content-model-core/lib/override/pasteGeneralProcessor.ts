@@ -1,7 +1,7 @@
 import { AllowedTags, createSanitizedElement, DisallowedTags } from '../utils/sanitizeElement';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
 import type {
-    DomToModelOptionForPaste,
+    DomToModelOptionForSanitizing,
     ElementProcessor,
     ValueSanitizer,
 } from 'roosterjs-content-model-types';
@@ -22,7 +22,7 @@ const DefaultStyleSanitizers: Readonly<Record<string, ValueSanitizer>> = {
  * @internal
  */
 export function createPasteGeneralProcessor(
-    options: DomToModelOptionForPaste
+    options: DomToModelOptionForSanitizing
 ): ElementProcessor<HTMLElement> {
     const allowedTags = AllowedTags.concat(options.additionalAllowedTags);
     const disallowedTags = DisallowedTags.concat(options.additionalDisallowedTags);

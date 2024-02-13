@@ -52,6 +52,7 @@ import type {
     TableSelection,
     DOMEventHandlerObject,
     DarkColorHandler,
+    IEditor,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -85,15 +86,14 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
-import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import type {
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from '../publicTypes/IContentModelEditor';
+import type { EditorAdapterCore } from '../publicTypes/EditorAdapterCore';
+import type { EditorAdapterOptions } from '../publicTypes/EditorAdapterOptions';
 import type {
     ContentModelFormatState,
     DOMEventRecord,
     ExportContentMode,
+    IStandaloneEditor,
+    StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 
 const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
@@ -108,15 +108,15 @@ const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export class ContentModelEditor extends StandaloneEditor implements IContentModelEditor {
-    private contentModelEditorCore: ContentModelEditorCore | undefined;
+export class EditorAdapter extends StandaloneEditor implements IEditor {
+    private contentModelEditorCore: EditorAdapterCore | undefined;
 
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
+    constructor(contentDiv: HTMLDivElement, options: EditorAdapterOptions = {}) {
         const bridgePlugin = new BridgePlugin(
             core => {
                 this.contentModelEditorCore = core;
@@ -139,7 +139,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                       options.defaultSegmentFormat
                   )
                 : options.initialModel;
-        const standaloneEditorOptions: ContentModelEditorOptions = {
+        const standaloneEditorOptions: StandaloneEditorOptions = {
             ...options,
             plugins,
             initialModel,
@@ -837,7 +837,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param callback The callback function to run
      * @returns a function to cancel this async run
      */
-    runAsync(callback: (editor: IContentModelEditor) => void) {
+    runAsync(callback: (editor: IEditor & IStandaloneEditor) => void) {
         const win = this.getCore().contentDiv.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
@@ -1075,10 +1075,10 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     }
 
     /**
-     * @returns the current ContentModelEditorCore object
+     * @returns the current EditorAdapterCore object
      * @throws a standard Error if there's no core object
      */
-    private getContentModelEditorCore(): ContentModelEditorCore {
+    private getContentModelEditorCore(): EditorAdapterCore {
         if (!this.contentModelEditorCore) {
             throw new Error('Editor is already disposed');
         }
