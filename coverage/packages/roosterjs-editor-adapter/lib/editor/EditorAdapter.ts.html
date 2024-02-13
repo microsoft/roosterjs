@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages-content-model/roosterjs-content-model-editor/lib/editor/ContentModelEditor.ts</title>
+    <title>Code coverage report for packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-editor/lib/editor</a> ContentModelEditor.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages/roosterjs-editor-adapter/lib/editor</a> EditorAdapter.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -1200,22 +1200,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2287,6 +2287,7 @@ import type {
     TableSelection,
     DOMEventHandlerObject,
     DarkColorHandler,
+    IEditor,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -2320,15 +2321,14 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
-import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import type {
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from '../publicTypes/IContentModelEditor';
+import type { EditorAdapterCore } from '../publicTypes/EditorAdapterCore';
+import type { EditorAdapterOptions } from '../publicTypes/EditorAdapterOptions';
 import type {
     ContentModelFormatState,
     DOMEventRecord,
     ExportContentMode,
+    IStandaloneEditor,
+    StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 &nbsp;
 const GetContentModeMap: Record&lt;GetContentMode, ExportContentMode&gt; = {
@@ -2343,15 +2343,15 @@ const GetContentModeMap: Record&lt;GetContentMode, ExportContentMode&gt; = {
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export class ContentModelEditor extends StandaloneEditor implements IContentModelEditor {
-    private contentModelEditorCore: ContentModelEditorCore | undefined;
+export class EditorAdapter extends StandaloneEditor implements IEditor {
+    private contentModelEditorCore: EditorAdapterCore | undefined;
 &nbsp;
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
+    constructor(contentDiv: HTMLDivElement, options: EditorAdapterOptions = {}) {
         const bridgePlugin = new BridgePlugin(
             core =&gt; {
                 this.contentModelEditorCore = core;
@@ -2374,7 +2374,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                       options.defaultSegmentFormat
                   )
                 : options.initialModel;
-        const standaloneEditorOptions: ContentModelEditorOptions = {
+        const standaloneEditorOptions: StandaloneEditorOptions = {
             ...options,
             plugins,
             initialModel,
@@ -3072,7 +3072,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param callback The callback function to run
      * @returns a function to cancel this async run
      */
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    runAsync(</span></span>callback: (editor: IContentModelEditor) =&gt; void) {
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    runAsync(</span></span>callback: (editor: IEditor &amp; IStandaloneEditor) =&gt; void) {
         const win = <span class="cstat-no" title="statement not covered" >this.getCore().contentDiv.ownerDocument.defaultView || window;</span>
         const handle = <span class="cstat-no" title="statement not covered" >win.requestAnimationFrame(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >            if (!this.isDisposed() &amp;&amp; callback) {</span>
@@ -3310,10 +3310,10 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     }
 &nbsp;
     /**
-     * @returns the current ContentModelEditorCore object
+     * @returns the current EditorAdapterCore object
      * @throws a standard Error if there's no core object
      */
-<span class="fstat-no" title="function not covered" >    private g</span>etContentModelEditorCore(): ContentModelEditorCore {
+<span class="fstat-no" title="function not covered" >    private g</span>etContentModelEditorCore(): EditorAdapterCore {
 <span class="cstat-no" title="statement not covered" >        if (!this.contentModelEditorCore) {</span>
 <span class="cstat-no" title="statement not covered" >            throw new Error('Editor is already disposed');</span>
         }
@@ -3328,7 +3328,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Feb 12 2024 23:53:45 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 13 2024 17:34:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

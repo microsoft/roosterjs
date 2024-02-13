@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages-content-model/roosterjs-content-model-editor/lib/corePlugins/BridgePlugin.ts</title>
+    <title>Code coverage report for packages/roosterjs-editor-adapter/lib/corePlugins/BridgePlugin.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-editor/lib/corePlugins</a> BridgePlugin.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages/roosterjs-editor-adapter/lib/corePlugins</a> BridgePlugin.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.38% </span>
+                <span class="strong">95.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>62/65</span>
+                <span class='fraction'>63/66</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.49% </span>
+                <span class="strong">96.55% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>55/57</span>
+                <span class='fraction'>56/58</span>
             </div>
         
             
@@ -221,16 +221,10 @@
 <a name='L162'></a><a href='#L162'>162</a>
 <a name='L163'></a><a href='#L163'>163</a>
 <a name='L164'></a><a href='#L164'>164</a>
-<a name='L165'></a><a href='#L165'>165</a>
-<a name='L166'></a><a href='#L166'>166</a>
-<a name='L167'></a><a href='#L167'>167</a>
-<a name='L168'></a><a href='#L168'>168</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L165'></a><a href='#L165'>165</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -254,6 +248,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -268,9 +263,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -376,6 +369,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -395,11 +389,7 @@
 import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
-import type {
-    ContentModelCoreApiMap,
-    ContentModelEditorCore,
-} from '../publicTypes/ContentModelEditorCore';
-import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
+import type { EditorAdapterCoreApiMap, EditorAdapterCore } from '../publicTypes/EditorAdapterCore';
 import type {
     EditorPlugin as LegacyEditorPlugin,
     PluginEvent as LegacyPluginEvent,
@@ -407,6 +397,7 @@ import type {
     IEditor as ILegacyEditor,
     ExperimentalFeatures,
     SizeTransformer,
+    EditPluginState,
 } from 'roosterjs-editor-types';
 import type {
     ContextMenuProvider,
@@ -422,22 +413,21 @@ const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
  */
 export class BridgePlugin implements ContextMenuProvider&lt;any&gt; {
     private legacyPlugins: LegacyEditorPlugin[];
-    private corePluginState: ContentModelCorePluginState;
+    private edit: EditPluginState;
+    private contextMenuProviders: LegacyContextMenuProvider&lt;any&gt;[];
     private checkExclusivelyHandling: boolean;
 &nbsp;
     constructor(
-        private onInitialize: (core: ContentModelEditorCore) =&gt; ILegacyEditor,
+        private onInitialize: (core: EditorAdapterCore) =&gt; ILegacyEditor,
         legacyPlugins: LegacyEditorPlugin[] = [],
-        private legacyCoreApiOverride?: Partial&lt;ContentModelCoreApiMap&gt;,
+        private legacyCoreApiOverride?: Partial&lt;EditorAdapterCoreApiMap&gt;,
         private experimentalFeatures: ExperimentalFeatures[] = []
     ) {
         const editPlugin = createEditPlugin();
 &nbsp;
         this.legacyPlugins = [editPlugin, ...legacyPlugins.filter(x =&gt; !!x)];
-        this.corePluginState = {
-            edit: editPlugin.getState(),
-            contextMenuProviders: this.legacyPlugins.filter(isContextMenuProvider),
-        };
+        this.edit = editPlugin.getState();
+        this.contextMenuProviders = this.legacyPlugins.filter(isContextMenuProvider);
         this.checkExclusivelyHandling = this.legacyPlugins.some(
             plugin =&gt; plugin.willHandleEventExclusively
         );
@@ -518,7 +508,7 @@ export class BridgePlugin implements ContextMenuProvider&lt;any&gt; {
     getContextMenuItems(target: Node): any[] {
         const allItems: any[] = [];
 &nbsp;
-        this.corePluginState.contextMenuProviders.forEach(provider =&gt; {
+        this.contextMenuProviders.forEach(provider =&gt; {
             const items = provider.getContextMenuItems(target) ?? <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
             <span class="missing-if-branch" title="else path not taken" >E</span>if (items<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength &gt; 0) {
                 if (allItems.length &gt; 0) {
@@ -532,7 +522,7 @@ export class BridgePlugin implements ContextMenuProvider&lt;any&gt; {
         return allItems;
     }
 &nbsp;
-    private createEditorCore(editor: IStandaloneEditor): ContentModelEditorCore {
+    private createEditorCore(editor: IStandaloneEditor): EditorAdapterCore {
         return {
             api: { ...coreApiMap, ...this.legacyCoreApiOverride },
             originalApi: coreApiMap,
@@ -540,7 +530,8 @@ export class BridgePlugin implements ContextMenuProvider&lt;any&gt; {
             experimentalFeatures: this.experimentalFeatures ?? <span class="branch-1 cbranch-no" title="branch not covered" >[],</span>
             sizeTransformer: createSizeTransformer(editor),
             darkColorHandler: createDarkColorHandler(editor.getColorManager()),
-            ...this.corePluginState,
+            edit: this.edit,
+            contextMenuProviders: this.contextMenuProviders,
         };
     }
 }
@@ -565,7 +556,7 @@ function isContextMenuProvider(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Feb 12 2024 23:53:45 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 13 2024 17:34:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

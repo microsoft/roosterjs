@@ -88,12 +88,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/fbb5485/packages-content-model/roosterjs-content-model/lib/createEditor.ts#L18">packages-content-model/roosterjs-content-model/lib/createEditor.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/38f203d/packages-content-model/roosterjs-content-model/lib/createEditor.ts#L18">packages-content-model/roosterjs-content-model/lib/createEditor.ts:18</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Create a Content Model Editor using the given options</p>
+									<p>Create a new Editor instance using the given options</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -108,15 +108,18 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> additionalPlugins: <a href="../interfaces/roosterjs_content_model_types.editorplugin.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorPlugin</a><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The additional user defined plugins. Currently the default plugins that are already included are
-										ContentEdit, HyperLink and Paste, user don&#39;t need to add those.</p>
+										PastePlugin, EditPlugin, user don&#39;t need to add those.</p>
 									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> initialModel: <a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The initial content model to show in editor. It can&#39;t be removed by undo, user need to manually remove it if needed.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_types.istandaloneeditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IStandaloneEditor</a></h4>
-							<p>The ContentModelEditor instance</p>
+							<p>The Editor instance</p>
 						</li>
 					</ul>
 				</section>
@@ -147,13 +150,13 @@
 						<a href="roosterjs_content_model_dom.html">roosterjs-<wbr>content-<wbr>model-<wbr>dom</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="roosterjs_content_model_editor.html">roosterjs-<wbr>content-<wbr>model-<wbr>editor</a>
-					</li>
-					<li class=" tsd-kind-module">
 						<a href="roosterjs_content_model_plugins.html">roosterjs-<wbr>content-<wbr>model-<wbr>plugins</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="roosterjs_content_model_types.html">roosterjs-<wbr>content-<wbr>model-<wbr>types</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="roosterjs_editor_adapter.html">roosterjs-<wbr>editor-<wbr>adapter</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="roosterjs_editor_api.html">roosterjs-<wbr>editor-<wbr>api</a>
