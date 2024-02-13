@@ -4,6 +4,7 @@ import * as createPasteGeneralProcessor from '../../lib/override/pasteGeneralPro
 import { containerSizeFormatParser } from '../../lib/override/containerSizeFormatParser';
 import { createDomToModelContextForSanitizing } from '../../lib/utils/createDomToModelContextForSanitizing';
 import { DomToModelOptionForSanitizing } from 'roosterjs-content-model-types';
+import { pasteBlockEntityParser } from '../../lib/override/pasteCopyBlockEntityParser';
 import { pasteDisplayFormatParser } from '../../lib/override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../../lib/override/pasteTextProcessor';
 
@@ -61,6 +62,7 @@ describe('createDomToModelContextForSanitizing', () => {
                 },
                 additionalFormatParsers: {
                     container: [containerSizeFormatParser],
+                    entity: [pasteBlockEntityParser],
                 },
             },
             defaultOptions
@@ -102,6 +104,7 @@ describe('createDomToModelContextForSanitizing', () => {
                 },
                 additionalFormatParsers: {
                     container: [containerSizeFormatParser],
+                    entity: [pasteBlockEntityParser],
                 },
             },
             additionalOption

@@ -1,7 +1,6 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
 import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
-import { createEntityDelimiterPlugin } from './EntityDelimiterPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
 import type { EditorAdapterCoreApiMap, EditorAdapterCore } from '../publicTypes/EditorAdapterCore';
 import type {
@@ -38,9 +37,8 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         private experimentalFeatures: ExperimentalFeatures[] = []
     ) {
         const editPlugin = createEditPlugin();
-        const entityDelimiterPlugin = createEntityDelimiterPlugin();
 
-        this.legacyPlugins = [editPlugin, ...legacyPlugins.filter(x => !!x), entityDelimiterPlugin];
+        this.legacyPlugins = [editPlugin, ...legacyPlugins.filter(x => !!x)];
         this.edit = editPlugin.getState();
         this.contextMenuProviders = this.legacyPlugins.filter(isContextMenuProvider);
         this.checkExclusivelyHandling = this.legacyPlugins.some(
