@@ -126,38 +126,62 @@ function getFocusedDelimiter(
 ): HTMLElement | null {
     const selection = editor.getDOMSelection();
     const helper = editor.getDOMHelper();
-    let node: Node | null = null;
 
     if (selection?.type == 'range' && selection.range.collapsed) {
-        const { range, isReverted } = selection;
-        const offset = isReverted ? range.startOffset : range.endOffset;
+        const { range } = selection;
         const expectedText = stringAfterZWS ? ZeroWidthSpace + stringAfterZWS : ZeroWidthSpace;
 
-        node = isReverted ? range.startContainer : range.endContainer;
+        let offset = range.startOffset;
+        let node = range.startContainer;
+
+        while (isNodeOfType(node, 'ELEMENT_NODE')) {
+            const isAtEnd = offset == -1 || offset >= node.childNodes.length;
+            const nextNode = isAtEnd ? node.lastChild : node.childNodes[offset];
+
+            if (nextNode) {
+                node = nextNode;
+                offset = isAtEnd ? -1 : 0;
+            } else {
+                break;
+            }
+        }
+
+        offset =
+            offset >= 0
+                ? offset
+                : isNodeOfType(node, 'TEXT_NODE')
+                ? node.nodeValue?.length ?? 0
+                : 0;
+
+        let result: Node | null = null;
 
         if (!isNodeOfType(node, 'ELEMENT_NODE')) {
             if (node.textContent != expectedText && (node.textContent || '').length == offset) {
-                node = node.nextSibling ?? node.parentElement?.closest(DelimiterSelector) ?? null;
+                result = node.nextSibling ?? node.parentElement?.closest(DelimiterSelector) ?? null;
             } else {
-                node = node?.parentElement?.closest(DelimiterSelector) ?? null;
+                result = node?.parentElement?.closest(DelimiterSelector) ?? null;
             }
         } else {
-            node = node.childNodes.length == offset ? node : node.childNodes.item(offset);
+            result = node.childNodes.length == offset ? node : node.childNodes.item(offset);
         }
 
-        if (node && !node.hasChildNodes()) {
-            const next = node.nextSibling;
+        if (result && !result.hasChildNodes()) {
+            const next = result.nextSibling;
 
-            node =
+            result =
                 isNodeOfType(next, 'ELEMENT_NODE') &&
                 next.matches(DelimiterSelector) &&
                 next.textContent == expectedText
                     ? next
                     : null;
         }
+
+        return isNodeOfType(result, 'ELEMENT_NODE') && helper.isNodeInEditor(result)
+            ? result
+            : null;
     }
 
-    return isNodeOfType(node, 'ELEMENT_NODE') && helper.isNodeInEditor(node) ? node : null;
+    return null;
 }
 
 /**
