@@ -1,8 +1,8 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { ContentModelRibbonPlugin } from '../../ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -20,7 +20,7 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     initialize(editor: IEditor): void {
         super.initialize(editor);
 
-        this.contentModelRibbon.initialize(editor as IContentModelEditor); // Temporarily use IContentModelEditor here. TODO: Port side pane to use IStandaloneEditor
+        this.contentModelRibbon.initialize(editor as IEditor & IStandaloneEditor); //  TODO: Port side pane to use IStandaloneEditor
         editor.getDocument().addEventListener('selectionchange', this.onModelChangeFromSelection);
     }
 
@@ -37,7 +37,9 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
         if (e.eventType == PluginEventType.ContentChanged && e.source == 'RefreshModel') {
             this.getComponent(component => {
                 // TODO: Port to use IStandaloneEditor and remove type cast here
-                const model = (this.editor as IContentModelEditor).getContentModelCopy('connected');
+                const model = (this.editor as IEditor & IStandaloneEditor).getContentModelCopy(
+                    'connected'
+                );
                 component.setContentModel(model);
                 setCurrentContentModel(model);
             });
@@ -72,7 +74,9 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     private onModelChange = () => {
         this.getComponent(component => {
             // TODO: Port to use IStandaloneEditor and remove type cast here
-            const model = (this.editor as IContentModelEditor).getContentModelCopy('connected');
+            const model = (this.editor as IEditor & IStandaloneEditor).getContentModelCopy(
+                'connected'
+            );
             component.setContentModel(model);
             setCurrentContentModel(model);
         });
