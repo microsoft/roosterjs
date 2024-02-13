@@ -77,9 +77,8 @@ async function buildDemoSite() {
                 [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
                 [/^roosterjs-react\/.*$/, 'roosterjsReact'],
                 [/^roosterjs-react$/, 'roosterjsReact'],
-                [/^roosterjs-content-model((?!-editor).)*\/.*$/, 'roosterjsContentModel'],
             ],
-            []
+            ['roosterjs-editor-adapter']
         ),
         stats: 'minimal',
         mode: 'production',
