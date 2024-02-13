@@ -36,6 +36,7 @@ export { applyTableFormat } from './publicApi/table/applyTableFormat';
 export { normalizeTable } from './publicApi/table/normalizeTable';
 export { setTableCellBackgroundColor } from './publicApi/table/setTableCellBackgroundColor';
 export { getSelectedCells } from './publicApi/table/getSelectedCells';
+export { clearSelectedCells } from './publicApi/table/clearSelectedCells';
 
 export { isCharacterValue, isModifierKey } from './publicApi/domUtils/eventUtils';
 export { combineBorderValue, extractBorderValues } from './publicApi/domUtils/borderValues';
