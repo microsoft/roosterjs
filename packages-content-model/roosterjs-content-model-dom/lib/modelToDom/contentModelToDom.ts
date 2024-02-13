@@ -44,6 +44,8 @@ function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSe
 
     if (imageSelection) {
         return imageSelection;
+    } else if (tableSelection) {
+        return tableSelection;
     } else if (
         (startPosition = start && calcPosition(start)) &&
         (endPosition = end && calcPosition(end))
@@ -58,8 +60,6 @@ function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSe
             range,
             isReverted: false,
         };
-    } else if (tableSelection) {
-        return tableSelection;
     } else {
         return null;
     }
