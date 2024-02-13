@@ -1,6 +1,6 @@
 import { convertDomSelectionToRangeEx, convertRangeExToDomSelection } from './selectionConverter';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
-import type { ContentModelBeforePasteEvent } from '../../publicTypes/ContentModelBeforePasteEvent';
+import type { BeforePasteAdapterEvent } from '../../publicTypes/BeforePasteAdapterEvent';
 import {
     KnownAnnounceStrings as OldKnownAnnounceStrings,
     PasteType as OldPasteType,
@@ -134,7 +134,7 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
 
         case PluginEventType.BeforePaste:
             const refBeforePasteEvent = refEvent?.eventType == 'beforePaste' ? refEvent : undefined;
-            const cmBeforePasteEvent = input as ContentModelBeforePasteEvent;
+            const cmBeforePasteEvent = input as BeforePasteAdapterEvent;
 
             return {
                 eventType: 'beforePaste',
@@ -352,7 +352,7 @@ export function newEventToOldEvent(input: NewEvent, refEvent?: OldEvent): OldEve
             const refBeforePasteEvent =
                 refEvent?.eventType == PluginEventType.BeforePaste ? refEvent : undefined;
 
-            const oldBeforePasteEvent: ContentModelBeforePasteEvent = {
+            const oldBeforePasteEvent: BeforePasteAdapterEvent = {
                 eventType: PluginEventType.BeforePaste,
                 clipboardData: input.clipboardData,
                 eventDataCache: input.eventDataCache,

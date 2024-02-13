@@ -8,7 +8,7 @@ import {
 } from 'roosterjs-editor-types';
 import type { ContentChangedEvent, PluginEvent as OldEvent } from 'roosterjs-editor-types';
 import type { PluginEvent as NewEvent } from 'roosterjs-content-model-types';
-import type { ContentModelBeforePasteEvent } from '../../../lib/publicTypes/ContentModelBeforePasteEvent';
+import type { BeforePasteAdapterEvent } from '../../../lib/publicTypes/BeforePasteAdapterEvent';
 
 describe('oldEventToNewEvent', () => {
     function runTest(
@@ -746,7 +746,7 @@ describe('newEventToOldEvent', () => {
                 },
                 customizedMerge: mockedCustomizedMerge,
                 domToModelOption: mockedDomToModelOption,
-            } as ContentModelBeforePasteEvent
+            } as BeforePasteAdapterEvent
         );
     });
 
@@ -796,7 +796,7 @@ describe('newEventToOldEvent', () => {
                 sanitizingOption: mockedSanitizeOption,
                 customizedMerge: mockedCustomizedMerge,
                 domToModelOption: mockedDomToModelOption,
-            } as ContentModelBeforePasteEvent
+            } as BeforePasteAdapterEvent
         );
     });
 
