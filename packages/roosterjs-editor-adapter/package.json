@@ -1,6 +1,6 @@
 {
-    "name": "roosterjs-content-model-editor",
-    "description": "Content Model for roosterjs (Under development)",
+    "name": "roosterjs-editor-adapter",
+    "description": "An adapter on top of Content Model based editor to work with legacy roosterjs editor",
     "dependencies": {
         "tslib": "^2.3.1",
         "roosterjs-editor-types": "",

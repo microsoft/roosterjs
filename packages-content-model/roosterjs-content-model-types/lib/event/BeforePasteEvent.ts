@@ -17,7 +17,7 @@ export type MergePastedContentFunc = (
 ) => InsertPoint | null;
 
 /**
- * Data of ContentModelBeforePasteEvent
+ * Data of BeforePasteEvent
  */
 export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
     /**

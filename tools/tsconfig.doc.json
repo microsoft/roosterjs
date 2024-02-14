@@ -36,7 +36,7 @@
             "../packages-content-model/roosterjs-content-model-core/lib/index.ts",
             "../packages-content-model/roosterjs-content-model-api/lib/index.ts",
             "../packages-content-model/roosterjs-content-model-plugins/lib/index.ts",
-            "../packages-content-model/roosterjs-content-model-editor/lib/index.ts",
+            "../packages/roosterjs-editor-adapter/lib/index.ts",
             "../packages-content-model/roosterjs-content-model/lib/index.ts"
         ],
         "plugin": ["typedoc-plugin-remove-references", "typedoc-plugin-external-module-map"],
