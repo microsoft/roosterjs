@@ -1,4 +1,4 @@
-import hasSelectionInBlock from '../selection/hasSelectionInBlock';
+import { setSelection } from '../selection/setSelection';
 import type { ContentModelTable, TableSelectionCoordinates } from 'roosterjs-content-model-types';
 
 /**
@@ -11,18 +11,8 @@ export function clearSelectedCells(table: ContentModelTable, sel: TableSelection
         const row = table.rows[i];
         for (let j = sel.firstColumn; j <= sel.lastColumn; j++) {
             const cell = row.cells[j];
-            delete cell.isSelected;
-            if (cell.blocks.some(hasSelectionInBlock)) {
-                cell.blocks.forEach(block => {
-                    if (block.blockType == 'Paragraph') {
-                        block.segments.forEach((segment, index) => {
-                            if (segment.segmentType == 'SelectionMarker') {
-                                block.segments.splice(index, 1);
-                            }
-                        });
-                    }
-                });
-            }
+            cell.isSelected = false;
+            setSelection(cell);
         }
     }
 }
