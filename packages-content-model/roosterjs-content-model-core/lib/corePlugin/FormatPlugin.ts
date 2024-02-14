@@ -35,6 +35,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
     private editor: IStandaloneEditor | null = null;
     private defaultFormatKeys: Set<keyof CSSStyleDeclaration>;
     private state: FormatPluginState;
+    private lastCheckedNode: Node | null = null;
 
     /**
      * Construct a new instance of FormatPlugin class
@@ -119,6 +120,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
             case 'keyDown':
                 if (isCursorMovingKey(event.rawEvent)) {
                     this.clearPendingFormat();
+                    this.lastCheckedNode = null;
                 } else if (
                     this.defaultFormatKeys.size > 0 &&
                     (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey) &&
@@ -176,7 +178,10 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
         const range = selection?.type == 'range' ? selection.range : null;
         const posContainer = range?.startContainer ?? null;
 
-        if (posContainer) {
+        if (posContainer && posContainer != this.lastCheckedNode) {
+            // Cache last checked parent node so no need to check it again if user is keep typing under the same node
+            this.lastCheckedNode = posContainer;
+
             const domHelper = editor.getDOMHelper();
             let element: HTMLElement | null = isNodeOfType(posContainer, 'ELEMENT_NODE')
                 ? posContainer

@@ -650,7 +650,32 @@ describe('FormatPlugin for default format', () => {
             rawEvent,
         });
 
+        expect(applyDefaultFormatSpy).toHaveBeenCalledTimes(1);
         expect(applyDefaultFormatSpy).toHaveBeenCalledWith(editor, defaultFormat);
+
+        // Trigger event again under the same node, no need to apply again
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent,
+        });
+
+        expect(applyDefaultFormatSpy).toHaveBeenCalledTimes(1);
+
+        // Trigger event again under the same node, no need to apply again
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: { key: 'ArrowUp' } as any,
+        });
+
+        expect(applyDefaultFormatSpy).toHaveBeenCalledTimes(1);
+
+        // Trigger event again under after moving cursor, should check again
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent,
+        });
+
+        expect(applyDefaultFormatSpy).toHaveBeenCalledTimes(2);
     });
 
     it('Collapsed range, already have style and is enough', () => {
