@@ -7,6 +7,8 @@ import type {
 
 /**
  * Insert a column to the table
+ * @param table The table model where the column is to be inserted
+ * @param operation The operation to be performed
  */
 export function insertTableColumn(
     table: ContentModelTable,

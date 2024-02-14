@@ -7,6 +7,8 @@ import type {
 
 /**
  * Insert a row to the table
+ * @param table The table model where the row is to be inserted
+ * @param operation The operation to be performed
  */
 export function insertTableRow(table: ContentModelTable, operation: TableVerticalInsertOperation) {
     const sel = getSelectedCells(table);
