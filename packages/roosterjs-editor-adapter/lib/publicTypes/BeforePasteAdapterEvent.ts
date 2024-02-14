@@ -5,9 +5,9 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * A temporary event type to be compatible with both legacy plugin and content model editor
+ * A temporary event type to be compatible with both legacy plugin and EditorAdapter
  */
-export interface ContentModelBeforePasteEvent extends BeforePasteEvent {
+export interface BeforePasteAdapterEvent extends BeforePasteEvent {
     /**
      * domToModel Options to use when creating the content model from the paste fragment
      */

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ContentModelEditor, ContentModelEditorOptions } from 'roosterjs-content-model-editor';
 import { createUIUtilities, ReactEditorPlugin, UIUtilities } from 'roosterjs-react';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
+import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
 import { useTheme } from '@fluentui/react/lib/Theme';
 import {
     EditorPlugin,
@@ -14,7 +14,7 @@ import type { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types'
  * Properties for Rooster react component
  */
 export interface ContentModelRoosterProps
-    extends ContentModelEditorOptions,
+    extends EditorAdapterOptions,
         React.HTMLAttributes<HTMLDivElement> {
     /**
      * Creator function used for creating the instance of roosterjs editor.
@@ -86,8 +86,8 @@ function setUIUtilities(
     });
 }
 
-function defaultEditorCreator(div: HTMLDivElement, options: ContentModelEditorOptions) {
-    return new ContentModelEditor(div, options);
+function defaultEditorCreator(div: HTMLDivElement, options: EditorAdapterOptions) {
+    return new EditorAdapter(div, options);
 }
 
 function isReactEditorPlugin(

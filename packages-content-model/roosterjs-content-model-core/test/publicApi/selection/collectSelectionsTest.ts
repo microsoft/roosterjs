@@ -715,7 +715,7 @@ describe('getOperationalBlocks', () => {
             ['ListItem'],
             ['TableCell'],
             false,
-            [{ block: para, parent: group }]
+            [{ block: para, parent: group, path: [group] }]
         );
     });
 
@@ -737,10 +737,12 @@ describe('getOperationalBlocks', () => {
                 {
                     block: listItem,
                     parent: group,
+                    path: [group],
                 },
                 {
                     block: para2,
                     parent: group,
+                    path: [group],
                 },
             ]
         );
@@ -763,8 +765,8 @@ describe('getOperationalBlocks', () => {
             ['TableCell'],
             false,
             [
-                { block: listItem, parent: group },
-                { block: para3, parent: group },
+                { block: listItem, parent: group, path: [group] },
+                { block: para3, parent: group, path: [group] },
             ]
         );
     });
@@ -786,8 +788,8 @@ describe('getOperationalBlocks', () => {
             ['FormatContainer'],
             false,
             [
-                { block: listItem1, parent: group },
-                { block: para2, parent: quote },
+                { block: listItem1, parent: group, path: [group] },
+                { block: para2, parent: quote, path: [quote, listItem2, group] },
             ]
         );
     });
@@ -811,8 +813,9 @@ describe('getOperationalBlocks', () => {
                 {
                     block: listItem,
                     parent: group,
+                    path: [group],
                 },
-                { block: quote, parent: group },
+                { block: quote, parent: group, path: [group] },
             ]
         );
     });
@@ -834,8 +837,8 @@ describe('getOperationalBlocks', () => {
             ['TableCell'],
             false,
             [
-                { block: quote1, parent: listItem },
-                { block: quote2, parent: group },
+                { block: quote1, parent: listItem, path: [listItem, group] },
+                { block: quote2, parent: group, path: [group] },
             ]
         );
     });
@@ -857,8 +860,8 @@ describe('getOperationalBlocks', () => {
             ['TableCell'],
             true,
             [
-                { block: listItem, parent: group },
-                { block: quote2, parent: group },
+                { block: listItem, parent: group, path: [group] },
+                { block: quote2, parent: group, path: [group] },
             ]
         );
     });

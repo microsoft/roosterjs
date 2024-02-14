@@ -8,6 +8,7 @@ import type {
     ContentModelSegmentFormat,
     IStandaloneEditor,
     KeyDownEvent,
+    RangeSelection,
 } from 'roosterjs-content-model-types';
 import {
     addDelimiters,
@@ -40,7 +41,7 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IStandaloneEdi
                 element => !!element
             ) as HTMLElement[]
         );
-        editor.formatContentModel(model => {
+        editor.formatContentModel((model, context) => {
             iterateSelections(model, (_path, _tableContext, block, _segments) => {
                 if (block?.blockType == 'Paragraph') {
                     block.segments.forEach(segment => {
@@ -50,6 +51,9 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IStandaloneEdi
                     });
                 }
             });
+
+            context.skipUndoSnapshot = true;
+
             return true;
         });
     }
@@ -120,68 +124,41 @@ function removeDelimiterAttr(node: Element | undefined | null, checkEntity: bool
     });
 }
 
-function getFocusedDelimiter(
-    editor: IStandaloneEditor,
-    stringAfterZWS?: string
+function getFocusedElement(
+    selection: RangeSelection,
+    existingTextInDelimiter?: string
 ): HTMLElement | null {
-    const selection = editor.getDOMSelection();
-    const helper = editor.getDOMHelper();
+    const { range, isReverted } = selection;
+    let node: Node | null = isReverted ? range.startContainer : range.endContainer;
+    let offset = isReverted ? range.startOffset : range.endOffset;
 
-    if (selection?.type == 'range' && selection.range.collapsed) {
-        const { range } = selection;
-        const expectedText = stringAfterZWS ? ZeroWidthSpace + stringAfterZWS : ZeroWidthSpace;
-
-        let offset = range.startOffset;
-        let node = range.startContainer;
-
-        while (isNodeOfType(node, 'ELEMENT_NODE')) {
-            const isAtEnd = offset == -1 || offset >= node.childNodes.length;
-            const nextNode = isAtEnd ? node.lastChild : node.childNodes[offset];
-
-            if (nextNode) {
-                node = nextNode;
-                offset = isAtEnd ? -1 : 0;
-            } else {
-                break;
-            }
-        }
-
-        offset =
-            offset >= 0
-                ? offset
-                : isNodeOfType(node, 'TEXT_NODE')
-                ? node.nodeValue?.length ?? 0
-                : 0;
-
-        let result: Node | null = null;
-
-        if (!isNodeOfType(node, 'ELEMENT_NODE')) {
-            if (node.textContent != expectedText && (node.textContent || '').length == offset) {
-                result = node.nextSibling ?? node.parentElement?.closest(DelimiterSelector) ?? null;
-            } else {
-                result = node?.parentElement?.closest(DelimiterSelector) ?? null;
-            }
+    while (node?.lastChild) {
+        if (offset == node.childNodes.length) {
+            node = node.lastChild;
+            offset = node.childNodes.length;
         } else {
-            result = node.childNodes.length == offset ? node : node.childNodes.item(offset);
+            node = node.childNodes[offset];
+            offset = 0;
         }
-
-        if (result && !result.hasChildNodes()) {
-            const next = result.nextSibling;
-
-            result =
-                isNodeOfType(next, 'ELEMENT_NODE') &&
-                next.matches(DelimiterSelector) &&
-                next.textContent == expectedText
-                    ? next
-                    : null;
-        }
-
-        return isNodeOfType(result, 'ELEMENT_NODE') && helper.isNodeInEditor(result)
-            ? result
-            : null;
     }
 
-    return null;
+    if (!isNodeOfType(node, 'ELEMENT_NODE')) {
+        const textToCheck = existingTextInDelimiter
+            ? ZeroWidthSpace + existingTextInDelimiter
+            : ZeroWidthSpace;
+
+        if (node.textContent != textToCheck && (node.textContent || '').length == offset) {
+            node = node.nextSibling ?? node.parentElement?.closest(DelimiterSelector) ?? null;
+        } else {
+            node = node?.parentElement?.closest(DelimiterSelector) ?? null;
+        }
+    } else {
+        node = node.childNodes.length == offset ? node : node.childNodes.item(offset);
+    }
+    if (node && !node.hasChildNodes()) {
+        node = node.nextSibling;
+    }
+    return isNodeOfType(node, 'ELEMENT_NODE') ? node : null;
 }
 
 /**
@@ -197,10 +174,19 @@ export function handleDelimiterContentChangedEvent(editor: IStandaloneEditor) {
  * @internal
  */
 export function handleCompositionEndEvent(editor: IStandaloneEditor, event: CompositionEndEvent) {
-    const delimiter = getFocusedDelimiter(editor, event.rawEvent.data);
+    const selection = editor.getDOMSelection();
 
-    if (delimiter?.firstChild && isNodeOfType(delimiter.firstChild, 'TEXT_NODE')) {
-        preventTypeInDelimiter(delimiter, editor);
+    if (selection?.type == 'range' && selection.range.collapsed) {
+        const node = getFocusedElement(selection, event.rawEvent.data);
+
+        if (
+            node?.firstChild &&
+            isNodeOfType(node.firstChild, 'TEXT_NODE') &&
+            node.matches(DelimiterSelector) &&
+            node.textContent == ZeroWidthSpace + event.rawEvent.data
+        ) {
+            preventTypeInDelimiter(node, editor);
+        }
     }
 }
 
@@ -208,47 +194,51 @@ export function handleCompositionEndEvent(editor: IStandaloneEditor, event: Comp
  * @internal
  */
 export function handleDelimiterKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
+    const selection = editor.getDOMSelection();
+
     const { rawEvent } = event;
+    if (!selection || selection.type != 'range') {
+        return;
+    }
     const isEnter = rawEvent.key === 'Enter';
-    let node: HTMLElement | null;
-
-    if ((isCharacterValue(rawEvent) || isEnter) && (node = getFocusedDelimiter(editor))) {
+    if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
         const helper = editor.getDOMHelper();
-        const blockEntityContainer = node.closest(BlockEntityContainerSelector);
+        const node = getFocusedElement(selection);
+        if (node && isEntityDelimiter(node) && helper.isNodeInEditor(node)) {
+            const blockEntityContainer = node.closest(BlockEntityContainerSelector);
+            if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
+                const isAfter = node.classList.contains(DelimiterAfter);
 
-        if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
-            const isAfter = node.classList.contains(DelimiterAfter);
-            const range = editor.getDocument().createRange();
+                if (isAfter) {
+                    selection.range.setStartAfter(blockEntityContainer);
+                } else {
+                    selection.range.setStartBefore(blockEntityContainer);
+                }
+                selection.range.collapse(true /* toStart */);
 
-            if (isAfter) {
-                range.setStartAfter(blockEntityContainer);
+                if (isEnter) {
+                    event.rawEvent.preventDefault();
+                }
+
+                editor.formatContentModel(handleKeyDownInBlockDelimiter, {
+                    selectionOverride: {
+                        type: 'range',
+                        isReverted: false,
+                        range: selection.range,
+                    },
+                });
             } else {
-                range.setStartBefore(blockEntityContainer);
-            }
-
-            range.collapse(true /* toStart */);
-
-            if (isEnter) {
-                event.rawEvent.preventDefault();
-            }
-
-            editor.formatContentModel(handleKeyDownInBlockDelimiter, {
-                selectionOverride: {
-                    type: 'range',
-                    isReverted: false,
-                    range: range,
-                },
-            });
-        } else {
-            if (isEnter) {
-                event.rawEvent.preventDefault();
-                editor.formatContentModel(handleEnterInlineEntity);
-            } else {
-                editor
-                    .getDocument()
-                    .defaultView?.requestAnimationFrame(
-                        () => node && preventTypeInDelimiter(node, editor)
-                    );
+                if (isEnter) {
+                    event.rawEvent.preventDefault();
+                    editor.formatContentModel(handleEnterInlineEntity);
+                } else {
+                    editor.takeSnapshot();
+                    editor
+                        .getDocument()
+                        .defaultView?.requestAnimationFrame(() =>
+                            preventTypeInDelimiter(node, editor)
+                        );
+                }
             }
         }
     }

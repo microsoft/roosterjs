@@ -1,10 +1,9 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
-import { Entity } from 'roosterjs-editor-types';
+import { Entity, IEditor } from 'roosterjs-editor-types';
 import { getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { insertEntity } from 'roosterjs-content-model-api';
-import { InsertEntityOptions } from 'roosterjs-content-model-types';
+import { InsertEntityOptions, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
 
 const styles = require('./InsertEntityPane.scss');
@@ -106,39 +105,36 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
 
         if (node) {
             const editor = this.props.getEditor();
+            const options: InsertEntityOptions = {
+                contentNode: node,
+                focusAfterEntity: focusAfterEntity,
+            };
 
             editor.focus();
 
-            editor.addUndoSnapshot(() => {
-                const options: InsertEntityOptions = {
-                    contentNode: node,
-                    focusAfterEntity: focusAfterEntity,
-                };
-
-                if (isBlock) {
-                    insertEntity(
-                        editor as IContentModelEditor,
-                        entityType,
-                        true,
-                        insertAtRoot
-                            ? 'root'
-                            : insertAtTop
-                            ? 'begin'
-                            : insertAtBottom
-                            ? 'end'
-                            : 'focus',
-                        options
-                    );
-                } else {
-                    insertEntity(
-                        editor as IContentModelEditor,
-                        entityType,
-                        isBlock,
-                        insertAtTop ? 'begin' : insertAtBottom ? 'end' : 'focus',
-                        options
-                    );
-                }
-            });
+            if (isBlock) {
+                insertEntity(
+                    editor as IStandaloneEditor & IEditor,
+                    entityType,
+                    true,
+                    insertAtRoot
+                        ? 'root'
+                        : insertAtTop
+                        ? 'begin'
+                        : insertAtBottom
+                        ? 'end'
+                        : 'focus',
+                    options
+                );
+            } else {
+                insertEntity(
+                    editor as IStandaloneEditor & IEditor,
+                    entityType,
+                    isBlock,
+                    insertAtTop ? 'begin' : insertAtBottom ? 'end' : 'focus',
+                    options
+                );
+            }
         }
     };
 
