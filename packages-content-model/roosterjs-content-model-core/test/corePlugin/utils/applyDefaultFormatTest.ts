@@ -78,10 +78,11 @@ describe('applyDefaultFormat', () => {
 
     it('No selection', () => {
         getDOMSelectionSpy.and.returnValue(null);
+        deleteSelectionSpy.and.returnValue({});
 
         applyDefaultFormat(editor, defaultFormat);
 
-        expect(formatContentModelSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
     });
 
     it('Selection already has style', () => {
@@ -106,7 +107,7 @@ describe('applyDefaultFormat', () => {
 
         applyDefaultFormat(editor, defaultFormat);
 
-        expect(formatContentModelSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
     });
 
     it('text under content div directly', () => {
