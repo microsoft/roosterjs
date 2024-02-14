@@ -133,6 +133,8 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
 
             case 'mouseUp':
             case 'contentChanged':
+                this.lastCheckedNode = null;
+
                 if (!this.canApplyPendingFormat()) {
                     this.clearPendingFormat();
                 }
