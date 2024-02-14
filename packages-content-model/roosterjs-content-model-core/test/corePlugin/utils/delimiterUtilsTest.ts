@@ -9,11 +9,7 @@ import {
     createEntity,
     createModelToDomContext,
 } from 'roosterjs-content-model-dom';
-import {
-    ContentModelDocument,
-    DOMSelection,
-    IStandaloneEditor,
-} from 'roosterjs-content-model-types';
+import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 
 const ZeroWidthSpace = '\u200B';
 const BlockEntityContainer = '_E_EBlockEntityContainer';
@@ -29,7 +25,7 @@ describe('EntityDelimiterUtils |', () => {
                 isNodeInEditor: () => true,
             }),
             getPendingFormat: <any>((): any => null),
-        }) as Partial<IStandaloneEditor>;
+        }) as Partial<IEditor>;
     });
 
     describe('contentChanged |', () => {
@@ -177,7 +173,7 @@ describe('EntityDelimiterUtils |', () => {
                     queryElements: queryElementsSpy,
                     isNodeInEditor: () => true,
                 }),
-            }) as Partial<IStandaloneEditor>;
+            }) as Partial<IEditor>;
             spyOn(DelimiterFile, 'preventTypeInDelimiter').and.callThrough();
         });
 
@@ -533,7 +529,7 @@ describe('preventTypeInDelimiter', () => {
             formatContentModel: formatter => {
                 formatter(mockedModel, <any>{});
             },
-        } as Partial<IStandaloneEditor>;
+        } as Partial<IEditor>;
     });
 
     it('handle delimiter after entity', () => {

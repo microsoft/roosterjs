@@ -2,12 +2,12 @@ import {
     ContentModelDocument,
     ContentModelFormatter,
     FormatContentModelOptions,
-    IStandaloneEditor,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 export function editingTestCommon(
     apiName: string,
-    executionCallback: (editor: IStandaloneEditor) => void,
+    executionCallback: (editor: IEditor) => void,
     model: ContentModelDocument,
     result: ContentModelDocument,
     calledTimes: number
@@ -32,7 +32,7 @@ export function editingTestCommon(
         triggerEvent,
         getEnvironment: () => ({}),
         formatContentModel,
-    } as any) as IStandaloneEditor;
+    } as any) as IEditor;
 
     executionCallback(editor);
 

@@ -12,7 +12,7 @@ import {
     isBold,
     redo,
     retrieveModelFormatState,
-    StandaloneEditor,
+    Editor,
     transformColor,
     undo,
 } from 'roosterjs-content-model-core';
@@ -52,7 +52,7 @@ import type {
     TableSelection,
     DOMEventHandlerObject,
     DarkColorHandler,
-    IEditor,
+    IEditor as ILegacyEditor,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -92,8 +92,8 @@ import type {
     ContentModelFormatState,
     DOMEventRecord,
     ExportContentMode,
-    IStandaloneEditor,
-    StandaloneEditorOptions,
+    IEditor,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
@@ -108,7 +108,7 @@ const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export class EditorAdapter extends StandaloneEditor implements IEditor {
+export class EditorAdapter extends Editor implements ILegacyEditor {
     private contentModelEditorCore: EditorAdapterCore | undefined;
 
     /**
@@ -139,7 +139,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                       options.defaultSegmentFormat
                   )
                 : options.initialModel;
-        const standaloneEditorOptions: StandaloneEditorOptions = {
+        const standaloneEditorOptions: EditorOptions = {
             ...options,
             plugins,
             initialModel,
@@ -837,7 +837,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @param callback The callback function to run
      * @returns a function to cancel this async run
      */
-    runAsync(callback: (editor: IEditor & IStandaloneEditor) => void) {
+    runAsync(callback: (editor: ILegacyEditor & IEditor) => void) {
         const win = this.getCore().contentDiv.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {

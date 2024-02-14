@@ -1,7 +1,7 @@
 import { clearModelFormat } from '../../modelApi/common/clearModelFormat';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type {
-    IStandaloneEditor,
+    IEditor,
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelSegment,
@@ -12,7 +12,7 @@ import type {
  * Clear format of selection
  * @param editor The editor to clear format from
  */
-export default function clearFormat(editor: IStandaloneEditor) {
+export default function clearFormat(editor: IEditor) {
     editor.focus();
 
     editor.formatContentModel(

@@ -6,11 +6,11 @@ import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     FormatContentModelContext,
-    StandaloneEditorCore,
+    EditorCore,
 } from 'roosterjs-content-model-types';
 
 describe('formatContentModel', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
@@ -56,7 +56,7 @@ describe('formatContentModel', () => {
             undo: {
                 snapshotsManager: {},
             },
-        } as any) as StandaloneEditorCore;
+        } as any) as EditorCore;
     });
 
     describe('Editor has focus', () => {

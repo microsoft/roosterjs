@@ -1,7 +1,7 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
-import type { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_Excel_E2E';
 const clipboardData = <ClipboardData>(<any>{
@@ -19,7 +19,7 @@ const clipboardData = <ClipboardData>(<any>{
 });
 
 describe(ID, () => {
-    let editor: IStandaloneEditor = undefined!;
+    let editor: IEditor = undefined!;
 
     beforeEach(() => {
         editor = initEditor(ID);

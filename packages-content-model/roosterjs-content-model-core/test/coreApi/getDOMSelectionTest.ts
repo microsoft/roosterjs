@@ -1,8 +1,8 @@
+import { EditorCore } from 'roosterjs-content-model-types';
 import { getDOMSelection } from '../../lib/coreApi/getDOMSelection';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('getDOMSelection', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let getSelectionSpy: jasmine.Spy;
     let hasFocusSpy: jasmine.Spy;
     let containsSpy: jasmine.Spy;

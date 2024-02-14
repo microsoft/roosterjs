@@ -1,6 +1,6 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { getSelectedSegments } from 'roosterjs-content-model-core';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Remove link at selection. If no links at selection, do nothing.
@@ -8,7 +8,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
  * If only part of a link is selected, the whole link style will be removed.
  * @param editor The editor instance
  */
-export default function removeLink(editor: IStandaloneEditor) {
+export default function removeLink(editor: IEditor) {
     editor.focus();
 
     editor.formatContentModel(

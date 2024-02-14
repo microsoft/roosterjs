@@ -1,11 +1,11 @@
-import type { StandaloneEditorOptions } from 'roosterjs-content-model-types';
+import type { EditorOptions } from 'roosterjs-content-model-types';
 import type { EditorAdapterCoreApiMap } from './EditorAdapterCore';
 import type { EditorPlugin, ExperimentalFeatures } from 'roosterjs-editor-types';
 
 /**
  * Options for editor adapter
  */
-export interface EditorAdapterOptions extends StandaloneEditorOptions {
+export interface EditorAdapterOptions extends EditorOptions {
     /**
      * Initial HTML content
      * Default value is whatever already inside the editor content DIV

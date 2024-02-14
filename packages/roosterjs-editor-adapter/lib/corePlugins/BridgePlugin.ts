@@ -12,11 +12,7 @@ import type {
     SizeTransformer,
     EditPluginState,
 } from 'roosterjs-editor-types';
-import type {
-    ContextMenuProvider,
-    IStandaloneEditor,
-    PluginEvent,
-} from 'roosterjs-content-model-types';
+import type { ContextMenuProvider, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 
@@ -57,7 +53,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         const outerEditor = this.onInitialize(this.createEditorCore(editor));
 
         this.legacyPlugins.forEach(plugin => plugin.initialize(outerEditor));
@@ -135,7 +131,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         return allItems;
     }
 
-    private createEditorCore(editor: IStandaloneEditor): EditorAdapterCore {
+    private createEditorCore(editor: IEditor): EditorAdapterCore {
         return {
             api: { ...coreApiMap, ...this.legacyCoreApiOverride },
             originalApi: coreApiMap,
@@ -153,7 +149,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
  * @internal Export for test only. This function is only used for compatibility from older build
 
  */
-export function createSizeTransformer(editor: IStandaloneEditor): SizeTransformer {
+export function createSizeTransformer(editor: IEditor): SizeTransformer {
     return size => size / editor.getDOMHelper().calculateZoomScale();
 }
 

@@ -3,11 +3,7 @@ import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/d
 import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/utils/findAllEntities';
 import { EditorAdapter } from '../../lib/editor/EditorAdapter';
 import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
-import {
-    ContentModelDocument,
-    EditorContext,
-    StandaloneEditorCore,
-} from 'roosterjs-content-model-types';
+import { ContentModelDocument, EditorContext, EditorCore } from 'roosterjs-content-model-types';
 
 const editorContext: EditorContext = {
     isDarkMode: false,
@@ -193,7 +189,7 @@ describe('EditorAdapter', () => {
     it('getPendingFormat', () => {
         const div = document.createElement('div');
         const editor = new EditorAdapter(div);
-        const core: StandaloneEditorCore = (editor as any).core;
+        const core: EditorCore = (editor as any).core;
         const mockedFormat = 'FORMAT' as any;
 
         expect(editor.getPendingFormat()).toBeNull();

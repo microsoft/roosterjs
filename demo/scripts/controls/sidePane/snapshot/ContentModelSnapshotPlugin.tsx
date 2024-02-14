@@ -1,11 +1,11 @@
 import * as React from 'react';
 import ContentModelSnapshotPane from './ContentModelSnapshotPane';
 import SidePanePlugin from '../../SidePanePlugin';
-import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { IStandaloneEditor, Snapshot, Snapshots } from 'roosterjs-content-model-types';
+import { IEditor as ILegacyEDitor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { IEditor, Snapshot, Snapshots } from 'roosterjs-content-model-types';
 
 export default class ContentModelSnapshotPlugin implements SidePanePlugin {
-    private editorInstance: IEditor & IStandaloneEditor;
+    private editorInstance: ILegacyEDitor & IEditor;
     private component: ContentModelSnapshotPane;
 
     constructor(private snapshots: Snapshots) {
@@ -16,8 +16,8 @@ export default class ContentModelSnapshotPlugin implements SidePanePlugin {
         return 'Snapshot';
     }
 
-    initialize(editor: IEditor) {
-        this.editorInstance = editor as IEditor & IStandaloneEditor;
+    initialize(editor: ILegacyEDitor) {
+        this.editorInstance = editor as ILegacyEDitor & IEditor;
     }
 
     dispose() {

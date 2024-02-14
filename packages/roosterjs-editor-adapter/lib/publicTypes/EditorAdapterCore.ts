@@ -1,4 +1,4 @@
-import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { EditorCore } from 'roosterjs-content-model-types';
 import type {
     CustomData,
     ExperimentalFeatures,
@@ -12,12 +12,12 @@ import type {
 /**
  * Insert a DOM node into editor content
  * @param core The EditorAdapterCore object. No op if null.
- * @param innerCore The StandaloneEditorCore object
+ * @param innerCore The EditorCore object
  * @param option An insert option object to specify how to insert the node
  */
 export type InsertNode = (
     core: EditorAdapterCore,
-    innerCore: StandaloneEditorCore,
+    innerCore: EditorCore,
     node: Node,
     option: InsertOption | null
 ) => boolean;
@@ -29,7 +29,7 @@ export interface EditorAdapterCoreApiMap {
     /**
      * Insert a DOM node into editor content
      * @param core The EditorAdapterCore object. No op if null.
-     * @param innerCore The StandaloneEditorCore object
+     * @param innerCore The EditorCore object
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;

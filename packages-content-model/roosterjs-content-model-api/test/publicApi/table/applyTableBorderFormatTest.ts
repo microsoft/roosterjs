@@ -2,7 +2,7 @@ import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/tabl
 import applyTableBorderFormat from '../../../lib/publicApi/table/applyTableBorderFormat';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     Border,
     BorderOperations,
@@ -13,7 +13,7 @@ import {
 } from 'roosterjs-content-model-types';
 
 describe('applyTableBorderFormat', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     const width = '3px';
     const style = 'double';
     const color = '#AABBCC';
@@ -43,7 +43,7 @@ describe('applyTableBorderFormat', () => {
     beforeEach(() => {
         spyOn(normalizeTable, 'normalizeTable');
 
-        editor = ({} as any) as IStandaloneEditor;
+        editor = ({} as any) as IEditor;
     });
 
     function runTest(

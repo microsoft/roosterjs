@@ -4,10 +4,10 @@ import { isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import { undo } from '../publicApi/undo/undo';
 import type {
     ContentChangedEvent,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
     PluginWithState,
-    StandaloneEditorOptions,
+    EditorOptions,
     UndoPluginState,
 } from 'roosterjs-content-model-types';
 
@@ -19,14 +19,14 @@ const Enter = 'Enter';
  * Provides snapshot based undo service for Editor
  */
 class UndoPlugin implements PluginWithState<UndoPluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private state: UndoPluginState;
 
     /**
      * Construct a new instance of UndoPlugin
      * @param options The wrapper of the state object
      */
-    constructor(options: StandaloneEditorOptions) {
+    constructor(options: EditorOptions) {
         this.state = {
             snapshotsManager: createSnapshotsManager(options.snapshots),
             isRestoring: false,
@@ -48,7 +48,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor): void {
+    initialize(editor: IEditor): void {
         this.editor = editor;
     }
 
@@ -121,7 +121,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
         }
     }
 
-    private onKeyDown(editor: IStandaloneEditor, evt: KeyboardEvent): void {
+    private onKeyDown(editor: IEditor, evt: KeyboardEvent): void {
         const { snapshotsManager } = this.state;
 
         // Handle backspace/delete when there is a selection to take a snapshot
@@ -168,7 +168,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
         }
     }
 
-    private onKeyPress(editor: IStandaloneEditor, evt: KeyboardEvent): void {
+    private onKeyPress(editor: IEditor, evt: KeyboardEvent): void {
         if (evt.metaKey) {
             // if metaKey is pressed, simply return since no actual effect will be taken on the editor.
             // this is to prevent changing hasNewContent to true when meta + v to paste on Safari.
@@ -227,7 +227,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
         this.state.snapshotsManager.hasNewContent = true;
     }
 
-    private canUndoAutoComplete(editor: IStandaloneEditor) {
+    private canUndoAutoComplete(editor: IEditor) {
         const selection = editor.getDOMSelection();
 
         return (
@@ -245,7 +245,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
         this.state.posOffset = null;
     }
 
-    private isCtrlOrMetaPressed(editor: IStandaloneEditor, event: KeyboardEvent) {
+    private isCtrlOrMetaPressed(editor: IEditor, event: KeyboardEvent) {
         const env = editor.getEnvironment();
 
         return env.isMac ? event.metaKey : event.ctrlKey;
@@ -257,8 +257,6 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
  * Create a new instance of UndoPlugin.
  * @param option The editor option
  */
-export function createUndoPlugin(
-    option: StandaloneEditorOptions
-): PluginWithState<UndoPluginState> {
+export function createUndoPlugin(option: EditorOptions): PluginWithState<UndoPluginState> {
     return new UndoPlugin(option);
 }

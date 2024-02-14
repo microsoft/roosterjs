@@ -11,7 +11,7 @@ import type {
     ClipboardData,
     ContentModelDocument,
     ContentModelSegmentFormat,
-    StandaloneEditorCore,
+    EditorCore,
 } from 'roosterjs-content-model-types';
 
 const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
@@ -32,7 +32,7 @@ const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
  * @internal
  */
 export function mergePasteContent(
-    core: StandaloneEditorCore,
+    core: EditorCore,
     eventResult: BeforePasteEvent,
     clipboardData: ClipboardData
 ) {

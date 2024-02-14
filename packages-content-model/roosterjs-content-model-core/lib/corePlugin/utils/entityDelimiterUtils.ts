@@ -5,7 +5,7 @@ import type {
     ContentModelFormatter,
     ContentModelParagraph,
     ContentModelSegmentFormat,
-    IStandaloneEditor,
+    IEditor,
     KeyDownEvent,
     RangeSelection,
 } from 'roosterjs-content-model-types';
@@ -31,7 +31,7 @@ const BlockEntityContainerSelector = '.' + BlockEntityContainer;
 /**
  * @internal exported only for unit test
  */
-export function preventTypeInDelimiter(node: HTMLElement, editor: IStandaloneEditor) {
+export function preventTypeInDelimiter(node: HTMLElement, editor: IEditor) {
     const isAfter = node.classList.contains(DelimiterAfter);
     const entitySibling = isAfter ? node.previousElementSibling : node.nextElementSibling;
     if (entitySibling && isEntityElement(entitySibling)) {
@@ -142,7 +142,7 @@ function getFocusedElement(selection: RangeSelection): HTMLElement | null {
 /**
  * @internal
  */
-export function handleDelimiterContentChangedEvent(editor: IStandaloneEditor) {
+export function handleDelimiterContentChangedEvent(editor: IEditor) {
     const helper = editor.getDOMHelper();
     removeInvalidDelimiters(helper.queryElements(DelimiterSelector));
     addDelimitersIfNeeded(helper.queryElements(InlineEntitySelector), editor.getPendingFormat());
@@ -151,7 +151,7 @@ export function handleDelimiterContentChangedEvent(editor: IStandaloneEditor) {
 /**
  * @internal
  */
-export function handleDelimiterKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
+export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
     const selection = editor.getDOMSelection();
 
     const { rawEvent } = event;

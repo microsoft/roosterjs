@@ -1,5 +1,5 @@
 import { createEditorContext } from '../../lib/coreApi/createEditorContext';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { EditorCore } from 'roosterjs-content-model-types';
 
 describe('createEditorContext', () => {
     it('create a normal context', () => {
@@ -33,7 +33,7 @@ describe('createEditorContext', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
             },
-        } as any) as StandaloneEditorCore;
+        } as any) as EditorCore;
 
         const context = createEditorContext(core, false);
 
@@ -81,7 +81,7 @@ describe('createEditorContext', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
             },
-        } as any) as StandaloneEditorCore;
+        } as any) as EditorCore;
 
         const context = createEditorContext(core, true);
 
@@ -128,7 +128,7 @@ describe('createEditorContext', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
             },
-        } as any) as StandaloneEditorCore;
+        } as any) as EditorCore;
 
         const context = createEditorContext(core, false);
 
@@ -147,7 +147,7 @@ describe('createEditorContext', () => {
 });
 
 describe('createEditorContext - checkZoomScale', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
     let calculateZoomScaleSpy: jasmine.Spy;
@@ -179,7 +179,7 @@ describe('createEditorContext - checkZoomScale', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
             },
-        } as any) as StandaloneEditorCore;
+        } as any) as EditorCore;
     });
 
     it('Zoom scale = 2', () => {
@@ -202,7 +202,7 @@ describe('createEditorContext - checkZoomScale', () => {
 });
 
 describe('createEditorContext - checkRootDir', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let div: any;
     let getComputedStyleSpy: jasmine.Spy;
     let calculateZoomScaleSpy: jasmine.Spy;
@@ -233,7 +233,7 @@ describe('createEditorContext - checkRootDir', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
             },
-        } as any) as StandaloneEditorCore;
+        } as any) as EditorCore;
     });
 
     it('LTR CSS', () => {

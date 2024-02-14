@@ -1,7 +1,7 @@
 import * as clearModelFormat from '../../../lib/modelApi/common/clearModelFormat';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import clearFormat from '../../../lib/publicApi/format/clearFormat';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -21,7 +21,7 @@ describe('clearFormat', () => {
         const editor = ({
             focus: () => {},
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         spyOn(clearModelFormat, 'clearModelFormat');
         spyOn(normalizeContentModel, 'normalizeContentModel');

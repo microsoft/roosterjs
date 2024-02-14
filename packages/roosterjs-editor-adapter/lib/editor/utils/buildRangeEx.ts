@@ -1,6 +1,6 @@
 import { createRange, safeInstanceOf } from 'roosterjs-editor-dom';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
-import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { EditorCore } from 'roosterjs-content-model-types';
 import type {
     NodePosition,
     PositionType,
@@ -13,7 +13,7 @@ import type {
  * @internal
  */
 export function buildRangeEx(
-    core: StandaloneEditorCore,
+    core: EditorCore,
     arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
     arg2?: NodePosition | number | PositionType | TableSelection | null,
     arg3?: Node,

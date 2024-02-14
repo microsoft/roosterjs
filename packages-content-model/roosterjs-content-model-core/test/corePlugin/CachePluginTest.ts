@@ -4,14 +4,14 @@ import { domIndexerImpl } from '../../lib/corePlugin/utils/domIndexerImpl';
 import {
     CachePluginState,
     DomIndexer,
-    IStandaloneEditor,
+    IEditor,
     PluginWithState,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 describe('CachePlugin', () => {
     let plugin: PluginWithState<CachePluginState>;
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     let addEventListenerSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
@@ -21,7 +21,7 @@ describe('CachePlugin', () => {
     let domIndexer: DomIndexer;
     let contentDiv: HTMLDivElement;
 
-    function init(option: StandaloneEditorOptions) {
+    function init(option: EditorOptions) {
         addEventListenerSpy = jasmine.createSpy('addEventListenerSpy');
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
@@ -43,7 +43,7 @@ describe('CachePlugin', () => {
                     removeEventListener: removeEventListenerSpy,
                 };
             },
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         plugin = createCachePlugin(option, contentDiv);
         plugin.initialize(editor);

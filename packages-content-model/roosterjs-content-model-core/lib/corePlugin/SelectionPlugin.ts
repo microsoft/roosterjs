@@ -2,23 +2,23 @@ import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-
 import { isModifierKey } from '../publicApi/domUtils/eventUtils';
 import type {
     DOMSelection,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
     PluginWithState,
     SelectionPluginState,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 const MouseMiddleButton = 1;
 const MouseRightButton = 2;
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
     private isSafari = false;
 
-    constructor(options: StandaloneEditorOptions) {
+    constructor(options: EditorOptions) {
         this.state = {
             selection: null,
             selectionStyleNode: null,
@@ -30,7 +30,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         return 'Selection';
     }
 
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
 
         const doc = this.editor.getDocument();
@@ -135,14 +135,14 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private selectImage(editor: IStandaloneEditor, image: HTMLImageElement) {
+    private selectImage(editor: IEditor, image: HTMLImageElement) {
         editor.setDOMSelection({
             type: 'image',
             image: image,
         });
     }
 
-    private selectBeforeImage(editor: IStandaloneEditor, image: HTMLImageElement) {
+    private selectBeforeImage(editor: IEditor, image: HTMLImageElement) {
         const doc = editor.getDocument();
         const parent = image.parentNode;
         const index = parent && toArray(parent.childNodes).indexOf(image);
@@ -204,7 +204,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
  * @param option The editor option
  */
 export function createSelectionPlugin(
-    options: StandaloneEditorOptions
+    options: EditorOptions
 ): PluginWithState<SelectionPluginState> {
     return new SelectionPlugin(options);
 }

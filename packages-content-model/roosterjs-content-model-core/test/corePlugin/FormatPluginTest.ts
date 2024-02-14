@@ -1,6 +1,6 @@
 import * as applyPendingFormat from '../../lib/corePlugin/utils/applyPendingFormat';
 import { createFormatPlugin } from '../../lib/corePlugin/FormatPlugin';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     addSegment,
     createContentModelDocument,
@@ -20,7 +20,7 @@ describe('FormatPlugin', () => {
         const editor = ({
             cacheContentModel: () => {},
             isDarkMode: () => false,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         const plugin = createFormatPlugin({});
         plugin.initialize(editor);
 
@@ -42,7 +42,7 @@ describe('FormatPlugin', () => {
             isInIME: () => false,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const model = createContentModelDocument();
 
@@ -79,7 +79,7 @@ describe('FormatPlugin', () => {
             createContentModel: () => model,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         const plugin = createFormatPlugin({});
         plugin.initialize(editor);
 
@@ -113,7 +113,7 @@ describe('FormatPlugin', () => {
             isDarkMode: () => false,
             triggerEvent,
             getVisibleViewport,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const state = plugin.getState();
 
@@ -142,7 +142,7 @@ describe('FormatPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             cacheContentModel: () => {},
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         const plugin = createFormatPlugin({});
         plugin.initialize(editor);
@@ -174,7 +174,7 @@ describe('FormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         const plugin = createFormatPlugin({});
         const state = plugin.getState();
@@ -203,7 +203,7 @@ describe('FormatPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             cacheContentModel: () => {},
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         const plugin = createFormatPlugin({});
 
         const state = plugin.getState();
@@ -233,7 +233,7 @@ describe('FormatPlugin', () => {
             createContentModel: () => model,
             cacheContentModel: () => {},
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const state = plugin.getState();
 
@@ -259,7 +259,7 @@ describe('FormatPlugin', () => {
 });
 
 describe('FormatPlugin for default format', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let contentDiv: HTMLDivElement;
     let getDOMSelection: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
@@ -285,7 +285,7 @@ describe('FormatPlugin for default format', () => {
             cacheContentModel: cacheContentModelSpy,
             takeSnapshot: takeSnapshotSpy,
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     it('Collapsed range, text input, under editor directly', () => {

@@ -4,10 +4,10 @@ import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import type {
     FormatPluginState,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
     PluginWithState,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 // During IME input, KeyDown event will have "Process" as key
@@ -19,7 +19,7 @@ const ProcessKey = 'Process';
  * 1. Handle pending format changes when selection is collapsed
  */
 class FormatPlugin implements PluginWithState<FormatPluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private hasDefaultFormat = false;
     private state: FormatPluginState;
 
@@ -27,7 +27,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
      * Construct a new instance of FormatPlugin class
      * @param option The editor option
      */
-    constructor(option: StandaloneEditorOptions) {
+    constructor(option: EditorOptions) {
         this.state = {
             defaultFormat: { ...option.defaultSegmentFormat },
             pendingFormat: null,
@@ -47,7 +47,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.hasDefaultFormat =
             getObjectKeys(this.state.defaultFormat).filter(
@@ -159,8 +159,6 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
  * Create a new instance of FormatPlugin.
  * @param option The editor option
  */
-export function createFormatPlugin(
-    option: StandaloneEditorOptions
-): PluginWithState<FormatPluginState> {
+export function createFormatPlugin(option: EditorOptions): PluginWithState<FormatPluginState> {
     return new FormatPlugin(option);
 }

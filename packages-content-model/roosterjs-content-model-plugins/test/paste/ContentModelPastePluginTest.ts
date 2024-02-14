@@ -4,7 +4,7 @@ import * as getPasteSource from '../../lib/paste/pasteSourceValidations/getPaste
 import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
-import { BeforePasteEvent, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { BeforePasteEvent, IEditor } from 'roosterjs-content-model-types';
 import { PastePlugin } from '../../lib/paste/PastePlugin';
 import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
 
@@ -12,12 +12,12 @@ const trustedHTMLHandler = (val: string) => val;
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Content Model Paste Plugin Test', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = ({
             getTrustedHTMLHandler: () => trustedHTMLHandler,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         spyOn(addParser, 'default').and.callThrough();
         spyOn(setProcessor, 'setProcessor').and.callThrough();
     });

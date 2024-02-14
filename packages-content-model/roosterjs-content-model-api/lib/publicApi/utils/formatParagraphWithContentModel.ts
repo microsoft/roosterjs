@@ -1,11 +1,11 @@
 import { getSelectedParagraphs } from 'roosterjs-content-model-core';
-import type { ContentModelParagraph, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelParagraph, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function formatParagraphWithContentModel(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     apiName: string,
     setStyleCallback: (paragraph: ContentModelParagraph) => void
 ) {

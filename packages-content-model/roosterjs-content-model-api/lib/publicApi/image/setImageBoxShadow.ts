@@ -1,5 +1,5 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Set image box shadow for all selected images at selection.
@@ -8,7 +8,7 @@ import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-mod
  * @param margin The image margin for all sides (eg. "4px"), null to remove margin
  */
 export default function setImageBoxShadow(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     boxShadow: string,
     margin?: string | null
 ) {

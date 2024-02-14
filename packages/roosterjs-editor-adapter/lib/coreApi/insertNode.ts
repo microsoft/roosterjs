@@ -16,11 +16,11 @@ import {
     splitTextNode,
     splitParentNode,
 } from 'roosterjs-editor-dom';
-import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { EditorCore } from 'roosterjs-content-model-types';
 import type { InsertNode } from '../publicTypes/EditorAdapterCore';
 
 function getInitialRange(
-    core: StandaloneEditorCore,
+    core: EditorCore,
     option: InsertOption
 ): { range: Range | null; rangeToRestore: Range | null } {
     // Selection start replaces based on the current selection.
@@ -182,11 +182,7 @@ export const insertNode: InsertNode = (core, innerCore, node, option) => {
     return true;
 };
 
-function adjustInsertPositionRegionRoot(
-    core: StandaloneEditorCore,
-    range: Range,
-    position: NodePosition
-) {
+function adjustInsertPositionRegionRoot(core: EditorCore, range: Range, position: NodePosition) {
     const region = getRegionsFromRange(core.contentDiv, range, RegionType.Table)[0];
     let node: Node | null = position.node;
 
@@ -210,11 +206,7 @@ function adjustInsertPositionRegionRoot(
     return position;
 }
 
-function adjustInsertPositionNewLine(
-    blockElement: BlockElement,
-    core: StandaloneEditorCore,
-    pos: Position
-) {
+function adjustInsertPositionNewLine(blockElement: BlockElement, core: EditorCore, pos: Position) {
     let tempPos = new Position(blockElement.getEndNode(), PositionType.After);
     if (safeInstanceOf(tempPos.node, 'HTMLTableRowElement')) {
         const div = core.contentDiv.ownerDocument.createElement('div');
