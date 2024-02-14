@@ -40,7 +40,7 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IEditor) {
                 element => !!element
             ) as HTMLElement[]
         );
-        editor.formatContentModel(model => {
+        editor.formatContentModel((model, context) => {
             iterateSelections(model, (_path, _tableContext, block, _segments) => {
                 if (block?.blockType == 'Paragraph') {
                     block.segments.forEach(segment => {
@@ -50,6 +50,9 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IEditor) {
                     });
                 }
             });
+
+            context.skipUndoSnapshot = true;
+
             return true;
         });
     }
@@ -123,7 +126,18 @@ function removeDelimiterAttr(node: Element | undefined | null, checkEntity: bool
 function getFocusedElement(selection: RangeSelection): HTMLElement | null {
     const { range, isReverted } = selection;
     let node: Node | null = isReverted ? range.startContainer : range.endContainer;
-    const offset = isReverted ? range.startOffset : range.endOffset;
+    let offset = isReverted ? range.startOffset : range.endOffset;
+
+    while (node?.lastChild) {
+        if (offset == node.childNodes.length) {
+            node = node.lastChild;
+            offset = node.childNodes.length;
+        } else {
+            node = node.childNodes[offset];
+            offset = 0;
+        }
+    }
+
     if (!isNodeOfType(node, 'ELEMENT_NODE')) {
         if (node.textContent != ZeroWidthSpace && (node.textContent || '').length == offset) {
             node = node.nextSibling ?? node.parentElement?.closest(DelimiterSelector) ?? null;
@@ -190,6 +204,7 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
                     event.rawEvent.preventDefault();
                     editor.formatContentModel(handleEnterInlineEntity);
                 } else {
+                    editor.takeSnapshot();
                     editor
                         .getDocument()
                         .defaultView?.requestAnimationFrame(() =>
