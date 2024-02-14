@@ -1,6 +1,7 @@
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import type {
+    CompositionEndEvent,
     ContentModelBlockGroup,
     ContentModelFormatter,
     ContentModelParagraph,
@@ -123,7 +124,10 @@ function removeDelimiterAttr(node: Element | undefined | null, checkEntity: bool
     });
 }
 
-function getFocusedElement(selection: RangeSelection): HTMLElement | null {
+function getFocusedElement(
+    selection: RangeSelection,
+    existingTextInDelimiter?: string
+): HTMLElement | null {
     const { range, isReverted } = selection;
     let node: Node | null = isReverted ? range.startContainer : range.endContainer;
     let offset = isReverted ? range.startOffset : range.endOffset;
@@ -139,7 +143,11 @@ function getFocusedElement(selection: RangeSelection): HTMLElement | null {
     }
 
     if (!isNodeOfType(node, 'ELEMENT_NODE')) {
-        if (node.textContent != ZeroWidthSpace && (node.textContent || '').length == offset) {
+        const textToCheck = existingTextInDelimiter
+            ? ZeroWidthSpace + existingTextInDelimiter
+            : ZeroWidthSpace;
+
+        if (node.textContent != textToCheck && (node.textContent || '').length == offset) {
             node = node.nextSibling ?? node.parentElement?.closest(DelimiterSelector) ?? null;
         } else {
             node = node?.parentElement?.closest(DelimiterSelector) ?? null;
@@ -160,6 +168,26 @@ export function handleDelimiterContentChangedEvent(editor: IEditor) {
     const helper = editor.getDOMHelper();
     removeInvalidDelimiters(helper.queryElements(DelimiterSelector));
     addDelimitersIfNeeded(helper.queryElements(InlineEntitySelector), editor.getPendingFormat());
+}
+
+/**
+ * @internal
+ */
+export function handleCompositionEndEvent(editor: IEditor, event: CompositionEndEvent) {
+    const selection = editor.getDOMSelection();
+
+    if (selection?.type == 'range' && selection.range.collapsed) {
+        const node = getFocusedElement(selection, event.rawEvent.data);
+
+        if (
+            node?.firstChild &&
+            isNodeOfType(node.firstChild, 'TEXT_NODE') &&
+            node.matches(DelimiterSelector) &&
+            node.textContent == ZeroWidthSpace + event.rawEvent.data
+        ) {
+            preventTypeInDelimiter(node, editor);
+        }
+    }
 }
 
 /**

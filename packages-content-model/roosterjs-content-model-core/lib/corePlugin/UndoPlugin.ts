@@ -85,8 +85,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent): void {
-        // if editor is in IME, don't do anything
-        if (!this.editor || this.editor.isInIME()) {
+        if (!this.editor) {
             return;
         }
 
