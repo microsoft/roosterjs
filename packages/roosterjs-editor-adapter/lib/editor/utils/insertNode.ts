@@ -44,11 +44,7 @@ function getInitialRange(
  * @internal
  * Insert a DOM node into editor content
  */
-export function insertNode(
-    innerCore: StandaloneEditorCore,
-    node: Node,
-    option: InsertOption | null
-) {
+export function insertNode(innerCore: EditorCore, node: Node, option: InsertOption | null) {
     option = option || {
         position: ContentPosition.SelectionStart,
         insertOnNewLine: false,
