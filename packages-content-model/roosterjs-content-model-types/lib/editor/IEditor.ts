@@ -135,12 +135,6 @@ export interface IEditor {
     restoreSnapshot(snapshot: Snapshot): void;
 
     /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    isInIME(): boolean;
-
-    /**
      * Attach a DOM event to the editor content DIV
      * @param eventMap A map from event name to its handler
      */

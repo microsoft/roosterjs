@@ -1,12 +1,8 @@
 import * as applyDefaultFormat from '../../lib/corePlugin/utils/applyDefaultFormat';
 import * as applyPendingFormat from '../../lib/corePlugin/utils/applyPendingFormat';
+import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createFormatPlugin } from '../../lib/corePlugin/FormatPlugin';
 import { IEditor } from 'roosterjs-content-model-types';
-import {
-    addSegment,
-    createContentModelDocument,
-    createSelectionMarker,
-} from 'roosterjs-content-model-dom';
 
 describe('FormatPlugin', () => {
     const mockedFormat = {
@@ -65,37 +61,6 @@ describe('FormatPlugin', () => {
         expect(applyPendingFormatSpy).toHaveBeenCalledTimes(1);
         expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'a', mockedFormat);
         expect(state.pendingFormat).toBeNull();
-    });
-
-    it('with pending format and selection, trigger input event with isComposing = true', () => {
-        const model = createContentModelDocument();
-        const marker = createSelectionMarker();
-
-        addSegment(model, marker);
-
-        const editor = ({
-            createContentModel: () => model,
-            cacheContentModel: () => {},
-            getEnvironment: () => ({}),
-        } as any) as IEditor;
-        const plugin = createFormatPlugin({});
-        plugin.initialize(editor);
-
-        const state = plugin.getState();
-
-        state.pendingFormat = {
-            format: mockedFormat,
-        } as any;
-        plugin.onPluginEvent({
-            eventType: 'input',
-            rawEvent: ({ data: 'a', isComposing: true } as any) as InputEvent,
-        });
-        plugin.dispose();
-
-        expect(applyPendingFormatSpy).not.toHaveBeenCalled();
-        expect(state.pendingFormat).toEqual({
-            format: mockedFormat,
-        } as any);
     });
 
     it('with pending format and selection, trigger CompositionEnd event', () => {

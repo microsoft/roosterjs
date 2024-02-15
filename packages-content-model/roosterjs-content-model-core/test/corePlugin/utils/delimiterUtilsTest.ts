@@ -1,5 +1,6 @@
 import * as DelimiterFile from '../../../lib/corePlugin/utils/entityDelimiterUtils';
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
+import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 import {
     handleDelimiterContentChangedEvent,
     handleDelimiterKeyDownEvent,
@@ -9,7 +10,6 @@ import {
     createEntity,
     createModelToDomContext,
 } from 'roosterjs-content-model-dom';
-import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 
 const ZeroWidthSpace = '\u200B';
 const BlockEntityContainer = '_E_EBlockEntityContainer';
@@ -156,10 +156,14 @@ describe('EntityDelimiterUtils |', () => {
     describe('onKeyDown |', () => {
         let mockedSelection: DOMSelection;
         let rafSpy: jasmine.Spy;
+        let takeSnapshotSpy: jasmine.Spy;
+
         beforeEach(() => {
             mockedSelection = undefined!;
             rafSpy = jasmine.createSpy('requestAnimationFrame');
             formatContentModelSpy = jasmine.createSpy('formatContentModel');
+            takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
+
             mockedEditor = (<any>{
                 getDOMSelection: () => mockedSelection,
                 getDocument: () =>
@@ -173,6 +177,7 @@ describe('EntityDelimiterUtils |', () => {
                     queryElements: queryElementsSpy,
                     isNodeInEditor: () => true,
                 }),
+                takeSnapshot: takeSnapshotSpy,
             }) as Partial<IEditor>;
             spyOn(DelimiterFile, 'preventTypeInDelimiter').and.callThrough();
         });
@@ -293,6 +298,40 @@ describe('EntityDelimiterUtils |', () => {
             });
 
             expect(rafSpy).toHaveBeenCalled();
+            expect(takeSnapshotSpy).toHaveBeenCalled();
+        });
+
+        it('Handle, range selection on upper container & delimiter', () => {
+            const parent = document.createElement('span');
+            const el = document.createElement('span');
+            const text = document.createTextNode('span');
+            el.appendChild(text);
+            parent.appendChild(el);
+            el.classList.add('entityDelimiterBefore');
+            mockedSelection = {
+                type: 'range',
+                range: <any>{
+                    endContainer: parent,
+                    endOffset: 1,
+                    collapsed: true,
+                },
+                isReverted: false,
+            };
+            spyOn(entityUtils, 'isEntityDelimiter').and.returnValue(true);
+            spyOn(entityUtils, 'isEntityElement').and.returnValue(false);
+
+            handleDelimiterKeyDownEvent(mockedEditor, {
+                eventType: 'keyDown',
+                rawEvent: <any>{
+                    ctrlKey: false,
+                    altKey: false,
+                    metaKey: false,
+                    key: 'A',
+                },
+            });
+
+            expect(rafSpy).toHaveBeenCalled();
+            expect(takeSnapshotSpy).toHaveBeenCalled();
         });
 
         it('Handle, range selection & delimiter before wrapped in block entity', () => {
@@ -520,14 +559,18 @@ describe('EntityDelimiterUtils |', () => {
 describe('preventTypeInDelimiter', () => {
     let mockedEditor: any;
     let mockedModel: ContentModelDocument;
+    let context: any;
+
     beforeEach(() => {
+        context = {};
+
         mockedModel = {
             blockGroupType: 'Document',
             blocks: [],
         };
         mockedEditor = {
             formatContentModel: formatter => {
-                formatter(mockedModel, <any>{});
+                formatter(mockedModel, context);
             },
         } as Partial<IEditor>;
     });
@@ -608,6 +651,9 @@ describe('preventTypeInDelimiter', () => {
             ],
             format: {},
         });
+        expect(context).toEqual({
+            skipUndoSnapshot: true,
+        });
     });
 
     it('handle delimiter before entity', () => {
@@ -685,6 +731,9 @@ describe('preventTypeInDelimiter', () => {
                 },
             ],
             format: {},
+        });
+        expect(context).toEqual({
+            skipUndoSnapshot: true,
         });
     });
 });

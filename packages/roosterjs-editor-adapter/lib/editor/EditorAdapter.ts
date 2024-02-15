@@ -1098,6 +1098,14 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         return core.darkColorHandler;
     }
 
+    /**
+     * Check if editor is in IME input sequence
+     * @returns True if editor is in IME input sequence, otherwise false
+     */
+    isInIME(): boolean {
+        return this.getCore().domEvent.isInIME;
+    }
+
     private retrieveFormatState(): ContentModelFormatState {
         const pendingFormat = this.getPendingFormat();
         const result: ContentModelFormatState = {};

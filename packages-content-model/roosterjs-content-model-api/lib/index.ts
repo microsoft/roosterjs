@@ -45,4 +45,5 @@ export { insertTableColumn } from './modelApi/table/insertTableColumn';
 
 export { formatTableWithContentModel } from './publicApi/utils/formatTableWithContentModel';
 export { setListType } from './modelApi/list/setListType';
+export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';

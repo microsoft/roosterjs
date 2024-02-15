@@ -28,6 +28,7 @@ export function keyboardListTrigger(
             triggerList(editor, model, listType, styleType, index);
             rawEvent.preventDefault();
             normalizeContentModel(model);
+
             return true;
         }
         return false;

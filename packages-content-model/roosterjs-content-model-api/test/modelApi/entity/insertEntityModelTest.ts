@@ -10,8 +10,6 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-const Entity = 'Entity' as any;
-
 function runTestGlobal(
     model: ContentModelDocument,
     pos: InsertEntityPosition,
@@ -19,6 +17,10 @@ function runTestGlobal(
     isBlock: boolean,
     focusAfterEntity: boolean
 ) {
+    const Entity = {
+        format: {},
+    } as any;
+
     insertEntityModel(model, Entity, pos, isBlock, focusAfterEntity);
 
     expect(model).toEqual(expectedResult, pos);
@@ -55,7 +57,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [],
@@ -71,7 +75,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -120,7 +126,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [txt1, marker, txt2],
@@ -136,7 +144,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, marker, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -152,7 +162,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, marker, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -168,7 +180,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, marker, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -199,7 +213,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [txt1, txt2],
@@ -215,7 +231,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -231,7 +249,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, marker],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -247,7 +267,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, marker],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -275,7 +297,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -301,7 +325,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -317,7 +343,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [marker],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [],
@@ -333,7 +361,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [marker],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [],
@@ -361,7 +391,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -379,7 +411,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         format: {},
                     },
                     divider,
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -395,7 +429,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [marker],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     divider,
                 ],
             },
@@ -407,7 +443,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [marker],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     divider,
                 ],
             }
@@ -431,7 +469,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -449,7 +489,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         format: {},
                     },
                     entity2,
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -465,7 +507,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [marker],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -482,7 +526,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [marker],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -515,7 +561,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [txt1, marker, txt2],
@@ -532,7 +580,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, marker, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -550,7 +600,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, marker, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -568,7 +620,9 @@ describe('insertEntityModel, block element, not focus after entity', () => {
                         segments: [txt1, marker, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [br],
@@ -612,7 +666,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -628,7 +684,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -676,7 +734,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, txt1, txt2],
@@ -692,7 +752,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -708,7 +770,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -724,7 +788,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -754,7 +820,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, txt1, txt2],
@@ -770,7 +838,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -786,7 +856,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -802,7 +874,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -828,7 +902,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -854,7 +930,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -870,7 +948,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -886,7 +966,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -913,7 +995,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -931,7 +1015,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         format: {},
                     },
                     divider,
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -947,7 +1033,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -964,7 +1052,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -992,7 +1082,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker],
@@ -1010,7 +1102,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         format: {},
                     },
                     entity2,
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -1026,7 +1120,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -1043,7 +1139,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, br],
@@ -1077,7 +1175,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
             {
                 blockGroupType: 'Document',
                 blocks: [
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker, txt1, txt2],
@@ -1094,7 +1194,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker2, br],
@@ -1112,7 +1214,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker2, br],
@@ -1130,7 +1234,9 @@ describe('insertEntityModel, block element, focus after entity', () => {
                         segments: [txt1, txt2],
                         format: {},
                     },
-                    Entity,
+                    {
+                        format: {},
+                    } as any,
                     {
                         blockType: 'Paragraph',
                         segments: [marker2, br],
@@ -1175,7 +1281,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     {
@@ -1195,7 +1305,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                 ],
@@ -1242,7 +1356,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     {
@@ -1262,7 +1380,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                 ],
@@ -1272,7 +1394,14 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, marker, Entity, txt2],
+                        segments: [
+                            txt1,
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                            txt2,
+                        ],
                         format: {},
                     },
                 ],
@@ -1282,7 +1411,14 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, marker, Entity, txt2],
+                        segments: [
+                            txt1,
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                            txt2,
+                        ],
                         format: {},
                     },
                 ],
@@ -1311,7 +1447,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     {
@@ -1331,7 +1471,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                 ],
@@ -1341,7 +1485,13 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, marker, Entity],
+                        segments: [
+                            txt1,
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                 ],
@@ -1351,7 +1501,13 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, marker, Entity],
+                        segments: [
+                            txt1,
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                 ],
@@ -1376,7 +1532,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     {
@@ -1406,7 +1566,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                 ],
@@ -1416,7 +1580,12 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [marker, Entity],
+                        segments: [
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     {
@@ -1431,7 +1600,12 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [marker, Entity],
+                        segments: [
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     {
@@ -1462,7 +1636,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     {
@@ -1484,7 +1662,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     divider,
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                 ],
@@ -1494,7 +1676,12 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [marker, Entity],
+                        segments: [
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     divider,
@@ -1505,7 +1692,12 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [marker, Entity],
+                        segments: [
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     divider,
@@ -1532,7 +1724,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     {
@@ -1554,7 +1750,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     entity2,
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                 ],
@@ -1564,7 +1764,12 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [marker, Entity],
+                        segments: [
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     entity2,
@@ -1575,7 +1780,12 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [marker, Entity],
+                        segments: [
+                            marker,
+                            {
+                                format: {},
+                            } as any,
+                        ],
                         format: {},
                     },
                     entity2,
@@ -1606,7 +1816,7 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [{ format } as any],
                         format: {},
                         segmentFormat: format,
                     },
@@ -1628,7 +1838,7 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity],
+                        segments: [{ format } as any],
                         format: {},
                         segmentFormat: format,
                     },
@@ -1640,7 +1850,7 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, marker, Entity, txt2],
+                        segments: [txt1, marker, { format: {} } as any, txt2],
                         format: {},
                     },
                 ],
@@ -1651,7 +1861,7 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, marker, Entity, txt2],
+                        segments: [txt1, marker, { format: {} } as any, txt2],
                         format: {},
                     },
                 ],
@@ -1692,7 +1902,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     {
@@ -1712,7 +1927,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                 ],
@@ -1759,7 +1979,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     {
@@ -1779,7 +2004,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                 ],
@@ -1789,7 +2019,14 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, Entity, marker, txt2],
+                        segments: [
+                            txt1,
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                            txt2,
+                        ],
                         format: {},
                     },
                 ],
@@ -1799,7 +2036,14 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, Entity, marker, txt2],
+                        segments: [
+                            txt1,
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                            txt2,
+                        ],
                         format: {},
                     },
                 ],
@@ -1828,7 +2072,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     {
@@ -1848,7 +2097,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                 ],
@@ -1858,7 +2112,13 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, Entity, marker],
+                        segments: [
+                            txt1,
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                 ],
@@ -1868,7 +2128,13 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, Entity, marker],
+                        segments: [
+                            txt1,
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                 ],
@@ -1893,7 +2159,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     {
@@ -1923,7 +2194,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                 ],
@@ -1933,7 +2209,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     {
@@ -1948,7 +2229,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     {
@@ -1979,7 +2265,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     {
@@ -2001,7 +2292,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                     divider,
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                 ],
@@ -2011,7 +2307,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     divider,
@@ -2022,7 +2323,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     divider,
@@ -2049,7 +2355,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     {
@@ -2071,7 +2382,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                     entity2,
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                 ],
@@ -2081,7 +2397,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     entity2,
@@ -2092,7 +2413,12 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker],
+                        segments: [
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                        ],
                         format: {},
                     },
                     entity2,
@@ -2124,7 +2450,7 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker2],
+                        segments: [{ format } as any, marker2],
                         format: {},
                         segmentFormat: format,
                     },
@@ -2146,7 +2472,7 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [Entity, marker2],
+                        segments: [{ format } as any, marker2],
                         format: {},
                         segmentFormat: format,
                     },
@@ -2158,7 +2484,14 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, Entity, marker, txt2],
+                        segments: [
+                            txt1,
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                            txt2,
+                        ],
                         format: {},
                     },
                 ],
@@ -2169,7 +2502,14 @@ describe('insertEntityModel, inline element, focus after entity', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, Entity, marker, txt2],
+                        segments: [
+                            txt1,
+                            {
+                                format: {},
+                            } as any,
+                            marker,
+                            txt2,
+                        ],
                         format: {},
                     },
                 ],
