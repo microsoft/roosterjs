@@ -1,6 +1,7 @@
 import { setModelIndentation } from '../../../lib/modelApi/block/setModelIndentation';
 import {
     createContentModelDocument,
+    createFormatContainer,
     createListItem,
     createListLevel,
     createParagraph,
@@ -283,11 +284,12 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
                     levels: [
-                        { listType: 'OL', dataset: {}, format: {} },
                         {
                             listType: 'OL',
-                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
-                            format: {},
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
                         },
                     ],
                     blocks: [para1, para2, para3],
@@ -348,12 +350,8 @@ describe('indent', () => {
                             },
                             format: {
                                 startNumberOverride: 2,
+                                marginLeft: '40px',
                             },
-                        },
-                        {
-                            listType: 'OL',
-                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
-                            format: {},
                         },
                     ],
                     blocks: [para1, para2, para3],
@@ -526,11 +524,12 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
                     levels: [
-                        { listType: 'UL', dataset: {}, format: {} },
                         {
                             listType: 'UL',
-                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
-                            format: {},
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
                         },
                     ],
                     blocks: [para3],
@@ -578,11 +577,12 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
                     levels: [
-                        { listType: 'OL', dataset: {}, format: {} },
                         {
                             listType: 'OL',
-                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
-                            format: {},
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
                         },
                     ],
                     blocks: [para1],
@@ -593,11 +593,12 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
                     levels: [
-                        { listType: 'UL', dataset: {}, format: {} },
                         {
                             listType: 'UL',
-                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
-                            format: {},
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
                         },
                     ],
                     blocks: [para2],
@@ -641,6 +642,77 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(result).toBeTrue();
+    });
+
+    it('Group with list with first item selected', () => {
+        const group = createContentModelDocument();
+        const listItem = createListItem([createListLevel('UL')]);
+        const listItem2 = createListItem([createListLevel('UL')]);
+        const listItem3 = createListItem([createListLevel('UL')]);
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const text3 = createText('test3');
+        text1.isSelected = true;
+        text2.isSelected = true;
+        text3.isSelected = true;
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+        listItem.blocks.push(para1);
+        listItem2.blocks.push(para2);
+        listItem3.blocks.push(para3);
+        group.blocks.push(listItem);
+        group.blocks.push(listItem2);
+        group.blocks.push(listItem3);
+
+        const result = setModelIndentation(group, 'indent');
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    ...listItem,
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
+                    ],
+                },
+                {
+                    ...listItem2,
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
+                    ],
+                },
+                {
+                    ...listItem3,
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                marginLeft: '40px',
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+
         expect(result).toBeTrue();
     });
 });
@@ -1041,6 +1113,186 @@ describe('outdent', () => {
                 },
             ],
         });
+        expect(result).toBeTrue();
+    });
+
+    it('Group with list with no indention selected', () => {
+        const group = createContentModelDocument();
+        const listItem = createListItem([createListLevel('UL')]);
+        const listItem2 = createListItem([createListLevel('UL')]);
+        const listItem3 = createListItem([createListLevel('UL')]);
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const text3 = createText('test3');
+        text1.isSelected = true;
+        text2.isSelected = true;
+        text3.isSelected = true;
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+        listItem.blocks.push(para1);
+        listItem2.blocks.push(para2);
+        listItem3.blocks.push(para3);
+        group.blocks.push(listItem);
+        group.blocks.push(listItem2);
+        group.blocks.push(listItem3);
+
+        const result = setModelIndentation(group, 'outdent');
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    ...listItem,
+                    levels: [],
+                },
+                {
+                    ...listItem2,
+                    levels: [],
+                },
+                {
+                    ...listItem3,
+                    levels: [],
+                },
+            ],
+        });
+
+        expect(result).toBeTrue();
+    });
+
+    it('Outdent parent format container, ltr', () => {
+        const group = createContentModelDocument();
+        const formatContainer = createFormatContainer('div');
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const text3 = createText('test3');
+
+        text2.isSelected = true;
+        formatContainer.format.marginLeft = '100px';
+        formatContainer.format.marginRight = '60px';
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+
+        formatContainer.blocks.push(para1, para2);
+        group.blocks.push(formatContainer, para3);
+
+        const result = setModelIndentation(group, 'outdent');
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                            format: {},
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test2',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    format: { marginLeft: '80px', marginRight: '60px' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test3', format: {} }],
+                    format: {},
+                },
+            ],
+        });
+
+        expect(result).toBeTrue();
+    });
+
+    it('Outdent parent format container, rtl', () => {
+        const group = createContentModelDocument();
+        const formatContainer = createFormatContainer('div');
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const text3 = createText('test3');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+        formatContainer.format.marginLeft = '100px';
+        formatContainer.format.marginRight = '60px';
+        formatContainer.format.direction = 'rtl';
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+
+        formatContainer.blocks.push(para1, para2);
+        group.blocks.push(formatContainer, para3);
+
+        const result = setModelIndentation(group, 'outdent');
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test1',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                            format: {},
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test2',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    format: { marginLeft: '100px', marginRight: '40px', direction: 'rtl' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test3', format: {} }],
+                    format: {},
+                },
+            ],
+        });
+
         expect(result).toBeTrue();
     });
 });

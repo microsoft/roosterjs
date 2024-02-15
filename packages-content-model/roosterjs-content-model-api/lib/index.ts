@@ -45,3 +45,4 @@ export { insertTableColumn } from './modelApi/table/insertTableColumn';
 
 export { formatTableWithContentModel } from './publicApi/utils/formatTableWithContentModel';
 export { setListType } from './modelApi/list/setListType';
+export { setModelIndentation } from './modelApi/block/setModelIndentation';

@@ -29,11 +29,11 @@ import { clearFormatButton } from './ribbonButtons/contentModel/clearFormatButto
 import { codeButton } from './ribbonButtons/contentModel/codeButton';
 import { ContentModelRibbon } from './ribbonButtons/contentModel/ContentModelRibbon';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { ContentModelSegmentFormat, Snapshots } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import { darkMode } from './ribbonButtons/contentModel/darkMode';
 import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
 import { decreaseIndentButton } from './ribbonButtons/contentModel/decreaseIndentButton';
+import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
 import { EditorPlugin } from 'roosterjs-editor-types';
 import { exportContent } from './ribbonButtons/contentModel/export';
 import { fontButton } from './ribbonButtons/contentModel/fontButton';
@@ -80,6 +80,11 @@ import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
 import {
+    ContentModelSegmentFormat,
+    IStandaloneEditor,
+    Snapshots,
+} from 'roosterjs-content-model-types';
+import {
     AutoFormatPlugin,
     EditPlugin,
     PastePlugin,
@@ -97,11 +102,6 @@ import {
     tableMergeButton,
     tableSplitButton,
 } from './ribbonButtons/contentModel/tableEditButtons';
-import {
-    ContentModelEditor,
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
 
 const styles = require('./ContentModelEditorMainPane.scss');
 
@@ -160,7 +160,7 @@ const DarkTheme: PartialTheme = {
 };
 
 interface ContentModelMainPaneState extends MainPaneBaseState {
-    editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) => IContentModelEditor;
+    editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IStandaloneEditor;
 }
 
 class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {
@@ -346,8 +346,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     resetEditor() {
         this.toggleablePlugins = null;
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) =>
-                new ContentModelEditor(div, {
+            editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) =>
+                new EditorAdapter(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
                 }),
