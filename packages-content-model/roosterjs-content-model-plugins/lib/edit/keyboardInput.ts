@@ -9,7 +9,7 @@ import type { DOMSelection, IStandaloneEditor } from 'roosterjs-content-model-ty
 export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
 
-    if (shouldInputWithContentModel(selection, rawEvent, editor.isInIME())) {
+    if (shouldInputWithContentModel(selection, rawEvent)) {
         editor.takeSnapshot();
 
         editor.formatContentModel(
@@ -48,12 +48,8 @@ function getInputSteps(selection: DOMSelection | null, rawEvent: KeyboardEvent) 
     return shouldHandleEnterKey(selection, rawEvent) ? [handleEnterOnList] : [];
 }
 
-function shouldInputWithContentModel(
-    selection: DOMSelection | null,
-    rawEvent: KeyboardEvent,
-    isInIME: boolean
-) {
-    if (!selection || isInIME || rawEvent.isComposing) {
+function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
+    if (!selection) {
         return false; // Nothing to delete
     } else if (
         !isModifierKey(rawEvent) &&
