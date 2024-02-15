@@ -53,5 +53,5 @@ export interface DOMHelper {
      * Get DOM style of editor content DIV
      * @param style Name of the style
      */
-    getDomStyle(style: keyof CSSStyleDeclaration): string | number | object | undefined;
+    getDomStyle<T extends keyof CSSStyleDeclaration>(style: T): CSSStyleDeclaration[T];
 }

@@ -37,8 +37,8 @@ class DOMHelperImpl implements DOMHelper {
         return this.contentDiv.getAttribute(name);
     }
 
-    getDomStyle(style: keyof CSSStyleDeclaration): string | number | object | undefined {
-        return this.contentDiv.style[style]?.valueOf();
+    getDomStyle<T extends keyof CSSStyleDeclaration>(style: T): CSSStyleDeclaration[T] {
+        return this.contentDiv.style[style];
     }
 }
 
