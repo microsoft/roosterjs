@@ -297,14 +297,6 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    isInIME(): boolean {
-        return this.getCore().domEvent.isInIME;
-    }
-
-    /**
      * Check if editor is in Shadow Edit mode
      */
     isInShadowEdit() {

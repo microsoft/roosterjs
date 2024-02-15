@@ -806,9 +806,7 @@ describe('formatContentModel', () => {
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
             expect(core.undo).toEqual({
                 isNested: false,
-                snapshotsManager: {
-                    hasNewContent: false,
-                },
+                snapshotsManager: {},
                 posContainer: mockedContainer,
                 posOffset: mockedOffset,
             } as any);
@@ -827,7 +825,9 @@ describe('formatContentModel', () => {
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
             expect(core.undo).toEqual({
                 isNested: true,
-                snapshotsManager: {},
+                snapshotsManager: {
+                    hasNewContent: true,
+                },
             } as any);
         });
     });

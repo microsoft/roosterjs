@@ -1,6 +1,7 @@
 import { findAllEntities } from './utils/findAllEntities';
 import { transformColor } from '../publicApi/color/transformColor';
 import {
+    handleCompositionEndEvent,
     handleDelimiterContentChangedEvent,
     handleDelimiterKeyDownEvent,
 } from './utils/entityDelimiterUtils';
@@ -87,6 +88,9 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                     break;
                 case 'keyDown':
                     handleDelimiterKeyDownEvent(this.editor, event);
+                    break;
+                case 'compositionEnd':
+                    handleCompositionEndEvent(this.editor, event);
                     break;
                 case 'editorReady':
                     this.handleContentChangedEvent(this.editor);
