@@ -1454,7 +1454,9 @@ describe('keyboardInput -  handleEnterOnList', () => {
     function runTest(
         input: ContentModelDocument,
         isShiftKey: boolean,
-        expectedResult: ContentModelDocument
+        expectedResult: ContentModelDocument,
+        doNotCallDefaultFormat: boolean = false,
+        calledTimes: number = 1
     ) {
         const preventDefault = jasmine.createSpy('preventDefault');
         const mockedEvent = ({
@@ -1481,7 +1483,8 @@ describe('keyboardInput -  handleEnterOnList', () => {
             },
             input,
             expectedResult,
-            1
+            calledTimes,
+            doNotCallDefaultFormat
         );
     }
 
@@ -2041,6 +2044,11 @@ describe('keyboardInput -  handleEnterOnList', () => {
                                     text: 'test',
                                     format: {},
                                 },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
                             ],
                             format: {},
                         },
@@ -2065,24 +2073,9 @@ describe('keyboardInput -  handleEnterOnList', () => {
                     },
                     format: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
             ],
             format: {},
         };
-        runTest(input, true, expected);
+        runTest(input, true, expected, true, 0);
     });
 });
