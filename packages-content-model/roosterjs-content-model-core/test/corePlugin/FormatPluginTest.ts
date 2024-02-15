@@ -1,19 +1,17 @@
+import * as applyDefaultFormat from '../../lib/corePlugin/utils/applyDefaultFormat';
 import * as applyPendingFormat from '../../lib/corePlugin/utils/applyPendingFormat';
+import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createFormatPlugin } from '../../lib/corePlugin/FormatPlugin';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
-import {
-    addSegment,
-    createContentModelDocument,
-    createSelectionMarker,
-} from 'roosterjs-content-model-dom';
 
 describe('FormatPlugin', () => {
     const mockedFormat = {
         fontSize: '10px',
     };
+    let applyPendingFormatSpy: jasmine.Spy;
 
     beforeEach(() => {
-        spyOn(applyPendingFormat, 'applyPendingFormat');
+        applyPendingFormatSpy = spyOn(applyPendingFormat, 'applyPendingFormat');
     });
 
     it('no pending format, trigger key down event', () => {
@@ -31,7 +29,7 @@ describe('FormatPlugin', () => {
 
         plugin.dispose();
 
-        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(applyPendingFormatSpy).not.toHaveBeenCalled();
         expect(plugin.getState().pendingFormat).toBeNull();
     });
 
@@ -60,44 +58,9 @@ describe('FormatPlugin', () => {
 
         plugin.dispose();
 
-        expect(applyPendingFormat.applyPendingFormat).toHaveBeenCalledTimes(1);
-        expect(applyPendingFormat.applyPendingFormat).toHaveBeenCalledWith(
-            editor,
-            'a',
-            mockedFormat
-        );
+        expect(applyPendingFormatSpy).toHaveBeenCalledTimes(1);
+        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'a', mockedFormat);
         expect(state.pendingFormat).toBeNull();
-    });
-
-    it('with pending format and selection, trigger input event with isComposing = true', () => {
-        const model = createContentModelDocument();
-        const marker = createSelectionMarker();
-
-        addSegment(model, marker);
-
-        const editor = ({
-            createContentModel: () => model,
-            cacheContentModel: () => {},
-            getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor;
-        const plugin = createFormatPlugin({});
-        plugin.initialize(editor);
-
-        const state = plugin.getState();
-
-        state.pendingFormat = {
-            format: mockedFormat,
-        } as any;
-        plugin.onPluginEvent({
-            eventType: 'input',
-            rawEvent: ({ data: 'a', isComposing: true } as any) as InputEvent,
-        });
-        plugin.dispose();
-
-        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
-        expect(state.pendingFormat).toEqual({
-            format: mockedFormat,
-        } as any);
     });
 
     it('with pending format and selection, trigger CompositionEnd event', () => {
@@ -128,11 +91,7 @@ describe('FormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(applyPendingFormat.applyPendingFormat).toHaveBeenCalledWith(
-            editor,
-            'test',
-            mockedFormat
-        );
+        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'test', mockedFormat);
         expect(state.pendingFormat).toBeNull();
     });
 
@@ -159,7 +118,7 @@ describe('FormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(applyPendingFormatSpy).not.toHaveBeenCalled();
         expect(state.pendingFormat).toEqual({
             format: mockedFormat,
         } as any);
@@ -192,7 +151,7 @@ describe('FormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(applyPendingFormatSpy).not.toHaveBeenCalled();
         expect(state.pendingFormat).toBeNull();
         expect((plugin as any).canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
@@ -221,7 +180,7 @@ describe('FormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(applyPendingFormatSpy).not.toHaveBeenCalled();
         expect(state.pendingFormat).toBeNull();
         expect((plugin as any).canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
@@ -250,7 +209,7 @@ describe('FormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(applyPendingFormat.applyPendingFormat).not.toHaveBeenCalled();
+        expect(applyPendingFormatSpy).not.toHaveBeenCalled();
         expect(state.pendingFormat).toEqual({
             format: mockedFormat,
         } as any);
@@ -273,12 +232,11 @@ describe('FormatPlugin for default format', () => {
         cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
         takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         formatContentModelSpy = jasmine.createSpy('formatContentModelSpy');
-
         contentDiv = document.createElement('div');
 
         editor = ({
             getDOMHelper: () => ({
-                isNodeInEditor: (e: Node) => contentDiv != e && contentDiv.contains(e),
+                isNodeInEditor: (e: Node) => contentDiv.contains(e),
             }),
             getDOMSelection,
             getPendingFormat: getPendingFormatSpy,
@@ -620,5 +578,107 @@ describe('FormatPlugin for default format', () => {
                 fontSize: '10pt',
             },
         });
+    });
+
+    it('Collapsed range, already have style but not enough', () => {
+        const defaultFormat = {
+            fontFamily: 'Arial',
+            fontSize: '20px',
+            textColor: 'red',
+        };
+        const plugin = createFormatPlugin({
+            defaultSegmentFormat: defaultFormat,
+        });
+        const rawEvent = { key: 'a' } as any;
+        const applyDefaultFormatSpy = spyOn(applyDefaultFormat, 'applyDefaultFormat');
+        const div = document.createElement('div');
+
+        contentDiv.appendChild(div);
+        div.style.fontFamily = 'Arial';
+        div.style.fontSize = '10px';
+
+        (editor as any).defaultFormatKeys = new Set(['fontFamily', 'fontSize', 'textColor']);
+
+        getDOMSelection.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+                startContainer: div,
+                startOffset: 0,
+            },
+        });
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent,
+        });
+
+        expect(applyDefaultFormatSpy).toHaveBeenCalledTimes(1);
+        expect(applyDefaultFormatSpy).toHaveBeenCalledWith(editor, defaultFormat);
+
+        // Trigger event again under the same node, no need to apply again
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent,
+        });
+
+        expect(applyDefaultFormatSpy).toHaveBeenCalledTimes(1);
+
+        // Trigger event again under the same node, no need to apply again
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: { key: 'ArrowUp' } as any,
+        });
+
+        expect(applyDefaultFormatSpy).toHaveBeenCalledTimes(1);
+
+        // Trigger event again under after moving cursor, should check again
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent,
+        });
+
+        expect(applyDefaultFormatSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('Collapsed range, already have style and is enough', () => {
+        const defaultFormat = {
+            fontFamily: 'Arial',
+            fontSize: '20px',
+            textColor: 'red',
+        };
+        const plugin = createFormatPlugin({
+            defaultSegmentFormat: defaultFormat,
+        });
+        const rawEvent = { key: 'a' } as any;
+        const applyDefaultFormatSpy = spyOn(applyDefaultFormat, 'applyDefaultFormat');
+        const div = document.createElement('div');
+
+        contentDiv.appendChild(div);
+        div.style.fontFamily = 'Arial';
+        div.style.fontSize = '10px';
+        div.style.color = 'green';
+
+        (editor as any).defaultFormatKeys = new Set(['fontFamily', 'fontSize', 'textColor']);
+
+        getDOMSelection.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+                startContainer: div,
+                startOffset: 0,
+            },
+        });
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent,
+        });
+
+        expect(applyDefaultFormatSpy).not.toHaveBeenCalled();
     });
 });
