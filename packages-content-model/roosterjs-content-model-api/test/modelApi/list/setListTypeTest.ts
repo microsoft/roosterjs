@@ -99,7 +99,6 @@ describe('indent', () => {
         expect(para).toEqual({
             blockType: 'Paragraph',
             format: {},
-            isImplicit: true,
             segments: [
                 {
                     segmentType: 'Text',
@@ -392,7 +391,6 @@ describe('indent', () => {
         expect(para).toEqual({
             blockType: 'Paragraph',
             format: { direction: 'rtl', textAlign: 'start', backgroundColor: 'yellow' },
-            isImplicit: true,
             segments: [
                 {
                     segmentType: 'Text',
