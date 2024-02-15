@@ -7,7 +7,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const MIN_HEIGHT = 22;
-const MIN_WIDTH = 30;
+export const MIN_WIDTH = 30;
 
 /**
  * Normalize a Content Model table, make sure:
