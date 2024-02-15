@@ -28,6 +28,11 @@ export type OperationalBlocks<T extends ContentModelBlockGroup> = {
      * The child block
      */
     block: ContentModelBlock | T;
+
+    /**
+     * Selection path of this block
+     */
+    path: ContentModelBlockGroup[];
 };
 
 /**
@@ -119,6 +124,7 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
                     result.push({
                         parent: path[groupIndex + 1],
                         block: path[groupIndex] as T,
+                        path: path.slice(groupIndex + 1),
                     });
                 }
                 break;
@@ -126,6 +132,7 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
                 result.push({
                     parent: path[0],
                     block: block,
+                    path,
                 });
                 break;
             }

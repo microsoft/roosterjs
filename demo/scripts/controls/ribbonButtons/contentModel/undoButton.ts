@@ -1,20 +1,19 @@
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton, UndoButtonStringKey } from 'roosterjs-react';
+import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { undo } from 'roosterjs-content-model-core';
+import { UndoButtonStringKey } from 'roosterjs-react';
 
 /**
  * @internal
  * "Undo" button on the format ribbon
  */
-export const undoButton: RibbonButton<UndoButtonStringKey> = {
+export const undoButton: ContentModelRibbonButton<UndoButtonStringKey> = {
     key: 'buttonNameUndo',
     unlocalizedText: 'Undo',
     iconName: 'undo',
     isDisabled: formatState => !formatState.canUndo,
     onClick: editor => {
-        if (isContentModelEditor(editor)) {
-            undo(editor);
-        }
+        undo(editor);
+
         return true;
     },
 };

@@ -1,3 +1,3 @@
-export { ContentModelPastePlugin } from './paste/ContentModelPastePlugin';
-export { ContentModelEditPlugin } from './edit/ContentModelEditPlugin';
-export { EntityDelimiterPlugin } from './entityDelimiter/EntityDelimiterPlugin';
+export { PastePlugin } from './paste/PastePlugin';
+export { EditPlugin } from './edit/EditPlugin';
+export { AutoFormatPlugin, AutoFormatOptions } from './autoFormat/AutoFormatPlugin';

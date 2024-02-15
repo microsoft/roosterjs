@@ -1,9 +1,10 @@
+import * as addBlock from '../../../lib/modelApi/common/addBlock';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { entityProcessor } from '../../../lib/domToModel/processors/entityProcessor';
 import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
 import {
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelEntity,
     ContentModelParagraph,
     DomToModelContext,
@@ -253,7 +254,7 @@ describe('entityProcessor', () => {
         setEntityElementClasses(span, 'entity', true, 'entity_1');
 
         const onSegmentSpy = jasmine.createSpy('onSegment');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: onSegmentSpy,
             onTable: null!,
@@ -283,5 +284,35 @@ describe('entityProcessor', () => {
             blocks: [paragraphModel],
         });
         expect(onSegmentSpy).toHaveBeenCalledWith(span, paragraphModel, [entityModel]);
+    });
+
+    it('Block element entity with Display: inline-block and width: 100%', () => {
+        const group = createContentModelDocument();
+        const span = document.createElement('span');
+        span.style.display = 'inline-block';
+        span.style.width = '100%';
+        spyOn(addBlock, 'addBlock').and.callThrough();
+
+        setEntityElementClasses(span, 'entity', true, 'entity_1');
+
+        entityProcessor(group, span, context);
+
+        expect(addBlock.addBlock).toHaveBeenCalled();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Entity',
+                    segmentType: 'Entity',
+                    format: {},
+                    entityFormat: {
+                        id: 'entity_1',
+                        entityType: 'entity',
+                        isReadonly: true,
+                    },
+                    wrapper: span,
+                },
+            ],
+        });
     });
 });

@@ -23,6 +23,18 @@ export function addSegment(
     const paragraph = ensureParagraph(group, blockFormat, segmentFormat);
     const lastSegment = paragraph.segments[paragraph.segments.length - 1];
 
+    if (blockFormat?.textIndent) {
+        // For a new paragraph, if current text indent is already applied to previous block in the same level,
+        // we need to ignore it according to browser rendering behavior
+        if (blockFormat.isTextIndentApplied && paragraph.segments.length == 0) {
+            delete paragraph.format.textIndent;
+        } else {
+            blockFormat.isTextIndentApplied = true;
+        }
+
+        delete paragraph.format.isTextIndentApplied;
+    }
+
     if (newSegment.segmentType == 'SelectionMarker') {
         if (!lastSegment || !lastSegment.isSelected) {
             paragraph.segments.push(newSegment);

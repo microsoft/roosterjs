@@ -6,28 +6,97 @@ import ContentModelEventViewPlugin from './sidePane/eventViewer/ContentModelEven
 import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModelFormatPainterPlugin';
 import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFormatStatePlugin';
 import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
-import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
+import ContentModelRibbonButton from './ribbonButtons/contentModel/ContentModelRibbonButton';
 import ContentModelRooster from './contentModel/editor/ContentModelRooster';
 import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
+import RibbonPlugin from './ribbonButtons/contentModel/RibbonPlugin';
 import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
+import { alignCenterButton } from './ribbonButtons/contentModel/alignCenterButton';
+import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyButton';
+import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
+import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelEditPlugin, EntityDelimiterPlugin } from 'roosterjs-content-model-plugins';
+import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
+import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
+import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
+import { boldButton } from './ribbonButtons/contentModel/boldButton';
+import { bulletedListButton } from './ribbonButtons/contentModel/bulletedListButton';
+import { changeImageButton } from './ribbonButtons/contentModel/changeImageButton';
+import { clearFormatButton } from './ribbonButtons/contentModel/clearFormatButton';
+import { codeButton } from './ribbonButtons/contentModel/codeButton';
+import { ContentModelRibbon } from './ribbonButtons/contentModel/ContentModelRibbon';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { ContentModelSegmentFormat, Snapshot } from 'roosterjs-content-model-types';
-import { createEmojiPlugin, createPasteOptionPlugin, RibbonPlugin } from 'roosterjs-react';
-import { EditorPlugin, Snapshots } from 'roosterjs-editor-types';
+import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
+import { darkMode } from './ribbonButtons/contentModel/darkMode';
+import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
+import { decreaseIndentButton } from './ribbonButtons/contentModel/decreaseIndentButton';
+import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
+import { EditorPlugin } from 'roosterjs-editor-types';
+import { exportContent } from './ribbonButtons/contentModel/export';
+import { fontButton } from './ribbonButtons/contentModel/fontButton';
+import { fontSizeButton } from './ribbonButtons/contentModel/fontSizeButton';
+import { formatPainterButton } from './ribbonButtons/contentModel/formatPainterButton';
+import { formatTableButton } from './ribbonButtons/contentModel/formatTableButton';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { imageBorderColorButton } from './ribbonButtons/contentModel/imageBorderColorButton';
+import { imageBorderRemoveButton } from './ribbonButtons/contentModel/imageBorderRemoveButton';
+import { imageBorderStyleButton } from './ribbonButtons/contentModel/imageBorderStyleButton';
+import { imageBorderWidthButton } from './ribbonButtons/contentModel/imageBorderWidthButton';
+import { imageBoxShadowButton } from './ribbonButtons/contentModel/imageBoxShadowButton';
+import { increaseFontSizeButton } from './ribbonButtons/contentModel/increaseFontSizeButton';
+import { increaseIndentButton } from './ribbonButtons/contentModel/increaseIndentButton';
+import { insertImageButton } from './ribbonButtons/contentModel/insertImageButton';
+import { insertLinkButton } from './ribbonButtons/contentModel/insertLinkButton';
+import { insertTableButton } from './ribbonButtons/contentModel/insertTableButton';
+import { italicButton } from './ribbonButtons/contentModel/italicButton';
+import { listStartNumberButton } from './ribbonButtons/contentModel/listStartNumberButton';
+import { ltrButton } from './ribbonButtons/contentModel/ltrButton';
+import { numberedListButton } from './ribbonButtons/contentModel/numberedListButton';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
+import { pasteButton } from './ribbonButtons/contentModel/pasteButton';
+import { popout } from './ribbonButtons/contentModel/popout';
+import { redoButton } from './ribbonButtons/contentModel/redoButton';
+import { removeLinkButton } from './ribbonButtons/contentModel/removeLinkButton';
+import { rtlButton } from './ribbonButtons/contentModel/rtlButton';
+import { setBulletedListStyleButton } from './ribbonButtons/contentModel/setBulletedListStyleButton';
+import { setHeadingLevelButton } from './ribbonButtons/contentModel/setHeadingLevelButton';
+import { setNumberedListStyleButton } from './ribbonButtons/contentModel/setNumberedListStyleButton';
+import { setTableCellShadeButton } from './ribbonButtons/contentModel/setTableCellShadeButton';
+import { setTableHeaderButton } from './ribbonButtons/contentModel/setTableHeaderButton';
+import { spacingButton } from './ribbonButtons/contentModel/spacingButton';
+import { strikethroughButton } from './ribbonButtons/contentModel/strikethroughButton';
+import { subscriptButton } from './ribbonButtons/contentModel/subscriptButton';
+import { superscriptButton } from './ribbonButtons/contentModel/superscriptButton';
+import { tableBorderApplyButton } from './ribbonButtons/contentModel/tableBorderApplyButton';
+import { tableBorderColorButton } from './ribbonButtons/contentModel/tableBorderColorButton';
+import { tableBorderStyleButton } from './ribbonButtons/contentModel/tableBorderStyleButton';
+import { tableBorderWidthButton } from './ribbonButtons/contentModel/tableBorderWidthButton';
+import { textColorButton } from './ribbonButtons/contentModel/textColorButton';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
+import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
+import { undoButton } from './ribbonButtons/contentModel/undoButton';
+import { zoom } from './ribbonButtons/contentModel/zoom';
 import {
-    ContentModelEditor,
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
+    ContentModelSegmentFormat,
+    IStandaloneEditor,
+    Snapshots,
+} from 'roosterjs-content-model-types';
+import {
+    spaceAfterButton,
+    spaceBeforeButton,
+} from './ribbonButtons/contentModel/spaceBeforeAfterButtons';
+import {
+    tableAlignCellButton,
+    tableAlignTableButton,
+    tableDeleteButton,
+    tableInsertButton,
+    tableMergeButton,
+    tableSplitButton,
+} from './ribbonButtons/contentModel/tableEditButtons';
 
 const styles = require('./ContentModelEditorMainPane.scss');
 
@@ -86,7 +155,7 @@ const DarkTheme: PartialTheme = {
 };
 
 interface ContentModelMainPaneState extends MainPaneBaseState {
-    editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) => IContentModelEditor;
+    editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IStandaloneEditor;
 }
 
 class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {
@@ -95,16 +164,81 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private eventViewPlugin: ContentModelEventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
-    private contentModelEditPlugin: ContentModelEditPlugin;
+    private contentModelEditPlugin: EditPlugin;
+    private contentModelAutoFormatPlugin: AutoFormatPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
-    private entityDelimiterPlugin: EntityDelimiterPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
+    private pastePlugin: PastePlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
-    private snapshots: Snapshots<Snapshot>;
+    private snapshots: Snapshots;
+    private buttons: ContentModelRibbonButton<any>[] = [
+        formatPainterButton,
+        boldButton,
+        italicButton,
+        underlineButton,
+        fontButton,
+        fontSizeButton,
+        increaseFontSizeButton,
+        decreaseFontSizeButton,
+        textColorButton,
+        backgroundColorButton,
+        bulletedListButton,
+        numberedListButton,
+        decreaseIndentButton,
+        increaseIndentButton,
+        blockQuoteButton,
+        alignLeftButton,
+        alignCenterButton,
+        alignRightButton,
+        alignJustifyButton,
+        insertLinkButton,
+        removeLinkButton,
+        insertTableButton,
+        insertImageButton,
+        superscriptButton,
+        subscriptButton,
+        strikethroughButton,
+        setHeadingLevelButton,
+        codeButton,
+        ltrButton,
+        rtlButton,
+        undoButton,
+        redoButton,
+        clearFormatButton,
+        setBulletedListStyleButton,
+        setNumberedListStyleButton,
+        listStartNumberButton,
+        formatTableButton,
+        setTableCellShadeButton,
+        setTableHeaderButton,
+        tableInsertButton,
+        tableDeleteButton,
+        tableMergeButton,
+        tableSplitButton,
+        tableAlignCellButton,
+        tableAlignTableButton,
+        tableBorderApplyButton,
+        tableBorderColorButton,
+        tableBorderWidthButton,
+        tableBorderStyleButton,
+        imageBorderColorButton,
+        imageBorderWidthButton,
+        imageBorderStyleButton,
+        imageBorderRemoveButton,
+        changeImageButton,
+        imageBoxShadowButton,
+        spacingButton,
+        spaceBeforeButton,
+        spaceAfterButton,
+        pasteButton,
+        darkMode,
+        zoom,
+        exportContent,
+    ];
 
     constructor(props: {}) {
         super(props);
@@ -123,12 +257,13 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
-        this.contentModelEditPlugin = new ContentModelEditPlugin();
+        this.contentModelEditPlugin = new EditPlugin();
+        this.contentModelAutoFormatPlugin = new AutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
-        this.entityDelimiterPlugin = new EntityDelimiterPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
+        this.pastePlugin = new PastePlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
@@ -155,11 +290,13 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     }
 
     renderRibbon(isPopout: boolean) {
+        const buttons = isPopout ? this.buttons : this.buttons.concat([popout]);
+
         return (
             <ContentModelRibbon
-                ribbonPlugin={this.contentModelRibbonPlugin}
-                isRtl={this.state.isRtl}
-                isInPopout={isPopout}
+                buttons={buttons}
+                plugin={this.contentModelRibbonPlugin}
+                dir={this.state.isRtl ? 'rtl' : 'ltr'}
             />
         );
     }
@@ -171,7 +308,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             <SidePane
                 ref={this.sidePane}
                 plugins={this.getSidePanePlugins()}
-                isContentModelDemo={true}
+                mode="contentModel"
                 className={`main-pane ${styles.sidePane} ${
                     fullWidth ? styles.sidePaneFullWidth : ''
                 }`}
@@ -185,13 +322,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
 
         const plugins = [
             ...this.toggleablePlugins,
-            this.contentModelRibbonPlugin,
-            this.contentModelPanePlugin.getInnerRibbonPlugin(),
-            this.contentModelEditPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
-            this.entityDelimiterPlugin,
-            this.formatPainterPlugin,
             this.sampleEntityPlugin,
         ];
 
@@ -207,8 +339,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     resetEditor() {
         this.toggleablePlugins = null;
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) =>
-                new ContentModelEditor(div, {
+            editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) =>
+                new EditorAdapter(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
                 }),
@@ -243,15 +375,23 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                 <div style={editorStyles}>
                     {this.state.editorCreator && (
                         <ContentModelRooster
+                            id={MainPaneBase.editorDivId}
                             className={styles.editor}
-                            plugins={allPlugins}
+                            legacyPlugins={allPlugins}
+                            plugins={[
+                                this.contentModelRibbonPlugin,
+                                this.formatPainterPlugin,
+                                this.pastePlugin,
+                                this.contentModelAutoFormatPlugin,
+                                this.contentModelEditPlugin,
+                                this.contentModelPanePlugin.getInnerRibbonPlugin(),
+                            ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
                             experimentalFeatures={this.state.initState.experimentalFeatures}
-                            snapshotsManager={this.snapshotPlugin.getSnapshotsManager()}
+                            snapshots={this.snapshotPlugin.getSnapshots()}
                             trustedHTMLHandler={trustedHTMLHandler}
-                            zoomScale={this.state.scale}
                             initialContent={this.content}
                             editorCreator={this.state.editorCreator}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}

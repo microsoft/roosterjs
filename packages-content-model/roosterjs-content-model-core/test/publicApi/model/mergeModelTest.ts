@@ -9,7 +9,7 @@ import {
     ContentModelSelectionMarker,
     ContentModelTable,
     ContentModelTableCell,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
 } from 'roosterjs-content-model-types';
 import {
     createBr,
@@ -3057,7 +3057,7 @@ describe('mergeModel', () => {
             textColor: 'aliceblue',
             italic: true,
         });
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             deletedEntities: [],
             newImages: [],
             newEntities: [],
@@ -3153,7 +3153,7 @@ describe('mergeModel', () => {
         newPara.segments.push(newEntity1, text, newEntity2);
         sourceModel.blocks.push(newPara);
 
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             deletedEntities: [],
             newImages: [],
             newEntities: [],
@@ -3218,7 +3218,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             deletedEntities: [],
             newImages: [],
             newEntities: [],
@@ -3289,7 +3289,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             deletedEntities: [],
             newImages: [],
             newEntities: [],
@@ -3361,7 +3361,7 @@ describe('mergeModel', () => {
         para1.segments.push(image, marker);
         majorModel.blocks.push(para1);
 
-        const context: FormatWithContentModelContext = {
+        const context: FormatContentModelContext = {
             deletedEntities: [],
             newEntities: [],
             newImages: [image],

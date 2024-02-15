@@ -1,10 +1,9 @@
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
-import { PluginEventType } from 'roosterjs-editor-types';
-import type { IContentModelEditor } from 'roosterjs-content-model-editor';
 import type {
     ContentModelDocument,
     DeleteResult,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
+    IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,11 +11,11 @@ import type {
  * @return True means content is changed, so need to rewrite content model to editor. Otherwise false
  */
 export function handleKeyboardEventResult(
-    editor: IContentModelEditor,
+    editor: IStandaloneEditor,
     model: ContentModelDocument,
     rawEvent: KeyboardEvent,
     result: DeleteResult,
-    context: FormatWithContentModelContext
+    context: FormatContentModelContext
 ): boolean {
     context.skipUndoSnapshot = true;
     context.clearModelCache = false;
@@ -47,7 +46,7 @@ export function handleKeyboardEventResult(
 
             // Trigger an event to let plugins know the content is about to be changed by Content Model keyboard editing.
             // So plugins can do proper handling. e.g. UndoPlugin can decide whether take a snapshot before this change happens.
-            editor.triggerPluginEvent(PluginEventType.BeforeKeyboardEditing, {
+            editor.triggerEvent('beforeKeyboardEditing', {
                 rawEvent,
             });
 

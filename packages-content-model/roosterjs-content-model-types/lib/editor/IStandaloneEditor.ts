@@ -1,19 +1,22 @@
+import type { DOMHelper } from '../parameter/DOMHelper';
+import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
+import type { PluginEventType } from '../event/PluginEventType';
+import type { PasteType } from '../enum/PasteType';
+import type { ClipboardData } from '../parameter/ClipboardData';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
-import type { CompatiblePluginEventType } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { DOMSelection } from '../selection/DOMSelection';
-import type { DomToModelOption } from '../context/DomToModelOption';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
-import type { ModelToDomOption } from '../context/ModelToDomOption';
-import type { OnNodeCreated } from '../context/ModelToDomSettings';
 import type {
     ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../parameter/FormatWithContentModelOptions';
-import type { PluginEventData, PluginEventFromType, PluginEventType } from 'roosterjs-editor-types';
+    FormatContentModelOptions,
+} from '../parameter/FormatContentModelOptions';
+import type { DarkColorHandler } from '../context/DarkColorHandler';
+import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
+import type { Rect } from '../parameter/Rect';
 
 /**
  * An interface of standalone Content Model editor.
@@ -22,27 +25,17 @@ import type { PluginEventData, PluginEventFromType, PluginEventType } from 'roos
 export interface IStandaloneEditor {
     /**
      * Create Content Model from DOM tree in this editor
-     * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),
-     * otherwise it will create Content Model for the whole content in editor.
-     * @param option The options to customize the behavior of DOM to Content Model conversion
-     * @param selectionOverride When specified, use this selection to override existing selection inside editor
+     * @param mode What kind of Content Model we want. Currently we support the following values:
+     * - connected: Returns a connect Content Model object. "Connected" means if there is any entity inside editor, the returned Content Model will
+     * contain the same wrapper element for entity. This option should only be used in some special cases. In most cases we should use "disconnected"
+     * to get a fully disconnected Content Model so that any change to the model will not impact editor content.
+     * - disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won't impact the editor content.
+     * If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
+     * If editor is in dark mode, the cloned entity will be converted back to light mode.
+     * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
+     * instead to improve performance. This is mostly used for retrieve current format state.
      */
-    createContentModel(
-        option?: DomToModelOption,
-        selectionOverride?: DOMSelection
-    ): ContentModelDocument;
-
-    /**
-     * Set content with content model
-     * @param model The content model to set
-     * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
-     */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ): DOMSelection | null;
+    getContentModelCopy(mode: 'connected' | 'disconnected' | 'reduced'): ContentModelDocument;
 
     /**
      * Get current running environment, such as if editor is running on Mac
@@ -68,25 +61,25 @@ export interface IStandaloneEditor {
      * to do format change. Then according to the return value, write back the modified content model into editor.
      * If there is cached model, it will be used and updated.
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
-    formatContentModel(
-        formatter: ContentModelFormatter,
-        options?: FormatWithContentModelOptions
-    ): void;
+    formatContentModel(formatter: ContentModelFormatter, options?: FormatContentModelOptions): void;
 
     /**
      * Get pending format of editor if any, or return null
      */
     getPendingFormat(): ContentModelSegmentFormat | null;
 
-    //#region Editor API copied from legacy editor, will be ported to use Content Model instead
-
     /**
      * Get whether this editor is disposed
      * @returns True if editor is disposed, otherwise false
      */
     isDisposed(): boolean;
+
+    /**
+     * Get a DOM Helper object to help access DOM tree in editor
+     */
+    getDOMHelper(): DOMHelper;
 
     /**
      * Get document which contains this editor
@@ -108,7 +101,7 @@ export interface IStandaloneEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
+    triggerEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast?: boolean
@@ -126,17 +119,15 @@ export interface IStandaloneEditor {
     isDarkMode(): boolean;
 
     /**
-     * Get current zoom scale, default value is 1
-     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
-     * to let editor behave correctly especially for those mouse drag/drop behaviors
-     * @returns current zoom scale number
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param isDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
      */
-    getZoomScale(): number;
+    setDarkModeState(isDarkMode?: boolean): void;
 
     /**
      * Add a single undo snapshot to undo stack
      */
-    takeSnapshot(): void;
+    takeSnapshot(): Snapshot | null;
 
     /**
      * Restore an undo snapshot into editor
@@ -145,16 +136,69 @@ export interface IStandaloneEditor {
     restoreSnapshot(snapshot: Snapshot): void;
 
     /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    isInIME(): boolean;
-
-    /**
      * Attach a DOM event to the editor content DIV
      * @param eventMap A map from event name to its handler
      */
     attachDomEvent(eventMap: Record<string, DOMEventRecord>): () => void;
 
-    //#endregion
+    /**
+     * Check if editor is in Shadow Edit mode
+     */
+    isInShadowEdit(): boolean;
+
+    /**
+     * Make the editor in "Shadow Edit" mode.
+     * In Shadow Edit mode, all format change will finally be ignored.
+     * This can be used for building a live preview feature for format button, to allow user
+     * see format result without really apply it.
+     * This function can be called repeated. If editor is already in shadow edit mode, we can still
+     * use this function to do more shadow edit operation.
+     */
+    startShadowEdit(): void;
+
+    /**
+     * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
+     */
+    stopShadowEdit(): void;
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteType Type of paste
+     */
+    pasteFromClipboard(clipboardData: ClipboardData, pasteType?: PasteType): void;
+
+    /**
+     * Get a darkColorHandler object for this editor.
+     */
+    getColorManager(): DarkColorHandler;
+
+    /**
+     * Dispose this editor, dispose all plugins and custom data
+     */
+    dispose(): void;
+
+    /**
+     * Check if focus is in editor now
+     * @returns true if focus is in editor, otherwise false
+     */
+    hasFocus(): boolean;
+
+    /**
+     * Get a function to convert HTML string to trusted HTML string.
+     * By default it will just return the input HTML directly. To override this behavior,
+     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getTrustedHTMLHandler(): TrustedHTMLHandler;
+
+    /**
+     * Get the scroll container of the editor
+     */
+    getScrollContainer(): HTMLElement;
+
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null;
 }

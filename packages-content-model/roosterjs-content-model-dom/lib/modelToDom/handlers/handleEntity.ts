@@ -6,14 +6,18 @@ import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,
     ContentModelEntity,
+    ContentModelSegmentFormat,
     ContentModelSegmentHandler,
+    ModelToDomContext,
 } from 'roosterjs-content-model-types';
+
+const BlockEntityContainer = '_E_EBlockEntityContainer';
 
 /**
  * @internal
  */
 export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
-    _,
+    doc,
     parent,
     entityModel,
     context,
@@ -23,7 +27,23 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
 
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
-    refNode = reuseCachedElement(parent, wrapper, refNode);
+    const isCursorAroundEntity =
+        context.addDelimiterForEntity &&
+        wrapper.style.display == 'inline-block' &&
+        wrapper.style.width == '100%';
+    const isContained = wrapper.parentElement?.classList.contains(BlockEntityContainer);
+    const elementToReuse = isContained && isCursorAroundEntity ? wrapper.parentElement! : wrapper;
+
+    refNode = reuseCachedElement(parent, elementToReuse, refNode);
+
+    if (isCursorAroundEntity) {
+        if (!isContained) {
+            const element = wrap(doc, wrapper, 'div');
+            element.classList.add(BlockEntityContainer);
+        }
+        addDelimiters(doc, wrapper, getSegmentFormat(context), context);
+    }
+
     context.onNodeCreated?.(entityModel, wrapper);
 
     return refNode;
@@ -53,7 +73,7 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     if (context.addDelimiterForEntity && entityFormat.isReadonly) {
-        const [after, before] = addDelimiters(doc, wrapper);
+        const [after, before] = addDelimiters(doc, wrapper, getSegmentFormat(context), context);
 
         newSegments?.push(after, before);
         context.regularSelection.current.segment = after;
@@ -63,3 +83,11 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 
     context.onNodeCreated?.(entityModel, wrapper);
 };
+function getSegmentFormat(
+    context: ModelToDomContext
+): ContentModelSegmentFormat | null | undefined {
+    return {
+        ...context.pendingFormat?.format,
+        ...context.defaultFormat,
+    };
+}

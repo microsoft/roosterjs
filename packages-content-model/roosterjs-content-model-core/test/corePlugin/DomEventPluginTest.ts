@@ -1,7 +1,11 @@
 import * as eventUtils from '../../lib/publicApi/domUtils/eventUtils';
-import { ChangeSource, IEditor, PluginEventType, PluginWithState } from 'roosterjs-editor-types';
+import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createDOMEventPlugin } from '../../lib/corePlugin/DOMEventPlugin';
-import { DOMEventPluginState, IStandaloneEditor } from 'roosterjs-content-model-types';
+import {
+    DOMEventPluginState,
+    IStandaloneEditor,
+    PluginWithState,
+} from 'roosterjs-content-model-types';
 
 const getDocument = () => document;
 
@@ -21,7 +25,7 @@ describe('DOMEventPlugin', () => {
             getDocument,
             attachDomEvent,
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         plugin.initialize(editor);
 
@@ -31,7 +35,6 @@ describe('DOMEventPlugin', () => {
         expect(state).toEqual({
             isInIME: false,
             scrollContainer: div,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -67,7 +70,7 @@ describe('DOMEventPlugin', () => {
         const attachDomEvent = jasmine
             .createSpy('attachDomEvent')
             .and.returnValue(jasmine.createSpy('disposer'));
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument,
             attachDomEvent,
             getEnvironment: () => ({}),
@@ -80,7 +83,6 @@ describe('DOMEventPlugin', () => {
         expect(state).toEqual({
             isInIME: false,
             scrollContainer: divScrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -95,6 +97,7 @@ describe('DOMEventPlugin', () => {
 describe('DOMEventPlugin verify event handlers while disallow keyboard event propagation', () => {
     let eventMap: Record<string, any>;
     let plugin: PluginWithState<DOMEventPluginState>;
+    let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         const div = <any>{
@@ -102,14 +105,17 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
             removeEventListener: jasmine.createSpy('removeEventListener'),
         };
 
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
+
         plugin = createDOMEventPlugin({}, div);
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument,
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');
             },
             getEnvironment: () => ({}),
+            triggerEvent: triggerEventSpy,
         }));
     });
 
@@ -120,16 +126,11 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
 
     it('check events are mapped', () => {
         expect(eventMap).toBeDefined();
-        expect(eventMap.keypress.pluginEventType).toBe(PluginEventType.KeyPress);
-        expect(eventMap.keydown.pluginEventType).toBe(PluginEventType.KeyDown);
-        expect(eventMap.keyup.pluginEventType).toBe(PluginEventType.KeyUp);
-        expect(eventMap.input.pluginEventType).toBe(PluginEventType.Input);
         expect(eventMap.keypress.beforeDispatch).toBeDefined();
         expect(eventMap.keydown.beforeDispatch).toBeDefined();
         expect(eventMap.keyup.beforeDispatch).toBeDefined();
         expect(eventMap.input.beforeDispatch).toBeDefined();
         expect(eventMap.mousedown).toBeDefined();
-        expect(eventMap.contextmenu).toBeDefined();
         expect(eventMap.compositionstart).toBeDefined();
         expect(eventMap.compositionend).toBeDefined();
         expect(eventMap.dragstart).toBeDefined();
@@ -149,28 +150,101 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     it('verify keydown event for character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
         const stopPropagation = jasmine.createSpy();
-        eventMap.keydown.beforeDispatch(<Event>(<any>{
+        const mockedEvent = {
             stopPropagation,
-        }));
+            type: 'keydown',
+        } as any;
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
         expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith('keyDown', { rawEvent: mockedEvent });
+    });
+
+    it('verify keydown event within IME 1', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            type: 'keydown',
+        } as any;
+
+        plugin.getState().isInIME = true;
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
+    });
+
+    it('verify keydown event within IME 2', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            isComposing: true,
+            type: 'keydown',
+        } as any;
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
     });
 
     it('verify input event for non-character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(false);
         const stopPropagation = jasmine.createSpy();
-        eventMap.input.beforeDispatch(<Event>(<any>{
+        const mockedEvent = {
             stopPropagation,
-        }));
+        } as any;
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
         expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith('input', { rawEvent: mockedEvent });
     });
 
     it('verify input event for character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
         const stopPropagation = jasmine.createSpy();
-        eventMap.input.beforeDispatch(<Event>(<any>{
+        const mockedEvent = {
             stopPropagation,
-        }));
+        } as any;
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
         expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith('input', { rawEvent: mockedEvent });
+    });
+
+    it('verify input event for character value in IME 1', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+        } as any;
+
+        plugin.getState().isInIME = true;
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
+    });
+
+    it('verify input event for character value in IME 2', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            isComposing: true,
+        } as any;
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
     });
 });
 
@@ -178,7 +252,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
     let plugin: PluginWithState<DOMEventPluginState>;
     let addEventListener: jasmine.Spy;
     let removeEventListener: jasmine.Spy;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let eventMap: Record<string, any>;
     let scrollContainer: HTMLElement;
     let onMouseUp: Function;
@@ -193,7 +267,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
                 onMouseUp = handler;
             });
         removeEventListener = jasmine.createSpy('.removeEventListener');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         scrollContainer = {
             addEventListener: () => {},
             removeEventListener: () => {},
@@ -204,12 +278,12 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
             },
             null!
         );
-        plugin.initialize(<IEditor>(<any>{
+        plugin.initialize(<IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
             }),
-            triggerPluginEvent,
+            triggerEvent,
             getEnvironment: () => ({}),
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
@@ -234,7 +308,6 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -253,7 +326,6 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -263,14 +335,13 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         onMouseUp(mockedEvent);
 
         expect(removeEventListener).toHaveBeenCalled();
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, {
+        expect(triggerEvent).toHaveBeenCalledWith('mouseUp', {
             rawEvent: mockedEvent,
             isClicking: true,
         });
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: false,
@@ -293,7 +364,6 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: true,
@@ -303,14 +373,13 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
         onMouseUp(mockedEvent2);
 
         expect(removeEventListener).toHaveBeenCalled();
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, {
+        expect(triggerEvent).toHaveBeenCalledWith('mouseUp', {
             rawEvent: mockedEvent2,
             isClicking: false,
         });
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: 100,
             mouseDownY: 200,
             mouseUpEventListerAdded: false,
@@ -322,19 +391,17 @@ describe('DOMEventPlugin handle other event', () => {
     let plugin: PluginWithState<DOMEventPluginState>;
     let addEventListener: jasmine.Spy;
     let removeEventListener: jasmine.Spy;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let eventMap: Record<string, any>;
     let scrollContainer: HTMLElement;
-    let getElementAtCursorSpy: jasmine.Spy;
-    let triggerContentChangedEventSpy: jasmine.Spy;
-    let editor: IEditor & IStandaloneEditor;
+    let addEventListenerSpy: jasmine.Spy;
+    let editor: IStandaloneEditor;
 
     beforeEach(() => {
         addEventListener = jasmine.createSpy('addEventListener');
         removeEventListener = jasmine.createSpy('.removeEventListener');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
-        triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
 
         scrollContainer = {
             addEventListener: () => {},
@@ -347,19 +414,24 @@ describe('DOMEventPlugin handle other event', () => {
             null!
         );
 
-        editor = <IEditor & IStandaloneEditor>(<any>{
+        editor = <IStandaloneEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
+                defaultView: {
+                    requestAnimationFrame: (callback: Function) => {
+                        callback();
+                    },
+                    addEventListener: addEventListenerSpy,
+                    removeEventListener: () => {},
+                },
             }),
-            triggerPluginEvent,
+            triggerEvent,
             getEnvironment: () => ({}),
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');
             },
-            getElementAtCursor: getElementAtCursorSpy,
-            triggerContentChangedEvent: triggerContentChangedEventSpy,
         });
         plugin.initialize(editor);
     });
@@ -373,49 +445,48 @@ describe('DOMEventPlugin handle other event', () => {
         expect(plugin.getState()).toEqual({
             isInIME: true,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
 
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerEvent).not.toHaveBeenCalled();
 
         const mockedEvent = 'EVENT' as any;
         eventMap.compositionend.beforeDispatch(mockedEvent);
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.CompositionEnd, {
+        expect(triggerEvent).toHaveBeenCalledWith('compositionEnd', {
             rawEvent: mockedEvent,
         });
+        expect(addEventListenerSpy).toHaveBeenCalledTimes(2);
     });
 
     it('Trigger onDragStart event', () => {
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
         const mockedEvent = {
             preventDefault: preventDefaultSpy,
+            target: {
+                nodeType: Node.ELEMENT_NODE,
+                isContentEditable: true,
+            },
         } as any;
 
-        getElementAtCursorSpy.and.returnValue({
-            isContentEditable: true,
-        });
         eventMap.dragstart.beforeDispatch(mockedEvent);
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
 
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerEvent).not.toHaveBeenCalled();
         expect(preventDefaultSpy).not.toHaveBeenCalled();
     });
 
@@ -423,67 +494,40 @@ describe('DOMEventPlugin handle other event', () => {
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
         const mockedEvent = {
             preventDefault: preventDefaultSpy,
+            target: {
+                nodeType: Node.ELEMENT_NODE,
+                isContentEditable: false,
+            },
         } as any;
 
-        getElementAtCursorSpy.and.returnValue({
-            isContentEditable: false,
-        });
         eventMap.dragstart.beforeDispatch(mockedEvent);
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
 
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerEvent).not.toHaveBeenCalled();
         expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
     it('Trigger onDrop event', () => {
         const takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
-        editor.runAsync = (callback: Function) => callback(editor);
         editor.takeSnapshot = takeSnapshotSpy;
 
         eventMap.drop.beforeDispatch();
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
-            contextMenuProviders: [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
         expect(takeSnapshotSpy).toHaveBeenCalledWith();
-        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(ChangeSource.Drop);
-    });
-
-    it('Trigger contextmenu event, skip reselect', () => {
-        editor.getContentSearcherOfCursor = () => null!;
-        const state = plugin.getState();
-        const mockedItems1 = ['Item1', 'Item2'];
-        const mockedItems2 = ['Item3', 'Item4'];
-
-        state.contextMenuProviders = [
-            {
-                getContextMenuItems: () => mockedItems1,
-            } as any,
-            {
-                getContextMenuItems: () => mockedItems2,
-            } as any,
-        ];
-
-        const mockedEvent = {
-            target: {},
-        };
-
-        eventMap.contextmenu.beforeDispatch(mockedEvent);
-
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContextMenu, {
-            rawEvent: mockedEvent,
-            items: ['Item1', 'Item2', null, 'Item3', 'Item4'],
+        expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+            source: ChangeSource.Drop,
         });
     });
 });

@@ -9,7 +9,7 @@ import {
     ContentModelTable,
     ContentModelTableCell,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('applyTableBorderFormat', () => {
@@ -48,7 +48,7 @@ describe('applyTableBorderFormat', () => {
 
     function runTest(
         table: ContentModelTable,
-        expectedTable: ContentModelTable | null,
+        expectedTable: ContentModelTable,
         border: Border,
         operation: BorderOperations
     ) {
@@ -59,15 +59,13 @@ describe('applyTableBorderFormat', () => {
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                formatResult = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         editor.formatContentModel = formatContentModel;
 
@@ -1559,6 +1557,295 @@ describe('applyTableBorderFormat', () => {
             },
             testBorder,
             'insideBorders'
+        );
+    });
+
+    it('RTL - Right Borders', () => {
+        const testTable = createTestTable(3, 3, { direction: 'rtl' });
+        testTable.format.direction = 'rtl';
+        runTest(
+            testTable,
+            {
+                blockType: 'Table',
+                rows: [
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    },
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                    borderLeft: testBorderString,
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {
+                                    editingInfo: '{"borderOverride":true}',
+                                },
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+
+                                    borderRight: testBorderString,
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {
+                                    editingInfo: '{"borderOverride":true}',
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    },
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    },
+                ],
+                format: {
+                    direction: 'rtl',
+                },
+                widths: [],
+                dataset: {},
+            },
+            testBorder,
+            'rightBorders'
+        );
+    });
+    it('RTL - Left Borders', () => {
+        const testTable = createTestTable(3, 3, { direction: 'rtl' });
+        testTable.format.direction = 'rtl';
+        runTest(
+            testTable,
+            {
+                blockType: 'Table',
+                rows: [
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    },
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+
+                                    borderLeft: testBorderString,
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {
+                                    editingInfo: '{"borderOverride":true}',
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                    borderRight: testBorderString,
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {
+                                    editingInfo: '{"borderOverride":true}',
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        height: 0,
+                        format: {},
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'rtl',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    },
+                ],
+                format: {
+                    direction: 'rtl',
+                },
+                widths: [],
+                dataset: {},
+            },
+            testBorder,
+            'leftBorders'
         );
     });
 });

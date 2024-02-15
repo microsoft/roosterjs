@@ -1,5 +1,4 @@
 export { CachedElementHandler, CloneModelOptions, cloneModel } from './publicApi/model/cloneModel';
-export { paste } from './publicApi/model/paste';
 export { mergeModel, MergeModelOption } from './publicApi/model/mergeModel';
 export { isBlockGroupOfType } from './publicApi/model/isBlockGroupOfType';
 export {
@@ -8,6 +7,7 @@ export {
 } from './publicApi/model/getClosestAncestorBlockGroupIndex';
 export { isBold } from './publicApi/model/isBold';
 export { createModelFromHtml } from './publicApi/model/createModelFromHtml';
+export { exportContent } from './publicApi/model/exportContent';
 
 export {
     iterateSelections,
@@ -48,6 +48,8 @@ export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
 export { transformColor } from './publicApi/color/transformColor';
 
+export { retrieveModelFormatState } from './publicApi/format/retrieveModelFormatState';
+
 export { updateImageMetadata } from './metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './metadata/updateTableMetadata';
@@ -58,5 +60,4 @@ export { BulletListType } from './constants/BulletListType';
 export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
-export { createStandaloneEditorCore } from './editor/createStandaloneEditorCore';
-export { createSnapshotsManager } from './editor/SnapshotsManagerImpl';
+export { StandaloneEditor } from './editor/StandaloneEditor';

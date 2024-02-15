@@ -1,6 +1,5 @@
 import type { TableSelectionCoordinates } from '../selection/TableSelectionCoordinates';
-import type { EntityState } from './FormatWithContentModelContext';
-import type { ModeIndependentColor } from 'roosterjs-editor-types';
+import type { EntityState } from './FormatContentModelContext';
 import type { SelectionType } from '../selection/DOMSelection';
 
 /**
@@ -26,6 +25,12 @@ export interface RangeSnapshotSelection extends SnapshotSelectionBase<'range'> {
      * End path of selection
      */
     end: number[];
+
+    /**
+     * Whether the selection was from left to right (in document order) or
+     * right to left (reverse of document order)
+     */
+    isReverted: boolean;
 }
 
 /**
@@ -64,11 +69,6 @@ export interface Snapshot {
      * HTML content string
      */
     html: string;
-
-    /**
-     * Known colors for dark mode
-     */
-    knownColors: Readonly<ModeIndependentColor>[];
 
     /**
      * Entity states related to this undo snapshots. When undo/redo to this snapshot, each entity state will trigger
@@ -110,6 +110,11 @@ export interface Snapshots {
      * Index of snapshot added before an auto complete action
      */
     autoCompleteIndex: number;
+
+    /**
+     * An optional callback to be invoked when snapshots are changed
+     */
+    onChanged?: (type: 'add' | 'move' | 'clear') => void;
 
     /**
      * Max size of all snapshots

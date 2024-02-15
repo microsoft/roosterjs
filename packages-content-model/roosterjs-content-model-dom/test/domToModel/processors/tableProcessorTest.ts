@@ -8,7 +8,7 @@ import { createTableCell } from '../../../lib/modelApi/creators/createTableCell'
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 import {
     ContentModelBlock,
-    ContentModelDomIndexer,
+    DomIndexer,
     ContentModelTable,
     DomToModelContext,
     ElementProcessor,
@@ -285,7 +285,7 @@ describe('tableProcessor', () => {
         const doc = createContentModelDocument();
         const div = document.createElement('div');
         const onTableSpy = jasmine.createSpy('onTable');
-        const domIndexer: ContentModelDomIndexer = {
+        const domIndexer: DomIndexer = {
             onParagraph: null!,
             onSegment: null!,
             onTable: onTableSpy,
@@ -1312,6 +1312,72 @@ describe('tableProcessor', () => {
                     widths: [100],
                     dataset: {},
 
+                    rows: [
+                        {
+                            format: {
+                                backgroundColor: 'red',
+                            },
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Has colgroup', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+        const colgroup = document.createElement('colgroup');
+        const col1 = document.createElement('col');
+        const col2 = document.createElement('col');
+        const tbody = document.createElement('tbody');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        col1.style.width = '100px';
+        col2.style.width = '50px';
+
+        colgroup.appendChild(col1);
+        colgroup.appendChild(col2);
+        table.appendChild(colgroup);
+
+        tbody.style.backgroundColor = 'red';
+
+        table.appendChild(tbody);
+        tbody.appendChild(tr);
+        tr.appendChild(td);
+
+        childProcessor.and.callFake(() => {
+            expect(context.blockFormat).toEqual({});
+            expect(context.segmentFormat).toEqual({});
+        });
+
+        context.allowCacheElement = true;
+
+        tableProcessor(group, table, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [100, 50],
+                    dataset: {},
+                    cachedElement: table,
                     rows: [
                         {
                             format: {

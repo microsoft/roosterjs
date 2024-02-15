@@ -1,19 +1,18 @@
-import { cloneModel } from 'roosterjs-content-model-core';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { ContentModelPastePlugin } from '../../../lib/paste/ContentModelPastePlugin';
+import { cloneModel, StandaloneEditor } from 'roosterjs-content-model-core';
+import { PastePlugin } from '../../../lib/paste/PastePlugin';
 import {
-    ContentModelEditorOptions,
-    ContentModelEditor,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
+    ContentModelDocument,
+    IStandaloneEditor,
+    StandaloneEditorOptions,
+} from 'roosterjs-content-model-types';
 
-export function initEditor(id: string): IContentModelEditor {
+export function initEditor(id: string): IStandaloneEditor {
     let node = document.createElement('div');
     node.id = id;
     document.body.insertBefore(node, document.body.childNodes[0]);
 
-    let options: ContentModelEditorOptions = {
-        plugins: [new ContentModelPastePlugin()],
+    let options: StandaloneEditorOptions = {
+        plugins: [new PastePlugin()],
         coreApiOverride: {
             getVisibleViewport: () => {
                 return {
@@ -26,7 +25,7 @@ export function initEditor(id: string): IContentModelEditor {
         },
     };
 
-    let editor = new ContentModelEditor(node as HTMLDivElement, options);
+    let editor = new StandaloneEditor(node as HTMLDivElement, options);
 
     return editor;
 }
@@ -40,5 +39,6 @@ export function expectEqual(model1: ContentModelDocument, model2: ContentModelDo
             })
         )
     );
+
     expect(newModel).toEqual(model2);
 }

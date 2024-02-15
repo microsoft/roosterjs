@@ -30,6 +30,7 @@ import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
+import { textIndentFormatHandler } from './block/textIndentFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
@@ -81,6 +82,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
+    textIndent: textIndentFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
@@ -103,6 +105,7 @@ const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'direction',
     'textAlign',
+    'textIndent',
     'lineHeight',
     'whiteSpace',
 ];
@@ -157,6 +160,7 @@ export const defaultFormatKeysPerCategory: {
         'size',
     ],
     tableRow: ['backgroundColor'],
+    tableColumn: ['size'],
     table: [
         'id',
         'border',
@@ -166,6 +170,7 @@ export const defaultFormatKeysPerCategory: {
         'margin',
         'size',
         'tableLayout',
+        'textColor',
     ],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
@@ -199,6 +204,7 @@ export const defaultFormatKeysPerCategory: {
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
     entity: ['entity'],
+    general: ['textColor', 'backgroundColor'], // General model still need to do color transformation in dark mode
 };
 
 /**

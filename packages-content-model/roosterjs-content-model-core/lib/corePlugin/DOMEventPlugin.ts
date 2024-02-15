@@ -1,18 +1,19 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
-import { PluginEventType } from 'roosterjs-editor-types';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type {
     DOMEventPluginState,
     IStandaloneEditor,
     DOMEventRecord,
     StandaloneEditorOptions,
-} from 'roosterjs-content-model-types';
-import type {
-    ContextMenuProvider,
-    EditorPlugin,
-    IEditor,
     PluginWithState,
-} from 'roosterjs-editor-types';
+} from 'roosterjs-content-model-types';
+
+const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
+    keydown: 'keyDown',
+    keyup: 'keyUp',
+    keypress: 'keyPress',
+};
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -26,7 +27,7 @@ import type {
  * It contains special handling for Safari since Safari cannot get correct selection when onBlur event is triggered in editor.
  */
 class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
-    private editor: (IStandaloneEditor & IEditor) | null = null;
+    private editor: IStandaloneEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: DOMEventPluginState;
 
@@ -39,8 +40,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
-            contextMenuProviders:
-                options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
             mouseDownX: null,
             mouseDownY: null,
             mouseUpEventListerAdded: false,
@@ -58,21 +57,21 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IStandaloneEditor & IEditor;
+    initialize(editor: IStandaloneEditor) {
+        this.editor = editor;
 
         const document = this.editor.getDocument();
         const eventHandlers: Partial<
             { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
         > = {
             // 1. Keyboard event
-            keypress: this.getEventHandler(PluginEventType.KeyPress),
-            keydown: this.getEventHandler(PluginEventType.KeyDown),
-            keyup: this.getEventHandler(PluginEventType.KeyUp),
+            keypress: this.keyboardEventHandler,
+            keydown: this.keyboardEventHandler,
+            keyup: this.keyboardEventHandler,
+            input: this.inputEventHandler,
 
             // 2. Mouse event
             mousedown: { beforeDispatch: this.onMouseDown },
-            contextmenu: { beforeDispatch: this.onContextMenuEvent },
 
             // 3. IME state management
             compositionstart: { beforeDispatch: this.onCompositionStart },
@@ -81,9 +80,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             // 4. Drag and Drop event
             dragstart: { beforeDispatch: this.onDragStart },
             drop: { beforeDispatch: this.onDrop },
-
-            // 5. Input event
-            input: this.getEventHandler(PluginEventType.Input),
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -119,50 +115,62 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
     private onDragStart = (e: Event) => {
         const dragEvent = e as DragEvent;
-        const element = this.editor?.getElementAtCursor('*', dragEvent.target as Node);
+        const node = dragEvent.target as Node;
+        const element = isNodeOfType(node, 'ELEMENT_NODE') ? node : node.parentElement;
 
         if (element && !element.isContentEditable) {
             dragEvent.preventDefault();
         }
     };
+
     private onDrop = () => {
-        this.editor?.runAsync(() => {
+        const doc = this.editor?.getDocument();
+
+        doc?.defaultView?.requestAnimationFrame(() => {
             if (this.editor) {
                 this.editor.takeSnapshot();
-                this.editor.triggerContentChangedEvent(ChangeSource.Drop);
+                this.editor.triggerEvent('contentChanged', {
+                    source: ChangeSource.Drop,
+                });
             }
         });
     };
 
     private onScroll = (e: Event) => {
-        this.editor?.triggerPluginEvent(PluginEventType.Scroll, {
+        this.editor?.triggerEvent('scroll', {
             rawEvent: e,
             scrollContainer: this.state.scrollContainer,
         });
     };
 
-    private getEventHandler(eventType: PluginEventType): DOMEventRecord {
-        const beforeDispatch = (event: Event) =>
-            eventType == PluginEventType.Input
-                ? this.onInputEvent(<InputEvent>event)
-                : this.onKeyboardEvent(<KeyboardEvent>event);
+    private keyboardEventHandler: DOMEventRecord<KeyboardEvent> = {
+        beforeDispatch: event => {
+            const eventType = EventTypeMap[event.type];
 
-        return {
-            pluginEventType: eventType,
-            beforeDispatch,
-        };
-    }
+            if (isCharacterValue(event) || isCursorMovingKey(event)) {
+                // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
+                // since editor already handles these keys and no need to propagate to parents
+                event.stopPropagation();
+            }
 
-    private onKeyboardEvent = (event: KeyboardEvent) => {
-        if (isCharacterValue(event) || isCursorMovingKey(event)) {
-            // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
-            // since editor already handles these keys and no need to propagate to parents
-            event.stopPropagation();
-        }
+            if (this.editor && eventType && !event.isComposing && !this.state.isInIME) {
+                this.editor.triggerEvent(eventType, {
+                    rawEvent: event,
+                });
+            }
+        },
     };
 
-    private onInputEvent = (event: InputEvent) => {
-        event.stopPropagation();
+    private inputEventHandler: DOMEventRecord<Event> = {
+        beforeDispatch: event => {
+            event.stopPropagation();
+
+            if (this.editor && !(event as InputEvent).isComposing && !this.state.isInIME) {
+                this.editor.triggerEvent('input', {
+                    rawEvent: event as InputEvent,
+                });
+            }
+        },
     };
 
     private onMouseDown = (event: MouseEvent) => {
@@ -176,7 +184,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 this.state.mouseDownY = event.pageY;
             }
 
-            this.editor.triggerPluginEvent(PluginEventType.MouseDown, {
+            this.editor.triggerEvent('mouseDown', {
                 rawEvent: event,
             });
         }
@@ -185,7 +193,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private onMouseUp = (rawEvent: MouseEvent) => {
         if (this.editor) {
             this.removeMouseUpEventListener();
-            this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
+            this.editor.triggerEvent('mouseUp', {
                 rawEvent,
                 isClicking:
                     this.state.mouseDownX == rawEvent.pageX &&
@@ -194,40 +202,13 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         }
     };
 
-    private onContextMenuEvent = (event: MouseEvent) => {
-        const allItems: any[] = [];
-
-        // TODO: Remove dependency to ContentSearcher
-        const searcher = this.editor?.getContentSearcherOfCursor();
-        const elementBeforeCursor = searcher?.getInlineElementBefore();
-
-        let eventTargetNode = event.target as Node;
-        if (event.button != 2 && elementBeforeCursor) {
-            eventTargetNode = elementBeforeCursor.getContainerNode();
-        }
-        this.state.contextMenuProviders.forEach(provider => {
-            const items = provider.getContextMenuItems(eventTargetNode) ?? [];
-            if (items?.length > 0) {
-                if (allItems.length > 0) {
-                    allItems.push(null);
-                }
-
-                allItems.push(...items);
-            }
-        });
-        this.editor?.triggerPluginEvent(PluginEventType.ContextMenu, {
-            rawEvent: event,
-            items: allItems,
-        });
-    };
-
     private onCompositionStart = () => {
         this.state.isInIME = true;
     };
 
     private onCompositionEnd = (rawEvent: CompositionEvent) => {
         this.state.isInIME = false;
-        this.editor?.triggerPluginEvent(PluginEventType.CompositionEnd, {
+        this.editor?.triggerEvent('compositionEnd', {
             rawEvent,
         });
     };
@@ -238,10 +219,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
         }
     }
-}
-
-function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvider<any> {
-    return !!(<ContextMenuProvider<any>>source)?.getContextMenuItems;
 }
 
 /**

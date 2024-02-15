@@ -1,11 +1,7 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
-import { Browser } from 'roosterjs-editor-dom';
 import { expectEqual, initEditor } from './testUtils';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
-import { paste } from 'roosterjs-content-model-core';
-import { tableProcessor } from 'roosterjs-content-model-dom';
-import type { ClipboardData } from 'roosterjs-content-model-types';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
+import type { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_Excel_E2E';
 const clipboardData = <ClipboardData>(<any>{
@@ -23,7 +19,7 @@ const clipboardData = <ClipboardData>(<any>{
 });
 
 describe(ID, () => {
-    let editor: IContentModelEditor = undefined!;
+    let editor: IStandaloneEditor = undefined!;
 
     beforeEach(() => {
         editor = initEditor(ID);
@@ -34,30 +30,20 @@ describe(ID, () => {
     });
 
     it('E2E', () => {
-        if (Browser.isFirefox) {
-            return;
-        }
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData);
-        editor.createContentModel({});
+        editor.pasteFromClipboard(clipboardData);
+        editor.getContentModelCopy('connected');
 
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 
     it('E2E paste as image', () => {
-        if (Browser.isFirefox) {
-            return;
-        }
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData, 'asImage');
+        editor.pasteFromClipboard(clipboardData, 'asImage');
 
-        const model = editor.createContentModel({
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -76,7 +62,19 @@ describe(ID, () => {
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                     ],
                     format: {},
@@ -102,13 +100,9 @@ describe(ID, () => {
             snapshotBeforePaste: '<br><!--{"start":[0],"end":[0]}-->',
         });
 
-        paste(editor, CD);
+        editor.pasteFromClipboard(CD);
 
-        const model = editor.createContentModel({
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        const model = editor.getContentModelCopy('connected');
 
         expectEqual(model, {
             blockGroupType: 'Document',
@@ -225,13 +219,11 @@ describe(ID, () => {
                                             blockType: 'Paragraph',
                                             format: {
                                                 textAlign: 'center',
-                                                whiteSpace: 'normal',
                                             },
                                         },
                                     ],
                                     format: {
                                         textAlign: 'center',
-                                        whiteSpace: 'normal',
                                         borderTop: '0.5pt solid',
                                         borderRight: '0.5pt solid',
                                         borderBottom: '0.5pt solid',
@@ -264,7 +256,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -288,6 +279,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -305,7 +297,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -335,6 +326,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '74.667px',
                                     },
                                     dataset: {},
                                 },
@@ -352,7 +344,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -374,6 +365,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '82.667px',
                                     },
                                     dataset: {},
                                 },
@@ -397,7 +389,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -421,6 +412,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -438,7 +430,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -468,6 +459,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '74.667px',
                                     },
                                     dataset: {},
                                 },
@@ -485,7 +477,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -507,6 +498,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '82.667px',
                                     },
                                     dataset: {},
                                 },
@@ -530,7 +522,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -554,6 +545,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -571,7 +563,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -601,6 +592,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '74.667px',
                                     },
                                     dataset: {},
                                 },
@@ -618,7 +610,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -640,6 +631,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '82.667px',
                                     },
                                     dataset: {},
                                 },
@@ -663,7 +655,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -687,6 +678,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -704,7 +696,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -734,6 +725,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '74.667px',
                                     },
                                     dataset: {},
                                 },
@@ -751,7 +743,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -773,6 +764,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '82.667px',
                                     },
                                     dataset: {},
                                 },
@@ -796,7 +788,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -820,6 +811,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -837,7 +829,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -867,6 +858,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '74.667px',
                                     },
                                     dataset: {},
                                 },
@@ -884,7 +876,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -906,6 +897,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '82.667px',
                                     },
                                     dataset: {},
                                 },
@@ -929,7 +921,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -953,6 +944,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -970,7 +962,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -1000,6 +991,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '74.667px',
                                     },
                                     dataset: {},
                                 },
@@ -1017,7 +1009,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -1039,6 +1030,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '82.667px',
                                     },
                                     dataset: {},
                                 },
@@ -1062,7 +1054,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'black',
                                                     },
                                                 },
@@ -1086,6 +1077,7 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -1103,7 +1095,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(5, 99, 193)',
                                                         underline: true,
                                                     },
@@ -1133,6 +1124,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '74.667px',
                                     },
                                     dataset: {},
                                 },
@@ -1150,7 +1142,6 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        fontWeight: '400',
                                                         textColor: 'rgb(219, 219, 219)',
                                                     },
                                                 },
@@ -1172,6 +1163,7 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
+                                        width: '82.667px',
                                     },
                                     dataset: {},
                                 },
@@ -1192,7 +1184,19 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
                         },
                         {
                             segmentType: 'Br',

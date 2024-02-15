@@ -1,5 +1,6 @@
 export { domToContentModel } from './domToModel/domToContentModel';
 export { contentModelToDom } from './modelToDom/contentModelToDom';
+export { contentModelToText } from './modelToText/contentModelToText';
 
 export {
     childProcessor,
@@ -21,14 +22,15 @@ export { default as toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
 export {
-    AllowedEntityClasses,
     isEntityElement,
     getAllEntityWrappers,
     parseEntityClassName,
     generateEntityClassNames,
     addDelimiters,
+    isEntityDelimiter,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
+export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
@@ -46,24 +48,25 @@ export { createGeneralBlock } from './modelApi/creators/createGeneralBlock';
 export { createEntity } from './modelApi/creators/createEntity';
 export { createDivider } from './modelApi/creators/createDivider';
 export { createListLevel } from './modelApi/creators/createListLevel';
+export { createEmptyModel } from './modelApi/creators/createEmptyModel';
 
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
+export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';
 export { unwrapBlock } from './modelApi/common/unwrapBlock';
 export { addSegment } from './modelApi/common/addSegment';
-export { isWhiteSpacePreserved } from './modelApi/common/isWhiteSpacePreserved';
+export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
-export { applySegmentFormatToElement } from './modelApi/common/applySegmentFormatToElement';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
-export { DeprecatedColors, getColor, setColor } from './formatHandlers/utils/color';
+export { DeprecatedColors, getColor, setColor, parseColor } from './formatHandlers/utils/color';
 
 export {
     createDomToModelContext,

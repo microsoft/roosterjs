@@ -1,4 +1,5 @@
 import { getColor, setColor } from '../utils/color';
+import { shouldSetValue } from '../utils/shouldSetValue';
 import type { BackgroundColorFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
@@ -11,11 +12,18 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
             getColor(
                 element,
                 true /*isBackground*/,
-                context.darkColorHandler,
-                !!context.isDarkMode
+                !!context.isDarkMode,
+                context.darkColorHandler
             ) || defaultStyle.backgroundColor;
 
-        if (backgroundColor) {
+        if (
+            shouldSetValue(
+                backgroundColor,
+                'transparent',
+                undefined /*existingValue*/,
+                defaultStyle.backgroundColor
+            )
+        ) {
             format.backgroundColor = backgroundColor;
         }
     },
@@ -25,8 +33,8 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
                 element,
                 format.backgroundColor,
                 true /*isBackground*/,
-                context.darkColorHandler,
-                !!context.isDarkMode
+                !!context.isDarkMode,
+                context.darkColorHandler
             );
         }
     },

@@ -1,6 +1,5 @@
 import { deleteSelection } from '../../publicApi/selection/deleteSelection';
-import { isBlockElement, isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
-import type { IEditor } from 'roosterjs-editor-types';
+import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -10,32 +9,9 @@ import type { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-con
  * @param defaultFormat The default segment format to apply
  */
 export function applyDefaultFormat(
-    editor: IStandaloneEditor & IEditor,
+    editor: IStandaloneEditor,
     defaultFormat: ContentModelSegmentFormat
 ) {
-    const selection = editor.getDOMSelection();
-    const range = selection?.type == 'range' ? selection.range : null;
-    const posContainer = range?.startContainer ?? null;
-    const posOffset = range?.startOffset ?? null;
-
-    if (posContainer) {
-        let node: Node | null = posContainer;
-
-        while (node && editor.contains(node)) {
-            if (isNodeOfType(node, 'ELEMENT_NODE')) {
-                if (node.getAttribute?.('style')) {
-                    return;
-                } else if (isBlockElement(node)) {
-                    break;
-                }
-            }
-
-            node = node.parentNode;
-        }
-    } else {
-        return;
-    }
-
     editor.formatContentModel((model, context) => {
         const result = deleteSelection(model, [], context);
 
@@ -45,12 +21,7 @@ export function applyDefaultFormat(
             editor.takeSnapshot();
 
             return true;
-        } else if (
-            result.deleteResult == 'notDeleted' &&
-            result.insertPoint &&
-            posContainer &&
-            posOffset !== null
-        ) {
+        } else if (result.deleteResult == 'notDeleted' && result.insertPoint) {
             const { paragraph, path, marker } = result.insertPoint;
             const blocks = path[0].blocks;
             const blockCount = blocks.length;

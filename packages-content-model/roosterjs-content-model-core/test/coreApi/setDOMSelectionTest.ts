@@ -1,6 +1,4 @@
 import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
-import { createElement } from 'roosterjs-editor-dom';
-import { CreateElementData, PluginEventType } from 'roosterjs-editor-types';
 import { DOMSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../lib/coreApi/setDOMSelection';
 
@@ -34,6 +32,7 @@ describe('setDOMSelection', () => {
         doc = {
             querySelectorAll: querySelectorAllSpy,
             createRange: createRangeSpy,
+            contains: () => true,
         } as any;
         contentDiv = {
             ownerDocument: doc,
@@ -77,8 +76,7 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: null,
                 },
                 true
@@ -99,6 +97,7 @@ describe('setDOMSelection', () => {
             runTest({
                 type: 'range',
                 range: {} as any,
+                isReverted: false,
             });
         });
 
@@ -126,6 +125,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             (core.selection.selectionStyleNode!.sheet!.cssRules as any) = ['Rule1', 'Rule2'];
@@ -143,13 +143,16 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(
+                doc,
+                mockedRange,
+                false /* isReverted */
+            );
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).toHaveBeenCalledTimes(2);
             expect(deleteRuleSpy).toHaveBeenCalledWith(1);
@@ -176,13 +179,12 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -192,6 +194,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             querySelectorAllSpy.and.returnValue([]);
@@ -205,7 +208,7 @@ describe('setDOMSelection', () => {
                 selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).not.toHaveBeenCalled();
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -215,6 +218,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
 
             querySelectorAllSpy.and.returnValue([]);
@@ -230,13 +234,12 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -246,6 +249,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -262,13 +266,12 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -278,6 +281,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -296,13 +300,12 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -312,6 +315,7 @@ describe('setDOMSelection', () => {
             const mockedSelection = {
                 type: 'range',
                 range: mockedRange,
+                isReverted: false,
             } as any;
             contentDiv.id = 'testId';
 
@@ -330,13 +334,12 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
             );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
             expect(contentDiv.id).toBe('testId_1');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).not.toHaveBeenCalled();
@@ -379,8 +382,7 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
@@ -391,8 +393,10 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedImage.id).toBe('image_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
             expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;caret-color:transparent;}'
+                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
         });
 
@@ -426,8 +430,7 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
@@ -438,8 +441,10 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedImage.id).toBe('image_0_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
             expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0_0 {outline-style:auto!important;outline-color:#DB626C!important;caret-color:transparent;}'
+                '#contentDiv_0 #image_0_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
         });
 
@@ -473,8 +478,7 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
@@ -485,8 +489,57 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedImage.id).toBe('image_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
             expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:red!important;caret-color:transparent;}'
+                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:red!important;}'
+            );
+        });
+
+        it('do not select if node is out of document', () => {
+            const mockedSelection = {
+                type: 'image',
+                image: mockedImage,
+            } as any;
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                selectNode: selectNodeSpy,
+                collapse: collapseSpy,
+            };
+
+            doc.contains = () => false;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            querySelectorAllSpy.and.returnValue([]);
+            hasFocusSpy.and.returnValue(false);
+
+            setDOMSelection(core, mockedSelection);
+
+            expect(core.selection).toEqual({
+                skipReselectOnFocus: undefined,
+                selection: mockedSelection,
+                selectionStyleNode: mockedStyleNode,
+            } as any);
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'selectionChanged',
+                    newSelection: mockedSelection,
+                },
+                true
+            );
+            expect(selectNodeSpy).not.toHaveBeenCalled();
+            expect(collapseSpy).not.toHaveBeenCalled();
+            expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
+            expect(contentDiv.id).toBe('contentDiv_0');
+            expect(mockedImage.id).toBe('image_0');
+            expect(deleteRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
+            expect(insertRuleSpy).toHaveBeenCalledWith(
+                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
         });
     });
@@ -529,8 +582,7 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
@@ -541,7 +593,8 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedTable.id).toBe('table_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).not.toHaveBeenCalled();
+            expect(insertRuleSpy).toHaveBeenCalledTimes(1);
+            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
         });
 
         function runTest(
@@ -550,7 +603,7 @@ describe('setDOMSelection', () => {
             firstRow: number,
             lastColumn: number,
             lastRow: number,
-            result: string
+            ...result: string[]
         ) {
             const mockedSelection = {
                 type: 'table',
@@ -582,8 +635,7 @@ describe('setDOMSelection', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: null,
+                    eventType: 'selectionChanged',
                     newSelection: mockedSelection,
                 },
                 true
@@ -591,7 +643,11 @@ describe('setDOMSelection', () => {
             expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedTable.id).toBe('table_0');
             expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).toHaveBeenCalledWith(result);
+            expect(insertRuleSpy).toHaveBeenCalledTimes(result.length);
+
+            result.forEach(rule => {
+                expect(insertRuleSpy).toHaveBeenCalledWith(rule);
+            });
         }
 
         it('Select Table Cells TR under Table Tag', () => {
@@ -601,7 +657,8 @@ describe('setDOMSelection', () => {
                 0,
                 1,
                 1,
-                '#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -612,51 +669,41 @@ describe('setDOMSelection', () => {
                 0,
                 0,
                 1,
-                '#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
         it('Select TH and TR in the same row', () => {
+            const table = document.createElement('table');
+            const tr1 = document.createElement('tr');
+            const th1 = document.createElement('th');
+            const td1 = document.createElement('td');
+            const tr2 = document.createElement('tr');
+            const th2 = document.createElement('th');
+            const td2 = document.createElement('td');
+
+            th1.appendChild(document.createTextNode('test'));
+            td1.appendChild(document.createTextNode('test'));
+            tr1.appendChild(th1);
+            tr1.appendChild(td1);
+
+            th2.appendChild(document.createTextNode('test'));
+            td2.appendChild(document.createTextNode('test'));
+            tr2.appendChild(th2);
+            tr2.appendChild(td2);
+
+            table.appendChild(tr1);
+            table.appendChild(tr2);
+
             runTest(
-                createElement(
-                    {
-                        tag: 'table',
-                        children: [
-                            {
-                                tag: 'TR',
-                                children: [
-                                    {
-                                        tag: 'TH',
-                                        children: ['test'],
-                                    },
-                                    {
-                                        tag: 'TD',
-                                        children: ['test'],
-                                    },
-                                ],
-                            },
-                            {
-                                tag: 'TR',
-                                children: [
-                                    {
-                                        tag: 'TH',
-                                        children: ['test'],
-                                    },
-                                    {
-                                        tag: 'TD',
-                                        children: ['test'],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    document
-                ) as HTMLTableElement,
+                table,
                 0,
                 0,
                 0,
                 1,
-                '#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -667,7 +714,8 @@ describe('setDOMSelection', () => {
                 1,
                 2,
                 2,
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -678,7 +726,8 @@ describe('setDOMSelection', () => {
                 1,
                 2,
                 2,
-                '#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -689,7 +738,8 @@ describe('setDOMSelection', () => {
                 1,
                 1,
                 4,
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -700,7 +750,8 @@ describe('setDOMSelection', () => {
                 1,
                 1,
                 2,
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
             );
         });
 
@@ -711,48 +762,40 @@ describe('setDOMSelection', () => {
                 0,
                 1,
                 1,
-                '#contentDiv_0 #table_0,#contentDiv_0 #table_0 * {background-color: rgb(198,198,198) !important; caret-color: transparent}'
+                '#contentDiv_0 {caret-color: transparent}',
+                '#contentDiv_0 #table_0,#contentDiv_0 #table_0 * {background-color: rgb(198,198,198) !important;}'
             );
         });
     });
 });
 
 function buildTable(tbody: boolean, thead: boolean = false, tfoot: boolean = false) {
-    const getElement = (tag: string): CreateElementData => {
-        return {
-            tag,
-            children: [
-                {
-                    tag: 'TR',
-                    children: [
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                    ],
-                },
-                {
-                    tag: 'TR',
-                    children: [
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                        {
-                            tag: 'TD',
-                            children: ['test'],
-                        },
-                    ],
-                },
-            ],
-        };
+    const getElement = (tag: string) => {
+        const container = document.createElement(tag);
+        const tr1 = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        const tr2 = document.createElement('tr');
+        const td3 = document.createElement('td');
+        const td4 = document.createElement('td');
+
+        td1.appendChild(document.createTextNode('test'));
+        td2.appendChild(document.createTextNode('test'));
+        tr1.appendChild(td1);
+        tr1.appendChild(td2);
+
+        td3.appendChild(document.createTextNode('test'));
+        td4.appendChild(document.createTextNode('test'));
+        tr2.appendChild(td3);
+        tr2.appendChild(td4);
+
+        container.appendChild(tr1);
+        container.appendChild(tr2);
+
+        return container;
     };
 
-    const children: (string | CreateElementData)[] = [];
+    const children: HTMLElement[] = [];
     if (thead) {
         children.push(getElement('thead'));
     }
@@ -763,41 +806,31 @@ function buildTable(tbody: boolean, thead: boolean = false, tfoot: boolean = fal
         children.push(getElement('tfoot'));
     }
     if (children.length === 0) {
-        children.push(
-            {
-                tag: 'TR',
-                children: [
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                ],
-            },
-            {
-                tag: 'TR',
-                children: [
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                    {
-                        tag: 'TD',
-                        children: ['test'],
-                    },
-                ],
-            }
-        );
+        const tr1 = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        const tr2 = document.createElement('tr');
+        const td3 = document.createElement('td');
+        const td4 = document.createElement('td');
+
+        td1.appendChild(document.createTextNode('test'));
+        td2.appendChild(document.createTextNode('test'));
+        tr1.appendChild(td1);
+        tr1.appendChild(td2);
+
+        td3.appendChild(document.createTextNode('test'));
+        td4.appendChild(document.createTextNode('test'));
+        tr2.appendChild(td3);
+        tr2.appendChild(td4);
+
+        children.push(tr1, tr2);
     }
 
-    return createElement(
-        {
-            tag: 'table',
-            children,
-        },
-        document
-    ) as HTMLTableElement;
+    const table = document.createElement('table');
+
+    children.forEach(node => {
+        table.appendChild(node);
+    });
+
+    return table;
 }

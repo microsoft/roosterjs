@@ -1,24 +1,14 @@
+import type { DOMHelper } from '../parameter/DOMHelper';
+import type { PluginEvent } from '../event/PluginEvent';
+import type { PluginState } from '../pluginState/PluginState';
+import type { EditorPlugin } from './EditorPlugin';
+import type { ClipboardData } from '../parameter/ClipboardData';
+import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
-import type { EntityState } from '../parameter/FormatWithContentModelContext';
-import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compatibleTypes';
-import type {
-    ContentMetadata,
-    DarkColorHandler,
-    EditorPlugin,
-    GetContentMode,
-    InsertOption,
-    NodePosition,
-    PluginEvent,
-    Rect,
-    StyleBasedFormatState,
-    TrustedHTMLHandler,
-} from 'roosterjs-editor-types';
+import type { EntityState } from '../parameter/FormatContentModelContext';
+import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
-import type {
-    StandaloneEditorCorePluginState,
-    UnportedCorePluginState,
-} from '../pluginState/StandaloneEditorPluginState';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { DomToModelSettings } from '../context/DomToModelSettings';
@@ -26,16 +16,19 @@ import type { EditorContext } from '../context/EditorContext';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ModelToDomSettings, OnNodeCreated } from '../context/ModelToDomSettings';
+import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
+import type { Rect } from '../parameter/Rect';
 import type {
     ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../parameter/FormatWithContentModelOptions';
+    FormatContentModelOptions,
+} from '../parameter/FormatContentModelOptions';
 
 /**
  * Create a EditorContext object used by ContentModel API
  * @param core The StandaloneEditorCore object
+ * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
  */
-export type CreateEditorContext = (core: StandaloneEditorCore) => EditorContext;
+export type CreateEditorContext = (core: StandaloneEditorCore, saveIndex: boolean) => EditorContext;
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -88,12 +81,12 @@ export type SetDOMSelection = (
  * If there is cached model, it will be used and updated.
  * @param core The StandaloneEditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
- * @param options More options, see FormatWithContentModelOptions
+ * @param options More options, see FormatContentModelOptions
  */
 export type FormatContentModel = (
     core: StandaloneEditorCore,
     formatter: ContentModelFormatter,
-    options?: FormatWithContentModelOptions
+    options?: FormatContentModelOptions
 ) => void;
 
 /**
@@ -127,27 +120,13 @@ export type AddUndoSnapshot = (
     core: StandaloneEditorCore,
     canUndoByBackspace: boolean,
     entityStates?: EntityState[]
-) => void;
+) => Snapshot | null;
 
 /**
  * Retrieves the rect of the visible viewport of the editor.
  * @param core The StandaloneEditorCore object
  */
 export type GetVisibleViewport = (core: StandaloneEditorCore) => Rect | null;
-
-/**
- * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
- * if triggerContentChangedEvent is set to true
- * @param core The StandaloneEditorCore object
- * @param content HTML content to set in
- * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
- */
-export type SetContent = (
-    core: StandaloneEditorCore,
-    content: string,
-    triggerContentChangedEvent: boolean,
-    metadata?: ContentMetadata
-) => void;
 
 /**
  * Check if the editor has focus now
@@ -163,17 +142,6 @@ export type HasFocus = (core: StandaloneEditorCore) => boolean;
 export type Focus = (core: StandaloneEditorCore) => void;
 
 /**
- * Insert a DOM node into editor content
- * @param core The StandaloneEditorCore object. No op if null.
- * @param option An insert option object to specify how to insert the node
- */
-export type InsertNode = (
-    core: StandaloneEditorCore,
-    node: Node,
-    option: InsertOption | null
-) => boolean;
-
-/**
  * Attach a DOM event to the editor content DIV
  * @param core The StandaloneEditorCore object
  * @param eventMap A map from event name to its handler
@@ -184,27 +152,6 @@ export type AttachDomEvent = (
 ) => () => void;
 
 /**
- * Get current editor content as HTML string
- * @param core The StandaloneEditorCore object
- * @param mode specify what kind of HTML content to retrieve
- * @returns HTML string representing current editor content
- */
-export type GetContent = (
-    core: StandaloneEditorCore,
-    mode: GetContentMode | CompatibleGetContentMode
-) => string;
-
-/**
- * Get style based format state from current selection, including font name/size and colors
- * @param core The StandaloneEditorCore objects
- * @param node The node to get style from
- */
-export type GetStyleBasedFormatState = (
-    core: StandaloneEditorCore,
-    node: Node | null
-) => StyleBasedFormatState;
-
-/**
  * Restore an undo snapshot into editor
  * @param core The StandaloneEditorCore object
  * @param step Steps to move, can be 0, positive or negative
@@ -212,27 +159,26 @@ export type GetStyleBasedFormatState = (
 export type RestoreUndoSnapshot = (core: StandaloneEditorCore, snapshot: Snapshot) => void;
 
 /**
- * Ensure user will type into a container element rather than into the editor content DIV directly
+ * Paste into editor using a clipboardData object
  * @param core The StandaloneEditorCore object.
- * @param position The position that user is about to type to
- * @param keyboardEvent Optional keyboard event object
- * @param deprecated Deprecated parameter, not used
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @param pasteType Type of content to paste. @default normal
  */
-export type EnsureTypeInContainer = (
+export type Paste = (
     core: StandaloneEditorCore,
-    position: NodePosition,
-    keyboardEvent?: KeyboardEvent,
-    deprecated?: boolean
+    clipboardData: ClipboardData,
+    pasteType: PasteType
 ) => void;
 
 /**
- * Temp interface
- * TODO: Port other core API
+ * The interface for the map of core API for Content Model editor.
+ * Editor can call call API from this map under StandaloneEditorCore object
  */
-export interface PortedCoreApiMap {
+export interface StandaloneCoreApiMap {
     /**
      * Create a EditorContext object used by ContentModel API
      * @param core The StandaloneEditorCore object
+     * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
      */
     createEditorContext: CreateEditorContext;
 
@@ -272,7 +218,7 @@ export interface PortedCoreApiMap {
      * If there is cached model, it will be used and updated.
      * @param core The StandaloneEditorCore object
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
     formatContentModel: FormatContentModel;
 
@@ -333,67 +279,20 @@ export interface PortedCoreApiMap {
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param editor The editor to paste content into
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteType Type of content to paste. @default normal
+     */
+    paste: Paste;
 }
-
-/**
- * Temp interface
- * TODO: Port these core API
- */
-export interface UnportedCoreApiMap {
-    /**
-     * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
-     * if triggerContentChangedEvent is set to true
-     * @param core The StandaloneEditorCore object
-     * @param content HTML content to set in
-     * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
-     */
-    setContent: SetContent;
-
-    /**
-     * Insert a DOM node into editor content
-     * @param core The StandaloneEditorCore object. No op if null.
-     * @param option An insert option object to specify how to insert the node
-     */
-    insertNode: InsertNode;
-
-    /**
-     * Get current editor content as HTML string
-     * @param core The StandaloneEditorCore object
-     * @param mode specify what kind of HTML content to retrieve
-     * @returns HTML string representing current editor content
-     */
-    getContent: GetContent;
-
-    /**
-     * Get style based format state from current selection, including font name/size and colors
-     * @param core The StandaloneEditorCore objects
-     * @param node The node to get style from
-     */
-    getStyleBasedFormatState: GetStyleBasedFormatState;
-
-    /**
-     * Ensure user will type into a container element rather than into the editor content DIV directly
-     * @param core The EditorCore object.
-     * @param position The position that user is about to type to
-     * @param keyboardEvent Optional keyboard event object
-     * @param deprecated Deprecated parameter, not used
-     */
-    ensureTypeInContainer: EnsureTypeInContainer;
-}
-
-/**
- * The interface for the map of core API for Content Model editor.
- * Editor can call call API from this map under StandaloneEditorCore object
- */
-export interface StandaloneCoreApiMap extends PortedCoreApiMap, UnportedCoreApiMap {}
 
 /**
  * Represents the core data structure of a Content Model editor
  */
-export interface StandaloneEditorCore
-    extends StandaloneEditorCorePluginState,
-        UnportedCorePluginState,
-        StandaloneEditorDefaultSettings {
+export interface StandaloneEditorCore extends PluginState {
     /**
      * The content DIV element of this editor
      */
@@ -415,6 +314,16 @@ export interface StandaloneEditorCore
     readonly plugins: EditorPlugin[];
 
     /**
+     * Settings used by DOM to Content Model conversion
+     */
+    readonly domToModelSettings: ContentModelSettings<DomToModelOption, DomToModelSettings>;
+
+    /**
+     * Settings used by Content Model to DOM conversion
+     */
+    readonly modelToDomSettings: ContentModelSettings<ModelToDomOption, ModelToDomSettings>;
+
+    /**
      * Editor running environment
      */
     readonly environment: EditorEnvironment;
@@ -431,31 +340,38 @@ export interface StandaloneEditorCore
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
+
+    /**
+     * A helper class to provide DOM access APIs
+     */
+    readonly domHelper: DOMHelper;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 }
 
 /**
  * Default DOM and Content Model conversion settings for an editor
  */
-export interface StandaloneEditorDefaultSettings {
+export interface ContentModelSettings<OptionType, ConfigType> {
     /**
-     * Default DOM to Content Model options
+     * Built in options used by editor
      */
-    defaultDomToModelOptions: (DomToModelOption | undefined)[];
+    builtIn: OptionType;
 
     /**
-     * Default Content Model to DOM options
+     * Customize options passed in from Editor Options, used for overwrite default option.
+     * This will also be used by copy/paste
      */
-    defaultModelToDomOptions: (ModelToDomOption | undefined)[];
+    customized: OptionType;
 
     /**
-     * Default DOM to Content Model config, calculated from defaultDomToModelOptions,
-     * will be used for creating content model if there is no other customized options
+     * Configuration calculated from default and customized options.
+     * This is a cached object so that we don't need to cache it every time when we use Content Model
      */
-    defaultDomToModelConfig: DomToModelSettings;
-
-    /**
-     * Default Content Model to DOM config, calculated from defaultModelToDomOptions,
-     * will be used for setting content model if there is no other customized options
-     */
-    defaultModelToDomConfig: ModelToDomSettings;
+    calculated: ConfigType;
 }

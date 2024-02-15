@@ -1,6 +1,6 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
-import type { ContentModelBeforePasteEvent } from 'roosterjs-content-model-types';
+import type { BeforePasteEvent } from 'roosterjs-content-model-types';
 
 const FORMATING_REGEX = /[\n\t'{}"]+/g;
 
@@ -25,7 +25,7 @@ const FORMATING_REGEX = /[\n\t'{}"]+/g;
  *
  */
 export default function getStyleMetadata(
-    ev: ContentModelBeforePasteEvent,
+    ev: BeforePasteEvent,
     trustedHTMLHandler: (val: string) => string
 ) {
     const metadataMap: Map<string, WordMetadata> = new Map();
@@ -72,7 +72,7 @@ export default function getStyleMetadata(
 
             const data: WordMetadata = {
                 'mso-level-number-format': record['mso-level-number-format'],
-                'mso-level-start-at': record['mso-level-start-at'],
+                'mso-level-start-at': record['mso-level-start-at'] || '1',
                 'mso-level-text': record['mso-level-text'],
             };
             if (getObjectKeys(data).some(key => !!data[key])) {

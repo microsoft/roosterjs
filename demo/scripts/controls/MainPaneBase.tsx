@@ -4,7 +4,6 @@ import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
 import { Border } from 'roosterjs-content-model-types';
 import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
-import { EditorPlugin } from 'roosterjs-editor-types';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
@@ -43,6 +42,8 @@ export default abstract class MainPaneBase<T extends MainPaneBaseState> extends 
         return this.instance;
     }
 
+    static readonly editorDivId = 'RoosterJsContentDiv';
+
     constructor(props: {}) {
         super(props);
 
@@ -57,8 +58,6 @@ export default abstract class MainPaneBase<T extends MainPaneBaseState> extends 
     abstract renderTitleBar(): JSX.Element;
 
     abstract renderSidePane(fullWidth: boolean): JSX.Element;
-
-    abstract getPlugins(): EditorPlugin[];
 
     abstract resetEditor(): void;
 

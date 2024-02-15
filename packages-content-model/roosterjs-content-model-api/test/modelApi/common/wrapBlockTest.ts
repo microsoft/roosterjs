@@ -225,7 +225,7 @@ describe('wrapBlockStep2', () => {
             ],
         });
         expect(canMerge).toHaveBeenCalledTimes(1);
-        expect(canMerge).toHaveBeenCalledWith(undefined, quote);
+        expect(canMerge).toHaveBeenCalledWith(false, undefined, quote);
     });
 
     it('Has results, can merge', () => {
@@ -270,8 +270,8 @@ describe('wrapBlockStep2', () => {
         wrapBlockStep2(result, canMerge as any);
 
         expect(canMerge).toHaveBeenCalledTimes(2);
-        expect(canMerge).toHaveBeenCalledWith(quote4, quote3);
-        expect(canMerge).toHaveBeenCalledWith(quote2, quote1);
+        expect(canMerge).toHaveBeenCalledWith(false, quote4, quote3);
+        expect(canMerge).toHaveBeenCalledWith(false, quote2, quote1);
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [

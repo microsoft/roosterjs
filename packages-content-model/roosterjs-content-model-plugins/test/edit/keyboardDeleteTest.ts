@@ -1,13 +1,16 @@
 import * as deleteSelection from 'roosterjs-content-model-core/lib/publicApi/selection/deleteSelection';
 import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCommon';
 import { ChangeSource } from 'roosterjs-content-model-core';
-import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
+import { deleteList } from '../../lib/edit/deleteSteps/deleteList';
 import { DeleteResult, DeleteSelectionStep } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { keyboardDelete } from '../../lib/edit/keyboardDelete';
-import { Keys } from 'roosterjs-editor-types';
+import {
+    ContentModelDocument,
+    DOMSelection,
+    IStandaloneEditor,
+} from 'roosterjs-content-model-types';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
@@ -16,6 +19,9 @@ import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
 } from '../../lib/edit/deleteSteps/deleteCollapsedSelection';
+
+const Delete = 46;
+const Backspace = 8;
 
 describe('keyboardDelete', () => {
     let deleteSelectionSpy: jasmine.Spy;
@@ -56,9 +62,10 @@ describe('keyboardDelete', () => {
                         collapsed: false,
                     },
                 });
+
                 const result = keyboardDelete(editor, mockedEvent);
 
-                expect(result).toBeTrue();
+                expect(result).toBe(expectedDelete == 'range' || expectedDelete == 'singleChar');
             },
             input,
             expectedResult,
@@ -86,7 +93,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -104,7 +111,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -124,7 +131,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, forwardDeleteWordSelection, forwardDeleteCollapsedSelection],
+            [null!, forwardDeleteWordSelection, forwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -144,7 +151,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, backwardDeleteWordSelection, backwardDeleteCollapsedSelection],
+            [null!, backwardDeleteWordSelection, backwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -164,7 +171,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -184,7 +191,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [deleteAllSegmentBefore, null!, backwardDeleteCollapsedSelection],
+            [deleteAllSegmentBefore, null!, backwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -226,7 +233,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -268,7 +275,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -320,7 +327,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection, deleteList],
             'singleChar',
             false,
             1
@@ -372,7 +379,101 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection, deleteList],
+            'singleChar',
+            false,
+            1
+        );
+    });
+
+    it('Backspace on empty list', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        format: {
+                            listStyleType: '"1. "',
+                        },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        format: {},
+                                        isSelected: true,
+                                    },
+                                    {
+                                        segmentType: 'Br',
+                                        format: {},
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    },
+                ],
+            },
+            'Backspace',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        format: {
+                            listStyleType: '"1. "',
+                        },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'SelectionMarker',
+                                        format: {},
+                                        isSelected: true,
+                                    },
+                                    {
+                                        segmentType: 'Br',
+                                        format: {},
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    },
+                ],
+            },
+            [null!, null!, backwardDeleteCollapsedSelection, deleteList],
             'singleChar',
             false,
             1
@@ -388,16 +489,16 @@ describe('keyboardDelete', () => {
                 type: 'range',
                 range: { collapsed: false },
             }),
-        } as any) as IContentModelEditor;
+        } as any) as IStandaloneEditor;
         const event = {
-            which: Keys.DELETE,
+            which: Delete,
             key: 'Delete',
         } as any;
 
         keyboardDelete(editor, event);
 
         expect(spy.calls.argsFor(0)[1]!.changeSource).toBe(ChangeSource.Keyboard);
-        expect(spy.calls.argsFor(0)[1]!.getChangeData?.()).toBe(Keys.DELETE);
+        expect(spy.calls.argsFor(0)[1]!.getChangeData?.()).toBe(Delete);
         expect(spy.calls.argsFor(0)[1]!.apiName).toBe('handleDeleteKey');
     });
 
@@ -412,7 +513,7 @@ describe('keyboardDelete', () => {
                 range: { collapsed: false },
             }),
         } as any;
-        const which = Keys.BACKSPACE;
+        const which = Backspace;
         const event = {
             key: 'Backspace',
             which,
@@ -436,6 +537,7 @@ describe('keyboardDelete', () => {
                 startContainer: document.createTextNode('test'),
                 startOffset: 2,
             } as any) as Range,
+            isReverted: false,
         };
         const editor = {
             formatContentModel: formatWithContentModelSpy,
@@ -457,6 +559,7 @@ describe('keyboardDelete', () => {
                 startContainer: document.createTextNode('test'),
                 startOffset: 2,
             } as any) as Range,
+            isReverted: false,
         };
         const editor = {
             formatContentModel: formatWithContentModelSpy,
@@ -478,6 +581,7 @@ describe('keyboardDelete', () => {
                 startContainer: document.createTextNode('test'),
                 startOffset: 0,
             } as any) as Range,
+            isReverted: false,
         };
 
         const editor = {
@@ -485,9 +589,8 @@ describe('keyboardDelete', () => {
             getDOMSelection: () => range,
         } as any;
 
-        const result = keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent);
 
-        expect(result).toBeTrue();
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -501,6 +604,7 @@ describe('keyboardDelete', () => {
                 startContainer: document.createTextNode('test'),
                 startOffset: 4,
             } as any) as Range,
+            isReverted: false,
         };
 
         const editor = {
@@ -508,9 +612,8 @@ describe('keyboardDelete', () => {
             getDOMSelection: () => range,
         } as any;
 
-        const result = keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent);
 
-        expect(result).toBeTrue();
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
 });

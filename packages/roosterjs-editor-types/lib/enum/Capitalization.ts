@@ -2,6 +2,7 @@
  * The enum used for controlling the capitalization of text.
  * Used by changeCapitalization API
  */
+// eslint-disable-next-line etc/no-const-enum
 export const enum Capitalization {
     /**
      * Transforms the first character after punctuation mark followed by space

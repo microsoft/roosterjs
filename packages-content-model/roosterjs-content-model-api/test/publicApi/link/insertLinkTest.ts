@@ -1,13 +1,11 @@
 import insertLink from '../../../lib/publicApi/link/insertLink';
-import { ChangeSource } from 'roosterjs-content-model-core';
-import { ContentModelEditor } from 'roosterjs-content-model-editor';
+import { ChangeSource, StandaloneEditor } from 'roosterjs-content-model-core';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
-import { PluginEventType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelLink,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     addSegment,
@@ -39,15 +37,13 @@ describe('insertLink', () => {
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                formatResult = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         editor.formatContentModel = formatContentModel;
 
@@ -330,7 +326,7 @@ describe('insertLink', () => {
             getName: () => 'mock',
             onPluginEvent: onPluginEvent,
         };
-        const editor = new ContentModelEditor(div, {
+        const editor = new StandaloneEditor(div, {
             plugins: [mockedPlugin],
         });
 
@@ -344,17 +340,106 @@ describe('insertLink', () => {
 
         expect(a!.outerHTML).toBe('<a href="http://test.com" title="title">http://test.com</a>');
         expect(onPluginEvent).toHaveBeenCalledWith({
-            eventType: PluginEventType.ContentChanged,
+            eventType: 'contentChanged',
             source: ChangeSource.CreateLink,
             data: a,
-            additionalData: {
-                formatApiName: 'insertLink',
-            },
+            formatApiName: 'insertLink',
             contentModel: jasmine.anything(),
             selection: jasmine.anything(),
             changedEntities: [],
         });
 
         document.body.removeChild(div);
+    });
+
+    it('Valid url with trailing space', () => {
+        const doc = createContentModelDocument();
+        const text = createText('test     ');
+        text.isSelected = true;
+        addSegment(doc, text);
+
+        runTest(doc, 'http://test.com', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'http://test.com',
+                                    anchorTitle: undefined,
+                                    target: undefined,
+                                    underline: true,
+                                },
+                            },
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: '     ',
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'http://test.com',
+                                    anchorTitle: undefined,
+                                    target: undefined,
+                                    underline: false,
+                                },
+                            },
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Invalid url', () => {
+        const doc = createContentModelDocument();
+        addSegment(doc, createSelectionMarker());
+
+        const url = 'javasc\nript:onC\nlick()';
+        let formatResult: boolean | undefined;
+        const formatContentModel = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                formatResult = callback(doc, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
+
+        editor.formatContentModel = formatContentModel;
+
+        insertLink(editor, url);
+
+        expect(formatContentModel).toHaveBeenCalledTimes(0);
+        expect(formatResult).toBeFalsy();
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
     });
 });

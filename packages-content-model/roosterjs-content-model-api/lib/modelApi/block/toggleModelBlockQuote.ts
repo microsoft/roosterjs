@@ -17,7 +17,8 @@ import type {
  */
 export function toggleModelBlockQuote(
     model: ContentModelDocument,
-    format: ContentModelFormatContainerFormat
+    formatLtr: ContentModelFormatContainerFormat,
+    formatRtl: ContentModelFormatContainerFormat
 ): boolean {
     const paragraphOfQuote = getOperationalBlocks<
         ContentModelFormatContainer | ContentModelListItem
@@ -30,12 +31,14 @@ export function toggleModelBlockQuote(
         });
     } else {
         const step1Results: WrapBlockStep1Result<ContentModelFormatContainer>[] = [];
-        const creator = () => createFormatContainer('blockquote', format);
+        const creator = (isRtl: boolean) =>
+            createFormatContainer('blockquote', isRtl ? formatRtl : formatLtr);
         const canMerge = (
+            isRtl: boolean,
             target: ContentModelBlock,
             current?: ContentModelFormatContainer
         ): target is ContentModelFormatContainer =>
-            canMergeQuote(target, current?.format || format);
+            canMergeQuote(target, current?.format || (isRtl ? formatRtl : formatLtr));
 
         paragraphOfQuote.forEach(({ block, parent }) => {
             if (isQuote(block)) {
@@ -67,6 +70,10 @@ function isQuote(block: ContentModelBlock): block is ContentModelFormatContainer
 
 function areAllBlockQuotes(
     blockAndParents: OperationalBlocks<ContentModelFormatContainer | ContentModelListItem>[]
-): blockAndParents is { block: ContentModelFormatContainer; parent: ContentModelBlockGroup }[] {
+): blockAndParents is {
+    block: ContentModelFormatContainer;
+    parent: ContentModelBlockGroup;
+    path: ContentModelBlockGroup[];
+}[] {
     return blockAndParents.every(blockAndParent => isQuote(blockAndParent.block));
 }

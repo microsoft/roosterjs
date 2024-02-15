@@ -1,81 +1,50 @@
 import * as addParser from '../../lib/paste/utils/addParser';
-import * as chainSanitizerCallbackFile from 'roosterjs-editor-dom/lib/htmlSanitizer/chainSanitizerCallback';
 import * as ExcelFile from '../../lib/paste/Excel/processPastedContentFromExcel';
 import * as getPasteSource from '../../lib/paste/pasteSourceValidations/getPasteSource';
 import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
-import { ContentModelBeforePasteEvent } from 'roosterjs-content-model-types';
-import { ContentModelPastePlugin } from '../../lib/paste/ContentModelPastePlugin';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
+import { BeforePasteEvent, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { PastePlugin } from '../../lib/paste/PastePlugin';
 import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
-import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 
 const trustedHTMLHandler = (val: string) => val;
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Content Model Paste Plugin Test', () => {
-    let editor: IContentModelEditor;
+    let editor: IStandaloneEditor;
 
     beforeEach(() => {
         editor = ({
             getTrustedHTMLHandler: () => trustedHTMLHandler,
-        } as any) as IContentModelEditor;
+        } as any) as IStandaloneEditor;
         spyOn(addParser, 'default').and.callThrough();
-        spyOn(chainSanitizerCallbackFile, 'default').and.callThrough();
         spyOn(setProcessor, 'setProcessor').and.callThrough();
     });
 
-    let event: ContentModelBeforePasteEvent = <ContentModelBeforePasteEvent>(<any>{
-        clipboardData: {},
-        fragment: document.createDocumentFragment(),
-        sanitizingOption: {
-            elementCallbacks: {},
-            attributeCallbacks: {},
-            cssStyleCallbacks: {},
-            additionalTagReplacements: {},
-            additionalAllowedAttributes: [],
-            additionalAllowedCssClasses: [],
-            additionalDefaultStyleValues: {},
-            additionalGlobalStyleNodes: [],
-            additionalPredefinedCssForElement: {},
-            preserveHtmlComments: false,
-            unknownTagReplacement: null,
-        },
-        htmlBefore: '',
-        htmlAfter: '',
-        htmlAttributes: {},
-        domToModelOption: {},
-    });
+    let event: BeforePasteEvent;
 
     describe('onPluginEvent', () => {
-        let plugin = new ContentModelPastePlugin();
+        let plugin = new PastePlugin();
 
         beforeEach(() => {
-            plugin = new ContentModelPastePlugin();
+            plugin = new PastePlugin();
 
-            event = <ContentModelBeforePasteEvent>(<any>{
-                eventType: PluginEventType.BeforePaste,
-                domToModelOption: {},
-                sanitizingOption: {
-                    elementCallbacks: {},
-                    attributeCallbacks: {},
-                    cssStyleCallbacks: {},
-                    additionalTagReplacements: {},
-                    additionalAllowedAttributes: [],
-                    additionalAllowedCssClasses: [],
-                    additionalDefaultStyleValues: {},
-                    additionalGlobalStyleNodes: [],
-                    additionalPredefinedCssForElement: {},
-                    preserveHtmlComments: false,
-                    unknownTagReplacement: null,
-                },
-                pasteType: PasteType.Normal,
+            event = {
+                eventType: 'beforePaste',
                 clipboardData: <any>{
                     html: '',
                 },
                 fragment: document.createDocumentFragment(),
-            });
+                htmlBefore: '',
+                htmlAfter: '',
+                htmlAttributes: {},
+                pasteType: 'normal',
+                domToModelOption: {
+                    additionalAllowedTags: [],
+                    additionalDisallowedTags: [],
+                } as any,
+            };
         });
 
         it('WordDesktop', () => {
@@ -84,8 +53,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
@@ -93,7 +61,7 @@ describe('Content Model Paste Plugin Test', () => {
             spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelDesktop');
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
-            (<any>event).pasteType = PasteType.MergeFormat;
+            (<any>event).pasteType = 'mergeFormat';
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
@@ -104,14 +72,13 @@ describe('Content Model Paste Plugin Test', () => {
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Excel | image', () => {
             spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelDesktop');
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
-            (<any>event).pasteType = PasteType.AsImage;
+            (<any>event).pasteType = 'asImage';
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
@@ -121,7 +88,6 @@ describe('Content Model Paste Plugin Test', () => {
                 undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
         });
 
@@ -139,7 +105,6 @@ describe('Content Model Paste Plugin Test', () => {
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Excel Online', () => {
@@ -156,7 +121,6 @@ describe('Content Model Paste Plugin Test', () => {
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Power Point', () => {
@@ -172,7 +136,6 @@ describe('Content Model Paste Plugin Test', () => {
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Wac', () => {
@@ -183,9 +146,8 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(WacFile.processPastedContentWacComponents).toHaveBeenCalledWith(event);
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(4);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
+            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Default', () => {
@@ -196,7 +158,6 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Google Sheets', () => {
@@ -207,12 +168,9 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
-            expect(
-                event.sanitizingOption.additionalTagReplacements[
-                    PastePropertyNames.GOOGLE_SHEET_NODE_NAME
-                ]
-            ).toEqual('*');
+            expect(event.domToModelOption.additionalAllowedTags).toEqual([
+                PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>,
+            ]);
         });
     });
 });

@@ -16,7 +16,7 @@ import type {
     ContentModelEntity,
     ContentModelParagraph,
     DeleteSelectionResult,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     InsertEntityPosition,
 } from 'roosterjs-content-model-types';
 
@@ -29,7 +29,7 @@ export function insertEntityModel(
     position: InsertEntityPosition,
     isBlock: boolean,
     focusAfterEntity?: boolean,
-    context?: FormatWithContentModelContext
+    context?: FormatContentModelContext
 ) {
     let blockParent: ContentModelBlockGroup | undefined;
     let blockIndex = -1;
@@ -38,6 +38,10 @@ export function insertEntityModel(
     if (position == 'begin' || position == 'end') {
         blockParent = model;
         blockIndex = position == 'begin' ? 0 : model.blocks.length;
+
+        if (!isBlock) {
+            Object.assign(entityModel.format, model.format);
+        }
     } else if ((deleteResult = deleteSelection(model, [], context)).insertPoint) {
         const { marker, paragraph, path } = deleteResult.insertPoint;
 
@@ -47,6 +51,8 @@ export function insertEntityModel(
 
         if (!isBlock) {
             const index = paragraph.segments.indexOf(marker);
+
+            Object.assign(entityModel.format, marker.format);
 
             if (index >= 0) {
                 paragraph.segments.splice(focusAfterEntity ? index : index + 1, 0, entityModel);

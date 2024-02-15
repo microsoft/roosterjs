@@ -4,7 +4,7 @@ import {
     ContentModelDocument,
     ContentModelImage,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
     addSegment,
@@ -204,7 +204,7 @@ function segmentTestForPluginEvent(
     let formatResult: boolean | undefined;
     const formatContentModel = jasmine
         .createSpy('formatContentModel')
-        .and.callFake((callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+        .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
             expect(options.apiName).toBe(apiName);
             formatResult = callback(model, {
                 newEntities: [],

@@ -106,6 +106,97 @@ describe('childProcessor', () => {
         expect(textProcessor).toHaveBeenCalledTimes(1);
         expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
     });
+
+    it('With selection and pending format', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        div.appendChild(span);
+
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div,
+                endContainer: div,
+                startOffset: 0,
+                endOffset: 0,
+                collapsed: false,
+            } as any,
+            isReverted: false,
+        };
+        context.pendingFormat = {
+            format: {
+                a: 'a',
+            } as any,
+            posContainer: div,
+            posOffset: 0,
+        };
+
+        childProcessor(doc, div, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: { a: 'a' } as any,
+                            isSelected: true,
+                        },
+                    ],
+                    isImplicit: true,
+                    segmentFormat: { a: 'a' } as any,
+                },
+            ],
+        });
+    });
+
+    it('With selection and pending format, selection not match', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        div.appendChild(span);
+
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div,
+                endContainer: div,
+                startOffset: 0,
+                endOffset: 0,
+                collapsed: false,
+            } as any,
+            isReverted: false,
+        };
+        context.pendingFormat = {
+            format: {
+                a: 'a',
+            } as any,
+            posContainer: div,
+            posOffset: 1,
+        };
+
+        childProcessor(doc, div, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {} as any,
+                            isSelected: true,
+                        },
+                    ],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });
 
 describe('childProcessor', () => {
@@ -129,6 +220,7 @@ describe('childProcessor', () => {
                 endOffset: 2,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -164,6 +256,7 @@ describe('childProcessor', () => {
                 endOffset: 1,
                 collapsed: true,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -199,6 +292,7 @@ describe('childProcessor', () => {
                 endOffset: 10,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -234,6 +328,7 @@ describe('childProcessor', () => {
                 endOffset: 5,
                 collapsed: true,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -268,6 +363,7 @@ describe('childProcessor', () => {
                 endOffset: 5,
                 collapsed: false,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);
@@ -314,6 +410,7 @@ describe('childProcessor', () => {
                 endOffset: 0,
                 collapsed: true,
             } as any,
+            isReverted: false,
         };
 
         childProcessor(doc, div, context);

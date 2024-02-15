@@ -7,6 +7,7 @@ import type {
     ContentModelSegmentFormat,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
+
 /**
  * @internal
  */
@@ -33,7 +34,6 @@ export function formatSegmentWithContentModel(
                 model,
                 !!includingFormatHolder
             );
-            const pendingFormat = editor.getPendingFormat();
             let isCollapsedSelection =
                 segmentAndParagraphs.length == 1 &&
                 segmentAndParagraphs[0][0].segmentType == 'SelectionMarker';
@@ -55,9 +55,7 @@ export function formatSegmentWithContentModel(
                 ContentModelSegmentFormat,
                 ContentModelSegment | null,
                 ContentModelParagraph | null
-            ][] = pendingFormat
-                ? [[pendingFormat, null, null]]
-                : segmentAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
+            ][] = segmentAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
 
             const isTurningOff = segmentHasStyleCallback
                 ? formatsAndSegments.every(([format, segment, paragraph]) =>
@@ -71,11 +69,8 @@ export function formatSegmentWithContentModel(
 
             afterFormatCallback?.(model);
 
-            if (!pendingFormat && isCollapsedSelection) {
-                context.newPendingFormat = segmentAndParagraphs[0][0].format;
-            }
-
             if (isCollapsedSelection) {
+                context.newPendingFormat = segmentAndParagraphs[0][0].format;
                 editor.focus();
                 return false;
             } else {

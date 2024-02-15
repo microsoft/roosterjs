@@ -30,6 +30,13 @@ describe('letterSpacingFormatHandler.parse', () => {
 
         expect(format.letterSpacing).toBe('1em');
     });
+
+    it('Normal', () => {
+        div.style.letterSpacing = 'normal';
+        letterSpacingFormatHandler.parse(format, div, context, {});
+
+        expect(format.letterSpacing).toBeUndefined();
+    });
 });
 
 describe('letterSpacingFormatHandler.apply', () => {

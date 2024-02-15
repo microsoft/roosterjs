@@ -8,7 +8,7 @@ import {
     ContentModelListItem,
     ContentModelTable,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('setAlignment', () => {
@@ -416,13 +416,11 @@ describe('setAlignment', () => {
 
 describe('setAlignment in table', () => {
     let editor: IStandaloneEditor;
-    let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        createContentModel = jasmine.createSpy('createContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         spyOn(normalizeTable, 'normalizeTable');
@@ -430,9 +428,8 @@ describe('setAlignment in table', () => {
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
-            createContentModel,
             isDarkMode: () => false,
-            triggerPluginEvent,
+            triggerEvent,
             getVisibleViewport,
         } as any) as IStandaloneEditor;
     });
@@ -445,19 +442,15 @@ describe('setAlignment in table', () => {
         const model = createContentModelDocument();
         model.blocks.push(table);
 
-        createContentModel.and.returnValue(model);
-
         editor.formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         setAlignment(editor, alignment);
 
@@ -821,51 +814,42 @@ describe('setAlignment in table', () => {
 
 describe('setAlignment in list', () => {
     let editor: IStandaloneEditor;
-    let setContentModel: jasmine.Spy<IStandaloneEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IStandaloneEditor['createContentModel']>;
-    let triggerPluginEvent: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerEvent = jasmine.createSpy('triggerEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
             isDarkMode: () => false,
-            triggerPluginEvent,
+            triggerEvent,
             getVisibleViewport,
         } as any) as IStandaloneEditor;
     });
 
     function runTest(
         list: ContentModelListItem,
-        alignment: 'left' | 'right' | 'center',
+        alignment: 'left' | 'right' | 'center' | 'justify',
         expectedList: ContentModelListItem | null
     ) {
         const model = createContentModelDocument();
         model.blocks.push(list);
 
-        createContentModel.and.returnValue(model);
         let result: boolean | undefined;
 
         editor.formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    result = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                        rawEvent: options.rawEvent,
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                result = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                    rawEvent: options.rawEvent,
+                });
+            });
 
         setAlignment(editor, alignment);
 
@@ -916,7 +900,9 @@ describe('setAlignment in list', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {},
+                        format: {
+                            textAlign: 'start',
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -948,7 +934,9 @@ describe('setAlignment in list', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {},
+                        format: {
+                            textAlign: 'start',
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -1022,7 +1010,9 @@ describe('setAlignment in list', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {},
+                        format: {
+                            textAlign: 'center',
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -1098,7 +1088,9 @@ describe('setAlignment in list', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {},
+                        format: {
+                            textAlign: 'end',
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -1120,6 +1112,86 @@ describe('setAlignment in list', () => {
                 },
                 format: {
                     textAlign: 'end',
+                },
+            }
+        );
+    });
+
+    it('List - apply justify', () => {
+        runTest(
+            {
+                blockGroupType: 'ListItem',
+                blockType: 'BlockGroup',
+                levels: [
+                    {
+                        listType: 'OL',
+                        dataset: {},
+                        format: {},
+                    },
+                ],
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            textAlign: 'end',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+                formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                format: {
+                    textAlign: 'end',
+                },
+            },
+            'justify',
+            {
+                blockGroupType: 'ListItem',
+                blockType: 'BlockGroup',
+                levels: [
+                    {
+                        listType: 'OL',
+                        dataset: {},
+                        format: {},
+                    },
+                ],
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            textAlign: 'justify',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+                formatHolder: {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                format: {
+                    textAlign: 'justify',
                 },
             }
         );

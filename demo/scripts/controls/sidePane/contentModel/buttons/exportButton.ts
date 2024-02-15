@@ -1,20 +1,19 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import ContentModelRibbonButton from '../../../ribbonButtons/contentModel/ContentModelRibbonButton';
 import { getCurrentContentModel } from '../currentModel';
-import { isContentModelEditor } from 'roosterjs-content-model-editor';
-import { RibbonButton } from 'roosterjs-react';
 
-export const exportButton: RibbonButton<'buttonNameExport'> = {
+export const exportButton: ContentModelRibbonButton<'buttonNameExport'> = {
     key: 'buttonNameExport',
     unlocalizedText: 'Create DOM tree',
     iconName: 'DOM',
     onClick: editor => {
-        const model = getCurrentContentModel(editor);
+        const model = getCurrentContentModel();
 
-        if (model && isContentModelEditor(editor)) {
-            editor.addUndoSnapshot(() => {
-                editor.focus();
-                editor.setContentModel(model);
-            }, ChangeSource.SetContent);
+        if (model) {
+            editor.formatContentModel(currentModel => {
+                currentModel.blocks = model.blocks;
+
+                return true;
+            });
         }
     },
 };

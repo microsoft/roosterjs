@@ -1,6 +1,5 @@
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
-import { PluginEventType } from 'roosterjs-editor-types';
 import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
 
 /**
@@ -10,15 +9,11 @@ import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
  * @param isOn True to switch On, False to switch Off
  */
 export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
-    // TODO: Use strong-typed editor core object
     const core = editorCore;
 
     if (isOn != !!core.lifecycle.shadowEditFragment) {
         if (isOn) {
             const model = !core.cache.cachedModel ? core.api.createContentModel(core) : null;
-
-            // Fake object, not used in Content Model Editor, just to satisfy original editor code
-            // TODO: we can remove them once we have standalone Content Model Editor
             const fragment = core.contentDiv.ownerDocument.createDocumentFragment();
             const clonedRoot = core.contentDiv.cloneNode(true /*deep*/);
 
@@ -27,9 +22,7 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: PluginEventType.EnteredShadowEdit,
-                    fragment,
-                    selectionPath: null,
+                    eventType: 'enteredShadowEdit',
                 },
                 false /*broadcast*/
             );
@@ -47,7 +40,7 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: PluginEventType.LeavingShadowEdit,
+                    eventType: 'leavingShadowEdit',
                 },
                 false /*broadcast*/
             );

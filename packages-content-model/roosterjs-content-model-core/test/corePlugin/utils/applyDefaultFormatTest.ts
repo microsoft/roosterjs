@@ -1,13 +1,12 @@
 import * as deleteSelection from '../../../lib/publicApi/selection/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyDefaultFormat } from '../../../lib/corePlugin/utils/applyDefaultFormat';
-import { IEditor } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
-    FormatWithContentModelContext,
-    FormatWithContentModelOptions,
+    FormatContentModelContext,
+    FormatContentModelOptions,
     IStandaloneEditor,
     InsertPoint,
 } from 'roosterjs-content-model-types';
@@ -21,15 +20,16 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('applyDefaultFormat', () => {
-    let editor: IStandaloneEditor & IEditor;
+    let editor: IStandaloneEditor;
     let getDOMSelectionSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let deleteSelectionSpy: jasmine.Spy;
     let normalizeContentModelSpy: jasmine.Spy;
     let takeSnapshotSpy: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
+    let isNodeInEditorSpy: jasmine.Spy;
 
-    let context: FormatWithContentModelContext | undefined;
+    let context: FormatContentModelContext | undefined;
     let model: ContentModelDocument;
 
     let formatResult: boolean | undefined;
@@ -49,11 +49,12 @@ describe('applyDefaultFormat', () => {
         normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
         takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         getPendingFormatSpy = jasmine.createSpy('getPendingFormat');
+        isNodeInEditorSpy = jasmine.createSpy('isNodeInEditor');
 
         formatContentModelSpy = jasmine
             .createSpy('formatContentModelSpy')
             .and.callFake(
-                (formatter: ContentModelFormatter, options: FormatWithContentModelOptions) => {
+                (formatter: ContentModelFormatter, options: FormatContentModelOptions) => {
                     context = {
                         deletedEntities: [],
                         newEntities: [],
@@ -65,7 +66,9 @@ describe('applyDefaultFormat', () => {
             );
 
         editor = {
-            contains: () => true,
+            getDOMHelper: () => ({
+                isNodeInEditor: isNodeInEditorSpy,
+            }),
             getDOMSelection: getDOMSelectionSpy,
             formatContentModel: formatContentModelSpy,
             takeSnapshot: takeSnapshotSpy,
@@ -75,15 +78,21 @@ describe('applyDefaultFormat', () => {
 
     it('No selection', () => {
         getDOMSelectionSpy.and.returnValue(null);
+        deleteSelectionSpy.and.returnValue({});
 
         applyDefaultFormat(editor, defaultFormat);
 
-        expect(formatContentModelSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
     });
 
     it('Selection already has style', () => {
+        const contentDiv = document.createElement('div');
         const node = document.createElement('div');
         node.style.fontFamily = 'Tahoma';
+
+        contentDiv.appendChild(node);
+
+        isNodeInEditorSpy.and.callFake(node => contentDiv.contains(node));
 
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
@@ -92,10 +101,38 @@ describe('applyDefaultFormat', () => {
                 startOffset: 0,
             },
         });
+        deleteSelectionSpy.and.returnValue({
+            deleteResult: '',
+        });
 
         applyDefaultFormat(editor, defaultFormat);
 
-        expect(formatContentModelSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+    });
+
+    it('text under content div directly', () => {
+        const contentDiv = document.createElement('div');
+        const text = document.createTextNode('test');
+
+        contentDiv.style.fontFamily = 'Tahoma';
+        contentDiv.appendChild(text);
+
+        isNodeInEditorSpy.and.callFake(node => contentDiv.contains(node));
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {
+                startContainer: text,
+                startOffset: 0,
+            },
+        });
+        deleteSelectionSpy.and.returnValue({
+            deleteResult: '',
+        });
+
+        applyDefaultFormat(editor, defaultFormat);
+
+        expect(formatContentModelSpy).toHaveBeenCalled();
     });
 
     it('Good selection, delete range ', () => {
@@ -130,6 +167,8 @@ describe('applyDefaultFormat', () => {
     it('Good selection, NothingToDelete ', () => {
         const node = document.createElement('div');
 
+        isNodeInEditorSpy.and.returnValue(true);
+
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
             range: {
@@ -158,6 +197,7 @@ describe('applyDefaultFormat', () => {
 
     it('Good selection, SingleChar ', () => {
         const node = document.createElement('div');
+        isNodeInEditorSpy.and.returnValue(true);
 
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
@@ -191,6 +231,7 @@ describe('applyDefaultFormat', () => {
         const text = createText('test');
         const para = createParagraph();
 
+        isNodeInEditorSpy.and.returnValue(true);
         para.segments.push(text, marker);
         model.blocks.push(para);
 
@@ -232,6 +273,7 @@ describe('applyDefaultFormat', () => {
         const img = createImage('test');
         const para = createParagraph();
 
+        isNodeInEditorSpy.and.returnValue(true);
         para.segments.push(img, marker);
         model.blocks.push(para);
 
@@ -274,6 +316,7 @@ describe('applyDefaultFormat', () => {
         const paraPrev = createParagraph();
         const para = createParagraph(true /*isImplicit*/);
 
+        isNodeInEditorSpy.and.returnValue(true);
         para.segments.push(marker);
         model.blocks.push(paraPrev, para);
 
@@ -315,6 +358,7 @@ describe('applyDefaultFormat', () => {
         const divider = createDivider('hr');
         const para = createParagraph(true /*isImplicit*/);
 
+        isNodeInEditorSpy.and.returnValue(true);
         para.segments.push(marker);
         model.blocks.push(divider, para);
 
@@ -360,6 +404,7 @@ describe('applyDefaultFormat', () => {
         const img = createImage('test');
         const para = createParagraph();
 
+        isNodeInEditorSpy.and.returnValue(true);
         para.segments.push(img, marker);
         model.blocks.push(para);
 

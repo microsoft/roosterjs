@@ -1,3 +1,4 @@
+import { shouldSetValue } from '../utils/shouldSetValue';
 import type { FormatHandler } from '../FormatHandler';
 import type { WhiteSpaceFormat } from 'roosterjs-content-model-types';
 
@@ -8,7 +9,7 @@ export const whiteSpaceFormatHandler: FormatHandler<WhiteSpaceFormat> = {
     parse: (format, element, _, defaultStyle) => {
         const whiteSpace = element.style.whiteSpace || defaultStyle.whiteSpace;
 
-        if (whiteSpace) {
+        if (shouldSetValue(whiteSpace, 'normal', format.whiteSpace, defaultStyle.whiteSpace)) {
             format.whiteSpace = whiteSpace;
         }
     },

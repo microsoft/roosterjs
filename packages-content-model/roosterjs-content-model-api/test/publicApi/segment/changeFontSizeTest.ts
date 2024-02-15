@@ -1,13 +1,13 @@
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
-import { createRange } from 'roosterjs-editor-dom';
+import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('changeFontSize', () => {
@@ -342,21 +342,20 @@ describe('changeFontSize', () => {
         const model = domToContentModel(div, createDomToModelContext(undefined), {
             type: 'range',
             range: createRange(sub),
+            isReverted: false,
         });
 
         let formatResult: boolean | undefined;
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    formatResult = callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                formatResult = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         const editor = ({
             formatContentModel,

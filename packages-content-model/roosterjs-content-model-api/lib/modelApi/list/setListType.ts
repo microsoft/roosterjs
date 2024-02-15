@@ -12,7 +12,9 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Set a list type to content model
+ * @param model the model document
+ * @param listType the list type OL | UL
  */
 export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') {
     const paragraphOrListItems = getOperationalBlocks<ContentModelListItem>(
@@ -26,7 +28,6 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             : shouldIgnoreBlock(block)
     );
     let existingListItems: ContentModelListItem[] = [];
-    let hasIgnoredParagraphBefore = false;
 
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
@@ -75,9 +76,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                         : 1,
                                 direction: block.format.direction,
                                 textAlign: block.format.textAlign,
-                                marginTop: hasIgnoredParagraphBefore ? '0' : undefined,
-                                marginBlockEnd: '0px',
-                                marginBlockStart: '0px',
+                                marginTop: '0px',
+                                marginBottom: '0px',
                             }),
                         ],
                         // For list bullet, we only want to carry over these formats from segments:
@@ -88,10 +88,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                         }
                     );
 
-                    // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
-                    // TODO: Do we need to keep the CSS styles applied to original DIV?
                     if (block.blockType == 'Paragraph') {
-                        block.isImplicit = true;
+                        setParagraphNotImplicit(block);
                     }
 
                     newListItem.blocks.push(block);
@@ -112,9 +110,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                     parent.blocks.splice(index, 1, newListItem);
                     existingListItems.push(newListItem);
                 } else {
-                    hasIgnoredParagraphBefore = true;
-
-                    existingListItems.forEach(x => (x.levels[0].format.marginBottom = '0'));
+                    existingListItems.forEach(x => (x.levels[0].format.marginBottom = '0px'));
                     existingListItems = [];
                 }
             }

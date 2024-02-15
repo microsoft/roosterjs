@@ -1,11 +1,13 @@
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
-import { isWhiteSpacePreserved } from './isWhiteSpacePreserved';
+import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
 import { normalizeAllSegments } from './normalizeSegment';
 import type { ContentModelParagraph } from 'roosterjs-content-model-types';
+
 /**
- * @internal
+ * @param paragraph The paragraph to normalize
+ * Normalize a paragraph. If it is empty, add a BR segment to make sure it can insert content
  */
 export function normalizeParagraph(paragraph: ContentModelParagraph) {
     const segments = paragraph.segments;
@@ -33,7 +35,7 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
         }
     }
 
-    if (!isWhiteSpacePreserved(paragraph)) {
+    if (!isWhiteSpacePreserved(paragraph.format.whiteSpace)) {
         normalizeAllSegments(paragraph);
     }
 

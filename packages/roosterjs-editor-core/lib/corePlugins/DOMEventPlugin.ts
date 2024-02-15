@@ -95,9 +95,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
         // 7. onBlur handlers
         if (Browser.isSafari) {
-            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
-            document.addEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.addEventListener('blur', this.cacheSelection);
+            document.addEventListener('selectionchange', this.onSelectionChangeSafari);
         } else if (Browser.isIEOrEdge) {
             type EventHandlersIE = {
                 beforedeactivate: DOMEventHandler<HTMLElementEventMap['blur']>;
@@ -121,13 +119,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     dispose() {
         const document = this.editor?.getDocument();
         if (document && Browser.isSafari) {
-            document.removeEventListener(
-                'mousedown',
-                this.onMouseDownDocument,
-                true /*useCapture*/
-            );
-            document.removeEventListener('keydown', this.onKeyDownDocument);
-            document.defaultView?.removeEventListener('blur', this.cacheSelection);
+            document.removeEventListener('selectionchange', this.onSelectionChangeSafari);
         }
 
         document?.defaultView?.removeEventListener('resize', this.onScroll);
@@ -173,21 +165,16 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             }
         }
 
-        this.state.selectionRange = null;
-    };
-    private onKeyDownDocument = (event: KeyboardEvent) => {
-        if (event.which == Keys.TAB && !event.defaultPrevented) {
-            this.cacheSelection();
+        if (!Browser.isSafari) {
+            this.state.selectionRange = null;
         }
     };
 
-    private onMouseDownDocument = (event: MouseEvent) => {
-        if (
-            this.editor &&
-            !this.state.selectionRange &&
-            !this.editor.contains(event.target as Node)
-        ) {
-            this.cacheSelection();
+    private onSelectionChangeSafari = () => {
+        // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
+        // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
+        if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
+            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
         }
     };
 
@@ -196,6 +183,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
         }
     };
+
     private onScroll = (e: Event) => {
         this.editor?.triggerPluginEvent(PluginEventType.Scroll, {
             rawEvent: e,

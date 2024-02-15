@@ -1,14 +1,13 @@
 import * as iterateSelections from '../../../lib/publicApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyPendingFormat } from '../../../lib/corePlugin/utils/applyPendingFormat';
-import { IEditor } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelSelectionMarker,
     ContentModelText,
     ContentModelFormatter,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
     IStandaloneEditor,
 } from 'roosterjs-content-model-types';
 import {
@@ -42,20 +41,18 @@ describe('applyPendingFormat', () => {
 
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    expect(options.apiName).toEqual('applyPendingFormat');
-                    callback(model, {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toEqual('applyPendingFormat');
+                callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -120,16 +117,14 @@ describe('applyPendingFormat', () => {
 
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    expect(options.apiName).toEqual('applyPendingFormat');
-                    callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toEqual('applyPendingFormat');
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
+            });
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -188,7 +183,7 @@ describe('applyPendingFormat', () => {
         const formatContentModelSpy = jasmine.createSpy('formatContentModel');
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -239,16 +234,14 @@ describe('applyPendingFormat', () => {
 
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    expect(options.apiName).toEqual('applyPendingFormat');
-                    callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toEqual('applyPendingFormat');
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
+            });
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [text]);
@@ -290,16 +283,14 @@ describe('applyPendingFormat', () => {
 
         const formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (callback: ContentModelFormatter, options: FormatWithContentModelOptions) => {
-                    expect(options.apiName).toEqual('applyPendingFormat');
-                    callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
-                }
-            );
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toEqual('applyPendingFormat');
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
+            });
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor & IEditor;
+        } as any) as IStandaloneEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);

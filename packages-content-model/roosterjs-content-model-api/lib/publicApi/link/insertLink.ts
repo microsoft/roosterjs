@@ -1,5 +1,6 @@
+import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
 import { ChangeSource, getSelectedSegments, mergeModel } from 'roosterjs-content-model-core';
-import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
+import { matchLink } from '../../modelApi/link/matchLink';
 import type { ContentModelLink, IStandaloneEditor } from 'roosterjs-content-model-types';
 import {
     addLink,
@@ -91,6 +92,7 @@ export default function insertLink(
                     });
                 }
 
+                adjustTrailingSpaceSelection(model);
                 return segments.length > 0;
             },
             {
@@ -124,7 +126,6 @@ const createLink = (
     };
 };
 
-// TODO: This is copied from original code. We may need to integrate this logic into matchLink() later.
 function applyLinkPrefix(url: string): string {
     if (!url) {
         return url;
@@ -150,16 +151,6 @@ function applyLinkPrefix(url: string): string {
     return prefix + url;
 }
 
-// TODO: This is copied from original code. However, ContentModel should be able to filter out malicious
-// attributes later, so no need to use HtmlSanitizer here
 function checkXss(link: string): string {
-    const sanitizer = new HtmlSanitizer();
-    const a = document.createElement('a');
-
-    a.href = link || '';
-
-    sanitizer.sanitize(a);
-    // We use getAttribute because some browsers will try to make the href property a valid link.
-    // This has unintended side effects when the link lacks a protocol.
-    return a.getAttribute('href') || '';
+    return link.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) ? '' : link;
 }
