@@ -1,4 +1,6 @@
-import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
+import { convertInlineCss, retrieveCssRules } from '../../utils/convertInlineCss';
+import { createDomToModelContextForSanitizing } from '../../utils/createDomToModelContextForSanitizing';
+import { createEmptyModel, domToContentModel, parseFormat } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -18,18 +20,20 @@ export function createModelFromHtml(
     options?: DomToModelOption,
     trustedHTMLHandler?: TrustedHTMLHandler,
     defaultSegmentFormat?: ContentModelSegmentFormat
-): ContentModelDocument | undefined {
-    const doc = new DOMParser().parseFromString(trustedHTMLHandler?.(html) ?? html, 'text/html');
+): ContentModelDocument {
+    const doc = html
+        ? new DOMParser().parseFromString(trustedHTMLHandler?.(html) ?? html, 'text/html')
+        : null;
 
-    return doc?.body
-        ? domToContentModel(
-              doc.body,
-              createDomToModelContext(
-                  {
-                      defaultFormat: defaultSegmentFormat,
-                  },
-                  options
-              )
-          )
-        : undefined;
+    if (doc?.body) {
+        const context = createDomToModelContextForSanitizing(defaultSegmentFormat, options);
+        const cssRules = doc ? retrieveCssRules(doc) : [];
+
+        convertInlineCss(doc, cssRules);
+        parseFormat(doc.body, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
+
+        return domToContentModel(doc.body, context);
+    } else {
+        return createEmptyModel(defaultSegmentFormat);
+    }
 }

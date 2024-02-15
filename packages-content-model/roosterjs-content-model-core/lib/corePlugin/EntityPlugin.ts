@@ -1,6 +1,11 @@
 import { findAllEntities } from './utils/findAllEntities';
 import { transformColor } from '../publicApi/color/transformColor';
 import {
+    handleCompositionEndEvent,
+    handleDelimiterContentChangedEvent,
+    handleDelimiterKeyDownEvent,
+} from './utils/entityDelimiterUtils';
+import {
     createEntity,
     generateEntityClassNames,
     getAllEntityWrappers,
@@ -81,7 +86,12 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                 case 'contentChanged':
                     this.handleContentChangedEvent(this.editor, event);
                     break;
-
+                case 'keyDown':
+                    handleDelimiterKeyDownEvent(this.editor, event);
+                    break;
+                case 'compositionEnd':
+                    handleCompositionEndEvent(this.editor, event);
+                    break;
                 case 'editorReady':
                     this.handleContentChangedEvent(this.editor);
                     break;
@@ -170,6 +180,8 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                 );
             }
         });
+
+        handleDelimiterContentChangedEvent(editor);
     }
 
     private getChangedEntities(editor: IStandaloneEditor): ChangedEntity[] {

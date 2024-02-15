@@ -1,6 +1,7 @@
 import * as entityUtils from '../../../lib/domUtils/entityUtils';
 import { ContentModelEntity, ModelToDomContext } from 'roosterjs-content-model-types';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { itChromeOnly } from '../../testUtils';
 import {
     handleEntityBlock,
     handleEntitySegment,
@@ -42,6 +43,37 @@ describe('handleEntity', () => {
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
         );
         expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(0);
+    });
+
+    itChromeOnly('Block entity with display: inline-block & width: 100%', () => {
+        const div = document.createElement('div');
+        div.style.display = 'inline-block';
+        div.style.width = '100%';
+
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            entityFormat: {
+                id: 'entity_1',
+                entityType: 'entity',
+                isReadonly: true,
+            },
+            wrapper: div,
+        };
+
+        const parent = document.createElement('div');
+
+        context.addDelimiterForEntity = true;
+        handleEntityBlock(document, parent, entityModel, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<div class="_E_EBlockEntityContainer"><span class="entityDelimiterBefore">​</span><div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false" style="display: inline-block; width: 100%;"></div><span class="entityDelimiterAfter">​</span></div>'
+        );
+        expect(div.outerHTML).toBe(
+            '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false" style="display: inline-block; width: 100%;"></div>'
+        );
+        expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(1);
     });
 
     it('Fake entity', () => {
@@ -159,6 +191,7 @@ describe('handleEntity', () => {
         const entityDiv = ({
             nextSibling: br,
             parentNode: parent,
+            style: {},
         } as any) as HTMLElement;
         const entityModel: ContentModelEntity = {
             blockType: 'Entity',

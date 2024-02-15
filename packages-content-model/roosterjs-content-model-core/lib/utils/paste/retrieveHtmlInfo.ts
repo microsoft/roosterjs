@@ -1,16 +1,10 @@
 import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { retrieveCssRules } from '../convertInlineCss';
+import type { CssRule } from '../convertInlineCss';
 import type { ClipboardData } from 'roosterjs-content-model-types';
 
 const START_FRAGMENT = '<!--StartFragment-->';
 const END_FRAGMENT = '<!--EndFragment-->';
-
-/**
- * @internal
- */
-export interface CssRule {
-    selectors: string[];
-    text: string;
-}
 
 /**
  * @internal
@@ -75,30 +69,6 @@ function retrieveMetadata(doc: Document): Record<string, string> {
 
     toArray(doc.querySelectorAll('meta')).forEach(meta => {
         result[meta.name] = meta.content;
-    });
-
-    return result;
-}
-
-function retrieveCssRules(doc: Document): CssRule[] {
-    const styles = toArray(doc.querySelectorAll('style'));
-    const result: CssRule[] = [];
-
-    styles.forEach(styleNode => {
-        const sheet = styleNode.sheet as CSSStyleSheet;
-
-        for (let ruleIndex = 0; ruleIndex < sheet.cssRules.length; ruleIndex++) {
-            const rule = sheet.cssRules[ruleIndex] as CSSStyleRule;
-
-            if (rule.type == CSSRule.STYLE_RULE && rule.selectorText) {
-                result.push({
-                    selectors: rule.selectorText.split(','),
-                    text: rule.style.cssText,
-                });
-            }
-        }
-
-        styleNode.parentNode?.removeChild(styleNode);
     });
 
     return result;

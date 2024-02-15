@@ -5,7 +5,7 @@ import type {
     ContentModelParagraph,
     ContentModelSegment,
     EntityRemovalOperation,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -19,7 +19,7 @@ import type {
 export function deleteSegment(
     paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
-    context?: FormatWithContentModelContext,
+    context?: FormatContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
     const segments = paragraph.segments;

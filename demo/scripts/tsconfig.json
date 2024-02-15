@@ -49,12 +49,8 @@
             "roosterjs-content-model-api/lib/*": [
                 "packages-content-model/roosterjs-content-model-api/lib/*"
             ],
-            "roosterjs-content-model-editor": [
-                "packages-content-model/roosterjs-content-model-editor/lib/index"
-            ],
-            "roosterjs-content-model-editor/lib/*": [
-                "packages-content-model/roosterjs-content-model-editor/lib/*"
-            ],
+            "roosterjs-editor-adapter": ["packages/roosterjs-editor-adapter/lib/index"],
+            "roosterjs-editor-adapter/lib/*": ["packages/roosterjs-editor-adapter/lib/*"],
             "roosterjs-content-model-plugins": [
                 "packages-content-model/roosterjs-content-model-plugins/lib/index"
             ],

@@ -6,7 +6,7 @@ import type { ClipboardData } from '../parameter/ClipboardData';
 import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
-import type { EntityState } from '../parameter/FormatWithContentModelContext';
+import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
@@ -20,8 +20,8 @@ import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
 import type {
     ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../parameter/FormatWithContentModelOptions';
+    FormatContentModelOptions,
+} from '../parameter/FormatContentModelOptions';
 
 /**
  * Create a EditorContext object used by ContentModel API
@@ -81,12 +81,12 @@ export type SetDOMSelection = (
  * If there is cached model, it will be used and updated.
  * @param core The StandaloneEditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
- * @param options More options, see FormatWithContentModelOptions
+ * @param options More options, see FormatContentModelOptions
  */
 export type FormatContentModel = (
     core: StandaloneEditorCore,
     formatter: ContentModelFormatter,
-    options?: FormatWithContentModelOptions
+    options?: FormatContentModelOptions
 ) => void;
 
 /**
@@ -218,7 +218,7 @@ export interface StandaloneCoreApiMap {
      * If there is cached model, it will be used and updated.
      * @param core The StandaloneEditorCore object
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
     formatContentModel: FormatContentModel;
 
