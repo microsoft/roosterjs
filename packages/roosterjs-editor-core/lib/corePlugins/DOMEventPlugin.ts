@@ -236,7 +236,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             }
         });
         this.editor?.triggerPluginEvent(PluginEventType.ContextMenu, {
-            rawEvent: event as MouseEvent,
+            rawEvent: event,
             items: allItems,
         });
     };
