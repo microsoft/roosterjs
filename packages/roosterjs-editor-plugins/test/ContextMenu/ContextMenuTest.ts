@@ -24,7 +24,7 @@ describe('ContextMenu plugin', () => {
     function triggerWithItems(items: any[]) {
         let event: PluginEvent = {
             eventType: PluginEventType.ContextMenu,
-            rawEvent: new PointerEvent('mousedown'),
+            rawEvent: new MouseEvent('mousedown'),
             items,
         };
 

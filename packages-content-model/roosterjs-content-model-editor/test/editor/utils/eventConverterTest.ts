@@ -320,6 +320,7 @@ describe('oldEventToNewEvent', () => {
                 eventDataCache: mockedDataCache,
                 rawEvent: mockedRawEvent,
                 items: mockedItems,
+                pointerEvent: mockedRawEvent,
             }
         );
     });
@@ -887,6 +888,7 @@ describe('newEventToOldEvent', () => {
                 eventDataCache: mockedDataCache,
                 rawEvent: mockedRawEvent,
                 items: mockedItems,
+                pointerEvent: mockedRawEvent,
             },
             undefined,
             {

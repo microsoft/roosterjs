@@ -200,6 +200,7 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
                 eventDataCache: input.eventDataCache,
                 rawEvent: input.rawEvent,
                 items: input.items,
+                pointerEvent: input.rawEvent as PointerEvent,
             };
 
         case PluginEventType.EditImage:
