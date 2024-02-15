@@ -1,5 +1,6 @@
-import { clearSelectedCells, getSelectedCells } from 'roosterjs-content-model-core';
+import { clearSelectedCells } from './clearSelectedCells';
 import { createTableCell } from 'roosterjs-content-model-dom';
+import { getSelectedCells } from 'roosterjs-content-model-core';
 import type {
     ContentModelTable,
     TableHorizontalInsertOperation,
