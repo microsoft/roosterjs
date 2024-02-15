@@ -1,6 +1,5 @@
 import { clearSelectedCells } from '../../../lib/modelApi/table/clearSelectedCells';
 import { createSelectionMarker, createTable, createTableCell } from 'roosterjs-content-model-dom';
-import { insertTableRow } from '../../../lib/modelApi/table/insertTableRow';
 
 describe('clearSelectedCells', () => {
     it('invalid selection to clear', () => {
