@@ -152,15 +152,16 @@ function onDragging(
 
     // Assign new widths and heights to the CM table
     if (cmTable && cmTable.rows && (shouldResizeX || shouldResizeY)) {
+        // Modify the CM Table size
         for (let i = 0; i < cmTable.rows.length; i++) {
             for (let j = 0; j < cmTable.rows[i].cells.length; j++) {
                 const cell = cmTable.rows[i].cells[j];
                 if (cell) {
                     if (shouldResizeX && i == 0) {
-                        cmTable.widths[j] = ((originalWidths[j] ?? 0) * ratioX) / zoomScale;
+                        cmTable.widths[j] = (originalWidths[j] ?? 0) * ratioX;
                     }
                     if (shouldResizeY && j == 0) {
-                        cmTable.rows[i].height = ((originalHeights[i] ?? 0) * ratioY) / zoomScale;
+                        cmTable.rows[i].height = (originalHeights[i] ?? 0) * ratioY;
                     }
                 }
             }

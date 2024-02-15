@@ -1,7 +1,7 @@
 import createElement from '../../../pluginUtils/CreateElement/createElement';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
-import { getFirstSelectedTable, normalizeTable } from 'roosterjs-content-model-core';
+import { getFirstSelectedTable, MIN_WIDTH, normalizeTable } from 'roosterjs-content-model-core';
 import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ContentModelTable, IStandaloneEditor } from 'roosterjs-content-model-types';
 import type TableEditFeature from './TableEditorFeature';
@@ -68,7 +68,7 @@ interface DragAndDropInitValue {
     cmTable: ContentModelTable | undefined;
     anchorColumn: number | undefined;
     anchorRow: number | undefined;
-    initialX: number;
+    anchorRowHeight: number;
     allWidths: number[];
 }
 
@@ -86,7 +86,7 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
             cmTable: undefined,
             anchorColumn: undefined,
             anchorRow: undefined,
-            initialX: 0,
+            anchorRowHeight: -1,
             allWidths: [],
         }; // Just a fallback
     }
@@ -119,15 +119,15 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
             cmTable,
             anchorColumn: columnIndex,
             anchorRow: rowIndex,
-            initialX: cmTable.widths[columnIndex],
-            allWidths: event.shiftKey ? [...cmTable.widths] : [],
+            anchorRowHeight: cmTable.rows[rowIndex].height,
+            allWidths: [...cmTable.widths],
         };
     } else {
         return {
             cmTable,
             anchorColumn: undefined,
             anchorRow: undefined,
-            initialX: 0,
+            anchorRowHeight: -1,
             allWidths: [],
         }; // Just a fallback
     }
@@ -140,27 +140,28 @@ function onDraggingHorizontal(
     deltaX: number,
     deltaY: number
 ) {
-    const { zoomScale, editor } = context;
-    const { cmTable, anchorRow } = initValue;
+    const { table } = context;
+    const { cmTable, anchorRow, anchorRowHeight } = initValue;
 
-    //TODO: Changes while dragging not updating on editor
-    if (cmTable && anchorRow) {
-        editor.formatContentModel(
-            (model, context) => {
-                context.skipUndoSnapshot = true;
+    // Assign new widths and heights to the CM table
+    if (cmTable && anchorRow != undefined) {
+        // Modify the CM Table size
+        cmTable.rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
 
-                cmTable.rows[anchorRow].height =
-                    (cmTable?.rows[anchorRow].height ?? 0) / zoomScale + deltaY;
-                normalizeTable(cmTable, model.format);
-                return true;
-            },
-            {
-                apiName: 'tableRowResize',
-            }
-        );
+        // Normalize the table
+        normalizeTable(cmTable);
+
+        // Writeback CM Table size changes to DOM Table
+        const tableRow = table.rows[anchorRow];
+        for (let col = 0; col < tableRow.cells.length; col++) {
+            const td = tableRow.cells[col];
+            td.style.height = cmTable.rows[anchorRow].height + 'px';
+        }
+
+        return true;
+    } else {
+        return false;
     }
-
-    return true;
 }
 
 function onDraggingVertical(
@@ -169,44 +170,44 @@ function onDraggingVertical(
     initValue: DragAndDropInitValue,
     deltaX: number
 ) {
-    const { editor, zoomScale } = context;
-    const { cmTable, anchorColumn, initialX, allWidths } = initValue;
+    const { table, isRTL } = context;
+    const { cmTable, anchorColumn, allWidths } = initValue;
 
-    //TODO: Changes while dragging not updating on editor
-    if (cmTable && anchorColumn) {
-        editor.formatContentModel(
-            (model, context) => {
-                context.skipUndoSnapshot = true;
-
-                // This is the last column
-                if (anchorColumn == cmTable.widths.length - 1) {
-                    // Shift held at start of drag
-                    if (allWidths) {
-                        // All columns change equally
-                        cmTable.widths.forEach((width, index) => {
-                            allWidths[index] = width / zoomScale + deltaX;
-                        });
-                    } else {
-                        // Only the last column changes
-                        cmTable.widths[anchorColumn] = initialX / zoomScale + deltaX;
-                    }
-                } else {
-                    // Any other two columns
-                    const newWidth =
-                        cmTable.widths[anchorColumn] + cmTable.widths[anchorColumn + 1] / zoomScale;
-                    cmTable.widths[anchorColumn] = newWidth / 2 + deltaX;
-                    cmTable.widths[anchorColumn + 1] = newWidth / 2 - deltaX;
-                }
-
-                normalizeTable(cmTable, model.format);
-                return true;
-            },
-            {
-                apiName: 'tableColumnResize',
+    // Assign new widths and heights to the CM table
+    if (cmTable && anchorColumn != undefined) {
+        // Modify the CM Table size
+        const lastColumn = anchorColumn == cmTable.widths.length - 1;
+        const change = deltaX * (isRTL ? -1 : 1);
+        // This is the last column
+        if (lastColumn) {
+            // Only the last column changes
+            cmTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
+        } else {
+            // Any other two columns
+            const anchorChange = allWidths[anchorColumn] + change;
+            const nextAnchorChange = allWidths[anchorColumn + 1] - change;
+            if (anchorChange < MIN_WIDTH || nextAnchorChange < MIN_WIDTH) {
+                return false;
             }
-        );
+            cmTable.widths[anchorColumn] = anchorChange;
+            cmTable.widths[anchorColumn + 1] = nextAnchorChange;
+        }
+
+        // Normalize the table
+        normalizeTable(cmTable);
+
+        // Writeback CM Table size changes to DOM Table
+        for (let row = 0; row < table.rows.length; row++) {
+            const tableRow = table.rows[row];
+            for (let col = 0; col < tableRow.cells.length; col++) {
+                tableRow.cells[col].style.width = cmTable.widths[col] + 'px';
+            }
+        }
+
+        return true;
+    } else {
+        return false;
     }
-    return true;
 }
 
 function setHorizontalPosition(context: DragAndDropContext, trigger: HTMLElement) {
