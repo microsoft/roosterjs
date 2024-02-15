@@ -108,4 +108,19 @@ describe('DOMHelperImpl', () => {
         domHelper.setDomAttribute(mockedAttr2, null);
         expect(removeAttributeSpy).toHaveBeenCalledWith(mockedAttr2);
     });
+
+    it('getDomStyle', () => {
+        const mockedValue = 'COLOR' as any;
+        const styleName: keyof CSSStyleDeclaration = 'backgroundColor';
+        const styleSpy = jasmine.createSpyObj('style', [styleName]);
+        styleSpy[styleName] = mockedValue;
+        const mockedDiv = {
+            style: styleSpy,
+        } as any;
+
+        const domHelper = createDOMHelper(mockedDiv);
+        const result = domHelper.getDomStyle(styleName);
+
+        expect(result).toBe(mockedValue);
+    });
 });
