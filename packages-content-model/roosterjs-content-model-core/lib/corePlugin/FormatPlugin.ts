@@ -175,7 +175,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
         return result;
     }
 
-    private shouldApplyDefaultFormat(editor: IStandaloneEditor): boolean {
+    private shouldApplyDefaultFormat(editor: IEditor): boolean {
         const selection = editor.getDOMSelection();
         const range = selection?.type == 'range' ? selection.range : null;
         const posContainer = range?.startContainer ?? null;
