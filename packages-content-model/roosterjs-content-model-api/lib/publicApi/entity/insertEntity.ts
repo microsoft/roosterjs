@@ -58,16 +58,22 @@ export default function insertEntity(
     options?: InsertEntityOptions
 ): ContentModelEntity | null {
     const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot } = options || {};
-    const wrapper = editor.getDocument().createElement(isBlock ? BlockEntityTag : InlineEntityTag);
+    const document = editor.getDocument();
+    const wrapper = document.createElement(isBlock ? BlockEntityTag : InlineEntityTag);
     const display = wrapperDisplay ?? (isBlock ? undefined : 'inline-block');
 
     wrapper.style.setProperty('display', display || null);
+
+    if (display == undefined && isBlock) {
+        wrapper.style.setProperty('width', '100%');
+        wrapper.style.setProperty('display', 'inline-block');
+    }
 
     if (contentNode) {
         wrapper.appendChild(contentNode);
     }
 
-    const entityModel = createEntity(wrapper, true /*isReadonly*/, undefined /*format*/, type);
+    const entityModel = createEntity(wrapper, true /* isReadonly */, undefined /*format*/, type);
 
     editor.formatContentModel(
         (model, context) => {

@@ -1,8 +1,8 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
 import * as keyboardInput from '../../lib/edit/keyboardInput';
 import * as keyboardTab from '../../lib/edit/keyboardTab';
-import { EditPlugin } from '../../lib/edit/EditPlugin';
 import { DOMEventRecord, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { EditPlugin } from '../../lib/edit/EditPlugin';
 
 describe('EditPlugin', () => {
     let plugin: EditPlugin;
@@ -78,7 +78,7 @@ describe('EditPlugin', () => {
         });
 
         it('Tab', () => {
-            const plugin = new EditPlugin();
+            plugin = new EditPlugin();
             const rawEvent = { key: 'Tab' } as any;
 
             plugin.initialize(editor);

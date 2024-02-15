@@ -1,5 +1,6 @@
 import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
+import * as copyPasteEntityOverride from '../../lib/override/pasteCopyBlockEntityParser';
 import * as deleteSelectionsFile from '../../lib/publicApi/selection/deleteSelection';
 import * as extractClipboardItemsFile from '../../lib/utils/extractClipboardItems';
 import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSelections';
@@ -622,17 +623,20 @@ describe('CopyPastePlugin |', () => {
     it('onNodeCreated with table', () => {
         const div = document.createElement('div');
         const table = document.createElement('table');
+        spyOn(copyPasteEntityOverride, 'onCreateCopyEntityNode').and.callThrough();
 
         div.appendChild(table);
 
         onNodeCreated(null!, table);
 
         expect(div.innerHTML).toEqual('<div><table></table></div>');
+        expect(copyPasteEntityOverride.onCreateCopyEntityNode).toHaveBeenCalled();
     });
 
     it('onNodeCreated with readonly element', () => {
         const div = document.createElement('div');
         div.contentEditable = 'true';
+        spyOn(copyPasteEntityOverride, 'onCreateCopyEntityNode').and.callThrough();
 
         const span = document.createElement('span');
         div.appendChild(span);
@@ -640,6 +644,7 @@ describe('CopyPastePlugin |', () => {
 
         onNodeCreated(null!, span);
 
+        expect(copyPasteEntityOverride.onCreateCopyEntityNode).toHaveBeenCalled();
         expect(div.innerHTML).toBe('<span></span>');
     });
 
