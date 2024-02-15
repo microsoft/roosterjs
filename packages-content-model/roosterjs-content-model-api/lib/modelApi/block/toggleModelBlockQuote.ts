@@ -70,6 +70,10 @@ function isQuote(block: ContentModelBlock): block is ContentModelFormatContainer
 
 function areAllBlockQuotes(
     blockAndParents: OperationalBlocks<ContentModelFormatContainer | ContentModelListItem>[]
-): blockAndParents is { block: ContentModelFormatContainer; parent: ContentModelBlockGroup }[] {
+): blockAndParents is {
+    block: ContentModelFormatContainer;
+    parent: ContentModelBlockGroup;
+    path: ContentModelBlockGroup[];
+}[] {
     return blockAndParents.every(blockAndParent => isQuote(blockAndParent.block));
 }

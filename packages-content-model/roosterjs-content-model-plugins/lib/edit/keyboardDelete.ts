@@ -68,13 +68,7 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
     const deleteCollapsedSelection = isForward
         ? forwardDeleteCollapsedSelection
         : backwardDeleteCollapsedSelection;
-    const deleteListStep = !isForward ? deleteList : null;
-    return [
-        deleteAllSegmentBeforeStep,
-        deleteWordSelection,
-        deleteCollapsedSelection,
-        deleteListStep,
-    ];
+    return [deleteAllSegmentBeforeStep, deleteWordSelection, deleteCollapsedSelection, deleteList];
 }
 
 function shouldDeleteWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {

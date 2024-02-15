@@ -38,7 +38,7 @@ export default class ContentModelEditorCode extends CodeElement {
             : '';
         code += darkMode ? this.indent(`getDarkColor: ${darkMode},\n`) : '';
         code += '};\n';
-        code += 'let editor = new roosterjsContentModel.ContentModelEditor(contentDiv, options);\n';
+        code += 'let editor = new roosterjsContentModel.StandaloneEditor(contentDiv, options);\n';
         code += this.buttons ? this.buttons.getCode() : '';
 
         return code;

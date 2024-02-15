@@ -2,7 +2,6 @@ import * as BridgePlugin from '../../lib/corePlugins/BridgePlugin';
 import * as DarkColorHandler from '../../lib/editor/DarkColorHandlerImpl';
 import * as EditPlugin from '../../lib/corePlugins/EditPlugin';
 import * as eventConverter from '../../lib/editor/utils/eventConverter';
-import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { PluginEventType } from 'roosterjs-editor-types';
 
 describe('BridgePlugin', () => {
@@ -69,8 +68,6 @@ describe('BridgePlugin', () => {
         plugin.initialize(mockedInnerEditor);
 
         expect(onInitializeSpy).toHaveBeenCalledWith({
-            api: coreApiMap,
-            originalApi: coreApiMap,
             customData: {},
             experimentalFeatures: [],
             sizeTransformer: jasmine.anything(),
@@ -127,7 +124,6 @@ describe('BridgePlugin', () => {
         const plugin = new BridgePlugin.BridgePlugin(
             onInitializeSpy,
             [mockedPlugin1, mockedPlugin2],
-            { a: 'b' } as any,
             ['c' as any]
         );
         expect(initializeSpy).not.toHaveBeenCalled();
@@ -157,8 +153,6 @@ describe('BridgePlugin', () => {
         plugin.initialize(mockedInnerEditor);
 
         expect(onInitializeSpy).toHaveBeenCalledWith({
-            api: { ...coreApiMap, a: 'b' },
-            originalApi: coreApiMap,
             customData: {},
             experimentalFeatures: ['c'],
             sizeTransformer: jasmine.anything(),
@@ -428,8 +422,6 @@ describe('BridgePlugin', () => {
         plugin.initialize(mockedInnerEditor);
 
         expect(onInitializeSpy).toHaveBeenCalledWith({
-            api: coreApiMap,
-            originalApi: coreApiMap,
             customData: {},
             experimentalFeatures: [],
             sizeTransformer: jasmine.anything(),

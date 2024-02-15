@@ -6,11 +6,12 @@ import {
 } from 'roosterjs-content-model-types';
 
 export function editingTestCommon(
-    apiName: string,
+    apiName: string | undefined,
     executionCallback: (editor: IStandaloneEditor) => void,
     model: ContentModelDocument,
     result: ContentModelDocument,
-    calledTimes: number
+    calledTimes: number,
+    doNotCallDefaultFormat?: boolean
 ) {
     const triggerEvent = jasmine.createSpy('triggerEvent');
 
@@ -30,6 +31,8 @@ export function editingTestCommon(
 
     const editor = ({
         triggerEvent,
+        takeSnapshot: () => {},
+        isInIME: () => false,
         getEnvironment: () => ({}),
         formatContentModel,
     } as any) as IStandaloneEditor;
@@ -37,6 +40,11 @@ export function editingTestCommon(
     executionCallback(editor);
 
     expect(model).toEqual(result);
-    expect(formatContentModel).toHaveBeenCalledTimes(1);
-    expect(formatResult).toBe(calledTimes > 0);
+    if (doNotCallDefaultFormat) {
+        expect(formatContentModel).not.toHaveBeenCalled();
+    } else {
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+    }
+
+    expect(!!formatResult).toBe(calledTimes > 0);
 }

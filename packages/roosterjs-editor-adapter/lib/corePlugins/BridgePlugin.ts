@@ -1,12 +1,6 @@
-import { coreApiMap } from '../coreApi/coreApiMap';
 import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
-import type {
-    ContentModelCoreApiMap,
-    ContentModelEditorCore,
-} from '../publicTypes/ContentModelEditorCore';
-import type { ContentModelCorePluginState } from '../publicTypes/ContentModelCorePlugins';
 import type {
     EditorPlugin as LegacyEditorPlugin,
     PluginEvent as LegacyPluginEvent,
@@ -14,6 +8,9 @@ import type {
     IEditor as ILegacyEditor,
     ExperimentalFeatures,
     SizeTransformer,
+    EditPluginState,
+    CustomData,
+    DarkColorHandler,
 } from 'roosterjs-editor-types';
 import type {
     ContextMenuProvider,
@@ -25,26 +22,61 @@ const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 
 /**
  * @internal
+ * Represents the core data structure of a editor adapter
+ */
+export interface EditorAdapterCore {
+    /**
+     * Custom data of this editor
+     */
+    readonly customData: Record<string, CustomData>;
+
+    /**
+     * Enabled experimental features
+     */
+    readonly experimentalFeatures: ExperimentalFeatures[];
+
+    /**
+     * Dark model handler for the editor, used for variable-based solution.
+     * If keep it null, editor will still use original dataset-based dark mode solution.
+     */
+    readonly darkColorHandler: DarkColorHandler;
+
+    /**
+     * Plugin state of EditPlugin
+     */
+    readonly edit: EditPluginState;
+
+    /**
+     * Context Menu providers
+     */
+    readonly contextMenuProviders: LegacyContextMenuProvider<any>[];
+
+    /**
+     * @deprecated Use zoomScale instead
+     */
+    readonly sizeTransformer: SizeTransformer;
+}
+
+/**
+ * @internal
  * Act as a bridge between Standalone editor and Content Model editor, translate Standalone editor event type to legacy event type
  */
 export class BridgePlugin implements ContextMenuProvider<any> {
     private legacyPlugins: LegacyEditorPlugin[];
-    private corePluginState: ContentModelCorePluginState;
+    private edit: EditPluginState;
+    private contextMenuProviders: LegacyContextMenuProvider<any>[];
     private checkExclusivelyHandling: boolean;
 
     constructor(
-        private onInitialize: (core: ContentModelEditorCore) => ILegacyEditor,
+        private onInitialize: (core: EditorAdapterCore) => ILegacyEditor,
         legacyPlugins: LegacyEditorPlugin[] = [],
-        private legacyCoreApiOverride?: Partial<ContentModelCoreApiMap>,
         private experimentalFeatures: ExperimentalFeatures[] = []
     ) {
         const editPlugin = createEditPlugin();
 
         this.legacyPlugins = [editPlugin, ...legacyPlugins.filter(x => !!x)];
-        this.corePluginState = {
-            edit: editPlugin.getState(),
-            contextMenuProviders: this.legacyPlugins.filter(isContextMenuProvider),
-        };
+        this.edit = editPlugin.getState();
+        this.contextMenuProviders = this.legacyPlugins.filter(isContextMenuProvider);
         this.checkExclusivelyHandling = this.legacyPlugins.some(
             plugin => plugin.willHandleEventExclusively
         );
@@ -125,7 +157,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     getContextMenuItems(target: Node): any[] {
         const allItems: any[] = [];
 
-        this.corePluginState.contextMenuProviders.forEach(provider => {
+        this.contextMenuProviders.forEach(provider => {
             const items = provider.getContextMenuItems(target) ?? [];
             if (items?.length > 0) {
                 if (allItems.length > 0) {
@@ -139,15 +171,14 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         return allItems;
     }
 
-    private createEditorCore(editor: IStandaloneEditor): ContentModelEditorCore {
+    private createEditorCore(editor: IStandaloneEditor): EditorAdapterCore {
         return {
-            api: { ...coreApiMap, ...this.legacyCoreApiOverride },
-            originalApi: coreApiMap,
             customData: {},
             experimentalFeatures: this.experimentalFeatures ?? [],
             sizeTransformer: createSizeTransformer(editor),
             darkColorHandler: createDarkColorHandler(editor.getColorManager()),
-            ...this.corePluginState,
+            edit: this.edit,
+            contextMenuProviders: this.contextMenuProviders,
         };
     }
 }

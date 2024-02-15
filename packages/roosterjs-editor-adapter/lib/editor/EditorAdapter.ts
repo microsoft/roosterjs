@@ -1,6 +1,8 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { insertNode } from './utils/insertNode';
+import type { EditorAdapterCore } from '../corePlugins/BridgePlugin';
 import {
     newEventToOldEvent,
     oldEventToNewEvent,
@@ -52,6 +54,7 @@ import type {
     TableSelection,
     DOMEventHandlerObject,
     DarkColorHandler,
+    IEditor,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -85,15 +88,13 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
-import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import type {
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from '../publicTypes/IContentModelEditor';
+import type { EditorAdapterOptions } from '../publicTypes/EditorAdapterOptions';
 import type {
     ContentModelFormatState,
     DOMEventRecord,
     ExportContentMode,
+    IStandaloneEditor,
+    StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 
 const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
@@ -108,15 +109,15 @@ const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export class ContentModelEditor extends StandaloneEditor implements IContentModelEditor {
-    private contentModelEditorCore: ContentModelEditorCore | undefined;
+export class EditorAdapter extends StandaloneEditor implements IEditor {
+    private contentModelEditorCore: EditorAdapterCore | undefined;
 
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
+    constructor(contentDiv: HTMLDivElement, options: EditorAdapterOptions = {}) {
         const bridgePlugin = new BridgePlugin(
             core => {
                 this.contentModelEditorCore = core;
@@ -124,7 +125,6 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                 return this;
             },
             options.legacyPlugins,
-            options.legacyCoreApiOverride,
             options.experimentalFeatures
         );
 
@@ -139,7 +139,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
                       options.defaultSegmentFormat
                   )
                 : options.initialModel;
-        const standaloneEditorOptions: ContentModelEditorOptions = {
+        const standaloneEditorOptions: StandaloneEditorOptions = {
             ...options,
             plugins,
             initialModel,
@@ -190,10 +190,44 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @returns true if node is inserted. Otherwise false
      */
     insertNode(node: Node, option?: InsertOption): boolean {
-        const core = this.getContentModelEditorCore();
-        const innerCore = this.getCore();
+        if (node) {
+            option = option || {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: false,
+                updateCursor: true,
+                replaceSelection: true,
+                insertToRegionRoot: false,
+            };
 
-        return node ? core.api.insertNode(core, innerCore, node, option ?? null) : false;
+            const { contentDiv } = this.getCore();
+
+            if (option.updateCursor) {
+                this.focus();
+            }
+
+            if (option.position == ContentPosition.Outside) {
+                contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);
+            } else {
+                if (this.isDarkMode()) {
+                    transformColor(
+                        node,
+                        true /*includeSelf*/,
+                        'lightToDark',
+                        this.getColorManager()
+                    );
+                }
+
+                const selection = insertNode(contentDiv, this.getDOMSelection(), node, option);
+
+                if (selection) {
+                    this.setDOMSelection(selection);
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -469,7 +503,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
-        const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+        const rangeEx = buildRangeEx(core.contentDiv, arg1, arg2, arg3, arg4);
         const selection = convertRangeExToDomSelection(rangeEx);
 
         this.setDOMSelection(selection);
@@ -837,7 +871,7 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
      * @param callback The callback function to run
      * @returns a function to cancel this async run
      */
-    runAsync(callback: (editor: IContentModelEditor) => void) {
+    runAsync(callback: (editor: IEditor & IStandaloneEditor) => void) {
         const win = this.getCore().contentDiv.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
@@ -1075,10 +1109,10 @@ export class ContentModelEditor extends StandaloneEditor implements IContentMode
     }
 
     /**
-     * @returns the current ContentModelEditorCore object
+     * @returns the current EditorAdapterCore object
      * @throws a standard Error if there's no core object
      */
-    private getContentModelEditorCore(): ContentModelEditorCore {
+    private getContentModelEditorCore(): EditorAdapterCore {
         if (!this.contentModelEditorCore) {
             throw new Error('Editor is already disposed');
         }

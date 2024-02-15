@@ -1,5 +1,6 @@
 import * as deleteSelection from 'roosterjs-content-model-core/lib/publicApi/selection/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
+import { handleEnterOnList } from '../../lib/edit/inputSteps/handleEnterOnList';
 import { keyboardInput } from '../../lib/edit/keyboardInput';
 import {
     ContentModelDocument,
@@ -384,5 +385,123 @@ describe('keyboardInput', () => {
             newPendingFormat: mockedFormat,
         });
         expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
+    });
+
+    it('Enter key input on collapsed range', () => {
+        const mockedFormat = 'FORMAT' as any;
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+            },
+        });
+        deleteSelectionSpy.and.returnValue({
+            deleteResult: 'range',
+            insertPoint: {
+                marker: {
+                    format: mockedFormat,
+                },
+            },
+        });
+
+        const rawEvent = {
+            key: 'Enter',
+        } as any;
+
+        keyboardInput(editor, rawEvent);
+
+        expect(getDOMSelectionSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            mockedModel,
+            [handleEnterOnList],
+            mockedContext
+        );
+        expect(formatResult).toBeTrue();
+        expect(mockedContext).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            clearModelCache: true,
+            skipUndoSnapshot: true,
+            newPendingFormat: mockedFormat,
+        });
+        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
+    });
+
+    it('Enter key input with IME', () => {
+        const mockedFormat = 'FORMAT' as any;
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+            },
+        });
+        deleteSelectionSpy.and.returnValue({
+            deleteResult: 'range',
+            insertPoint: {
+                marker: {
+                    format: mockedFormat,
+                },
+            },
+        });
+        isInIMESpy.and.returnValue(true);
+
+        const rawEvent = {
+            key: 'Enter',
+            isComposing: false,
+        } as any;
+
+        keyboardInput(editor, rawEvent);
+
+        expect(getDOMSelectionSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+        expect(deleteSelectionSpy).not.toHaveBeenCalled();
+        expect(formatResult).toBeUndefined();
+        expect(mockedContext).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Enter key input with isComposing', () => {
+        const mockedFormat = 'FORMAT' as any;
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+            },
+        });
+        deleteSelectionSpy.and.returnValue({
+            deleteResult: 'range',
+            insertPoint: {
+                marker: {
+                    format: mockedFormat,
+                },
+            },
+        });
+
+        const rawEvent = {
+            key: 'Enter',
+            isComposing: true,
+        } as any;
+
+        keyboardInput(editor, rawEvent);
+
+        expect(getDOMSelectionSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+        expect(deleteSelectionSpy).not.toHaveBeenCalled();
+        expect(formatResult).toBeUndefined();
+        expect(mockedContext).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
     });
 });
