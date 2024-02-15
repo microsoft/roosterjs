@@ -48,4 +48,10 @@ export interface DOMHelper {
      * @param name Name of the attribute
      */
     getDomAttribute(name: string): string | null;
+
+    /**
+     * Get DOM style of editor content DIV
+     * @param style Name of the style
+     */
+    getDomStyle(style: keyof CSSStyleDeclaration): string | number | object | undefined;
 }
