@@ -503,7 +503,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
-        const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+        const rangeEx = buildRangeEx(core.contentDiv, arg1, arg2, arg3, arg4);
         const selection = convertRangeExToDomSelection(rangeEx);
 
         this.setDOMSelection(selection);
