@@ -213,7 +213,7 @@ const wacCommentParser: FormatParser<ContentModelSegmentFormat> = (
  * Convert pasted content from Office Online
  * Once it is known that the document is from WAC
  * We need to remove the display property and margin from all the list item
- * @param ev ContentModelBeforePasteEvent
+ * @param ev BeforePasteEvent
  */
 export function processPastedContentWacComponents(ev: BeforePasteEvent) {
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
