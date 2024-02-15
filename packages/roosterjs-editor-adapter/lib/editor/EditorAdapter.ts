@@ -1,6 +1,8 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { insertNode } from './utils/insertNode';
+import type { EditorAdapterCore } from '../corePlugins/BridgePlugin';
 import {
     newEventToOldEvent,
     oldEventToNewEvent,
@@ -86,7 +88,6 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
-import type { EditorAdapterCore } from '../publicTypes/EditorAdapterCore';
 import type { EditorAdapterOptions } from '../publicTypes/EditorAdapterOptions';
 import type {
     ContentModelFormatState,
@@ -124,7 +125,6 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                 return this;
             },
             options.legacyPlugins,
-            options.legacyCoreApiOverride,
             options.experimentalFeatures
         );
 
@@ -190,10 +190,44 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @returns true if node is inserted. Otherwise false
      */
     insertNode(node: Node, option?: InsertOption): boolean {
-        const core = this.getContentModelEditorCore();
-        const innerCore = this.getCore();
+        if (node) {
+            option = option || {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: false,
+                updateCursor: true,
+                replaceSelection: true,
+                insertToRegionRoot: false,
+            };
 
-        return node ? core.api.insertNode(core, innerCore, node, option ?? null) : false;
+            const { contentDiv } = this.getCore();
+
+            if (option.updateCursor) {
+                this.focus();
+            }
+
+            if (option.position == ContentPosition.Outside) {
+                contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);
+            } else {
+                if (this.isDarkMode()) {
+                    transformColor(
+                        node,
+                        true /*includeSelf*/,
+                        'lightToDark',
+                        this.getColorManager()
+                    );
+                }
+
+                const selection = insertNode(contentDiv, this.getDOMSelection(), node, option);
+
+                if (selection) {
+                    this.setDOMSelection(selection);
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -469,7 +503,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
-        const rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+        const rangeEx = buildRangeEx(core.contentDiv, arg1, arg2, arg3, arg4);
         const selection = convertRangeExToDomSelection(rangeEx);
 
         this.setDOMSelection(selection);
