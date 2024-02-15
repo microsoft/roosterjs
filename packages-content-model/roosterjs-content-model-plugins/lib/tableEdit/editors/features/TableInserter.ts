@@ -1,12 +1,12 @@
 import createElement from '../../../pluginUtils/CreateElement/createElement';
 import getIntersectedRect from '../../../pluginUtils/Rect/getIntersectedRect';
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
+import { isElementOfType } from 'roosterjs-content-model-dom';
 import {
     formatTableWithContentModel,
     insertTableColumn,
     insertTableRow,
 } from 'roosterjs-content-model-api';
-import { isElementOfType } from 'roosterjs-content-model-dom';
 import type CreateElementData from '../../../pluginUtils/CreateElement/CreateElementData';
 import type Disposable from '../../../pluginUtils/Disposable';
 import type TableEditFeature from './TableEditorFeature';
@@ -116,9 +116,9 @@ class TableInsertHandler implements Disposable {
             this.td.parentElement && isElementOfType(this.td.parentElement, 'tr')
                 ? this.td.parentElement
                 : undefined;
-        const rowIndex = row?.rowIndex;
+        const rowIndex = row && row.rowIndex;
 
-        if (rowIndex == undefined) {
+        if (row?.cells == undefined || rowIndex == undefined) {
             return;
         }
 
