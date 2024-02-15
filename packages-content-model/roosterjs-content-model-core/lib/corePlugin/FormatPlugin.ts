@@ -1,17 +1,30 @@
 import { applyDefaultFormat } from './utils/applyDefaultFormat';
 import { applyPendingFormat } from './utils/applyPendingFormat';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { getObjectKeys, isBlockElement, isNodeOfType } from 'roosterjs-content-model-dom';
 import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import type {
+    BackgroundColorFormat,
+    FontFamilyFormat,
+    FontSizeFormat,
     FormatPluginState,
     IEditor,
     PluginEvent,
     PluginWithState,
     EditorOptions,
+    TextColorFormat,
 } from 'roosterjs-content-model-types';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
+const DefaultStyleKeyMap: Record<
+    keyof (FontFamilyFormat & FontSizeFormat & TextColorFormat & BackgroundColorFormat),
+    keyof CSSStyleDeclaration
+> = {
+    backgroundColor: 'backgroundColor',
+    textColor: 'color',
+    fontFamily: 'fontFamily',
+    fontSize: 'fontSize',
+};
 
 /**
  * FormatPlugin plugins helps editor to do formatting on top of content model.
@@ -20,8 +33,9 @@ const ProcessKey = 'Process';
  */
 class FormatPlugin implements PluginWithState<FormatPluginState> {
     private editor: IEditor | null = null;
-    private hasDefaultFormat = false;
+    private defaultFormatKeys: Set<keyof CSSStyleDeclaration>;
     private state: FormatPluginState;
+    private lastCheckedNode: Node | null = null;
 
     /**
      * Construct a new instance of FormatPlugin class
@@ -32,6 +46,14 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
             defaultFormat: { ...option.defaultSegmentFormat },
             pendingFormat: null,
         };
+
+        this.defaultFormatKeys = new Set<keyof CSSStyleDeclaration>();
+
+        getObjectKeys(DefaultStyleKeyMap).forEach(key => {
+            if (this.state.defaultFormat[key]) {
+                this.defaultFormatKeys.add(DefaultStyleKeyMap[key]);
+            }
+        });
     }
 
     /**
@@ -49,10 +71,6 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.hasDefaultFormat =
-            getObjectKeys(this.state.defaultFormat).filter(
-                x => typeof this.state.defaultFormat[x] !== 'undefined'
-            ).length > 0;
     }
 
     /**
@@ -102,9 +120,11 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
             case 'keyDown':
                 if (isCursorMovingKey(event.rawEvent)) {
                     this.clearPendingFormat();
+                    this.lastCheckedNode = null;
                 } else if (
-                    this.hasDefaultFormat &&
-                    (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey)
+                    this.defaultFormatKeys.size > 0 &&
+                    (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey) &&
+                    this.shouldApplyDefaultFormat(this.editor)
                 ) {
                     applyDefaultFormat(this.editor, this.state.defaultFormat);
                 }
@@ -113,6 +133,8 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
 
             case 'mouseUp':
             case 'contentChanged':
+                this.lastCheckedNode = null;
+
                 if (!this.canApplyPendingFormat()) {
                     this.clearPendingFormat();
                 }
@@ -151,6 +173,48 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
         }
 
         return result;
+    }
+
+    private shouldApplyDefaultFormat(editor: IStandaloneEditor): boolean {
+        const selection = editor.getDOMSelection();
+        const range = selection?.type == 'range' ? selection.range : null;
+        const posContainer = range?.startContainer ?? null;
+
+        if (posContainer && posContainer != this.lastCheckedNode) {
+            // Cache last checked parent node so no need to check it again if user is keep typing under the same node
+            this.lastCheckedNode = posContainer;
+
+            const domHelper = editor.getDOMHelper();
+            let element: HTMLElement | null = isNodeOfType(posContainer, 'ELEMENT_NODE')
+                ? posContainer
+                : posContainer.parentElement;
+            const foundFormatKeys = new Set<keyof CSSStyleDeclaration>();
+
+            while (element?.parentElement && domHelper.isNodeInEditor(element.parentElement)) {
+                if (element.getAttribute?.('style')) {
+                    const style = element.style;
+                    this.defaultFormatKeys.forEach(key => {
+                        if (style[key]) {
+                            foundFormatKeys.add(key);
+                        }
+                    });
+
+                    if (foundFormatKeys.size == this.defaultFormatKeys.size) {
+                        return false;
+                    }
+                }
+
+                if (isBlockElement(element)) {
+                    break;
+                }
+
+                element = element.parentElement;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
