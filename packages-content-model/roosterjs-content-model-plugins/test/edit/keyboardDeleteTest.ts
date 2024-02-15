@@ -93,7 +93,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, forwardDeleteCollapsedSelection, null!],
+            [null!, null!, forwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -131,7 +131,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, forwardDeleteWordSelection, forwardDeleteCollapsedSelection, null!],
+            [null!, forwardDeleteWordSelection, forwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -171,7 +171,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, forwardDeleteCollapsedSelection, null!],
+            [null!, null!, forwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -233,7 +233,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, forwardDeleteCollapsedSelection, null!],
+            [null!, null!, forwardDeleteCollapsedSelection, deleteList],
             'notDeleted',
             true,
             0
@@ -327,7 +327,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, forwardDeleteCollapsedSelection, null!],
+            [null!, null!, forwardDeleteCollapsedSelection, deleteList],
             'singleChar',
             false,
             1

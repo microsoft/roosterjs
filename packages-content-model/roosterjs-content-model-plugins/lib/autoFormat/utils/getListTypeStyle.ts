@@ -1,6 +1,5 @@
-import { getIndex } from './getIndex';
+import { findListItemsInSameThread } from 'roosterjs-content-model-api';
 import { getNumberingListStyle } from './getNumberingListStyle';
-
 import type {
     ContentModelDocument,
     ContentModelListItem,
@@ -49,19 +48,23 @@ export function getListTypeStyle(
             return { listType: 'UL', styleType: bulletType };
         } else if (shouldSearchForNumbering) {
             const previousList = getPreviousListLevel(model, paragraph);
+            const previousIndex = getPreviousListIndex(model, previousList);
             const previousListStyle = getPreviousListStyle(previousList);
             const numberingType = getNumberingListStyle(
                 listMarker,
-                previousList?.format?.listStyleType
-                    ? getIndex(previousList.format.listStyleType)
-                    : undefined,
+                previousIndex,
                 previousListStyle
             );
             if (numberingType) {
                 return {
                     listType: 'OL',
                     styleType: numberingType,
-                    index: previousList?.format?.listStyleType ? getIndex(listMarker) : undefined,
+                    index:
+                        !isNewList(listMarker) &&
+                        previousListStyle === numberingType &&
+                        previousIndex
+                            ? previousIndex + 1
+                            : undefined,
                 };
             }
         }
@@ -69,22 +72,34 @@ export function getListTypeStyle(
     return undefined;
 }
 
+const getPreviousListIndex = (
+    model: ContentModelDocument,
+    previousListItem?: ContentModelListItem
+) => {
+    return previousListItem ? findListItemsInSameThread(model, previousListItem).length : undefined;
+};
+
 const getPreviousListLevel = (model: ContentModelDocument, paragraph: ContentModelParagraph) => {
-    const blocks = getOperationalBlocks(model, ['ListItem'], ['TableCell']);
+    const blocks = getOperationalBlocks<ContentModelListItem>(
+        model,
+        ['ListItem'],
+        ['TableCell']
+    )[0];
     let listItem: ContentModelListItem | undefined = undefined;
-    const listBlock = blocks.filter(({ block, parent }) => {
-        return parent.blocks.indexOf(paragraph) > -1;
-    })[0];
-    if (listBlock) {
-        const length = listBlock.parent.blocks.length;
-        for (let i = length - 1; i > -1; i--) {
-            const item = listBlock.parent.blocks[i];
-            if (isBlockGroupOfType<ContentModelListItem>(item, 'ListItem')) {
-                listItem = item;
-                break;
+    if (blocks) {
+        const listBlockIndex = blocks.parent.blocks.indexOf(paragraph);
+
+        if (listBlockIndex > -1) {
+            for (let i = listBlockIndex - 1; i > -1; i--) {
+                const item = blocks.parent.blocks[i];
+                if (isBlockGroupOfType<ContentModelListItem>(item, 'ListItem')) {
+                    listItem = item;
+                    break;
+                }
             }
         }
     }
+
     return listItem;
 };
 
@@ -103,4 +118,10 @@ const bulletListType: Record<string, number> = {
     '=>': BulletListType.UnfilledArrow,
     '>': BulletListType.ShortArrow,
     '—': BulletListType.Hyphen,
+};
+
+const isNewList = (listMarker: string) => {
+    const marker = listMarker.replace(/[^\w\s]/g, '');
+    const pattern = /^[1aAiI]$/;
+    return pattern.test(marker);
 };
