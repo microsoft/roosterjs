@@ -20,12 +20,6 @@ import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyBut
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
 import { arrayPush } from 'roosterjs-editor-dom';
-import {
-    AutoFormatPlugin,
-    EditPlugin,
-    PastePlugin,
-    TableEditPlugin,
-} from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -85,6 +79,12 @@ import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
+import {
+    AutoFormatPlugin,
+    EditPlugin,
+    PastePlugin,
+    TableEditPlugin,
+} from 'roosterjs-content-model-plugins';
 import {
     spaceAfterButton,
     spaceBeforeButton,
