@@ -20,6 +20,7 @@ import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyBut
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
 import { arrayPush } from 'roosterjs-editor-dom';
+import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -29,11 +30,11 @@ import { clearFormatButton } from './ribbonButtons/contentModel/clearFormatButto
 import { codeButton } from './ribbonButtons/contentModel/codeButton';
 import { ContentModelRibbon } from './ribbonButtons/contentModel/ContentModelRibbon';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { ContentModelSegmentFormat, Snapshots } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import { darkMode } from './ribbonButtons/contentModel/darkMode';
 import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
 import { decreaseIndentButton } from './ribbonButtons/contentModel/decreaseIndentButton';
+import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
 import { EditorPlugin } from 'roosterjs-editor-types';
 import { exportContent } from './ribbonButtons/contentModel/export';
 import { fontButton } from './ribbonButtons/contentModel/fontButton';
@@ -80,6 +81,11 @@ import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
 import {
+    ContentModelSegmentFormat,
+    IStandaloneEditor,
+    Snapshots,
+} from 'roosterjs-content-model-types';
+import {
     spaceAfterButton,
     spaceBeforeButton,
 } from './ribbonButtons/contentModel/spaceBeforeAfterButtons';
@@ -91,16 +97,6 @@ import {
     tableMergeButton,
     tableSplitButton,
 } from './ribbonButtons/contentModel/tableEditButtons';
-import {
-    ContentModelAutoFormatPlugin,
-    ContentModelEditPlugin,
-    ContentModelPastePlugin,
-} from 'roosterjs-content-model-plugins';
-import {
-    ContentModelEditor,
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from 'roosterjs-content-model-editor';
 
 const styles = require('./ContentModelEditorMainPane.scss');
 
@@ -159,7 +155,7 @@ const DarkTheme: PartialTheme = {
 };
 
 interface ContentModelMainPaneState extends MainPaneBaseState {
-    editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) => IContentModelEditor;
+    editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IStandaloneEditor;
 }
 
 class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {
@@ -168,15 +164,15 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private eventViewPlugin: ContentModelEventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
-    private contentModelEditPlugin: ContentModelEditPlugin;
-    private contentModelAutoFormatPlugin: ContentModelAutoFormatPlugin;
+    private contentModelEditPlugin: EditPlugin;
+    private contentModelAutoFormatPlugin: AutoFormatPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
-    private pastePlugin: ContentModelPastePlugin;
+    private pastePlugin: PastePlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
     private snapshots: Snapshots;
     private buttons: ContentModelRibbonButton<any>[] = [
@@ -261,13 +257,13 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
-        this.contentModelEditPlugin = new ContentModelEditPlugin();
-        this.contentModelAutoFormatPlugin = new ContentModelAutoFormatPlugin();
+        this.contentModelEditPlugin = new EditPlugin();
+        this.contentModelAutoFormatPlugin = new AutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
-        this.pastePlugin = new ContentModelPastePlugin();
+        this.pastePlugin = new PastePlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
@@ -343,8 +339,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     resetEditor() {
         this.toggleablePlugins = null;
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: ContentModelEditorOptions) =>
-                new ContentModelEditor(div, {
+            editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) =>
+                new EditorAdapter(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
                 }),

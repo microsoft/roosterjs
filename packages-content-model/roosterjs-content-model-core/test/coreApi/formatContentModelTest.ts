@@ -5,7 +5,7 @@ import { formatContentModel } from '../../lib/coreApi/formatContentModel';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
@@ -741,12 +741,10 @@ describe('formatContentModel', () => {
             const mockedEntityState = 'STATE' as any;
             const callback = jasmine
                 .createSpy('callback')
-                .and.callFake(
-                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
-                        context.entityStates = mockedEntityState;
-                        return true;
-                    }
-                );
+                .and.callFake((model: ContentModelDocument, context: FormatContentModelContext) => {
+                    context.entityStates = mockedEntityState;
+                    return true;
+                });
 
             formatContentModel(core, callback);
 
@@ -765,12 +763,10 @@ describe('formatContentModel', () => {
         it('trigger addUndoSnapshot when has canUndoByBackspace', () => {
             const callback = jasmine
                 .createSpy('callback')
-                .and.callFake(
-                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
-                        context.canUndoByBackspace = true;
-                        return true;
-                    }
-                );
+                .and.callFake((model: ContentModelDocument, context: FormatContentModelContext) => {
+                    context.canUndoByBackspace = true;
+                    return true;
+                });
 
             formatContentModel(core, callback);
 
@@ -788,12 +784,10 @@ describe('formatContentModel', () => {
         it('trigger addUndoSnapshot when has canUndoByBackspace and has valid range selection', () => {
             const callback = jasmine
                 .createSpy('callback')
-                .and.callFake(
-                    (model: ContentModelDocument, context: FormatWithContentModelContext) => {
-                        context.canUndoByBackspace = true;
-                        return true;
-                    }
-                );
+                .and.callFake((model: ContentModelDocument, context: FormatContentModelContext) => {
+                    context.canUndoByBackspace = true;
+                    return true;
+                });
 
             setContentModel.and.returnValue({
                 type: 'range',
@@ -812,9 +806,7 @@ describe('formatContentModel', () => {
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
             expect(core.undo).toEqual({
                 isNested: false,
-                snapshotsManager: {
-                    hasNewContent: false,
-                },
+                snapshotsManager: {},
                 posContainer: mockedContainer,
                 posOffset: mockedOffset,
             } as any);
@@ -833,7 +825,9 @@ describe('formatContentModel', () => {
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
             expect(core.undo).toEqual({
                 isNested: true,
-                snapshotsManager: {},
+                snapshotsManager: {
+                    hasNewContent: true,
+                },
             } as any);
         });
     });

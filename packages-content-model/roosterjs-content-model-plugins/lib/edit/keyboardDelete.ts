@@ -26,8 +26,10 @@ import type {
  * Do keyboard event handling for DELETE/BACKSPACE key
  * @param editor The Content Model Editor
  * @param rawEvent DOM keyboard event
+ * @returns True if the event is handled by content model, otherwise false
  */
 export function keyboardDelete(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
+    let handled = false;
     const selection = editor.getDOMSelection();
 
     if (shouldDeleteWithContentModel(selection, rawEvent)) {
@@ -39,7 +41,8 @@ export function keyboardDelete(editor: IStandaloneEditor, rawEvent: KeyboardEven
                     context
                 ).deleteResult;
 
-                return handleKeyboardEventResult(editor, model, rawEvent, result, context);
+                handled = handleKeyboardEventResult(editor, model, rawEvent, result, context);
+                return handled;
             },
             {
                 rawEvent,
@@ -48,9 +51,9 @@ export function keyboardDelete(editor: IStandaloneEditor, rawEvent: KeyboardEven
                 apiName: rawEvent.key == 'Delete' ? 'handleDeleteKey' : 'handleBackspaceKey',
             }
         );
-
-        return true;
     }
+
+    return handled;
 }
 
 function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelectionStep | null)[] {
@@ -65,13 +68,7 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
     const deleteCollapsedSelection = isForward
         ? forwardDeleteCollapsedSelection
         : backwardDeleteCollapsedSelection;
-    const deleteListStep = !isForward ? deleteList : null;
-    return [
-        deleteAllSegmentBeforeStep,
-        deleteWordSelection,
-        deleteCollapsedSelection,
-        deleteListStep,
-    ];
+    return [deleteAllSegmentBeforeStep, deleteWordSelection, deleteCollapsedSelection, deleteList];
 }
 
 function shouldDeleteWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {

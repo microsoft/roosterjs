@@ -15,7 +15,7 @@ import type {
     DOMHelper,
     DOMSelection,
     EditorEnvironment,
-    FormatWithContentModelOptions,
+    FormatContentModelOptions,
     IStandaloneEditor,
     PasteType,
     PluginEventData,
@@ -26,6 +26,7 @@ import type {
     StandaloneEditorCore,
     StandaloneEditorOptions,
     TrustedHTMLHandler,
+    Rect,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -39,14 +40,8 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(
-        contentDiv: HTMLDivElement,
-        options: StandaloneEditorOptions = {},
-        onBeforeInitializePlugins?: () => void
-    ) {
+    constructor(contentDiv: HTMLDivElement, options: StandaloneEditorOptions = {}) {
         this.core = createStandaloneEditorCore(contentDiv, options);
-
-        onBeforeInitializePlugins?.();
 
         const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
 
@@ -152,11 +147,11 @@ export class StandaloneEditor implements IStandaloneEditor {
      * to do format change. Then according to the return value, write back the modified content model into editor.
      * If there is cached model, it will be used and updated.
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
     formatContentModel(
         formatter: ContentModelFormatter,
-        options?: FormatWithContentModelOptions
+        options?: FormatContentModelOptions
     ): void {
         const core = this.getCore();
 
@@ -302,14 +297,6 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    isInIME(): boolean {
-        return this.getCore().domEvent.isInIME;
-    }
-
-    /**
      * Check if editor is in Shadow Edit mode
      */
     isInShadowEdit() {
@@ -363,6 +350,20 @@ export class StandaloneEditor implements IStandaloneEditor {
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler {
         return this.getCore().trustedHTMLHandler;
+    }
+
+    /**
+     * Get the scroll container of the editor
+     */
+    getScrollContainer(): HTMLElement {
+        return this.getCore().domEvent.scrollContainer;
+    }
+
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null {
+        return this.getCore().api.getVisibleViewport(this.getCore());
     }
 
     /**

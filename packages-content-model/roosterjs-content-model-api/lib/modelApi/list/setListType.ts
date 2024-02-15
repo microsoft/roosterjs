@@ -89,7 +89,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                     );
 
                     if (block.blockType == 'Paragraph') {
-                        block.isImplicit = true;
+                        setParagraphNotImplicit(block);
                     }
 
                     newListItem.blocks.push(block);

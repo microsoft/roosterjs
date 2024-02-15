@@ -1,5 +1,6 @@
 export { domToContentModel } from './domToModel/domToContentModel';
 export { contentModelToDom } from './modelToDom/contentModelToDom';
+export { contentModelToText } from './modelToText/contentModelToText';
 
 export {
     childProcessor,
@@ -26,6 +27,7 @@ export {
     parseEntityClassName,
     generateEntityClassNames,
     addDelimiters,
+    isEntityDelimiter,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
@@ -51,6 +53,7 @@ export { createEmptyModel } from './modelApi/creators/createEmptyModel';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
+export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';

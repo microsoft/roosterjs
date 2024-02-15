@@ -20,7 +20,7 @@ import type {
     ContentModelParagraph,
     ContentModelSegmentFormat,
     ContentModelTable,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     InsertPoint,
 } from 'roosterjs-content-model-types';
 
@@ -66,7 +66,7 @@ export interface MergeModelOption {
 export function mergeModel(
     target: ContentModelDocument,
     source: ContentModelDocument,
-    context?: FormatWithContentModelContext,
+    context?: FormatContentModelContext,
     options?: MergeModelOption
 ): InsertPoint | null {
     const insertPosition =
@@ -131,7 +131,7 @@ function mergeParagraph(
     markerPosition: InsertPoint,
     newPara: ContentModelParagraph,
     mergeToCurrentParagraph: boolean,
-    context?: FormatWithContentModelContext,
+    context?: FormatContentModelContext,
     option?: MergeModelOption
 ) {
     const { paragraph, marker } = markerPosition;

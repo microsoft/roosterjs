@@ -8,6 +8,10 @@ class DOMHelperImpl implements DOMHelper {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
     }
 
+    getTextContent(): string {
+        return this.contentDiv.textContent || '';
+    }
+
     isNodeInEditor(node: Node): boolean {
         return this.contentDiv.contains(node);
     }
@@ -19,6 +23,22 @@ class DOMHelperImpl implements DOMHelper {
         return visualWidth > 0 && originalWidth > 0
             ? Math.round((originalWidth / visualWidth) * 100) / 100
             : 1;
+    }
+
+    setDomAttribute(name: string, value: string | null) {
+        if (value === null) {
+            this.contentDiv.removeAttribute(name);
+        } else {
+            this.contentDiv.setAttribute(name, value);
+        }
+    }
+
+    getDomAttribute(name: string): string | null {
+        return this.contentDiv.getAttribute(name);
+    }
+
+    getDomStyle<T extends keyof CSSStyleDeclaration>(style: T): CSSStyleDeclaration[T] {
+        return this.contentDiv.style[style];
     }
 }
 

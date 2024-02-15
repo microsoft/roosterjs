@@ -141,4 +141,9 @@ export interface ContentModelFormatMap {
      * Format type for entity
      */
     entity: ContentModelEntityFormat;
+
+    /**
+     * Format type for general model
+     */
+    general: ContentModelSegmentFormat;
 }

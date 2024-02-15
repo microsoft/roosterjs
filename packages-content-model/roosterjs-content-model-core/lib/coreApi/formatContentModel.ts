@@ -4,7 +4,7 @@ import type {
     ContentChangedEvent,
     DOMSelection,
     FormatContentModel,
-    FormatWithContentModelContext,
+    FormatContentModelContext,
     StandaloneEditorCore,
 } from 'roosterjs-content-model-types';
 
@@ -16,13 +16,13 @@ import type {
  * If there is cached model, it will be used and updated.
  * @param core The StandaloneEditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
- * @param options More options, see FormatWithContentModelOptions
+ * @param options More options, see FormatContentModelOptions
  */
 export const formatContentModel: FormatContentModel = (core, formatter, options) => {
     const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
         options || {};
     const model = core.api.createContentModel(core, undefined /*option*/, selectionOverride);
-    const context: FormatWithContentModelContext = {
+    const context: FormatContentModelContext = {
         newEntities: [],
         deletedEntities: [],
         rawEvent,
@@ -60,31 +60,32 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
 
             handlePendingFormat(core, context, selection);
 
+            const eventData: ContentChangedEvent = {
+                eventType: 'contentChanged',
+                contentModel: clearModelCache ? undefined : model,
+                selection: clearModelCache ? undefined : selection,
+                source: changeSource || ChangeSource.Format,
+                data: getChangeData?.(),
+                formatApiName: apiName,
+                changedEntities: getChangedEntities(context, rawEvent),
+            };
+
+            core.api.triggerEvent(core, eventData, true /*broadcast*/);
+
+            if (canUndoByBackspace && selection?.type == 'range') {
+                core.undo.posContainer = selection.range.startContainer;
+                core.undo.posOffset = selection.range.startOffset;
+            }
+
             if (shouldAddSnapshot) {
                 core.api.addUndoSnapshot(core, !!canUndoByBackspace, entityStates);
+            } else {
+                core.undo.snapshotsManager.hasNewContent = true;
             }
         } finally {
             if (!isNested) {
                 core.undo.isNested = false;
             }
-        }
-
-        const eventData: ContentChangedEvent = {
-            eventType: 'contentChanged',
-            contentModel: clearModelCache ? undefined : model,
-            selection: clearModelCache ? undefined : selection,
-            source: changeSource || ChangeSource.Format,
-            data: getChangeData?.(),
-            formatApiName: apiName,
-            changedEntities: getChangedEntities(context, rawEvent),
-        };
-
-        core.api.triggerEvent(core, eventData, true /*broadcast*/);
-
-        if (canUndoByBackspace && selection?.type == 'range') {
-            core.undo.snapshotsManager.hasNewContent = false;
-            core.undo.posContainer = selection.range.startContainer;
-            core.undo.posOffset = selection.range.startOffset;
         }
     } else {
         if (clearModelCache) {
@@ -96,7 +97,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
     }
 };
 
-function handleImages(core: StandaloneEditorCore, context: FormatWithContentModelContext) {
+function handleImages(core: StandaloneEditorCore, context: FormatContentModelContext) {
     if (context.newImages.length > 0) {
         const viewport = core.api.getVisibleViewport(core);
 
@@ -113,7 +114,7 @@ function handleImages(core: StandaloneEditorCore, context: FormatWithContentMode
 
 function handlePendingFormat(
     core: StandaloneEditorCore,
-    context: FormatWithContentModelContext,
+    context: FormatContentModelContext,
     selection?: DOMSelection | null
 ) {
     const pendingFormat =
@@ -130,10 +131,7 @@ function handlePendingFormat(
     }
 }
 
-function getChangedEntities(
-    context: FormatWithContentModelContext,
-    rawEvent?: Event
-): ChangedEntity[] {
+function getChangedEntities(context: FormatContentModelContext, rawEvent?: Event): ChangedEntity[] {
     return context.newEntities
         .map(
             (entity): ChangedEntity => ({

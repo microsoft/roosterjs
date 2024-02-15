@@ -12,10 +12,11 @@ import type { DOMSelection } from '../selection/DOMSelection';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type {
     ContentModelFormatter,
-    FormatWithContentModelOptions,
-} from '../parameter/FormatWithContentModelOptions';
+    FormatContentModelOptions,
+} from '../parameter/FormatContentModelOptions';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
+import type { Rect } from '../parameter/Rect';
 
 /**
  * An interface of standalone Content Model editor.
@@ -60,12 +61,9 @@ export interface IStandaloneEditor {
      * to do format change. Then according to the return value, write back the modified content model into editor.
      * If there is cached model, it will be used and updated.
      * @param formatter Formatter function, see ContentModelFormatter
-     * @param options More options, see FormatWithContentModelOptions
+     * @param options More options, see FormatContentModelOptions
      */
-    formatContentModel(
-        formatter: ContentModelFormatter,
-        options?: FormatWithContentModelOptions
-    ): void;
+    formatContentModel(formatter: ContentModelFormatter, options?: FormatContentModelOptions): void;
 
     /**
      * Get pending format of editor if any, or return null
@@ -138,12 +136,6 @@ export interface IStandaloneEditor {
     restoreSnapshot(snapshot: Snapshot): void;
 
     /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    isInIME(): boolean;
-
-    /**
      * Attach a DOM event to the editor content DIV
      * @param eventMap A map from event name to its handler
      */
@@ -199,4 +191,14 @@ export interface IStandaloneEditor {
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler;
+
+    /**
+     * Get the scroll container of the editor
+     */
+    getScrollContainer(): HTMLElement;
+
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null;
 }
