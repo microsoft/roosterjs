@@ -190,9 +190,44 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @returns true if node is inserted. Otherwise false
      */
     insertNode(node: Node, option?: InsertOption): boolean {
-        const innerCore = this.getCore();
+        if (node) {
+            option = option || {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: false,
+                updateCursor: true,
+                replaceSelection: true,
+                insertToRegionRoot: false,
+            };
 
-        return node ? insertNode(innerCore, node, option ?? null) : false;
+            const { contentDiv } = this.getCore();
+
+            if (option.updateCursor) {
+                this.focus();
+            }
+
+            if (option.position == ContentPosition.Outside) {
+                contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);
+            } else {
+                if (this.isDarkMode()) {
+                    transformColor(
+                        node,
+                        true /*includeSelf*/,
+                        'lightToDark',
+                        this.getColorManager()
+                    );
+                }
+
+                const selection = insertNode(contentDiv, this.getDOMSelection(), node, option);
+
+                if (selection) {
+                    this.setDOMSelection(selection);
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

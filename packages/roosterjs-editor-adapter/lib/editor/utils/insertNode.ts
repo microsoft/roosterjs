@@ -1,5 +1,4 @@
 import { ContentPosition, NodeType, PositionType, RegionType } from 'roosterjs-editor-types';
-import { transformColor } from 'roosterjs-content-model-core';
 import type { BlockElement, InsertOption, NodePosition } from 'roosterjs-editor-types';
 import {
     createRange,
@@ -16,17 +15,16 @@ import {
     splitTextNode,
     splitParentNode,
 } from 'roosterjs-editor-dom';
-import type { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { DOMSelection } from 'roosterjs-content-model-types';
 
 function getInitialRange(
-    core: StandaloneEditorCore,
+    selection: DOMSelection | null,
     option: InsertOption
 ): { range: Range | null; rangeToRestore: Range | null } {
     // Selection start replaces based on the current selection.
     // Range inserts based on a provided range.
     // Both have the potential to use the current selection to restore cursor position
     // So in both cases we need to store the selection state.
-    const selection = core.api.getDOMSelection(core);
     let range = selection?.type == 'range' ? selection.range : null;
     let rangeToRestore = null;
 
@@ -45,32 +43,11 @@ function getInitialRange(
  * Insert a DOM node into editor content
  */
 export function insertNode(
-    innerCore: StandaloneEditorCore,
+    contentDiv: HTMLDivElement,
+    selection: DOMSelection | null,
     node: Node,
-    option: InsertOption | null
-) {
-    option = option || {
-        position: ContentPosition.SelectionStart,
-        insertOnNewLine: false,
-        updateCursor: true,
-        replaceSelection: true,
-        insertToRegionRoot: false,
-    };
-    const { contentDiv, api, lifecycle, darkColorHandler } = innerCore;
-
-    if (option.updateCursor) {
-        api.focus(innerCore);
-    }
-
-    if (option.position == ContentPosition.Outside) {
-        contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);
-        return true;
-    }
-
-    if (lifecycle.isDarkMode) {
-        transformColor(node, true /*includeSelf*/, 'lightToDark', darkColorHandler);
-    }
-
+    option: InsertOption
+): DOMSelection | undefined {
     switch (option.position) {
         case ContentPosition.Begin:
         case ContentPosition.End: {
@@ -133,7 +110,7 @@ export function insertNode(
             break;
         case ContentPosition.Range:
         case ContentPosition.SelectionStart:
-            let { range, rangeToRestore } = getInitialRange(innerCore, option);
+            let { range, rangeToRestore } = getInitialRange(selection, option);
             if (!range) {
                 break;
             }
@@ -147,12 +124,12 @@ export function insertNode(
             let blockElement: BlockElement | null;
 
             if (option.insertOnNewLine && option.insertToRegionRoot) {
-                pos = adjustInsertPositionRegionRoot(innerCore, range, pos);
+                pos = adjustInsertPositionRegionRoot(contentDiv, range, pos);
             } else if (
                 option.insertOnNewLine &&
                 (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
             ) {
-                pos = adjustInsertPositionNewLine(blockElement, innerCore, pos);
+                pos = adjustInsertPositionNewLine(blockElement, contentDiv, pos);
             } else {
                 pos = adjustInsertPosition(contentDiv, node, pos, range);
             }
@@ -169,26 +146,22 @@ export function insertNode(
                 );
             }
 
-            if (rangeToRestore) {
-                api.setDOMSelection(innerCore, {
-                    type: 'range',
-                    range: rangeToRestore,
-                    isReverted: false,
-                });
-            }
-
-            break;
+            return rangeToRestore
+                ? {
+                      type: 'range',
+                      range: rangeToRestore,
+                      isReverted: false,
+                  }
+                : undefined;
     }
-
-    return true;
 }
 
 function adjustInsertPositionRegionRoot(
-    core: StandaloneEditorCore,
+    contentDiv: HTMLDivElement,
     range: Range,
     position: NodePosition
 ) {
-    const region = getRegionsFromRange(core.contentDiv, range, RegionType.Table)[0];
+    const region = getRegionsFromRange(contentDiv, range, RegionType.Table)[0];
     let node: Node | null = position.node;
 
     if (region) {
@@ -213,12 +186,12 @@ function adjustInsertPositionRegionRoot(
 
 function adjustInsertPositionNewLine(
     blockElement: BlockElement,
-    core: StandaloneEditorCore,
+    contentDiv: HTMLDivElement,
     pos: Position
 ) {
     let tempPos = new Position(blockElement.getEndNode(), PositionType.After);
     if (safeInstanceOf(tempPos.node, 'HTMLTableRowElement')) {
-        const div = core.contentDiv.ownerDocument.createElement('div');
+        const div = contentDiv.ownerDocument.createElement('div');
         const range = createRange(pos);
         range.insertNode(div);
         tempPos = new Position(div, PositionType.Begin);
