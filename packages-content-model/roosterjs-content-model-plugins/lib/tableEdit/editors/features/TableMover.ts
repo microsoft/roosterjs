@@ -32,8 +32,7 @@ export default function createTableMover(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        style:
-            'background-color: red; position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
+        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
     };
 
     const div = createElement(createElementData, document) as HTMLDivElement;

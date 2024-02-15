@@ -29,7 +29,7 @@ export default function createTableResizer(
     const zoomScale = editor.getDOMHelper().calculateZoomScale();
     const createElementData = {
         tag: 'div',
-        style: `background-color: red; position: fixed; cursor: ${
+        style: `position: fixed; cursor: ${
             isRTL ? 'ne' : 'nw'
         }-resize; user-select: none; border: 1px solid #808080`,
     };

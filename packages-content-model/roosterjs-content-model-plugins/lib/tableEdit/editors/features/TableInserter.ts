@@ -41,8 +41,7 @@ export default function createTableInserter(
             isHorizontal,
             editor.isDarkMode(),
             isRTL,
-            'red' //editor.getDefaultFormat().backgroundColor || 'white'
-            // TODO: Fix this
+            editor.getDOMHelper().getDomStyle('backgroundColor') || 'white'
         );
 
         const div = createElement(createElementData, document) as HTMLDivElement;
