@@ -90,6 +90,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domhelper.html#calculatezoomscale" class="tsd-kind-icon">calculate<wbr>Zoom<wbr>Scale</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domhelper.html#getdomattribute" class="tsd-kind-icon">get<wbr>Dom<wbr>Attribute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="roosterjs_content_model_types.domhelper.html#getdomstyle" class="tsd-kind-icon">get<wbr>Dom<wbr>Style</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domhelper.html#gettextcontent" class="tsd-kind-icon">get<wbr>Text<wbr>Content</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domhelper.html#isnodeineditor" class="tsd-kind-icon">is<wbr>Node<wbr>InEditor</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="roosterjs_content_model_types.domhelper.html#queryelements" class="tsd-kind-icon">query<wbr>Elements</a></li>
@@ -111,7 +112,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/20e6e35/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L37">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/609a61e/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L37">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:37</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -133,7 +134,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/20e6e35/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L50">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/609a61e/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L50">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -154,6 +155,43 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+					<a name="getdomstyle" class="tsd-anchor"></a>
+					<h3>get<wbr>Dom<wbr>Style</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Dom<wbr>Style&lt;T&gt;<span class="tsd-signature-symbol">(</span>style<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CSSStyleDeclaration</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/609a61e/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L56">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:56</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get DOM style of editor content DIV</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">CSSStyleDeclaration</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>style: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Name of the style</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">CSSStyleDeclaration</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="gettextcontent" class="tsd-anchor"></a>
 					<h3>get<wbr>Text<wbr>Content</h3>
@@ -164,7 +202,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/20e6e35/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L32">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/609a61e/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L32">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:32</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -186,7 +224,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/20e6e35/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L9">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/609a61e/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L9">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -218,7 +256,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/20e6e35/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L17">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/609a61e/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L17">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:17</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -248,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/20e6e35/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L27">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/609a61e/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L27">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -281,7 +319,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/20e6e35/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L44">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/609a61e/packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts#L44">packages-content-model/roosterjs-content-model-types/lib/parameter/DOMHelper.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -378,6 +416,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.domhelper.html#getdomattribute" class="tsd-kind-icon">get<wbr>Dom<wbr>Attribute</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+								<a href="roosterjs_content_model_types.domhelper.html#getdomstyle" class="tsd-kind-icon">get<wbr>Dom<wbr>Style</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.domhelper.html#gettextcontent" class="tsd-kind-icon">get<wbr>Text<wbr>Content</a>
