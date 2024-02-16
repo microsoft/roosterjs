@@ -1,6 +1,6 @@
 import { BulletListType } from 'roosterjs-content-model-core';
-import { RibbonButton } from '../type/RibbonButton';
 import { setListStyle } from 'roosterjs-content-model-api';
+import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 const dropDownMenuItems = {
     [BulletListType.Disc]: 'Disc',
@@ -20,7 +20,6 @@ export const setBulletedListStyleButton: RibbonButton<'ribbonButtonBulletedListS
     unlocalizedText: 'Set unordered list style',
     iconName: 'BulletedList',
     isDisabled: formatState => !formatState.isBullet,
-    category: 'list',
     onClick: (editor, key) => {
         const value = parseInt(key);
 

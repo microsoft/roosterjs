@@ -11,7 +11,6 @@ export const redoButton: RibbonButton<RedoButtonStringKey> = {
     unlocalizedText: 'Redo',
     iconName: 'Redo',
     isDisabled: formatState => !formatState.canRedo,
-    category: 'format',
     onClick: editor => {
         redo(editor);
     },

@@ -10,43 +10,72 @@ import { backgroundColorButton } from '../roosterjsReact/ribbon/buttons/backgrou
 import { blockQuoteButton } from '../roosterjsReact/ribbon/buttons/blockQuoteButton';
 import { boldButton } from '../roosterjsReact/ribbon/buttons/boldButton';
 import { bulletedListButton } from '../roosterjsReact/ribbon/buttons/bulletedListButton';
+import { changeImageButton } from '../demoButtons/changeImageButton';
 import { clearFormatButton } from '../roosterjsReact/ribbon/buttons/clearFormatButton';
 import { codeButton } from '../roosterjsReact/ribbon/buttons/codeButton';
 import { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
+import { darkMode } from '../demoButtons/darkMode';
 import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
 import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseIndentButton';
 import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
 import { EditorPlugin } from 'roosterjs-editor-types';
+import { exportContentButton } from '../demoButtons/exportButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
 import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
+import { formatPainterButton } from '../demoButtons/formatPainterButton';
+import { formatTableButton } from '../demoButtons/formatTableButton';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { imageBorderColorButton } from '../demoButtons/imageBorderColorButton';
+import { imageBorderRemoveButton } from '../demoButtons/imageBorderRemoveButton';
+import { imageBorderStyleButton } from '../demoButtons/imageBorderStyleButton';
+import { imageBorderWidthButton } from '../demoButtons/imageBorderWidthButton';
+import { imageBoxShadowButton } from '../demoButtons/imageBoxShadowButton';
 import { increaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/increaseFontSizeButton';
 import { increaseIndentButton } from '../roosterjsReact/ribbon/buttons/increaseIndentButton';
 import { insertImageButton } from '../roosterjsReact/ribbon/buttons/insertImageButton';
 import { insertLinkButton } from '../roosterjsReact/ribbon/buttons/insertLinkButton';
 import { insertTableButton } from '../roosterjsReact/ribbon/buttons/insertTableButton';
 import { italicButton } from '../roosterjsReact/ribbon/buttons/italicButton';
+import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
 import { ltrButton } from '../roosterjsReact/ribbon/buttons/ltrButton';
 import { MainPaneBase, MainPaneBaseState } from './MainPaneBase';
 import { numberedListButton } from '../roosterjsReact/ribbon/buttons/numberedListButton';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
-import { popoutButton } from '../roosterjsReact/ribbon/buttons/popoutButton';
+import { pasteButton } from '../demoButtons/pasteButton';
+import { popoutButton } from '../demoButtons/popoutButton';
 import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
 import { removeLinkButton } from '../roosterjsReact/ribbon/buttons/removeLinkButton';
 import { Rooster } from '../roosterjsReact/rooster';
 import { rtlButton } from '../roosterjsReact/ribbon/buttons/rtlButton';
-import { setBulletedListStyleButton } from '../roosterjsReact/ribbon/buttons/setBulletedListStyleButton';
+import { setBulletedListStyleButton } from '../demoButtons/setBulletedListStyleButton';
 import { setHeadingLevelButton } from '../roosterjsReact/ribbon/buttons/setHeadingLevelButton';
-import { setNumberedListStyleButton } from '../roosterjsReact/ribbon/buttons/setNumberedListStyleButton';
+import { setNumberedListStyleButton } from '../demoButtons/setNumberedListStyleButton';
+import { setTableCellShadeButton } from '../demoButtons/setTableCellShadeButton';
+import { setTableHeaderButton } from '../demoButtons/setTableHeaderButton';
+import { spaceAfterButton, spaceBeforeButton } from '../demoButtons/spaceBeforeAfterButtons';
+import { spacingButton } from '../demoButtons/spacingButton';
 import { strikethroughButton } from '../roosterjsReact/ribbon/buttons/strikethroughButton';
 import { subscriptButton } from '../roosterjsReact/ribbon/buttons/subscriptButton';
 import { superscriptButton } from '../roosterjsReact/ribbon/buttons/superscriptButton';
+import { tableBorderApplyButton } from '../demoButtons/tableBorderApplyButton';
+import { tableBorderColorButton } from '../demoButtons/tableBorderColorButton';
+import { tableBorderStyleButton } from '../demoButtons/tableBorderStyleButton';
+import { tableBorderWidthButton } from '../demoButtons/tableBorderWidthButton';
 import { textColorButton } from '../roosterjsReact/ribbon/buttons/textColorButton';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { underlineButton } from '../roosterjsReact/ribbon/buttons/underlineButton';
 import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
+import { zoomButton } from '../demoButtons/zoomButton';
+import {
+    tableAlignCellButton,
+    tableAlignTableButton,
+    tableDeleteButton,
+    tableInsertButton,
+    tableMergeButton,
+    tableSplitButton,
+} from '../demoButtons/tableEditButtons';
 // import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 // import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModelFormatPainterPlugin';
 // import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
@@ -109,7 +138,7 @@ const DarkTheme: PartialTheme = {
 };
 
 const buttons: RibbonButton<any>[] = [
-    // formatPainterButton,
+    formatPainterButton,
     boldButton,
     italicButton,
     underlineButton,
@@ -144,33 +173,33 @@ const buttons: RibbonButton<any>[] = [
     clearFormatButton,
     setBulletedListStyleButton,
     setNumberedListStyleButton,
-    // listStartNumberButton,
-    // formatTableButton,
-    // setTableCellShadeButton,
-    // setTableHeaderButton,
-    // tableInsertButton,
-    // tableDeleteButton,
-    // tableMergeButton,
-    // tableSplitButton,
-    // tableAlignCellButton,
-    // tableAlignTableButton,
-    // tableBorderApplyButton,
-    // tableBorderColorButton,
-    // tableBorderWidthButton,
-    // tableBorderStyleButton,
-    // imageBorderColorButton,
-    // imageBorderWidthButton,
-    // imageBorderStyleButton,
-    // imageBorderRemoveButton,
-    // changeImageButton,
-    // imageBoxShadowButton,
-    // spacingButton,
-    // spaceBeforeButton,
-    // spaceAfterButton,
-    // pasteButton,
-    // darkMode,
-    // zoom,
-    // exportContent,
+    listStartNumberButton,
+    formatTableButton,
+    setTableCellShadeButton,
+    setTableHeaderButton,
+    tableInsertButton,
+    tableDeleteButton,
+    tableMergeButton,
+    tableSplitButton,
+    tableAlignCellButton,
+    tableAlignTableButton,
+    tableBorderApplyButton,
+    tableBorderColorButton,
+    tableBorderWidthButton,
+    tableBorderStyleButton,
+    imageBorderColorButton,
+    imageBorderWidthButton,
+    imageBorderStyleButton,
+    imageBorderRemoveButton,
+    changeImageButton,
+    imageBoxShadowButton,
+    spacingButton,
+    spaceBeforeButton,
+    spaceAfterButton,
+    pasteButton,
+    darkMode,
+    zoomButton,
+    exportContentButton,
 ];
 
 const buttonsWithPopout = buttons.concat(popoutButton);

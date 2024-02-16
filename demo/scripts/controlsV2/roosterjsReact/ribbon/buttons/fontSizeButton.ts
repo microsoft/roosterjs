@@ -20,7 +20,6 @@ export const fontSizeButton: RibbonButton<FontSizeButtonStringKey> = {
         getSelectedItemKey: formatState => formatState.fontSize,
         allowLivePreview: true,
     },
-    category: 'format',
     onClick: (editor, size) => {
         setFontSize(editor, size);
     },

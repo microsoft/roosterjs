@@ -9,7 +9,6 @@ export const moreCommands: RibbonButton<MoreCommandsButtonStringKey> = {
     key: 'buttonNameMoreCommands',
     unlocalizedText: 'More commands',
     iconName: 'MoreCommands',
-    category: 'format',
     onClick: () => {
         return true;
     },

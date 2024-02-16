@@ -31,7 +31,6 @@ export const backgroundColorButton: RibbonButton<BackgroundColorButtonStringKey>
     key: Key,
     unlocalizedText: 'Background color',
     iconName: 'FabricTextHighlight',
-    category: 'format',
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
         if (key != 'buttonNameBackgroundColor') {

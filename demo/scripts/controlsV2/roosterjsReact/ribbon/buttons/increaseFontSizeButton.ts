@@ -10,7 +10,6 @@ export const increaseFontSizeButton: RibbonButton<IncreaseFontSizeButtonStringKe
     key: 'buttonNameIncreaseFontSize',
     unlocalizedText: 'Increase font size',
     iconName: 'FontIncrease',
-    category: 'format',
     onClick: editor => {
         changeFontSize(editor, 'increase');
     },

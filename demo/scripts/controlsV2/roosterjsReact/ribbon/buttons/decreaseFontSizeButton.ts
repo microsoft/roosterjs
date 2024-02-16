@@ -10,7 +10,6 @@ export const decreaseFontSizeButton: RibbonButton<DecreaseFontSizeButtonStringKe
     key: 'buttonNameDecreaseFontSize',
     unlocalizedText: 'Decrease font size',
     iconName: 'FontDecrease',
-    category: 'format',
     onClick: editor => {
         changeFontSize(editor, 'decrease');
     },

@@ -10,7 +10,6 @@ export const alignCenterButton: RibbonButton<AlignCenterButtonStringKey> = {
     key: 'buttonNameAlignCenter',
     unlocalizedText: 'Align center',
     iconName: 'AlignCenter',
-    category: 'format',
     onClick: editor => {
         setAlignment(editor, 'center');
     },

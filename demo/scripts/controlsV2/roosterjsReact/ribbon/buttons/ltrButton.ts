@@ -10,7 +10,6 @@ export const ltrButton: RibbonButton<LtrButtonStringKey> = {
     key: 'buttonNameLtr',
     unlocalizedText: 'Left to right',
     iconName: 'BidiLtr',
-    category: 'format',
     onClick: editor => {
         setDirection(editor, 'ltr');
     },

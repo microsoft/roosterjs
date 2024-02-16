@@ -34,7 +34,6 @@ export const setHeadingLevelButton: RibbonButton<HeadingButtonStringKey> = {
                 : 'noHeading';
         },
     },
-    category: 'format',
     onClick: (editor, key) => {
         const headingLevel = keys.indexOf(key);
 

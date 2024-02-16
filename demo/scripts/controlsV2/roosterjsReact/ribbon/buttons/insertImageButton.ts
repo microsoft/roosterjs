@@ -20,7 +20,6 @@ export const insertImageButton: RibbonButton<InsertImageButtonStringKey> = {
     key: 'buttonNameInsertImage',
     unlocalizedText: 'Insert image',
     iconName: 'Photo2',
-    category: 'format',
     onClick: editor => {
         const document = editor.getDocument();
         const fileInput = createInput(document) as HTMLInputElement;

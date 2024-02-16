@@ -11,7 +11,6 @@ export const undoButton: RibbonButton<UndoButtonStringKey> = {
     unlocalizedText: 'Undo',
     iconName: 'undo',
     isDisabled: formatState => !formatState.canUndo,
-    category: 'format',
     onClick: editor => {
         undo(editor);
     },

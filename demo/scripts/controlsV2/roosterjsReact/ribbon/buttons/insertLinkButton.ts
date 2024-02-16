@@ -11,7 +11,6 @@ export const insertLinkButton: RibbonButton<InsertLinkButtonStringKey> = {
     key: 'buttonNameInsertLink',
     unlocalizedText: 'Insert link',
     iconName: 'Link',
-    category: 'format',
     onClick: (editor, _, strings, uiUtilities) => {
         const [displayText, url] = adjustLinkSelection(editor);
         const items = {

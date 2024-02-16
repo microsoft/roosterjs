@@ -11,7 +11,6 @@ export const blockQuoteButton: RibbonButton<QuoteButtonStringKey> = {
     unlocalizedText: 'Quote',
     iconName: 'RightDoubleQuote',
     isChecked: formatState => !!formatState.isBlockQuote,
-    category: 'format',
     onClick: editor => {
         toggleBlockQuote(editor);
     },

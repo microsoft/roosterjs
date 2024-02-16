@@ -11,7 +11,6 @@ export const decreaseIndentButton: RibbonButton<DecreaseIndentButtonStringKey> =
     unlocalizedText: 'Decrease indent',
     iconName: 'DecreaseIndentLegacy',
     flipWhenRtl: true,
-    category: 'format',
     onClick: editor => {
         setIndentation(editor, 'outdent');
     },

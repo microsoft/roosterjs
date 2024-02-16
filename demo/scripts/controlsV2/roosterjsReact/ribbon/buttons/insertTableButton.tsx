@@ -51,7 +51,6 @@ export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
             className: classNames.tablePane,
         },
     },
-    category: 'format',
     onClick: (editor, key) => {
         const { row, col } = parseKey(key);
         insertTable(editor, col, row);

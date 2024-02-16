@@ -10,7 +10,6 @@ export const rtlButton: RibbonButton<RtlButtonStringKey> = {
     key: 'buttonNameRtl',
     unlocalizedText: 'Right to left',
     iconName: 'BidiRtl',
-    category: 'format',
     onClick: editor => {
         setDirection(editor, 'rtl');
     },

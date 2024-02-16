@@ -10,7 +10,6 @@ export const alignRightButton: RibbonButton<AlignRightButtonStringKey> = {
     key: 'buttonNameAlignRight',
     unlocalizedText: 'Align right',
     iconName: 'AlignRight',
-    category: 'format',
     onClick: editor => {
         setAlignment(editor, 'right');
     },

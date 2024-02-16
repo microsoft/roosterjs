@@ -11,7 +11,6 @@ export const removeLinkButton: RibbonButton<RemoveLinkButtonStringKey> = {
     unlocalizedText: 'Remove link',
     iconName: 'RemoveLink',
     isDisabled: formatState => !formatState.canUnlink,
-    category: 'format',
     onClick: editor => {
         removeLink(editor);
     },

@@ -11,7 +11,6 @@ export const codeButton: RibbonButton<CodeButtonStringKey> = {
     unlocalizedText: 'Code',
     iconName: 'Code',
     isChecked: formatState => !!formatState.isCodeInline,
-    category: 'format',
     onClick: editor => {
         toggleCode(editor);
     },

@@ -11,7 +11,6 @@ export const strikethroughButton: RibbonButton<StrikethroughButtonStringKey> = {
     unlocalizedText: 'Strikethrough',
     iconName: 'Strikethrough',
     isChecked: formatState => formatState.isStrikeThrough,
-    category: 'format',
     onClick: editor => {
         toggleStrikethrough(editor);
     },

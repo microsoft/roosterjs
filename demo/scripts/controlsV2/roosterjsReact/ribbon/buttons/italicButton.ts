@@ -11,7 +11,6 @@ export const italicButton: RibbonButton<ItalicButtonStringKey> = {
     unlocalizedText: 'Italic',
     iconName: 'Italic',
     isChecked: formatState => formatState.isItalic,
-    category: 'format',
     onClick: editor => {
         toggleItalic(editor);
     },

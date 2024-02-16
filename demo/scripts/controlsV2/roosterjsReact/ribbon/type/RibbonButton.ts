@@ -4,11 +4,6 @@ import type { ContentModelFormatState, IStandaloneEditor } from 'roosterjs-conte
 import type { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
 
 /**
- * Category of this button, this will decide which ribbon tab the button will be shown in
- */
-export type ButtonCategory = 'format' | 'list';
-
-/**
  * Represents a button on format ribbon
  */
 export interface RibbonButton<T extends string> {
@@ -16,11 +11,6 @@ export interface RibbonButton<T extends string> {
      * key of this button, needs to be unique
      */
     key: T;
-
-    /**
-     * Category of this button, this will decide which ribbon tab the button will be shown in
-     */
-    category: ButtonCategory;
 
     /**
      * Name of button icon. See https://developer.microsoft.com/en-us/fluentui#/styles/web/icons for all icons

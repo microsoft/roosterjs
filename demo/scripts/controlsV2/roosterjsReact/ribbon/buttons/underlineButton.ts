@@ -11,7 +11,6 @@ export const underlineButton: RibbonButton<UnderlineButtonStringKey> = {
     unlocalizedText: 'Underline',
     iconName: 'Underline',
     isChecked: formatState => formatState.isUnderline,
-    category: 'format',
     onClick: editor => {
         toggleUnderline(editor);
     },

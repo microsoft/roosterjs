@@ -31,7 +31,6 @@ export const textColorButton: RibbonButton<TextColorButtonStringKey> = {
     key: Key,
     unlocalizedText: 'Text color',
     iconName: 'FontColor',
-    category: 'format',
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
         if (key != 'buttonNameTextColor') {

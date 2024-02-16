@@ -60,4 +60,6 @@ export { BulletListType } from './constants/BulletListType';
 export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
+export { extractClipboardItems } from './utils/extractClipboardItems';
+
 export { StandaloneEditor } from './editor/StandaloneEditor';

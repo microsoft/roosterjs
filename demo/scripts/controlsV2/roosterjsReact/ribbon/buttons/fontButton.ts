@@ -165,7 +165,6 @@ export const fontButton: RibbonButton<FontButtonStringKey> = {
         },
         allowLivePreview: true,
     },
-    category: 'format',
     onClick: (editor, font) => {
         setFontName(editor, font);
     },

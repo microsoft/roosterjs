@@ -9,7 +9,6 @@ export const clearFormatButton: RibbonButton<ClearFormatButtonStringKey> = {
     key: 'buttonNameClearFormat',
     unlocalizedText: 'Clear format',
     iconName: 'ClearFormatting',
-    category: 'format',
     onClick: editor => {
         clearFormat(editor);
     },

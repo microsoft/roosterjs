@@ -1,5 +1,5 @@
-import { MainPaneBase } from '../../../mainPane/MainPaneBase';
-import type { RibbonButton } from '../type/RibbonButton';
+import { MainPaneBase } from '../mainPane/MainPaneBase';
+import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 /**
  * Key of localized strings of Popout button
@@ -14,7 +14,6 @@ export const popoutButton: RibbonButton<PopoutButtonStringKey> = {
     unlocalizedText: 'Open in a separate window',
     iconName: 'OpenInNewWindow',
     flipWhenRtl: true,
-    category: 'format',
     onClick: _ => {
         MainPaneBase.getInstance().popout();
     },

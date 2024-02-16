@@ -9,7 +9,6 @@ export const alignJustifyButton: RibbonButton<'buttonNameAlignJustify'> = {
     key: 'buttonNameAlignJustify',
     unlocalizedText: 'Align justify',
     iconName: 'AlignJustify',
-    category: 'format',
     onClick: editor => {
         setAlignment(editor, 'justify');
     },

@@ -11,7 +11,6 @@ export const increaseIndentButton: RibbonButton<IncreaseIndentButtonStringKey> =
     unlocalizedText: 'Increase indent',
     iconName: 'IncreaseIndentLegacy',
     flipWhenRtl: true,
-    category: 'format',
     onClick: editor => {
         setIndentation(editor, 'indent');
     },

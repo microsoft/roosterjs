@@ -47,37 +47,7 @@ interface RibbonProps<T extends string> extends Partial<ICommandBarProps> {
 export function Ribbon<T extends string>(props: RibbonProps<T>) {
     const { plugin, buttons, strings, dir } = props;
     const [formatState, setFormatState] = React.useState<ContentModelFormatState | null>(null);
-    const [currentTab, setCurrentTab] = React.useState<'format' | 'list'>('format');
     const isRtl = dir == 'rtl';
-
-    const switchToFormatTab = React.useCallback(() => {
-        setCurrentTab('format');
-    }, []);
-
-    const switchToListTab = React.useCallback(() => {
-        setCurrentTab('list');
-    }, []);
-
-    const ribbonTabs = React.useMemo((): ICommandBarItemProps[] => {
-        const result: ICommandBarItemProps[] = [
-            {
-                text: 'Format',
-                key: 'format',
-                checked: currentTab == 'format',
-                onClick: switchToFormatTab,
-            },
-        ];
-
-        if (formatState?.isBullet || formatState?.isNumbering) {
-            result.push({
-                text: 'List',
-                key: 'list',
-                checked: currentTab == 'list',
-                onClick: switchToListTab,
-            });
-        }
-        return result;
-    }, [currentTab, formatState]);
 
     const onClick = React.useCallback(
         (_, item?: IContextualMenuItem) => {
@@ -113,74 +83,72 @@ export function Ribbon<T extends string>(props: RibbonProps<T>) {
     );
 
     const commandBarItems = React.useMemo((): ICommandBarItemProps[] => {
-        return buttons
-            .filter(button => button.category == currentTab)
-            .map(
-                (button): ICommandBarItemProps => {
-                    const selectedItem =
-                        formatState && button.dropDownMenu?.getSelectedItemKey?.(formatState);
-                    const dropDownMenu = button.dropDownMenu;
+        return buttons.map(
+            (button): ICommandBarItemProps => {
+                const selectedItem =
+                    formatState && button.dropDownMenu?.getSelectedItemKey?.(formatState);
+                const dropDownMenu = button.dropDownMenu;
 
-                    const result: ICommandBarItemProps = {
-                        key: button.key,
-                        data: button,
-                        iconProps: {
-                            iconName: button.iconName,
-                        },
-                        onRenderIcon: isRtl && button.flipWhenRtl ? flipIcon : undefined,
-                        iconOnly: true,
-                        text: getLocalizedString(strings, button.key, button.unlocalizedText),
-                        ariaLabel: getLocalizedString(strings, button.key, button.unlocalizedText),
-                        canCheck: true,
-                        checked: (formatState && button.isChecked?.(formatState)) || false,
-                        disabled: (formatState && button.isDisabled?.(formatState)) || false,
-                        ...(button.commandBarProperties || {}),
-                    };
+                const result: ICommandBarItemProps = {
+                    key: button.key,
+                    data: button,
+                    iconProps: {
+                        iconName: button.iconName,
+                    },
+                    onRenderIcon: isRtl && button.flipWhenRtl ? flipIcon : undefined,
+                    iconOnly: true,
+                    text: getLocalizedString(strings, button.key, button.unlocalizedText),
+                    ariaLabel: getLocalizedString(strings, button.key, button.unlocalizedText),
+                    canCheck: true,
+                    checked: (formatState && button.isChecked?.(formatState)) || false,
+                    disabled: (formatState && button.isDisabled?.(formatState)) || false,
+                    ...(button.commandBarProperties || {}),
+                };
 
-                    const contextMenuItemRenderer: IRenderFunction<IContextualMenuItem> = (
-                        props,
-                        defaultRenderer
-                    ) =>
-                        props && defaultRenderer ? (
-                            <div onMouseOver={e => onHover(button, props.key)}>
-                                {defaultRenderer(props)}
-                            </div>
-                        ) : null;
+                const contextMenuItemRenderer: IRenderFunction<IContextualMenuItem> = (
+                    props,
+                    defaultRenderer
+                ) =>
+                    props && defaultRenderer ? (
+                        <div onMouseOver={e => onHover(button, props.key)}>
+                            {defaultRenderer(props)}
+                        </div>
+                    ) : null;
 
-                    if (dropDownMenu) {
-                        result.subMenuProps = {
-                            shouldFocusOnMount: true,
-                            focusZoneProps: { direction: FocusZoneDirection.bidirectional },
-                            onMenuDismissed: onDismiss,
-                            onItemClick: onClick,
-                            onRenderContextualMenuItem: dropDownMenu.allowLivePreview
-                                ? contextMenuItemRenderer
+                if (dropDownMenu) {
+                    result.subMenuProps = {
+                        shouldFocusOnMount: true,
+                        focusZoneProps: { direction: FocusZoneDirection.bidirectional },
+                        onMenuDismissed: onDismiss,
+                        onItemClick: onClick,
+                        onRenderContextualMenuItem: dropDownMenu.allowLivePreview
+                            ? contextMenuItemRenderer
+                            : undefined,
+                        items: getObjectKeys(dropDownMenu.items).map(key => ({
+                            key: key,
+                            text: getLocalizedString<string, string>(
+                                strings,
+                                key,
+                                dropDownMenu.items[key]
+                            ),
+                            data: button,
+                            canCheck: !!dropDownMenu.getSelectedItemKey,
+                            checked: selectedItem == key || false,
+                            className: dropDownMenu.itemClassName,
+                            onRender: dropDownMenu.itemRender
+                                ? item => dropDownMenu.itemRender!(item, onClick)
                                 : undefined,
-                            items: getObjectKeys(dropDownMenu.items).map(key => ({
-                                key: key,
-                                text: getLocalizedString<string, string>(
-                                    strings,
-                                    key,
-                                    dropDownMenu.items[key]
-                                ),
-                                data: button,
-                                canCheck: !!dropDownMenu.getSelectedItemKey,
-                                checked: selectedItem == key || false,
-                                className: dropDownMenu.itemClassName,
-                                onRender: dropDownMenu.itemRender
-                                    ? item => dropDownMenu.itemRender!(item, onClick)
-                                    : undefined,
-                            })),
-                            ...(dropDownMenu.commandBarSubMenuProperties || {}),
-                        };
-                    } else {
-                        result.onClick = onClick;
-                    }
-
-                    return result;
+                        })),
+                        ...(dropDownMenu.commandBarSubMenuProperties || {}),
+                    };
+                } else {
+                    result.onClick = onClick;
                 }
-            );
-    }, [buttons, formatState, isRtl, strings, onClick, onDismiss, onHover, currentTab]);
+
+                return result;
+            }
+        );
+    }, [buttons, formatState, isRtl, strings, onClick, onDismiss, onHover]);
 
     React.useEffect(() => {
         const disposer = plugin?.registerFormatChangedCallback(setFormatState);
@@ -193,21 +161,18 @@ export function Ribbon<T extends string>(props: RibbonProps<T>) {
     const moreCommandsBtn = moreCommands as RibbonButton<string>;
 
     return (
-        <>
-            <CommandBar items={ribbonTabs}></CommandBar>
-            <CommandBar
-                items={commandBarItems}
-                {...props}
-                className={ribbonClassName + ' ' + (props?.className || '')}
-                overflowButtonProps={{
-                    ariaLabel: getLocalizedString<string, string>(
-                        strings,
-                        moreCommandsBtn.key,
-                        moreCommandsBtn.unlocalizedText
-                    ),
-                    ...props?.overflowButtonProps,
-                }}
-            />
-        </>
+        <CommandBar
+            items={commandBarItems}
+            {...props}
+            className={ribbonClassName + ' ' + (props?.className || '')}
+            overflowButtonProps={{
+                ariaLabel: getLocalizedString<string, string>(
+                    strings,
+                    moreCommandsBtn.key,
+                    moreCommandsBtn.unlocalizedText
+                ),
+                ...props?.overflowButtonProps,
+            }}
+        />
     );
 }

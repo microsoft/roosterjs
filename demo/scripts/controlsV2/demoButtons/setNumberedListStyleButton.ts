@@ -1,6 +1,6 @@
 import { NumberingListType } from 'roosterjs-content-model-core';
-import { RibbonButton } from '../type/RibbonButton';
 import { setListStyle } from 'roosterjs-content-model-api';
+import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 const dropDownMenuItems = {
     [NumberingListType.Decimal]: 'Decimal',
@@ -31,7 +31,6 @@ export const setNumberedListStyleButton: RibbonButton<'ribbonButtonNumberedListS
     unlocalizedText: 'Set ordered list style',
     iconName: 'NumberedList',
     isDisabled: formatState => !formatState.isNumbering,
-    category: 'list',
     onClick: (editor, key) => {
         const value = parseInt(key);
 

@@ -11,7 +11,6 @@ export const subscriptButton: RibbonButton<SubscriptButtonStringKey> = {
     unlocalizedText: 'Subscript',
     iconName: 'Subscript',
     isChecked: formatState => formatState.isSubscript,
-    category: 'format',
     onClick: editor => {
         toggleSubscript(editor);
     },
