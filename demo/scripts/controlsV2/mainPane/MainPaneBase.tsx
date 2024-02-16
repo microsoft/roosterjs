@@ -1,11 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import SidePane from '../sidePane/SidePane';
 import { Border } from 'roosterjs-content-model-types';
 import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+
+const styles = require('./MainPane.scss');
 
 export interface MainPaneBaseState {
     showSidePane: boolean;
@@ -23,10 +26,11 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Component<{}, T> {
-    // private mouseX: number;
+    private mouseX: number;
     private static instance: MainPaneBase<MainPaneBaseState>;
     private popoutRoot: HTMLElement;
 
+    protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
     protected content: string = '';
     protected themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
@@ -44,8 +48,6 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
     }
 
-    abstract getStyles(): Record<string, string>;
-
     abstract renderRibbon(isPopout: boolean): JSX.Element;
 
     abstract renderTitleBar(): JSX.Element;
@@ -59,8 +61,6 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
     abstract renderEditor(): JSX.Element;
 
     render() {
-        const styles = this.getStyles();
-
         return (
             <ThemeProvider
                 applyTo="body"
@@ -155,8 +155,6 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
     }
 
     private renderMainPane() {
-        const styles = this.getStyles();
-
         return (
             <>
                 {this.renderEditor()}
@@ -174,8 +172,6 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
     }
 
     private renderSidePaneButton() {
-        const styles = this.getStyles();
-
         return (
             <button
                 className={`side-pane-toggle ${this.state.showSidePane ? 'open' : 'close'} ${
@@ -188,8 +184,6 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
     }
 
     private renderPopout() {
-        const styles = this.getStyles();
-
         return (
             <>
                 {this.renderSidePane(true /*fullWidth*/)}
@@ -212,11 +206,12 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
         document.addEventListener('mousemove', this.onMouseMove, true);
         document.addEventListener('mouseup', this.onMouseUp, true);
         document.body.style.userSelect = 'none';
-        // this.mouseX = e.pageX;
+        this.mouseX = e.pageX;
     };
 
     private onMouseMove = (e: MouseEvent) => {
-        // this.mouseX = e.pageX;
+        this.sidePane.current.changeWidth(this.mouseX - e.pageX);
+        this.mouseX = e.pageX;
     };
 
     private onMouseUp = (e: MouseEvent) => {

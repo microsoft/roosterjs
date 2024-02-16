@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import SidePane from '../sidePane/SidePane';
 import TitleBar from '../titleBar/TitleBar';
 import { alignCenterButton } from '../roosterjsReact/ribbon/buttons/alignCenterButton';
 import { alignJustifyButton } from '../roosterjsReact/ribbon/buttons/alignJustifyButton';
@@ -55,6 +56,7 @@ import { setHeadingLevelButton } from '../roosterjsReact/ribbon/buttons/setHeadi
 import { setNumberedListStyleButton } from '../demoButtons/setNumberedListStyleButton';
 import { setTableCellShadeButton } from '../demoButtons/setTableCellShadeButton';
 import { setTableHeaderButton } from '../demoButtons/setTableHeaderButton';
+import { SidePanePlugin } from '../sidePane/SidePanePlugin';
 import { spaceAfterButton, spaceBeforeButton } from '../demoButtons/spaceBeforeAfterButtons';
 import { spacingButton } from '../demoButtons/spacingButton';
 import { strikethroughButton } from '../roosterjsReact/ribbon/buttons/strikethroughButton';
@@ -209,7 +211,7 @@ interface ContentModelMainPaneState extends MainPaneBaseState {
     editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IStandaloneEditor;
 }
 
-class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {
+class MainPane extends MainPaneBase<ContentModelMainPaneState> {
     // private formatStatePlugin: ContentModelFormatStatePlugin;
     // private editorOptionPlugin: ContentModelEditorOptionsPlugin;
     // private eventViewPlugin: ContentModelEventViewPlugin;
@@ -267,10 +269,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         };
     }
 
-    getStyles(): Record<string, string> {
-        return styles;
-    }
-
     renderTitleBar() {
         return <TitleBar className={styles.noGrow} />;
     }
@@ -286,20 +284,15 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     }
 
     renderSidePane(fullWidth: boolean) {
-        // const styles = this.getStyles();
-
-        // return (
-        //     <SidePane
-        //         ref={this.sidePane}
-        //         plugins={this.getSidePanePlugins()}
-        //         mode="contentModel"
-        //         className={`main-pane ${styles.sidePane} ${
-        //             fullWidth ? styles.sidePaneFullWidth : ''
-        //         }`}
-        //     />
-        // );
-
-        return <></>;
+        return (
+            <SidePane
+                ref={this.sidePane}
+                plugins={this.getSidePanePlugins()}
+                className={`main-pane ${styles.sidePane} ${
+                    fullWidth ? styles.sidePaneFullWidth : ''
+                }`}
+            />
+        );
     }
 
     getPlugins() {
@@ -334,7 +327,6 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     }
 
     renderEditor() {
-        const styles = this.getStyles();
         // const allPlugins = this.getPlugins();
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
@@ -391,18 +383,18 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         return isDark ? DarkTheme : LightTheme;
     }
 
-    // private getSidePanePlugins() {
-    //     return [
-    //         this.formatStatePlugin,
-    //         this.editorOptionPlugin,
-    //         this.eventViewPlugin,
-    //         this.apiPlaygroundPlugin,
-    //         this.snapshotPlugin,
-    //         this.contentModelPanePlugin,
-    //     ];
-    // }
+    private getSidePanePlugins(): SidePanePlugin[] {
+        return [
+            // this.formatStatePlugin,
+            // this.editorOptionPlugin,
+            // this.eventViewPlugin,
+            // this.apiPlaygroundPlugin,
+            // this.snapshotPlugin,
+            // this.contentModelPanePlugin,
+        ];
+    }
 }
 
 export function mount(parent: HTMLElement) {
-    ReactDOM.render(<ContentModelEditorMainPane />, parent);
+    ReactDOM.render(<MainPane />, parent);
 }
