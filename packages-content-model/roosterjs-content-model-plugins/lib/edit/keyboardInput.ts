@@ -66,11 +66,5 @@ function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: K
 }
 
 const shouldHandleEnterKey = (selection: DOMSelection | null, rawEvent: KeyboardEvent) => {
-    return (
-        selection &&
-        selection.type == 'range' &&
-        selection.range.collapsed &&
-        rawEvent.key == 'Enter' &&
-        !rawEvent.shiftKey
-    );
+    return selection && selection.type == 'range' && rawEvent.key == 'Enter' && !rawEvent.shiftKey;
 };

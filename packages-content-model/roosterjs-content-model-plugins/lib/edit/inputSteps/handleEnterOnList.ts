@@ -1,9 +1,13 @@
-import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core';
+import {
+    getClosestAncestorBlockGroupIndex,
+    isBlockGroupOfType,
+} from 'roosterjs-content-model-core';
 import {
     createBr,
     createListItem,
     createListLevel,
     createParagraph,
+    normalizeContentModel,
     normalizeParagraph,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
@@ -30,13 +34,33 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
         const listItem = path[index];
+        const listParent = path[index + 1];
 
         if (listItem && listItem.blockGroupType === 'ListItem') {
-            const listParent = path[index + 1];
-            if (isEmptyListItem(listItem)) {
-                listItem.levels.pop();
+            const listIndex = listParent.blocks.indexOf(listItem);
+            const nextBlock = listParent.blocks[listIndex + 1];
+            if (context.deleteResult == 'range' && nextBlock) {
+                normalizeContentModel(listParent);
+                const nextListItem = listParent.blocks[listIndex + 1];
+                if (
+                    isBlockGroupOfType<ContentModelListItem>(nextListItem, 'ListItem') &&
+                    nextListItem.levels[0]
+                ) {
+                    nextListItem.levels.forEach((level, index) => {
+                        level.format.startNumberOverride = undefined;
+                        level.dataset = listItem.levels[index]
+                            ? listItem.levels[index].dataset
+                            : {};
+                    });
+
+                    context.lastParagraph = undefined;
+                }
             } else {
-                createNewListItem(context, listItem, listParent);
+                if (isEmptyListItem(listItem)) {
+                    listItem.levels.pop();
+                } else {
+                    createNewListItem(context, listItem, listParent);
+                }
             }
             rawEvent?.preventDefault();
             context.deleteResult = 'range';
@@ -62,9 +86,12 @@ const createNewListItem = (
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
     const newParagraph = createNewParagraph(insertPoint);
+
     const levels = createNewListLevel(listItem);
     const newListItem = createListItem(levels, insertPoint.marker.format);
     newListItem.blocks.push(newParagraph);
+    insertPoint.paragraph = newParagraph;
+    context.lastParagraph = newParagraph;
     listParent.blocks.splice(listIndex + 1, 0, newListItem);
 };
 
@@ -104,5 +131,6 @@ const createNewParagraph = (insertPoint: InsertPoint) => {
     }
 
     normalizeParagraph(newParagraph);
+
     return newParagraph;
 };

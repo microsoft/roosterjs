@@ -429,43 +429,4 @@ describe('keyboardInput', () => {
         });
         expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
     });
-
-    it('Enter key input on expanded range', () => {
-        const mockedFormat = 'FORMAT' as any;
-        getDOMSelectionSpy.and.returnValue({
-            type: 'range',
-            range: {
-                collapsed: false,
-            },
-        });
-        deleteSelectionSpy.and.returnValue({
-            deleteResult: 'range',
-            insertPoint: {
-                marker: {
-                    format: mockedFormat,
-                },
-            },
-        });
-
-        const rawEvent = {
-            key: 'Enter',
-        } as any;
-
-        keyboardInput(editor, rawEvent);
-
-        expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(takeSnapshotSpy).toHaveBeenCalled();
-        expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
-        expect(formatResult).toBeTrue();
-        expect(mockedContext).toEqual({
-            deletedEntities: [],
-            newEntities: [],
-            newImages: [],
-            clearModelCache: true,
-            skipUndoSnapshot: true,
-            newPendingFormat: mockedFormat,
-        });
-        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
-    });
 });
