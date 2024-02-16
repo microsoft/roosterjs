@@ -1,5 +1,5 @@
+import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
-// import ContentModelFormatPainterPlugin from '../../contentModel/plugins/ContentModelFormatPainterPlugin';
 
 /**
  * @internal
@@ -10,6 +10,6 @@ export const formatPainterButton: RibbonButton<'formatPainter'> = {
     unlocalizedText: 'Format painter',
     iconName: 'Brush',
     onClick: () => {
-        // ContentModelFormatPainterPlugin.startFormatPainter();
+        FormatPainterPlugin.startFormatPainter();
     },
 };

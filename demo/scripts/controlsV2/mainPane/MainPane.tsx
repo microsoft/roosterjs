@@ -25,6 +25,7 @@ import { exportContentButton } from '../demoButtons/exportButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
 import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
 import { formatPainterButton } from '../demoButtons/formatPainterButton';
+import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
 import { formatTableButton } from '../demoButtons/formatTableButton';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { imageBorderColorButton } from '../demoButtons/imageBorderColorButton';
@@ -221,7 +222,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private emojiPlugin: EditorPlugin;
     // private snapshotPlugin: ContentModelSnapshotPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
-    // private formatPainterPlugin: ContentModelFormatPainterPlugin;
+    private formatPainterPlugin: FormatPainterPlugin;
     private pastePlugin: PastePlugin;
     // private sampleEntityPlugin: SampleEntityPlugin;
     // private snapshots: Snapshots;
@@ -248,7 +249,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.ribbonPlugin = createRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
-        // this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
+        this.formatPainterPlugin = new FormatPainterPlugin();
         this.pastePlugin = new PastePlugin();
         // this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
@@ -365,7 +366,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             // legacyPlugins={allPlugins}
                             plugins={[
                                 this.ribbonPlugin,
-                                // this.formatPainterPlugin,
+                                this.formatPainterPlugin,
                                 this.pastePlugin,
                                 this.autoFormatPlugin,
                                 this.editPlugin,
