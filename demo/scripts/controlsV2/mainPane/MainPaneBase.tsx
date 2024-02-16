@@ -2,11 +2,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import SidePane from '../sidePane/SidePane';
 import { Border } from 'roosterjs-content-model-types';
-import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+// import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 
 const styles = require('./MainPane.scss');
 
@@ -31,7 +31,7 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
     private popoutRoot: HTMLElement;
 
     protected sidePane = React.createRef<SidePane>();
-    protected updateContentPlugin: UpdateContentPlugin;
+    // protected updateContentPlugin: UpdateContentPlugin;
     protected content: string = '';
     protected themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
 
@@ -45,7 +45,7 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
         super(props);
 
         MainPaneBase.instance = this;
-        this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
+        // this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
     }
 
     abstract renderRibbon(isPopout: boolean): JSX.Element;
@@ -85,12 +85,12 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
     }
 
     popout() {
-        this.updateContentPlugin.forceUpdate();
+        // this.updateContentPlugin.forceUpdate();
 
         const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
         win.document.write(trustedHTMLHandler(POPOUT_HTML));
         win.addEventListener('beforeunload', () => {
-            this.updateContentPlugin.forceUpdate();
+            // this.updateContentPlugin.forceUpdate();
 
             unregisterWindowForCss(win);
             this.setState({ popoutWindow: null });
@@ -105,7 +105,7 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
     }
 
     resetEditorPlugin(pluginState: {}) {
-        this.updateContentPlugin.forceUpdate();
+        // this.updateContentPlugin.forceUpdate();
         this.setState({});
 
         this.resetEditor();
@@ -220,9 +220,9 @@ export abstract class MainPaneBase<T extends MainPaneBaseState> extends React.Co
         document.body.style.userSelect = '';
     };
 
-    private onUpdate = (content: string) => {
-        this.content = content;
-    };
+    // private onUpdate = (content: string) => {
+    //     this.content = content;
+    // };
 
     private onShowSidePane = () => {
         this.setState({

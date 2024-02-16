@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import EventViewPlugin from '../sidePane/eventViewer/EventViewPlugin';
+import FormatStatePlugin from '../sidePane/formatState/FormatStatePlugin';
 import SidePane from '../sidePane/SidePane';
 import TitleBar from '../titleBar/TitleBar';
 import { alignCenterButton } from '../roosterjsReact/ribbon/buttons/alignCenterButton';
@@ -14,14 +16,12 @@ import { bulletedListButton } from '../roosterjsReact/ribbon/buttons/bulletedLis
 import { changeImageButton } from '../demoButtons/changeImageButton';
 import { clearFormatButton } from '../roosterjsReact/ribbon/buttons/clearFormatButton';
 import { codeButton } from '../roosterjsReact/ribbon/buttons/codeButton';
-import { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-content-model-types';
-import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { darkMode } from '../demoButtons/darkMode';
 import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
 import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseIndentButton';
 import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
-import { EditorPlugin } from 'roosterjs-editor-types';
+import { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types';
 import { exportContentButton } from '../demoButtons/exportContentButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
 import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
@@ -72,6 +72,12 @@ import { underlineButton } from '../roosterjsReact/ribbon/buttons/underlineButto
 import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
 import { zoomButton } from '../demoButtons/zoomButton';
 import {
+    ContentModelSegmentFormat,
+    EditorPlugin,
+    IStandaloneEditor,
+} from 'roosterjs-content-model-types';
+// import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
+import {
     tableAlignCellButton,
     tableAlignTableButton,
     tableDeleteButton,
@@ -80,9 +86,7 @@ import {
     tableSplitButton,
 } from '../demoButtons/tableEditButtons';
 // import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
-// import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModelFormatPainterPlugin';
 // import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
-// import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 
 const styles = require('./MainPane.scss');
 
@@ -212,18 +216,18 @@ interface ContentModelMainPaneState extends MainPaneBaseState {
 }
 
 class MainPane extends MainPaneBase<ContentModelMainPaneState> {
-    // private formatStatePlugin: ContentModelFormatStatePlugin;
+    private formatStatePlugin: FormatStatePlugin;
     // private editorOptionPlugin: ContentModelEditorOptionsPlugin;
-    // private eventViewPlugin: ContentModelEventViewPlugin;
+    private eventViewPlugin: EventViewPlugin;
     // private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     // private contentModelPanePlugin: ContentModelPanePlugin;
     private editPlugin: EditPlugin;
     private autoFormatPlugin: AutoFormatPlugin;
     private ribbonPlugin: RibbonPlugin;
-    private pasteOptionPlugin: EditorPlugin;
-    private emojiPlugin: EditorPlugin;
+    // private pasteOptionPlugin: EditorPlugin;
+    // private emojiPlugin: EditorPlugin;
     // private snapshotPlugin: ContentModelSnapshotPlugin;
-    private toggleablePlugins: EditorPlugin[] | null = null;
+    // private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: FormatPainterPlugin;
     private pastePlugin: PastePlugin;
     // private sampleEntityPlugin: SampleEntityPlugin;
@@ -240,17 +244,17 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         //     maxSize: 1e7,
         // };
 
-        // this.formatStatePlugin = new ContentModelFormatStatePlugin();
+        this.formatStatePlugin = new FormatStatePlugin();
         // this.editorOptionPlugin = new ContentModelEditorOptionsPlugin();
-        // this.eventViewPlugin = new ContentModelEventViewPlugin();
+        this.eventViewPlugin = new EventViewPlugin();
         // this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         // this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         // this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.editPlugin = new EditPlugin();
         this.autoFormatPlugin = new AutoFormatPlugin();
         this.ribbonPlugin = createRibbonPlugin();
-        this.pasteOptionPlugin = createPasteOptionPlugin();
-        this.emojiPlugin = createEmojiPlugin();
+        // this.pasteOptionPlugin = createPasteOptionPlugin();
+        // this.emojiPlugin = createEmojiPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.pastePlugin = new PastePlugin();
         // this.sampleEntityPlugin = new SampleEntityPlugin();
@@ -299,24 +303,20 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         // this.toggleablePlugins =
         //     this.toggleablePlugins || getToggleablePlugins(this.state.initState);
 
-        const plugins = [
-            ...this.toggleablePlugins,
-            this.pasteOptionPlugin,
-            this.emojiPlugin,
+        const plugins: LegacyEditorPlugin[] = [
+            // ...this.toggleablePlugins,
+            // this.pasteOptionPlugin,
+            // this.emojiPlugin,
             // this.sampleEntityPlugin,
         ];
 
-        // if (this.state.showSidePane || this.state.popoutWindow) {
-        //     plugins.push(...this.getSidePanePlugins());
-        // }
-
-        plugins.push(this.updateContentPlugin);
+        // plugins.push(this.updateContentPlugin);
 
         return plugins;
     }
 
     resetEditor() {
-        this.toggleablePlugins = null;
+        // this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) =>
                 new EditorAdapter(div, {
@@ -346,7 +346,20 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
             //     format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
         };
 
-        this.updateContentPlugin.forceUpdate();
+        const plugins: EditorPlugin[] = [
+            this.ribbonPlugin,
+            this.formatPainterPlugin,
+            this.pastePlugin,
+            this.autoFormatPlugin,
+            this.editPlugin,
+            // this.contentModelPanePlugin.getInnerRibbonPlugin()
+        ];
+
+        if (this.state.showSidePane || this.state.popoutWindow) {
+            plugins.push(...this.getSidePanePlugins());
+        }
+
+        // this.updateContentPlugin.forceUpdate();
 
         return (
             <div className={styles.editorContainer} id="EditorContainer">
@@ -356,14 +369,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
                             id={MainPaneBase.editorDivId}
                             className={styles.editor}
                             // legacyPlugins={allPlugins}
-                            plugins={[
-                                this.ribbonPlugin,
-                                this.formatPainterPlugin,
-                                this.pastePlugin,
-                                this.autoFormatPlugin,
-                                this.editPlugin,
-                                // this.contentModelPanePlugin.getInnerRibbonPlugin(),
-                            ]}
+                            plugins={plugins}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
@@ -385,9 +391,9 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
 
     private getSidePanePlugins(): SidePanePlugin[] {
         return [
-            // this.formatStatePlugin,
+            this.formatStatePlugin,
             // this.editorOptionPlugin,
-            // this.eventViewPlugin,
+            this.eventViewPlugin,
             // this.apiPlaygroundPlugin,
             // this.snapshotPlugin,
             // this.contentModelPanePlugin,
