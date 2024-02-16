@@ -22,7 +22,7 @@ import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreas
 import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseIndentButton';
 import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
 import { EditorPlugin } from 'roosterjs-editor-types';
-import { exportContentButton } from '../demoButtons/exportButton';
+import { exportContentButton } from '../demoButtons/exportContentButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
 import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
 import { formatPainterButton } from '../demoButtons/formatPainterButton';
