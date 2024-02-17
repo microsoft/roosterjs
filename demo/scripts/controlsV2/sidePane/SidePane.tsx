@@ -12,7 +12,7 @@ export interface SidePaneState {
     currentPane: SidePanePlugin;
 }
 
-export default class SidePane extends React.Component<SidePaneProps, SidePaneState> {
+export class SidePane extends React.Component<SidePaneProps, SidePaneState> {
     private div = React.createRef<HTMLDivElement>();
 
     constructor(props: SidePaneProps) {

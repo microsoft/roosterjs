@@ -1,230 +1,49 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import EventViewPlugin from '../sidePane/eventViewer/EventViewPlugin';
-import FormatStatePlugin from '../sidePane/formatState/FormatStatePlugin';
-import SidePane from '../sidePane/SidePane';
-import SnapshotPlugin from '../sidePane/snapshot/SnapshotPlugin';
-import TitleBar from '../titleBar/TitleBar';
-import { alignCenterButton } from '../roosterjsReact/ribbon/buttons/alignCenterButton';
-import { alignJustifyButton } from '../roosterjsReact/ribbon/buttons/alignJustifyButton';
-import { alignLeftButton } from '../roosterjsReact/ribbon/buttons/alignLeftButton';
-import { alignRightButton } from '../roosterjsReact/ribbon/buttons/alignRightButton';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
-import { backgroundColorButton } from '../roosterjsReact/ribbon/buttons/backgroundColorButton';
-import { blockQuoteButton } from '../roosterjsReact/ribbon/buttons/blockQuoteButton';
-import { boldButton } from '../roosterjsReact/ribbon/buttons/boldButton';
-import { Border, ContentModelDocument } from 'roosterjs-content-model-types';
-import { bulletedListButton } from '../roosterjsReact/ribbon/buttons/bulletedListButton';
-import { changeImageButton } from '../demoButtons/changeImageButton';
-import { clearFormatButton } from '../roosterjsReact/ribbon/buttons/clearFormatButton';
-import { codeButton } from '../roosterjsReact/ribbon/buttons/codeButton';
+import { buttons, buttonsWithPopout } from './ribbonButtons';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
-import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
-import { darkMode } from '../demoButtons/darkMode';
-import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
-import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseIndentButton';
-import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
-import { exportContentButton } from '../demoButtons/exportContentButton';
-import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
-import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
-import { formatPainterButton } from '../demoButtons/formatPainterButton';
+import { createRibbonPlugin, Ribbon, RibbonPlugin } from '../roosterjsReact/ribbon';
+import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
+import { EditorPlugin, IStandaloneEditor, Snapshots } from 'roosterjs-content-model-types';
+import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
-import { formatTableButton } from '../demoButtons/formatTableButton';
+import { FormatStatePlugin } from '../sidePane/formatState/FormatStatePlugin';
 import { getDarkColor } from 'roosterjs-color-utils';
-import { imageBorderColorButton } from '../demoButtons/imageBorderColorButton';
-import { imageBorderRemoveButton } from '../demoButtons/imageBorderRemoveButton';
-import { imageBorderStyleButton } from '../demoButtons/imageBorderStyleButton';
-import { imageBorderWidthButton } from '../demoButtons/imageBorderWidthButton';
-import { imageBoxShadowButton } from '../demoButtons/imageBoxShadowButton';
-import { increaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/increaseFontSizeButton';
-import { increaseIndentButton } from '../roosterjsReact/ribbon/buttons/increaseIndentButton';
-import { insertImageButton } from '../roosterjsReact/ribbon/buttons/insertImageButton';
-import { insertLinkButton } from '../roosterjsReact/ribbon/buttons/insertLinkButton';
-import { insertTableButton } from '../roosterjsReact/ribbon/buttons/insertTableButton';
-import { italicButton } from '../roosterjsReact/ribbon/buttons/italicButton';
-import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
-import { ltrButton } from '../roosterjsReact/ribbon/buttons/ltrButton';
-import { numberedListButton } from '../roosterjsReact/ribbon/buttons/numberedListButton';
-import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
-import { pasteButton } from '../demoButtons/pasteButton';
-import { popoutButton } from '../demoButtons/popoutButton';
-import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
+import { getTheme } from '../theme/themes';
+import { OptionState } from '../sidePane/editorOptions/OptionState';
 import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
-import { removeLinkButton } from '../roosterjsReact/ribbon/buttons/removeLinkButton';
 import { Rooster } from '../roosterjsReact/rooster';
-import { rtlButton } from '../roosterjsReact/ribbon/buttons/rtlButton';
-import { setBulletedListStyleButton } from '../demoButtons/setBulletedListStyleButton';
-import { setHeadingLevelButton } from '../roosterjsReact/ribbon/buttons/setHeadingLevelButton';
-import { setNumberedListStyleButton } from '../demoButtons/setNumberedListStyleButton';
-import { setTableCellShadeButton } from '../demoButtons/setTableCellShadeButton';
-import { setTableHeaderButton } from '../demoButtons/setTableHeaderButton';
+import { SidePane } from '../sidePane/SidePane';
 import { SidePanePlugin } from '../sidePane/SidePanePlugin';
-import { spaceAfterButton, spaceBeforeButton } from '../demoButtons/spaceBeforeAfterButtons';
-import { spacingButton } from '../demoButtons/spacingButton';
-import { strikethroughButton } from '../roosterjsReact/ribbon/buttons/strikethroughButton';
-import { subscriptButton } from '../roosterjsReact/ribbon/buttons/subscriptButton';
-import { superscriptButton } from '../roosterjsReact/ribbon/buttons/superscriptButton';
-import { tableBorderApplyButton } from '../demoButtons/tableBorderApplyButton';
-import { tableBorderColorButton } from '../demoButtons/tableBorderColorButton';
-import { tableBorderStyleButton } from '../demoButtons/tableBorderStyleButton';
-import { tableBorderWidthButton } from '../demoButtons/tableBorderWidthButton';
-import { textColorButton } from '../roosterjsReact/ribbon/buttons/textColorButton';
+import { SnapshotPlugin } from '../sidePane/snapshot/SnapshotPlugin';
+import { StandaloneEditor } from 'roosterjs-content-model-core';
+import { ThemeProvider } from '@fluentui/react/lib/Theme';
+import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
-import { underlineButton } from '../roosterjsReact/ribbon/buttons/underlineButton';
-import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-import { zoomButton } from '../demoButtons/zoomButton';
 import {
-    ContentModelSegmentFormat,
-    EditorPlugin,
-    IStandaloneEditor,
-    Snapshots,
+    Border,
+    ContentModelDocument,
+    StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
 // import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
-import {
-    tableAlignCellButton,
-    tableAlignTableButton,
-    tableDeleteButton,
-    tableInsertButton,
-    tableMergeButton,
-    tableSplitButton,
-} from '../demoButtons/tableEditButtons';
 // import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';import SidePane from '../sidePane/SidePane';
 // import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 
 const styles = require('./MainPane.scss');
 
-export interface MainPaneBaseState {
+export interface MainPaneState {
     showSidePane: boolean;
     popoutWindow: Window;
+    initState: OptionState;
     scale: number;
     isDarkMode: boolean;
     isRtl: boolean;
     tableBorderFormat?: Border;
-    editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IStandaloneEditor;
+    editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) => IStandaloneEditor;
 }
-
-const LightTheme: PartialTheme = {
-    palette: {
-        themePrimary: '#cc6688',
-        themeLighterAlt: '#080405',
-        themeLighter: '#211016',
-        themeLight: '#3d1f29',
-        themeTertiary: '#7a3d52',
-        themeSecondary: '#b45a78',
-        themeDarkAlt: '#d17392',
-        themeDark: '#d886a1',
-        themeDarker: '#e2a3b8',
-        neutralLighterAlt: '#f8f8f8',
-        neutralLighter: '#f4f4f4',
-        neutralLight: '#eaeaea',
-        neutralQuaternaryAlt: '#dadada',
-        neutralQuaternary: '#d0d0d0',
-        neutralTertiaryAlt: '#c8c8c8',
-        neutralTertiary: '#595959',
-        neutralSecondary: '#373737',
-        neutralPrimaryAlt: '#2f2f2f',
-        neutralPrimary: '#000000',
-        neutralDark: '#151515',
-        black: '#0b0b0b',
-        white: '#ffffff',
-    },
-};
-
-const DarkTheme: PartialTheme = {
-    palette: {
-        themePrimary: '#cb6587',
-        themeLighterAlt: '#fdf8fa',
-        themeLighter: '#f7e3ea',
-        themeLight: '#f0ccd8',
-        themeTertiary: '#e09db4',
-        themeSecondary: '#d27694',
-        themeDarkAlt: '#b85c7a',
-        themeDark: '#9b4e67',
-        themeDarker: '#72394c',
-        neutralLighterAlt: '#3c3c3c',
-        neutralLighter: '#444444',
-        neutralLight: '#515151',
-        neutralQuaternaryAlt: '#595959',
-        neutralQuaternary: '#5f5f5f',
-        neutralTertiaryAlt: '#7a7a7a',
-        neutralTertiary: '#c8c8c8',
-        neutralSecondary: '#d0d0d0',
-        neutralPrimaryAlt: '#dadada',
-        neutralPrimary: '#ffffff',
-        neutralDark: '#f4f4f4',
-        black: '#f8f8f8',
-        white: '#333333',
-    },
-};
-
-const buttons: RibbonButton<any>[] = [
-    formatPainterButton,
-    boldButton,
-    italicButton,
-    underlineButton,
-    fontButton,
-    fontSizeButton,
-    increaseFontSizeButton,
-    decreaseFontSizeButton,
-    textColorButton,
-    backgroundColorButton,
-    bulletedListButton,
-    numberedListButton,
-    decreaseIndentButton,
-    increaseIndentButton,
-    blockQuoteButton,
-    alignLeftButton,
-    alignCenterButton,
-    alignRightButton,
-    alignJustifyButton,
-    insertLinkButton,
-    removeLinkButton,
-    insertTableButton,
-    insertImageButton,
-    superscriptButton,
-    subscriptButton,
-    strikethroughButton,
-    setHeadingLevelButton,
-    codeButton,
-    ltrButton,
-    rtlButton,
-    undoButton,
-    redoButton,
-    clearFormatButton,
-    setBulletedListStyleButton,
-    setNumberedListStyleButton,
-    listStartNumberButton,
-    formatTableButton,
-    setTableCellShadeButton,
-    setTableHeaderButton,
-    tableInsertButton,
-    tableDeleteButton,
-    tableMergeButton,
-    tableSplitButton,
-    tableAlignCellButton,
-    tableAlignTableButton,
-    tableBorderApplyButton,
-    tableBorderColorButton,
-    tableBorderWidthButton,
-    tableBorderStyleButton,
-    imageBorderColorButton,
-    imageBorderWidthButton,
-    imageBorderStyleButton,
-    imageBorderRemoveButton,
-    changeImageButton,
-    imageBoxShadowButton,
-    spacingButton,
-    spaceBeforeButton,
-    spaceAfterButton,
-    pasteButton,
-    darkMode,
-    zoomButton,
-    exportContentButton,
-];
-
-const buttonsWithPopout = buttons.concat(popoutButton);
 
 const PopoutRoot = 'mainPane';
 const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Site</title></head><body><div id=${PopoutRoot}></div></body></html>`;
@@ -232,12 +51,12 @@ const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
-export class MainPane extends React.Component<{}, MainPaneBaseState> {
+export class MainPane extends React.Component<{}, MainPaneState> {
     private mouseX: number;
     private static instance: MainPane;
     private popoutRoot: HTMLElement;
     private formatStatePlugin: FormatStatePlugin;
-    // private editorOptionPlugin: ContentModelEditorOptionsPlugin;
+    private editorOptionPlugin: EditorOptionsPlugin;
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
@@ -279,7 +98,7 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
         };
 
         this.formatStatePlugin = new FormatStatePlugin();
-        // this.editorOptionPlugin = new ContentModelEditorOptionsPlugin();
+        this.editorOptionPlugin = new EditorOptionsPlugin();
         this.eventViewPlugin = new EventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin(this.snapshots);
@@ -295,6 +114,7 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
+            initState: this.editorOptionPlugin.getBuildInPluginState(),
             scale: 1,
             isDarkMode: this.themeMatch?.matches || false,
             editorCreator: null,
@@ -311,7 +131,7 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
         return (
             <ThemeProvider
                 applyTo="body"
-                theme={this.getTheme(this.state.isDarkMode)}
+                theme={getTheme(this.state.isDarkMode)}
                 className={styles.mainPane}>
                 {this.renderTitleBar()}
                 {!this.state.popoutWindow && this.renderRibbon(false /*isPopout*/)}
@@ -351,10 +171,11 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
         });
     }
 
-    resetEditorPlugin(pluginState: {}) {
+    resetEditorPlugin(pluginState: OptionState) {
         // this.updateContentPlugin.forceUpdate();
-        this.setState({});
-
+        this.setState({
+            initState: pluginState,
+        });
         this.resetEditor();
     }
 
@@ -446,8 +267,8 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
     private resetEditor() {
         // this.toggleablePlugins = null;
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) =>
-                new EditorAdapter(div, {
+            editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) =>
+                new StandaloneEditor(div, {
                     ...options,
                     cacheModel: true,
                 }),
@@ -462,18 +283,6 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
             height: `calc(${100 / this.state.scale}%)`,
             width: `calc(${100 / this.state.scale}%)`,
         };
-        // const format = this.state.initState.defaultFormat;
-        const defaultFormat: ContentModelSegmentFormat = {
-            // fontWeight: format.bold ? 'bold' : undefined,
-            // italic: format.italic || undefined,
-            // underline: format.underline || undefined,
-            // fontFamily: format.fontFamily || undefined,
-            // fontSize: format.fontSize || undefined,
-            // textColor: format.textColors?.lightModeColor || format.textColor || undefined,
-            // backgroundColor:
-            //     format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
-        };
-
         const plugins: EditorPlugin[] = [
             this.ribbonPlugin,
             this.formatPainterPlugin,
@@ -498,7 +307,7 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
                             className={styles.editor}
                             // legacyPlugins={allPlugins}
                             plugins={plugins}
-                            defaultSegmentFormat={defaultFormat}
+                            defaultSegmentFormat={this.state.initState.defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
                             snapshots={this.snapshotPlugin.getSnapshots()}
@@ -511,10 +320,6 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
                 </div>
             </div>
         );
-    }
-
-    private getTheme(isDark: boolean): PartialTheme {
-        return isDark ? DarkTheme : LightTheme;
     }
 
     private renderMainPane() {
@@ -552,7 +357,7 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
                 {this.renderSidePane(true /*fullWidth*/)}
                 {ReactDOM.createPortal(
                     <WindowProvider window={this.state.popoutWindow}>
-                        <ThemeProvider applyTo="body" theme={this.getTheme(this.state.isDarkMode)}>
+                        <ThemeProvider applyTo="body" theme={getTheme(this.state.isDarkMode)}>
                             <div className={styles.mainPane}>
                                 {this.renderRibbon(true /*isPopout*/)}
                                 <div className={styles.body}>{this.renderEditor()}</div>
@@ -611,7 +416,7 @@ export class MainPane extends React.Component<{}, MainPaneBaseState> {
     private getSidePanePlugins(): SidePanePlugin[] {
         return [
             this.formatStatePlugin,
-            // this.editorOptionPlugin,
+            this.editorOptionPlugin,
             this.eventViewPlugin,
             this.apiPlaygroundPlugin,
             this.snapshotPlugin,

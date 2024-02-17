@@ -7,7 +7,7 @@ export interface TitleBarProps {
     className?: string;
 }
 
-export default class TitleBar extends React.Component<TitleBarProps, {}> {
+export class TitleBar extends React.Component<TitleBarProps, {}> {
     render() {
         const { className: baseClassName } = this.props;
         const className = styles.titleBar + ' ' + (baseClassName || '');

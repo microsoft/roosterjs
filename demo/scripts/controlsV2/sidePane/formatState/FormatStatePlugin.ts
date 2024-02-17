@@ -4,10 +4,7 @@ import { PluginEvent } from 'roosterjs-content-model-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
 
-export default class FormatStatePlugin extends SidePanePluginImpl<
-    FormatStatePane,
-    FormatStatePaneProps
-> {
+export class FormatStatePlugin extends SidePanePluginImpl<FormatStatePane, FormatStatePaneProps> {
     constructor() {
         super(FormatStatePane, 'format', 'Format State');
     }

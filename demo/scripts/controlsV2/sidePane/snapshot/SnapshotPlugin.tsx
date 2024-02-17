@@ -3,7 +3,7 @@ import { IStandaloneEditor, PluginEvent, Snapshot, Snapshots } from 'roosterjs-c
 import { SidePanePlugin } from '../SidePanePlugin';
 import { SnapshotPane } from './SnapshotPane';
 
-export default class ContentModelSnapshotPlugin implements SidePanePlugin {
+export class SnapshotPlugin implements SidePanePlugin {
     private editor: IStandaloneEditor;
     private component: SnapshotPane;
 
