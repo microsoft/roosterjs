@@ -3,10 +3,10 @@ import * as ReactDOM from 'react-dom';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
 import { buttons, buttonsWithPopout } from './ribbonButtons';
+import { Colors, EditorPlugin, IStandaloneEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createRibbonPlugin, Ribbon, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
-import { EditorPlugin, IStandaloneEditor, Snapshots } from 'roosterjs-content-model-types';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
 import { FormatStatePlugin } from '../sidePane/formatState/FormatStatePlugin';
@@ -22,15 +22,13 @@ import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
+import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import {
     Border,
     ContentModelDocument,
     StandaloneEditorOptions,
 } from 'roosterjs-content-model-types';
-// import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
-// import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';import SidePane from '../sidePane/SidePane';
-// import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 
 const styles = require('./MainPane.scss');
 
@@ -63,18 +61,19 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private editPlugin: EditPlugin;
     private autoFormatPlugin: AutoFormatPlugin;
     private ribbonPlugin: RibbonPlugin;
-    // private pasteOptionPlugin: EditorPlugin;
-    // private emojiPlugin: EditorPlugin;
     private snapshotPlugin: SnapshotPlugin;
-    // private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: FormatPainterPlugin;
     private pastePlugin: PastePlugin;
-    // private sampleEntityPlugin: SampleEntityPlugin;
     private snapshots: Snapshots;
+    // private pasteOptionPlugin: EditorPlugin;
+    // private emojiPlugin: EditorPlugin;
+    // private toggleablePlugins: EditorPlugin[] | null = null;
+    // private sampleEntityPlugin: SampleEntityPlugin;
 
     protected sidePane = React.createRef<SidePane>();
-    // protected updateContentPlugin: UpdateContentPlugin;
+    protected updateContentPlugin: UpdateContentPlugin;
     protected model: ContentModelDocument | null = null;
+    private knownColors: Record<string, Colors> = {};
     protected themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
 
     static getInstance() {
@@ -87,7 +86,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         super(props);
 
         MainPane.instance = this;
-        // this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
+        this.updateContentPlugin = new UpdateContentPlugin(this.onUpdate);
 
         this.snapshots = {
             snapshots: [],
@@ -106,10 +105,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.editPlugin = new EditPlugin();
         this.autoFormatPlugin = new AutoFormatPlugin();
         this.ribbonPlugin = createRibbonPlugin();
-        // this.pasteOptionPlugin = createPasteOptionPlugin();
-        // this.emojiPlugin = createEmojiPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.pastePlugin = new PastePlugin();
+        // this.pasteOptionPlugin = createPasteOptionPlugin();
+        // this.emojiPlugin = createEmojiPlugin();
         // this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
@@ -152,12 +151,12 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     }
 
     popout() {
-        // this.updateContentPlugin.forceUpdate();
+        this.updateContentPlugin.update();
 
         const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
         win.document.write(trustedHTMLHandler(POPOUT_HTML));
         win.addEventListener('beforeunload', () => {
-            // this.updateContentPlugin.forceUpdate();
+            this.updateContentPlugin.update();
 
             unregisterWindowForCss(win);
             this.setState({ popoutWindow: null });
@@ -172,7 +171,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     }
 
     resetEditorPlugin(pluginState: OptionState) {
-        // this.updateContentPlugin.forceUpdate();
+        this.updateContentPlugin.update();
         this.setState({
             initState: pluginState,
         });
@@ -259,8 +258,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     //         // this.sampleEntityPlugin,
     //     ];
 
-    //     // plugins.push(this.updateContentPlugin);
-
     //     return plugins;
     // }
 
@@ -290,13 +287,14 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.autoFormatPlugin,
             this.editPlugin,
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
+            this.updateContentPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
             plugins.push(...this.getSidePanePlugins());
         }
 
-        // this.updateContentPlugin.forceUpdate();
+        this.updateContentPlugin.update();
 
         return (
             <div className={styles.editorContainer} id="EditorContainer">
@@ -312,9 +310,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             getDarkColor={getDarkColor}
                             snapshots={this.snapshotPlugin.getSnapshots()}
                             trustedHTMLHandler={trustedHTMLHandler}
-                            // initialContent={this.content}
+                            initialModel={this.model}
                             editorCreator={this.state.editorCreator}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
+                            knownColors={this.knownColors}
                         />
                     )}
                 </div>
@@ -388,9 +387,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         document.body.style.userSelect = '';
     };
 
-    // private onUpdate = (content: string) => {
-    //     this.content = content;
-    // };
+    private onUpdate = (model: ContentModelDocument) => {
+        this.model = model;
+    };
 
     private onShowSidePane = () => {
         this.setState({
