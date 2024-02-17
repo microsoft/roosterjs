@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import EventViewPlugin from '../sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from '../sidePane/formatState/FormatStatePlugin';
 import SidePane from '../sidePane/SidePane';
+import SnapshotPlugin from '../sidePane/snapshot/SnapshotPlugin';
 import TitleBar from '../titleBar/TitleBar';
 import { alignCenterButton } from '../roosterjsReact/ribbon/buttons/alignCenterButton';
 import { alignJustifyButton } from '../roosterjsReact/ribbon/buttons/alignJustifyButton';
@@ -76,6 +77,7 @@ import {
     ContentModelSegmentFormat,
     EditorPlugin,
     IStandaloneEditor,
+    Snapshots,
 } from 'roosterjs-content-model-types';
 // import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import {
@@ -227,29 +229,29 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
     private ribbonPlugin: RibbonPlugin;
     // private pasteOptionPlugin: EditorPlugin;
     // private emojiPlugin: EditorPlugin;
-    // private snapshotPlugin: ContentModelSnapshotPlugin;
+    private snapshotPlugin: SnapshotPlugin;
     // private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: FormatPainterPlugin;
     private pastePlugin: PastePlugin;
     // private sampleEntityPlugin: SampleEntityPlugin;
-    // private snapshots: Snapshots;
+    private snapshots: Snapshots;
 
     constructor(props: {}) {
         super(props);
 
-        // this.snapshots = {
-        //     snapshots: [],
-        //     totalSize: 0,
-        //     currentIndex: -1,
-        //     autoCompleteIndex: -1,
-        //     maxSize: 1e7,
-        // };
+        this.snapshots = {
+            snapshots: [],
+            totalSize: 0,
+            currentIndex: -1,
+            autoCompleteIndex: -1,
+            maxSize: 1e7,
+        };
 
         this.formatStatePlugin = new FormatStatePlugin();
         // this.editorOptionPlugin = new ContentModelEditorOptionsPlugin();
         this.eventViewPlugin = new EventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
-        // this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
+        this.snapshotPlugin = new SnapshotPlugin(this.snapshots);
         // this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.editPlugin = new EditPlugin();
         this.autoFormatPlugin = new AutoFormatPlugin();
@@ -374,7 +376,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
-                            // snapshots={this.snapshotPlugin.getSnapshots()}
+                            snapshots={this.snapshotPlugin.getSnapshots()}
                             trustedHTMLHandler={trustedHTMLHandler}
                             // initialContent={this.content}
                             editorCreator={this.state.editorCreator}
@@ -396,7 +398,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
             // this.editorOptionPlugin,
             this.eventViewPlugin,
             this.apiPlaygroundPlugin,
-            // this.snapshotPlugin,
+            this.snapshotPlugin,
             // this.contentModelPanePlugin,
         ];
     }
