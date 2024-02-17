@@ -1,5 +1,5 @@
 import { applySegmentFormat, getFormatState } from 'roosterjs-content-model-api';
-import { MainPaneBase } from '../mainPane/MainPaneBase';
+import { MainPane } from '../mainPane/MainPane';
 import {
     ContentModelSegmentFormat,
     EditorPlugin,
@@ -64,7 +64,7 @@ export class FormatPainterPlugin implements EditorPlugin {
         this.painterFormat = format;
 
         if (this.painterFormat) {
-            sheet.insertRule(`#${MainPaneBase.editorDivId} {${FORMATPAINTERCURSOR_STYLE}}`);
+            sheet.insertRule(`#${MainPane.editorDivId} {${FORMATPAINTERCURSOR_STYLE}}`);
         }
     }
 

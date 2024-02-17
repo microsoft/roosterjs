@@ -1,4 +1,4 @@
-import { MainPaneBase } from '../mainPane/MainPaneBase';
+import { MainPane } from '../mainPane/MainPane';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 /**
@@ -15,6 +15,6 @@ export const popoutButton: RibbonButton<PopoutButtonStringKey> = {
     iconName: 'OpenInNewWindow',
     flipWhenRtl: true,
     onClick: _ => {
-        MainPaneBase.getInstance().popout();
+        MainPane.getInstance().popout();
     },
 };

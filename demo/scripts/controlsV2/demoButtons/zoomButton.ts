@@ -1,4 +1,4 @@
-import { MainPaneBase } from '../mainPane/MainPaneBase';
+import { MainPane } from '../mainPane/MainPane';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 const DropDownItems = {
@@ -37,7 +37,7 @@ export const zoomButton: RibbonButton<ZoomButtonStringKey> = {
         editor.focus();
 
         // Let main pane know this state change so that it can be persisted when pop out/pop in
-        MainPaneBase.getInstance().setScale(zoomScale);
+        MainPane.getInstance().setScale(zoomScale);
 
         editor.triggerEvent('zoomChanged', { newZoomScale: zoomScale });
     },

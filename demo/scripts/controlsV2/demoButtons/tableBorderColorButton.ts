@@ -1,4 +1,4 @@
-import { MainPaneBase } from '../mainPane/MainPaneBase';
+import { MainPane } from '../mainPane/MainPane';
 import { renderColorPicker } from '../roosterjsReact/colorPicker/component/renderColorPicker';
 import {
     getColorPickerContainerClassName,
@@ -32,7 +32,7 @@ export const tableBorderColorButton: RibbonButton<'buttonNameTableBorderColor'> 
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
         if (key != 'buttonNameTableBorderColor') {
-            MainPaneBase.getInstance().setTableBorderColor(getTextColorValue(key).lightModeColor);
+            MainPane.getInstance().setTableBorderColor(getTextColorValue(key).lightModeColor);
             editor.focus();
         }
     },

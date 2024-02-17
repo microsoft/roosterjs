@@ -14,6 +14,7 @@ import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-mod
 import { backgroundColorButton } from '../roosterjsReact/ribbon/buttons/backgroundColorButton';
 import { blockQuoteButton } from '../roosterjsReact/ribbon/buttons/blockQuoteButton';
 import { boldButton } from '../roosterjsReact/ribbon/buttons/boldButton';
+import { Border, ContentModelDocument } from 'roosterjs-content-model-types';
 import { bulletedListButton } from '../roosterjsReact/ribbon/buttons/bulletedListButton';
 import { changeImageButton } from '../demoButtons/changeImageButton';
 import { clearFormatButton } from '../roosterjsReact/ribbon/buttons/clearFormatButton';
@@ -24,7 +25,6 @@ import { darkMode } from '../demoButtons/darkMode';
 import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
 import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseIndentButton';
 import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
-import { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types';
 import { exportContentButton } from '../demoButtons/exportContentButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
 import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
@@ -45,12 +45,12 @@ import { insertTableButton } from '../roosterjsReact/ribbon/buttons/insertTableB
 import { italicButton } from '../roosterjsReact/ribbon/buttons/italicButton';
 import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
 import { ltrButton } from '../roosterjsReact/ribbon/buttons/ltrButton';
-import { MainPaneBase, MainPaneBaseState } from './MainPaneBase';
 import { numberedListButton } from '../roosterjsReact/ribbon/buttons/numberedListButton';
-import { PartialTheme } from '@fluentui/react/lib/Theme';
+import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { pasteButton } from '../demoButtons/pasteButton';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
+import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
 import { removeLinkButton } from '../roosterjsReact/ribbon/buttons/removeLinkButton';
 import { Rooster } from '../roosterjsReact/rooster';
 import { rtlButton } from '../roosterjsReact/ribbon/buttons/rtlButton';
@@ -73,6 +73,7 @@ import { textColorButton } from '../roosterjsReact/ribbon/buttons/textColorButto
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { underlineButton } from '../roosterjsReact/ribbon/buttons/underlineButton';
 import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
+import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
 import {
     ContentModelSegmentFormat,
@@ -89,10 +90,20 @@ import {
     tableMergeButton,
     tableSplitButton,
 } from '../demoButtons/tableEditButtons';
-// import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
-// import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
+// import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';import SidePane from '../sidePane/SidePane';
+// import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 
 const styles = require('./MainPane.scss');
+
+export interface MainPaneBaseState {
+    showSidePane: boolean;
+    popoutWindow: Window;
+    scale: number;
+    isDarkMode: boolean;
+    isRtl: boolean;
+    tableBorderFormat?: Border;
+    editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IStandaloneEditor;
+}
 
 const LightTheme: PartialTheme = {
     palette: {
@@ -215,11 +226,16 @@ const buttons: RibbonButton<any>[] = [
 
 const buttonsWithPopout = buttons.concat(popoutButton);
 
-interface ContentModelMainPaneState extends MainPaneBaseState {
-    editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IStandaloneEditor;
-}
+const PopoutRoot = 'mainPane';
+const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Site</title></head><body><div id=${PopoutRoot}></div></body></html>`;
+const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
+const POPOUT_URL = 'about:blank';
+const POPOUT_TARGET = '_blank';
 
-class MainPane extends MainPaneBase<ContentModelMainPaneState> {
+export class MainPane extends React.Component<{}, MainPaneBaseState> {
+    private mouseX: number;
+    private static instance: MainPane;
+    private popoutRoot: HTMLElement;
     private formatStatePlugin: FormatStatePlugin;
     // private editorOptionPlugin: ContentModelEditorOptionsPlugin;
     private eventViewPlugin: EventViewPlugin;
@@ -237,8 +253,22 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
     // private sampleEntityPlugin: SampleEntityPlugin;
     private snapshots: Snapshots;
 
+    protected sidePane = React.createRef<SidePane>();
+    // protected updateContentPlugin: UpdateContentPlugin;
+    protected model: ContentModelDocument | null = null;
+    protected themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
+
+    static getInstance() {
+        return this.instance;
+    }
+
+    static readonly editorDivId = 'RoosterJsContentDiv';
+
     constructor(props: {}) {
         super(props);
+
+        MainPane.instance = this;
+        // this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
 
         this.snapshots = {
             snapshots: [],
@@ -277,11 +307,105 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         };
     }
 
-    renderTitleBar() {
+    render() {
+        return (
+            <ThemeProvider
+                applyTo="body"
+                theme={this.getTheme(this.state.isDarkMode)}
+                className={styles.mainPane}>
+                {this.renderTitleBar()}
+                {!this.state.popoutWindow && this.renderRibbon(false /*isPopout*/)}
+                <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
+                    {this.state.popoutWindow ? this.renderPopout() : this.renderMainPane()}
+                </div>
+            </ThemeProvider>
+        );
+    }
+
+    componentDidMount() {
+        this.themeMatch?.addEventListener('change', this.onThemeChange);
+        this.resetEditor();
+    }
+
+    componentWillUnmount() {
+        this.themeMatch?.removeEventListener('change', this.onThemeChange);
+    }
+
+    popout() {
+        // this.updateContentPlugin.forceUpdate();
+
+        const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
+        win.document.write(trustedHTMLHandler(POPOUT_HTML));
+        win.addEventListener('beforeunload', () => {
+            // this.updateContentPlugin.forceUpdate();
+
+            unregisterWindowForCss(win);
+            this.setState({ popoutWindow: null });
+        });
+
+        registerWindowForCss(win);
+
+        this.popoutRoot = win.document.getElementById(PopoutRoot);
+        this.setState({
+            popoutWindow: win,
+        });
+    }
+
+    resetEditorPlugin(pluginState: {}) {
+        // this.updateContentPlugin.forceUpdate();
+        this.setState({});
+
+        this.resetEditor();
+    }
+
+    setScale(scale: number): void {
+        this.setState({
+            scale: scale,
+        });
+    }
+
+    getTableBorder(): Border {
+        return this.state.tableBorderFormat;
+    }
+
+    setTableBorderColor(color: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), color },
+        });
+    }
+
+    setTableBorderWidth(width: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), width },
+        });
+    }
+
+    setTableBorderStyle(style: string): void {
+        this.setState({
+            tableBorderFormat: { ...this.getTableBorder(), style },
+        });
+    }
+
+    toggleDarkMode(): void {
+        this.setState({
+            isDarkMode: !this.state.isDarkMode,
+        });
+    }
+
+    setPageDirection(isRtl: boolean): void {
+        this.setState({ isRtl: isRtl });
+        [window, this.state.popoutWindow].forEach(win => {
+            if (win) {
+                win.document.body.dir = isRtl ? 'rtl' : 'ltr';
+            }
+        });
+    }
+
+    private renderTitleBar() {
         return <TitleBar className={styles.noGrow} />;
     }
 
-    renderRibbon(isPopout: boolean) {
+    private renderRibbon(isPopout: boolean) {
         return (
             <Ribbon
                 buttons={isPopout ? buttons : buttonsWithPopout}
@@ -291,7 +415,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         );
     }
 
-    renderSidePane(fullWidth: boolean) {
+    private renderSidePane(fullWidth: boolean) {
         return (
             <SidePane
                 ref={this.sidePane}
@@ -303,23 +427,23 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         );
     }
 
-    getPlugins() {
-        // this.toggleablePlugins =
-        //     this.toggleablePlugins || getToggleablePlugins(this.state.initState);
+    // private getPlugins() {
+    //     // this.toggleablePlugins =
+    //     //     this.toggleablePlugins || getToggleablePlugins(this.state.initState);
 
-        const plugins: LegacyEditorPlugin[] = [
-            // ...this.toggleablePlugins,
-            // this.pasteOptionPlugin,
-            // this.emojiPlugin,
-            // this.sampleEntityPlugin,
-        ];
+    //     const plugins: LegacyEditorPlugin[] = [
+    //         // ...this.toggleablePlugins,
+    //         // this.pasteOptionPlugin,
+    //         // this.emojiPlugin,
+    //         // this.sampleEntityPlugin,
+    //     ];
 
-        // plugins.push(this.updateContentPlugin);
+    //     // plugins.push(this.updateContentPlugin);
 
-        return plugins;
-    }
+    //     return plugins;
+    // }
 
-    resetEditor() {
+    private resetEditor() {
         // this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) =>
@@ -330,7 +454,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         });
     }
 
-    renderEditor() {
+    private renderEditor() {
         // const allPlugins = this.getPlugins();
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
@@ -370,7 +494,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
                 <div style={editorStyles}>
                     {this.state.editorCreator && (
                         <Rooster
-                            id={MainPaneBase.editorDivId}
+                            id={MainPane.editorDivId}
                             className={styles.editor}
                             // legacyPlugins={allPlugins}
                             plugins={plugins}
@@ -389,9 +513,100 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         );
     }
 
-    getTheme(isDark: boolean): PartialTheme {
+    private getTheme(isDark: boolean): PartialTheme {
         return isDark ? DarkTheme : LightTheme;
     }
+
+    private renderMainPane() {
+        return (
+            <>
+                {this.renderEditor()}
+                {this.state.showSidePane ? (
+                    <>
+                        <div className={styles.resizer} onMouseDown={this.onMouseDown} />
+                        {this.renderSidePane(false /*fullWidth*/)}
+                        {this.renderSidePaneButton()}
+                    </>
+                ) : (
+                    this.renderSidePaneButton()
+                )}
+            </>
+        );
+    }
+
+    private renderSidePaneButton() {
+        return (
+            <button
+                className={`side-pane-toggle ${this.state.showSidePane ? 'open' : 'close'} ${
+                    styles.showSidePane
+                }`}
+                onClick={this.state.showSidePane ? this.onHideSidePane : this.onShowSidePane}>
+                <div>{this.state.showSidePane ? 'Hide side pane' : 'Show side pane'}</div>
+            </button>
+        );
+    }
+
+    private renderPopout() {
+        return (
+            <>
+                {this.renderSidePane(true /*fullWidth*/)}
+                {ReactDOM.createPortal(
+                    <WindowProvider window={this.state.popoutWindow}>
+                        <ThemeProvider applyTo="body" theme={this.getTheme(this.state.isDarkMode)}>
+                            <div className={styles.mainPane}>
+                                {this.renderRibbon(true /*isPopout*/)}
+                                <div className={styles.body}>{this.renderEditor()}</div>
+                            </div>
+                        </ThemeProvider>
+                    </WindowProvider>,
+                    this.popoutRoot
+                )}
+            </>
+        );
+    }
+
+    private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
+        document.addEventListener('mousemove', this.onMouseMove, true);
+        document.addEventListener('mouseup', this.onMouseUp, true);
+        document.body.style.userSelect = 'none';
+        this.mouseX = e.pageX;
+    };
+
+    private onMouseMove = (e: MouseEvent) => {
+        this.sidePane.current.changeWidth(this.mouseX - e.pageX);
+        this.mouseX = e.pageX;
+    };
+
+    private onMouseUp = (e: MouseEvent) => {
+        document.removeEventListener('mousemove', this.onMouseMove, true);
+        document.removeEventListener('mouseup', this.onMouseUp, true);
+        document.body.style.userSelect = '';
+    };
+
+    // private onUpdate = (content: string) => {
+    //     this.content = content;
+    // };
+
+    private onShowSidePane = () => {
+        this.setState({
+            showSidePane: true,
+        });
+        this.resetEditor();
+    };
+
+    private onHideSidePane = () => {
+        this.setState({
+            showSidePane: false,
+        });
+        this.resetEditor();
+        window.location.hash = '';
+    };
+
+    private onThemeChange = () => {
+        this.setState({
+            isDarkMode: this.themeMatch?.matches || false,
+        });
+    };
 
     private getSidePanePlugins(): SidePanePlugin[] {
         return [
