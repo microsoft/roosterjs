@@ -7,7 +7,7 @@ interface SidePaneComponent<P extends SidePaneElementProps>
     extends React.Component<P, any>,
         SidePaneElement {}
 
-export default abstract class SidePanePluginImpl<
+export abstract class SidePanePluginImpl<
     T extends SidePaneComponent<P>,
     P extends SidePaneElementProps
 > implements SidePanePlugin {

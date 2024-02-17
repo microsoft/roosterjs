@@ -8,6 +8,7 @@ import { alignCenterButton } from '../roosterjsReact/ribbon/buttons/alignCenterB
 import { alignJustifyButton } from '../roosterjsReact/ribbon/buttons/alignJustifyButton';
 import { alignLeftButton } from '../roosterjsReact/ribbon/buttons/alignLeftButton';
 import { alignRightButton } from '../roosterjsReact/ribbon/buttons/alignRightButton';
+import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from '../roosterjsReact/ribbon/buttons/backgroundColorButton';
 import { blockQuoteButton } from '../roosterjsReact/ribbon/buttons/blockQuoteButton';
@@ -219,7 +220,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
     private formatStatePlugin: FormatStatePlugin;
     // private editorOptionPlugin: ContentModelEditorOptionsPlugin;
     private eventViewPlugin: EventViewPlugin;
-    // private apiPlaygroundPlugin: ApiPlaygroundPlugin;
+    private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     // private contentModelPanePlugin: ContentModelPanePlugin;
     private editPlugin: EditPlugin;
     private autoFormatPlugin: AutoFormatPlugin;
@@ -247,7 +248,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         this.formatStatePlugin = new FormatStatePlugin();
         // this.editorOptionPlugin = new ContentModelEditorOptionsPlugin();
         this.eventViewPlugin = new EventViewPlugin();
-        // this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
+        this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         // this.snapshotPlugin = new ContentModelSnapshotPlugin(this.snapshots);
         // this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.editPlugin = new EditPlugin();
@@ -394,7 +395,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
             this.formatStatePlugin,
             // this.editorOptionPlugin,
             this.eventViewPlugin,
-            // this.apiPlaygroundPlugin,
+            this.apiPlaygroundPlugin,
             // this.snapshotPlugin,
             // this.contentModelPanePlugin,
         ];

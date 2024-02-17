@@ -1,7 +1,7 @@
 import EventViewPane from './EventViewPane';
-import SidePanePluginImpl from '../SidePanePluginImpl';
 import { PluginEvent } from 'roosterjs-content-model-types';
 import { SidePaneElementProps } from '../SidePaneElement';
+import { SidePanePluginImpl } from '../SidePanePluginImpl';
 
 export default class ContentModelEventViewPlugin extends SidePanePluginImpl<
     EventViewPane,
