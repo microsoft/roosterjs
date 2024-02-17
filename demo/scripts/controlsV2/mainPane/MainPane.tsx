@@ -49,6 +49,18 @@ const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
+// Pending tasks:
+// Support Ctrl+Z, Ctrl+B, ...
+// Add context menus for table, image and list
+// pasteOptionPlugin
+// emoji
+// sample entity
+// More options
+// toggleable plugins
+// Support legacy plugins
+// Generate code
+// Ribbon tabs
+
 export class MainPane extends React.Component<{}, MainPaneState> {
     private mouseX: number;
     private static instance: MainPane;
@@ -65,10 +77,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private formatPainterPlugin: FormatPainterPlugin;
     private pastePlugin: PastePlugin;
     private snapshots: Snapshots;
-    // private pasteOptionPlugin: EditorPlugin;
-    // private emojiPlugin: EditorPlugin;
-    // private toggleablePlugins: EditorPlugin[] | null = null;
-    // private sampleEntityPlugin: SampleEntityPlugin;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
