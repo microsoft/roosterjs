@@ -18,6 +18,7 @@ import { bulletedListButton } from '../roosterjsReact/ribbon/buttons/bulletedLis
 import { changeImageButton } from '../demoButtons/changeImageButton';
 import { clearFormatButton } from '../roosterjsReact/ribbon/buttons/clearFormatButton';
 import { codeButton } from '../roosterjsReact/ribbon/buttons/codeButton';
+import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { darkMode } from '../demoButtons/darkMode';
 import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
@@ -223,7 +224,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
     // private editorOptionPlugin: ContentModelEditorOptionsPlugin;
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
-    // private contentModelPanePlugin: ContentModelPanePlugin;
+    private contentModelPanePlugin: ContentModelPanePlugin;
     private editPlugin: EditPlugin;
     private autoFormatPlugin: AutoFormatPlugin;
     private ribbonPlugin: RibbonPlugin;
@@ -252,7 +253,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
         this.eventViewPlugin = new EventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin(this.snapshots);
-        // this.contentModelPanePlugin = new ContentModelPanePlugin();
+        this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.editPlugin = new EditPlugin();
         this.autoFormatPlugin = new AutoFormatPlugin();
         this.ribbonPlugin = createRibbonPlugin();
@@ -355,7 +356,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
             this.pastePlugin,
             this.autoFormatPlugin,
             this.editPlugin,
-            // this.contentModelPanePlugin.getInnerRibbonPlugin()
+            this.contentModelPanePlugin.getInnerRibbonPlugin(),
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
@@ -399,7 +400,7 @@ class MainPane extends MainPaneBase<ContentModelMainPaneState> {
             this.eventViewPlugin,
             this.apiPlaygroundPlugin,
             this.snapshotPlugin,
-            // this.contentModelPanePlugin,
+            this.contentModelPanePlugin,
         ];
     }
 }

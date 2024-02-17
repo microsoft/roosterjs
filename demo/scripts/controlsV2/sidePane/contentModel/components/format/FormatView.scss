@@ -1,0 +1,42 @@
+.formatTable {
+    display: table;
+}
+
+.formatRow {
+    display: table-row;
+    height: 24px;
+}
+
+.formatName {
+    display: table-cell;
+    width: 120px;
+    vertical-align: top;
+}
+
+.formatValue {
+    display: table-cell;
+    margin: 2px;
+    overflow-x: hidden;
+}
+
+.errorMessage {
+    color: red;
+    font-weight: bold;
+}
+
+.colorValue {
+    width: 60px;
+}
+
+.textValue {
+    width: 95%;
+}
+
+.multiLineValue {
+    width: 95%;
+    height: 80px;
+}
+
+.numberValue {
+    width: 80px;
+}
