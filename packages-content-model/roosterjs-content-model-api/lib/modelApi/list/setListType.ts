@@ -76,8 +76,6 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                         : 1,
                                 direction: block.format.direction,
                                 textAlign: block.format.textAlign,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             }),
                         ],
                         // For list bullet, we only want to carry over these formats from segments:
@@ -98,6 +96,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                         newListItem.format.marginRight = block.format.marginRight;
                         block.format.marginRight = undefined;
                     }
+
                     if (block.format.marginLeft) {
                         newListItem.format.marginLeft = block.format.marginLeft;
                         block.format.marginLeft = undefined;

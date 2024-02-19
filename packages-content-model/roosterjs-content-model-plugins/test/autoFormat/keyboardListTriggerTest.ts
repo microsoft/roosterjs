@@ -95,8 +95,6 @@ describe('keyboardListTrigger', () => {
                             {
                                 listType: 'OL',
                                 format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
                                     startNumberOverride: 1,
                                     direction: undefined,
                                     textAlign: undefined,
@@ -148,10 +146,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3,"unorderedStyleType":1}',
                                 },
@@ -207,10 +202,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3,"unorderedStyleType":1}',
                                 },
@@ -248,8 +240,6 @@ describe('keyboardListTrigger', () => {
                                     startNumberOverride: 2,
                                     direction: undefined,
                                     textAlign: undefined,
-                                    marginBottom: '0px',
-                                    marginTop: '0px',
                                 },
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
@@ -373,8 +363,6 @@ describe('keyboardListTrigger', () => {
                             {
                                 listType: 'UL',
                                 format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
                                     startNumberOverride: 1,
                                     direction: undefined,
                                     textAlign: undefined,
@@ -477,10 +465,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
                                 },
@@ -514,10 +499,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
                                 },
@@ -579,8 +561,6 @@ describe('keyboardListTrigger', () => {
                                 listType: 'OL',
                                 format: {
                                     startNumberOverride: 1,
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
                                 },
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":10}',
@@ -615,10 +595,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":10}',
                                 },
@@ -659,10 +636,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
                                 },
@@ -696,10 +670,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
                                 },
@@ -735,8 +706,7 @@ describe('keyboardListTrigger', () => {
                                 listType: 'OL',
                                 format: {
                                     startNumberOverride: 3,
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
+
                                     direction: undefined,
                                     textAlign: undefined,
                                 },
@@ -787,8 +757,6 @@ describe('keyboardListTrigger', () => {
                                 listType: 'OL',
                                 format: {
                                     startNumberOverride: 1,
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
                                 },
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":10}',
@@ -823,10 +791,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":10}',
                                 },
@@ -872,10 +837,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
                                 },
@@ -909,10 +871,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
                                 },
@@ -978,10 +937,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
                                 },
@@ -1015,10 +971,7 @@ describe('keyboardListTrigger', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
-                                },
+                                format: {},
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
                                 },
@@ -1064,8 +1017,7 @@ describe('keyboardListTrigger', () => {
                                 listType: 'OL',
                                 format: {
                                     startNumberOverride: 1,
-                                    marginTop: '0px',
-                                    marginBottom: '0px',
+
                                     direction: undefined,
                                     textAlign: undefined,
                                 },
