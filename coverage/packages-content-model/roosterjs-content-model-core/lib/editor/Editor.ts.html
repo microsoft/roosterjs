@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages-content-model/roosterjs-content-model-core/lib/editor/StandaloneEditor.ts</title>
+    <title>Code coverage report for packages-content-model/roosterjs-content-model-core/lib/editor/Editor.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-core/lib/editor</a> StandaloneEditor.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-core/lib/editor</a> Editor.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -583,9 +583,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">44x</span>
+<span class="cline-any cline-yes">65x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -669,8 +669,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">32255x</span>
-<span class="cline-any cline-yes">32254x</span>
+<span class="cline-any cline-yes">7822x</span>
+<span class="cline-any cline-yes">7821x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -828,10 +828,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">33123x</span>
+<span class="cline-any cline-yes">8711x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">33096x</span>
+<span class="cline-any cline-yes">8684x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">55x</span>
@@ -855,8 +855,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource } from '../constants/ChangeSource';
 import { cloneModel } from '../publicApi/model/cloneModel';
+import { createEditorCore } from './createEditorCore';
 import { createEmptyModel, tableProcessor } from 'roosterjs-content-model-dom';
-import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import { transformColor } from '../publicApi/color/transformColor';
 import type { CachedElementHandler } from '../publicApi/model/cloneModel';
@@ -871,32 +871,32 @@ import type {
     DOMSelection,
     EditorEnvironment,
     FormatContentModelOptions,
-    IStandaloneEditor,
+    IEditor,
     PasteType,
     PluginEventData,
     PluginEventFromType,
     PluginEventType,
     Snapshot,
     SnapshotsManager,
-    StandaloneEditorCore,
-    StandaloneEditorOptions,
+    EditorCore,
+    EditorOptions,
     TrustedHTMLHandler,
     Rect,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
- * The standalone editor class based on Content Model
+ * The main editor class based on Content Model
  */
-export class StandaloneEditor implements IStandaloneEditor {
-    private core: StandaloneEditorCore | null = null;
+export class Editor implements IEditor {
+    private core: EditorCore | null = null;
 &nbsp;
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: StandaloneEditorOptions = {}) {
-        this.core = createStandaloneEditorCore(contentDiv, options);
+    constructor(contentDiv: HTMLDivElement, options: EditorOptions = {}) {
+        this.core = createEditorCore(contentDiv, options);
 &nbsp;
         const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
 &nbsp;
@@ -1222,10 +1222,10 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 &nbsp;
     /**
-     * @returns the current StandaloneEditorCore object
+     * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    protected getCore(): StandaloneEditorCore {
+    protected getCore(): EditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }
@@ -1258,7 +1258,7 @@ export class StandaloneEditor implements IStandaloneEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Feb 20 2024 03:18:38 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 20 2024 06:28:33 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

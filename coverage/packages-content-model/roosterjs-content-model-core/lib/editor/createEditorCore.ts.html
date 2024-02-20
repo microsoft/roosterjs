@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages-content-model/roosterjs-content-model-core/lib/editor/createStandaloneEditorCore.ts</title>
+    <title>Code coverage report for packages-content-model/roosterjs-content-model-core/lib/editor/createEditorCore.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-core/lib/editor</a> createStandaloneEditorCore.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-core/lib/editor</a> createEditorCore.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -170,14 +170,7 @@
 <a name='L111'></a><a href='#L111'>111</a>
 <a name='L112'></a><a href='#L112'>112</a>
 <a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a>
-<a name='L118'></a><a href='#L118'>118</a>
-<a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L114'></a><a href='#L114'>114</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -195,14 +188,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">41x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">41x</span>
@@ -297,38 +283,31 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">81x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createDarkColorHandler } from './DarkColorHandlerImpl';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { coreApiMap } from './coreApiMap';
+import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createDOMHelper } from './DOMHelperImpl';
-import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
-import { standaloneCoreApiMap } from './standaloneCoreApiMap';
-import {
-    createDomToModelSettings,
-    createModelToDomSettings,
-} from './createStandaloneEditorDefaultSettings';
+import { createEditorCorePlugins } from '../corePlugin/createEditorCorePlugins';
+import { createDomToModelSettings, createModelToDomSettings } from './createEditorDefaultSettings';
 import type {
     EditorEnvironment,
     PluginState,
-    StandaloneEditorCore,
-    StandaloneEditorCorePlugins,
-    StandaloneEditorOptions,
+    EditorCore,
+    EditorCorePlugins,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
- * @internal
- * A temporary function to create Standalone Editor core
+ * @internal Create core object for editor
  * @param contentDiv Editor content DIV
  * @param options Editor options
  */
-export function createStandaloneEditorCore(
-    contentDiv: HTMLDivElement,
-    options: StandaloneEditorOptions
-): StandaloneEditorCore {
-    const corePlugins = createStandaloneEditorCorePlugins(options, contentDiv);
+export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOptions): EditorCore {
+    const corePlugins = createEditorCorePlugins(options, contentDiv);
 &nbsp;
     return {
         contentDiv,
-        api: { ...standaloneCoreApiMap, ...options.coreApiOverride },
-        originalApi: { ...standaloneCoreApiMap },
+        api: { ...coreApiMap, ...options.coreApiOverride },
+        originalApi: { ...coreApiMap },
         plugins: [
             corePlugins.cache,
             corePlugins.format,
@@ -396,7 +375,7 @@ export function defaultTrustHtmlHandler(html: string) {
     return html;
 }
 &nbsp;
-function getPluginState(corePlugins: StandaloneEditorCorePlugins): PluginState {
+function getPluginState(corePlugins: EditorCorePlugins): PluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),
         copyPaste: corePlugins.copyPaste.getState(),
@@ -424,7 +403,7 @@ export function getDarkColorFallback(color: string) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Feb 20 2024 03:18:38 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 20 2024 06:28:33 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

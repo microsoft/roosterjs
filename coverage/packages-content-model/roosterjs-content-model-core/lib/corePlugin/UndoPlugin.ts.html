@@ -318,9 +318,7 @@
 <a name='L259'></a><a href='#L259'>259</a>
 <a name='L260'></a><a href='#L260'>260</a>
 <a name='L261'></a><a href='#L261'>261</a>
-<a name='L262'></a><a href='#L262'>262</a>
-<a name='L263'></a><a href='#L263'>263</a>
-<a name='L264'></a><a href='#L264'>264</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L262'></a><a href='#L262'>262</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -579,8 +577,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource } from '../constants/ChangeSource';
@@ -589,10 +585,10 @@ import { isCursorMovingKey } from '../publicApi/domUtils/eventUtils';
 import { undo } from '../publicApi/undo/undo';
 import type {
     ContentChangedEvent,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
     PluginWithState,
-    StandaloneEditorOptions,
+    EditorOptions,
     UndoPluginState,
 } from 'roosterjs-content-model-types';
 &nbsp;
@@ -604,14 +600,14 @@ const Enter = 'Enter';
  * Provides snapshot based undo service for Editor
  */
 class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt; {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private state: UndoPluginState;
 &nbsp;
     /**
      * Construct a new instance of UndoPlugin
      * @param options The wrapper of the state object
      */
-    constructor(options: StandaloneEditorOptions) {
+    constructor(options: EditorOptions) {
         this.state = {
             snapshotsManager: createSnapshotsManager(options.snapshots),
             isRestoring: false,
@@ -633,7 +629,7 @@ class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt; {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor): void {
+    initialize(editor: IEditor): void {
         this.editor = editor;
     }
 &nbsp;
@@ -705,7 +701,7 @@ class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt; {
         }
     }
 &nbsp;
-    private onKeyDown(editor: IStandaloneEditor, evt: KeyboardEvent): void {
+    private onKeyDown(editor: IEditor, evt: KeyboardEvent): void {
         const { snapshotsManager } = this.state;
 &nbsp;
         // Handle backspace/delete when there is a selection to take a snapshot
@@ -752,7 +748,7 @@ class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt; {
         }
     }
 &nbsp;
-    private onKeyPress(editor: IStandaloneEditor, evt: KeyboardEvent): void {
+    private onKeyPress(editor: IEditor, evt: KeyboardEvent): void {
         <span class="missing-if-branch" title="if path not taken" >I</span>if (evt.metaKey) {
             // if metaKey is pressed, simply return since no actual effect will be taken on the editor.
             // this is to prevent changing hasNewContent to true when meta + v to paste on Safari.
@@ -811,7 +807,7 @@ class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt; {
         this.state.snapshotsManager.hasNewContent = true;
     }
 &nbsp;
-    private canUndoAutoComplete(editor: IStandaloneEditor) {
+    private canUndoAutoComplete(editor: IEditor) {
         const selection = editor.getDOMSelection();
 &nbsp;
         return (
@@ -829,7 +825,7 @@ class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt; {
         this.state.posOffset = null;
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    private i</span>sCtrlOrMetaPressed(editor: IStandaloneEditor, event: KeyboardEvent) {
+<span class="fstat-no" title="function not covered" >    private i</span>sCtrlOrMetaPressed(editor: IEditor, event: KeyboardEvent) {
         const env = <span class="cstat-no" title="statement not covered" >editor.getEnvironment();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        return env.isMac ? event.metaKey : event.ctrlKey;</span>
@@ -841,9 +837,7 @@ class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt; {
  * Create a new instance of UndoPlugin.
  * @param option The editor option
  */
-export function createUndoPlugin(
-    option: StandaloneEditorOptions
-): PluginWithState&lt;UndoPluginState&gt; {
+export function createUndoPlugin(option: EditorOptions): PluginWithState&lt;UndoPluginState&gt; {
     return new UndoPlugin(option);
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -853,7 +847,7 @@ export function createUndoPlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Feb 20 2024 03:18:38 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 20 2024 06:28:33 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
