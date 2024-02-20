@@ -44,7 +44,11 @@ describe('toggleNumbering', () => {
         toggleNumbering(editor);
 
         expect(setListType.setListType).toHaveBeenCalledTimes(1);
-        expect(setListType.setListType).toHaveBeenCalledWith(mockedModel, 'OL');
+        expect(setListType.setListType).toHaveBeenCalledWith(
+            mockedModel,
+            'OL',
+            false /** remove margins */
+        );
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
