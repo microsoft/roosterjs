@@ -1,4 +1,4 @@
-import { cacheGetEventData } from 'roosterjs-content-model-core/lib';
+import { cacheGetEventData } from 'roosterjs-content-model-core';
 import type { ShortcutCommand } from './ShortcutCommand';
 import {
     ShortcutBold,
