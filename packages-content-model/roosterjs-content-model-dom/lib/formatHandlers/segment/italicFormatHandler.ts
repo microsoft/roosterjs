@@ -11,7 +11,11 @@ export const italicFormatHandler: FormatHandler<ItalicFormat> = {
 
         if (fontStyle == 'italic' || fontStyle == 'oblique') {
             format.italic = true;
-        } else if (fontStyle == 'initial' || fontStyle == 'normal') {
+        } else if (
+            fontStyle == 'initial' ||
+            fontStyle == 'normal' ||
+            context.defaultFormat?.italic
+        ) {
             format.italic = false;
         }
     },

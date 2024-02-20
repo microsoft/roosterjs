@@ -12,6 +12,11 @@ export const boldFormatHandler: FormatHandler<BoldFormat> = {
 
         if (shouldSetValue(fontWeight, '400', format.fontWeight, defaultStyle.fontWeight)) {
             format.fontWeight = fontWeight;
+        } else if (
+            context.defaultFormat?.fontWeight &&
+            context.defaultFormat.fontWeight !== 'normal'
+        ) {
+            format.fontWeight = 'normal';
         }
     },
     apply: (format, element, context) => {
