@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
-import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
 import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-model-types';
 import { buttons, buttonsWithPopout } from './ribbonButtons';
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
@@ -25,6 +24,12 @@ import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+import {
+    AutoFormatPlugin,
+    EditPlugin,
+    PastePlugin,
+    ShortcutPlugin,
+} from 'roosterjs-content-model-plugins';
 
 const styles = require('./MainPane.scss');
 
@@ -46,7 +51,6 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
-// Support Ctrl+Z, Ctrl+B, ...
 // Add context menus for table, image and list
 // pasteOptionPlugin
 // emoji
@@ -68,6 +72,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private contentModelPanePlugin: ContentModelPanePlugin;
     private editPlugin: EditPlugin;
     private autoFormatPlugin: AutoFormatPlugin;
+    private shortcutPlugin: ShortcutPlugin;
     private ribbonPlugin: RibbonPlugin;
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
@@ -108,6 +113,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.editPlugin = new EditPlugin();
         this.autoFormatPlugin = new AutoFormatPlugin();
+        this.shortcutPlugin = new ShortcutPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.pastePlugin = new PastePlugin();
@@ -289,6 +295,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.formatPainterPlugin,
             this.pastePlugin,
             this.autoFormatPlugin,
+            this.shortcutPlugin,
             this.editPlugin,
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,

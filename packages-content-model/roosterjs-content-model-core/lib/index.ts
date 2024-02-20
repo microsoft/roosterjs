@@ -43,6 +43,7 @@ export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stri
 export { parseTableCells, createTableRanges } from './publicApi/domUtils/tableCellUtils';
 export { getSegmentTextFormat } from './publicApi/domUtils/getSegmentTextFormat';
 export { readFile } from './publicApi/domUtils/readFile';
+export { cacheGetEventData } from './publicApi/domUtils/cacheGetEventData';
 
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
