@@ -12,10 +12,10 @@ import * as mergeTableRow from '../../../lib/modelApi/table/mergeTableRow';
 import * as splitTableCellHorizontally from '../../../lib/modelApi/table/splitTableCellHorizontally';
 import * as splitTableCellVertically from '../../../lib/modelApi/table/splitTableCellVertically';
 import editTable from '../../../lib/publicApi/table/editTable';
-import { IStandaloneEditor, TableOperation } from 'roosterjs-content-model-types';
+import { IEditor, TableOperation } from 'roosterjs-content-model-types';
 
 describe('editTable', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let focusSpy: jasmine.Spy;
     let formatTableWithContentModelSpy: jasmine.Spy;
     const mockedTable = 'TABLE' as any;

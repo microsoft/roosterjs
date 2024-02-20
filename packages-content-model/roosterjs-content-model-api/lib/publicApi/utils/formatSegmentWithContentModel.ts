@@ -5,14 +5,14 @@ import type {
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentFormat,
-    IStandaloneEditor,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function formatSegmentWithContentModel(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     apiName: string,
     toggleStyleCallback: (
         format: ContentModelSegmentFormat,

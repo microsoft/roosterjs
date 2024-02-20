@@ -2,7 +2,7 @@ import * as cloneModel from '../../lib/publicApi/model/cloneModel';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import { createContentModel } from '../../lib/coreApi/createContentModel';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { EditorCore } from 'roosterjs-content-model-types';
 
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedContext = 'CONTEXT' as any;
@@ -12,7 +12,7 @@ const mockedCachedMode = 'CACHEDMODEL' as any;
 const mockedClonedModel = 'CLONEDMODEL' as any;
 
 describe('createContentModel', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let createEditorContext: jasmine.Spy;
     let getDOMSelection: jasmine.Spy;
     let domToContentModelSpy: jasmine.Spy;
@@ -44,7 +44,7 @@ describe('createContentModel', () => {
             },
             lifecycle: {},
             domToModelSettings: {},
-        } as any) as StandaloneEditorCore;
+        } as any) as EditorCore;
     });
 
     it('Reuse model, no cache, no shadow edit', () => {

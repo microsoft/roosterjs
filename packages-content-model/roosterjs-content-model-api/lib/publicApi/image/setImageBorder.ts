@@ -1,6 +1,6 @@
 import applyImageBorderFormat from '../../modelApi/image/applyImageBorderFormat';
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import type { Border, ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { Border, ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Set image border style for all selected images at selection.
@@ -10,7 +10,7 @@ import type { Border, ContentModelImage, IStandaloneEditor } from 'roosterjs-con
  * @param borderRadius the border radius value, if undefined, the border radius will keep the actual value
  */
 export default function setImageBorder(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     border: Border | null,
     borderRadius?: string
 ) {

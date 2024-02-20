@@ -7,7 +7,7 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     Snapshot,
-    StandaloneEditorCore,
+    EditorCore,
     KnownEntityItem,
     ContentModelEntityFormat,
 } from 'roosterjs-content-model-types';
@@ -17,7 +17,7 @@ const BlockEntityContainer = '_E_EBlockEntityContainer';
 /**
  * @internal
  */
-export function restoreSnapshotHTML(core: StandaloneEditorCore, snapshot: Snapshot) {
+export function restoreSnapshotHTML(core: EditorCore, snapshot: Snapshot) {
     const {
         contentDiv,
         entity: { entityMap },

@@ -1,12 +1,12 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Set text color
  * @param editor The editor to operate on
  * @param textColor The text color to set. Pass null to remove existing color.
  */
-export default function setTextColor(editor: IStandaloneEditor, textColor: string | null) {
+export default function setTextColor(editor: IEditor, textColor: string | null) {
     editor.focus();
 
     formatSegmentWithContentModel(

@@ -1,5 +1,5 @@
 import adjustLinkSelection from '../../../lib/publicApi/link/adjustLinkSelection';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelLink,
@@ -17,7 +17,7 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('adjustLinkSelection', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let formatContentModel: jasmine.Spy;
     let formatResult: boolean | undefined;
     let mockedModel: ContentModelDocument;
@@ -38,7 +38,7 @@ describe('adjustLinkSelection', () => {
 
         editor = ({
             formatContentModel,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     function runTest(

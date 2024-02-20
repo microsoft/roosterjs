@@ -1,6 +1,6 @@
 import { addCode } from 'roosterjs-content-model-dom';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { ContentModelCode, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelCode, IEditor } from 'roosterjs-content-model-types';
 
 const DefaultCode: ContentModelCode = {
     format: {
@@ -12,7 +12,7 @@ const DefaultCode: ContentModelCode = {
  * Toggle italic style
  * @param editor The editor to operate on
  */
-export default function toggleCode(editor: IStandaloneEditor) {
+export default function toggleCode(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

@@ -1,5 +1,5 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { cloneModel } from 'roosterjs-content-model-core';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
@@ -18,7 +18,7 @@ const clipboardData = <ClipboardData>(<any>{
 });
 
 describe(ID, () => {
-    let editor: IStandaloneEditor = undefined!;
+    let editor: IEditor = undefined!;
 
     beforeEach(() => {
         editor = initEditor(ID);

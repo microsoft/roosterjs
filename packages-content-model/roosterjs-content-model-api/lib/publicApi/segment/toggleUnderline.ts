@@ -1,12 +1,12 @@
 import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Toggle underline style
  * @param editor The editor to operate on
  */
-export default function toggleUnderline(editor: IStandaloneEditor) {
+export default function toggleUnderline(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

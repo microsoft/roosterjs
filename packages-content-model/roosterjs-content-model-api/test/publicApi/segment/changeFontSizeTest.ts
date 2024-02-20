@@ -1,7 +1,7 @@
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
 import {
     ContentModelDocument,
@@ -361,7 +361,7 @@ describe('changeFontSize', () => {
             formatContentModel,
             focus: jasmine.createSpy(),
             getPendingFormat: () => null as ContentModelSegmentFormat,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         changeFontSize(editor, 'increase');
 

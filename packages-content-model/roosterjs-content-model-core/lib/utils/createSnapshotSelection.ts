@@ -1,10 +1,10 @@
 import { isElementOfType, isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
-import type { SnapshotSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { SnapshotSelection, EditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function createSnapshotSelection(core: StandaloneEditorCore): SnapshotSelection {
+export function createSnapshotSelection(core: EditorCore): SnapshotSelection {
     const { contentDiv, api } = core;
     const selection = api.getDOMSelection(core);
 

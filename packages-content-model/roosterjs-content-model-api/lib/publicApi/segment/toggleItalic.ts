@@ -1,11 +1,11 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Toggle italic style
  * @param editor The editor to operate on
  */
-export default function toggleItalic(editor: IStandaloneEditor) {
+export default function toggleItalic(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

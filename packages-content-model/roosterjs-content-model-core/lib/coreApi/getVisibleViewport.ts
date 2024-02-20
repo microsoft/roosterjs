@@ -3,7 +3,7 @@ import type { GetVisibleViewport, Rect } from 'roosterjs-content-model-types';
 /**
  * @internal
  * Retrieves the rect of the visible viewport of the editor.
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  */
 export const getVisibleViewport: GetVisibleViewport = core => {
     const scrollContainer = core.domEvent.scrollContainer;

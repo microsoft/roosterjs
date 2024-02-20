@@ -1,6 +1,6 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleBullet from '../../../lib/publicApi/list/toggleBullet';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -9,7 +9,7 @@ import {
 } from 'roosterjs-content-model-types';
 
 describe('toggleBullet', () => {
-    let editor = ({} as any) as IStandaloneEditor;
+    let editor = ({} as any) as IEditor;
     let formatContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
@@ -36,7 +36,7 @@ describe('toggleBullet', () => {
             focus,
             formatContentModel,
             getFocusedPosition: () => ({}),
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);
     });

@@ -1,5 +1,5 @@
 import { setListType } from '../../modelApi/list/setListType';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Toggle bullet list type

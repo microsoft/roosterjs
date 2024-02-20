@@ -7,20 +7,17 @@ import { createFormatPlugin } from './FormatPlugin';
 import { createLifecyclePlugin } from './LifecyclePlugin';
 import { createSelectionPlugin } from './SelectionPlugin';
 import { createUndoPlugin } from './UndoPlugin';
-import type {
-    StandaloneEditorCorePlugins,
-    StandaloneEditorOptions,
-} from 'roosterjs-content-model-types';
+import type { EditorCorePlugins, EditorOptions } from 'roosterjs-content-model-types';
 
 /**
  * @internal
- * Create core plugins for standalone editor
+ * Create core plugins for editor
  * @param options Options of editor
  */
-export function createStandaloneEditorCorePlugins(
-    options: StandaloneEditorOptions,
+export function createEditorCorePlugins(
+    options: EditorOptions,
     contentDiv: HTMLDivElement
-): StandaloneEditorCorePlugins {
+): EditorCorePlugins {
     return {
         cache: createCachePlugin(options, contentDiv),
         format: createFormatPlugin(options),

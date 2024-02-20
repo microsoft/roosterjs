@@ -1,8 +1,8 @@
 import FormatStatePlugin from './FormatStatePlugin';
-import { FormatState, IEditor } from 'roosterjs-editor-types';
+import { FormatState, IEditor as ILegacyEditor } from 'roosterjs-editor-types';
 import { getFormatState } from 'roosterjs-content-model-api';
 import { getPositionRect } from 'roosterjs-editor-dom';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 
 export default class ContentModelFormatStatePlugin extends FormatStatePlugin {
     protected getFormatState() {
@@ -11,7 +11,7 @@ export default class ContentModelFormatStatePlugin extends FormatStatePlugin {
         }
 
         const format = (getFormatState(
-            this.editor as IStandaloneEditor & IEditor
+            this.editor as IEditor & ILegacyEditor
         ) as any) as FormatState;
         const position = this.editor && this.editor.getFocusedPosition();
         const rect = position && getPositionRect(position);

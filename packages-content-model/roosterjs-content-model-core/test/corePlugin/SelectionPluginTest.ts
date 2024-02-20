@@ -1,7 +1,7 @@
 import { createSelectionPlugin } from '../../lib/corePlugin/SelectionPlugin';
 import {
     EditorPlugin,
-    IStandaloneEditor,
+    IEditor,
     PluginWithState,
     SelectionPluginState,
 } from 'roosterjs-content-model-types';
@@ -30,7 +30,7 @@ describe('SelectionPlugin', () => {
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         plugin.initialize(editor);
 
@@ -71,7 +71,7 @@ describe('SelectionPlugin', () => {
             removeEventListener: removeEventListenerSpy,
         });
 
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
@@ -100,7 +100,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let setDOMSelectionSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
 
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         triggerEvent = jasmine.createSpy('triggerEvent');
@@ -119,7 +119,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
 
         plugin = createSelectionPlugin({});
 
-        editor = <IStandaloneEditor>(<any>{
+        editor = <IEditor>(<any>{
             getDocument: getDocumentSpy,
             triggerEvent,
             getEnvironment: () => ({}),
@@ -172,7 +172,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
 
 describe('SelectionPlugin handle image selection', () => {
     let plugin: EditorPlugin;
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let getDOMSelectionSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let getDocumentSpy: jasmine.Spy;
@@ -584,7 +584,7 @@ describe('SelectionPlugin on Safari', () => {
     let hasFocusSpy: jasmine.Spy;
     let isInShadowEditSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         disposer = jasmine.createSpy('disposer');
@@ -614,7 +614,7 @@ describe('SelectionPlugin on Safari', () => {
             hasFocus: hasFocusSpy,
             isInShadowEdit: isInShadowEditSpy,
             getDOMSelection: getDOMSelectionSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     it('init and dispose', () => {

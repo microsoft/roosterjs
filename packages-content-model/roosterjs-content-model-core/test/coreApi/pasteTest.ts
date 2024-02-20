@@ -9,13 +9,13 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
+import { Editor } from '../../lib/editor/Editor';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
 import { PastePlugin } from 'roosterjs-content-model-plugins/lib/paste/PastePlugin';
-import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 import {
     ClipboardData,
     ContentModelDocument,
-    IStandaloneEditor,
+    IEditor,
     BeforePasteEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
@@ -25,7 +25,7 @@ let clipboardData: ClipboardData;
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Paste ', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let createContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
@@ -72,7 +72,7 @@ describe('Paste ', () => {
             } as any,
         ]);
 
-        editor = new StandaloneEditor(div, {
+        editor = new Editor(div, {
             plugins: [new PastePlugin()],
             coreApiOverride: {
                 focus,
@@ -105,13 +105,13 @@ describe('Paste ', () => {
 });
 
 describe('paste with content model & paste plugin', () => {
-    let editor: StandaloneEditor | undefined;
+    let editor: Editor | undefined;
     let div: HTMLDivElement | undefined;
 
     beforeEach(() => {
         div = document.createElement('div');
         document.body.appendChild(div);
-        editor = new StandaloneEditor(div, {
+        editor = new Editor(div, {
             plugins: [new PastePlugin()],
         });
         spyOn(addParserF, 'default').and.callThrough();
@@ -258,7 +258,7 @@ describe('paste with content model & paste plugin', () => {
         };
 
         let eventChecker: BeforePasteEvent = <any>{};
-        editor = new StandaloneEditor(div!, {
+        editor = new Editor(div!, {
             plugins: [
                 {
                     initialize: () => {},
@@ -283,7 +283,7 @@ describe('paste with content model & paste plugin', () => {
 });
 
 describe('Paste with clipboardData', () => {
-    let editor: IStandaloneEditor = undefined!;
+    let editor: IEditor = undefined!;
     const ID = 'EDITOR_ID';
 
     beforeEach(() => {

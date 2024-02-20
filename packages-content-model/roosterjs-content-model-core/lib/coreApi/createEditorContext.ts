@@ -1,9 +1,5 @@
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
-import type {
-    EditorContext,
-    CreateEditorContext,
-    StandaloneEditorCore,
-} from 'roosterjs-content-model-types';
+import type { EditorContext, CreateEditorContext, EditorCore } from 'roosterjs-content-model-types';
 
 const DefaultRootFontSize = 16;
 
@@ -40,7 +36,7 @@ function checkRootRtl(element: HTMLElement, context: EditorContext) {
     }
 }
 
-function getRootComputedStyle(core: StandaloneEditorCore) {
+function getRootComputedStyle(core: EditorCore) {
     const document = core.contentDiv.ownerDocument;
     const rootComputedStyle = document.defaultView?.getComputedStyle(document.documentElement);
     return rootComputedStyle;
