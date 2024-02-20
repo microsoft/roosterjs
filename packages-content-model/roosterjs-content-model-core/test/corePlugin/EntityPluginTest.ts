@@ -7,12 +7,12 @@ import {
     ContentModelDocument,
     DarkColorHandler,
     EntityPluginState,
-    IStandaloneEditor,
+    IEditor,
     PluginWithState,
 } from 'roosterjs-content-model-types';
 
 describe('EntityPlugin', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let plugin: PluginWithState<EntityPluginState>;
     let formatContentModelSpy: jasmine.Spy;
     let triggerPluginEventSpy: jasmine.Spy;

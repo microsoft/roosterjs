@@ -3,7 +3,7 @@ import {
     getFirstSelectedTable,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-core';
-import type { IStandaloneEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
+import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * Format current focused table with the given format
@@ -12,7 +12,7 @@ import type { IStandaloneEditor, TableMetadataFormat } from 'roosterjs-content-m
  * @param keepCellShade Whether keep existing shade color when apply format if there is a manually set shade color
  */
 export default function formatTable(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     format: TableMetadataFormat,
     keepCellShade?: boolean
 ) {

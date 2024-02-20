@@ -1,6 +1,6 @@
 import { createParagraphDecorator } from 'roosterjs-content-model-dom';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Toggles the current block(s) margin properties.
@@ -10,7 +10,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
  * @param marginBottom value for bottom margin
  */
 export default function setParagraphMargin(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     marginTop?: string | null,
     marginBottom?: string | null
 ) {

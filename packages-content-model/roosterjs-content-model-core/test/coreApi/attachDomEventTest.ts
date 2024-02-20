@@ -1,9 +1,9 @@
 import { attachDomEvent } from '../../lib/coreApi/attachDomEvent';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { EditorCore } from 'roosterjs-content-model-types';
 
 describe('attachDomEvent', () => {
     let div: HTMLDivElement;
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
 
     beforeEach(() => {
         div = document.createElement('div');

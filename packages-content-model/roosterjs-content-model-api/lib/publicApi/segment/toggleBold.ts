@@ -1,12 +1,12 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { isBold } from 'roosterjs-content-model-core';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Toggle bold style
  * @param editor The editor to operate on
  */
-export default function toggleBold(editor: IStandaloneEditor) {
+export default function toggleBold(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

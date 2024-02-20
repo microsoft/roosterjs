@@ -1,9 +1,9 @@
 import { createSnapshotSelection } from '../../lib/utils/createSnapshotSelection';
-import { DOMSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { DOMSelection, EditorCore } from 'roosterjs-content-model-types';
 
 describe('createSnapshotSelection', () => {
     let div: HTMLDivElement;
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let getDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -66,7 +66,7 @@ describe('createSnapshotSelection', () => {
 
 describe('createSnapshotSelection - Range selection', () => {
     let div: HTMLDivElement;
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let getDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -227,7 +227,7 @@ describe('createSnapshotSelection - Normalize Table', () => {
     const TABLE_ID1 = 't1';
     const TABLE_ID2 = 't2';
     let div: HTMLDivElement;
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let getDOMSelectionSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
 

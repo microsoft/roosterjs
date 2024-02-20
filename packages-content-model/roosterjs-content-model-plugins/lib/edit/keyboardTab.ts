@@ -3,13 +3,13 @@ import { setModelIndentation } from 'roosterjs-content-model-api';
 import type {
     ContentModelDocument,
     ContentModelListItem,
-    IStandaloneEditor,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function keyboardTab(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
+export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
 
     if (selection?.type == 'range') {

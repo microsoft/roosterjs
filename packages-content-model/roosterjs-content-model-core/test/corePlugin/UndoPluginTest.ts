@@ -3,14 +3,14 @@ import * as undo from '../../lib/publicApi/undo/undo';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createUndoPlugin } from '../../lib/corePlugin/UndoPlugin';
 import {
-    IStandaloneEditor,
+    IEditor,
     PluginWithState,
     SnapshotsManager,
     UndoPluginState,
 } from 'roosterjs-content-model-types';
 
 describe('UndoPlugin', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let createSnapshotsManagerSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let canUndoAutoCompleteSpy: jasmine.Spy;

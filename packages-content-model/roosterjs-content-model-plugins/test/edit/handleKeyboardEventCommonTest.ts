@@ -1,5 +1,5 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import { FormatContentModelContext, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { FormatContentModelContext, IEditor } from 'roosterjs-content-model-types';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
@@ -7,7 +7,7 @@ import {
 } from '../../lib/edit/handleKeyboardEventCommon';
 
 describe('handleKeyboardEventResult', () => {
-    let mockedEditor: IStandaloneEditor;
+    let mockedEditor: IEditor;
     let mockedEvent: KeyboardEvent;
     let cacheContentModel: jasmine.Spy;
     let preventDefault: jasmine.Spy;
@@ -27,7 +27,7 @@ describe('handleKeyboardEventResult', () => {
             triggerContentChangedEvent,
             triggerEvent,
             addUndoSnapshot,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         mockedEvent = ({
             preventDefault,
         } as any) as KeyboardEvent;

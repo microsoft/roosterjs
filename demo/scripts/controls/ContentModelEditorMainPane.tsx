@@ -80,11 +80,7 @@ import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
-import {
-    ContentModelSegmentFormat,
-    IStandaloneEditor,
-    Snapshots,
-} from 'roosterjs-content-model-types';
+import { ContentModelSegmentFormat, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import {
     spaceAfterButton,
     spaceBeforeButton,
@@ -155,7 +151,7 @@ const DarkTheme: PartialTheme = {
 };
 
 interface ContentModelMainPaneState extends MainPaneBaseState {
-    editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IStandaloneEditor;
+    editorCreator: (div: HTMLDivElement, options: EditorAdapterOptions) => IEditor;
 }
 
 class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {

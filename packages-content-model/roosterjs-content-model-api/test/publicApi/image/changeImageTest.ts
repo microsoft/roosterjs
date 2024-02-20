@@ -1,6 +1,6 @@
 import * as readFile from 'roosterjs-content-model-core/lib/publicApi/domUtils/readFile';
 import changeImage from '../../../lib/publicApi/image/changeImage';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -21,7 +21,7 @@ describe('changeImage', () => {
 
     function runTest(
         model: ContentModelDocument,
-        executionCallback: (editor: IStandaloneEditor) => void,
+        executionCallback: (editor: IEditor) => void,
         result: ContentModelDocument,
         calledTimes: number
     ) {
@@ -49,7 +49,7 @@ describe('changeImage', () => {
             getDOMSelection,
             triggerEvent,
             formatContentModel,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         executionCallback(editor);
 

@@ -1,8 +1,8 @@
+import { EditorCore } from 'roosterjs-content-model-types';
 import { hasFocus } from '../../lib/coreApi/hasFocus';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('hasFocus', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let containsSpy: jasmine.Spy;
     let mockedElement = 'ELEMENT' as any;
 

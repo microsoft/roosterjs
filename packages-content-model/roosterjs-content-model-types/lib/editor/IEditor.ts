@@ -19,10 +19,9 @@ import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
 
 /**
- * An interface of standalone Content Model editor.
- * (This interface is still under development, and may still be changed in the future with some breaking changes)
+ * An interface of Editor, built on top of Content Model
  */
-export interface IStandaloneEditor {
+export interface IEditor {
     /**
      * Create Content Model from DOM tree in this editor
      * @param mode What kind of Content Model we want. Currently we support the following values:

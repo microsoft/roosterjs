@@ -1,5 +1,5 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Change the capitalization of text in the selection
@@ -10,7 +10,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
  * Default is the host environment’s current locale.
  */
 export default function changeCapitalization(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     capitalization: 'sentence' | 'lowerCase' | 'upperCase' | 'capitalize',
     language?: string
 ) {

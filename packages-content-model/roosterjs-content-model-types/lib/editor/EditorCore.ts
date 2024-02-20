@@ -25,38 +25,38 @@ import type {
 
 /**
  * Create a EditorContext object used by ContentModel API
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
  */
-export type CreateEditorContext = (core: StandaloneEditorCore, saveIndex: boolean) => EditorContext;
+export type CreateEditorContext = (core: EditorCore, saveIndex: boolean) => EditorContext;
 
 /**
  * Create Content Model from DOM tree in this editor
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param option The option to customize the behavior of DOM to Content Model conversion
  * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export type CreateContentModel = (
-    core: StandaloneEditorCore,
+    core: EditorCore,
     option?: DomToModelOption,
     selectionOverride?: DOMSelection
 ) => ContentModelDocument;
 
 /**
  * Get current DOM selection from editor
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  */
-export type GetDOMSelection = (core: StandaloneEditorCore) => DOMSelection | null;
+export type GetDOMSelection = (core: EditorCore) => DOMSelection | null;
 
 /**
  * Set content with content model. This is the replacement of core API getSelectionRangeEx
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
  * @param onNodeCreated An optional callback that will be called when a DOM node is created
  */
 export type SetContentModel = (
-    core: StandaloneEditorCore,
+    core: EditorCore,
     model: ContentModelDocument,
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated
@@ -64,12 +64,12 @@ export type SetContentModel = (
 
 /**
  * Set current DOM selection from editor. This is the replacement of core API select
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param selection The selection to set
  * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
  */
 export type SetDOMSelection = (
-    core: StandaloneEditorCore,
+    core: EditorCore,
     selection: DOMSelection | null,
     skipSelectionChangedEvent?: boolean
 ) => void;
@@ -79,125 +79,117 @@ export type SetDOMSelection = (
  * It will grab a Content Model for current editor content, and invoke a callback function
  * to do format change. Then according to the return value, write back the modified content model into editor.
  * If there is cached model, it will be used and updated.
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
  * @param options More options, see FormatContentModelOptions
  */
 export type FormatContentModel = (
-    core: StandaloneEditorCore,
+    core: EditorCore,
     formatter: ContentModelFormatter,
     options?: FormatContentModelOptions
 ) => void;
 
 /**
  * Switch the Shadow Edit mode of editor On/Off
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param isOn True to switch On, False to switch Off
  */
-export type SwitchShadowEdit = (core: StandaloneEditorCore, isOn: boolean) => void;
+export type SwitchShadowEdit = (core: EditorCore, isOn: boolean) => void;
 
 /**
  * Trigger a plugin event
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param pluginEvent The event object to trigger
  * @param broadcast Set to true to skip the shouldHandleEventExclusively check
  */
-export type TriggerEvent = (
-    core: StandaloneEditorCore,
-    pluginEvent: PluginEvent,
-    broadcast: boolean
-) => void;
+export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
 
 /**
  * Add an undo snapshot to current undo snapshot stack
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
  * @param entityStates @optional Entity states related to this snapshot.
  * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
  * when undo/redo to this snapshot
  */
 export type AddUndoSnapshot = (
-    core: StandaloneEditorCore,
+    core: EditorCore,
     canUndoByBackspace: boolean,
     entityStates?: EntityState[]
 ) => Snapshot | null;
 
 /**
  * Retrieves the rect of the visible viewport of the editor.
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  */
-export type GetVisibleViewport = (core: StandaloneEditorCore) => Rect | null;
+export type GetVisibleViewport = (core: EditorCore) => Rect | null;
 
 /**
  * Check if the editor has focus now
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @returns True if the editor has focus, otherwise false
  */
-export type HasFocus = (core: StandaloneEditorCore) => boolean;
+export type HasFocus = (core: EditorCore) => boolean;
 
 /**
  * Focus to editor. If there is a cached selection range, use it as current selection
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  */
-export type Focus = (core: StandaloneEditorCore) => void;
+export type Focus = (core: EditorCore) => void;
 
 /**
  * Attach a DOM event to the editor content DIV
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param eventMap A map from event name to its handler
  */
 export type AttachDomEvent = (
-    core: StandaloneEditorCore,
+    core: EditorCore,
     eventMap: Record<string, DOMEventRecord>
 ) => () => void;
 
 /**
  * Restore an undo snapshot into editor
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param step Steps to move, can be 0, positive or negative
  */
-export type RestoreUndoSnapshot = (core: StandaloneEditorCore, snapshot: Snapshot) => void;
+export type RestoreUndoSnapshot = (core: EditorCore, snapshot: Snapshot) => void;
 
 /**
  * Paste into editor using a clipboardData object
- * @param core The StandaloneEditorCore object.
+ * @param core The EditorCore object.
  * @param clipboardData Clipboard data retrieved from clipboard
  * @param pasteType Type of content to paste. @default normal
  */
-export type Paste = (
-    core: StandaloneEditorCore,
-    clipboardData: ClipboardData,
-    pasteType: PasteType
-) => void;
+export type Paste = (core: EditorCore, clipboardData: ClipboardData, pasteType: PasteType) => void;
 
 /**
- * The interface for the map of core API for Content Model editor.
- * Editor can call call API from this map under StandaloneEditorCore object
+ * The interface for the map of core API for Editor.
+ * Editor can call call API from this map under EditorCore object
  */
-export interface StandaloneCoreApiMap {
+export interface CoreApiMap {
     /**
      * Create a EditorContext object used by ContentModel API
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
      */
     createEditorContext: CreateEditorContext;
 
     /**
      * Create Content Model from DOM tree in this editor
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
     createContentModel: CreateContentModel;
 
     /**
      * Get current DOM selection from editor
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      */
     getDOMSelection: GetDOMSelection;
 
     /**
      * Set content with content model
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
@@ -205,7 +197,7 @@ export interface StandaloneCoreApiMap {
 
     /**
      * Set current DOM selection from editor. This is the replacement of core API select
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param selection The selection to set
      * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
      */
@@ -216,7 +208,7 @@ export interface StandaloneCoreApiMap {
      * It will grab a Content Model for current editor content, and invoke a callback function
      * to do format change. Then according to the return value, write back the modified content model into editor.
      * If there is cached model, it will be used and updated.
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param formatter Formatter function, see ContentModelFormatter
      * @param options More options, see FormatContentModelOptions
      */
@@ -224,33 +216,33 @@ export interface StandaloneCoreApiMap {
 
     /**
      * Switch the Shadow Edit mode of editor On/Off
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param isOn True to switch On, False to switch Off
      */
     switchShadowEdit: SwitchShadowEdit;
 
     /**
      * Retrieves the rect of the visible viewport of the editor.
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      */
     getVisibleViewport: GetVisibleViewport;
 
     /**
      * Check if the editor has focus now
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @returns True if the editor has focus, otherwise false
      */
     hasFocus: HasFocus;
 
     /**
      * Focus to editor. If there is a cached selection range, use it as current selection
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      */
     focus: Focus;
 
     /**
      * Add an undo snapshot to current undo snapshot stack
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
      * @param entityStates @optional Entity states related to this snapshot.
      * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
@@ -267,14 +259,14 @@ export interface StandaloneCoreApiMap {
 
     /**
      * Attach a DOM event to the editor content DIV
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param eventMap A map from event name to its handler
      */
     attachDomEvent: AttachDomEvent;
 
     /**
      * Trigger a plugin event
-     * @param core The StandaloneEditorCore object
+     * @param core The EditorCore object
      * @param pluginEvent The event object to trigger
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
@@ -290,9 +282,9 @@ export interface StandaloneCoreApiMap {
 }
 
 /**
- * Represents the core data structure of a Content Model editor
+ * Represents the core data structure of an editor
  */
-export interface StandaloneEditorCore extends PluginState {
+export interface EditorCore extends PluginState {
     /**
      * The content DIV element of this editor
      */
@@ -301,12 +293,12 @@ export interface StandaloneEditorCore extends PluginState {
     /**
      * Core API map of this editor
      */
-    readonly api: StandaloneCoreApiMap;
+    readonly api: CoreApiMap;
 
     /**
      * Original API map of this editor. Overridden core API can use API from this map to call the original version of core API.
      */
-    readonly originalApi: StandaloneCoreApiMap;
+    readonly originalApi: CoreApiMap;
 
     /**
      * An array of editor plugins.

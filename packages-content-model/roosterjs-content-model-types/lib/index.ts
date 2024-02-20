@@ -201,8 +201,8 @@ export {
 } from './metadata/Definition';
 export { DarkColorHandler, Colors, ColorTransformFunction } from './context/DarkColorHandler';
 
-export { IStandaloneEditor } from './editor/IStandaloneEditor';
-export { StandaloneEditorOptions } from './editor/StandaloneEditorOptions';
+export { IEditor } from './editor/IEditor';
+export { EditorOptions } from './editor/EditorOptions';
 export {
     CreateContentModel,
     CreateEditorContext,
@@ -210,8 +210,8 @@ export {
     SetContentModel,
     SetDOMSelection,
     FormatContentModel,
-    StandaloneCoreApiMap,
-    StandaloneEditorCore,
+    CoreApiMap,
+    EditorCore,
     ContentModelSettings,
     SwitchShadowEdit,
     TriggerEvent,
@@ -222,8 +222,8 @@ export {
     RestoreUndoSnapshot,
     GetVisibleViewport,
     Paste,
-} from './editor/StandaloneEditorCore';
-export { StandaloneEditorCorePlugins } from './editor/StandaloneEditorCorePlugins';
+} from './editor/EditorCore';
+export { EditorCorePlugins } from './editor/EditorCorePlugins';
 export { EditorPlugin } from './editor/EditorPlugin';
 export { PluginWithState } from './editor/PluginWithState';
 export { ContextMenuProvider } from './editor/ContextMenuProvider';

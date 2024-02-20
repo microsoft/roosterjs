@@ -15,7 +15,7 @@ const allowedEventsInShadowEdit: PluginEventType[] = [
 /**
  * @internal
  * Trigger a plugin event
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param pluginEvent The event object to trigger
  * @param broadcast Set to true to skip the shouldHandleEventExclusively check
  */

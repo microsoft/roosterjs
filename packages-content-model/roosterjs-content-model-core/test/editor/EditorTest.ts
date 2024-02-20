@@ -1,14 +1,14 @@
 import * as cloneModel from '../../lib/publicApi/model/cloneModel';
+import * as createEditorCore from '../../lib/editor/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
-import * as createStandaloneEditorCore from '../../lib/editor/createStandaloneEditorCore';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
-import { Rect, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { Editor } from '../../lib/editor/Editor';
+import { EditorCore, Rect } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
-import { StandaloneEditor } from '../../lib/editor/StandaloneEditor';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 
-describe('StandaloneEditor', () => {
+describe('Editor', () => {
     let createEditorCoreSpy: jasmine.Spy;
     let updateKnownColorSpy: jasmine.Spy;
     let setContentModelSpy: jasmine.Spy;
@@ -16,10 +16,7 @@ describe('StandaloneEditor', () => {
 
     beforeEach(() => {
         updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
-        createEditorCoreSpy = spyOn(
-            createStandaloneEditorCore,
-            'createStandaloneEditorCore'
-        ).and.callThrough();
+        createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.callThrough();
         setContentModelSpy = jasmine.createSpy('setContentModel');
         createEmptyModelSpy = spyOn(createEmptyModel, 'createEmptyModel');
     });
@@ -29,7 +26,7 @@ describe('StandaloneEditor', () => {
 
         createEmptyModelSpy.and.callThrough();
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(div, {});
         expect(editor.isDisposed()).toBeFalse();
@@ -75,7 +72,7 @@ describe('StandaloneEditor', () => {
 
         createEmptyModelSpy.and.callThrough();
 
-        const editor = new StandaloneEditor(div, options);
+        const editor = new Editor(div, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(div, options);
         expect(editor.isDisposed()).toBeFalse();
@@ -129,7 +126,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const model1 = editor.getContentModelCopy('connected');
 
@@ -180,7 +177,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.returnValue(mockedClonedModel);
 
@@ -256,7 +253,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result = editor.getEnvironment();
 
@@ -288,7 +285,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result = editor.getDOMSelection();
 
@@ -319,7 +316,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         editor.setDOMSelection(null);
 
@@ -354,7 +351,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         editor.formatContentModel(mockedFormatter);
 
@@ -391,7 +388,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result1 = editor.getPendingFormat();
 
@@ -430,7 +427,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const snapshot = editor.takeSnapshot();
 
@@ -458,7 +455,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
         const domHelper = editor.getDOMHelper();
 
         expect(domHelper).toBe(mockedDOMHelper);
@@ -487,7 +484,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         editor.restoreSnapshot(mockedSnapshot);
 
@@ -516,7 +513,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         editor.focus();
         expect(focusSpy).toHaveBeenCalledWith(mockedCore);
@@ -545,7 +542,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result = editor.hasFocus();
 
@@ -580,7 +577,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
         const mockedEventType = 'EVENTTYPE' as any;
 
         const result = editor.triggerEvent<any>(mockedEventType, mockedEventData, true);
@@ -627,7 +624,7 @@ describe('StandaloneEditor', () => {
         createEditorCoreSpy.and.returnValue(mockedCore);
 
         const mockedEventMap = 'EVENTMAP' as any;
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result = editor.attachDomEvent(mockedEventMap);
 
@@ -658,7 +655,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result = editor.getSnapshotsManager();
 
@@ -692,7 +689,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         expect(editor.isInShadowEdit()).toBeFalse();
 
@@ -736,7 +733,7 @@ describe('StandaloneEditor', () => {
         const mockedClipboardData = 'ClipboardData' as any;
         const mockedPasteType = 'PASTETYPE' as any;
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         editor.pasteFromClipboard(mockedClipboardData);
 
@@ -766,7 +763,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result = editor.getColorManager();
 
@@ -805,7 +802,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         expect(editor.isDarkMode()).toBeFalse();
 
@@ -879,7 +876,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result = editor.getScrollContainer();
 
@@ -902,7 +899,7 @@ describe('StandaloneEditor', () => {
             },
             api: {
                 setContentModel: setContentModelSpy,
-                getVisibleViewport: (core: StandaloneEditorCore) => {
+                getVisibleViewport: (core: EditorCore) => {
                     return mockedScrollContainer;
                 },
             },
@@ -911,7 +908,7 @@ describe('StandaloneEditor', () => {
 
         createEditorCoreSpy.and.returnValue(mockedCore);
 
-        const editor = new StandaloneEditor(div);
+        const editor = new Editor(div);
 
         const result = editor.getVisibleViewport();
 

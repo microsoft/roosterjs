@@ -3,14 +3,14 @@ import * as insertEntityModel from '../../../lib/modelApi/entity/insertEntityMod
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import insertEntity from '../../../lib/publicApi/entity/insertEntity';
 import { ChangeSource } from 'roosterjs-content-model-core';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     FormatContentModelContext,
     FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 
 describe('insertEntity', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let context: FormatContentModelContext;
     let wrapper: HTMLElement;
     const model = 'MockedModel' as any;

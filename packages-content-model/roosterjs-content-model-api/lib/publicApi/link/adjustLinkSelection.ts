@@ -1,13 +1,13 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { getSelectedSegments, setSelection } from 'roosterjs-content-model-core';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Adjust selection to make sure select a hyperlink if any, or a word if original selection is collapsed
  * @return A combination of existing link display text and url if any. If there is no existing link, return selected text and null
  */
-export default function adjustLinkSelection(editor: IStandaloneEditor): [string, string | null] {
+export default function adjustLinkSelection(editor: IEditor): [string, string | null] {
     let text = '';
     let url: string | null = null;
 

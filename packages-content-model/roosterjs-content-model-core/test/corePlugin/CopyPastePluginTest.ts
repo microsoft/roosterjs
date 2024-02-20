@@ -13,7 +13,7 @@ import {
     DOMSelection,
     ContentModelFormatter,
     FormatContentModelOptions,
-    IStandaloneEditor,
+    IEditor,
     DOMEventRecord,
     ClipboardData,
     CopyPastePluginState,
@@ -59,7 +59,7 @@ describe('CopyPastePlugin.Ctor', () => {
 });
 
 describe('CopyPastePlugin |', () => {
-    let editor: IStandaloneEditor = null!;
+    let editor: IEditor = null!;
     let plugin: PluginWithState<CopyPastePluginState>;
     let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
@@ -115,7 +115,7 @@ describe('CopyPastePlugin |', () => {
             allowedCustomPasteType,
         });
         plugin.getState().tempDiv = div;
-        editor = <IStandaloneEditor>(<any>{
+        editor = <IEditor>(<any>{
             attachDomEvent: (eventMap: Record<string, DOMEventRecord>) => {
                 domEvents = eventMap;
             },

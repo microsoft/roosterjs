@@ -1,5 +1,5 @@
 import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelParagraph,
@@ -14,7 +14,7 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('formatParagraphWithContentModel', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let model: ContentModelDocument;
     let context: FormatContentModelContext;
 
@@ -42,7 +42,7 @@ describe('formatParagraphWithContentModel', () => {
         editor = ({
             getFocusedPosition: () => ({ node: mockedContainer, offset: mockedOffset }),
             formatContentModel,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     it('empty doc', () => {

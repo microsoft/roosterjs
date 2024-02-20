@@ -1,9 +1,9 @@
+import { EditorCore } from 'roosterjs-content-model-types';
 import { focus } from '../../lib/coreApi/focus';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('focus', () => {
     let div: HTMLDivElement;
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let hasFocusSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let nativeFocusSpy: jasmine.Spy;
