@@ -3,7 +3,7 @@ import type { HasFocus } from 'roosterjs-content-model-types';
 /**
  * @internal
  * Check if the editor has focus now
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @returns True if the editor has focus, otherwise false
  */
 export const hasFocus: HasFocus = core => {

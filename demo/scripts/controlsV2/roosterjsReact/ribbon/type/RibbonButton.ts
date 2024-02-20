@@ -1,6 +1,6 @@
 import type { RibbonButtonDropDown } from './RibbonButtonDropDown';
 import type { LocalizedStrings, UIUtilities } from '../../common';
-import type { ContentModelFormatState, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelFormatState, IEditor } from 'roosterjs-content-model-types';
 import type { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
 
 /**
@@ -35,7 +35,7 @@ export interface RibbonButton<T extends string> {
      * @param uiUtilities a utilities object to help render addition UI elements
      */
     onClick: (
-        editor: IStandaloneEditor,
+        editor: IEditor,
         key: T,
         strings: LocalizedStrings<T> | undefined,
         uiUtilities: UIUtilities

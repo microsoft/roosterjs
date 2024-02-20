@@ -1,5 +1,5 @@
 import { formatSegmentWithContentModel } from '../../../lib/publicApi/utils/formatSegmentWithContentModel';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -15,7 +15,7 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('formatSegment', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
     let formatContentModel: jasmine.Spy;
@@ -43,7 +43,7 @@ describe('formatSegment', () => {
         editor = ({
             focus,
             formatContentModel,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     it('empty doc', () => {

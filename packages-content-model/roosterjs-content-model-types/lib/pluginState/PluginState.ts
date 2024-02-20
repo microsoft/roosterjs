@@ -1,24 +1,24 @@
 import type { PluginWithState } from '../editor/PluginWithState';
-import type { StandaloneEditorCorePlugins } from '../editor/StandaloneEditorCorePlugins';
+import type { EditorCorePlugins } from '../editor/EditorCorePlugins';
 
 /**
  * Names of core plugins
  */
-export type PluginKey = keyof StandaloneEditorCorePlugins;
+export type PluginKey = keyof EditorCorePlugins;
 
 /**
  * Names of the core plugins that have plugin state
  */
 export type KeyOfStatePlugin<
     Key extends PluginKey
-> = StandaloneEditorCorePlugins[Key] extends PluginWithState<infer U> ? Key : never;
+> = EditorCorePlugins[Key] extends PluginWithState<infer U> ? Key : never;
 
 /**
  * Get type of a plugin with state
  */
 export type TypeOfStatePlugin<
     Key extends PluginKey
-> = StandaloneEditorCorePlugins[Key] extends PluginWithState<infer U> ? U : never;
+> = EditorCorePlugins[Key] extends PluginWithState<infer U> ? U : never;
 
 /**
  * All names of plugins with plugin state

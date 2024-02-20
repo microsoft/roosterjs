@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ApiPaneProps } from '../ApiPaneProps';
+import { Entity, InsertEntityOptions } from 'roosterjs-content-model-types';
 import { insertEntity } from 'roosterjs-content-model-api';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
-import { Entity, InsertEntityOptions } from 'roosterjs-content-model-types';
 
 const styles = require('./InsertEntityPane.scss');
 

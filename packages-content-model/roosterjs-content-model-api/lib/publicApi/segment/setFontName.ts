@@ -1,12 +1,12 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Set font name
  * @param editor The editor to operate on
  * @param fontName The font name to set
  */
-export default function setFontName(editor: IStandaloneEditor, fontName: string) {
+export default function setFontName(editor: IEditor, fontName: string) {
     editor.focus();
 
     formatSegmentWithContentModel(

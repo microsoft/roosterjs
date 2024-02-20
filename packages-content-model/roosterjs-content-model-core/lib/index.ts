@@ -62,4 +62,4 @@ export { TableBorderFormat } from './constants/TableBorderFormat';
 
 export { extractClipboardItems } from './utils/extractClipboardItems';
 
-export { StandaloneEditor } from './editor/StandaloneEditor';
+export { Editor } from './editor/Editor';

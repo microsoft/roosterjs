@@ -1,10 +1,10 @@
 import { isNodeOfType } from 'roosterjs-content-model-dom';
-import type { DOMSelection, StandaloneEditorCore, Snapshot } from 'roosterjs-content-model-types';
+import type { DOMSelection, EditorCore, Snapshot } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function restoreSnapshotSelection(core: StandaloneEditorCore, snapshot: Snapshot) {
+export function restoreSnapshotSelection(core: EditorCore, snapshot: Snapshot) {
     const snapshotSelection = snapshot.selection;
     const { contentDiv } = core;
     let domSelection: DOMSelection | null = null;

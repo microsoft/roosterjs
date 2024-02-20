@@ -2,7 +2,7 @@ import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContent
 import type {
     ContentModelParagraph,
     ContentModelSegmentFormat,
-    IStandaloneEditor,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -10,7 +10,7 @@ import type {
  * @param editor The editor to operate on
  * @param fontSize The font size to set
  */
-export default function setFontSize(editor: IStandaloneEditor, fontSize: string) {
+export default function setFontSize(editor: IEditor, fontSize: string) {
     editor.focus();
 
     formatSegmentWithContentModel(

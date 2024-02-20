@@ -6,7 +6,7 @@ import type {
     DOMSelection,
     InsertEntityPosition,
     InsertEntityOptions,
-    IStandaloneEditor,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 const BlockEntityTag = 'div';
@@ -14,7 +14,7 @@ const InlineEntityTag = 'span';
 
 /**
  * Insert an entity into editor
- * @param editor The Content Model editor
+ * @param editor The editor object
  * @param type Type of entity
  * @param isBlock True to insert a block entity, false to insert an inline entity
  * @param position Position of the entity to insert. It can be
@@ -24,7 +24,7 @@ const InlineEntityTag = 'span';
  * @param options Move options to insert. See InsertEntityOptions
  */
 export default function insertEntity(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     type: string,
     isBlock: boolean,
     position: 'focus' | 'begin' | 'end' | DOMSelection,
@@ -33,7 +33,7 @@ export default function insertEntity(
 
 /**
  * Insert a block entity into editor
- * @param editor The Content Model editor
+ * @param editor The editor object
  * @param type Type of entity
  * @param isBlock Must be true for a block entity
  * @param position Position of the entity to insert. It can be
@@ -43,7 +43,7 @@ export default function insertEntity(
  * @param options Move options to insert. See InsertEntityOptions
  */
 export default function insertEntity(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     type: string,
     isBlock: true,
     position: InsertEntityPosition | DOMSelection,
@@ -51,7 +51,7 @@ export default function insertEntity(
 ): ContentModelEntity | null;
 
 export default function insertEntity(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     type: string,
     isBlock: boolean,
     position?: InsertEntityPosition | DOMSelection,

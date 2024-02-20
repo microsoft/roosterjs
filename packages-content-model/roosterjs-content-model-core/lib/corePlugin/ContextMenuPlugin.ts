@@ -2,9 +2,9 @@ import { getSelectionRootNode } from '../publicApi/selection/getSelectionRootNod
 import type {
     ContextMenuPluginState,
     ContextMenuProvider,
-    IStandaloneEditor,
+    IEditor,
     PluginWithState,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 const ContextMenuButton = 2;
@@ -13,7 +13,7 @@ const ContextMenuButton = 2;
  * Edit Component helps handle Content edit features
  */
 class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private state: ContextMenuPluginState;
     private disposer: (() => void) | null = null;
 
@@ -21,7 +21,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
      * Construct a new instance of EditPlugin
      * @param options The editor options
      */
-    constructor(options: StandaloneEditorOptions) {
+    constructor(options: EditorOptions) {
         this.state = {
             contextMenuProviders:
                 options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
@@ -39,7 +39,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = this.editor.attachDomEvent({
             contextmenu: {
@@ -97,7 +97,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
         }
     };
 
-    private getFocusedNode(editor: IStandaloneEditor) {
+    private getFocusedNode(editor: IEditor) {
         const selection = editor.getDOMSelection();
 
         if (selection) {
@@ -121,7 +121,7 @@ function isContextMenuProvider(source: unknown): source is ContextMenuProvider<a
  * Create a new instance of EditPlugin.
  */
 export function createContextMenuPlugin(
-    options: StandaloneEditorOptions
+    options: EditorOptions
 ): PluginWithState<ContextMenuPluginState> {
     return new ContextMenuPlugin(options);
 }

@@ -6,11 +6,11 @@ import {
     ContentModelDocument,
     ContentModelFormatter,
     FormatContentModelContext,
-    IStandaloneEditor,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 describe('keyboardInput', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let takeSnapshotSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;

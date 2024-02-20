@@ -2,23 +2,24 @@ import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-
 import { isModifierKey } from '../publicApi/domUtils/eventUtils';
 import type {
     DOMSelection,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
     PluginWithState,
     SelectionPluginState,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 const MouseMiddleButton = 1;
 const MouseRightButton = 2;
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
     private isSafari = false;
+    private isMac = false;
 
-    constructor(options: StandaloneEditorOptions) {
+    constructor(options: EditorOptions) {
         this.state = {
             selection: null,
             selectionStyleNode: null,
@@ -30,7 +31,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         return 'Selection';
     }
 
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
 
         const doc = this.editor.getDocument();
@@ -43,6 +44,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const document = this.editor.getDocument();
 
         this.isSafari = !!env.isSafari;
+        this.isMac = !!env.isMac;
 
         if (this.isSafari) {
             document.addEventListener('selectionchange', this.onSelectionChangeSafari);
@@ -91,7 +93,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     (image = this.getClickingImage(event.rawEvent)) &&
                     image.isContentEditable &&
                     event.rawEvent.button != MouseMiddleButton &&
-                    event.isClicking
+                    (event.rawEvent.button ==
+                        MouseRightButton /* it's not possible to drag using right click */ ||
+                        event.isClicking)
                 ) {
                     this.selectImage(this.editor, image);
                 }
@@ -101,7 +105,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 selection = this.editor.getDOMSelection();
                 if (
                     event.rawEvent.button === MouseRightButton &&
-                    (image = this.getClickingImage(event.rawEvent)) &&
+                    (image =
+                        this.getClickingImage(event.rawEvent) ??
+                        this.getContainedTargetImage(event.rawEvent, selection)) &&
                     image.isContentEditable
                 ) {
                     this.selectImage(this.editor, image);
@@ -135,14 +141,14 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private selectImage(editor: IStandaloneEditor, image: HTMLImageElement) {
+    private selectImage(editor: IEditor, image: HTMLImageElement) {
         editor.setDOMSelection({
             type: 'image',
             image: image,
         });
     }
 
-    private selectBeforeImage(editor: IStandaloneEditor, image: HTMLImageElement) {
+    private selectBeforeImage(editor: IEditor, image: HTMLImageElement) {
         const doc = editor.getDocument();
         const parent = image.parentNode;
         const index = parent && toArray(parent.childNodes).indexOf(image);
@@ -167,6 +173,27 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             ? target
             : null;
     }
+
+    //MacOS will not create a mouseUp event if contextMenu event is not prevent defaulted.
+    //Make sure we capture image target even if image is wrapped
+    private getContainedTargetImage = (
+        event: MouseEvent,
+        previousSelection: DOMSelection | null
+    ): HTMLImageElement | null => {
+        if (!this.isMac || !previousSelection || previousSelection.type !== 'image') {
+            return null;
+        }
+
+        const target = event.target as Node;
+        if (
+            isNodeOfType(target, 'ELEMENT_NODE') &&
+            isElementOfType(target, 'span') &&
+            target.firstChild === previousSelection.image
+        ) {
+            return previousSelection.image;
+        }
+        return null;
+    };
 
     private onFocus = () => {
         if (!this.state.skipReselectOnFocus && this.state.selection) {
@@ -204,7 +231,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
  * @param option The editor option
  */
 export function createSelectionPlugin(
-    options: StandaloneEditorOptions
+    options: EditorOptions
 ): PluginWithState<SelectionPluginState> {
     return new SelectionPlugin(options);
 }

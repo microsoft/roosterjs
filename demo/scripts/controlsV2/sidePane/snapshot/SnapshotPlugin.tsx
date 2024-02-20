@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { IStandaloneEditor, PluginEvent, Snapshot, Snapshots } from 'roosterjs-content-model-types';
+import { IEditor, PluginEvent, Snapshot, Snapshots } from 'roosterjs-content-model-types';
 import { SidePanePlugin } from '../SidePanePlugin';
 import { SnapshotPane } from './SnapshotPane';
 
 export class SnapshotPlugin implements SidePanePlugin {
-    private editor: IStandaloneEditor;
+    private editor: IEditor;
     private component: SnapshotPane;
 
     constructor(private snapshots: Snapshots) {
@@ -15,7 +15,7 @@ export class SnapshotPlugin implements SidePanePlugin {
         return 'Snapshot';
     }
 
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

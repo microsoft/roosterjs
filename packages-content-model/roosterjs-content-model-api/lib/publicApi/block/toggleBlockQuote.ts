@@ -1,8 +1,5 @@
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
-import type {
-    ContentModelFormatContainerFormat,
-    IStandaloneEditor,
-} from 'roosterjs-content-model-types';
+import type { ContentModelFormatContainerFormat, IEditor } from 'roosterjs-content-model-types';
 
 const DefaultQuoteFormatLtr: ContentModelFormatContainerFormat = {
     borderLeft: '3px solid rgb(200, 200, 200)',
@@ -27,7 +24,7 @@ const BuildInQuoteFormat: ContentModelFormatContainerFormat = {
  * @param quoteFormat @optional Block format for the new quote object
  */
 export default function toggleBlockQuote(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     quoteFormat?: ContentModelFormatContainerFormat,
     quoteFormatRtl?: ContentModelFormatContainerFormat
 ) {
