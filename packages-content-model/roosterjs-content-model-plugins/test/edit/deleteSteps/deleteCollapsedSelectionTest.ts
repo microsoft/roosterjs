@@ -1,5 +1,6 @@
 import { deleteSelection } from 'roosterjs-content-model-core';
 import {
+    ContentModelDocument,
     ContentModelEntity,
     ContentModelSelectionMarker,
     DeletedEntity,
@@ -3228,6 +3229,277 @@ describe('deleteSelection - backward', () => {
                             isSelected: true,
                         },
                     ],
+                },
+            ],
+        });
+    });
+
+    it('Outdent from empty paragraph', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+
+        para.format.marginLeft = '40px';
+
+        para.segments.push(marker);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+
+        expect(result.deleteResult).toBe('range');
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '0px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Dont outdent from empty paragraph nested in list', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const list = createListItem([]);
+
+        para.format.marginLeft = '40px';
+
+        para.segments.push(marker);
+        model.blocks.push(list);
+        list.blocks.push(para);
+
+        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+
+        expect(result.deleteResult).toBe('nothingToDelete');
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [list, model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: true,
+                    },
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {
+                                marginLeft: '40px',
+                            },
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Dont outdent empty para with no margins', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+
+        para.format.marginLeft = '0px';
+
+        para.segments.push(marker);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+
+        expect(result.deleteResult).toBe('nothingToDelete');
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '0px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Dont outdent empty para with no margins and delete', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const para0 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para.format.marginLeft = '0px';
+        para.segments.push(createBr());
+        para.segments.push(marker);
+        model.blocks.push(para0, para);
+
+        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+
+        expect(result.deleteResult).toBe('singleChar');
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: { marginLeft: '0px' },
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Outdent paragraph inside table nested in a list', () => {
+        const model = createContentModelDocument();
+        const list = createListItem([]);
+        const table = createTable(1);
+        const cell = createTableCell();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+
+        cell.blocks.push(para);
+        table.rows[0].cells.push(cell);
+        list.blocks.push(table);
+        para.format.marginLeft = '40px';
+        para.segments.push(marker);
+        model.blocks.push(list);
+
+        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+
+        expect(result.deleteResult).toBe('range');
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [cell, list, model],
+            tableContext: {
+                table,
+                colIndex: 0,
+                rowIndex: 0,
+                isWholeTableSelected: false,
+            },
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Table',
+                            rows: [
+                                {
+                                    height: 0,
+                                    format: {},
+                                    cells: [
+                                        {
+                                            blockGroupType: 'TableCell',
+                                            blocks: [
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: true,
+                                                            format: {},
+                                                        },
+                                                    ],
+                                                    format: {
+                                                        marginLeft: '0px',
+                                                    },
+                                                },
+                                            ],
+                                            format: {},
+                                            spanLeft: false,
+                                            spanAbove: false,
+                                            isHeader: false,
+                                            dataset: {},
+                                        },
+                                    ],
+                                },
+                            ],
+                            format: {},
+                            widths: [],
+                            dataset: {},
+                        },
+                    ],
+                    levels: [],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
                 },
             ],
         });
