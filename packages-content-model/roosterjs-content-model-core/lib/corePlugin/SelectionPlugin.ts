@@ -17,6 +17,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
     private isSafari = false;
+    private isMac = false;
 
     constructor(options: StandaloneEditorOptions) {
         this.state = {
@@ -43,6 +44,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const document = this.editor.getDocument();
 
         this.isSafari = !!env.isSafari;
+        this.isMac = !!env.isMac;
 
         if (this.isSafari) {
             document.addEventListener('selectionchange', this.onSelectionChangeSafari);
@@ -91,7 +93,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     (image = this.getClickingImage(event.rawEvent)) &&
                     image.isContentEditable &&
                     event.rawEvent.button != MouseMiddleButton &&
-                    event.isClicking
+                    (event.rawEvent.button ==
+                        MouseRightButton /* it's not possible to drag using right click */ ||
+                        event.isClicking)
                 ) {
                     this.selectImage(this.editor, image);
                 }
@@ -101,7 +105,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 selection = this.editor.getDOMSelection();
                 if (
                     event.rawEvent.button === MouseRightButton &&
-                    (image = this.getClickingImage(event.rawEvent)) &&
+                    (image =
+                        this.getClickingImage(event.rawEvent) ??
+                        this.getContainedTargetImage(event.rawEvent, selection)) &&
                     image.isContentEditable
                 ) {
                     this.selectImage(this.editor, image);
@@ -167,6 +173,27 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             ? target
             : null;
     }
+
+    //MacOS will not create a mouseUp event if contextMenu event is not prevent defaulted.
+    //Make sure we capture image target even if image is wrapped
+    private getContainedTargetImage = (
+        event: MouseEvent,
+        previousSelection: DOMSelection | null
+    ): HTMLImageElement | null => {
+        if (!this.isMac || !previousSelection || previousSelection.type !== 'image') {
+            return null;
+        }
+
+        const target = event.target as Node;
+        if (
+            isNodeOfType(target, 'ELEMENT_NODE') &&
+            isElementOfType(target, 'span') &&
+            target.firstChild === previousSelection.image
+        ) {
+            return previousSelection.image;
+        }
+        return null;
+    };
 
     private onFocus = () => {
         if (!this.state.skipReselectOnFocus && this.state.selection) {
