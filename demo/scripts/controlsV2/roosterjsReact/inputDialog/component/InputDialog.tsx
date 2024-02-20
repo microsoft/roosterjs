@@ -4,7 +4,7 @@ import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
 import { getLocalizedString } from '../../common/index';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import type DialogItem from '../type/DialogItem';
+import type { DialogItem } from '../type/DialogItem';
 import type {
     CancelButtonStringKey,
     LocalizedStrings,

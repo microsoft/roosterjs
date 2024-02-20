@@ -1,2 +1,2 @@
-export { default as showInputDialog } from './utils/showInputDialog';
-export { default as DialogItem } from './type/DialogItem';
+export { showInputDialog } from './utils/showInputDialog';
+export { DialogItem } from './type/DialogItem';

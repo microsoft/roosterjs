@@ -2,7 +2,7 @@ import * as React from 'react';
 import { getLocalizedString } from '../../common/index';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { TextField } from '@fluentui/react/lib/TextField';
-import type DialogItem from '../type/DialogItem';
+import type { DialogItem } from '../type/DialogItem';
 import type { LocalizedStrings } from '../../common/index';
 
 /**

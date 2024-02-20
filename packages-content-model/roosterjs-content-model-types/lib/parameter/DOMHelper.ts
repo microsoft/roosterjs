@@ -54,4 +54,13 @@ export interface DOMHelper {
      * @param style Name of the style
      */
     getDomStyle<T extends keyof CSSStyleDeclaration>(style: T): CSSStyleDeclaration[T];
+
+    /**
+     * Find closest element ancestor start from the given node which matches the given selector
+     * @param node Find ancestor start from this node
+     * @param selector The expected selector. If null, return the first HTML Element found from start node
+     * @returns An HTML element which matches the given selector. If the given start node matches the selector,
+     * returns the given node
+     */
+    findClosestElementAncestor(node: Node, selector: string): HTMLElement | null;
 }

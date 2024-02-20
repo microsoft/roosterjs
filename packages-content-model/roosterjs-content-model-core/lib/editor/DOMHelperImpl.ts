@@ -1,4 +1,4 @@
-import { toArray } from 'roosterjs-content-model-dom';
+import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import type { DOMHelper } from 'roosterjs-content-model-types';
 
 class DOMHelperImpl implements DOMHelper {
@@ -39,6 +39,19 @@ class DOMHelperImpl implements DOMHelper {
 
     getDomStyle<T extends keyof CSSStyleDeclaration>(style: T): CSSStyleDeclaration[T] {
         return this.contentDiv.style[style];
+    }
+
+    findClosestElementAncestor(startFrom: Node, selector: string): HTMLElement | null {
+        const startElement = isNodeOfType(startFrom, 'ELEMENT_NODE')
+            ? startFrom
+            : startFrom.parentElement;
+        const closestElement = startElement?.closest(selector) as HTMLElement | null;
+
+        return closestElement &&
+            this.isNodeInEditor(closestElement) &&
+            closestElement != this.contentDiv
+            ? closestElement
+            : null;
     }
 }
 

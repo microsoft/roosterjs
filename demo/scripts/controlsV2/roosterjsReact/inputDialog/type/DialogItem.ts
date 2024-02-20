@@ -1,7 +1,7 @@
 /**
  * Item of input dialog
  */
-export default interface DialogItem<Strings extends string> {
+export interface DialogItem<Strings extends string> {
     /**
      * Localized string key of the input item name
      */

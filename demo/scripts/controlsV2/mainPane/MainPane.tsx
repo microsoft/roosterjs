@@ -5,6 +5,8 @@ import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-m
 import { buttons, buttonsWithPopout } from './ribbonButtons';
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
+import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
+import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
 import { createRibbonPlugin, Ribbon, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
@@ -24,6 +26,10 @@ import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+import {
+    createContextMenuPlugin,
+    createTableEditMenuProvider,
+} from '../roosterjsReact/contextMenu';
 import {
     AutoFormatPlugin,
     EditPlugin,
@@ -51,7 +57,6 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
-// Add context menus for table, image and list
 // pasteOptionPlugin
 // emoji
 // sample entity
@@ -77,6 +82,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
     private pastePlugin: PastePlugin;
+    private listMenuPlugin: EditorPlugin;
+    private tableMenuPlugin: EditorPlugin;
+    private imageMenuPlugin: EditorPlugin;
+    private contextMenuPlugin: EditorPlugin;
     private snapshots: Snapshots;
 
     protected sidePane = React.createRef<SidePane>();
@@ -117,6 +126,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.pastePlugin = new PastePlugin();
+        this.contextMenuPlugin = createContextMenuPlugin();
+        this.listMenuPlugin = createListEditMenuProvider();
+        this.tableMenuPlugin = createTableEditMenuProvider();
+        this.imageMenuPlugin = createImageEditMenuProvider();
         // this.pasteOptionPlugin = createPasteOptionPlugin();
         // this.emojiPlugin = createEmojiPlugin();
         // this.sampleEntityPlugin = new SampleEntityPlugin();
@@ -299,6 +312,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.editPlugin,
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,
+            this.contextMenuPlugin,
+            this.listMenuPlugin,
+            this.tableMenuPlugin,
+            this.imageMenuPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
