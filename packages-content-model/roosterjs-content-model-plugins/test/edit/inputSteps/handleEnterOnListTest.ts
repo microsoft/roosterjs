@@ -1408,11 +1408,6 @@ describe('handleEnterOnList', () => {
                                     text: 'te',
                                     format: {},
                                 },
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
                             ],
                             format: {},
                         },
@@ -1444,6 +1439,11 @@ describe('handleEnterOnList', () => {
                         {
                             blockType: 'Paragraph',
                             segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
                                 {
                                     segmentType: 'Text',
                                     text: 'st',
@@ -1600,11 +1600,6 @@ describe('handleEnterOnList', () => {
                                     text: 'te',
                                     format: {},
                                 },
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
                             ],
                             format: {},
                         },
@@ -1637,6 +1632,11 @@ describe('handleEnterOnList', () => {
                         {
                             blockType: 'Paragraph',
                             segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
                                 {
                                     segmentType: 'Text',
                                     text: 'st',

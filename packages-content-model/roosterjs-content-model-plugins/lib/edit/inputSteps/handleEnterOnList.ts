@@ -7,6 +7,7 @@ import {
     createListItem,
     createListLevel,
     createParagraph,
+    createSelectionMarker,
     normalizeContentModel,
     normalizeParagraph,
     setParagraphNotImplicit,
@@ -23,10 +24,11 @@ import type {
  * @internal
  */
 export const handleEnterOnList: DeleteSelectionStep = context => {
+    const { deleteResult } = context;
     if (
-        context.deleteResult == 'nothingToDelete' ||
-        context.deleteResult == 'notDeleted' ||
-        context.deleteResult == 'range'
+        deleteResult == 'nothingToDelete' ||
+        deleteResult == 'notDeleted' ||
+        deleteResult == 'range'
     ) {
         const { insertPoint, formatContext } = context;
         const { path } = insertPoint;
@@ -39,7 +41,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         if (listItem && listItem.blockGroupType === 'ListItem') {
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
-            if (context.deleteResult == 'range' && nextBlock) {
+            if (deleteResult == 'range' && nextBlock) {
                 normalizeContentModel(listParent);
                 const nextListItem = listParent.blocks[listIndex + 1];
                 if (
@@ -52,10 +54,23 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                             ? listItem.levels[index].dataset
                             : {};
                     });
+                    const lastParagraph = listItem.blocks[listItem.blocks.length - 1];
+                    const nextParagraph = nextListItem.blocks[0];
+                    if (
+                        nextParagraph.blockType === 'Paragraph' &&
+                        lastParagraph.blockType === 'Paragraph' &&
+                        lastParagraph.segments[lastParagraph.segments.length - 1].segmentType ===
+                            'SelectionMarker'
+                    ) {
+                        lastParagraph.segments.pop();
 
+                        nextParagraph.segments.unshift(
+                            createSelectionMarker(insertPoint.marker.format)
+                        );
+                    }
                     context.lastParagraph = undefined;
                 }
-            } else {
+            } else if (deleteResult !== 'range') {
                 if (isEmptyListItem(listItem)) {
                     listItem.levels.pop();
                 } else {
