@@ -17,7 +17,7 @@ import { alignCenterButton } from './ribbonButtons/contentModel/alignCenterButto
 import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyButton';
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
-import { AutoFormatPlugin, EditPlugin } from 'roosterjs-content-model-plugins';
+import { AutoFormatPlugin, EditPlugin, ShortcutPlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -165,6 +165,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentModelRibbonPlugin: RibbonPlugin;
     private contentAutoFormatPlugin: AutoFormatPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
+    private shortcutPlugin: ShortcutPlugin;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private snapshots: Snapshots<Snapshot>;
     private buttons: ContentModelRibbonButton<any>[] = [
@@ -251,6 +252,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.contentModelEditPlugin = new EditPlugin();
         this.contentAutoFormatPlugin = new AutoFormatPlugin();
+        this.shortcutPlugin = new ShortcutPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.state = {
@@ -347,6 +349,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                                 this.formatPainterPlugin,
                                 this.contentModelEditPlugin,
                                 this.contentAutoFormatPlugin,
+                                this.shortcutPlugin,
                             ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}
