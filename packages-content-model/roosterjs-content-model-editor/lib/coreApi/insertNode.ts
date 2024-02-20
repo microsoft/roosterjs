@@ -166,14 +166,14 @@ export const insertNode: InsertNode = (core, innerCore, node, option) => {
                 rangeToRestore = createRange(
                     new Position(nodeForCursor, PositionType.After).normalize()
                 );
-            }
 
-            if (rangeToRestore) {
-                api.setDOMSelection(innerCore, {
-                    type: 'range',
-                    range: rangeToRestore,
-                    isReverted: false,
-                });
+                if (rangeToRestore) {
+                    api.setDOMSelection(innerCore, {
+                        type: 'range',
+                        range: rangeToRestore,
+                        isReverted: false,
+                    });
+                }
             }
 
             break;
