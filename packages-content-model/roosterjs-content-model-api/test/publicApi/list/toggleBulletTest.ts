@@ -45,7 +45,11 @@ describe('toggleBullet', () => {
         toggleBullet(editor);
 
         expect(setListType.setListType).toHaveBeenCalledTimes(1);
-        expect(setListType.setListType).toHaveBeenCalledWith(mockedModel, 'UL');
+        expect(setListType.setListType).toHaveBeenCalledWith(
+            mockedModel,
+            'UL',
+            false /** remove margins */
+        );
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
