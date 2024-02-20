@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import { SidePaneElement, SidePaneElementProps } from './SidePaneElement';
 import { SidePanePlugin } from './SidePanePlugin';
 
@@ -11,7 +11,7 @@ export abstract class SidePanePluginImpl<
     T extends SidePaneComponent<P>,
     P extends SidePaneElementProps
 > implements SidePanePlugin {
-    protected editor: IStandaloneEditor;
+    protected editor: IEditor;
     private component = React.createRef<T>();
 
     constructor(
@@ -24,7 +24,7 @@ export abstract class SidePanePluginImpl<
         return this.pluginName;
     }
 
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

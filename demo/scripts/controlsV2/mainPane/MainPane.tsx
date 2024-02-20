@@ -2,10 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
+import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-model-types';
 import { buttons, buttonsWithPopout } from './ribbonButtons';
-import { Colors, EditorPlugin, IStandaloneEditor, Snapshots } from 'roosterjs-content-model-types';
+import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createRibbonPlugin, Ribbon, RibbonPlugin } from '../roosterjsReact/ribbon';
+import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
@@ -18,17 +20,11 @@ import { Rooster } from '../roosterjsReact/rooster';
 import { SidePane } from '../sidePane/SidePane';
 import { SidePanePlugin } from '../sidePane/SidePanePlugin';
 import { SnapshotPlugin } from '../sidePane/snapshot/SnapshotPlugin';
-import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-import {
-    Border,
-    ContentModelDocument,
-    StandaloneEditorOptions,
-} from 'roosterjs-content-model-types';
 
 const styles = require('./MainPane.scss');
 
@@ -40,7 +36,7 @@ export interface MainPaneState {
     isDarkMode: boolean;
     isRtl: boolean;
     tableBorderFormat?: Border;
-    editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) => IStandaloneEditor;
+    editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
 }
 
 const PopoutRoot = 'mainPane';
@@ -272,8 +268,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private resetEditor() {
         // this.toggleablePlugins = null;
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) =>
-                new StandaloneEditor(div, {
+            editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
+                new Editor(div, {
                     ...options,
                     cacheModel: true,
                 }),

@@ -1,8 +1,8 @@
 import type { SidePaneElementProps } from '../SidePaneElement';
-import type { IStandaloneEditor, PluginEvent } from 'roosterjs-content-model-types';
+import type { IEditor, PluginEvent } from 'roosterjs-content-model-types';
 
 export interface ApiPaneProps extends SidePaneElementProps {
-    getEditor: () => IStandaloneEditor;
+    getEditor: () => IEditor;
 }
 
 export interface ApiPlaygroundComponent {

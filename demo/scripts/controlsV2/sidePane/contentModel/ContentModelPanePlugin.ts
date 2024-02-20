@@ -1,6 +1,6 @@
 import { ContentModelPane, ContentModelPaneProps } from './ContentModelPane';
 import { createRibbonPlugin, RibbonPlugin } from '../../roosterjsReact/ribbon';
-import { IStandaloneEditor, PluginEvent } from 'roosterjs-content-model-types';
+import { IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
@@ -16,7 +16,7 @@ export class ContentModelPanePlugin extends SidePanePluginImpl<
         this.contentModelRibbon = createRibbonPlugin();
     }
 
-    initialize(editor: IStandaloneEditor): void {
+    initialize(editor: IEditor): void {
         super.initialize(editor);
 
         this.contentModelRibbon.initialize(editor);

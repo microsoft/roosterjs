@@ -1,7 +1,7 @@
 import type {
     ContentModelDocument,
     EditorPlugin,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
@@ -9,7 +9,7 @@ import type {
  * A plugin to help get HTML content from editor
  */
 export class UpdateContentPlugin implements EditorPlugin {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
 
     /**
      * Create a new instance of UpdateContentPlugin class
@@ -28,7 +28,7 @@ export class UpdateContentPlugin implements EditorPlugin {
      * Initialize this plugin
      * @param editor The editor instance
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

@@ -1,15 +1,11 @@
 import * as React from 'react';
 import { createUIUtilities } from '../../common/index';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
-import { StandaloneEditor } from 'roosterjs-content-model-core';
+import { Editor } from 'roosterjs-content-model-core';
 import { useTheme } from '@fluentui/react/lib/Theme';
 import type { RoosterProps } from '../type/RoosterProps';
 import type { ReactEditorPlugin } from '../../common/index';
-import type {
-    EditorPlugin,
-    IStandaloneEditor,
-    StandaloneEditorOptions,
-} from 'roosterjs-content-model-types';
+import type { EditorPlugin, IEditor, EditorOptions } from 'roosterjs-content-model-types';
 
 /**
  * Main component of react wrapper for roosterjs
@@ -18,7 +14,7 @@ import type {
  */
 export function Rooster(props: RoosterProps) {
     const editorDiv = React.useRef<HTMLDivElement>(null);
-    const editor = React.useRef<IStandaloneEditor | null>(null);
+    const editor = React.useRef<IEditor | null>(null);
     const theme = useTheme();
 
     const { focusOnInit, editorCreator, inDarkMode, plugins } = props;
@@ -60,8 +56,8 @@ export function Rooster(props: RoosterProps) {
     return <div ref={editorDiv} tabIndex={0} {...(divProps || {})}></div>;
 }
 
-function defaultEditorCreator(div: HTMLDivElement, options: StandaloneEditorOptions) {
-    return new StandaloneEditor(div, options);
+function defaultEditorCreator(div: HTMLDivElement, options: EditorOptions) {
+    return new Editor(div, options);
 }
 
 function isReactEditorPlugin(plugin: EditorPlugin): plugin is ReactEditorPlugin {
