@@ -1,6 +1,5 @@
 import { deleteSelection } from 'roosterjs-content-model-core';
 import {
-    ContentModelDocument,
     ContentModelEntity,
     ContentModelSelectionMarker,
     DeletedEntity,
