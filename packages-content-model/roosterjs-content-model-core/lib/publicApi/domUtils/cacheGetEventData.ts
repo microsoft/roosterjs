@@ -16,10 +16,8 @@ export function cacheGetEventData<T, E extends PluginEvent>(
         event.eventDataCache && event.eventDataCache.hasOwnProperty(key)
             ? <T>event.eventDataCache[key]
             : getter(event);
-    if (event) {
-        event.eventDataCache = event.eventDataCache || {};
-        event.eventDataCache[key] = result;
-    }
+    event.eventDataCache = event.eventDataCache || {};
+    event.eventDataCache[key] = result;
 
     return result;
 }

@@ -15,6 +15,7 @@ import type {
 import type { ContextMenuProvider, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
+const OldEventKey = '__OldEventFromNewEvent';
 
 /**
  * @internal
@@ -111,7 +112,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     }
 
     onPluginEvent(event: PluginEvent) {
-        const oldEvent = newEventToOldEvent(event);
+        const oldEvent = this.cacheGetOldEvent(event);
 
         if (oldEvent) {
             const exclusivelyHandleEventPlugin = this.cacheGetExclusivelyHandlePlugin(event);
@@ -150,7 +151,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
 
     private cacheGetExclusivelyHandlePlugin(event: PluginEvent) {
         return cacheGetEventData(event, ExclusivelyHandleEventPluginKey, event => {
-            const oldEvent = newEventToOldEvent(event);
+            const oldEvent = this.cacheGetOldEvent(event);
 
             if (oldEvent) {
                 for (let i = 0; i < this.legacyPlugins.length; i++) {
@@ -164,6 +165,10 @@ export class BridgePlugin implements ContextMenuProvider<any> {
 
             return null;
         });
+    }
+
+    private cacheGetOldEvent(event: PluginEvent) {
+        return cacheGetEventData(event, OldEventKey, newEventToOldEvent);
     }
 
     private createEditorCore(editor: IEditor): EditorAdapterCore {
