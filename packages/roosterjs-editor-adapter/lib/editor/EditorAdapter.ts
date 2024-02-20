@@ -219,7 +219,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 
                 const selection = insertNode(contentDiv, this.getDOMSelection(), node, option);
 
-                if (selection) {
+                if (selection && option.updateCursor) {
                     this.setDOMSelection(selection);
                 }
             }

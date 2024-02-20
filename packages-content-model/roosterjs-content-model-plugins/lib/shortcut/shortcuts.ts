@@ -1,4 +1,4 @@
-import { redo, undo } from 'roosterjs-content-model-core/lib';
+import { redo, undo } from 'roosterjs-content-model-core';
 import {
     changeFontSize,
     clearFormat,
@@ -17,7 +17,7 @@ export const ShortcutBold: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: false,
     key: 'b',
-    onCommand: toggleBold,
+    onCommand: editor => toggleBold(editor),
 };
 
 /**
@@ -27,7 +27,7 @@ export const ShortcutItalic: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: false,
     key: 'i',
-    onCommand: toggleItalic,
+    onCommand: editor => toggleItalic(editor),
 };
 
 /**
@@ -37,7 +37,7 @@ export const ShortcutUnderline: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: false,
     key: 'u',
-    onCommand: toggleUnderline,
+    onCommand: editor => toggleUnderline(editor),
 };
 
 /**
@@ -47,7 +47,7 @@ export const ShortcutClearFormat: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: false,
     key: ' ',
-    onCommand: clearFormat,
+    onCommand: editor => clearFormat(editor),
 };
 
 /**
@@ -57,7 +57,7 @@ export const ShortcutUndo: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: false,
     key: 'z',
-    onCommand: undo,
+    onCommand: editor => undo(editor),
 };
 
 /**
@@ -67,7 +67,7 @@ export const ShortcutUndo2: ShortcutCommand = {
     modifierKey: 'alt',
     shiftKey: false,
     key: 'Backspace',
-    onCommand: undo,
+    onCommand: editor => undo(editor),
     isDisabled: editor => !!editor.getEnvironment().isMac,
 };
 
@@ -78,7 +78,8 @@ export const ShortcutRedo: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: false,
     key: 'y',
-    onCommand: redo,
+    onCommand: editor => redo(editor),
+    isDisabled: editor => !!editor.getEnvironment().isMac,
 };
 
 /**
@@ -88,7 +89,7 @@ export const ShortcutRedoMacOS: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: true,
     key: 'z',
-    onCommand: redo,
+    onCommand: editor => redo(editor),
     isDisabled: editor => !editor.getEnvironment().isMac,
 };
 
@@ -99,7 +100,7 @@ export const ShortcutBullet: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: false,
     key: '.',
-    onCommand: toggleBullet,
+    onCommand: editor => toggleBullet(editor),
 };
 
 /**
@@ -109,7 +110,7 @@ export const ShortcutNumbering: ShortcutCommand = {
     modifierKey: 'ctrl',
     shiftKey: false,
     key: '/',
-    onCommand: toggleNumbering,
+    onCommand: editor => toggleNumbering(editor),
 };
 
 /**
