@@ -98,6 +98,8 @@ describe('keyboardListTrigger', () => {
                                     startNumberOverride: 1,
                                     direction: undefined,
                                     textAlign: undefined,
+                                    marginBottom: undefined,
+                                    marginTop: undefined,
                                 },
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
@@ -240,6 +242,8 @@ describe('keyboardListTrigger', () => {
                                     startNumberOverride: 2,
                                     direction: undefined,
                                     textAlign: undefined,
+                                    marginBottom: undefined,
+                                    marginTop: undefined,
                                 },
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
@@ -366,6 +370,8 @@ describe('keyboardListTrigger', () => {
                                     startNumberOverride: 1,
                                     direction: undefined,
                                     textAlign: undefined,
+                                    marginBottom: undefined,
+                                    marginTop: undefined,
                                 },
                                 dataset: {
                                     editingInfo: '{"unorderedStyleType":1}',
@@ -706,9 +712,10 @@ describe('keyboardListTrigger', () => {
                                 listType: 'OL',
                                 format: {
                                     startNumberOverride: 3,
-
                                     direction: undefined,
                                     textAlign: undefined,
+                                    marginBottom: undefined,
+                                    marginTop: undefined,
                                 },
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":3}',
@@ -1017,9 +1024,10 @@ describe('keyboardListTrigger', () => {
                                 listType: 'OL',
                                 format: {
                                     startNumberOverride: 1,
-
                                     direction: undefined,
                                     textAlign: undefined,
+                                    marginBottom: undefined,
+                                    marginTop: undefined,
                                 },
                                 dataset: {
                                     editingInfo: '{"orderedStyleType":10}',
