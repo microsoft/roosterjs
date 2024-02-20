@@ -115,8 +115,8 @@ function shouldOutdentParagraph(
         !isForward &&
         segments.length == 1 &&
         segments[0].segmentType == 'SelectionMarker' &&
-        ((paragraph.format.marginLeft && parseInt(paragraph.format.marginLeft)) ||
-            (paragraph.format.marginRight && parseInt(paragraph.format.marginRight))) &&
+        paragraph.format.marginLeft &&
+        parseInt(paragraph.format.marginLeft) &&
         getClosestAncestorBlockGroupIndex(path, ['Document', 'TableCell'], ['ListItem']) > -1
     );
 }
