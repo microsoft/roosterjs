@@ -1,4 +1,4 @@
-import { redo, undo } from 'roosterjs-content-model-core/lib';
+import { redo, undo } from 'roosterjs-content-model-core';
 import {
     changeFontSize,
     clearFormat,
