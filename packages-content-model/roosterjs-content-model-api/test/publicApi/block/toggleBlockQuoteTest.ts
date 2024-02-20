@@ -1,11 +1,11 @@
 import * as toggleModelBlockQuote from '../../../lib/modelApi/block/toggleModelBlockQuote';
 import toggleBlockQuote from '../../../lib/publicApi/block/toggleBlockQuote';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import { ContentModelFormatter, FormatContentModelContext } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 
 describe('toggleBlockQuote', () => {
     const fakeModel: any = { a: 'b' };
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let formatContentModelSpy: jasmine.Spy;
     let context: FormatContentModelContext;
 
@@ -26,7 +26,7 @@ describe('toggleBlockQuote', () => {
         editor = ({
             focus: jasmine.createSpy('focus'),
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     it('toggleBlockQuote', () => {

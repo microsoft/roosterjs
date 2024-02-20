@@ -7,7 +7,7 @@ import {
     normalizeTable,
     setSelection,
 } from 'roosterjs-content-model-core';
-import type { IStandaloneEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
+import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * Insert table into editor at current selection
@@ -19,7 +19,7 @@ import type { IStandaloneEditor, TableMetadataFormat } from 'roosterjs-content-m
  * background color: #FFF; border color: #ABABAB
  */
 export default function insertTable(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     columns: number,
     rows: number,
     format?: Partial<TableMetadataFormat>

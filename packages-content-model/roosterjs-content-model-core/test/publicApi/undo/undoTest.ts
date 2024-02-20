@@ -1,8 +1,8 @@
-import { IStandaloneEditor, SnapshotsManager } from 'roosterjs-content-model-types';
+import { IEditor, SnapshotsManager } from 'roosterjs-content-model-types';
 import { undo } from '../../../lib/publicApi/undo/undo';
 
 describe('undo', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let getSnapshotsManagerSpy: jasmine.Spy;
     let takeSnapshotSpy: jasmine.Spy;
     let restoreSnapshotSpy: jasmine.Spy;

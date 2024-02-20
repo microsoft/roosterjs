@@ -1,11 +1,7 @@
 import * as eventUtils from '../../lib/publicApi/domUtils/eventUtils';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createDOMEventPlugin } from '../../lib/corePlugin/DOMEventPlugin';
-import {
-    DOMEventPluginState,
-    IStandaloneEditor,
-    PluginWithState,
-} from 'roosterjs-content-model-types';
+import { DOMEventPluginState, IEditor, PluginWithState } from 'roosterjs-content-model-types';
 
 const getDocument = () => document;
 
@@ -25,7 +21,7 @@ describe('DOMEventPlugin', () => {
             getDocument,
             attachDomEvent,
             getEnvironment: () => ({}),
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         plugin.initialize(editor);
 
@@ -70,7 +66,7 @@ describe('DOMEventPlugin', () => {
         const attachDomEvent = jasmine
             .createSpy('attachDomEvent')
             .and.returnValue(jasmine.createSpy('disposer'));
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getDocument,
             attachDomEvent,
             getEnvironment: () => ({}),
@@ -108,7 +104,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         triggerEventSpy = jasmine.createSpy('triggerEvent');
 
         plugin = createDOMEventPlugin({}, div);
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getDocument,
             attachDomEvent: (map: Record<string, any>) => {
                 eventMap = map;
@@ -278,7 +274,7 @@ describe('DOMEventPlugin handle mouse down and mouse up event', () => {
             },
             null!
         );
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,
@@ -395,7 +391,7 @@ describe('DOMEventPlugin handle other event', () => {
     let eventMap: Record<string, any>;
     let scrollContainer: HTMLElement;
     let addEventListenerSpy: jasmine.Spy;
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         addEventListener = jasmine.createSpy('addEventListener');
@@ -414,7 +410,7 @@ describe('DOMEventPlugin handle other event', () => {
             null!
         );
 
-        editor = <IStandaloneEditor>(<any>{
+        editor = <IEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,

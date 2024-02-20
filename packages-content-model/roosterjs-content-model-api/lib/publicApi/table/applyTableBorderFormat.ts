@@ -6,7 +6,7 @@ import {
     updateTableCellMetadata,
 } from 'roosterjs-content-model-core';
 import type {
-    IStandaloneEditor,
+    IEditor,
     Border,
     ContentModelTable,
     ContentModelTableCell,
@@ -39,7 +39,7 @@ type Perimeter = {
  * @param operation The operation to apply
  */
 export default function applyTableBorderFormat(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     border: Border,
     operation: BorderOperations
 ) {

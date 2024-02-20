@@ -15,20 +15,16 @@ import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
 } from './deleteSteps/deleteCollapsedSelection';
-import type {
-    DOMSelection,
-    DeleteSelectionStep,
-    IStandaloneEditor,
-} from 'roosterjs-content-model-types';
+import type { DOMSelection, DeleteSelectionStep, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Do keyboard event handling for DELETE/BACKSPACE key
- * @param editor The Content Model Editor
+ * @param editor The editor object
  * @param rawEvent DOM keyboard event
  * @returns True if the event is handled by content model, otherwise false
  */
-export function keyboardDelete(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
+export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent) {
     let handled = false;
     const selection = editor.getDOMSelection();
 

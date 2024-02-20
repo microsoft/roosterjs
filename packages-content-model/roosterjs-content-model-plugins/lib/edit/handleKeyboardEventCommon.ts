@@ -3,7 +3,7 @@ import type {
     ContentModelDocument,
     DeleteResult,
     FormatContentModelContext,
-    IStandaloneEditor,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -11,7 +11,7 @@ import type {
  * @return True means content is changed, so need to rewrite content model to editor. Otherwise false
  */
 export function handleKeyboardEventResult(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     model: ContentModelDocument,
     rawEvent: KeyboardEvent,
     result: DeleteResult,

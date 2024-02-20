@@ -1,12 +1,12 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
 import * as keyboardInput from '../../lib/edit/keyboardInput';
 import * as keyboardTab from '../../lib/edit/keyboardTab';
-import { DOMEventRecord, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { DOMEventRecord, IEditor } from 'roosterjs-content-model-types';
 import { EditPlugin } from '../../lib/edit/EditPlugin';
 
 describe('EditPlugin', () => {
     let plugin: EditPlugin;
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let eventMap: Record<string, any>;
     let attachDOMEventSpy: jasmine.Spy;
     let getEnvironmentSpy: jasmine.Spy;
@@ -29,7 +29,7 @@ describe('EditPlugin', () => {
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     afterEach(() => {

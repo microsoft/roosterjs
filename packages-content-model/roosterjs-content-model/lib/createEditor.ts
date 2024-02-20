@@ -1,10 +1,10 @@
+import { Editor } from 'roosterjs-content-model-core';
 import { EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
-import { StandaloneEditor } from 'roosterjs-content-model-core';
 import type {
     ContentModelDocument,
     EditorPlugin,
-    IStandaloneEditor,
-    StandaloneEditorOptions,
+    IEditor,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -19,10 +19,10 @@ export function createEditor(
     contentDiv: HTMLDivElement,
     additionalPlugins?: EditorPlugin[],
     initialModel?: ContentModelDocument
-): IStandaloneEditor {
+): IEditor {
     const plugins = [new PastePlugin(), new EditPlugin(), ...(additionalPlugins ?? [])];
 
-    const options: StandaloneEditorOptions = {
+    const options: EditorOptions = {
         plugins: plugins,
         initialModel,
         defaultSegmentFormat: {
@@ -31,5 +31,5 @@ export function createEditor(
             textColor: '#000000',
         },
     };
-    return new StandaloneEditor(contentDiv, options);
+    return new Editor(contentDiv, options);
 }

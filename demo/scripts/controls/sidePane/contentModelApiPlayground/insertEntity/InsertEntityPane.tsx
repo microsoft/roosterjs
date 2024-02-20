@@ -1,9 +1,9 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
-import { Entity, IEditor } from 'roosterjs-editor-types';
+import { Entity, IEditor as ILegacyEditor } from 'roosterjs-editor-types';
 import { getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
+import { IEditor, InsertEntityOptions } from 'roosterjs-content-model-types';
 import { insertEntity } from 'roosterjs-content-model-api';
-import { InsertEntityOptions, IStandaloneEditor } from 'roosterjs-content-model-types';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
 
 const styles = require('./InsertEntityPane.scss');
@@ -114,7 +114,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
 
             if (isBlock) {
                 insertEntity(
-                    editor as IStandaloneEditor & IEditor,
+                    editor as IEditor & ILegacyEditor,
                     entityType,
                     true,
                     insertAtRoot
@@ -128,7 +128,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                 );
             } else {
                 insertEntity(
-                    editor as IStandaloneEditor & IEditor,
+                    editor as IEditor & ILegacyEditor,
                     entityType,
                     isBlock,
                     insertAtTop ? 'begin' : insertAtBottom ? 'end' : 'focus',

@@ -3,7 +3,7 @@ import { applySegmentFormat, getFormatState } from 'roosterjs-content-model-api'
 import {
     ContentModelSegmentFormat,
     EditorPlugin,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
@@ -11,7 +11,7 @@ const FORMATPAINTERCURSOR_SVG = require('./formatpaintercursor.svg');
 const FORMATPAINTERCURSOR_STYLE = `cursor: url("${FORMATPAINTERCURSOR_SVG}") 8.5 16, auto`;
 
 export default class ContentModelFormatPainterPlugin implements EditorPlugin {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private styleNode: HTMLStyleElement | null = null;
     private painterFormat: ContentModelSegmentFormat | null = null;
     private static instance: ContentModelFormatPainterPlugin | undefined;
@@ -24,7 +24,7 @@ export default class ContentModelFormatPainterPlugin implements EditorPlugin {
         return 'FormatPainter';
     }
 
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
 
         const doc = this.editor.getDocument();
@@ -77,7 +77,7 @@ export default class ContentModelFormatPainterPlugin implements EditorPlugin {
     }
 }
 
-function getSegmentFormat(editor: IStandaloneEditor): ContentModelSegmentFormat {
+function getSegmentFormat(editor: IEditor): ContentModelSegmentFormat {
     const formatState = getFormatState(editor);
 
     return {

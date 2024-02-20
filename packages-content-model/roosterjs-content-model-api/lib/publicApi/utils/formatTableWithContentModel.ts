@@ -11,11 +11,7 @@ import {
     normalizeTable,
     setSelection,
 } from 'roosterjs-content-model-core';
-import type {
-    ContentModelTable,
-    IStandaloneEditor,
-    TableSelection,
-} from 'roosterjs-content-model-types';
+import type { ContentModelTable, IEditor, TableSelection } from 'roosterjs-content-model-types';
 
 /**
  * Invoke a callback to format the selected table using Content Model
@@ -25,7 +21,7 @@ import type {
  * @param selectionOverride Override the current selection. If we want to format a table even currently it is not selected, we can use this parameter to override current selection
  */
 export function formatTableWithContentModel(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     apiName: string,
     callback: (tableModel: ContentModelTable) => void,
     selectionOverride?: TableSelection

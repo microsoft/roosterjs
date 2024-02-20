@@ -10,7 +10,7 @@ import {
     FormatContentModelContext,
     FormatContentModelOptions,
     InsertPoint,
-    StandaloneEditorCore,
+    EditorCore,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
@@ -18,7 +18,7 @@ describe('mergePasteContent', () => {
     let context: FormatContentModelContext | undefined;
     let formatContentModel: jasmine.Spy;
     let sourceModel: ContentModelDocument;
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     const mockedClipboard = 'CLIPBOARD' as any;
 
     beforeEach(() => {

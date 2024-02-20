@@ -3,7 +3,7 @@ import { createContextMenuPlugin } from '../../lib/corePlugin/ContextMenuPlugin'
 import {
     ContextMenuPluginState,
     DOMEventRecord,
-    IStandaloneEditor,
+    IEditor,
     PluginWithState,
 } from 'roosterjs-content-model-types';
 
@@ -14,7 +14,7 @@ describe('ContextMenu handle other event', () => {
     let getDOMSelectionSpy: jasmine.Spy;
     let attachDOMEventSpy: jasmine.Spy;
     let getSelectionRootNodeSpy: jasmine.Spy;
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         triggerEventSpy = jasmine.createSpy('triggerEvent');
@@ -26,7 +26,7 @@ describe('ContextMenu handle other event', () => {
                 eventMap = handlers;
             });
 
-        editor = <IStandaloneEditor>(<any>{
+        editor = <IEditor>(<any>{
             getDOMSelection: getDOMSelectionSpy,
             attachDomEvent: attachDOMEventSpy,
             triggerEvent: triggerEventSpy,

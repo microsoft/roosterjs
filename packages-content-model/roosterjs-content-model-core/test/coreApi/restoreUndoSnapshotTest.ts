@@ -2,11 +2,11 @@ import * as restoreSnapshotColors from '../../lib/utils/restoreSnapshotColors';
 import * as restoreSnapshotHTML from '../../lib/utils/restoreSnapshotHTML';
 import * as restoreSnapshotSelection from '../../lib/utils/restoreSnapshotSelection';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
+import { EditorCore, Snapshot } from 'roosterjs-content-model-types';
 import { restoreUndoSnapshot } from '../../lib/coreApi/restoreUndoSnapshot';
-import { Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('restoreUndoSnapshot', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let triggerEventSpy: jasmine.Spy;
     let restoreSnapshotColorsSpy: jasmine.Spy;
     let restoreSnapshotHTMLSpy: jasmine.Spy;

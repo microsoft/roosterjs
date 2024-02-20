@@ -1,9 +1,9 @@
 import * as createSnapshotSelection from '../../lib/utils/createSnapshotSelection';
 import { addUndoSnapshot } from '../../lib/coreApi/addUndoSnapshot';
-import { SnapshotsManager, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { EditorCore, SnapshotsManager } from 'roosterjs-content-model-types';
 
 describe('addUndoSnapshot', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let contentDiv: HTMLDivElement;
     let addSnapshotSpy: jasmine.Spy;
     let getKnownColorsCopySpy: jasmine.Spy;

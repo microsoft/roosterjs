@@ -1,35 +1,28 @@
+import { coreApiMap } from './coreApiMap';
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createDOMHelper } from './DOMHelperImpl';
-import { createStandaloneEditorCorePlugins } from '../corePlugin/createStandaloneEditorCorePlugins';
-import { standaloneCoreApiMap } from './standaloneCoreApiMap';
-import {
-    createDomToModelSettings,
-    createModelToDomSettings,
-} from './createStandaloneEditorDefaultSettings';
+import { createEditorCorePlugins } from '../corePlugin/createEditorCorePlugins';
+import { createDomToModelSettings, createModelToDomSettings } from './createEditorDefaultSettings';
 import type {
     EditorEnvironment,
     PluginState,
-    StandaloneEditorCore,
-    StandaloneEditorCorePlugins,
-    StandaloneEditorOptions,
+    EditorCore,
+    EditorCorePlugins,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
- * A temporary function to create Standalone Editor core
+ * @internal Create core object for editor
  * @param contentDiv Editor content DIV
  * @param options Editor options
  */
-export function createStandaloneEditorCore(
-    contentDiv: HTMLDivElement,
-    options: StandaloneEditorOptions
-): StandaloneEditorCore {
-    const corePlugins = createStandaloneEditorCorePlugins(options, contentDiv);
+export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOptions): EditorCore {
+    const corePlugins = createEditorCorePlugins(options, contentDiv);
 
     return {
         contentDiv,
-        api: { ...standaloneCoreApiMap, ...options.coreApiOverride },
-        originalApi: { ...standaloneCoreApiMap },
+        api: { ...coreApiMap, ...options.coreApiOverride },
+        originalApi: { ...coreApiMap },
         plugins: [
             corePlugins.cache,
             corePlugins.format,
@@ -97,7 +90,7 @@ export function defaultTrustHtmlHandler(html: string) {
     return html;
 }
 
-function getPluginState(corePlugins: StandaloneEditorCorePlugins): PluginState {
+function getPluginState(corePlugins: EditorCorePlugins): PluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),
         copyPaste: corePlugins.copyPaste.getState(),

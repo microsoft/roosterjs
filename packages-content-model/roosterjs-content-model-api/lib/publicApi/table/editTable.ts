@@ -10,7 +10,7 @@ import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
-import type { TableOperation, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { TableOperation, IEditor } from 'roosterjs-content-model-types';
 import {
     alignTableCellHorizontally,
     alignTableCellVertically,
@@ -21,7 +21,7 @@ import {
  * @param editor The editor instance
  * @param operation The table operation to apply
  */
-export default function editTable(editor: IStandaloneEditor, operation: TableOperation) {
+export default function editTable(editor: IEditor, operation: TableOperation) {
     editor.focus();
 
     formatTableWithContentModel(editor, 'editTable', tableModel => {

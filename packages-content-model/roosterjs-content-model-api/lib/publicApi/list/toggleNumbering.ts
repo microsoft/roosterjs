@@ -1,5 +1,5 @@
 import { setListType } from '../../modelApi/list/setListType';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Toggle numbering list type
@@ -7,7 +7,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
  * - When all blocks are already in numbering list, turn off / outdent there list type
  * @param editor The editor to operate on
  */
-export default function toggleNumbering(editor: IStandaloneEditor) {
+export default function toggleNumbering(editor: IEditor) {
     editor.focus();
 
     editor.formatContentModel(

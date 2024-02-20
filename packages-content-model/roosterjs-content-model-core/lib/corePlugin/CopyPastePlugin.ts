@@ -22,9 +22,9 @@ import type {
     CopyPastePluginState,
     ContentModelTable,
     DOMSelection,
-    IStandaloneEditor,
+    IEditor,
     OnNodeCreated,
-    StandaloneEditorOptions,
+    EditorOptions,
     PluginWithState,
     ContentModelDocument,
     ContentModelParagraph,
@@ -36,7 +36,7 @@ import type {
  * Copy and paste plugin for handling onCopy and onPaste event
  */
 class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
 
@@ -44,7 +44,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
      * Construct a new instance of CopyPastePlugin
      * @param option The editor option
      */
-    constructor(option: StandaloneEditorOptions) {
+    constructor(option: EditorOptions) {
         this.state = {
             allowedCustomPasteType: option.allowedCustomPasteType || [],
             tempDiv: null,
@@ -62,7 +62,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = this.editor.attachDomEvent({
             paste: {
@@ -338,7 +338,7 @@ export function preprocessTable(table: ContentModelTable) {
  * @param option The editor option
  */
 export function createCopyPastePlugin(
-    option: StandaloneEditorOptions
+    option: EditorOptions
 ): PluginWithState<CopyPastePluginState> {
     return new CopyPastePlugin(option);
 }

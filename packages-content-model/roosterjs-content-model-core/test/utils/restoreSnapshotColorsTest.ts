@@ -1,9 +1,9 @@
 import * as transformColor from '../../lib/publicApi/color/transformColor';
-import { DarkColorHandler, Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { DarkColorHandler, EditorCore, Snapshot } from 'roosterjs-content-model-types';
 import { restoreSnapshotColors } from '../../lib/utils/restoreSnapshotColors';
 
 describe('restoreSnapshotColors', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let updateKnownColorSpy: jasmine.Spy;
     let transformColorSpy: jasmine.Spy;
     let darkColorHandler: DarkColorHandler;
