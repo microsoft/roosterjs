@@ -183,7 +183,6 @@ const buildConfig = {
             packagesContentModel
         ),
         dependsOnRoosterJs: true,
-        dependsOnReact: true,
     },
 };
 
