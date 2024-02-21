@@ -6,8 +6,11 @@ import type {
     ContentModelTableCell,
 } from 'roosterjs-content-model-types';
 
+/**
+ * Minimum width for a table cell
+ */
+export const MIN_WIDTH: number = 30;
 const MIN_HEIGHT = 22;
-export const MIN_WIDTH = 30;
 
 /**
  * Normalize a Content Model table, make sure:
