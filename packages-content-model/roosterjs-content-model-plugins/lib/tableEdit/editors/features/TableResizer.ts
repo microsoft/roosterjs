@@ -3,7 +3,7 @@ import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelpe
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
 import { getFirstSelectedTable, normalizeTable } from 'roosterjs-content-model-core';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, IStandaloneEditor, Rect } from 'roosterjs-content-model-types';
+import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
 import type TableEditFeature from './TableEditorFeature';
 
 const TABLE_RESIZER_LENGTH = 12;
@@ -13,7 +13,7 @@ const TABLE_RESIZER_LENGTH = 12;
  */
 export default function createTableResizer(
     table: HTMLTableElement,
-    editor: IStandaloneEditor,
+    editor: IEditor,
     isRTL: boolean,
     onStart: () => void,
     onEnd: () => false,
@@ -78,7 +78,7 @@ interface DragAndDropContext {
     onStart: () => void;
     onEnd: () => false;
     div: HTMLDivElement;
-    editor: IStandaloneEditor;
+    editor: IEditor;
     contentDiv?: EventTarget | null;
 }
 
@@ -228,7 +228,7 @@ function hideResizer(context: DragAndDropContext, trigger: HTMLElement) {
 }
 
 function isTableBottomVisible(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     rect: Rect | null,
     contentDiv?: Node | null
 ): boolean {

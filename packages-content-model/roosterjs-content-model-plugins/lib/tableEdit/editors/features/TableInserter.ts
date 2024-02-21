@@ -10,7 +10,7 @@ import {
 import type CreateElementData from '../../../pluginUtils/CreateElement/CreateElementData';
 import type Disposable from '../../../pluginUtils/Disposable';
 import type TableEditFeature from './TableEditorFeature';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';
@@ -21,7 +21,7 @@ const INSERTER_BORDER_SIZE = 1;
  * @internal
  */
 export default function createTableInserter(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     td: HTMLTableCellElement,
     table: HTMLTableElement,
     isRTL: boolean,
@@ -89,7 +89,7 @@ class TableInsertHandler implements Disposable {
         private td: HTMLTableCellElement,
         private table: HTMLTableElement,
         private isHorizontal: boolean,
-        private editor: IStandaloneEditor,
+        private editor: IEditor,
         private onInsert: () => void,
         getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void
     ) {

@@ -3,7 +3,7 @@ import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelpe
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
 import { getFirstSelectedTable, MIN_WIDTH, normalizeTable } from 'roosterjs-content-model-core';
 import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
-import type { ContentModelTable, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
 import type TableEditFeature from './TableEditorFeature';
 
 const CELL_RESIZER_WIDTH = 4;
@@ -12,7 +12,7 @@ const CELL_RESIZER_WIDTH = 4;
  * @internal
  */
 export default function createCellResizer(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     td: HTMLTableCellElement,
     table: HTMLTableElement,
     isRTL: boolean,
@@ -56,7 +56,7 @@ export default function createCellResizer(
 }
 
 interface DragAndDropContext {
-    editor: IStandaloneEditor;
+    editor: IEditor;
     td: HTMLTableCellElement;
     table: HTMLTableElement;
     isRTL: boolean;

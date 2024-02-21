@@ -6,7 +6,7 @@ import normalizeRect from '../../pluginUtils/Rect/normalizeRect';
 import { disposeTableEditFeature } from './features/TableEditorFeature';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type TableEditFeature from './features/TableEditorFeature';
-import type { IStandaloneEditor, TableSelection } from 'roosterjs-content-model-types';
+import type { IEditor, TableSelection } from 'roosterjs-content-model-types';
 
 const INSERTER_HOVER_OFFSET = 6;
 const enum TOP_OR_SIDE {
@@ -62,7 +62,7 @@ export default class TableEditor {
     private isCurrentlyEditing: boolean;
 
     constructor(
-        private editor: IStandaloneEditor,
+        private editor: IEditor,
         public readonly table: HTMLTableElement,
         private onChanged: () => void,
         private anchorContainer?: HTMLElement,

@@ -1,12 +1,7 @@
 import normalizeRect from '../pluginUtils/Rect/normalizeRect';
 import TableEditor from './editors/TableEditor';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
-import type {
-    EditorPlugin,
-    IStandaloneEditor,
-    PluginEvent,
-    Rect,
-} from 'roosterjs-content-model-types';
+import type { EditorPlugin, IEditor, PluginEvent, Rect } from 'roosterjs-content-model-types';
 
 const TABLE_RESIZER_LENGTH = 12;
 
@@ -14,7 +9,7 @@ const TABLE_RESIZER_LENGTH = 12;
  * TableEdit plugin, provides the ability to resize a table by drag-and-drop
  */
 export class TableEditPlugin implements EditorPlugin {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private onMouseMoveDisposer: (() => void) | null = null;
     private tableRectMap: { table: HTMLTableElement; rect: Rect }[] | null = null;
     private tableEditor: TableEditor | null = null;
@@ -38,7 +33,7 @@ export class TableEditPlugin implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.onMouseMoveDisposer = this.editor.attachDomEvent({
             mousemove: { beforeDispatch: this.onMouseMove },

@@ -3,7 +3,7 @@ import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelpe
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
-import type { IStandaloneEditor, Rect } from 'roosterjs-content-model-types';
+import type { IEditor, Rect } from 'roosterjs-content-model-types';
 import type TableEditorFeature from './TableEditorFeature';
 
 const TABLE_MOVER_LENGTH = 12;
@@ -16,7 +16,7 @@ const TABLE_MOVER_ID = '_Table_Mover';
  */
 export default function createTableMover(
     table: HTMLTableElement,
-    editor: IStandaloneEditor,
+    editor: IEditor,
     isRTL: boolean,
     onFinishDragging: (table: HTMLTableElement) => void,
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
@@ -124,11 +124,7 @@ function setDivPosition(context: TableMoverContext, trigger: HTMLElement) {
     }
 }
 
-function isTableTopVisible(
-    editor: IStandaloneEditor,
-    rect: Rect | null,
-    contentDiv?: Node | null
-): boolean {
+function isTableTopVisible(editor: IEditor, rect: Rect | null, contentDiv?: Node | null): boolean {
     const visibleViewport = editor.getVisibleViewport();
     if (isNodeOfType(contentDiv, 'ELEMENT_NODE') && visibleViewport && rect) {
         const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
