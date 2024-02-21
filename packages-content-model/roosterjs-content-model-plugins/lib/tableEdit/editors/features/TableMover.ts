@@ -1,6 +1,7 @@
 import createElement from '../../../pluginUtils/CreateElement/createElement';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IStandaloneEditor, Rect } from 'roosterjs-content-model-types';
 import type TableEditorFeature from './TableEditorFeature';
@@ -24,7 +25,7 @@ export default function createTableMover(
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
-    if (!isTableTopVisible(editor, rect, contentDiv)) {
+    if (!isTableTopVisible(editor, rect, contentDiv as Node)) {
         return null;
     }
 
@@ -126,10 +127,10 @@ function setDivPosition(context: TableMoverContext, trigger: HTMLElement) {
 function isTableTopVisible(
     editor: IStandaloneEditor,
     rect: Rect | null,
-    contentDiv?: EventTarget | null
+    contentDiv?: Node | null
 ): boolean {
     const visibleViewport = editor.getVisibleViewport();
-    if (contentDiv instanceof HTMLElement && visibleViewport && rect) {
+    if (isNodeOfType(contentDiv, 'ELEMENT_NODE') && visibleViewport && rect) {
         const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
 
         return !!containerRect && containerRect.top <= rect.top && visibleViewport.top <= rect.top;

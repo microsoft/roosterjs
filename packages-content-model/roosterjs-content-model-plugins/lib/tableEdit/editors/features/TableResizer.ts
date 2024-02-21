@@ -2,6 +2,7 @@ import createElement from '../../../pluginUtils/CreateElement/createElement';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
 import { getFirstSelectedTable, normalizeTable } from 'roosterjs-content-model-core';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type { ContentModelTable, IStandaloneEditor, Rect } from 'roosterjs-content-model-types';
 import type TableEditFeature from './TableEditorFeature';
 
@@ -21,7 +22,7 @@ export default function createTableResizer(
 ): TableEditFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
-    if (!isTableBottomVisible(editor, rect, contentDiv)) {
+    if (!isTableBottomVisible(editor, rect, contentDiv as Node)) {
         return null;
     }
 
@@ -200,7 +201,7 @@ function onDragEnd(
         isTableBottomVisible(
             context.editor,
             normalizeRect(context.table.getBoundingClientRect()),
-            context.contentDiv
+            context.contentDiv as Node
         )
     ) {
         context.div.style.visibility = 'visible';
@@ -229,10 +230,10 @@ function hideResizer(context: DragAndDropContext, trigger: HTMLElement) {
 function isTableBottomVisible(
     editor: IStandaloneEditor,
     rect: Rect | null,
-    contentDiv?: EventTarget | null
+    contentDiv?: Node | null
 ): boolean {
     const visibleViewport = editor.getVisibleViewport();
-    if (contentDiv instanceof HTMLElement && visibleViewport && rect) {
+    if (isNodeOfType(contentDiv, 'ELEMENT_NODE') && visibleViewport && rect) {
         const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
 
         return (

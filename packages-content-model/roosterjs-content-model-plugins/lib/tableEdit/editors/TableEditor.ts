@@ -4,6 +4,7 @@ import createTableMover from './features/TableMover';
 import createTableResizer from './features/TableResizer';
 import normalizeRect from '../../pluginUtils/Rect/normalizeRect';
 import { disposeTableEditFeature } from './features/TableEditorFeature';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type TableEditFeature from './features/TableEditorFeature';
 import type { IStandaloneEditor, TableSelection } from 'roosterjs-content-model-types';
 
@@ -373,8 +374,8 @@ export default class TableEditor {
             if (
                 feature &&
                 ev.relatedTarget != feature &&
-                this.contentDiv instanceof HTMLElement &&
-                ev.relatedTarget instanceof HTMLElement &&
+                isNodeOfType(this.contentDiv as Node, 'ELEMENT_NODE') &&
+                isNodeOfType(ev.relatedTarget as Node, 'ELEMENT_NODE') &&
                 !(this.contentDiv == ev.relatedTarget)
             ) {
                 this.dispose();
