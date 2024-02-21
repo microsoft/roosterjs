@@ -1,9 +1,14 @@
-import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core';
+import {
+    getClosestAncestorBlockGroupIndex,
+    isBlockGroupOfType,
+} from 'roosterjs-content-model-core';
 import {
     createBr,
     createListItem,
     createListLevel,
     createParagraph,
+    createSelectionMarker,
+    normalizeContentModel,
     normalizeParagraph,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
@@ -19,10 +24,11 @@ import type {
  * @internal
  */
 export const handleEnterOnList: DeleteSelectionStep = context => {
+    const { deleteResult } = context;
     if (
-        context.deleteResult == 'nothingToDelete' ||
-        context.deleteResult == 'notDeleted' ||
-        context.deleteResult == 'range'
+        deleteResult == 'nothingToDelete' ||
+        deleteResult == 'notDeleted' ||
+        deleteResult == 'range'
     ) {
         const { insertPoint, formatContext } = context;
         const { path } = insertPoint;
@@ -30,13 +36,46 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
         const listItem = path[index];
+        const listParent = path[index + 1];
 
         if (listItem && listItem.blockGroupType === 'ListItem') {
-            const listParent = path[index + 1];
-            if (isEmptyListItem(listItem)) {
-                listItem.levels.pop();
-            } else {
-                createNewListItem(context, listItem, listParent);
+            const listIndex = listParent.blocks.indexOf(listItem);
+            const nextBlock = listParent.blocks[listIndex + 1];
+            if (deleteResult == 'range' && nextBlock) {
+                normalizeContentModel(listParent);
+                const nextListItem = listParent.blocks[listIndex + 1];
+                if (
+                    isBlockGroupOfType<ContentModelListItem>(nextListItem, 'ListItem') &&
+                    nextListItem.levels[0]
+                ) {
+                    nextListItem.levels.forEach((level, index) => {
+                        level.format.startNumberOverride = undefined;
+                        level.dataset = listItem.levels[index]
+                            ? listItem.levels[index].dataset
+                            : {};
+                    });
+                    const lastParagraph = listItem.blocks[listItem.blocks.length - 1];
+                    const nextParagraph = nextListItem.blocks[0];
+                    if (
+                        nextParagraph.blockType === 'Paragraph' &&
+                        lastParagraph.blockType === 'Paragraph' &&
+                        lastParagraph.segments[lastParagraph.segments.length - 1].segmentType ===
+                            'SelectionMarker'
+                    ) {
+                        lastParagraph.segments.pop();
+
+                        nextParagraph.segments.unshift(
+                            createSelectionMarker(insertPoint.marker.format)
+                        );
+                    }
+                    context.lastParagraph = undefined;
+                }
+            } else if (deleteResult !== 'range') {
+                if (isEmptyListItem(listItem)) {
+                    listItem.levels.pop();
+                } else {
+                    createNewListItem(context, listItem, listParent);
+                }
             }
             rawEvent?.preventDefault();
             context.deleteResult = 'range';
@@ -62,9 +101,12 @@ const createNewListItem = (
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
     const newParagraph = createNewParagraph(insertPoint);
+
     const levels = createNewListLevel(listItem);
     const newListItem = createListItem(levels, insertPoint.marker.format);
     newListItem.blocks.push(newParagraph);
+    insertPoint.paragraph = newParagraph;
+    context.lastParagraph = newParagraph;
     listParent.blocks.splice(listIndex + 1, 0, newListItem);
 };
 
@@ -104,5 +146,6 @@ const createNewParagraph = (insertPoint: InsertPoint) => {
     }
 
     normalizeParagraph(newParagraph);
+
     return newParagraph;
 };
