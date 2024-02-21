@@ -1,12 +1,12 @@
 import { deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
 import { handleEnterOnList } from './inputSteps/handleEnterOnList';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
-import type { DOMSelection, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { DOMSelection, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function keyboardInput(editor: IStandaloneEditor, rawEvent: KeyboardEvent) {
+export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
     const selection = editor.getDOMSelection();
 
     if (shouldInputWithContentModel(selection, rawEvent)) {

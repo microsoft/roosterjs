@@ -7,10 +7,10 @@ import type {
     FontFamilyFormat,
     FontSizeFormat,
     FormatPluginState,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
     PluginWithState,
-    StandaloneEditorOptions,
+    EditorOptions,
     TextColorFormat,
 } from 'roosterjs-content-model-types';
 
@@ -32,7 +32,7 @@ const DefaultStyleKeyMap: Record<
  * 1. Handle pending format changes when selection is collapsed
  */
 class FormatPlugin implements PluginWithState<FormatPluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private defaultFormatKeys: Set<keyof CSSStyleDeclaration>;
     private state: FormatPluginState;
     private lastCheckedNode: Node | null = null;
@@ -41,7 +41,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
      * Construct a new instance of FormatPlugin class
      * @param option The editor option
      */
-    constructor(option: StandaloneEditorOptions) {
+    constructor(option: EditorOptions) {
         this.state = {
             defaultFormat: { ...option.defaultSegmentFormat },
             pendingFormat: null,
@@ -69,7 +69,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 
@@ -168,7 +168,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
         return result;
     }
 
-    private shouldApplyDefaultFormat(editor: IStandaloneEditor): boolean {
+    private shouldApplyDefaultFormat(editor: IEditor): boolean {
         const selection = editor.getDOMSelection();
         const range = selection?.type == 'range' ? selection.range : null;
         const posContainer = range?.startContainer ?? null;
@@ -216,8 +216,6 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
  * Create a new instance of FormatPlugin.
  * @param option The editor option
  */
-export function createFormatPlugin(
-    option: StandaloneEditorOptions
-): PluginWithState<FormatPluginState> {
+export function createFormatPlugin(option: EditorOptions): PluginWithState<FormatPluginState> {
     return new FormatPlugin(option);
 }

@@ -3,7 +3,7 @@ import {
     contentModelToText,
     createModelToDomContext,
 } from 'roosterjs-content-model-dom';
-import type { ExportContentMode, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ExportContentMode, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Export string content of editor
@@ -13,7 +13,7 @@ import type { ExportContentMode, IStandaloneEditor } from 'roosterjs-content-mod
  * - PlainText: Export plain text content
  * - PlainTextFast: Export plain text using editor's textContent property directly
  */
-export function exportContent(editor: IStandaloneEditor, mode: ExportContentMode = 'HTML'): string {
+export function exportContent(editor: IEditor, mode: ExportContentMode = 'HTML'): string {
     if (mode == 'PlainTextFast') {
         return editor.getDOMHelper().getTextContent();
     } else {

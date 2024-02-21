@@ -1,7 +1,7 @@
 import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
 import setAlignment from '../../../lib/publicApi/block/setAlignment';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import { paragraphTestCommon } from './paragraphTestCommon';
 import {
     ContentModelDocument,
@@ -415,7 +415,7 @@ describe('setAlignment', () => {
 });
 
 describe('setAlignment in table', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
@@ -431,7 +431,7 @@ describe('setAlignment in table', () => {
             isDarkMode: () => false,
             triggerEvent,
             getVisibleViewport,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     function runTest(
@@ -813,7 +813,7 @@ describe('setAlignment in table', () => {
 });
 
 describe('setAlignment in list', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let triggerEvent: jasmine.Spy;
     let getVisibleViewport: jasmine.Spy;
 
@@ -827,7 +827,7 @@ describe('setAlignment in list', () => {
             isDarkMode: () => false,
             triggerEvent,
             getVisibleViewport,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     function runTest(

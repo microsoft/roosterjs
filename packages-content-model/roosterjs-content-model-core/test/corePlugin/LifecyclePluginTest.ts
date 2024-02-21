@@ -1,7 +1,7 @@
 import * as color from 'roosterjs-content-model-dom/lib/formatHandlers/utils/color';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { createLifecyclePlugin } from '../../lib/corePlugin/LifecyclePlugin';
-import { DarkColorHandler, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { DarkColorHandler, IEditor } from 'roosterjs-content-model-types';
 
 describe('LifecyclePlugin', () => {
     it('init', () => {
@@ -10,7 +10,7 @@ describe('LifecyclePlugin', () => {
         const triggerEvent = jasmine.createSpy('triggerEvent');
         const state = plugin.getState();
 
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             triggerEvent,
             getFocusedPosition: () => <any>null,
             getColorManager: () => <DarkColorHandler | null>null,
@@ -47,7 +47,7 @@ describe('LifecyclePlugin', () => {
         const triggerEvent = jasmine.createSpy('triggerEvent');
         const state = plugin.getState();
 
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             triggerEvent,
             getFocusedPosition: () => <any>null,
             getColorManager: () => <DarkColorHandler | null>null,
@@ -74,7 +74,7 @@ describe('LifecyclePlugin', () => {
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
 
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             triggerEvent,
             getFocusedPosition: () => <any>null,
             getColorManager: () => <DarkColorHandler | null>null,
@@ -96,7 +96,7 @@ describe('LifecyclePlugin', () => {
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
 
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             triggerEvent,
             getFocusedPosition: () => <any>null,
             getColorManager: () => <DarkColorHandler | null>null,
@@ -121,7 +121,7 @@ describe('LifecyclePlugin', () => {
 
         const setColorSpy = spyOn(color, 'setColor');
 
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             triggerEvent,
             getColorManager: () => mockedDarkColorHandler,
         }));
@@ -151,7 +151,7 @@ describe('LifecyclePlugin', () => {
 
         const setColorSpy = spyOn(color, 'setColor');
 
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             triggerEvent,
             getColorManager: () => mockedDarkColorHandler,
         }));
@@ -203,7 +203,7 @@ describe('LifecyclePlugin', () => {
 
         const setColorSpy = spyOn(color, 'setColor');
 
-        plugin.initialize(<IStandaloneEditor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             triggerEvent,
             getDarkColorHandler: () => mockedDarkColorHandler,
         }));

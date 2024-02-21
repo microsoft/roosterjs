@@ -4,14 +4,14 @@ import type {
     ClipboardData,
     DomToModelOptionForSanitizing,
     PasteType,
-    StandaloneEditorCore,
+    EditorCore,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function generatePasteOptionFromPlugins(
-    core: StandaloneEditorCore,
+    core: EditorCore,
     clipboardData: ClipboardData,
     fragment: DocumentFragment,
     htmlFromClipboard: HtmlFromClipboard,

@@ -1,6 +1,6 @@
 import * as readFile from 'roosterjs-content-model-core/lib/publicApi/domUtils/readFile';
 import insertImage from '../../../lib/publicApi/image/insertImage';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -17,7 +17,7 @@ describe('insertImage', () => {
 
     function runTest(
         apiName: string,
-        executionCallback: (editor: IStandaloneEditor) => void,
+        executionCallback: (editor: IEditor) => void,
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number
@@ -37,7 +37,7 @@ describe('insertImage', () => {
             focus: jasmine.createSpy(),
             isDisposed: () => false,
             formatContentModel,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         executionCallback(editor);
 

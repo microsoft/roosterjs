@@ -14,7 +14,7 @@ import type {
     ContentModelTableCellFormat,
     EditorPlugin,
     FormatParser,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
@@ -24,10 +24,9 @@ import type {
  * 2. Content copied from Excel
  * 3. Content copied from Word Online or OneNote Online
  * 4. Content copied from Power Point
- * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export class PastePlugin implements EditorPlugin {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
 
     /**
      * Construct a new instance of Paste class
@@ -49,7 +48,7 @@ export class PastePlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

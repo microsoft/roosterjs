@@ -1,5 +1,5 @@
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
-import type { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 import {
     createText,
     normalizeContentModel,
@@ -16,7 +16,7 @@ const NON_BREAK_SPACE = '\u00A0';
  * @param data The text user just input
  */
 export function applyPendingFormat(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     data: string,
     format: ContentModelSegmentFormat
 ) {

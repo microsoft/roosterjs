@@ -1,8 +1,19 @@
-import { deleteBlock, deleteSegment } from 'roosterjs-content-model-core';
 import { getLeafSiblingBlock } from '../utils/getLeafSiblingBlock';
+import { setModelIndentation } from 'roosterjs-content-model-api';
 import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
+import {
+    deleteBlock,
+    deleteSegment,
+    getClosestAncestorBlockGroupIndex,
+} from 'roosterjs-content-model-core';
 import type { BlockAndPath } from '../utils/getLeafSiblingBlock';
-import type { ContentModelSegment, DeleteSelectionStep } from 'roosterjs-content-model-types';
+import type {
+    ContentModelBlockGroup,
+    ContentModelDocument,
+    ContentModelParagraph,
+    ContentModelSegment,
+    DeleteSelectionStep,
+} from 'roosterjs-content-model-types';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return context => {
@@ -19,6 +30,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
         const index = segments.indexOf(marker) + (isForward ? 1 : -1);
         const segmentToDelete = segments[index];
         let blockToDelete: BlockAndPath | null;
+        let root: ContentModelDocument | null;
 
         if (segmentToDelete) {
             if (deleteSegment(paragraph, segmentToDelete, context.formatContext, direction)) {
@@ -28,6 +40,12 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                 // to avoid losing its format. See https://github.com/microsoft/roosterjs/issues/1953
                 setParagraphNotImplicit(paragraph);
             }
+        } else if (
+            shouldOutdentParagraph(isForward, segments, paragraph, path) &&
+            (root = getRoot(path))
+        ) {
+            setModelIndentation(root, 'outdent');
+            context.deleteResult = 'range';
         } else if ((blockToDelete = getLeafSiblingBlock(path, paragraph, isForward))) {
             const { block, path, siblingSegment } = blockToDelete;
 
@@ -80,6 +98,27 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
             context.deleteResult = 'nothingToDelete';
         }
     };
+}
+
+function getRoot(path: ContentModelBlockGroup[]): ContentModelDocument | null {
+    const lastInPath = path[path.length - 1];
+    return lastInPath.blockGroupType == 'Document' ? lastInPath : null;
+}
+
+function shouldOutdentParagraph(
+    isForward: boolean,
+    segments: ContentModelSegment[],
+    paragraph: ContentModelParagraph,
+    path: ContentModelBlockGroup[]
+) {
+    return (
+        !isForward &&
+        segments.length == 1 &&
+        segments[0].segmentType == 'SelectionMarker' &&
+        paragraph.format.marginLeft &&
+        parseInt(paragraph.format.marginLeft) &&
+        getClosestAncestorBlockGroupIndex(path, ['Document', 'TableCell'], ['ListItem']) > -1
+    );
 }
 
 /**

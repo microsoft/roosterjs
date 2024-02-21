@@ -74,9 +74,9 @@ describe('indent', () => {
                             format: {
                                 startNumberOverride: 1,
                                 direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             },
                             dataset: {},
                         },
@@ -110,6 +110,65 @@ describe('indent', () => {
         });
     });
 
+    it('Group with single paragraph selection remove margins', () => {
+        const group = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText('test');
+
+        para.segments.push(text);
+        group.blocks.push(para);
+
+        text.isSelected = true;
+
+        const result = setListType(group, 'OL', true /** remove margins */);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockGroupType: 'ListItem',
+                    blockType: 'BlockGroup',
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                direction: undefined,
+                                marginBottom: '0px',
+                                marginTop: '0px',
+                                textAlign: undefined,
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blocks: [para],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                        isSelected: true,
+                    },
+                    format: {},
+                },
+            ],
+        });
+        expect(result).toBeTrue();
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {},
+                    isSelected: true,
+                },
+            ],
+        });
+    });
     it('Group with single list item selection in a different type', () => {
         const group = createContentModelDocument();
         const para = createParagraph();
@@ -301,9 +360,9 @@ describe('indent', () => {
                                     format: {
                                         startNumberOverride: undefined,
                                         direction: undefined,
+                                        marginBottom: undefined,
+                                        marginTop: undefined,
                                         textAlign: undefined,
-                                        marginTop: '0px',
-                                        marginBottom: '0px',
                                     },
                                     dataset: {},
                                 },
@@ -366,8 +425,8 @@ describe('indent', () => {
                                 startNumberOverride: 1,
                                 direction: 'rtl',
                                 textAlign: 'start',
-                                marginTop: '0px',
-                                marginBottom: '0px',
+                                marginBottom: undefined,
+                                marginTop: undefined,
                             },
                         },
                     ],
@@ -445,9 +504,9 @@ describe('indent', () => {
                             format: {
                                 startNumberOverride: 1,
                                 direction: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
                                 marginBottom: '0px',
-                                marginTop: '0px',
                             },
                         },
                     ],
@@ -473,10 +532,10 @@ describe('indent', () => {
                             dataset: {},
                             format: {
                                 direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
                                 startNumberOverride: undefined,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             },
                         },
                     ],
@@ -529,9 +588,9 @@ describe('indent', () => {
                             format: {
                                 startNumberOverride: 1,
                                 direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             },
                         },
                     ],
@@ -586,9 +645,9 @@ describe('indent', () => {
                             format: {
                                 startNumberOverride: 1,
                                 direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             },
                         },
                     ],
@@ -614,9 +673,9 @@ describe('indent', () => {
                             format: {
                                 startNumberOverride: undefined,
                                 direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             },
                         },
                     ],
@@ -641,10 +700,10 @@ describe('indent', () => {
                             dataset: {},
                             format: {
                                 direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
                                 startNumberOverride: undefined,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             },
                         },
                     ],
@@ -716,9 +775,9 @@ describe('indent', () => {
                             format: {
                                 startNumberOverride: 1,
                                 direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             },
                             dataset: {},
                         },
@@ -746,9 +805,9 @@ describe('indent', () => {
                             format: {
                                 startNumberOverride: undefined,
                                 direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
                                 textAlign: undefined,
-                                marginTop: '0px',
-                                marginBottom: '0px',
                             },
                             dataset: {},
                         },
@@ -799,10 +858,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'UL',
-                            format: {
-                                marginTop: '0px',
-                                marginBottom: '0px',
-                            },
+                            format: {},
                             dataset: {},
                         },
                     ],
@@ -840,10 +896,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'UL',
-                            format: {
-                                marginTop: '0px',
-                                marginBottom: '0px',
-                            },
+                            format: {},
                             dataset: {},
                         },
                     ],

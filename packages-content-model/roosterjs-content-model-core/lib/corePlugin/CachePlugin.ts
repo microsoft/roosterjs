@@ -3,17 +3,17 @@ import { createTextMutationObserver } from './utils/textMutationObserver';
 import { domIndexerImpl } from './utils/domIndexerImpl';
 import type {
     CachePluginState,
-    IStandaloneEditor,
+    IEditor,
     PluginEvent,
     PluginWithState,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
 class CachePlugin implements PluginWithState<CachePluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private state: CachePluginState;
 
     /**
@@ -21,7 +21,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * @param option The editor option
      * @param contentDiv The editor content DIV
      */
-    constructor(option: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
+    constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
         this.state = option.cacheModel
             ? {
                   domIndexer: domIndexerImpl,
@@ -43,7 +43,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
 
@@ -134,7 +134,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
     }
 
-    private updateCachedModel(editor: IStandaloneEditor, forceUpdate?: boolean) {
+    private updateCachedModel(editor: IEditor, forceUpdate?: boolean) {
         const cachedSelection = this.state.cachedSelection;
         this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
 
@@ -169,7 +169,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
  * @param contentDiv The editor content DIV
  */
 export function createCachePlugin(
-    option: StandaloneEditorOptions,
+    option: EditorOptions,
     contentDiv: HTMLDivElement
 ): PluginWithState<CachePluginState> {
     return new CachePlugin(option, contentDiv);

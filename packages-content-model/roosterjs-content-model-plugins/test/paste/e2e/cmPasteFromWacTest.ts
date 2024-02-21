@@ -1,11 +1,11 @@
 import * as processPastedContentWacComponents from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
-import { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 
 const ID = 'CM_Paste_From_WORD_Online_E2E';
 
 describe(ID, () => {
-    let editor: IStandaloneEditor = undefined!;
+    let editor: IEditor = undefined!;
     let clipboardData: ClipboardData;
 
     beforeEach(() => {

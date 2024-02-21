@@ -4,14 +4,14 @@ import {
     normalizeTable,
     setTableCellBackgroundColor,
 } from 'roosterjs-content-model-core';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Set table cell shade color
  * @param editor The editor instance
  * @param color The color to set. Pass null to remove existing shade color
  */
-export default function setTableCellShade(editor: IStandaloneEditor, color: string | null) {
+export default function setTableCellShade(editor: IEditor, color: string | null) {
     editor.focus();
 
     editor.formatContentModel(

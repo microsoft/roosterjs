@@ -5,7 +5,7 @@ import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
 /**
  * @internal
  * Switch the Shadow Edit mode of editor On/Off
- * @param editorCore The StandaloneEditorCore object
+ * @param editorCore The EditorCore object
  * @param isOn True to switch On, False to switch Off
  */
 export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {

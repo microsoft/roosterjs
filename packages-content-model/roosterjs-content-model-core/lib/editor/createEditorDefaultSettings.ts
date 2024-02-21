@@ -7,16 +7,16 @@ import type {
     DomToModelSettings,
     ModelToDomOption,
     ModelToDomSettings,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
- * Create default DOM to Content Model conversion settings for a standalone editor
+ * Create default DOM to Content Model conversion settings for an editor
  * @param options The editor options
  */
 export function createDomToModelSettings(
-    options: StandaloneEditorOptions
+    options: EditorOptions
 ): ContentModelSettings<DomToModelOption, DomToModelSettings> {
     const builtIn: DomToModelOption = {
         processorOverride: {
@@ -34,11 +34,11 @@ export function createDomToModelSettings(
 
 /**
  * @internal
- * Create default Content Model to DOM conversion settings for a standalone editor
+ * Create default Content Model to DOM conversion settings for an editor
  * @param options The editor options
  */
 export function createModelToDomSettings(
-    options: StandaloneEditorOptions
+    options: EditorOptions
 ): ContentModelSettings<ModelToDomOption, ModelToDomSettings> {
     const builtIn: ModelToDomOption = {
         metadataAppliers: {

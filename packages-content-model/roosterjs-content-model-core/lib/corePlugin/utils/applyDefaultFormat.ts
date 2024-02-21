@@ -1,17 +1,14 @@
 import { deleteSelection } from '../../publicApi/selection/deleteSelection';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
-import type { ContentModelSegmentFormat, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * When necessary, set default format as current pending format so it will be applied when Input event is fired
- * @param editor The Content Model Editor
+ * @param editor The editor object
  * @param defaultFormat The default segment format to apply
  */
-export function applyDefaultFormat(
-    editor: IStandaloneEditor,
-    defaultFormat: ContentModelSegmentFormat
-) {
+export function applyDefaultFormat(editor: IEditor, defaultFormat: ContentModelSegmentFormat) {
     editor.formatContentModel((model, context) => {
         const result = deleteSelection(model, [], context);
 
@@ -64,7 +61,7 @@ export function applyDefaultFormat(
 }
 
 function getNewPendingFormat(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     defaultFormat: ContentModelSegmentFormat,
     markerFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {

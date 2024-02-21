@@ -30,6 +30,7 @@ import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentMo
 import { darkMode } from './ribbonButtons/contentModel/darkMode';
 import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
 import { decreaseIndentButton } from './ribbonButtons/contentModel/decreaseIndentButton';
+import { Editor } from 'roosterjs-content-model-core';
 import { exportContent } from './ribbonButtons/contentModel/export';
 import { fontButton } from './ribbonButtons/contentModel/fontButton';
 import { fontSizeButton } from './ribbonButtons/contentModel/fontSizeButton';
@@ -63,7 +64,6 @@ import { setTableCellShadeButton } from './ribbonButtons/contentModel/setTableCe
 import { setTableHeaderButton } from './ribbonButtons/contentModel/setTableHeaderButton';
 import { Snapshots } from 'roosterjs-editor-types';
 import { spacingButton } from './ribbonButtons/contentModel/spacingButton';
-import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { strikethroughButton } from './ribbonButtons/contentModel/strikethroughButton';
 import { subscriptButton } from './ribbonButtons/contentModel/subscriptButton';
 import { superscriptButton } from './ribbonButtons/contentModel/superscriptButton';
@@ -78,9 +78,9 @@ import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
 import {
     ContentModelSegmentFormat,
-    IStandaloneEditor,
+    IEditor,
     Snapshot,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 import {
     spaceAfterButton,
@@ -152,7 +152,7 @@ const DarkTheme: PartialTheme = {
 };
 
 interface ContentModelMainPaneState extends MainPaneBaseState {
-    editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) => IStandaloneEditor;
+    editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
 }
 
 class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {
@@ -307,8 +307,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
 
     resetEditor() {
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) =>
-                new StandaloneEditor(div, {
+            editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
+                new Editor(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
                 }),

@@ -8,7 +8,7 @@ import {
     ContentModelText,
     ContentModelFormatter,
     FormatContentModelOptions,
-    IStandaloneEditor,
+    IEditor,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
@@ -52,7 +52,7 @@ describe('applyPendingFormat', () => {
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -124,7 +124,7 @@ describe('applyPendingFormat', () => {
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -183,7 +183,7 @@ describe('applyPendingFormat', () => {
         const formatContentModelSpy = jasmine.createSpy('formatContentModel');
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
@@ -241,7 +241,7 @@ describe('applyPendingFormat', () => {
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [text]);
@@ -290,7 +290,7 @@ describe('applyPendingFormat', () => {
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
