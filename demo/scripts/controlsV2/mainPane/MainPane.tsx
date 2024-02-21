@@ -7,6 +7,7 @@ import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-mode
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
 import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
+import { createPasteOptionPlugin } from '../roosterjsReact/pasteOptions';
 import { createRibbonPlugin, Ribbon, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
@@ -57,7 +58,6 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
-// pasteOptionPlugin
 // emoji
 // sample entity
 // More options
@@ -86,6 +86,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private tableMenuPlugin: EditorPlugin;
     private imageMenuPlugin: EditorPlugin;
     private contextMenuPlugin: EditorPlugin;
+    private pasteOptionPlugin: EditorPlugin;
     private snapshots: Snapshots;
 
     protected sidePane = React.createRef<SidePane>();
@@ -130,7 +131,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.listMenuPlugin = createListEditMenuProvider();
         this.tableMenuPlugin = createTableEditMenuProvider();
         this.imageMenuPlugin = createImageEditMenuProvider();
-        // this.pasteOptionPlugin = createPasteOptionPlugin();
+        this.pasteOptionPlugin = createPasteOptionPlugin();
         // this.emojiPlugin = createEmojiPlugin();
         // this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
@@ -316,6 +317,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.listMenuPlugin,
             this.tableMenuPlugin,
             this.imageMenuPlugin,
+            this.pasteOptionPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {

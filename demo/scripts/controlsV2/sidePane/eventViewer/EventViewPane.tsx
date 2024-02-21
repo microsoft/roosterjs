@@ -104,7 +104,7 @@ export default class ContentModelEventViewPane extends React.Component<
                 return (
                     <span>
                         Key=
-                        {event.rawEvent.which}
+                        {event.rawEvent.key}
                     </span>
                 );
 
