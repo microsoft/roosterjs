@@ -1,4 +1,4 @@
-import { createSelectionMarker, createText } from 'roosterjs-content-model-dom/lib';
+import { createSelectionMarker, createText } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from 'roosterjs-content-model-api';
 import type {
     ContentModelDocument,
