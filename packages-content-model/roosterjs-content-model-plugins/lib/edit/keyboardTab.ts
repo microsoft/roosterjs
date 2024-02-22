@@ -1,9 +1,11 @@
 import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-core';
-import { setModelIndentation } from 'roosterjs-content-model-api';
+import { handleTabOnList } from './tabUtils/handleTabOnList';
+import { handleTabOnParagraph } from './tabUtils/handleTabOnParagraph';
 import type {
     ContentModelDocument,
     ContentModelListItem,
     IEditor,
+    RangeSelection,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -15,32 +17,30 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
     if (selection?.type == 'range') {
         editor.takeSnapshot();
 
-        editor.formatContentModel((model, _context) => {
-            return handleTabOnList(model, rawEvent);
-        });
+        editor.formatContentModel(
+            (model, _context) => {
+                return handleTab(model, rawEvent, selection);
+            },
+            {
+                apiName: 'handleTabKey',
+            }
+        );
 
         return true;
     }
 }
 
-function isMarkerAtStartOfBlock(listItem: ContentModelListItem) {
-    return (
-        listItem.blocks[0].blockType == 'Paragraph' &&
-        listItem.blocks[0].segments[0].segmentType == 'SelectionMarker'
-    );
-}
-
-function handleTabOnList(model: ContentModelDocument, rawEvent: KeyboardEvent) {
+function handleTab(
+    model: ContentModelDocument,
+    rawEvent: KeyboardEvent,
+    selection: RangeSelection
+) {
     const blocks = getOperationalBlocks<ContentModelListItem>(model, ['ListItem'], ['TableCell']);
-    const listItem = blocks[0].block;
-
-    if (
-        isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
-        isMarkerAtStartOfBlock(listItem)
-    ) {
-        setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
-        rawEvent.preventDefault();
-        return true;
+    const block = blocks[0].block;
+    if (block.blockType === 'Paragraph') {
+        return handleTabOnParagraph(model, block, rawEvent, selection);
+    } else if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
+        return handleTabOnList(model, block, rawEvent);
     }
     return false;
 }

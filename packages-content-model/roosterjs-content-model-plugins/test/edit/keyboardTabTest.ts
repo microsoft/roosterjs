@@ -1,5 +1,6 @@
 import * as setModelIndentation from '../../../roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { editingTestCommon } from './editingTestCommon';
 import { keyboardTab } from '../../lib/edit/keyboardTab';
 
 describe('keyboardTab', () => {
@@ -35,6 +36,9 @@ describe('keyboardTab', () => {
             getDOMSelection: () => {
                 return {
                     type: 'range',
+                    range: {
+                        collapsed: true,
+                    },
                 };
             },
         };
@@ -56,7 +60,7 @@ describe('keyboardTab', () => {
         }
     }
 
-    it('tab on paragraph', () => {
+    it('tab on the end of paragraph', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -80,7 +84,34 @@ describe('keyboardTab', () => {
             format: {},
         };
 
-        runTest(model, undefined, false, false);
+        runTest(model, undefined, false, true);
+    });
+
+    it('tab on the start of paragraph', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(model, 'indent', false, true);
     });
 
     it('tab on empty list', () => {
@@ -866,5 +897,534 @@ describe('keyboardTab', () => {
             format: {},
         };
         runTest(model, undefined, true, false);
+    });
+});
+
+describe('keyboardTab - handleTabOnParagraph -', () => {
+    function runTest(
+        input: ContentModelDocument,
+        key: string,
+        collapsed: boolean,
+        shiftKey: boolean,
+        expectedResult: ContentModelDocument,
+        calledTimes: number = 1
+    ) {
+        const preventDefault = jasmine.createSpy('preventDefault');
+        const mockedEvent = ({
+            key,
+            shiftKey: shiftKey,
+            preventDefault,
+        } as any) as KeyboardEvent;
+
+        let editor: any;
+
+        editingTestCommon(
+            'handleTabKey',
+            newEditor => {
+                editor = newEditor;
+
+                editor.getDOMSelection = () => ({
+                    type: 'range',
+                    range: {
+                        collapsed: collapsed,
+                    },
+                });
+
+                keyboardTab(editor, mockedEvent);
+            },
+            input,
+            expectedResult,
+            calledTimes
+        );
+    }
+
+    it('collapsed range | tab on the end of paragraph', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', true, false, expectedResult);
+    });
+
+    it('collapsed range | tab on the start of paragraph', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginLeft: '40px',
+                    },
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', true, false, expectedResult);
+    });
+
+    it('collapsed range | tab on the middle of paragraph', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'te',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'te',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', true, false, expectedResult);
+    });
+
+    it('collapsed range | shift tab on the end of paragraph', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', true, true, input, 0);
+    });
+
+    it('collapsed range | shift tab on the start of paragraph indented', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginLeft: '40px',
+                    },
+                },
+            ],
+            format: {},
+        };
+
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginLeft: '0px',
+                    },
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', true, true, expectedResult);
+    });
+
+    it('collapsed range | shift tab on the end of paragraph indented', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', true, true, expectedResult);
+    });
+
+    it('collapsed range | shift tab on the middle of paragraph indented', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'te    ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'te',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', true, true, expectedResult);
+    });
+
+    it('expanded range | tab on paragraph', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '123',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '456',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '789',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '123',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: ' ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '789',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', false, false, expectedResult);
+    });
+
+    it('expanded range | shift tab on paragraph', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '123',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '456',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '789',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '123',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '789',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', false, true, expectedResult);
     });
 });
