@@ -1,10 +1,10 @@
 import { createSelectionMarker, createText } from 'roosterjs-content-model-dom/lib';
 import { setModelIndentation } from 'roosterjs-content-model-api';
-import {
+import type {
     ContentModelDocument,
     ContentModelParagraph,
     RangeSelection,
-} from 'roosterjs-content-model-types/lib';
+} from 'roosterjs-content-model-types';
 
 const tabSpaces = '    ';
 const space = ' ';
