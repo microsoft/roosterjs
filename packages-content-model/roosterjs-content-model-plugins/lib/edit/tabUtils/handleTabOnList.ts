@@ -1,5 +1,5 @@
-import { ContentModelDocument, ContentModelListItem } from 'roosterjs-content-model-types';
 import { setModelIndentation } from 'roosterjs-content-model-api';
+import type { ContentModelDocument, ContentModelListItem } from 'roosterjs-content-model-types';
 
 /**
  * @internal
