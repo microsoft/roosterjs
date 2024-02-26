@@ -1,3 +1,4 @@
+import { addUndoSnapshot } from './addUndoSnapshot';
 import { cloneModel } from '../publicApi/model/cloneModel';
 import { convertInlineCss } from '../utils/convertInlineCss';
 import { createPasteFragment } from '../utils/paste/createPasteFragment';
@@ -30,6 +31,7 @@ export const paste: Paste = (
     pasteType: PasteType = 'normal'
 ) => {
     core.api.focus(core);
+    addUndoSnapshot(core, false);
 
     if (clipboardData.modelBeforePaste) {
         core.api.setContentModel(core, cloneModel(clipboardData.modelBeforePaste, CloneOption));
