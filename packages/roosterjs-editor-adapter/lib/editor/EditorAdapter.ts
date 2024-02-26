@@ -114,10 +114,10 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 
     /**
      * Creates an instance of Editor
-     * @param contentDiv The DIV HTML element which will be the container element of editor
+     * @param physicalRoot The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: EditorAdapterOptions = {}) {
+    constructor(physicalRoot: HTMLDivElement, options: EditorAdapterOptions = {}) {
         const bridgePlugin = new BridgePlugin(
             core => {
                 this.contentModelEditorCore = core;
@@ -129,7 +129,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         );
 
         const plugins = [bridgePlugin, ...(options.plugins ?? [])];
-        const initContent = options.initialContent ?? contentDiv.innerHTML;
+        const initContent = options.initialContent ?? physicalRoot.innerHTML;
         const initialModel =
             initContent && !options.initialModel
                 ? createModelFromHtml(
@@ -145,7 +145,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
             initialModel,
         };
 
-        super(contentDiv, standaloneEditorOptions);
+        super(physicalRoot, standaloneEditorOptions);
     }
 
     /**
@@ -199,14 +199,14 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 insertToRegionRoot: false,
             };
 
-            const { contentDiv } = this.getCore();
+            const { physicalRoot } = this.getCore();
 
             if (option.updateCursor) {
                 this.focus();
             }
 
             if (option.position == ContentPosition.Outside) {
-                contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);
+                physicalRoot.parentNode?.insertBefore(node, physicalRoot.nextSibling);
             } else {
                 if (this.isDarkMode()) {
                     transformColor(
@@ -217,7 +217,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                     );
                 }
 
-                const selection = insertNode(contentDiv, this.getDOMSelection(), node, option);
+                const selection = insertNode(physicalRoot, this.getDOMSelection(), node, option);
 
                 if (selection && option.updateCursor) {
                     this.setDOMSelection(selection);
@@ -274,14 +274,14 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns The BlockElement result
      */
     getBlockElementAtNode(node: Node): BlockElement | null {
-        return getBlockElementAtNode(this.getCore().contentDiv, node);
+        return getBlockElementAtNode(this.getCore().logicalRoot, node);
     }
 
     contains(arg: Node | Range | null): boolean {
         if (!arg) {
             return false;
         }
-        return contains(this.getCore().contentDiv, <Node>arg);
+        return contains(this.getCore().logicalRoot, <Node>arg);
     }
 
     queryElements(
@@ -300,10 +300,16 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         const selectionEx = scope == QueryScope.Body ? null : this.getSelectionRangeEx();
         if (selectionEx) {
             selectionEx.ranges.forEach(range => {
-                result.push(...queryElements(core.contentDiv, selector, callback, scope, range));
+                result.push(...queryElements(core.logicalRoot, selector, callback, scope, range));
             });
         } else {
-            return queryElements(core.contentDiv, selector, callback, scope, undefined /* range */);
+            return queryElements(
+                core.logicalRoot,
+                selector,
+                callback,
+                scope,
+                undefined /* range */
+            );
         }
 
         return result;
@@ -321,7 +327,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * otherwise just return start and end
      */
     collapseNodes(start: Node, end: Node, canSplitParent: boolean): Node[] {
-        return collapseNodes(this.getCore().contentDiv, start, end, canSplitParent);
+        return collapseNodes(this.getCore().physicalRoot, start, end, canSplitParent);
     }
 
     //#endregion
@@ -334,7 +340,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns True if there's no visible content, otherwise false
      */
     isEmpty(trim?: boolean): boolean {
-        return isNodeEmpty(this.getCore().contentDiv, trim);
+        return isNodeEmpty(this.getCore().physicalRoot, trim);
     }
 
     /**
@@ -353,7 +359,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      */
     setContent(content: string, triggerContentChangedEvent: boolean = true) {
         const core = this.getCore();
-        const { contentDiv, api, trustedHTMLHandler, lifecycle, darkColorHandler } = core;
+        const { physicalRoot, api, trustedHTMLHandler, lifecycle, darkColorHandler } = core;
 
         api.triggerEvent(
             core,
@@ -383,7 +389,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 false /*broadcast*/
             );
         } else if (lifecycle.isDarkMode) {
-            transformColor(contentDiv, false /*includeSelf*/, 'lightToDark', darkColorHandler);
+            transformColor(physicalRoot, false /*includeSelf*/, 'lightToDark', darkColorHandler);
         }
     }
 
@@ -425,7 +431,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     deleteSelectedContent(): NodePosition | null {
         const range = this.getSelectionRange();
         if (range && !range.collapsed) {
-            return deleteSelectedContent(this.getCore().contentDiv, range);
+            return deleteSelectedContent(this.getCore().physicalRoot, range);
         }
         return null;
     }
@@ -493,7 +499,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      */
     getSelectionPath(): SelectionPath | null {
         const range = this.getSelectionRange();
-        return range && getSelectionPath(this.getCore().contentDiv, range);
+        return range && getSelectionPath(this.getCore().physicalRoot, range);
     }
 
     select(
@@ -503,7 +509,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
-        const rangeEx = buildRangeEx(core.contentDiv, arg1, arg2, arg3, arg4);
+        const rangeEx = buildRangeEx(core.physicalRoot, arg1, arg2, arg3, arg4);
         const selection = convertRangeExToDomSelection(rangeEx);
 
         this.setDOMSelection(selection);
@@ -554,7 +560,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 }
                 return (
                     startFrom &&
-                    findClosestElementAncestor(startFrom, this.getCore().contentDiv, selector)
+                    findClosestElementAncestor(startFrom, this.getCore().physicalRoot, selector)
                 );
             }) ?? null
         );
@@ -567,7 +573,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns True if position is at beginning of the editor, otherwise false
      */
     isPositionAtBeginning(position: NodePosition): boolean {
-        return isPositionAtBeginningOf(position, this.getCore().contentDiv);
+        return isPositionAtBeginningOf(position, this.getCore().physicalRoot);
     }
 
     /**
@@ -576,9 +582,9 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     getSelectedRegions(type: RegionType | CompatibleRegionType = RegionType.Table): Region[] {
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
-        const contentDiv = this.getCore().contentDiv;
+        const physicalRoot = this.getCore().physicalRoot;
         selection.ranges.forEach(range => {
-            result.push(...(range ? getRegionsFromRange(contentDiv, range, type) : []));
+            result.push(...(range ? getRegionsFromRange(physicalRoot, range, type) : []));
         });
         return result.filter((value, index, self) => {
             return self.indexOf(value) === index;
@@ -822,7 +828,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
     getBodyTraverser(startNode?: Node): IContentTraverser {
-        return ContentTraverser.createBodyTraverser(this.getCore().contentDiv, startNode);
+        return ContentTraverser.createBodyTraverser(this.getCore().logicalRoot, startNode);
     }
 
     /**
@@ -832,7 +838,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     getSelectionTraverser(range?: Range): IContentTraverser | null {
         range = range ?? this.getSelectionRange() ?? undefined;
         return range
-            ? ContentTraverser.createSelectionTraverser(this.getCore().contentDiv, range)
+            ? ContentTraverser.createSelectionTraverser(this.getCore().logicalRoot, range)
             : null;
     }
 
@@ -846,7 +852,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     ): IContentTraverser | null {
         const range = this.getSelectionRange();
         return range
-            ? ContentTraverser.createBlockTraverser(this.getCore().contentDiv, range, startFrom)
+            ? ContentTraverser.createBlockTraverser(this.getCore().logicalRoot, range, startFrom)
             : null;
     }
 
@@ -861,7 +867,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
             const range = this.getSelectionRange();
             return (
                 range &&
-                new PositionContentSearcher(this.getCore().contentDiv, Position.getStart(range))
+                new PositionContentSearcher(this.getCore().logicalRoot, Position.getStart(range))
             );
         });
     }
@@ -872,7 +878,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns a function to cancel this async run
      */
     runAsync(callback: (editor: ILegacyEditor & IEditor) => void) {
-        const win = this.getCore().contentDiv.ownerDocument.defaultView || window;
+        const win = this.getCore().physicalRoot.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
                 callback(this);
@@ -912,8 +918,8 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      */
     getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[] | null {
         if (this.contains(element)) {
-            const contentDiv = this.getCore().contentDiv;
-            const editorRect = contentDiv.getBoundingClientRect();
+            const physicalRoot = this.getCore().physicalRoot;
+            const editorRect = physicalRoot.getBoundingClientRect();
             const elementRect = element.getBoundingClientRect();
 
             if (editorRect && elementRect) {
@@ -921,8 +927,8 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 let y = elementRect.top - editorRect?.top;
 
                 if (addScroll) {
-                    x += contentDiv.scrollLeft;
-                    y += contentDiv.scrollTop;
+                    x += physicalRoot.scrollLeft;
+                    y += physicalRoot.scrollTop;
                 }
 
                 return [x, y];

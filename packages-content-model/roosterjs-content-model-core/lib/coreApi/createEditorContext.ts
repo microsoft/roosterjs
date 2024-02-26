@@ -8,7 +8,7 @@ const DefaultRootFontSize = 16;
  * Create a EditorContext object used by ContentModel API
  */
 export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
-    const { lifecycle, format, darkColorHandler, contentDiv, cache, domHelper } = core;
+    const { lifecycle, format, darkColorHandler, logicalRoot, cache, domHelper } = core;
 
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,
@@ -23,7 +23,7 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
             parseValueWithUnit(getRootComputedStyle(core)?.fontSize) || DefaultRootFontSize,
     };
 
-    checkRootRtl(contentDiv, context);
+    checkRootRtl(logicalRoot, context);
 
     return context;
 };
@@ -37,7 +37,7 @@ function checkRootRtl(element: HTMLElement, context: EditorContext) {
 }
 
 function getRootComputedStyle(core: EditorCore) {
-    const document = core.contentDiv.ownerDocument;
+    const document = core.physicalRoot.ownerDocument;
     const rootComputedStyle = document.defaultView?.getComputedStyle(document.documentElement);
     return rootComputedStyle;
 }

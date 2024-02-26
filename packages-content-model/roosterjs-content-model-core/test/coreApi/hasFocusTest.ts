@@ -9,7 +9,11 @@ describe('hasFocus', () => {
     beforeEach(() => {
         containsSpy = jasmine.createSpy('contains');
         core = {
-            contentDiv: {
+            physicalRoot: {
+                ownerDocument: {},
+                contains: containsSpy,
+            },
+            logicalRoot: {
                 ownerDocument: {},
                 contains: containsSpy,
             },
@@ -21,7 +25,7 @@ describe('hasFocus', () => {
     });
 
     it('Has active element inside editor', () => {
-        (core.contentDiv.ownerDocument as any).activeElement = mockedElement;
+        (core.physicalRoot.ownerDocument as any).activeElement = mockedElement;
         containsSpy.and.returnValue(true);
 
         let result = hasFocus(core);
@@ -30,7 +34,7 @@ describe('hasFocus', () => {
     });
 
     it('Has active element outside editor', () => {
-        (core.contentDiv.ownerDocument as any).activeElement = mockedElement;
+        (core.physicalRoot.ownerDocument as any).activeElement = mockedElement;
         containsSpy.and.returnValue(false);
 
         let result = hasFocus(core);
