@@ -5,6 +5,7 @@ import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-m
 import { buttons, buttonsWithPopout } from './ribbonButtons';
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
+import { createEmojiPlugin } from '../roosterjsReact/emoji';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
 import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
 import { createPasteOptionPlugin } from '../roosterjsReact/pasteOptions';
@@ -58,7 +59,6 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
-// emoji
 // sample entity
 // More options
 // toggleable plugins
@@ -87,6 +87,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private imageMenuPlugin: EditorPlugin;
     private contextMenuPlugin: EditorPlugin;
     private pasteOptionPlugin: EditorPlugin;
+    private emojiPlugin: EditorPlugin;
     private snapshots: Snapshots;
 
     protected sidePane = React.createRef<SidePane>();
@@ -132,7 +133,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.tableMenuPlugin = createTableEditMenuProvider();
         this.imageMenuPlugin = createImageEditMenuProvider();
         this.pasteOptionPlugin = createPasteOptionPlugin();
-        // this.emojiPlugin = createEmojiPlugin();
+        this.emojiPlugin = createEmojiPlugin();
         // this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
@@ -318,6 +319,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.tableMenuPlugin,
             this.imageMenuPlugin,
             this.pasteOptionPlugin,
+            this.emojiPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
