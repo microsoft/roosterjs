@@ -17,6 +17,6 @@ export {
     ShortcutDecreaseFont,
 } from './shortcut/shortcuts';
 export { ShortcutPlugin } from './shortcut/ShortcutPlugin';
-export { ShortcutCommand } from './shortcut/ShortcutCommand';
+export { ShortcutKeyDefinition, ShortcutCommand } from './shortcut/ShortcutCommand';
 
 export { ContextMenuPluginBase, ContextMenuOptions } from './contextMenuBase/ContextMenuPluginBase';

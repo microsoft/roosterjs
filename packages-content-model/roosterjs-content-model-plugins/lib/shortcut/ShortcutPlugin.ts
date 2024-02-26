@@ -1,5 +1,5 @@
 import { cacheGetEventData } from 'roosterjs-content-model-core';
-import type { ShortcutCommand } from './ShortcutCommand';
+import type { ShortcutCommand, ShortcutKeyDefinition } from './ShortcutCommand';
 import {
     ShortcutBold,
     ShortcutBullet,
@@ -42,6 +42,7 @@ const CommandCacheKey = '__ShortcutCommandCache';
  */
 export class ShortcutPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
+    private isMac = false;
 
     /**
      * Create a new instance of ShortcutPlugin
@@ -64,6 +65,7 @@ export class ShortcutPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.isMac = !!this.editor.getEnvironment().isMac;
     }
 
     /**
@@ -86,7 +88,7 @@ export class ShortcutPlugin implements EditorPlugin {
     willHandleEventExclusively(event: PluginEvent) {
         return (
             event.eventType == 'keyDown' &&
-            (event.rawEvent.ctrlKey || event.rawEvent.altKey) &&
+            (event.rawEvent.ctrlKey || event.rawEvent.altKey || event.rawEvent.metaKey) &&
             !!this.cacheGetCommand(event)
         );
     }
@@ -102,7 +104,7 @@ export class ShortcutPlugin implements EditorPlugin {
             const command = this.cacheGetCommand(event);
 
             if (command) {
-                command.onCommand(this.editor);
+                command.onClick(this.editor);
                 event.rawEvent.preventDefault();
             }
         }
@@ -116,19 +118,33 @@ export class ShortcutPlugin implements EditorPlugin {
                 editor &&
                 this.shortcuts.filter(
                     command =>
-                        (!command.isDisabled || !command.isDisabled(editor)) &&
-                        this.matchShortcut(command, event.rawEvent)
+                        this.matchOS(command.environment) &&
+                        this.matchShortcut(command.shortcutKey, event.rawEvent)
                 )[0]
             );
         });
     }
 
-    private matchShortcut(command: ShortcutCommand, event: KeyboardEvent) {
-        const { ctrlKey, altKey, shiftKey, key } = event;
-        const matchModifier =
-            (command.modifierKey == 'ctrl' && ctrlKey && !altKey) ||
-            (command.modifierKey == 'alt' && altKey && !ctrlKey);
+    private matchOS(environment?: 'all' | 'mac' | 'nonMac') {
+        switch (environment) {
+            case 'mac':
+                return this.isMac;
 
-        return matchModifier && shiftKey == command.shiftKey && command.key == key;
+            case 'nonMac':
+                return !this.isMac;
+
+            default:
+                return true;
+        }
+    }
+
+    private matchShortcut(shortcutKey: ShortcutKeyDefinition, event: KeyboardEvent) {
+        const { ctrlKey, altKey, shiftKey, key, metaKey } = event;
+        const ctrlOrMeta = this.isMac ? metaKey : ctrlKey;
+        const matchModifier =
+            (shortcutKey.modifierKey == 'ctrl' && ctrlOrMeta && !altKey) ||
+            (shortcutKey.modifierKey == 'alt' && altKey && !ctrlOrMeta);
+
+        return matchModifier && shiftKey == shortcutKey.shiftKey && shortcutKey.key == key;
     }
 }
