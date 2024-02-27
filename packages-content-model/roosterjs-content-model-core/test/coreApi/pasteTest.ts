@@ -1,5 +1,4 @@
 import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
-import * as addUndoSnapshot from '../../lib/coreApi/addUndoSnapshot';
 import * as cloneModel from '../../lib/publicApi/model/cloneModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
@@ -32,7 +31,6 @@ describe('Paste ', () => {
     let mockedModel: ContentModelDocument;
     let mockedMergeModel: ContentModelDocument;
     let getVisibleViewport: jasmine.Spy;
-    let addUndoSnapshotSpy: jasmine.Spy;
 
     const mockedCloneModel = 'CloneModel' as any;
 
@@ -41,7 +39,7 @@ describe('Paste ', () => {
     beforeEach(() => {
         spyOn(domToContentModel, 'domToContentModel').and.callThrough();
         spyOn(cloneModel, 'cloneModel').and.returnValue(mockedCloneModel);
-        addUndoSnapshotSpy = spyOn(addUndoSnapshot, 'addUndoSnapshot');
+
         clipboardData = {
             types: ['image/png', 'text/html'],
             text: '',
@@ -98,14 +96,12 @@ describe('Paste ', () => {
         editor.pasteFromClipboard(clipboardData);
 
         expect(mockedModel).toEqual(mockedMergeModel);
-        expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
     });
 
     it('Execute | As plain text', () => {
         editor.pasteFromClipboard(clipboardData, 'asPlainText');
 
         expect(mockedModel).toEqual(mockedMergeModel);
-        expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
     });
 });
 

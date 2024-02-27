@@ -47,13 +47,9 @@ class SnapshotsManagerImpl implements SnapshotsManager {
 
     addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean): void {
         const currentSnapshot = this.snapshots.snapshots[this.snapshots.currentIndex];
-        const isSameSnapshot =
-            currentSnapshot &&
-            currentSnapshot.html == snapshot.html &&
-            !currentSnapshot.entityStates &&
-            !snapshot.entityStates;
+        const addSnapshot = !currentSnapshot || shouldAddSnapshot(currentSnapshot, snapshot);
 
-        if (this.snapshots.currentIndex < 0 || !currentSnapshot || !isSameSnapshot) {
+        if (this.snapshots.currentIndex < 0 || addSnapshot) {
             this.clearRedo();
             this.snapshots.snapshots.push(snapshot);
             this.snapshots.currentIndex++;
@@ -82,7 +78,7 @@ class SnapshotsManagerImpl implements SnapshotsManager {
             if (isAutoCompleteSnapshot) {
                 this.snapshots.autoCompleteIndex = this.snapshots.currentIndex;
             }
-        } else if (isSameSnapshot) {
+        } else if (!addSnapshot) {
             // replace the currentSnapshot's metadata so the selection is updated
             this.snapshots.snapshots.splice(this.snapshots.currentIndex, 1, snapshot);
         }
@@ -128,4 +124,14 @@ class SnapshotsManagerImpl implements SnapshotsManager {
  */
 export function createSnapshotsManager(snapshots?: Snapshots): SnapshotsManager {
     return new SnapshotsManagerImpl(snapshots);
+}
+
+function shouldAddSnapshot(currentSnapshot: Snapshot, snapshot: Snapshot) {
+    return (
+        currentSnapshot.html !== snapshot.html ||
+        (currentSnapshot.entityStates &&
+            snapshot.entityStates &&
+            currentSnapshot.entityStates !== snapshot.entityStates) ||
+        (!currentSnapshot.entityStates && snapshot.entityStates)
+    );
 }
