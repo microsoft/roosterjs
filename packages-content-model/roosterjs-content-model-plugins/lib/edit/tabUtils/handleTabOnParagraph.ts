@@ -1,30 +1,38 @@
 import { createSelectionMarker, createText } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from 'roosterjs-content-model-api';
-import type {
-    ContentModelDocument,
-    ContentModelParagraph,
-    RangeSelection,
-} from 'roosterjs-content-model-types';
+import type { ContentModelDocument, ContentModelParagraph } from 'roosterjs-content-model-types';
 
 const tabSpaces = '    ';
 const space = ' ';
 
 /**
  * @internal
+ The handleTabOnParagraph function will handle the tab key in following scenarios:
+ * 1. When the selection is collapsed and the cursor is at the end of a paragraph, add 4 spaces.
+ * 2. When the selection is collapsed and the cursor is at the start of a paragraph, call setModelIndention function to indent the whole paragraph
+ * 3. When the selection is collapsed and the cursor is at the middle of a paragraph, add 4 spaces.
+ * 4. When the selection is not collapsed, replace the selected range with a single space.
+ * 5. When the selection is not collapsed, but all segments are selected, call setModelIndention function to indent the whole paragraph
+ The handleTabOnParagraph function will handle the shift + tab key in a indented paragraph in following scenarios:
+ * 1. When the selection is collapsed and the cursor is at the end of a paragraph, remove 4 spaces.
+ * 2. When the selection is collapsed and the cursor is at the start of a paragraph, call setModelIndention function to outdent the whole paragraph
+ * 3. When the selection is collapsed and the cursor is at the middle of a paragraph, remove 4 spaces.
+ * 4. When the selection is not collapsed, replace the selected range with a 4 space.
+ * 5. When the selection is not collapsed, but all segments are selected, call setModelIndention function to outdent the whole paragraph
  */
 export function handleTabOnParagraph(
     model: ContentModelDocument,
     paragraph: ContentModelParagraph,
-    rawEvent: KeyboardEvent,
-    selection: RangeSelection
+    rawEvent: KeyboardEvent
 ) {
-    if (paragraph.segments[0].segmentType === 'SelectionMarker' && selection.range.collapsed) {
+    const selectedSegments = paragraph.segments.filter(segment => segment.isSelected);
+    const isCollapsed =
+        selectedSegments.length === 1 && selectedSegments[0].segmentType === 'SelectionMarker';
+    const isAllSelected = paragraph.segments.every(segment => segment.isSelected);
+    if ((paragraph.segments[0].segmentType === 'SelectionMarker' && isCollapsed) || isAllSelected) {
         setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
     } else {
-        const markerIndex = paragraph.segments.findIndex(
-            segment => segment.segmentType === 'SelectionMarker'
-        );
-        if (!selection.range.collapsed) {
+        if (!isCollapsed) {
             let firstSelectedSegmentIndex: number | undefined = undefined;
             let lastSelectedSegmentIndex: number | undefined = undefined;
 
@@ -38,7 +46,10 @@ export function handleTabOnParagraph(
             });
             if (firstSelectedSegmentIndex && lastSelectedSegmentIndex) {
                 const firstSelectedSegment = paragraph.segments[firstSelectedSegmentIndex];
-                const spaceText = createText(rawEvent.shiftKey ? tabSpaces : space);
+                const spaceText = createText(
+                    rawEvent.shiftKey ? tabSpaces : space,
+                    firstSelectedSegment.format
+                );
                 const marker = createSelectionMarker(firstSelectedSegment.format);
                 paragraph.segments.splice(
                     firstSelectedSegmentIndex,
@@ -50,8 +61,12 @@ export function handleTabOnParagraph(
                 return false;
             }
         } else {
+            const markerIndex = paragraph.segments.findIndex(
+                segment => segment.segmentType === 'SelectionMarker'
+            );
             if (!rawEvent.shiftKey) {
-                const tabText = createText(tabSpaces);
+                const markerFormat = paragraph.segments[markerIndex].format;
+                const tabText = createText(tabSpaces, markerFormat);
                 paragraph.segments.splice(markerIndex, 0, tabText);
             } else {
                 const tabText = paragraph.segments[markerIndex - 1];

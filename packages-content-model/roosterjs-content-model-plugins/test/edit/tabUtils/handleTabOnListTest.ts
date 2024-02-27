@@ -207,7 +207,7 @@ describe('handleTabOnList', () => {
         runTest(model, listItem, rawEvent, expectedReturnValue);
     });
 
-    it('should return false when the cursor is not at the start of the list item', () => {
+    it('should return true when the cursor is not at the start of the list item', () => {
         // Arrange
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -297,9 +297,8 @@ describe('handleTabOnList', () => {
             shiftKey: false,
             preventDefault: () => {},
         } as KeyboardEvent;
-        const expectedReturnValue = false;
 
         // Act
-        runTest(model, listItem, rawEvent, expectedReturnValue);
+        runTest(model, listItem, rawEvent, true);
     });
 });
