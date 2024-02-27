@@ -8,15 +8,15 @@ describe('hasFocus', () => {
 
     beforeEach(() => {
         containsSpy = jasmine.createSpy('contains');
+
+        const mockedRoot = {
+            ownerDocument: {},
+            contains: containsSpy,
+        };
+
         core = {
-            physicalRoot: {
-                ownerDocument: {},
-                contains: containsSpy,
-            },
-            logicalRoot: {
-                ownerDocument: {},
-                contains: containsSpy,
-            },
+            physicalRoot: mockedRoot,
+            logicalRoot: mockedRoot,
         } as any;
     });
 
