@@ -39,7 +39,6 @@ describe('Paste ', () => {
     beforeEach(() => {
         spyOn(domToContentModel, 'domToContentModel').and.callThrough();
         spyOn(cloneModel, 'cloneModel').and.returnValue(mockedCloneModel);
-
         clipboardData = {
             types: ['image/png', 'text/html'],
             text: '',
