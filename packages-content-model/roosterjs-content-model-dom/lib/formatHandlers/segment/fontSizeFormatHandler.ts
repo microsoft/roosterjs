@@ -50,6 +50,7 @@ function normalizeFontSize(
     context: EditorContext
 ): string | undefined {
     const knownFontSize = KnownFontSizes[fontSize];
+    const isRemUnit = fontSize.endsWith('rem');
 
     if (knownFontSize) {
         return knownFontSize;
@@ -58,16 +59,14 @@ function normalizeFontSize(
         fontSize == 'larger' ||
         fontSize.endsWith('em') ||
         fontSize.endsWith('%') ||
-        fontSize.endsWith('rem')
+        isRemUnit
     ) {
-        if (!contextFont) {
+        if (!contextFont && !isRemUnit) {
             return undefined;
         } else {
-            const existingFontSize = parseValueWithUnit(
-                contextFont,
-                fontSize.endsWith('rem') ? context.rootFontSize : undefined /*element*/,
-                'px'
-            );
+            const existingFontSize = isRemUnit
+                ? context.rootFontSize
+                : parseValueWithUnit(contextFont);
 
             if (existingFontSize) {
                 switch (fontSize) {

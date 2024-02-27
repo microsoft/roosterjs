@@ -26,7 +26,7 @@ export function createModelFromHtml(
         : null;
 
     if (doc?.body) {
-        const context = createDomToModelContextForSanitizing(defaultSegmentFormat, options);
+        const context = createDomToModelContextForSanitizing(doc, defaultSegmentFormat, options);
         const cssRules = doc ? retrieveCssRules(doc) : [];
 
         convertInlineCss(doc, cssRules);
