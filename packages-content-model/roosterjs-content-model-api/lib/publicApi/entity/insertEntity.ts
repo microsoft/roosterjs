@@ -1,6 +1,10 @@
 import { ChangeSource } from 'roosterjs-content-model-core';
-import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
+import {
+    createEntity,
+    normalizeContentModel,
+    parseEntityFormat,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelEntity,
     DOMSelection,
@@ -57,7 +61,8 @@ export default function insertEntity(
     position?: InsertEntityPosition | DOMSelection,
     options?: InsertEntityOptions
 ): ContentModelEntity | null {
-    const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot } = options || {};
+    const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot, initialEntityState } =
+        options || {};
     const document = editor.getDocument();
     const wrapper = document.createElement(isBlock ? BlockEntityTag : InlineEntityTag);
     const display = wrapperDisplay ?? (isBlock ? undefined : 'inline-block');
@@ -75,6 +80,10 @@ export default function insertEntity(
 
     const entityModel = createEntity(wrapper, true /* isReadonly */, undefined /*format*/, type);
 
+    if (!skipUndoSnapshot) {
+        editor.takeSnapshot();
+    }
+
     editor.formatContentModel(
         (model, context) => {
             insertEntityModel(
@@ -88,7 +97,7 @@ export default function insertEntity(
 
             normalizeContentModel(model);
 
-            context.skipUndoSnapshot = skipUndoSnapshot;
+            context.skipUndoSnapshot = true;
             context.newEntities.push(entityModel);
 
             return true;
@@ -105,6 +114,21 @@ export default function insertEntity(
             apiName: 'insertEntity',
         }
     );
+
+    if (!skipUndoSnapshot) {
+        const format = parseEntityFormat(wrapper);
+        const { id, entityType } = format;
+
+        editor.takeSnapshot(
+            initialEntityState && id && entityType
+                ? {
+                      id: id,
+                      type: entityType,
+                      state: initialEntityState,
+                  }
+                : undefined
+        );
+    }
 
     return entityModel;
 }
