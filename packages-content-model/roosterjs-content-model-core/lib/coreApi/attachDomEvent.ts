@@ -30,10 +30,10 @@ export const attachDomEvent: AttachDomEvent = (core, eventMap) => {
             }
         };
 
-        core.contentDiv.addEventListener(eventName, onEvent);
+        core.logicalRoot.addEventListener(eventName, onEvent);
 
         return () => {
-            core.contentDiv.removeEventListener(eventName, onEvent);
+            core.logicalRoot.removeEventListener(eventName, onEvent);
         };
     });
 

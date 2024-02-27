@@ -51,7 +51,7 @@ describe('mergePasteContent', () => {
                 formatContentModel,
             },
             domToModelSettings: {},
-            contentDiv: <any>{
+            physicalRoot: <any>{
                 ownerDocument: document,
             },
         } as any;

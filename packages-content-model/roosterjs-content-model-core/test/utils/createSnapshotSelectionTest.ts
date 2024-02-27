@@ -10,7 +10,8 @@ describe('createSnapshotSelection', () => {
         div = document.createElement('div');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             api: {
                 getDOMSelection: getDOMSelectionSpy,
             },
@@ -73,7 +74,8 @@ describe('createSnapshotSelection - Range selection', () => {
         div = document.createElement('div');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             api: {
                 getDOMSelection: getDOMSelectionSpy,
             },
@@ -236,7 +238,8 @@ describe('createSnapshotSelection - Normalize Table', () => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             api: {
                 getDOMSelection: getDOMSelectionSpy,
                 setDOMSelection: setDOMSelectionSpy,

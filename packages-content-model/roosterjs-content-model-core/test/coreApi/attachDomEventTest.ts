@@ -9,7 +9,8 @@ describe('attachDomEvent', () => {
         div = document.createElement('div');
         document.body.appendChild(div);
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             api: {},
         } as any;
     });
