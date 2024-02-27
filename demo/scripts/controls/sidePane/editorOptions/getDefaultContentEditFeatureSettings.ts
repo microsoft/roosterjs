@@ -10,22 +10,5 @@ export default function getDefaultContentEditFeatureSettings(): ContentEditFeatu
             settings[key] = !allFeatures[key].defaultDisabled;
             return settings;
         }, <ContentEditFeatureSettings>{}),
-        ...listFeatures,
     };
 }
-
-const listFeatures = {
-    autoBullet: false,
-    indentWhenTab: false,
-    outdentWhenShiftTab: false,
-    outdentWhenBackspaceOnEmptyFirstLine: false,
-    outdentWhenEnterOnEmptyLine: false,
-    mergeInNewLineWhenBackspaceOnFirstChar: false,
-    maintainListChain: false,
-    maintainListChainWhenDelete: false,
-    autoNumberingList: false,
-    autoBulletList: false,
-    mergeListOnBackspaceAfterList: false,
-    outdentWhenAltShiftLeft: false,
-    indentWhenAltShiftRight: false,
-};
