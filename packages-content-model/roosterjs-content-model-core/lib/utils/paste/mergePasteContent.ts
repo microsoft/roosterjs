@@ -43,6 +43,7 @@ export function mergePasteContent(
         (model, context) => {
             const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
             const domToModelContext = createDomToModelContextForSanitizing(
+                core.contentDiv.ownerDocument,
                 undefined /*defaultFormat*/,
                 core.domToModelSettings.customized,
                 domToModelOption

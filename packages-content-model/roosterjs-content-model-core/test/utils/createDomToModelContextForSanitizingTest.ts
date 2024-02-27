@@ -43,12 +43,13 @@ describe('createDomToModelContextForSanitizing', () => {
     });
 
     it('no options', () => {
-        const context = createDomToModelContextForSanitizing();
+        const context = createDomToModelContextForSanitizing(document);
 
         expect(context).toBe(mockedResult);
         expect(createDomToModelContextSpy).toHaveBeenCalledWith(
             {
                 defaultFormat: undefined,
+                rootFontSize: 16,
             },
             undefined,
             {
@@ -77,6 +78,7 @@ describe('createDomToModelContextForSanitizing', () => {
         const mockedAdditionalOption = { a: 'b' } as any;
 
         const context = createDomToModelContextForSanitizing(
+            document,
             mockedDefaultFormat,
             mockedOption,
             mockedAdditionalOption
@@ -91,6 +93,7 @@ describe('createDomToModelContextForSanitizing', () => {
         expect(createDomToModelContextSpy).toHaveBeenCalledWith(
             {
                 defaultFormat: mockedDefaultFormat,
+                rootFontSize: 16,
             },
             mockedOption,
             {
