@@ -1,8 +1,8 @@
-import { parseEntityFormat } from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
 import {
     getAllEntityWrappers,
     isEntityElement,
     isNodeOfType,
+    parseEntityFormat,
     reuseCachedElement,
 } from 'roosterjs-content-model-dom';
 import type { Snapshot, EditorCore, KnownEntityItem } from 'roosterjs-content-model-types';
@@ -78,18 +78,31 @@ function tryGetEntityElement(
 
             result = (format.id && entityMap[format.id]?.element) || null;
         } else if (isBlockEntityContainer(node)) {
-            const format = parseEntityFormat(node);
-            const parent = format.id ? entityMap[format.id]?.element.parentElement : null;
-
-            result =
-                isNodeOfType(parent, 'ELEMENT_NODE') && isBlockEntityContainer(parent)
-                    ? parent
-                    : null;
+            result = tryGetEntityFromContainer(node, entityMap);
         }
     }
 
     return result;
 }
+
 function isBlockEntityContainer(node: HTMLElement) {
     return node.classList.contains(BlockEntityContainer);
+}
+
+function tryGetEntityFromContainer(
+    element: HTMLElement,
+    entityMap: Record<string, KnownEntityItem>
+): HTMLElement | null {
+    for (let node = element.firstChild; node; node = node.nextSibling) {
+        if (isEntityElement(node) && isNodeOfType(node, 'ELEMENT_NODE')) {
+            const format = parseEntityFormat(node);
+            const parent = format.id ? entityMap[format.id]?.element.parentElement : null;
+
+            return isNodeOfType(parent, 'ELEMENT_NODE') && isBlockEntityContainer(parent)
+                ? parent
+                : null;
+        }
+    }
+
+    return null;
 }

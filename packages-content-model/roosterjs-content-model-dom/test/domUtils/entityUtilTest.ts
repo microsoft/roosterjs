@@ -5,6 +5,7 @@ import {
     getAllEntityWrappers,
     isEntityDelimiter,
     isEntityElement,
+    parseEntityFormat,
 } from '../../lib/domUtils/entityUtils';
 
 export function setEntityElementClasses(
@@ -42,69 +43,61 @@ describe('isEntityElement', () => {
     });
 });
 
-describe('parseEntityClassName', () => {
+describe('parseEntityFormat', () => {
     it('No entity class', () => {
-        const format: ContentModelEntityFormat = {};
+        const div = document.createElement('div');
 
-        const result = parseEntityClassName('test', format);
+        div.className = 'test';
 
-        expect(result).toBeFalsy();
-        expect(format).toEqual({});
-    });
+        const format = parseEntityFormat(div);
 
-    it('Entity class', () => {
-        const format: ContentModelEntityFormat = {};
-
-        const result = parseEntityClassName('_Entity', format);
-
-        expect(result).toBeTrue();
-        expect(format).toEqual({});
-    });
-
-    it('EntityId class', () => {
-        const format: ContentModelEntityFormat = {};
-
-        const result = parseEntityClassName('_EId_A', format);
-
-        expect(result).toBeFalsy();
         expect(format).toEqual({
-            id: 'A',
-        });
-    });
-
-    it('EntityType class', () => {
-        const format: ContentModelEntityFormat = {};
-
-        const result = parseEntityClassName('_EType_B', format);
-
-        expect(result).toBeFalsy();
-        expect(format).toEqual({
-            entityType: 'B',
-        });
-    });
-
-    it('Entity readonly class', () => {
-        const format: ContentModelEntityFormat = {};
-
-        const result = parseEntityClassName('_EReadonly_1', format);
-
-        expect(result).toBeFalsy();
-        expect(format).toEqual({
+            isFakeEntity: true,
             isReadonly: true,
         });
     });
 
-    it('Parse class on existing format', () => {
-        const format: ContentModelEntityFormat = {
-            id: 'A',
-        };
+    it('Entity class', () => {
+        const div = document.createElement('div');
 
-        const result = parseEntityClassName('_EType_B', format);
+        div.className = '_Entity _EId_A _EType_B _EReadonly_1';
 
-        expect(result).toBeFalsy();
+        const format = parseEntityFormat(div);
+
         expect(format).toEqual({
             id: 'A',
             entityType: 'B',
+            isReadonly: true,
+        });
+    });
+
+    it('Fake entity', () => {
+        const div = document.createElement('div');
+
+        div.contentEditable = 'true';
+
+        div.className = '_EId_A _EType_B _EReadonly_1';
+
+        const format = parseEntityFormat(div);
+
+        expect(format).toEqual({
+            isFakeEntity: true,
+            isReadonly: false,
+            id: 'A',
+            entityType: 'B',
+        });
+    });
+
+    it('Fake entity, readonly', () => {
+        const div = document.createElement('div');
+
+        div.contentEditable = 'false';
+
+        const format = parseEntityFormat(div);
+
+        expect(format).toEqual({
+            isFakeEntity: true,
+            isReadonly: true,
         });
     });
 });
