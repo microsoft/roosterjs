@@ -14,7 +14,7 @@ describe('handleTabOnParagraph', () => {
         expectedReturnValue: boolean
     ) {
         // Act
-        const result = handleTabOnParagraph(model, paragraph, rawEvent, selection);
+        const result = handleTabOnParagraph(model, paragraph, rawEvent);
 
         // Assert
         expect(result).toBe(expectedReturnValue);
