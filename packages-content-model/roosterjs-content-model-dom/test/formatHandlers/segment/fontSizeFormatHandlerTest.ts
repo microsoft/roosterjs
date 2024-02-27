@@ -167,6 +167,25 @@ describe('fontSizeFormatHandler.parse', () => {
 
         expect(format.fontSize).toBe('8px');
     });
+
+    it('rem handling', () => {
+        div.style.fontSize = '0.75rem';
+        context.rootFontSize = 16;
+        context.segmentFormat.fontSize = '12pt';
+
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('12px');
+    });
+
+    it('rem handling without segment format', () => {
+        div.style.fontSize = '0.75rem';
+        context.rootFontSize = 16;
+
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('12px');
+    });
 });
 
 describe('fontSizeFormatHandler.apply', () => {
