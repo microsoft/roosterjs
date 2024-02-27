@@ -288,7 +288,13 @@ export function sanitizeElement(
     if (sanitizedElement) {
         for (let child = element.firstChild; child; child = child.nextSibling) {
             const newChild = isNodeOfType(child, 'ELEMENT_NODE')
-                ? sanitizeElement(child, allowedTags, disallowedTags, styleSanitizers)
+                ? sanitizeElement(
+                      child,
+                      allowedTags,
+                      disallowedTags,
+                      styleSanitizers,
+                      attributeSanitizers
+                  )
                 : isNodeOfType(child, 'TEXT_NODE')
                 ? child.cloneNode()
                 : null;
