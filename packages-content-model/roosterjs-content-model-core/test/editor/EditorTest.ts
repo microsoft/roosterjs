@@ -465,6 +465,38 @@ describe('Editor', () => {
         expect(() => editor.takeSnapshot()).toThrow();
     });
 
+    it('takeSnapshot', () => {
+        const div = document.createElement('div');
+        const mockedSnapshot = 'SNAPSHOT' as any;
+        const resetSpy = jasmine.createSpy('reset');
+        const addUndoSnapshotSpy = jasmine
+            .createSpy('addUndoSnapshot')
+            .and.returnValue(mockedSnapshot);
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: { addUndoSnapshot: addUndoSnapshotSpy, setContentModel: setContentModelSpy },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+        const snapshot = editor.takeSnapshot();
+
+        expect(snapshot).toEqual(mockedSnapshot);
+        expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false, undefined);
+
+        const mockedState = 'STATE' as any;
+
+        editor.takeSnapshot(mockedState);
+        expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(2);
+        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false, [mockedState]);
+    });
+
     it('restoreSnapshot', () => {
         const div = document.createElement('div');
         const mockedSnapshot = 'SNAPSHOT' as any;
