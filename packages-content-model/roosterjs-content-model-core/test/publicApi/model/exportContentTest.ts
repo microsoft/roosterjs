@@ -99,7 +99,7 @@ describe('exportContent', () => {
             createElement: () => mockedDiv,
         } as any;
         const triggerEventSpy = jasmine.createSpy('triggerEvent');
-        const editor: IEditor = {
+        const editor: IStandaloneEditor = {
             getContentModelCopy: getContentModelCopySpy,
             getDocument: () => mockedDoc,
             triggerEvent: triggerEventSpy,
