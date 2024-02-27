@@ -24,6 +24,7 @@ describe('insertEntity', () => {
     let insertEntityModelSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
     let normalizeContentModelSpy: jasmine.Spy;
+    let takeSnapshotSpy: jasmine.Spy;
 
     const type = 'Entity';
     const apiName = 'insertEntity';
@@ -39,6 +40,7 @@ describe('insertEntity', () => {
         appendChildSpy = jasmine.createSpy('appendChildSpy');
         insertEntityModelSpy = spyOn(insertEntityModel, 'insertEntityModel');
         isDarkModeSpy = jasmine.createSpy('isDarkMode');
+        takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
 
         wrapper = {
             style: {
@@ -68,6 +70,7 @@ describe('insertEntity', () => {
             getDocument: getDocumentSpy,
             isDarkMode: isDarkModeSpy,
             formatContentModel: formatWithContentModelSpy,
+            takeSnapshot: takeSnapshotSpy,
         } as any;
 
         spyOn(entityUtils, 'addDelimiters').and.returnValue([]);

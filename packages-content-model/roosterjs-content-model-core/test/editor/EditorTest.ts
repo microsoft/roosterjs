@@ -431,7 +431,7 @@ describe('Editor', () => {
 
         const snapshot = editor.takeSnapshot();
 
-        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false);
+        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false, undefined);
         expect(snapshot).toBe(mockedSnapshot);
 
         editor.dispose();

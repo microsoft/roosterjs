@@ -11,6 +11,7 @@ import type {
     InsertEntityPosition,
     InsertEntityOptions,
     IEditor,
+    EntityState,
 } from 'roosterjs-content-model-types';
 
 const BlockEntityTag = 'div';
@@ -116,18 +117,23 @@ export default function insertEntity(
     );
 
     if (!skipUndoSnapshot) {
-        const format = parseEntityFormat(wrapper);
-        const { id, entityType } = format;
+        let entityState: EntityState | undefined;
 
-        editor.takeSnapshot(
-            initialEntityState && id && entityType
-                ? {
-                      id: id,
-                      type: entityType,
-                      state: initialEntityState,
-                  }
-                : undefined
-        );
+        if (initialEntityState) {
+            const format = parseEntityFormat(wrapper);
+            const { id, entityType } = format;
+
+            entityState =
+                id && entityType
+                    ? {
+                          id: id,
+                          type: entityType,
+                          state: initialEntityState,
+                      }
+                    : undefined;
+        }
+
+        editor.takeSnapshot(entityState);
     }
 
     return entityModel;
