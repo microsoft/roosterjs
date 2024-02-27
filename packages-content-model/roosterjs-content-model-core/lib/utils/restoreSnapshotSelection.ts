@@ -6,15 +6,15 @@ import type { DOMSelection, EditorCore, Snapshot } from 'roosterjs-content-model
  */
 export function restoreSnapshotSelection(core: EditorCore, snapshot: Snapshot) {
     const snapshotSelection = snapshot.selection;
-    const { contentDiv } = core;
+    const { physicalRoot } = core;
     let domSelection: DOMSelection | null = null;
 
     if (snapshotSelection) {
         switch (snapshotSelection.type) {
             case 'range':
-                const startPos = getPositionFromPath(contentDiv, snapshotSelection.start);
-                const endPos = getPositionFromPath(contentDiv, snapshotSelection.end);
-                const range = contentDiv.ownerDocument.createRange();
+                const startPos = getPositionFromPath(physicalRoot, snapshotSelection.start);
+                const endPos = getPositionFromPath(physicalRoot, snapshotSelection.end);
+                const range = physicalRoot.ownerDocument.createRange();
 
                 range.setStart(startPos.node, startPos.offset);
                 range.setEnd(endPos.node, endPos.offset);
@@ -26,7 +26,7 @@ export function restoreSnapshotSelection(core: EditorCore, snapshot: Snapshot) {
                 };
                 break;
             case 'table':
-                const table = contentDiv.querySelector(
+                const table = physicalRoot.querySelector(
                     '#' + snapshotSelection.tableId
                 ) as HTMLTableElement;
 
@@ -42,7 +42,7 @@ export function restoreSnapshotSelection(core: EditorCore, snapshot: Snapshot) {
                 }
                 break;
             case 'image':
-                const image = contentDiv.querySelector(
+                const image = physicalRoot.querySelector(
                     '#' + snapshotSelection.imageId
                 ) as HTMLImageElement;
 

@@ -46,10 +46,11 @@ describe('setDOMSelection', () => {
         } as any;
 
         core = {
+            physicalRoot: contentDiv,
+            logicalRoot: contentDiv,
             selection: {
                 selectionStyleNode: mockedStyleNode,
             },
-            contentDiv,
             api: {
                 hasFocus: hasFocusSpy,
                 triggerEvent: triggerEventSpy,

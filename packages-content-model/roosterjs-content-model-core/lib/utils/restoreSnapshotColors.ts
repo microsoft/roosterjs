@@ -11,7 +11,7 @@ export function restoreSnapshotColors(core: EditorCore, snapshot: Snapshot) {
 
     if (!!snapshot.isDarkMode != !!isDarkMode) {
         transformColor(
-            core.contentDiv,
+            core.physicalRoot,
             false /*includeSelf*/,
             isDarkMode ? 'lightToDark' : 'darkToLight',
             core.darkColorHandler

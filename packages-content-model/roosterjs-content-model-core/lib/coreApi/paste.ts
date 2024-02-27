@@ -45,7 +45,7 @@ export const paste: Paste = (
 
     // 3. Create target fragment
     const sourceFragment = createPasteFragment(
-        core.contentDiv.ownerDocument,
+        core.physicalRoot.ownerDocument,
         clipboardData,
         pasteType,
         (clipboardData.rawHtml == clipboardData.html

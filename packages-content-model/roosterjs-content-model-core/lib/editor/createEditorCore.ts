@@ -20,7 +20,8 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
     const corePlugins = createEditorCorePlugins(options, contentDiv);
 
     return {
-        contentDiv,
+        physicalRoot: contentDiv,
+        logicalRoot: contentDiv,
         api: { ...coreApiMap, ...options.coreApiOverride },
         originalApi: { ...coreApiMap },
         plugins: [
