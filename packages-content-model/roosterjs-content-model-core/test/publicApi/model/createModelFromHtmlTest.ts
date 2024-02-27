@@ -131,7 +131,11 @@ describe('createModelFromHtml', () => {
             mockedContext
         );
         expect(createContextSpy).toHaveBeenCalledTimes(1);
-        expect(createContextSpy).toHaveBeenCalledWith(mockedDefaultSegmentFormat, mockedOptions);
+        expect(createContextSpy).toHaveBeenCalledWith(
+            mockedDoc,
+            mockedDefaultSegmentFormat,
+            mockedOptions
+        );
         expect(domToContentModelSpy).toHaveBeenCalledWith('BODY' as any, mockedContext);
         expect(retrieveCssRulesSpy).toHaveBeenCalledWith(mockedDoc);
         expect(convertInlineCssSpy).toHaveBeenCalledWith(mockedDoc, mockedRules);
