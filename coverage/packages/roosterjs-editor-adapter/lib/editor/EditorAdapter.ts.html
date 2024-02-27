@@ -1191,7 +1191,13 @@
 <a name='L1132'></a><a href='#L1132'>1132</a>
 <a name='L1133'></a><a href='#L1133'>1133</a>
 <a name='L1134'></a><a href='#L1134'>1134</a>
-<a name='L1135'></a><a href='#L1135'>1135</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L1135'></a><a href='#L1135'>1135</a>
+<a name='L1136'></a><a href='#L1136'>1136</a>
+<a name='L1137'></a><a href='#L1137'>1137</a>
+<a name='L1138'></a><a href='#L1138'>1138</a>
+<a name='L1139'></a><a href='#L1139'>1139</a>
+<a name='L1140'></a><a href='#L1140'>1140</a>
+<a name='L1141'></a><a href='#L1141'>1141</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1497,6 +1503,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2526,14 +2538,14 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 insertToRegionRoot: false,
             };
 &nbsp;
-            const { contentDiv } = <span class="cstat-no" title="statement not covered" >this.getCore();</span>
+            const { physicalRoot } = <span class="cstat-no" title="statement not covered" >this.getCore();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (option.updateCursor) {</span>
 <span class="cstat-no" title="statement not covered" >                this.focus();</span>
             }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (option.position == ContentPosition.Outside) {</span>
-<span class="cstat-no" title="statement not covered" >                contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);</span>
+<span class="cstat-no" title="statement not covered" >                physicalRoot.parentNode?.insertBefore(node, physicalRoot.nextSibling);</span>
             } else {
 <span class="cstat-no" title="statement not covered" >                if (this.isDarkMode()) {</span>
 <span class="cstat-no" title="statement not covered" >                    transformColor(</span>
@@ -2544,7 +2556,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                     );
                 }
 &nbsp;
-                const selection = <span class="cstat-no" title="statement not covered" >insertNode(contentDiv, this.getDOMSelection(), node, option);</span>
+                const selection = <span class="cstat-no" title="statement not covered" >insertNode(physicalRoot, this.getDOMSelection(), node, option);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (selection &amp;&amp; option.updateCursor) {</span>
 <span class="cstat-no" title="statement not covered" >                    this.setDOMSelection(selection);</span>
@@ -2601,14 +2613,14 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns The BlockElement result
      */
 <span class="fstat-no" title="function not covered" >    getBlockElementAtNode(</span>node: Node): BlockElement | null {
-<span class="cstat-no" title="statement not covered" >        return getBlockElementAtNode(this.getCore().contentDiv, node);</span>
+<span class="cstat-no" title="statement not covered" >        return getBlockElementAtNode(this.getCore().logicalRoot, node);</span>
     }
 &nbsp;
 <span class="fstat-no" title="function not covered" >    contains(</span>arg: Node | Range | null): boolean {
 <span class="cstat-no" title="statement not covered" >        if (!arg) {</span>
 <span class="cstat-no" title="statement not covered" >            return false;</span>
         }
-<span class="cstat-no" title="statement not covered" >        return contains(this.getCore().contentDiv, &lt;Node&gt;arg);</span>
+<span class="cstat-no" title="statement not covered" >        return contains(this.getCore().logicalRoot, &lt;Node&gt;arg);</span>
     }
 &nbsp;
 <span class="fstat-no" title="function not covered" >    queryElements(</span>
@@ -2627,10 +2639,16 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         const selectionEx = <span class="cstat-no" title="statement not covered" >scope == QueryScope.Body ? null : this.getSelectionRangeEx();</span>
 <span class="cstat-no" title="statement not covered" >        if (selectionEx) {</span>
 <span class="cstat-no" title="statement not covered" >            selectionEx.ranges.forEach(<span class="fstat-no" title="function not covered" >range </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                result.push(...queryElements(core.contentDiv, selector, callback, scope, range));</span>
+<span class="cstat-no" title="statement not covered" >                result.push(...queryElements(core.logicalRoot, selector, callback, scope, range));</span>
             });
         } else {
-<span class="cstat-no" title="statement not covered" >            return queryElements(core.contentDiv, selector, callback, scope, undefined /* range */);</span>
+<span class="cstat-no" title="statement not covered" >            return queryElements(</span>
+                core.logicalRoot,
+                selector,
+                callback,
+                scope,
+                undefined /* range */
+            );
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        return result;</span>
@@ -2648,7 +2666,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * otherwise just return start and end
      */
 <span class="fstat-no" title="function not covered" >    collapseNodes(</span>start: Node, end: Node, canSplitParent: boolean): Node[] {
-<span class="cstat-no" title="statement not covered" >        return collapseNodes(this.getCore().contentDiv, start, end, canSplitParent);</span>
+<span class="cstat-no" title="statement not covered" >        return collapseNodes(this.getCore().physicalRoot, start, end, canSplitParent);</span>
     }
 &nbsp;
     //#endregion
@@ -2661,7 +2679,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns True if there's no visible content, otherwise false
      */
 <span class="fstat-no" title="function not covered" >    isEmpty(</span>trim?: boolean): boolean {
-<span class="cstat-no" title="statement not covered" >        return isNodeEmpty(this.getCore().contentDiv, trim);</span>
+<span class="cstat-no" title="statement not covered" >        return isNodeEmpty(this.getCore().physicalRoot, trim);</span>
     }
 &nbsp;
     /**
@@ -2684,7 +2702,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      */
 <span class="fstat-no" title="function not covered" >    setContent(</span>content: string, <span class="cstat-no" title="statement not covered" >triggerContentChangedEvent: boolean = true) {</span>
         const core = <span class="cstat-no" title="statement not covered" >this.getCore();</span>
-        const { contentDiv, api, trustedHTMLHandler, lifecycle, darkColorHandler } = <span class="cstat-no" title="statement not covered" >core;</span>
+        const { physicalRoot, api, trustedHTMLHandler, lifecycle, darkColorHandler } = <span class="cstat-no" title="statement not covered" >core;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        api.triggerEvent(</span>
             core,
@@ -2714,7 +2732,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 false /*broadcast*/
             );
         } else <span class="cstat-no" title="statement not covered" >if (lifecycle.isDarkMode) {</span>
-<span class="cstat-no" title="statement not covered" >            transformColor(contentDiv, false /*includeSelf*/, 'lightToDark', darkColorHandler);</span>
+<span class="cstat-no" title="statement not covered" >            transformColor(physicalRoot, false /*includeSelf*/, 'lightToDark', darkColorHandler);</span>
         }
     }
 &nbsp;
@@ -2756,7 +2774,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 <span class="fstat-no" title="function not covered" >    deleteSelectedContent(</span>): NodePosition | null {
         const range = <span class="cstat-no" title="statement not covered" >this.getSelectionRange();</span>
 <span class="cstat-no" title="statement not covered" >        if (range &amp;&amp; !range.collapsed) {</span>
-<span class="cstat-no" title="statement not covered" >            return deleteSelectedContent(this.getCore().contentDiv, range);</span>
+<span class="cstat-no" title="statement not covered" >            return deleteSelectedContent(this.getCore().physicalRoot, range);</span>
         }
 <span class="cstat-no" title="statement not covered" >        return null;</span>
     }
@@ -2824,7 +2842,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      */
 <span class="fstat-no" title="function not covered" >    getSelectionPath(</span>): SelectionPath | null {
         const range = <span class="cstat-no" title="statement not covered" >this.getSelectionRange();</span>
-<span class="cstat-no" title="statement not covered" >        return range &amp;&amp; getSelectionPath(this.getCore().contentDiv, range);</span>
+<span class="cstat-no" title="statement not covered" >        return range &amp;&amp; getSelectionPath(this.getCore().physicalRoot, range);</span>
     }
 &nbsp;
 <span class="fstat-no" title="function not covered" >    select(</span>
@@ -2834,7 +2852,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         arg4?: number | PositionType
     ): boolean {
         const core = <span class="cstat-no" title="statement not covered" >this.getCore();</span>
-        const rangeEx = <span class="cstat-no" title="statement not covered" >buildRangeEx(core.contentDiv, arg1, arg2, arg3, arg4);</span>
+        const rangeEx = <span class="cstat-no" title="statement not covered" >buildRangeEx(core.physicalRoot, arg1, arg2, arg3, arg4);</span>
         const selection = <span class="cstat-no" title="statement not covered" >convertRangeExToDomSelection(rangeEx);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        this.setDOMSelection(selection);</span>
@@ -2885,7 +2903,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 }
 <span class="cstat-no" title="statement not covered" >                return (</span>
                     startFrom &amp;&amp;
-                    findClosestElementAncestor(startFrom, this.getCore().contentDiv, selector)
+                    findClosestElementAncestor(startFrom, this.getCore().physicalRoot, selector)
                 );
             }) ?? null
         );
@@ -2898,7 +2916,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns True if position is at beginning of the editor, otherwise false
      */
 <span class="fstat-no" title="function not covered" >    isPositionAtBeginning(</span>position: NodePosition): boolean {
-<span class="cstat-no" title="statement not covered" >        return isPositionAtBeginningOf(position, this.getCore().contentDiv);</span>
+<span class="cstat-no" title="statement not covered" >        return isPositionAtBeginningOf(position, this.getCore().logicalRoot);</span>
     }
 &nbsp;
     /**
@@ -2907,9 +2925,9 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 <span class="fstat-no" title="function not covered" >    getSelectedRegions(<span class="cstat-no" title="statement not covered" ></span>type: RegionType | CompatibleRegionType = RegionType.Table): Region[] {</span>
         const selection = <span class="cstat-no" title="statement not covered" >this.getSelectionRangeEx();</span>
         const result: Region[] = <span class="cstat-no" title="statement not covered" >[];</span>
-        const contentDiv = <span class="cstat-no" title="statement not covered" >this.getCore().contentDiv;</span>
+        const logicalRoot = <span class="cstat-no" title="statement not covered" >this.getCore().logicalRoot;</span>
 <span class="cstat-no" title="statement not covered" >        selection.ranges.forEach(<span class="fstat-no" title="function not covered" >range </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            result.push(...(range ? getRegionsFromRange(contentDiv, range, type) : []));</span>
+<span class="cstat-no" title="statement not covered" >            result.push(...(range ? getRegionsFromRange(logicalRoot, range, type) : []));</span>
         });
 <span class="cstat-no" title="statement not covered" >        return result.filter(<span class="fstat-no" title="function not covered" >(v</span>alue, index, self) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            return self.indexOf(value) === index;</span>
@@ -3153,7 +3171,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
 <span class="fstat-no" title="function not covered" >    getBodyTraverser(</span>startNode?: Node): IContentTraverser {
-<span class="cstat-no" title="statement not covered" >        return ContentTraverser.createBodyTraverser(this.getCore().contentDiv, startNode);</span>
+<span class="cstat-no" title="statement not covered" >        return ContentTraverser.createBodyTraverser(this.getCore().logicalRoot, startNode);</span>
     }
 &nbsp;
     /**
@@ -3163,7 +3181,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 <span class="fstat-no" title="function not covered" >    getSelectionTraverser(</span>range?: Range): IContentTraverser | null {
 <span class="cstat-no" title="statement not covered" >        range = range ?? this.getSelectionRange() ?? undefined;</span>
 <span class="cstat-no" title="statement not covered" >        return range</span>
-            ? ContentTraverser.createSelectionTraverser(this.getCore().contentDiv, range)
+            ? ContentTraverser.createSelectionTraverser(this.getCore().logicalRoot, range)
             : null;
     }
 &nbsp;
@@ -3177,7 +3195,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     ): IContentTraverser | null {
         const range = <span class="cstat-no" title="statement not covered" >this.getSelectionRange();</span>
 <span class="cstat-no" title="statement not covered" >        return range</span>
-            ? ContentTraverser.createBlockTraverser(this.getCore().contentDiv, range, startFrom)
+            ? ContentTraverser.createBlockTraverser(this.getCore().logicalRoot, range, startFrom)
             : null;
     }
 &nbsp;
@@ -3192,7 +3210,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
             const range = <span class="cstat-no" title="statement not covered" >this.getSelectionRange();</span>
 <span class="cstat-no" title="statement not covered" >            return (</span>
                 range &amp;&amp;
-                new PositionContentSearcher(this.getCore().contentDiv, Position.getStart(range))
+                new PositionContentSearcher(this.getCore().logicalRoot, Position.getStart(range))
             );
         });
     }
@@ -3203,7 +3221,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns a function to cancel this async run
      */
 <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    runAsync(</span></span>callback: (editor: ILegacyEditor &amp; IEditor) =&gt; void) {
-        const win = <span class="cstat-no" title="statement not covered" >this.getCore().contentDiv.ownerDocument.defaultView || window;</span>
+        const win = <span class="cstat-no" title="statement not covered" >this.getCore().physicalRoot.ownerDocument.defaultView || window;</span>
         const handle = <span class="cstat-no" title="statement not covered" >win.requestAnimationFrame(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >            if (!this.isDisposed() &amp;&amp; callback) {</span>
 <span class="cstat-no" title="statement not covered" >                callback(this);</span>
@@ -3243,8 +3261,8 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      */
 <span class="fstat-no" title="function not covered" >    getRelativeDistanceToEditor(</span>element: HTMLElement, addScroll?: boolean): number[] | null {
 <span class="cstat-no" title="statement not covered" >        if (this.contains(element)) {</span>
-            const contentDiv = <span class="cstat-no" title="statement not covered" >this.getCore().contentDiv;</span>
-            const editorRect = <span class="cstat-no" title="statement not covered" >contentDiv.getBoundingClientRect();</span>
+            const physicalRoot = <span class="cstat-no" title="statement not covered" >this.getCore().physicalRoot;</span>
+            const editorRect = <span class="cstat-no" title="statement not covered" >physicalRoot.getBoundingClientRect();</span>
             const elementRect = <span class="cstat-no" title="statement not covered" >element.getBoundingClientRect();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (editorRect &amp;&amp; elementRect) {</span>
@@ -3252,8 +3270,8 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 let y = <span class="cstat-no" title="statement not covered" >elementRect.top - editorRect?.top;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (addScroll) {</span>
-<span class="cstat-no" title="statement not covered" >                    x += contentDiv.scrollLeft;</span>
-<span class="cstat-no" title="statement not covered" >                    y += contentDiv.scrollTop;</span>
+<span class="cstat-no" title="statement not covered" >                    x += physicalRoot.scrollLeft;</span>
+<span class="cstat-no" title="statement not covered" >                    y += physicalRoot.scrollTop;</span>
                 }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                return [x, y];</span>
@@ -3466,7 +3484,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Feb 27 2024 18:25:54 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 27 2024 23:26:54 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
