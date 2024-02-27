@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-model-types';
 import { buttons, buttonsWithPopout } from './ribbonButtons';
@@ -59,7 +60,6 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
-// sample entity
 // More options
 // toggleable plugins
 // Support legacy plugins
@@ -88,6 +88,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private contextMenuPlugin: EditorPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
+    private sampleEntityPlugin: EditorPlugin;
     private snapshots: Snapshots;
 
     protected sidePane = React.createRef<SidePane>();
@@ -134,7 +135,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.imageMenuPlugin = createImageEditMenuProvider();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
-        // this.sampleEntityPlugin = new SampleEntityPlugin();
+        this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -272,20 +273,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         );
     }
 
-    // private getPlugins() {
-    //     // this.toggleablePlugins =
-    //     //     this.toggleablePlugins || getToggleablePlugins(this.state.initState);
-
-    //     const plugins: LegacyEditorPlugin[] = [
-    //         // ...this.toggleablePlugins,
-    //         // this.pasteOptionPlugin,
-    //         // this.emojiPlugin,
-    //         // this.sampleEntityPlugin,
-    //     ];
-
-    //     return plugins;
-    // }
-
     private resetEditor() {
         // this.toggleablePlugins = null;
         this.setState({
@@ -298,7 +285,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     }
 
     private renderEditor() {
-        // const allPlugins = this.getPlugins();
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
             transformOrigin: this.state.isRtl ? 'right top' : 'left top',
@@ -320,6 +306,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.imageMenuPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
+            this.sampleEntityPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
