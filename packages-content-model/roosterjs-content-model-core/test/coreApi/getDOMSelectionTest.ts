@@ -12,17 +12,20 @@ describe('getDOMSelection', () => {
         containsSpy = jasmine.createSpy('contains');
         hasFocusSpy = jasmine.createSpy('hasFocus');
 
+        const contentDiv = {
+            ownerDocument: {
+                defaultView: {
+                    getSelection: getSelectionSpy,
+                },
+            },
+            contains: containsSpy,
+        };
+
         core = {
+            physicalRoot: contentDiv,
+            logicalRoot: contentDiv,
             lifecycle: {},
             selection: {},
-            contentDiv: {
-                ownerDocument: {
-                    defaultView: {
-                        getSelection: getSelectionSpy,
-                    },
-                },
-                contains: containsSpy,
-            },
             api: {
                 hasFocus: hasFocusSpy,
             },

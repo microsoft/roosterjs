@@ -1,14 +1,12 @@
-import { parseValueWithUnit } from 'roosterjs-content-model-dom';
-import type { EditorContext, CreateEditorContext, EditorCore } from 'roosterjs-content-model-types';
-
-const DefaultRootFontSize = 16;
+import { getRootComputedStyleForContext } from '../utils/getRootComputedStyleForContext';
+import type { EditorContext, CreateEditorContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Create a EditorContext object used by ContentModel API
  */
 export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
-    const { lifecycle, format, darkColorHandler, contentDiv, cache, domHelper } = core;
+    const { lifecycle, format, darkColorHandler, logicalRoot, cache, domHelper } = core;
 
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,
@@ -19,11 +17,10 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         allowCacheElement: true,
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
-        rootFontSize:
-            parseValueWithUnit(getRootComputedStyle(core)?.fontSize) || DefaultRootFontSize,
+        ...getRootComputedStyleForContext(logicalRoot.ownerDocument),
     };
 
-    checkRootRtl(contentDiv, context);
+    checkRootRtl(logicalRoot, context);
 
     return context;
 };
@@ -34,10 +31,4 @@ function checkRootRtl(element: HTMLElement, context: EditorContext) {
     if (style?.direction == 'rtl') {
         context.isRootRtl = true;
     }
-}
-
-function getRootComputedStyle(core: EditorCore) {
-    const document = core.contentDiv.ownerDocument;
-    const rootComputedStyle = document.defaultView?.getComputedStyle(document.documentElement);
-    return rootComputedStyle;
 }

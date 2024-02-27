@@ -72,7 +72,51 @@ describe('exportContent', () => {
 
         expect(html).toBe(mockedHTML);
         expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
-        expect(createModelToDomContextSpy).toHaveBeenCalledWith();
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(undefined, undefined);
+        expect(contentModelToDomSpy).toHaveBeenCalledWith(
+            mockedDoc,
+            mockedDiv,
+            mockedModel,
+            mockedContext
+        );
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            'extractContentWithDom',
+            { clonedRoot: mockedDiv },
+            true
+        );
+    });
+
+    it('HTML with options', () => {
+        const mockedModel = 'MODEL' as any;
+        const getContentModelCopySpy = jasmine
+            .createSpy('getContentModelCopy')
+            .and.returnValue(mockedModel);
+        const mockedHTML = 'HTML';
+        const mockedDiv = {
+            innerHTML: mockedHTML,
+        } as any;
+        const mockedDoc = {
+            createElement: () => mockedDiv,
+        } as any;
+        const triggerEventSpy = jasmine.createSpy('triggerEvent');
+        const editor: IEditor = {
+            getContentModelCopy: getContentModelCopySpy,
+            getDocument: () => mockedDoc,
+            triggerEvent: triggerEventSpy,
+        } as any;
+        const contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
+        const mockedContext = 'CONTEXT' as any;
+        const createModelToDomContextSpy = spyOn(
+            createModelToDomContext,
+            'createModelToDomContext'
+        ).and.returnValue(mockedContext);
+        const mockedOptions = 'OPTIONS' as any;
+
+        const html = exportContent(editor, 'HTML', mockedOptions);
+
+        expect(html).toBe(mockedHTML);
+        expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(undefined, mockedOptions);
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,

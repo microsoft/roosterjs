@@ -64,7 +64,8 @@ describe('createEditorCore', () => {
         const core = createEditorCore(contentDiv, options);
 
         expect(core).toEqual({
-            contentDiv: contentDiv,
+            physicalRoot: contentDiv,
+            logicalRoot: contentDiv,
             api: coreApiMap,
             originalApi: coreApiMap,
             plugins: [
@@ -155,7 +156,8 @@ describe('createEditorCore', () => {
         } as any;
 
         runTest(mockedDiv, mockedOptions, {
-            contentDiv: mockedDiv,
+            physicalRoot: mockedDiv,
+            logicalRoot: mockedDiv,
             api: { ...coreApiMap, a: 'b' } as any,
             plugins: [
                 mockedCachePlugin,

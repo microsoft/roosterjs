@@ -51,6 +51,9 @@ describe('mergePasteContent', () => {
                 formatContentModel,
             },
             domToModelSettings: {},
+            physicalRoot: <any>{
+                ownerDocument: document,
+            },
         } as any;
     });
 
@@ -399,6 +402,7 @@ describe('mergePasteContent', () => {
             mergeTable: false,
         });
         expect(createDomToModelContextSpy).toHaveBeenCalledWith(
+            document,
             undefined,
             mockedDomToModelOptions,
             mockedDefaultDomToModelOptions
