@@ -60,14 +60,13 @@ function normalizeFontSize(
         fontSize.endsWith('%') ||
         fontSize.endsWith('rem')
     ) {
-        if (!contextFont) {
+        const isRemUnit = fontSize.endsWith('rem');
+        if (!contextFont && !isRemUnit) {
             return undefined;
         } else {
-            const existingFontSize = parseValueWithUnit(
-                contextFont,
-                fontSize.endsWith('rem') ? context.rootFontSize : undefined /*element*/,
-                'px'
-            );
+            const existingFontSize = isRemUnit
+                ? context.rootFontSize
+                : parseValueWithUnit(contextFont);
 
             if (existingFontSize) {
                 switch (fontSize) {
