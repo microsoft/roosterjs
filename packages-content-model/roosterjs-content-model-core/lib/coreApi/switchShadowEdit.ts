@@ -14,8 +14,8 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
     if (isOn != !!core.lifecycle.shadowEditFragment) {
         if (isOn) {
             const model = !core.cache.cachedModel ? core.api.createContentModel(core) : null;
-            const fragment = core.physicalRoot.ownerDocument.createDocumentFragment();
-            const clonedRoot = core.physicalRoot.cloneNode(true /*deep*/);
+            const fragment = core.logicalRoot.ownerDocument.createDocumentFragment();
+            const clonedRoot = core.logicalRoot.cloneNode(true /*deep*/);
 
             moveChildNodes(fragment, clonedRoot);
 

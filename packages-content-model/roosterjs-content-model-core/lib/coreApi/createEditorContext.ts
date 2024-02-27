@@ -35,9 +35,3 @@ function checkRootRtl(element: HTMLElement, context: EditorContext) {
         context.isRootRtl = true;
     }
 }
-
-function getRootComputedStyle(core: EditorCore) {
-    const document = core.physicalRoot.ownerDocument;
-    const rootComputedStyle = document.defaultView?.getComputedStyle(document.documentElement);
-    return rootComputedStyle;
-}

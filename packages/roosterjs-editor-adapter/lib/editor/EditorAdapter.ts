@@ -114,10 +114,10 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 
     /**
      * Creates an instance of Editor
-     * @param physicalRoot The DIV HTML element which will be the container element of editor
+     * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(physicalRoot: HTMLDivElement, options: EditorAdapterOptions = {}) {
+    constructor(contentDiv: HTMLDivElement, options: EditorAdapterOptions = {}) {
         const bridgePlugin = new BridgePlugin(
             core => {
                 this.contentModelEditorCore = core;
@@ -129,7 +129,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         );
 
         const plugins = [bridgePlugin, ...(options.plugins ?? [])];
-        const initContent = options.initialContent ?? physicalRoot.innerHTML;
+        const initContent = options.initialContent ?? contentDiv.innerHTML;
         const initialModel =
             initContent && !options.initialModel
                 ? createModelFromHtml(
@@ -573,7 +573,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns True if position is at beginning of the editor, otherwise false
      */
     isPositionAtBeginning(position: NodePosition): boolean {
-        return isPositionAtBeginningOf(position, this.getCore().physicalRoot);
+        return isPositionAtBeginningOf(position, this.getCore().logicalRoot);
     }
 
     /**
@@ -582,9 +582,9 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     getSelectedRegions(type: RegionType | CompatibleRegionType = RegionType.Table): Region[] {
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
-        const physicalRoot = this.getCore().physicalRoot;
+        const logicalRoot = this.getCore().logicalRoot;
         selection.ranges.forEach(range => {
-            result.push(...(range ? getRegionsFromRange(physicalRoot, range, type) : []));
+            result.push(...(range ? getRegionsFromRange(logicalRoot, range, type) : []));
         });
         return result.filter((value, index, self) => {
             return self.indexOf(value) === index;

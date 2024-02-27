@@ -16,10 +16,10 @@ export const getDOMSelection: GetDOMSelection = core => {
 };
 
 function getNewSelection(core: EditorCore): DOMSelection | null {
-    const selection = core.physicalRoot.ownerDocument.defaultView?.getSelection();
+    const selection = core.logicalRoot.ownerDocument.defaultView?.getSelection();
     const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
 
-    return range && core.physicalRoot.contains(range.commonAncestorContainer)
+    return range && core.logicalRoot.contains(range.commonAncestorContainer)
         ? {
               type: 'range',
               range,
