@@ -24,13 +24,14 @@ describe('focus', () => {
         } as any;
 
         core = {
+            physicalRoot: div,
+            logicalRoot: div,
             lifecycle: {},
             api: {
                 hasFocus: hasFocusSpy,
                 setDOMSelection: setDOMSelectionSpy,
             },
             selection: {},
-            contentDiv: div,
         } as any;
     });
 

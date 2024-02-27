@@ -790,7 +790,8 @@ describe('Editor', () => {
         const mockedCore = {
             plugins: [],
             darkColorHandler: mockedColorHandler,
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             lifecycle: {
                 isDarkMode: false,
             },

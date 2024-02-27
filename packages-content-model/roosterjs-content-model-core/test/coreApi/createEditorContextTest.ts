@@ -19,7 +19,8 @@ describe('createEditorContext', () => {
         };
 
         const core = ({
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             lifecycle: {
                 isDarkMode,
             },
@@ -67,7 +68,8 @@ describe('createEditorContext', () => {
         };
 
         const core = ({
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             lifecycle: {
                 isDarkMode,
             },
@@ -115,7 +117,8 @@ describe('createEditorContext', () => {
         };
 
         const core = ({
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             lifecycle: {
                 isDarkMode,
             },
@@ -167,7 +170,8 @@ describe('createEditorContext - checkZoomScale', () => {
             },
         };
         core = ({
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             lifecycle: {
                 isDarkMode,
             },
@@ -221,7 +225,8 @@ describe('createEditorContext - checkRootDir', () => {
             },
         };
         core = ({
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             lifecycle: {
                 isDarkMode,
             },

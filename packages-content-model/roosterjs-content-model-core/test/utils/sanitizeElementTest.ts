@@ -143,6 +143,7 @@ describe('sanitizeElement', () => {
         });
 
         expect(result!.outerHTML).toBe('<div id="b"></div>');
+        expect(sanitizerSpy).toHaveBeenCalledTimes(1);
         expect(sanitizerSpy).toHaveBeenCalledWith('a', 'div');
     });
 
@@ -156,6 +157,27 @@ describe('sanitizeElement', () => {
         });
 
         expect(result!.outerHTML).toBe('<div></div>');
+    });
+
+    it('attributeCallbacks with child element', () => {
+        const element = document.createElement('div');
+        const child = document.createElement('span');
+        const sanitizerSpy = jasmine
+            .createSpy('sanitizer')
+            .and.callFake((value: string) => value + value);
+
+        element.id = 'a';
+        child.id = 'b';
+        element.appendChild(child);
+
+        const result = sanitizeElement(element, AllowedTags, DisallowedTags, undefined, {
+            id: sanitizerSpy,
+        });
+
+        expect(result!.outerHTML).toBe('<div id="aa"><span id="bb"></span></div>');
+        expect(sanitizerSpy).toHaveBeenCalledTimes(2);
+        expect(sanitizerSpy).toHaveBeenCalledWith('a', 'div');
+        expect(sanitizerSpy).toHaveBeenCalledWith('b', 'span');
     });
 });
 

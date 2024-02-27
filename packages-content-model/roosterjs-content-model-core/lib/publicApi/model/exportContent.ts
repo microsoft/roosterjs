@@ -3,7 +3,7 @@ import {
     contentModelToText,
     createModelToDomContext,
 } from 'roosterjs-content-model-dom';
-import type { ExportContentMode, IEditor } from 'roosterjs-content-model-types';
+import type { ExportContentMode, IEditor, ModelToDomOption } from 'roosterjs-content-model-types';
 
 /**
  * Export string content of editor
@@ -12,8 +12,13 @@ import type { ExportContentMode, IEditor } from 'roosterjs-content-model-types';
  * - HTML: Export HTML content. If there are entities, this will cause EntityOperation event with option = 'replaceTemporaryContent' to get a dehydrated entity
  * - PlainText: Export plain text content
  * - PlainTextFast: Export plain text using editor's textContent property directly
+ * @param options @optional Options for Model to DOM conversion
  */
-export function exportContent(editor: IEditor, mode: ExportContentMode = 'HTML'): string {
+export function exportContent(
+    editor: IEditor,
+    mode: ExportContentMode = 'HTML',
+    options?: ModelToDomOption
+): string {
     if (mode == 'PlainTextFast') {
         return editor.getDOMHelper().getTextContent();
     } else {
@@ -25,7 +30,12 @@ export function exportContent(editor: IEditor, mode: ExportContentMode = 'HTML')
             const doc = editor.getDocument();
             const div = doc.createElement('div');
 
-            contentModelToDom(doc, div, model, createModelToDomContext());
+            contentModelToDom(
+                doc,
+                div,
+                model,
+                createModelToDomContext(undefined /*editorContext*/, options)
+            );
 
             editor.triggerEvent('extractContentWithDom', { clonedRoot: div }, true /*broadcast*/);
 
