@@ -33,7 +33,7 @@ export {
 export { setSelection } from './publicApi/selection/setSelection';
 
 export { applyTableFormat } from './publicApi/table/applyTableFormat';
-export { normalizeTable, MIN_WIDTH } from './publicApi/table/normalizeTable';
+export { normalizeTable, MIN_ALLOWED_TABLE_CELL_WIDTH } from './publicApi/table/normalizeTable';
 export { setTableCellBackgroundColor } from './publicApi/table/setTableCellBackgroundColor';
 export { getSelectedCells } from './publicApi/table/getSelectedCells';
 

@@ -9,7 +9,7 @@ import type {
 /**
  * Minimum width for a table cell
  */
-export const MIN_WIDTH: number = 30;
+export const MIN_ALLOWED_TABLE_CELL_WIDTH: number = 30;
 const MIN_HEIGHT = 22;
 
 /**
@@ -79,8 +79,8 @@ export function normalizeTable(
     for (let i = 0; i < columns; i++) {
         if (table.widths[i] === undefined) {
             table.widths[i] = getTableCellWidth(columns);
-        } else if (table.widths[i] < MIN_WIDTH) {
-            table.widths[i] = MIN_WIDTH;
+        } else if (table.widths[i] < MIN_ALLOWED_TABLE_CELL_WIDTH) {
+            table.widths[i] = MIN_ALLOWED_TABLE_CELL_WIDTH;
         }
     }
 
