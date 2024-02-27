@@ -36,7 +36,8 @@ describe('setContentModel', () => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
 
         core = ({
-            contentDiv: mockedDiv,
+            physicalRoot: mockedDiv,
+            logicalRoot: mockedDiv,
             api: {
                 createEditorContext,
                 setDOMSelection: setDOMSelectionSpy,

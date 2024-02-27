@@ -18,7 +18,11 @@ describe('switchShadowEdit', () => {
         getSelectionRange = jasmine.createSpy('getSelectionRange');
         triggerEvent = jasmine.createSpy('triggerEvent');
 
+        const contentDiv = document.createElement('div');
+
         core = ({
+            physicalRoot: contentDiv,
+            logicalRoot: contentDiv,
             api: {
                 createContentModel,
                 setContentModel,
@@ -26,7 +30,6 @@ describe('switchShadowEdit', () => {
                 triggerEvent,
             },
             lifecycle: {},
-            contentDiv: document.createElement('div'),
             cache: {},
         } as any) as EditorCore;
     });

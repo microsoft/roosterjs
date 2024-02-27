@@ -10,7 +10,8 @@ describe('triggerEvent', () => {
         document.body.appendChild(div);
 
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             api: {},
             plugins: [],
             lifecycle: {},

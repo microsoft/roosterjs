@@ -17,10 +17,11 @@ describe('restoreSnapshotColors', () => {
         } as any;
 
         core = {
+            physicalRoot: mockedDiv,
+            logicalRoot: mockedDiv,
             lifecycle: {
                 isDarkMode: false,
             },
-            contentDiv: mockedDiv,
             darkColorHandler,
         } as any;
     });
