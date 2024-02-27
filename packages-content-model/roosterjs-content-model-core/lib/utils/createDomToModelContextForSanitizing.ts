@@ -1,9 +1,8 @@
 import { containerSizeFormatParser } from '../override/containerSizeFormatParser';
-import { createDomToModelContext, parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { createDomToModelContext } from 'roosterjs-content-model-dom';
 import { createPasteEntityProcessor } from '../override/pasteEntityProcessor';
 import { createPasteGeneralProcessor } from '../override/pasteGeneralProcessor';
-import { DefaultRootFontSize } from '../coreApi/createEditorContext';
-import { getRootComputedStyle } from './getRootComputedStyle';
+import { getRootComputedStyleForContext } from './getRootComputedStyleForContext';
 import { pasteBlockEntityParser } from '../override/pasteCopyBlockEntityParser';
 import { pasteDisplayFormatParser } from '../override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../override/pasteTextProcessor';
@@ -38,13 +37,10 @@ export function createDomToModelContextForSanitizing(
         ...additionalSanitizingOption,
     };
 
-    const computedFontStyle =
-        parseValueWithUnit(getRootComputedStyle(document)?.fontSize) || DefaultRootFontSize;
-
     return createDomToModelContext(
         {
             defaultFormat,
-            rootFontSize: computedFontStyle,
+            ...getRootComputedStyleForContext(document),
         },
         defaultOption,
         {

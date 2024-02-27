@@ -1,11 +1,5 @@
-import { getRootComputedStyle } from '../utils/getRootComputedStyle';
-import { parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { getRootComputedStyleForContext } from '../utils/getRootComputedStyleForContext';
 import type { EditorContext, CreateEditorContext } from 'roosterjs-content-model-types';
-
-/**
- * @internal
- */
-export const DefaultRootFontSize = 16;
 
 /**
  * @internal
@@ -23,9 +17,7 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         allowCacheElement: true,
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
-        rootFontSize:
-            parseValueWithUnit(getRootComputedStyle(core.contentDiv.ownerDocument)?.fontSize) ||
-            DefaultRootFontSize,
+        ...getRootComputedStyleForContext(contentDiv.ownerDocument),
     };
 
     checkRootRtl(contentDiv, context);
