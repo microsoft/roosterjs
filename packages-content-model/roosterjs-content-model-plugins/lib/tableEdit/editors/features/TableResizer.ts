@@ -7,6 +7,7 @@ import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-t
 import type TableEditFeature from './TableEditorFeature';
 
 const TABLE_RESIZER_LENGTH = 12;
+const TABLE_RESIZER_ID = '_Table_Resizer';
 
 /**
  * @internal
@@ -37,6 +38,7 @@ export default function createTableResizer(
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 
+    div.id = TABLE_RESIZER_ID;
     div.style.width = `${TABLE_RESIZER_LENGTH}px`;
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
 

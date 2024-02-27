@@ -1,7 +1,12 @@
 import createElement from '../../../pluginUtils/CreateElement/createElement';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
-import { getFirstSelectedTable, MIN_WIDTH, normalizeTable } from 'roosterjs-content-model-core';
+import { isElementOfType } from 'roosterjs-content-model-dom';
+import {
+    getFirstSelectedTable,
+    MIN_ALLOWED_TABLE_CELL_WIDTH,
+    normalizeTable,
+} from 'roosterjs-content-model-core';
 import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
 import type TableEditFeature from './TableEditorFeature';
@@ -78,7 +83,8 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
 
     // Get cell coordinates
     const columnIndex = td.cellIndex;
-    const row = td.parentElement instanceof HTMLTableRowElement ? td.parentElement : undefined;
+    const row =
+        td.parentElement && isElementOfType(td.parentElement, 'tr') ? td.parentElement : undefined;
     const rowIndex = row?.rowIndex;
 
     if (rowIndex == undefined) {
@@ -186,7 +192,10 @@ function onDraggingVertical(
             // Any other two columns
             const anchorChange = allWidths[anchorColumn] + change;
             const nextAnchorChange = allWidths[anchorColumn + 1] - change;
-            if (anchorChange < MIN_WIDTH || nextAnchorChange < MIN_WIDTH) {
+            if (
+                anchorChange < MIN_ALLOWED_TABLE_CELL_WIDTH ||
+                nextAnchorChange < MIN_ALLOWED_TABLE_CELL_WIDTH
+            ) {
                 return false;
             }
             cmTable.widths[anchorColumn] = anchorChange;
@@ -214,6 +223,7 @@ function setHorizontalPosition(context: DragAndDropContext, trigger: HTMLElement
     const { td } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
+        trigger.id = 'horizontalResizer';
         trigger.style.top = rect.bottom - CELL_RESIZER_WIDTH + 'px';
         trigger.style.left = rect.left + 'px';
         trigger.style.width = rect.right - rect.left + 'px';
@@ -225,6 +235,7 @@ function setVerticalPosition(context: DragAndDropContext, trigger: HTMLElement) 
     const { td, isRTL } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
+        trigger.id = 'verticalResizer';
         trigger.style.top = rect.top + 'px';
         trigger.style.left = (isRTL ? rect.left : rect.right) - CELL_RESIZER_WIDTH + 1 + 'px';
         trigger.style.width = CELL_RESIZER_WIDTH + 'px';

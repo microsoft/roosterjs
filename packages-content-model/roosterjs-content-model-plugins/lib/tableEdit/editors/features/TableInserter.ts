@@ -48,6 +48,7 @@ export default function createTableInserter(
 
         if (isHorizontal) {
             // tableRect.left/right is used because the Inserter is always intended to be on the side
+            div.id = 'horizontalInserter';
             div.style.left = `${
                 isRTL
                     ? tableRect.right
@@ -56,6 +57,7 @@ export default function createTableInserter(
             div.style.top = `${tdRect.bottom - 8}px`;
             (div.firstChild as HTMLElement).style.width = `${tableRect.right - tableRect.left}px`;
         } else {
+            div.id = 'verticalInserter';
             div.style.left = `${isRTL ? tdRect.left - 8 : tdRect.right - 8}px`;
             // tableRect.top is used because the Inserter is always intended to be on top
             div.style.top = `${
