@@ -17,7 +17,7 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         allowCacheElement: true,
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
-        ...getRootComputedStyleForContext(contentDiv.ownerDocument),
+        ...getRootComputedStyleForContext(logicalRoot.ownerDocument),
     };
 
     checkRootRtl(logicalRoot, context);

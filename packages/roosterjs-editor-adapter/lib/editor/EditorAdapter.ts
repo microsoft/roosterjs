@@ -145,7 +145,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
             initialModel,
         };
 
-        super(physicalRoot, standaloneEditorOptions);
+        super(contentDiv, standaloneEditorOptions);
     }
 
     /**
