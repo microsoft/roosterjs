@@ -26,18 +26,20 @@ export default class SampleEntityPlugin implements EditorPlugin {
 
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == 'keyDown' && event.rawEvent.key == 'm' && event.rawEvent.ctrlKey) {
-            this.editor.takeSnapshot();
+            // this.editor.takeSnapshot();
 
-            const entity = insertEntity(this.editor, EntityType, true /*isBlock*/, 'focus', {
+            // const entity =
+            insertEntity(this.editor, EntityType, true /*isBlock*/, 'focus', {
                 contentNode: this.createEntityNode(),
-                skipUndoSnapshot: true,
+                initialEntityState: '{}',
+                //   skipUndoSnapshot: true,
             });
 
-            this.editor.takeSnapshot({
-                id: entity.entityFormat.id,
-                type: entity.entityFormat.entityType,
-                state: entity.wrapper.dataset.editingInfo,
-            });
+            // this.editor.takeSnapshot({
+            //     id: entity.entityFormat.id,
+            //     type: entity.entityFormat.entityType,
+            //     state: entity.wrapper.dataset.editingInfo,
+            // });
 
             event.rawEvent.preventDefault();
         } else if (event.eventType == 'entityOperation' && event.entity.type == EntityType) {

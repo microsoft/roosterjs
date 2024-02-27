@@ -5,7 +5,6 @@ import {
     getAllEntityWrappers,
     isEntityDelimiter,
     isEntityElement,
-    parseEntityClassName,
 } from '../../lib/domUtils/entityUtils';
 
 export function setEntityElementClasses(
