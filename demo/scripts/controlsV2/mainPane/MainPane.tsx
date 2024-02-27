@@ -274,7 +274,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     }
 
     private resetEditor() {
-        // this.toggleablePlugins = null;
+        // TODO: this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
                 new Editor(div, {
@@ -322,7 +322,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         <Rooster
                             id={MainPane.editorDivId}
                             className={styles.editor}
-                            // legacyPlugins={allPlugins}
+                            // TODO: legacyPlugins={allPlugins}
                             plugins={plugins}
                             defaultSegmentFormat={this.state.initState.defaultFormat}
                             inDarkMode={this.state.isDarkMode}

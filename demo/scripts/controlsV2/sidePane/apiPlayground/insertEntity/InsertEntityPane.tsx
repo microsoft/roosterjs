@@ -136,7 +136,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
         }
     };
 
-    // private onGetEntities = () => {
+    // TODO: private onGetEntities = () => {
     //     const selector = getEntitySelector();
     //     const nodes = this.props.getEditor().queryElements(selector);
     //     const allEntities = nodes.map(node => getEntityFromElement(node));
@@ -147,7 +147,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
     // };
 }
 
-// function EntityButton({ entity }: { entity: Entity }) {
+// TODO: function EntityButton({ entity }: { entity: Entity }) {
 //     let background = '';
 //     const onMouseOver = React.useCallback(() => {
 //         background = entity.wrapper.style.backgroundColor;

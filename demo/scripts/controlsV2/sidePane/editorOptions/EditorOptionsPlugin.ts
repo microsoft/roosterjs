@@ -4,7 +4,7 @@ import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
 
 const initialState: OptionState = {
-    // pluginList: {
+    // TODO: pluginList: {
     //     contentEdit: true,
     //     hyperlink: true,
     //     paste: false,

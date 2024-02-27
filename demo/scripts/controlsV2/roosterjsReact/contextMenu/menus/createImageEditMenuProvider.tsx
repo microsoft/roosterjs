@@ -40,7 +40,7 @@ const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     },
 };
 
-// const sizeMap: { [key in ImageEditMenuItemStringKey]?: number } = {
+// TODO: const sizeMap: { [key in ImageEditMenuItemStringKey]?: number } = {
 //     menuNameImageSizeBestFit: 0,
 //     menuNameImageSizeSmall: 0.25,
 //     menuNameImageSizeMedium: 0.5,
@@ -61,7 +61,7 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
         if (selection.type !== 'image') {
             return;
         }
-        // editor.addUndoSnapshot(() => {
+        // TODO: editor.addUndoSnapshot(() => {
         //     const percentage = sizeMap[key];
 
         //     if (percentage != undefined && percentage > 0) {
@@ -78,7 +78,7 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
         // });
     },
     getSelectedId: (editor, _) => {
-        // const selection = editor.getDOMSelection();
+        // TODO: const selection = editor.getDOMSelection();
         // return (
         //     (selection.type === 'image' &&
         //         getObjectKeys(sizeMap).find(key => {
@@ -94,7 +94,7 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     },
 };
 
-// const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+// TODO: const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
 //     key: 'menuNameImageRotate',
 //     unlocalizedText: 'Rotate image',
 //     subItems: {
@@ -121,7 +121,7 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
 //     },
 // };
 
-// const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+// TODO: const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
 //     key: 'menuNameImageFlip',
 //     unlocalizedText: 'Flip image',
 //     subItems: {
@@ -148,7 +148,7 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
 //     },
 // };
 
-// const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+// TODO: const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
 //     key: 'menuNameImageCrop',
 //     unlocalizedText: 'Crop image',
 //     shouldShow: (_, node, imageEdit) => {
@@ -220,7 +220,7 @@ function shouldShowImageEditItems(editor: IEditor, _: Node) {
  * @returns A new ContextMenuProvider
  */
 export function createImageEditMenuProvider(
-    // imageEditPlugin: ImageEdit,
+    // TODO: imageEditPlugin: ImageEdit,
     strings?: LocalizedStrings<ImageEditMenuItemStringKey>
 ): EditorPlugin {
     return createContextMenuProvider<ImageEditMenuItemStringKey, undefined>(

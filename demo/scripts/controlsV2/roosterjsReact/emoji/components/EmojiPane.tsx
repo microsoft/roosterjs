@@ -52,22 +52,13 @@ const TooltipCalloutProps: ICalloutProps = {
  * @internal
  * Types of emoji pane size
  */
-// eslint-disable-next-line etc/no-const-enum
-export const enum EmojiPaneMode {
-    Quick,
-    Partial,
-    Full,
-}
+export type EmojiPaneMode = 'Quick' | 'Partial' | 'Full';
 
 /**
  * @internal
  * Types of emoji Navigation direction
  */
-// eslint-disable-next-line etc/no-const-enum
-export const enum EmojiPaneNavigateDirection {
-    Horizontal,
-    Vertical,
-}
+export type EmojiPaneNavigateDirection = 'Horizontal' | 'Vertical';
 
 /**
  * @internal
@@ -132,11 +123,9 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
     let input: HTMLInputElement;
 
     const [index, setIndex] = React.useState<number>(0);
-    const [mode, setMode] = React.useState<EmojiPaneMode>(EmojiPaneMode.Quick);
+    const [mode, setMode] = React.useState<EmojiPaneMode>('Quick');
     const [currentEmojiList, setCurrentEmojiList] = React.useState<Emoji[]>(CommonEmojis);
-    const [currentFamily, setCurrentFamily] = React.useState<EmojiFamilyKeys>(
-        EmojiFamilyKeys.People
-    );
+    const [currentFamily, setCurrentFamily] = React.useState<EmojiFamilyKeys>('People');
     const [search, setSearchString] = React.useState<string>(':');
     const [searchInBox, setSearchInBox] = React.useState<string>('');
 
@@ -147,10 +136,10 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
     const navigate = React.useCallback(
         (change: number, direction?: EmojiPaneNavigateDirection): number => {
             if (!direction) {
-                direction = EmojiPaneNavigateDirection.Horizontal;
+                direction = 'Horizontal';
             }
 
-            if (direction === EmojiPaneNavigateDirection.Vertical && index !== -1) {
+            if (direction === 'Vertical' && index !== -1) {
                 change *= EmojisPerRow;
             }
 
@@ -199,9 +188,8 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
     const showFullPicker = React.useCallback(
         (fullSearchText: string): void => {
             const normalizedSearchValue = normalizeSearchText(fullSearchText, true);
-            const newMode =
-                normalizedSearchValue.length === 0 ? EmojiPaneMode.Full : EmojiPaneMode.Partial;
-            setIndex(newMode === EmojiPaneMode.Full ? -1 : 0);
+            const newMode: EmojiPaneMode = normalizedSearchValue.length === 0 ? 'Full' : 'Partial';
+            setIndex(newMode === 'Full' ? -1 : 0);
             setMode(newMode);
             setCurrentEmojiList(getSearchResult(normalizedSearchValue, newMode));
             setSearchString(fullSearchText);
@@ -222,7 +210,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
 
     const getSearchResult = React.useCallback(
         (searchValue: string, mode: EmojiPaneMode): Emoji[] => {
-            const isQuickMode = mode === EmojiPaneMode.Quick;
+            const isQuickMode = mode === 'Quick';
             if (!searchValue) {
                 return isQuickMode ? currentEmojiList : EmojiList[currentFamily];
             }
@@ -338,7 +326,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
                         {...autoCompleteAttributes}
                     />
                 )}
-                {mode === EmojiPaneMode.Full
+                {mode === 'Full'
                     ? renderFullList(props, index, currentFamily, currentEmojiList)
                     : renderPartialList(props, index, currentEmojiList)}
             </div>
@@ -376,19 +364,15 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
             return;
         }
 
-        const direction =
-            VerticalDirectionKeys.indexOf(e.which) < 0
-                ? EmojiPaneNavigateDirection.Horizontal
-                : EmojiPaneNavigateDirection.Vertical;
+        const direction: EmojiPaneNavigateDirection =
+            VerticalDirectionKeys.indexOf(e.which) < 0 ? 'Horizontal' : 'Vertical';
         const newIndex = navigate(
             e.which === KeyCodes.left || e.which === KeyCodes.up ? -1 : 1,
             direction
         );
         if (newIndex > -1) {
             const visibleRowCount =
-                mode === EmojiPaneMode.Full
-                    ? EmojiVisibleRowCount
-                    : EmojiVisibleWithoutNavBarRowCount;
+                mode === 'Full' ? EmojiVisibleRowCount : EmojiVisibleWithoutNavBarRowCount;
             const currentRow = Math.floor(newIndex / EmojisPerRow);
             const visibleTop = emojiBody.scrollTop;
             const visibleBottom = visibleTop + visibleRowCount * EmojiHeightPx;
@@ -551,9 +535,8 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
     const onSearchChange = (_: any, newValue?: string): void => {
         if (typeof newValue === 'string') {
             const normalizedSearchValue = normalizeSearchText(newValue, false);
-            const newMode =
-                normalizedSearchValue.length === 0 ? EmojiPaneMode.Full : EmojiPaneMode.Partial;
-            setIndex(newMode === EmojiPaneMode.Full ? -1 : 0);
+            const newMode: EmojiPaneMode = normalizedSearchValue.length === 0 ? 'Full' : 'Partial';
+            setIndex(newMode === 'Full' ? -1 : 0);
             setCurrentEmojiList(getSearchResult(normalizedSearchValue, mode));
             setSearchInBox(newValue);
             setMode(newMode);
@@ -578,7 +561,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         currentFamily: EmojiFamilyKeys,
         currentEmojiList: Emoji[]
     ) => {
-        return mode === EmojiPaneMode.Quick
+        return mode === 'Quick'
             ? renderQuickPicker(props, index, currentEmojiList)
             : renderFullPicker(props, index, searchInBox, currentFamily, currentEmojiList);
     };

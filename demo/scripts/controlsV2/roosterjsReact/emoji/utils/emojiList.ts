@@ -24,23 +24,21 @@ export const CommonEmojis = [Common1, common2, common3, common4, common5, MoreEm
 /**
  * @internal
  */
-// eslint-disable-next-line etc/no-const-enum
-export const enum EmojiFamilyKeys {
-    People = 'People',
-    Nature = 'Nature',
-    Activities = 'Activities',
-    Food = 'Food',
-    Travel = 'Travel',
-    Symbols = 'Symbols',
-    Objects = 'Objects',
-}
+export type EmojiFamilyKeys =
+    | 'People'
+    | 'Nature'
+    | 'Activities'
+    | 'Food'
+    | 'Travel'
+    | 'Symbols'
+    | 'Objects';
 
 /**
  * @internal
  * NOTE: name for an emoji should be in lower case
  */
-export const EmojiList = {
-    [EmojiFamilyKeys.People]: [
+export const EmojiList: Record<EmojiFamilyKeys, Emoji[]> = {
+    People: [
         createEmoji('1f601'),
         createEmoji('1f602'),
         common5,
@@ -188,7 +186,7 @@ export const EmojiList = {
         createEmoji('1f48d'),
         createEmoji('1f302'),
     ],
-    [EmojiFamilyKeys.Nature]: [
+    Nature: [
         createEmoji('1f436'),
         createEmoji('1f431'),
         createEmoji('1f42d'),
@@ -284,7 +282,7 @@ export const EmojiList = {
         createEmojiWithNoKeyword('1f4a6'),
         createEmoji('1f30a'),
     ],
-    [EmojiFamilyKeys.Activities]: [
+    Activities: [
         createEmoji('026bd'),
         createEmoji('1f3c0'),
         createEmoji('1f3c8'),
@@ -319,7 +317,7 @@ export const EmojiList = {
         createEmoji('1f3b0'),
         createEmoji('1f3b3'),
     ],
-    [EmojiFamilyKeys.Food]: [
+    Food: [
         createEmoji('1f34f'),
         createEmoji('1f34e'),
         createEmoji('1f34a'),
@@ -377,7 +375,7 @@ export const EmojiList = {
         createEmoji('02615'),
         createEmoji('1f374'),
     ],
-    [EmojiFamilyKeys.Travel]: [
+    Travel: [
         createEmoji('1f697'),
         createEmoji('1f695'),
         createEmoji('1f687'),
@@ -445,7 +443,7 @@ export const EmojiList = {
         createEmoji('026ea'),
         createEmoji('1f320'),
     ],
-    [EmojiFamilyKeys.Symbols]: [
+    Symbols: [
         common3,
         createEmoji('1f49b'),
         createEmoji('1f49a'),
@@ -605,7 +603,7 @@ export const EmojiList = {
         createEmojiWithNoKeyword('1f23a'),
         createEmojiWithNoKeyword('1f235'),
     ],
-    [EmojiFamilyKeys.Objects]: [
+    Objects: [
         createEmojiWithNoKeyword('0231a'),
         createEmoji('1f4f1'),
         createEmojiWithNoKeyword('1f4f2'),
@@ -722,14 +720,14 @@ export const EmojiList = {
 /**
  * @internal
  */
-export const EmojiFabricIconCharacterMap = {
-    [EmojiFamilyKeys.Activities]: 'Soccer',
-    [EmojiFamilyKeys.Food]: 'EatDrink',
-    [EmojiFamilyKeys.Nature]: 'FangBody',
-    [EmojiFamilyKeys.Objects]: 'Lightbulb',
-    [EmojiFamilyKeys.People]: 'Emoji2',
-    [EmojiFamilyKeys.Symbols]: 'Heart',
-    [EmojiFamilyKeys.Travel]: 'Car',
+export const EmojiFabricIconCharacterMap: Record<EmojiFamilyKeys, string> = {
+    Activities: 'Soccer',
+    Food: 'EatDrink',
+    Nature: 'FangBody',
+    Objects: 'Lightbulb',
+    People: 'Emoji2',
+    Symbols: 'Heart',
+    Travel: 'Car',
 };
 
 /**

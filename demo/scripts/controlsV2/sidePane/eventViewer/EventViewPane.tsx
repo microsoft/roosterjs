@@ -74,7 +74,7 @@ export default class ContentModelEventViewPane extends React.Component<
     addEvent(event: PluginEvent) {
         if (this.state.displayCount > 0) {
             if (event.eventType == 'beforePaste') {
-                // const sanitizer = new HtmlSanitizer(event.sanitizingOption);
+                // TODO: const sanitizer = new HtmlSanitizer(event.sanitizingOption);
                 // const fragment = event.fragment.cloneNode(true /*deep*/) as DocumentFragment;
                 // sanitizer.convertGlobalCssToInlineCss(fragment);
                 // sanitizer.sanitize(fragment);
@@ -234,7 +234,7 @@ export default class ContentModelEventViewPane extends React.Component<
         );
     }
 
-    // private getHtml(fragment: DocumentFragment) {
+    // TODO: private getHtml(fragment: DocumentFragment) {
     //     const stringArray: string[] = [];
     //     for (let child = fragment.firstChild; child; child = child.nextSibling) {
     //         stringArray.push(

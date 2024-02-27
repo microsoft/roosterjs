@@ -6,7 +6,7 @@ const styles = require('./FormatStatePane.scss');
 
 export interface FormatStatePaneState {
     format: ContentModelFormatState;
-    // inIME: boolean;
+    // TODO: inIME: boolean;
     // x: number;
     // y: number;
 }

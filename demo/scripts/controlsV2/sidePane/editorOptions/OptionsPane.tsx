@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DefaultFormatPane } from './DefaultFormatPane';
 import { MainPane } from '../../mainPane/MainPane';
 import { OptionPaneProps, OptionState } from './OptionState';
-// import { Plugins } from './Plugins';
+// TODO: import { Plugins } from './Plugins';
 // import ContentModelEditorCode from './codes/ContentModelEditorCode';
 // import BuildInPluginState, { BuildInPluginProps } from '../../BuildInPluginState';
 // import Code from './Code';
@@ -128,7 +128,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
 
     private resetState = (callback: (state: OptionState) => void, resetEditor: boolean) => {
         let state: OptionState = {
-            // linkTitle: this.state.linkTitle,
+            // TODO: linkTitle: this.state.linkTitle,
             // watermarkText: this.state.watermarkText,
             // pluginList: { ...this.state.pluginList },
             // contentEditFeatures: { ...this.state.contentEditFeatures },
@@ -151,7 +151,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         }
     };
 
-    // private onExportRoosterContentModel = () => {
+    // TODO: private onExportRoosterContentModel = () => {
     //     let editor = new ContentModelEditorCode(this.state);
     //     let code = editor.getCode();
     //     let json = {
@@ -179,7 +179,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         }, true);
     };
 
-    // private getHtml() {
+    // TODO: private getHtml() {
     //     return `${htmlStart}${htmlButtons}${darkButton}${htmlEnd}`;
     // }
 }

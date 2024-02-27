@@ -2,7 +2,7 @@ import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 export interface OptionState {
-    // pluginList: BuildInPluginList;
+    // TODO: pluginList: BuildInPluginList;
     // contentEditFeatures: ContentEditFeatureSettings;
     defaultFormat: ContentModelSegmentFormat;
     // linkTitle: string;
