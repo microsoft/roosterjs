@@ -47,6 +47,11 @@ class SnapshotsManagerImpl implements SnapshotsManager {
 
     addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean): void {
         const currentSnapshot = this.snapshots.snapshots[this.snapshots.currentIndex];
+        const isSameSnapshot =
+            currentSnapshot &&
+            currentSnapshot.html == snapshot.html &&
+            !currentSnapshot.entityStates &&
+            !snapshot.entityStates;
         const addSnapshot = !currentSnapshot || shouldAddSnapshot(currentSnapshot, snapshot);
 
         if (this.snapshots.currentIndex < 0 || addSnapshot) {
@@ -78,7 +83,7 @@ class SnapshotsManagerImpl implements SnapshotsManager {
             if (isAutoCompleteSnapshot) {
                 this.snapshots.autoCompleteIndex = this.snapshots.currentIndex;
             }
-        } else if (!addSnapshot) {
+        } else if (isSameSnapshot) {
             // replace the currentSnapshot's metadata so the selection is updated
             this.snapshots.snapshots.splice(this.snapshots.currentIndex, 1, snapshot);
         }
