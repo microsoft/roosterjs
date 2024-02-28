@@ -571,6 +571,46 @@ describe('SelectionPlugin handle image selection', () => {
         expect(stopPropagationSpy).not.toHaveBeenCalled();
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
     });
+
+    it('key down - select all', () => {
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const rawEvent = {
+            key: 'a',
+            ctrlKey: true,
+            stopPropagation: stopPropagationSpy,
+        } as any;
+
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+
+        mockedImage.parentNode.childNodes.push(mockedImage);
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent,
+        });
+
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range: mockedRange,
+            isReverted: false,
+        });
+    });
 });
 
 describe('SelectionPlugin on Safari', () => {

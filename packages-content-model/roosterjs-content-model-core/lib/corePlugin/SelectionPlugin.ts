@@ -137,6 +137,15 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         this.selectBeforeImage(this.editor, selection.image);
                     }
                 }
+
+                // Select all images when pressing Ctrl+A
+                if (
+                    (rawEvent.ctrlKey || rawEvent.metaKey) &&
+                    key == 'a' &&
+                    selection?.type == 'image'
+                ) {
+                    this.selectBeforeImage(this.editor, selection.image);
+                }
                 break;
         }
     }
