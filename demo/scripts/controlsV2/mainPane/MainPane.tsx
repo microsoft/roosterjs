@@ -8,10 +8,12 @@ import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-mode
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
+import { createLegacyPlugins } from '../plugins/createLegacyPlugins';
 import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
 import { createPasteOptionPlugin } from '../roosterjsReact/pasteOptions';
 import { createRibbonPlugin, Ribbon, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { Editor } from 'roosterjs-content-model-core';
+import { EditorAdapter } from 'roosterjs-editor-adapter';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
@@ -61,7 +63,6 @@ const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
 // More options
-// toggleable plugins
 // Support legacy plugins
 // Generate code
 // Ribbon tabs
@@ -274,13 +275,17 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     }
 
     private resetEditor() {
-        // TODO: this.toggleablePlugins = null;
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new Editor(div, {
-                    ...options,
-                    cacheModel: true,
-                }),
+            editorCreator: (div: HTMLDivElement, options: EditorOptions) => {
+                const legacyPluginList = createLegacyPlugins(this.state.initState);
+
+                return legacyPluginList.length > 0
+                    ? new EditorAdapter(div, {
+                          ...options,
+                          legacyPlugins: legacyPluginList,
+                      })
+                    : new Editor(div, options);
+            },
         });
     }
 
@@ -322,7 +327,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         <Rooster
                             id={MainPane.editorDivId}
                             className={styles.editor}
-                            // TODO: legacyPlugins={allPlugins}
                             plugins={plugins}
                             defaultSegmentFormat={this.state.initState.defaultFormat}
                             inDarkMode={this.state.isDarkMode}
@@ -333,6 +337,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             editorCreator={this.state.editorCreator}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
                             knownColors={this.knownColors}
+                            cacheModel={this.state.initState.cacheModel}
                         />
                     )}
                 </div>

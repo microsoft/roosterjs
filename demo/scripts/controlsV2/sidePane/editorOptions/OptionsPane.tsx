@@ -2,9 +2,8 @@ import * as React from 'react';
 import { DefaultFormatPane } from './DefaultFormatPane';
 import { MainPane } from '../../mainPane/MainPane';
 import { OptionPaneProps, OptionState } from './OptionState';
-// TODO: import { Plugins } from './Plugins';
-// import ContentModelEditorCode from './codes/ContentModelEditorCode';
-// import BuildInPluginState, { BuildInPluginProps } from '../../BuildInPluginState';
+import { Plugins } from './Plugins';
+// TODO: import ContentModelEditorCode from './codes/ContentModelEditorCode';
 // import Code from './Code';
 
 // const htmlStart =
@@ -47,21 +46,6 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                 <div>
                     <br />
                 </div>
-                {/* <details>
-                    <summary>
-                        <b>Plugins:</b>
-                    </summary>
-                    <Plugins state={this.state} resetState={this.resetState} />
-                </details> */}
-                {/* <details>
-                    <summary>
-                        <b>Content edit features:</b>
-                    </summary>
-                    <ContentEditFeatures
-                        state={this.state.contentEditFeatures}
-                        resetState={this.resetState}
-                    />
-                </details> */}
                 <details>
                     <summary>
                         <b>Default Format:</b>
@@ -70,6 +54,15 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                         state={this.state.defaultFormat}
                         resetState={this.resetState}
                     />
+                </details>
+                <div>
+                    <br />
+                </div>
+                <details>
+                    <summary>
+                        <b>Legacy Plugins</b>
+                    </summary>
+                    <Plugins state={this.state} resetState={this.resetState} />
                 </details>
                 <div>
                     <br />
@@ -128,14 +121,13 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
 
     private resetState = (callback: (state: OptionState) => void, resetEditor: boolean) => {
         let state: OptionState = {
-            // TODO: linkTitle: this.state.linkTitle,
-            // watermarkText: this.state.watermarkText,
-            // pluginList: { ...this.state.pluginList },
-            // contentEditFeatures: { ...this.state.contentEditFeatures },
+            linkTitle: this.state.linkTitle,
+            watermarkText: this.state.watermarkText,
+            pluginList: { ...this.state.pluginList },
+            contentEditFeatures: { ...this.state.contentEditFeatures },
             defaultFormat: { ...this.state.defaultFormat },
-            // experimentalFeatures: this.state.experimentalFeatures,
-            // forcePreserveRatio: this.state.forcePreserveRatio,
-            // applyChangesOnMouseUp: this.state.applyChangesOnMouseUp,
+            forcePreserveRatio: this.state.forcePreserveRatio,
+            applyChangesOnMouseUp: this.state.applyChangesOnMouseUp,
             isRtl: this.state.isRtl,
             cacheModel: this.state.cacheModel,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
