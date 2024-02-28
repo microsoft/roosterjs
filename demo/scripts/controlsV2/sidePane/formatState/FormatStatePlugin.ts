@@ -1,5 +1,6 @@
-import FormatStatePane, { FormatStatePaneProps } from './FormatStatePane';
+import FormatStatePane, { FormatStatePaneProps, FormatStatePaneState } from './FormatStatePane';
 import { getFormatState } from 'roosterjs-content-model-api';
+import { getPositionRect } from '../../roosterjsReact/pasteOptions/utils/getPositionRect';
 import { PluginEvent } from 'roosterjs-content-model-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
@@ -13,6 +14,7 @@ export class FormatStatePlugin extends SidePanePluginImpl<FormatStatePane, Forma
         return {
             ...base,
             ...this.getFormatState(),
+            env: this.editor?.getEnvironment(),
         };
     }
 
@@ -31,20 +33,31 @@ export class FormatStatePlugin extends SidePanePluginImpl<FormatStatePane, Forma
         this.getComponent(component => component.setFormatState(this.getFormatState()));
     }
 
-    private getFormatState() {
+    private getFormatState(): FormatStatePaneState {
         if (!this.editor) {
             return null;
         }
 
         const format = getFormatState(this.editor);
-        // const position = this.editor && this.editor.getFocusedPosition();
-        // const rect = position && getPositionRect(position);
+        const selection = this.editor?.getDOMSelection();
+        let x = 0;
+        let y = 0;
 
-        return {
-            format,
-            // inIME: this.editor && this.editor.isInIME(),
-            // x: rect ? rect.left : 0,
-            // y: rect ? rect.top : 0,
-        };
+        if (selection?.type == 'range') {
+            const node = selection.isReverted
+                ? selection.range.startContainer
+                : selection.range.endContainer;
+            const offset = selection.isReverted
+                ? selection.range.startOffset
+                : selection.range.endOffset;
+            const rect = getPositionRect(node, offset);
+
+            if (rect) {
+                x = rect.left;
+                y = rect.top;
+            }
+        }
+
+        return { format, x, y };
     }
 }

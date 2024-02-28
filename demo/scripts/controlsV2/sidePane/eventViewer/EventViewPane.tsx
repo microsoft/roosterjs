@@ -73,14 +73,6 @@ export default class ContentModelEventViewPane extends React.Component<
 
     addEvent(event: PluginEvent) {
         if (this.state.displayCount > 0) {
-            if (event.eventType == 'beforePaste') {
-                // TODO: const sanitizer = new HtmlSanitizer(event.sanitizingOption);
-                // const fragment = event.fragment.cloneNode(true /*deep*/) as DocumentFragment;
-                // sanitizer.convertGlobalCssToInlineCss(fragment);
-                // sanitizer.sanitize(fragment);
-                // (event.clipboardData as any).html = this.getHtml(fragment);
-            }
-
             this.events.push({
                 time: new Date(),
                 event: event,
@@ -137,10 +129,7 @@ export default class ContentModelEventViewPane extends React.Component<
                         Types=
                         {event.clipboardData.types.join()}
                         {this.renderPasteContent('Plain text', event.clipboardData.text)}
-                        {this.renderPasteContent(
-                            'Sanitized HTML',
-                            (event.clipboardData as any).html
-                        )}
+                        {this.renderPasteContent('Sanitized HTML', event.clipboardData.html)}
                         {this.renderPasteContent('Original HTML', event.clipboardData.rawHtml)}
                         {this.renderPasteContent('Image', event.clipboardData.image, img => (
                             <img
@@ -233,19 +222,4 @@ export default class ContentModelEventViewPane extends React.Component<
             )
         );
     }
-
-    // TODO: private getHtml(fragment: DocumentFragment) {
-    //     const stringArray: string[] = [];
-    //     for (let child = fragment.firstChild; child; child = child.nextSibling) {
-    //         stringArray.push(
-    //             safeInstanceOf(child, 'HTMLElement')
-    //                 ? child.outerHTML
-    //                 : safeInstanceOf(child, 'Text')
-    //                 ? child.nodeValue
-    //                 : ''
-    //         );
-    //     }
-
-    //     return stringArray.join('');
-    // }
 }

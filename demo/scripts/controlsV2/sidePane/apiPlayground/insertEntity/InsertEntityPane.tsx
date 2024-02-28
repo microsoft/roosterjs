@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { ApiPaneProps } from '../ApiPaneProps';
-import { Entity, InsertEntityOptions } from 'roosterjs-content-model-types';
 import { insertEntity } from 'roosterjs-content-model-api';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
+import {
+    ContentModelBlockGroup,
+    ContentModelEntity,
+    InsertEntityOptions,
+} from 'roosterjs-content-model-types';
 
 const styles = require('./InsertEntityPane.scss');
 
 interface InsertEntityPaneState {
-    entities: Entity[];
+    entities: ContentModelEntity[];
 }
 
 export default class InsertEntityPane extends React.Component<ApiPaneProps, InsertEntityPaneState> {
@@ -79,14 +83,14 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                     <button onClick={this.insertEntity}>Insert Entity</button>
                 </div>
                 <hr />
-                {/* <div>
+                <div>
                     <button onClick={this.onGetEntities}>Get all entities</button>
                 </div>
                 <div>
                     {this.state.entities.map(entity => (
-                        <EntityButton key={entity.id} entity={entity} />
+                        <EntityButton key={entity.entityFormat.id} entity={entity} />
                     ))}
-                </div> */}
+                </div>
             </>
         );
     }
@@ -136,36 +140,79 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
         }
     };
 
-    // TODO: private onGetEntities = () => {
-    //     const selector = getEntitySelector();
-    //     const nodes = this.props.getEditor().queryElements(selector);
-    //     const allEntities = nodes.map(node => getEntityFromElement(node));
+    private onGetEntities = () => {
+        const model = this.props.getEditor().getContentModelCopy('connected');
+        const allEntities: ContentModelEntity[] = [];
 
-    //     this.setState({
-    //         entities: allEntities.filter(e => !!e),
-    //     });
-    // };
+        findAllEntities(model, allEntities);
+
+        this.setState({
+            entities: allEntities.filter(e => !!e),
+        });
+    };
 }
 
-// TODO: function EntityButton({ entity }: { entity: Entity }) {
-//     let background = '';
-//     const onMouseOver = React.useCallback(() => {
-//         background = entity.wrapper.style.backgroundColor;
-//         entity.wrapper.style.backgroundColor = 'blue';
-//     }, [entity]);
+function findAllEntities(group: ContentModelBlockGroup, result: ContentModelEntity[]) {
+    group.blocks.forEach(block => {
+        switch (block.blockType) {
+            case 'BlockGroup':
+                findAllEntities(block, result);
+                break;
 
-//     const onMouseOut = React.useCallback(() => {
-//         entity.wrapper.style.backgroundColor = background;
-//     }, [entity]);
+            case 'Entity':
+                result.push(block);
+                break;
 
-//     return (
-//         <div onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
-//             Type: {entity.type}
-//             <br />
-//             Id: {entity.id}
-//             <br />
-//             Readonly: {entity.isReadonly ? 'True' : 'False'}
-//             <br />
-//         </div>
-//     );
-// }
+            case 'Paragraph':
+                block.segments.forEach(segment => {
+                    switch (segment.segmentType) {
+                        case 'Entity':
+                            result.push(segment);
+                            break;
+
+                        case 'General':
+                            findAllEntities(segment, result);
+                            break;
+                    }
+                });
+                break;
+
+            case 'Table':
+                block.rows.forEach(row => row.cells.forEach(cell => findAllEntities(cell, result)));
+                break;
+        }
+    });
+}
+
+function EntityButton({ entity }: { entity: ContentModelEntity }) {
+    let background = '';
+    const onMouseOver = React.useCallback(() => {
+        background = entity.wrapper.style.backgroundColor;
+        entity.wrapper.style.backgroundColor = 'blue';
+    }, [entity]);
+
+    const onMouseOut = React.useCallback(() => {
+        entity.wrapper.style.backgroundColor = background;
+    }, [entity]);
+
+    return (
+        <div
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+            style={{
+                border: 'solid 1px gray',
+                borderRadius: '5px',
+                marginBottom: '10px',
+                padding: '5px',
+            }}>
+            Type: {entity.entityFormat.entityType}
+            <br />
+            Id: {entity.entityFormat.id}
+            <br />
+            Readonly: {entity.entityFormat.isReadonly ? 'True' : 'False'}
+            <br />
+            Fake entity: {entity.entityFormat.isFakeEntity ? 'True' : 'False'}
+            <br />
+        </div>
+    );
+}

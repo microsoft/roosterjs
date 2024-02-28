@@ -8,7 +8,7 @@ export interface ApiPlaygroundReactComponent
 
 interface ApiEntry {
     name: string;
-    component?: { new (prpos: ApiPaneProps): ApiPlaygroundReactComponent };
+    component?: { new (props: ApiPaneProps): ApiPlaygroundReactComponent };
 }
 
 const apiEntries: { [key: string]: ApiEntry } = {

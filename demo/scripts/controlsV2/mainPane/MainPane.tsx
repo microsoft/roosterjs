@@ -62,7 +62,7 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
-// More options
+// More context menu items
 // Generate code
 // Ribbon tabs
 
