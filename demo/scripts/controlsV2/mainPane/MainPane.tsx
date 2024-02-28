@@ -63,7 +63,6 @@ const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
 // More options
-// Support legacy plugins
 // Generate code
 // Ribbon tabs
 
