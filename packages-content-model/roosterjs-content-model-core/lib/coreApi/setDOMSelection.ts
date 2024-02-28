@@ -23,14 +23,14 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     // Set skipReselectOnFocus to skip this behavior
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
 
-    const doc = core.contentDiv.ownerDocument;
+    const doc = core.physicalRoot.ownerDocument;
     const sheet = core.selection.selectionStyleNode?.sheet;
 
     core.selection.skipReselectOnFocus = true;
 
     try {
         let selectionRules: string[] | undefined;
-        const rootSelector = '#' + addUniqueId(core.contentDiv, CONTENT_DIV_ID);
+        const rootSelector = '#' + addUniqueId(core.physicalRoot, CONTENT_DIV_ID);
 
         switch (selection?.type) {
             case 'image':

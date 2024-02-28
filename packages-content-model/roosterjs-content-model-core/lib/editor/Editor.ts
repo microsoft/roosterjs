@@ -196,7 +196,7 @@ export class Editor implements IEditor {
      * @returns The HTML document which contains this editor
      */
     getDocument(): Document {
-        return this.getCore().contentDiv.ownerDocument;
+        return this.getCore().physicalRoot.ownerDocument;
     }
 
     /**
@@ -275,7 +275,7 @@ export class Editor implements IEditor {
 
         if (!!isDarkMode != core.lifecycle.isDarkMode) {
             transformColor(
-                core.contentDiv,
+                core.physicalRoot,
                 false /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
                 core.darkColorHandler

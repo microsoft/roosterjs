@@ -15,7 +15,7 @@ export const focus: Focus = core => {
 
         // fallback, in case editor still have no focus
         if (!core.api.hasFocus(core)) {
-            core.contentDiv.focus();
+            core.logicalRoot.focus();
         }
     }
 };

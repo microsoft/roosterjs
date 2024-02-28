@@ -286,9 +286,16 @@ export interface CoreApiMap {
  */
 export interface EditorCore extends PluginState {
     /**
-     * The content DIV element of this editor
+     * The root DIV element of this editor (formerly contentDiv)
      */
-    readonly contentDiv: HTMLDivElement;
+    readonly physicalRoot: HTMLDivElement;
+
+    /**
+     * The content DIV element that operations should be applied to
+     * By default, the logical root is the same as the physical root,
+     * but if nested editors are used, the logical root changes to that of the inner editor
+     */
+    logicalRoot: HTMLDivElement;
 
     /**
      * Core API map of this editor
