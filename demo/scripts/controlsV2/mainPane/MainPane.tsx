@@ -62,7 +62,6 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 // Pending tasks:
-// Generate code
 // Ribbon tabs
 
 export class MainPane extends React.Component<{}, MainPaneState> {

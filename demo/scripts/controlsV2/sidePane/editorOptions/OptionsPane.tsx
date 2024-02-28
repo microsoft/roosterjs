@@ -1,29 +1,29 @@
 import * as React from 'react';
+import { Code } from './Code';
 import { DefaultFormatPane } from './DefaultFormatPane';
+import { EditorCode } from './codes/EditorCode';
 import { MainPane } from '../../mainPane/MainPane';
 import { OptionPaneProps, OptionState } from './OptionState';
 import { Plugins } from './Plugins';
-// TODO: import ContentModelEditorCode from './codes/ContentModelEditorCode';
-// import Code from './Code';
 
-// const htmlStart =
-//     '<html>\n' +
-//     '<body>\n' +
-//     '<div id="contentDiv" style="width: 800px; height: 400px; border: solid 1px black; overflow: auto"></div>\n';
-// const htmlButtons =
-//     '<button id=buttonB><b>B</b></button>\n' +
-//     '<button id=buttonI><i>I</i></button>\n' +
-//     '<button id=buttonU><u>U</u></button>\n' +
-//     '<button id=buttonBullet>Bullet</button>\n' +
-//     '<button id=buttonNumbering>Numbering</button>\n' +
-//     '<button id=buttonUndo>Undo</button>\n' +
-//     '<button id=buttonRedo>Redo</button>\n';
+const htmlStart =
+    '<html>\n' +
+    '<body>\n' +
+    '<div id="contentDiv" style="width: 800px; height: 400px; border: solid 1px black; overflow: auto"></div>\n';
+const htmlButtons =
+    '<button id=buttonB><b>B</b></button>\n' +
+    '<button id=buttonI><i>I</i></button>\n' +
+    '<button id=buttonU><u>U</u></button>\n' +
+    '<button id=buttonBullet>Bullet</button>\n' +
+    '<button id=buttonNumbering>Numbering</button>\n' +
+    '<button id=buttonUndo>Undo</button>\n' +
+    '<button id=buttonRedo>Redo</button>\n';
 // const darkButton = '<button id=buttonDark>Dark Mode</button>\n';
-// const htmlEnd =
-//     '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
-//     '<script src="https://microsoft.github.io/roosterjs/rooster-content-model-min.js"></script>\n' +
-//     '</body>\n' +
-//     '</html>';
+const htmlEnd =
+    //    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
+    '<script src="https://microsoft.github.io/roosterjs/rooster-content-model-min.js"></script>\n' +
+    '</body>\n' +
+    '</html>';
 
 export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
     private exportForm = React.createRef<HTMLFormElement>();
@@ -38,14 +38,6 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
     render() {
         return (
             <div>
-                {/* <div>
-                    <button onClick={this.onExportRoosterContentModel}>
-                        Try roosterjs Content Model Editor in CodePen
-                    </button>
-                </div> */}
-                <div>
-                    <br />
-                </div>
                 <details>
                     <summary>
                         <b>Default Format:</b>
@@ -88,7 +80,12 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                     <label htmlFor="cacheModel">Use Content Model Cache</label>
                 </div>
                 <hr />
-                {/* <details>
+                <div>
+                    <button onClick={this.onExportRoosterContentModel}>
+                        Try roosterjs Content Model Editor in CodePen
+                    </button>
+                </div>
+                <details>
                     <summary>
                         <b>HTML Code:</b>
                     </summary>
@@ -97,13 +94,13 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                             <pre>{this.getHtml()}</pre>
                         </code>
                     </div>
-                </details> */}
-                {/* <details>
+                </details>
+                <details>
                     <summary>
                         <b>Typescript Code:</b>
                     </summary>
                     <Code state={this.state} />
-                </details> */}
+                </details>
                 <form
                     ref={this.exportForm}
                     method="POST"
@@ -143,19 +140,19 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         }
     };
 
-    // TODO: private onExportRoosterContentModel = () => {
-    //     let editor = new ContentModelEditorCode(this.state);
-    //     let code = editor.getCode();
-    //     let json = {
-    //         title: 'RoosterJs',
-    //         html: this.getHtml(),
-    //         head: '',
-    //         js: code,
-    //         js_pre_processor: 'typescript',
-    //     };
-    //     this.exportData.current.value = JSON.stringify(json);
-    //     this.exportForm.current.submit();
-    // };
+    private onExportRoosterContentModel = () => {
+        let editor = new EditorCode(this.state);
+        let code = editor.getCode();
+        let json = {
+            title: 'RoosterJs',
+            html: this.getHtml(),
+            head: '',
+            js: code,
+            js_pre_processor: 'typescript',
+        };
+        this.exportData.current.value = JSON.stringify(json);
+        this.exportForm.current.submit();
+    };
 
     private onToggleDirection = () => {
         let isRtl = this.rtl.current.checked;
@@ -171,7 +168,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         }, true);
     };
 
-    // TODO: private getHtml() {
-    //     return `${htmlStart}${htmlButtons}${darkButton}${htmlEnd}`;
-    // }
+    private getHtml() {
+        return `${htmlStart}${htmlButtons}${htmlEnd}`;
+    }
 }
