@@ -12,7 +12,8 @@ describe('restoreSnapshotSelection', () => {
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
 
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             api: {
                 setDOMSelection: setDOMSelectionSpy,
             },

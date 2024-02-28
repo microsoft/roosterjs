@@ -10,7 +10,8 @@ describe('restoreSnapshotHTML', () => {
         div = document.createElement('div');
 
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             entity: {
                 entityMap: {},
             },

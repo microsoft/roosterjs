@@ -9,7 +9,9 @@ export const getVisibleViewport: GetVisibleViewport = core => {
     const scrollContainer = core.domEvent.scrollContainer;
 
     return getIntersectedRect(
-        scrollContainer == core.contentDiv ? [scrollContainer] : [scrollContainer, core.contentDiv]
+        scrollContainer == core.physicalRoot
+            ? [scrollContainer]
+            : [scrollContainer, core.physicalRoot]
     );
 };
 

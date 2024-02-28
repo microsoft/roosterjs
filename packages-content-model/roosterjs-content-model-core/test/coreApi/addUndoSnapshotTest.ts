@@ -21,7 +21,8 @@ describe('addUndoSnapshot', () => {
         } as any;
 
         core = {
-            contentDiv,
+            physicalRoot: contentDiv,
+            logicalRoot: contentDiv,
             darkColorHandler: {
                 getKnownColorsCopy: getKnownColorsCopySpy,
             },

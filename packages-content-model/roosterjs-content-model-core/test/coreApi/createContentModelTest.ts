@@ -34,7 +34,8 @@ describe('createContentModel', () => {
         );
 
         core = ({
-            contentDiv: mockedDiv,
+            physicalRoot: mockedDiv,
+            logicalRoot: mockedDiv,
             api: {
                 createEditorContext,
                 getDOMSelection,
@@ -99,7 +100,8 @@ describe('createContentModel with selection', () => {
         );
 
         core = {
-            contentDiv: MockedDiv,
+            physicalRoot: MockedDiv,
+            logicalRoot: MockedDiv,
             api: {
                 getDOMSelection: getDOMSelectionSpy,
                 createEditorContext: createEditorContextSpy,
