@@ -152,6 +152,8 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * Dispose this editor, dispose all plugins and custom data
      */
     dispose(): void {
+        super.dispose();
+
         const core = this.contentModelEditorCore;
 
         if (core) {
@@ -167,8 +169,6 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
 
             this.contentModelEditorCore = undefined;
         }
-
-        super.dispose();
     }
 
     /**
