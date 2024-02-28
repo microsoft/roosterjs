@@ -4,6 +4,6 @@
     "packages-content-model": "0.26.4",
     "overrides": {
         "roosterjs-editor-plugins": "8.60.2",
-        "roosterjs-editor-adapter": "0.26.2"
+        "roosterjs-editor-adapter": "0.26.3"
     }
 }
