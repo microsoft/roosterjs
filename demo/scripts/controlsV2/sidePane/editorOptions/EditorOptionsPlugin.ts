@@ -1,38 +1,8 @@
-import { ContentEditFeatureSettings } from 'roosterjs-editor-types';
-import { getAllFeatures } from 'roosterjs-editor-plugins';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { getDefaultContentEditFeatureSettings } from './getDefaultContentEditFeatureSettings';
 import { OptionPaneProps, OptionState, UrlPlaceholder } from './OptionState';
 import { OptionsPane } from './OptionsPane';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
-
-const listFeatures = {
-    autoBullet: false,
-    indentWhenTab: false,
-    outdentWhenShiftTab: false,
-    outdentWhenBackspaceOnEmptyFirstLine: false,
-    outdentWhenEnterOnEmptyLine: false,
-    mergeInNewLineWhenBackspaceOnFirstChar: false,
-    maintainListChain: false,
-    maintainListChainWhenDelete: false,
-    autoNumberingList: false,
-    autoBulletList: false,
-    mergeListOnBackspaceAfterList: false,
-    outdentWhenAltShiftLeft: false,
-    indentWhenAltShiftRight: false,
-};
-
-function getDefaultContentEditFeatureSettings(): ContentEditFeatureSettings {
-    const allFeatures = getAllFeatures();
-
-    return {
-        ...getObjectKeys(allFeatures).reduce((settings, key) => {
-            settings[key] = !allFeatures[key].defaultDisabled;
-            return settings;
-        }, <ContentEditFeatureSettings>{}),
-        ...listFeatures,
-    };
-}
 
 const initialState: OptionState = {
     pluginList: {

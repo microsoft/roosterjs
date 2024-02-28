@@ -1,17 +1,14 @@
 import * as React from 'react';
-import { EditorCode } from './codes/EditorCode';
-import { OptionState } from './OptionState';
 
 export interface CodeProps {
-    state: OptionState;
+    code: string;
 }
 
 export class Code extends React.Component<CodeProps, {}> {
     render() {
-        let editor = new EditorCode(this.props.state);
         return (
             <div>
-                <pre>{editor.getCode()}</pre>
+                <pre>{this.props.code}</pre>
             </div>
         );
     }

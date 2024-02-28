@@ -9,12 +9,12 @@ const codeMap: { [id: string]: string } = {
     buttonNumbering: 'roosterjsContentModel.toggleNumbering(editor)',
     buttonUndo: 'roosterjsContentModel.undo(editor)',
     buttonRedo: 'roosterjsContentModel.redo(editor)',
+    buttonDark: 'editor.setDarkModeState(!editor.isDarkMode())',
 };
-const buttonDark = 'editor.setDarkModeState(!editor.isDarkMode())';
 
 export class ButtonsCode extends CodeElement {
     getCode() {
-        const map = { ...codeMap, buttonDark: buttonDark };
+        const map = { ...codeMap };
         return getObjectKeys(map)
             .map(
                 id =>

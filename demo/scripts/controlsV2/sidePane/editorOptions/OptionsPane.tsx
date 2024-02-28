@@ -17,13 +17,13 @@ const htmlButtons =
     '<button id=buttonBullet>Bullet</button>\n' +
     '<button id=buttonNumbering>Numbering</button>\n' +
     '<button id=buttonUndo>Undo</button>\n' +
-    '<button id=buttonRedo>Redo</button>\n';
-// const darkButton = '<button id=buttonDark>Dark Mode</button>\n';
-const htmlEnd =
-    //    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
-    '<script src="https://microsoft.github.io/roosterjs/rooster-content-model-min.js"></script>\n' +
-    '</body>\n' +
-    '</html>';
+    '<button id=buttonRedo>Redo</button>\n' +
+    '<button id=buttonDark>Dark Mode</button>\n';
+const legacyJsCode =
+    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n';
+const jsCode =
+    '<script src="https://microsoft.github.io/roosterjs/rooster-content-model-min.js"></script>\n';
+const htmlEnd = '</body>\n' + '</html>';
 
 export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
     private exportForm = React.createRef<HTMLFormElement>();
@@ -36,6 +36,9 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         this.state = { ...props };
     }
     render() {
+        const editorCode = new EditorCode(this.state);
+        const html = this.getHtml(editorCode.requireLegacyCode());
+
         return (
             <div>
                 <details>
@@ -82,24 +85,23 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                 <hr />
                 <div>
                     <button onClick={this.onExportRoosterContentModel}>
-                        Try roosterjs Content Model Editor in CodePen
+                        Try roosterjs in CodePen
                     </button>
+                </div>
+                <div>
+                    <br />
                 </div>
                 <details>
                     <summary>
                         <b>HTML Code:</b>
                     </summary>
-                    <div>
-                        <code>
-                            <pre>{this.getHtml()}</pre>
-                        </code>
-                    </div>
+                    <Code code={html} />
                 </details>
                 <details>
                     <summary>
                         <b>Typescript Code:</b>
                     </summary>
-                    <Code state={this.state} />
+                    <Code code={editorCode.getCode()} />
                 </details>
                 <form
                     ref={this.exportForm}
@@ -145,7 +147,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         let code = editor.getCode();
         let json = {
             title: 'RoosterJs',
-            html: this.getHtml(),
+            html: this.getHtml(editor.requireLegacyCode()),
             head: '',
             js: code,
             js_pre_processor: 'typescript',
@@ -168,7 +170,9 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         }, true);
     };
 
-    private getHtml() {
-        return `${htmlStart}${htmlButtons}${htmlEnd}`;
+    private getHtml(requireLegacyCode: boolean) {
+        return `${htmlStart}${htmlButtons}${
+            requireLegacyCode ? legacyJsCode : ''
+        }${jsCode}${htmlEnd}`;
     }
 }
