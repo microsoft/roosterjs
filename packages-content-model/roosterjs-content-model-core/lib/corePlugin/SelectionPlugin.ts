@@ -125,26 +125,21 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 selection = this.editor.getDOMSelection();
 
                 if (
-                    !isModifierKey(rawEvent) &&
                     !rawEvent.shiftKey &&
                     selection?.type == 'image' &&
                     selection.image.parentNode
                 ) {
-                    if (key === 'Escape') {
+                    if (key === 'Escape' && !isModifierKey(rawEvent)) {
                         this.selectBeforeImage(this.editor, selection.image);
                         event.rawEvent.stopPropagation();
-                    } else if (key !== 'Delete' && key !== 'Backspace') {
+                    } else if (
+                        (key !== 'Delete' && key !== 'Backspace' && !isModifierKey(rawEvent)) ||
+                        (key !== 'Escape' &&
+                            isModifierKey(rawEvent) &&
+                            !this.getClickingImage(rawEvent))
+                    ) {
                         this.selectBeforeImage(this.editor, selection.image);
                     }
-                }
-
-                // Select all images when pressing Ctrl+A
-                if (
-                    (rawEvent.ctrlKey || rawEvent.metaKey) &&
-                    key == 'a' &&
-                    selection?.type == 'image'
-                ) {
-                    this.selectBeforeImage(this.editor, selection.image);
                 }
                 break;
         }

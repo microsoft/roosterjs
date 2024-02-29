@@ -506,10 +506,10 @@ describe('SelectionPlugin handle image selection', () => {
         });
     });
 
-    it('key down - other key with modifier key', () => {
+    it('key down - Escape key with modifier key', () => {
         const stopPropagationSpy = jasmine.createSpy('stopPropagation');
         const rawEvent = {
-            key: 'A',
+            key: 'Escape',
             stopPropagation: stopPropagationSpy,
             ctrlKey: true,
         } as any;
