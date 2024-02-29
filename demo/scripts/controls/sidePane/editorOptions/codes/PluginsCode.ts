@@ -9,7 +9,6 @@ import {
     CutPasteListChainCode,
     ImageEditCode,
     ContentModelPasteCode,
-    TableResizeCode,
 } from './SimplePluginCode';
 
 export default class PluginsCode extends CodeElement {
@@ -26,7 +25,6 @@ export default class PluginsCode extends CodeElement {
             pluginList.watermark && new WatermarkCode(this.state.watermarkText),
             pluginList.imageEdit && new ImageEditCode(),
             pluginList.cutPasteListChain && new CutPasteListChainCode(),
-            pluginList.tableResize && new TableResizeCode(),
             pluginList.customReplace && new CustomReplaceCode(),
             pluginList.tableCellSelection && new TableCellSelectionCode(),
         ].filter(plugin => !!plugin);

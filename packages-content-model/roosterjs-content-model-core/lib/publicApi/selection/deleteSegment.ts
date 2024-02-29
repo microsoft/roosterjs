@@ -48,9 +48,6 @@ export function deleteSegment(
                 ? 'removeFromEnd'
                 : undefined;
             if (operation !== undefined) {
-                const wrapper = segmentToDelete.wrapper;
-
-                wrapper.parentNode?.removeChild(wrapper);
                 segments.splice(index, 1);
                 context?.deletedEntities.push({
                     entity: segmentToDelete,
