@@ -11,13 +11,13 @@ import type { AddUndoSnapshot, Snapshot } from 'roosterjs-content-model-types';
  * when undo/redo to this snapshot
  */
 export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entityStates) => {
-    const { lifecycle, contentDiv, undo } = core;
+    const { lifecycle, physicalRoot, undo } = core;
     let snapshot: Snapshot | null = null;
 
     if (!lifecycle.shadowEditFragment) {
         // Need to create snapshot selection before retrieve innerHTML since HTML can be changed during creating selection when normalize table
         const selection = createSnapshotSelection(core);
-        const html = contentDiv.innerHTML;
+        const html = physicalRoot.innerHTML;
 
         snapshot = {
             html,

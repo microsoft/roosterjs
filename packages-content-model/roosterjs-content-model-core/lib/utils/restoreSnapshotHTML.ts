@@ -19,10 +19,10 @@ const BlockEntityContainer = '_E_EBlockEntityContainer';
  */
 export function restoreSnapshotHTML(core: EditorCore, snapshot: Snapshot) {
     const {
-        contentDiv,
+        physicalRoot,
         entity: { entityMap },
     } = core;
-    let refNode: Node | null = contentDiv.firstChild;
+    let refNode: Node | null = physicalRoot.firstChild;
 
     const body = new DOMParser().parseFromString(
         core.trustedHTMLHandler?.(snapshot.html) ?? snapshot.html,
@@ -34,9 +34,9 @@ export function restoreSnapshotHTML(core: EditorCore, snapshot: Snapshot) {
         const originalEntityElement = tryGetEntityElement(entityMap, currentNode);
 
         if (originalEntityElement) {
-            refNode = reuseCachedElement(contentDiv, originalEntityElement, refNode);
+            refNode = reuseCachedElement(physicalRoot, originalEntityElement, refNode);
         } else {
-            contentDiv.insertBefore(currentNode, refNode);
+            physicalRoot.insertBefore(currentNode, refNode);
 
             if (isNodeOfType(currentNode, 'ELEMENT_NODE')) {
                 const childEntities = getAllEntityWrappers(currentNode);
@@ -51,7 +51,7 @@ export function restoreSnapshotHTML(core: EditorCore, snapshot: Snapshot) {
                             // Then after replaceChild(), the original refNode will be moved away
                             const markerNode = wrapper.cloneNode();
 
-                            contentDiv.insertBefore(markerNode, refNode);
+                            physicalRoot.insertBefore(markerNode, refNode);
                             refNode = markerNode;
                         }
 
