@@ -61,7 +61,6 @@ export class Plugins extends React.Component<PluginsProps, {}> {
                             (state, value) => (state.forcePreserveRatio = value)
                         )
                     )}
-                    {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
                     {this.renderPluginItem('tableCellSelection', 'Table Cell Selection')}
                     {this.renderPluginItem('announce', 'Announce')}

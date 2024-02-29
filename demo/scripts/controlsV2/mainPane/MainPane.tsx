@@ -40,6 +40,7 @@ import {
     EditPlugin,
     PastePlugin,
     ShortcutPlugin,
+    TableEditPlugin,
 } from 'roosterjs-content-model-plugins';
 
 const styles = require('./MainPane.scss');
@@ -60,9 +61,6 @@ const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Site</titl
 const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
-
-// Pending tasks:
-// Ribbon tabs
 
 export class MainPane extends React.Component<{}, MainPaneState> {
     private mouseX: number;
@@ -85,6 +83,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private imageMenuPlugin: EditorPlugin;
     private contextMenuPlugin: EditorPlugin;
     private pasteOptionPlugin: EditorPlugin;
+    private tableEditPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private sampleEntityPlugin: EditorPlugin;
     private snapshots: Snapshots;
@@ -127,6 +126,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.pastePlugin = new PastePlugin();
+        this.tableEditPlugin = new TableEditPlugin();
         this.contextMenuPlugin = createContextMenuPlugin();
         this.listMenuPlugin = createListEditMenuProvider();
         this.tableMenuPlugin = createTableEditMenuProvider();
@@ -307,6 +307,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.tableMenuPlugin,
             this.imageMenuPlugin,
             this.pasteOptionPlugin,
+            this.tableEditPlugin,
             this.emojiPlugin,
             this.sampleEntityPlugin,
         ];

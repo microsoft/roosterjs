@@ -10,7 +10,7 @@ import {
     ImageEditCode,
     PastePluginCode,
     TableCellSelectionCode,
-    TableResizeCode,
+    TableEditPluginCode,
     // TODO:    ShortcutPluginCode,
 } from './SimplePluginCode';
 
@@ -40,6 +40,7 @@ export class PluginsCode extends PluginsCodeBase {
             new AutoFormatPluginCode(),
             new EditPluginCode(),
             new PastePluginCode(),
+            new TableEditPluginCode(),
             // new ShortcutPluginCode(),
         ]);
     }
@@ -53,7 +54,6 @@ export class LegacyPluginCode extends PluginsCodeBase {
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
             pluginList.watermark && new WatermarkCode(state.watermarkText),
             pluginList.imageEdit && new ImageEditCode(),
-            pluginList.tableResize && new TableResizeCode(),
             pluginList.customReplace && new CustomReplaceCode(),
             pluginList.tableCellSelection && new TableCellSelectionCode(),
         ];

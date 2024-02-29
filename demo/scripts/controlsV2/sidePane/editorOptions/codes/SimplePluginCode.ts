@@ -34,15 +34,15 @@ export class ShortcutPluginCode extends SimplePluginCode {
     }
 }
 
-export class ImageEditCode extends SimplePluginCode {
+export class TableEditPluginCode extends SimplePluginCode {
     constructor() {
-        super('ImageEdit', 'roosterjs');
+        super('TableEditPlugin');
     }
 }
 
-export class TableResizeCode extends SimplePluginCode {
+export class ImageEditCode extends SimplePluginCode {
     constructor() {
-        super('TableResize', 'roosterjs');
+        super('ImageEdit', 'roosterjs');
     }
 }
 

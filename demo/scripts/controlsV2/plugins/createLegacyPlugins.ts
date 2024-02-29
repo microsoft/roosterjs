@@ -6,7 +6,6 @@ import {
     HyperLink,
     ImageEdit,
     TableCellSelection,
-    TableResize,
     Watermark,
 } from 'roosterjs-editor-plugins';
 import {
@@ -37,9 +36,6 @@ export function createLegacyPlugins(initState: OptionState): LegacyEditorPlugin[
               })
             : null,
         tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
-        tableResize: pluginList.tableResize
-            ? new TableResize(undefined, initState.tableFeaturesContainerSelector)
-            : null,
         customReplace: pluginList.customReplace ? new CustomReplace() : null,
         announce: pluginList.announce ? new Announce(getDefaultStringsMap()) : null,
     };

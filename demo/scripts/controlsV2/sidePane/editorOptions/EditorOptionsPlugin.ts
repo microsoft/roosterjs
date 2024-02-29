@@ -11,7 +11,6 @@ const initialState: OptionState = {
         watermark: false,
         imageEdit: false,
         tableCellSelection: false,
-        tableResize: false,
         customReplace: false,
         announce: false,
     },

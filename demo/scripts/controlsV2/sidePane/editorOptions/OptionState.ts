@@ -8,7 +8,6 @@ export interface BuildInPluginList {
     watermark: boolean;
     imageEdit: boolean;
     tableCellSelection: boolean;
-    tableResize: boolean;
     customReplace: boolean;
     announce: boolean;
 }
