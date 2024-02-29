@@ -42,9 +42,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         if (shouldAddSnapshot) {
             core.undo.isNested = true;
 
-            if (core.undo.snapshotsManager.hasNewContent || entityStates) {
-                core.api.addUndoSnapshot(core, !!canUndoByBackspace);
-            }
+            core.api.addUndoSnapshot(core, !!canUndoByBackspace, entityStates);
         }
 
         try {
