@@ -93,7 +93,7 @@ describe('formatContentModel', () => {
                 newImages: [],
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
-            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -725,7 +725,7 @@ describe('formatContentModel', () => {
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
-            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -750,7 +750,7 @@ describe('formatContentModel', () => {
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
-            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -771,7 +771,7 @@ describe('formatContentModel', () => {
             formatContentModel(core, callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
-            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -800,7 +800,7 @@ describe('formatContentModel', () => {
             formatContentModel(core, callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
-            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
