@@ -18,6 +18,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private disposer: (() => void) | null = null;
     private isSafari = false;
     private isMac = false;
+    private suspendSelectionChangeEvent = false;
 
     constructor(options: EditorOptions) {
         this.state = {
@@ -46,8 +47,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.isSafari = !!env.isSafari;
         this.isMac = !!env.isMac;
 
+        document.addEventListener('selectionchange', this.onSelectionChange);
+
         if (this.isSafari) {
-            document.addEventListener('selectionchange', this.onSelectionChangeSafari);
             this.disposer = this.editor.attachDomEvent({ focus: { beforeDispatch: this.onFocus } });
         } else {
             this.disposer = this.editor.attachDomEvent({
@@ -58,9 +60,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     dispose() {
-        this.editor
-            ?.getDocument()
-            .removeEventListener('selectionchange', this.onSelectionChangeSafari);
+        this.editor?.getDocument().removeEventListener('selectionchange', this.onSelectionChange);
 
         if (this.state.selectionStyleNode) {
             this.state.selectionStyleNode.parentNode?.removeChild(this.state.selectionStyleNode);
@@ -123,21 +123,18 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 const rawEvent = event.rawEvent;
                 const key = rawEvent.key;
                 selection = this.editor.getDOMSelection();
+                this.suspendSelectionChangeEvent = false;
 
                 if (
+                    !isModifierKey(rawEvent) &&
                     !rawEvent.shiftKey &&
                     selection?.type == 'image' &&
                     selection.image.parentNode
                 ) {
-                    if (key === 'Escape' && !isModifierKey(rawEvent)) {
+                    if (key === 'Escape') {
                         this.selectBeforeImage(this.editor, selection.image);
                         event.rawEvent.stopPropagation();
-                    } else if (
-                        (key !== 'Delete' && key !== 'Backspace' && !isModifierKey(rawEvent)) ||
-                        (key !== 'Escape' &&
-                            isModifierKey(rawEvent) &&
-                            !this.getClickingImage(rawEvent))
-                    ) {
+                    } else if (key !== 'Delete' && key !== 'Backspace') {
                         this.selectBeforeImage(this.editor, selection.image);
                     }
                 }
@@ -146,6 +143,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     private selectImage(editor: IEditor, image: HTMLImageElement) {
+        this.suspendSelectionChangeEvent = true;
         editor.setDOMSelection({
             type: 'image',
             image: image,
@@ -216,7 +214,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private onSelectionChangeSafari = () => {
+    private onSelectionChange = (event: Event) => {
         if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
             // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
             // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
@@ -224,6 +222,16 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             if (newSelection?.type == 'range') {
                 this.state.selection = newSelection;
+            }
+
+            const range = document.getSelection()?.getRangeAt(0);
+            if (range && newSelection?.type == 'image' && !this.suspendSelectionChangeEvent) {
+                this.editor.setDOMSelection({
+                    type: 'range',
+                    range,
+                    isReverted: false,
+                });
+                this.suspendSelectionChangeEvent = false;
             }
         }
     };

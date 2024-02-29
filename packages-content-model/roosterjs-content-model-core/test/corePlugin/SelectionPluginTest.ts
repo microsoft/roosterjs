@@ -17,12 +17,14 @@ describe('SelectionPlugin', () => {
             .and.returnValue(MockedStyleNode);
         const appendChildSpy = jasmine.createSpy('appendChild');
         const attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
         const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createElement: createElementSpy,
             head: {
                 appendChild: appendChildSpy,
             },
+            addEventListener: addEventListenerSpy,
             removeEventListener: removeEventListenerSpy,
         });
         const state = plugin.getState();
@@ -62,12 +64,14 @@ describe('SelectionPlugin', () => {
             .createSpy('createElement')
             .and.returnValue(MockedStyleNode);
         const appendChildSpy = jasmine.createSpy('appendChild');
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
         const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createElement: createElementSpy,
             head: {
                 appendChild: appendChildSpy,
             },
+            addEventListener: addEventListenerSpy,
             removeEventListener: removeEventListenerSpy,
         });
 
@@ -99,6 +103,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let appendChildSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
 
     let editor: IEditor;
 
@@ -108,11 +113,13 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         createElementSpy = jasmine.createSpy('createElement').and.returnValue(MockedStyleNode);
         appendChildSpy = jasmine.createSpy('appendChild');
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createElement: createElementSpy,
             head: {
                 appendChild: appendChildSpy,
             },
+            addEventListener: addEventListenerSpy,
             removeEventListener: removeEventListenerSpy,
         });
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
@@ -178,18 +185,23 @@ describe('SelectionPlugin handle image selection', () => {
     let getDocumentSpy: jasmine.Spy;
     let createElementSpy: jasmine.Spy;
     let createRangeSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
+    let hasFocusSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         createElementSpy = jasmine.createSpy('createElement').and.returnValue(MockedStyleNode);
         createRangeSpy = jasmine.createSpy('createRange');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
+        hasFocusSpy = jasmine.createSpy('hasFocus');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createElement: createElementSpy,
             createRange: createRangeSpy,
             head: {
                 appendChild: () => {},
             },
+            addEventListener: addEventListenerSpy,
         });
 
         editor = {
@@ -200,6 +212,7 @@ describe('SelectionPlugin handle image selection', () => {
             attachDomEvent: (map: Record<string, any>) => {
                 return jasmine.createSpy('disposer');
             },
+            hasFocus: hasFocusSpy,
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -506,10 +519,10 @@ describe('SelectionPlugin handle image selection', () => {
         });
     });
 
-    it('key down - Escape key with modifier key', () => {
+    it('key down - other key with modifier key', () => {
         const stopPropagationSpy = jasmine.createSpy('stopPropagation');
         const rawEvent = {
-            key: 'Escape',
+            key: 'A',
             stopPropagation: stopPropagationSpy,
             ctrlKey: true,
         } as any;
@@ -541,20 +554,13 @@ describe('SelectionPlugin handle image selection', () => {
     });
 
     it('key down - other key, image has no parent', () => {
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
-        const rawEvent = {
-            key: 'A',
-            stopPropagation: stopPropagationSpy,
-        } as any;
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = 'OLDSELECTION' as any;
 
-        const mockedImage = {
-            parentNode: { childNodes: [] },
-        } as any;
+        state.selection = mockedOldSelection;
 
-        getDOMSelectionSpy.and.returnValue({
-            type: 'image',
-            image: mockedImage,
-        });
+        plugin.initialize(editor);
 
         const mockedRange = {
             setStart: jasmine.createSpy('setStart'),
@@ -572,44 +578,51 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
     });
 
-    it('key down - select all', () => {
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
-        const rawEvent = {
-            key: 'a',
-            ctrlKey: true,
-            stopPropagation: stopPropagationSpy,
-        } as any;
+    it('key down - select all after image selection', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = 'OLDSELECTION' as any;
 
-        const mockedImage = {
-            parentNode: { childNodes: [] },
-        } as any;
+        const mockedImage = document.createElement('img');
 
-        mockedImage.parentNode.childNodes.push(mockedImage);
+        mockedImage.contentEditable = 'true';
 
-        getDOMSelectionSpy.and.returnValue({
-            type: 'image',
-            image: mockedImage,
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            isClicking: false,
+            rawEvent: {
+                target: mockedImage,
+            } as any,
         });
-
-        const mockedRange = {
-            setStart: jasmine.createSpy('setStart'),
-            collapse: jasmine.createSpy('collapse'),
-        };
-
-        createRangeSpy.and.returnValue(mockedRange);
 
         plugin.onPluginEvent({
             eventType: 'keyDown',
-            rawEvent,
+            rawEvent: {
+                key: 'a',
+                ctrlKey: true,
+            } as any,
         });
 
-        expect(stopPropagationSpy).not.toHaveBeenCalled();
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'range',
-            range: mockedRange,
-            isReverted: false,
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'image',
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+
+        onSelectionChange();
+
+        expect(state).not.toEqual({
+            selection: mockedNewSelection,
+            selectionStyleNode: MockedStyleNode,
+            imageSelectionBorderColor: undefined,
         });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -625,6 +638,7 @@ describe('SelectionPlugin on Safari', () => {
     let isInShadowEditSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let editor: IEditor;
+    let setDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposer = jasmine.createSpy('disposer');
@@ -644,6 +658,7 @@ describe('SelectionPlugin on Safari', () => {
         hasFocusSpy = jasmine.createSpy('hasFocus');
         isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
 
         editor = ({
             getDocument: getDocumentSpy,
@@ -651,6 +666,7 @@ describe('SelectionPlugin on Safari', () => {
             getEnvironment: () => ({
                 isSafari: true,
             }),
+            setDOMSelection: setDOMSelectionSpy,
             hasFocus: hasFocusSpy,
             isInShadowEdit: isInShadowEditSpy,
             getDOMSelection: getDOMSelectionSpy,
