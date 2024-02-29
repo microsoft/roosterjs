@@ -17,7 +17,6 @@ import { alignCenterButton } from './ribbonButtons/contentModel/alignCenterButto
 import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyButton';
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
-import { AutoFormatPlugin, EditPlugin, ShortcutPlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -76,6 +75,12 @@ import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
+import {
+    AutoFormatPlugin,
+    EditPlugin,
+    ShortcutPlugin,
+    TableEditPlugin,
+} from 'roosterjs-content-model-plugins';
 import {
     ContentModelSegmentFormat,
     IEditor,
@@ -167,6 +172,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private snapshotPlugin: ContentModelSnapshotPlugin;
     private shortcutPlugin: ShortcutPlugin;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
+    private tableEditPlugin: TableEditPlugin;
     private snapshots: Snapshots<Snapshot>;
     private buttons: ContentModelRibbonButton<any>[] = [
         formatPainterButton,
@@ -255,6 +261,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.shortcutPlugin = new ShortcutPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
+        this.tableEditPlugin = new TableEditPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -347,6 +354,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             plugins={[
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
+                                this.tableEditPlugin,
                                 this.contentModelEditPlugin,
                                 this.contentAutoFormatPlugin,
                                 this.shortcutPlugin,
