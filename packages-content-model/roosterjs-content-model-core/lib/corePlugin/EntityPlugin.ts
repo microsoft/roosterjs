@@ -11,12 +11,11 @@ import {
     getAllEntityWrappers,
     getObjectKeys,
     isEntityElement,
-    parseEntityClassName,
+    parseEntityFormat,
 } from 'roosterjs-content-model-dom';
 import type {
     ChangedEntity,
     ContentChangedEvent,
-    ContentModelEntityFormat,
     EntityOperation,
     EntityPluginState,
     IEditor,
@@ -209,16 +208,19 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                     result.splice(index, 1);
                 } else {
                     // Entity is not in editor, which means it is deleted, use a temporary entity here to represent this entity
-                    const tempEntity = createEntity(entry.element);
-                    let isEntity = false;
+                    const format = parseEntityFormat(entry.element);
 
-                    entry.element.classList.forEach(name => {
-                        isEntity = parseEntityClassName(name, tempEntity.entityFormat) || isEntity;
-                    });
+                    if (!format.isFakeEntity) {
+                        const entity = createEntity(
+                            entry.element,
+                            format.isReadonly,
+                            {},
+                            format.entityType,
+                            format.id
+                        );
 
-                    if (isEntity) {
                         result.push({
-                            entity: tempEntity,
+                            entity: entity,
                             operation: 'overwrite',
                         });
                     }
@@ -244,10 +246,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         rawEvent?: Event,
         state?: string
     ) {
-        const format: ContentModelEntityFormat = {};
-        wrapper.classList.forEach(name => {
-            parseEntityClassName(name, format);
-        });
+        const format = parseEntityFormat(wrapper);
 
         return format.id && format.entityType && !format.isFakeEntity
             ? editor.triggerEvent('entityOperation', {

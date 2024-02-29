@@ -21,4 +21,9 @@ export interface InsertEntityOptions {
      * Whether skip adding an undo snapshot around
      */
     skipUndoSnapshot?: boolean;
+
+    /**
+     * Initial entity state, this is used when restore an undo snapshot to right after entity is inserted, this state will be used for set initial state of entity
+     */
+    initialEntityState?: string;
 }
