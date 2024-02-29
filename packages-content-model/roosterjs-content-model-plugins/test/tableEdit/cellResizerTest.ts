@@ -1,5 +1,5 @@
 import { ContentModelTable, DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types';
-import { getMergedCenterColumnTable, getModelTable } from './tableData';
+import { getModelTable } from './tableData';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 import {
     afterTableTest,

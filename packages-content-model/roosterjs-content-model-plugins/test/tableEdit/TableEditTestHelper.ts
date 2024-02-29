@@ -18,7 +18,7 @@ import {
 export function beforeTableTest(TEST_ID: string) {
     const plugin = new TableEditPlugin();
 
-    let handler = {};
+    let handler: Record<string, DOMEventHandlerFunction> = {};
     const attachDomEvent = jasmine
         .createSpy('attachDomEvent')
         .and.callFake((core: EditorCore, eventMap: Record<string, DOMEventRecord<Event>>) => {
