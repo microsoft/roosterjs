@@ -1,4 +1,4 @@
-import { PasteType } from '../enum/PasteType';
+import type { PasteType } from '../enum/PasteType';
 import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
 import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';

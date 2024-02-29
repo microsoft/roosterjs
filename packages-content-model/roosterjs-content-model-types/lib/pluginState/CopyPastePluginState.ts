@@ -1,4 +1,4 @@
-import { PasteType } from '../enum/PasteType';
+import type { PasteType } from '../enum/PasteType';
 
 /**
  * The state object for CopyPastePlugin
