@@ -10,6 +10,20 @@ import * as undo from 'roosterjs-content-model-core/lib/publicApi/undo/undo';
 import { EditorEnvironment, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { ShortcutPlugin } from '../../lib/shortcut/ShortcutPlugin';
 
+const enum Keys {
+    BACKSPACE = 8,
+    SPACE = 32,
+    A = 65,
+    B = 66,
+    I = 73,
+    U = 85,
+    Y = 89,
+    Z = 90,
+    COMMA = 188,
+    PERIOD = 190,
+    FORWARD_SLASH = 191,
+}
+
 describe('ShortcutPlugin', () => {
     let preventDefaultSpy: jasmine.Spy;
     let mockedEditor: IEditor;
@@ -24,14 +38,14 @@ describe('ShortcutPlugin', () => {
     });
 
     function createMockedEvent(
-        key: string,
+        which: number,
         ctrlKey: boolean,
         altKey: boolean,
         shiftKey: boolean,
         metaKey: boolean
     ): KeyboardEvent {
         return {
-            key,
+            which,
             ctrlKey,
             shiftKey,
             altKey,
@@ -46,7 +60,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('a', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.A, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -66,7 +80,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('b', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.B, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -87,7 +101,7 @@ describe('ShortcutPlugin', () => {
 
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('i', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.I, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -107,7 +121,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('u', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.U, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -127,7 +141,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent(' ', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.SPACE, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -147,7 +161,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('z', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.Z, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -167,7 +181,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('Backspace', false, true, false, false),
+                rawEvent: createMockedEvent(Keys.BACKSPACE, false, true, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -187,7 +201,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('y', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.Y, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -207,7 +221,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('z', true, false, true, false),
+                rawEvent: createMockedEvent(Keys.Z, true, false, true, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -227,7 +241,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('.', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.PERIOD, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -247,7 +261,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('/', true, false, false, false),
+                rawEvent: createMockedEvent(Keys.FORWARD_SLASH, true, false, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -267,7 +281,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('>', true, false, true, false),
+                rawEvent: createMockedEvent(Keys.PERIOD, true, false, true, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -287,7 +301,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('<', true, false, true, false),
+                rawEvent: createMockedEvent(Keys.COMMA, true, false, true, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -313,7 +327,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('a', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.A, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -333,7 +347,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('b', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.B, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -354,7 +368,7 @@ describe('ShortcutPlugin', () => {
 
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('i', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.I, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -374,7 +388,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('u', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.U, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -394,7 +408,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent(' ', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.SPACE, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -414,7 +428,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('z', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.Z, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -435,7 +449,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('Backspace', false, true, false, false),
+                rawEvent: createMockedEvent(Keys.BACKSPACE, false, true, false, false),
             };
 
             plugin.initialize(mockedEditor);
@@ -456,7 +470,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('y', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.Y, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -477,7 +491,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('z', false, false, true, true),
+                rawEvent: createMockedEvent(Keys.Z, false, false, true, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -497,7 +511,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('.', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.PERIOD, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -517,7 +531,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('/', false, false, false, true),
+                rawEvent: createMockedEvent(Keys.FORWARD_SLASH, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -537,7 +551,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('>', false, false, true, true),
+                rawEvent: createMockedEvent(Keys.PERIOD, false, false, true, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -557,7 +571,7 @@ describe('ShortcutPlugin', () => {
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
-                rawEvent: createMockedEvent('<', false, false, true, true),
+                rawEvent: createMockedEvent(Keys.COMMA, false, false, true, true),
             };
 
             plugin.initialize(mockedEditor);
