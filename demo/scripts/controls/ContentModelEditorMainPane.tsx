@@ -20,7 +20,6 @@ import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyBut
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { AutoFormatPlugin, EditPlugin, PastePlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -81,6 +80,12 @@ import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
 import { ContentModelSegmentFormat, IEditor, Snapshots } from 'roosterjs-content-model-types';
+import {
+    AutoFormatPlugin,
+    EditPlugin,
+    PastePlugin,
+    TableEditPlugin,
+} from 'roosterjs-content-model-plugins';
 import {
     spaceAfterButton,
     spaceBeforeButton,
@@ -170,6 +175,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private pastePlugin: PastePlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
+    private tableEditPlugin: TableEditPlugin;
     private snapshots: Snapshots;
     private buttons: ContentModelRibbonButton<any>[] = [
         formatPainterButton,
@@ -259,6 +265,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
+        this.tableEditPlugin = new TableEditPlugin();
         this.pastePlugin = new PastePlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
@@ -378,6 +385,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
                                 this.pastePlugin,
+                                this.tableEditPlugin,
                                 this.contentModelAutoFormatPlugin,
                                 this.contentModelEditPlugin,
                                 this.contentModelPanePlugin.getInnerRibbonPlugin(),

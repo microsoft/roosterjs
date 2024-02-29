@@ -17,7 +17,7 @@ import { alignCenterButton } from './ribbonButtons/contentModel/alignCenterButto
 import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyButton';
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
-import { AutoFormatPlugin, EditPlugin } from 'roosterjs-content-model-plugins';
+import { AutoFormatPlugin, EditPlugin, TableEditPlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -166,6 +166,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentAutoFormatPlugin: AutoFormatPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
+    private tableEditPlugin: TableEditPlugin;
     private snapshots: Snapshots<Snapshot>;
     private buttons: ContentModelRibbonButton<any>[] = [
         formatPainterButton,
@@ -253,6 +254,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.contentAutoFormatPlugin = new AutoFormatPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
+        this.tableEditPlugin = new TableEditPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -345,6 +347,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             plugins={[
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
+                                this.tableEditPlugin,
                                 this.contentModelEditPlugin,
                                 this.contentAutoFormatPlugin,
                             ]}
