@@ -11,10 +11,12 @@ import { isEntityElement } from './entityUtils';
  */
 export function reuseCachedElement(parent: Node, element: Node, refNode: Node | null): Node | null {
     if (element.parentNode == parent) {
+        const isEntity = isEntityElement(element);
+
         // Remove nodes before the one we are hitting since they don't appear in Content Model at this position.
         // But we don't want to touch entity since it would better to keep entity at its place unless it is removed
         // In that case we will remove it after we have handled all other nodes
-        while (refNode && refNode != element && !isEntityElement(refNode)) {
+        while (refNode && refNode != element && (isEntity || !isEntityElement(refNode))) {
             const next = refNode.nextSibling;
 
             refNode.parentNode?.removeChild(refNode);
