@@ -15,7 +15,7 @@ export class EditorCode extends CodeElement {
     constructor(state: OptionState) {
         super();
 
-        this.plugins = new PluginsCode();
+        this.plugins = new PluginsCode(state);
         this.legacyPlugins = new LegacyPluginCode(state);
         this.defaultFormat = new DefaultFormatCode(state.defaultFormat);
         this.buttons = new ButtonsCode();

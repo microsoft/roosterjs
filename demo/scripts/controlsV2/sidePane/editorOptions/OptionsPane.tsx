@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Code } from './Code';
 import { DefaultFormatPane } from './DefaultFormatPane';
 import { EditorCode } from './codes/EditorCode';
+import { LegacyPlugins, Plugins } from './Plugins';
 import { MainPane } from '../../mainPane/MainPane';
 import { OptionPaneProps, OptionState } from './OptionState';
-import { Plugins } from './Plugins';
 
 const htmlStart =
     '<html>\n' +
@@ -19,7 +19,7 @@ const htmlButtons =
     '<button id=buttonUndo>Undo</button>\n' +
     '<button id=buttonRedo>Redo</button>\n' +
     '<button id=buttonTable>Insert Table</button>\n' +
-    '<button id=buttonDark>Insert Table</button>\n';
+    '<button id=buttonDark>Dark mode</button>\n';
 '<button id=buttonDark>Dark Mode</button>\n';
 const legacyJsCode =
     '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n';
@@ -45,21 +45,24 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             <div>
                 <details>
                     <summary>
-                        <b>Default Format:</b>
+                        <b>Default Format</b>
                     </summary>
                     <DefaultFormatPane
                         state={this.state.defaultFormat}
                         resetState={this.resetState}
                     />
                 </details>
-                <div>
-                    <br />
-                </div>
+                <details>
+                    <summary>
+                        <b>Plugins</b>
+                    </summary>
+                    <Plugins state={this.state} resetState={this.resetState} />
+                </details>
                 <details>
                     <summary>
                         <b>Legacy Plugins</b>
                     </summary>
-                    <Plugins state={this.state} resetState={this.resetState} />
+                    <LegacyPlugins state={this.state} resetState={this.resetState} />
                 </details>
                 <div>
                     <br />
@@ -132,6 +135,10 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             isRtl: this.state.isRtl,
             cacheModel: this.state.cacheModel,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
+            allowExcelNoBorderTable: this.state.allowExcelNoBorderTable,
+            listMenu: this.state.listMenu,
+            tableMenu: this.state.tableMenu,
+            imageMenu: this.state.imageMenu,
         };
 
         if (callback) {

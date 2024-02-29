@@ -6,6 +6,17 @@ import { SidePanePluginImpl } from '../SidePanePluginImpl';
 
 const initialState: OptionState = {
     pluginList: {
+        autoFormat: true,
+        edit: true,
+        paste: true,
+        shortcut: true,
+        tableEdit: true,
+        contextMenu: true,
+        emoji: true,
+        pasteOption: true,
+        sampleEntity: true,
+
+        // Legacy plugins
         contentEdit: false,
         hyperlink: false,
         watermark: false,
@@ -23,6 +34,10 @@ const initialState: OptionState = {
     isRtl: false,
     cacheModel: true,
     tableFeaturesContainerSelector: '#' + 'EditorContainer',
+    allowExcelNoBorderTable: false,
+    imageMenu: true,
+    tableMenu: true,
+    listMenu: true,
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

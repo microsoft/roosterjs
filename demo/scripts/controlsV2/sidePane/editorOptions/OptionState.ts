@@ -2,7 +2,7 @@ import type { ContentEditFeatureSettings } from 'roosterjs-editor-types';
 import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
-export interface BuildInPluginList {
+export interface LegacyPluginList {
     contentEdit: boolean;
     hyperlink: boolean;
     watermark: boolean;
@@ -12,16 +12,40 @@ export interface BuildInPluginList {
     announce: boolean;
 }
 
+export interface NewPluginList {
+    autoFormat: boolean;
+    edit: boolean;
+    paste: boolean;
+    shortcut: boolean;
+    tableEdit: boolean;
+    contextMenu: boolean;
+    emoji: boolean;
+    pasteOption: boolean;
+    sampleEntity: boolean;
+}
+
+export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
+
 export interface OptionState {
     pluginList: BuildInPluginList;
+
+    // New plugin options
+    allowExcelNoBorderTable: boolean;
+    listMenu: boolean;
+    tableMenu: boolean;
+    imageMenu: boolean;
+
+    // Legacy plugin options
     contentEditFeatures: ContentEditFeatureSettings;
     defaultFormat: ContentModelSegmentFormat;
     linkTitle: string;
     watermarkText: string;
     forcePreserveRatio: boolean;
+    tableFeaturesContainerSelector: string;
+
+    // Editor options
     isRtl: boolean;
     cacheModel: boolean;
-    tableFeaturesContainerSelector: string;
     applyChangesOnMouseUp: boolean;
 }
 

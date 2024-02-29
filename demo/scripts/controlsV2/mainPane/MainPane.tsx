@@ -71,21 +71,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
-    private editPlugin: EditPlugin;
-    private autoFormatPlugin: AutoFormatPlugin;
-    private shortcutPlugin: ShortcutPlugin;
     private ribbonPlugin: RibbonPlugin;
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
-    private pastePlugin: PastePlugin;
-    private listMenuPlugin: EditorPlugin;
-    private tableMenuPlugin: EditorPlugin;
-    private imageMenuPlugin: EditorPlugin;
-    private contextMenuPlugin: EditorPlugin;
-    private pasteOptionPlugin: EditorPlugin;
-    private tableEditPlugin: EditorPlugin;
-    private emojiPlugin: EditorPlugin;
-    private sampleEntityPlugin: EditorPlugin;
     private snapshots: Snapshots;
 
     protected sidePane = React.createRef<SidePane>();
@@ -120,20 +108,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
-        this.editPlugin = new EditPlugin();
-        this.autoFormatPlugin = new AutoFormatPlugin();
-        this.shortcutPlugin = new ShortcutPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
-        this.pastePlugin = new PastePlugin();
-        this.tableEditPlugin = new TableEditPlugin();
-        this.contextMenuPlugin = createContextMenuPlugin();
-        this.listMenuPlugin = createListEditMenuProvider();
-        this.tableMenuPlugin = createTableEditMenuProvider();
-        this.imageMenuPlugin = createImageEditMenuProvider();
-        this.pasteOptionPlugin = createPasteOptionPlugin();
-        this.emojiPlugin = createEmojiPlugin();
-        this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -296,20 +272,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         const plugins: EditorPlugin[] = [
             this.ribbonPlugin,
             this.formatPainterPlugin,
-            this.pastePlugin,
-            this.autoFormatPlugin,
-            this.shortcutPlugin,
-            this.editPlugin,
+            ...this.getToggleablePlugins(),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,
-            this.contextMenuPlugin,
-            this.listMenuPlugin,
-            this.tableMenuPlugin,
-            this.imageMenuPlugin,
-            this.pasteOptionPlugin,
-            this.tableEditPlugin,
-            this.emojiPlugin,
-            this.sampleEntityPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
@@ -443,6 +408,30 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.snapshotPlugin,
             this.contentModelPanePlugin,
         ];
+    }
+
+    private getToggleablePlugins(): EditorPlugin[] {
+        const {
+            pluginList,
+            allowExcelNoBorderTable,
+            listMenu,
+            tableMenu,
+            imageMenu,
+        } = this.state.initState;
+        return [
+            pluginList.autoFormat && new AutoFormatPlugin(),
+            pluginList.edit && new EditPlugin(),
+            pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
+            pluginList.shortcut && new ShortcutPlugin(),
+            pluginList.tableEdit && new TableEditPlugin(),
+            pluginList.emoji && createEmojiPlugin(),
+            pluginList.pasteOption && createPasteOptionPlugin(),
+            pluginList.sampleEntity && new SampleEntityPlugin(),
+            pluginList.contextMenu && createContextMenuPlugin(),
+            pluginList.contextMenu && listMenu && createListEditMenuProvider(),
+            pluginList.contextMenu && tableMenu && createTableEditMenuProvider(),
+            pluginList.contextMenu && imageMenu && createImageEditMenuProvider(),
+        ].filter(x => !!x);
     }
 }
 

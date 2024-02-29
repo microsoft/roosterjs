@@ -35,20 +35,23 @@ export class PluginsCodeBase extends CodeElement {
 }
 
 export class PluginsCode extends PluginsCodeBase {
-    constructor() {
+    constructor(state: OptionState) {
+        const pluginList = state.pluginList;
+
         super([
-            new AutoFormatPluginCode(),
-            new EditPluginCode(),
-            new PastePluginCode(),
-            new TableEditPluginCode(),
-            // new ShortcutPluginCode(),
+            pluginList.autoFormat && new AutoFormatPluginCode(),
+            pluginList.edit && new EditPluginCode(),
+            pluginList.paste && new PastePluginCode(),
+            pluginList.tableEdit && new TableEditPluginCode(),
+            // pluginList.shortcut &&new ShortcutPluginCode(),
         ]);
     }
 }
 
 export class LegacyPluginCode extends PluginsCodeBase {
     constructor(state: OptionState) {
-        let pluginList = state.pluginList;
+        const pluginList = state.pluginList;
+
         const plugins: CodeElement[] = [
             pluginList.contentEdit && new ContentEditCode(state.contentEditFeatures),
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),

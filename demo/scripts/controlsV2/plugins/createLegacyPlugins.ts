@@ -9,7 +9,7 @@ import {
     Watermark,
 } from 'roosterjs-editor-plugins';
 import {
-    BuildInPluginList,
+    LegacyPluginList,
     OptionState,
     UrlPlaceholder,
 } from '../sidePane/editorOptions/OptionState';
@@ -17,7 +17,7 @@ import {
 export function createLegacyPlugins(initState: OptionState): LegacyEditorPlugin[] {
     const { pluginList, linkTitle } = initState;
 
-    const plugins: Record<keyof BuildInPluginList, LegacyEditorPlugin | null> = {
+    const plugins: Record<keyof LegacyPluginList, LegacyEditorPlugin | null> = {
         contentEdit: pluginList.contentEdit ? new ContentEdit(initState.contentEditFeatures) : null,
         hyperlink: pluginList.hyperlink
             ? new HyperLink(
