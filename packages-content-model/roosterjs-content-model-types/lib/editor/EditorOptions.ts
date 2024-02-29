@@ -1,3 +1,4 @@
+import { PasteType } from '../enum/PasteType';
 import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
 import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
@@ -109,4 +110,9 @@ export interface EditorOptions {
      * @param error The error object we got
      */
     disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * Default paste type. By default will use the normal (as-is) paste type.
+     */
+    defaultPasteType?: PasteType;
 }

@@ -1,3 +1,5 @@
+import { PasteType } from '../enum/PasteType';
+
 /**
  * The state object for CopyPastePlugin
  */
@@ -12,4 +14,9 @@ export interface CopyPastePluginState {
      * A temporary DIV element used for cut/copy content
      */
     tempDiv: HTMLDivElement | null;
+
+    /**
+     * Default paste type. By default will use the normal (as-is) paste type.
+     */
+    defaultPasteType?: PasteType;
 }
