@@ -52,8 +52,9 @@ class SnapshotsManagerImpl implements SnapshotsManager {
             currentSnapshot.html == snapshot.html &&
             !currentSnapshot.entityStates &&
             !snapshot.entityStates;
+        const addSnapshot = !currentSnapshot || shouldAddSnapshot(currentSnapshot, snapshot);
 
-        if (this.snapshots.currentIndex < 0 || !currentSnapshot || !isSameSnapshot) {
+        if (this.snapshots.currentIndex < 0 || addSnapshot) {
             this.clearRedo();
             this.snapshots.snapshots.push(snapshot);
             this.snapshots.currentIndex++;
@@ -128,4 +129,14 @@ class SnapshotsManagerImpl implements SnapshotsManager {
  */
 export function createSnapshotsManager(snapshots?: Snapshots): SnapshotsManager {
     return new SnapshotsManagerImpl(snapshots);
+}
+
+function shouldAddSnapshot(currentSnapshot: Snapshot, snapshot: Snapshot) {
+    return (
+        currentSnapshot.html !== snapshot.html ||
+        (currentSnapshot.entityStates &&
+            snapshot.entityStates &&
+            currentSnapshot.entityStates !== snapshot.entityStates) ||
+        (!currentSnapshot.entityStates && snapshot.entityStates)
+    );
 }
