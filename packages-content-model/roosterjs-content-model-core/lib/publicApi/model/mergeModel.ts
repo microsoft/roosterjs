@@ -343,6 +343,8 @@ function applyDefaultFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
 ) {
     group.blocks.forEach(block => {
+        mergeBlockFormat(applyDefaultFormatOption, block);
+
         switch (block.blockType) {
             case 'BlockGroup':
                 if (block.blockGroupType == 'ListItem') {
@@ -382,6 +384,16 @@ function applyDefaultFormat(
                 break;
         }
     });
+}
+
+function mergeBlockFormat(applyDefaultFormatOption: string, block: ContentModelBlock) {
+    if (
+        applyDefaultFormatOption == 'keepSourceEmphasisFormat' &&
+        (block.blockType != 'BlockGroup' || block.blockGroupType != 'ListItem') &&
+        block.format.backgroundColor
+    ) {
+        delete block.format.backgroundColor;
+    }
 }
 
 function mergeSegmentFormat(

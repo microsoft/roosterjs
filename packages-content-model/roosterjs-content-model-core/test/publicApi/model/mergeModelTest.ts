@@ -1784,6 +1784,83 @@ describe('mergeModel', () => {
         });
     });
 
+    it('Merge with keepSourceEmphasisFormat and remove background color of model', () => {
+        const MockedFormat = {
+            formatName: 'mocked',
+            fontWeight: 'ToBeRemoved',
+            italic: 'ToBeRemoved',
+            underline: 'ToBeRemoved',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                formatName: 'ToBeRemoved',
+                                fontWeight: 'sourceFontWeight',
+                                italic: true,
+                                underline: true,
+                            } as any,
+                        },
+                    ],
+                    format: {
+                        backgroundColor: 'Test',
+                    },
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        formatName: 'mocked',
+                        fontWeight: 'sourceFontWeight',
+                        italic: true,
+                        underline: true,
+                    } as any,
+                },
+                marker,
+            ],
+            format: {},
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+            format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
     it('Merge model with List Item with default format, keep the source bold, italic and underline', () => {
         const MockedFormat = {
             formatName: 'mocked',
