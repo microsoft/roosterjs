@@ -300,6 +300,171 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
         ]);
     });
 
+    it('Add snapshot with entity state with equal entity states', () => {
+        const mockedEntityStates = 'ENTITYSTATES' as any;
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+        ]);
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+        ]);
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+        ]);
+    });
+
+    it('Add snapshot with entity state with different entity states', () => {
+        const mockedEntityStates = 'ENTITYSTATES' as any;
+        const mockedEntityStates2 = 'ENTITYSTATES2' as any;
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+        ]);
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+        ]);
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates2,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates2,
+            },
+        ]);
+    });
+
+    it('Add snapshot without entity state after a snapshot with empty state', () => {
+        const mockedEntityStates = 'ENTITYSTATES' as any;
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+        ]);
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+                entityStates: mockedEntityStates,
+            },
+        ]);
+    });
+
     it('Has onChanged', () => {
         const onChanged = jasmine.createSpy('onChanged');
         snapshots.onChanged = onChanged;

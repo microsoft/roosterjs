@@ -1,4 +1,4 @@
-import { generateEntityClassNames, parseEntityClassName } from '../../domUtils/entityUtils';
+import { generateEntityClassNames, parseEntityFormat } from '../../domUtils/entityUtils';
 import type { EntityInfoFormat, IdFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
@@ -7,16 +7,7 @@ import type { FormatHandler } from '../FormatHandler';
  */
 export const entityFormatHandler: FormatHandler<EntityInfoFormat & IdFormat> = {
     parse: (format, element) => {
-        let isEntity = false;
-
-        element.classList.forEach(name => {
-            isEntity = parseEntityClassName(name, format) || isEntity;
-        });
-
-        if (!isEntity) {
-            format.isFakeEntity = true;
-            format.isReadonly = !element.isContentEditable;
-        }
+        Object.assign(format, parseEntityFormat(element));
     },
 
     apply: (format, element) => {
