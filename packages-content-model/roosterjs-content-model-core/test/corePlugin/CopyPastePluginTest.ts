@@ -19,6 +19,7 @@ import {
     CopyPastePluginState,
     PluginWithState,
     DarkColorHandler,
+    PasteType,
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
@@ -42,18 +43,21 @@ describe('CopyPastePlugin.Ctor', () => {
         expect(state).toEqual({
             allowedCustomPasteType: [],
             tempDiv: null,
+            defaultPasteType: undefined,
         });
     });
 
     it('Ctor with options', () => {
         const plugin = createCopyPastePlugin({
             allowedCustomPasteType,
+            defaultPasteType: 'mergeFormat',
         });
         const state = plugin.getState();
 
         expect(state).toEqual({
             allowedCustomPasteType: allowedCustomPasteType,
             tempDiv: null,
+            defaultPasteType: 'mergeFormat',
         });
     });
 });
@@ -145,8 +149,8 @@ describe('CopyPastePlugin |', () => {
             isDarkMode: () => {
                 return false;
             },
-            pasteFromClipboard: (ar1: any) => {
-                pasteSpy(ar1);
+            pasteFromClipboard: (ar1: any, pasteType?: PasteType) => {
+                pasteSpy(ar1, pasteType);
             },
             getColorManager: () => mockedDarkColorHandler,
             isDisposed,
@@ -552,7 +556,7 @@ describe('CopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData);
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, undefined);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType
@@ -581,7 +585,127 @@ describe('CopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData);
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, undefined);
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
+                Array.from(clipboardEvent.clipboardData!.items),
+                allowedCustomPasteType
+            );
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('Handle with defaultPasteType mergePaste', () => {
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            plugin.getState().defaultPasteType = 'mergeFormat';
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
+                then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
+                    cb(clipboardData);
+                },
+            });
+            isDisposed.and.returnValue(false);
+
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
+
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, 'mergeFormat');
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
+                Array.from(clipboardEvent.clipboardData!.items),
+                allowedCustomPasteType
+            );
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('Handle with defaultPasteType asImage', () => {
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            plugin.getState().defaultPasteType = 'asImage';
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
+                then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
+                    cb(clipboardData);
+                },
+            });
+            isDisposed.and.returnValue(false);
+
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
+
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, 'asImage');
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
+                Array.from(clipboardEvent.clipboardData!.items),
+                allowedCustomPasteType
+            );
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('Handle with defaultPasteType asPlainText', () => {
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            plugin.getState().defaultPasteType = 'asPlainText';
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
+                then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
+                    cb(clipboardData);
+                },
+            });
+            isDisposed.and.returnValue(false);
+
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
+
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, 'asPlainText');
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
+                Array.from(clipboardEvent.clipboardData!.items),
+                allowedCustomPasteType
+            );
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('Handle with defaultPasteType asPlainText', () => {
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            plugin.getState().defaultPasteType = 'normal';
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
+                then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
+                    cb(clipboardData);
+                },
+            });
+            isDisposed.and.returnValue(false);
+
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
+
+            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, 'normal');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType
