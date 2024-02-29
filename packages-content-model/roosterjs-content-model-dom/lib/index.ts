@@ -24,7 +24,7 @@ export { wrap } from './domUtils/wrap';
 export {
     isEntityElement,
     getAllEntityWrappers,
-    parseEntityClassName,
+    parseEntityFormat,
     generateEntityClassNames,
     addDelimiters,
     isEntityDelimiter,
