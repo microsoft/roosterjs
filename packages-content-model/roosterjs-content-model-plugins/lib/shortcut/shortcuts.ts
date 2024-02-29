@@ -10,6 +10,19 @@ import {
 } from 'roosterjs-content-model-api';
 import type { ShortcutCommand } from './ShortcutCommand';
 
+const enum Keys {
+    BACKSPACE = 8,
+    SPACE = 32,
+    B = 66,
+    I = 73,
+    U = 85,
+    Y = 89,
+    Z = 90,
+    COMMA = 188,
+    PERIOD = 190,
+    FORWARD_SLASH = 191,
+}
+
 /**
  * Shortcut command for Bold
  * Windows: Ctrl + B
@@ -19,7 +32,7 @@ export const ShortcutBold: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: false,
-        key: 'b',
+        which: Keys.B,
     },
     onClick: editor => toggleBold(editor),
 };
@@ -33,7 +46,7 @@ export const ShortcutItalic: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: false,
-        key: 'i',
+        which: Keys.I,
     },
     onClick: editor => toggleItalic(editor),
 };
@@ -47,7 +60,7 @@ export const ShortcutUnderline: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: false,
-        key: 'u',
+        which: Keys.U,
     },
     onClick: editor => toggleUnderline(editor),
 };
@@ -61,7 +74,7 @@ export const ShortcutClearFormat: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: false,
-        key: ' ',
+        which: Keys.SPACE,
     },
     onClick: editor => clearFormat(editor),
 };
@@ -75,7 +88,7 @@ export const ShortcutUndo: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: false,
-        key: 'z',
+        which: Keys.Z,
     },
     onClick: editor => undo(editor),
 };
@@ -89,7 +102,7 @@ export const ShortcutUndo2: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'alt',
         shiftKey: false,
-        key: 'Backspace',
+        which: Keys.BACKSPACE,
     },
     onClick: editor => undo(editor),
     environment: 'nonMac',
@@ -104,7 +117,7 @@ export const ShortcutRedo: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: false,
-        key: 'y',
+        which: Keys.Y,
     },
     onClick: editor => redo(editor),
     environment: 'nonMac',
@@ -119,7 +132,7 @@ export const ShortcutRedoMacOS: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: true,
-        key: 'z',
+        which: Keys.Z,
     },
     onClick: editor => redo(editor),
     environment: 'mac',
@@ -134,7 +147,7 @@ export const ShortcutBullet: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: false,
-        key: '.',
+        which: Keys.PERIOD,
     },
     onClick: editor => toggleBullet(editor),
 };
@@ -148,7 +161,7 @@ export const ShortcutNumbering: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: false,
-        key: '/',
+        which: Keys.FORWARD_SLASH,
     },
     onClick: editor => toggleNumbering(editor),
 };
@@ -162,7 +175,7 @@ export const ShortcutIncreaseFont: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: true,
-        key: '>',
+        which: Keys.PERIOD,
     },
     onClick: editor => changeFontSize(editor, 'increase'),
 };
@@ -176,7 +189,7 @@ export const ShortcutDecreaseFont: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: true,
-        key: '<',
+        which: Keys.COMMA,
     },
     onClick: editor => changeFontSize(editor, 'decrease'),
 };

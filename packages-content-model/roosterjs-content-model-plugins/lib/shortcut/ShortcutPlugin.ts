@@ -139,12 +139,12 @@ export class ShortcutPlugin implements EditorPlugin {
     }
 
     private matchShortcut(shortcutKey: ShortcutKeyDefinition, event: KeyboardEvent) {
-        const { ctrlKey, altKey, shiftKey, key, metaKey } = event;
+        const { ctrlKey, altKey, shiftKey, which, metaKey } = event;
         const ctrlOrMeta = this.isMac ? metaKey : ctrlKey;
         const matchModifier =
             (shortcutKey.modifierKey == 'ctrl' && ctrlOrMeta && !altKey) ||
             (shortcutKey.modifierKey == 'alt' && altKey && !ctrlOrMeta);
 
-        return matchModifier && shiftKey == shortcutKey.shiftKey && shortcutKey.key == key;
+        return matchModifier && shiftKey == shortcutKey.shiftKey && shortcutKey.which == which;
     }
 }

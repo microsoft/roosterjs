@@ -17,9 +17,12 @@ export interface ShortcutKeyDefinition {
     shiftKey: boolean;
 
     /**
-     * Key for this shortcut. The value should be the value of KeyboardEvent.key string
+     * Key code for this shortcut. The value should be the value of KeyboardEvent.which
+     * We are still using key code here rather than key name (event.key)  although event.which is deprecated because of globalization.
+     * For example, on US keyboard, Shift+Comma="<" but on Spanish keyboard it is ":"
+     * And we still want the shortcut key to be registered on  the same key, in that case key name is different but key code keeps the same.
      */
-    key: string;
+    which: number;
 }
 
 /**
