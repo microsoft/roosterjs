@@ -11,7 +11,7 @@ import {
     PastePluginCode,
     TableCellSelectionCode,
     TableEditPluginCode,
-    // TODO:    ShortcutPluginCode,
+    ShortcutPluginCode,
 } from './SimplePluginCode';
 
 export class PluginsCodeBase extends CodeElement {
@@ -43,7 +43,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.edit && new EditPluginCode(),
             pluginList.paste && new PastePluginCode(),
             pluginList.tableEdit && new TableEditPluginCode(),
-            // pluginList.shortcut &&new ShortcutPluginCode(),
+            pluginList.shortcut && new ShortcutPluginCode(),
         ]);
     }
 }
