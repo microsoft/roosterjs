@@ -9,6 +9,7 @@ const codeMap: { [id: string]: string } = {
     buttonNumbering: 'roosterjsContentModel.toggleNumbering(editor)',
     buttonUndo: 'roosterjsContentModel.undo(editor)',
     buttonRedo: 'roosterjsContentModel.redo(editor)',
+    buttonTable: 'roosterjsContentModel.insertTable(editor, 3, 3)',
     buttonDark: 'editor.setDarkModeState(!editor.isDarkMode())',
 };
 
