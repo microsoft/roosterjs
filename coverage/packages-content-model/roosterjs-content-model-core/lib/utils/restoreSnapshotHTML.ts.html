@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">97.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>46/46</span>
+                <span class='fraction'>43/44</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">97.62% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>44/44</span>
+                <span class='fraction'>41/42</span>
             </div>
         
             
@@ -165,18 +165,7 @@
 <a name='L106'></a><a href='#L106'>106</a>
 <a name='L107'></a><a href='#L107'>107</a>
 <a name='L108'></a><a href='#L108'>108</a>
-<a name='L109'></a><a href='#L109'>109</a>
-<a name='L110'></a><a href='#L110'>110</a>
-<a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L109'></a><a href='#L109'>109</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -255,16 +244,13 @@
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">90x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-yes">103x</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">133x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">129x</span>
@@ -277,27 +263,24 @@
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-yes">78x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
     getAllEntityWrappers,
     isEntityElement,
     isNodeOfType,
-    parseEntityClassName,
+    parseEntityFormat,
     reuseCachedElement,
 } from 'roosterjs-content-model-dom';
-import type {
-    Snapshot,
-    EditorCore,
-    KnownEntityItem,
-    ContentModelEntityFormat,
-} from 'roosterjs-content-model-types';
+import type { Snapshot, EditorCore, KnownEntityItem } from 'roosterjs-content-model-types';
 &nbsp;
 const BlockEntityContainer = '_E_EBlockEntityContainer';
 &nbsp;
@@ -366,11 +349,7 @@ function tryGetEntityElement(
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (isNodeOfType(node, 'ELEMENT_NODE')) {
         if (isEntityElement(node)) {
-            const format: ContentModelEntityFormat = {};
-&nbsp;
-            node.classList.forEach(name =&gt; {
-                parseEntityClassName(name, format);
-            });
+            const format = parseEntityFormat(node);
 &nbsp;
             result = (format.id &amp;&amp; entityMap[format.id]?.element) || null;
         } else if (isBlockEntityContainer(node)) {
@@ -380,6 +359,7 @@ function tryGetEntityElement(
 &nbsp;
     return result;
 }
+&nbsp;
 function isBlockEntityContainer(node: HTMLElement) {
     return node.classList.contains(BlockEntityContainer);
 }
@@ -388,16 +368,18 @@ function tryGetEntityFromContainer(
     element: HTMLElement,
     entityMap: Record&lt;string, KnownEntityItem&gt;
 ): HTMLElement | null {
-    const format: ContentModelEntityFormat = {};
-    element.childNodes.forEach(node =&gt; {
+    for (let node = element.firstChild; node; node = node.nextSibling) {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (isEntityElement(node) &amp;&amp; isNodeOfType(node, 'ELEMENT_NODE')) {
-            node.classList.forEach(name =&gt; parseEntityClassName(name, format));
+            const format = parseEntityFormat(node);
+            const parent = format.id ? entityMap[format.id]<span class="branch-0 cbranch-no" title="branch not covered" >?.e</span>lement.parentElement : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+&nbsp;
+            return isNodeOfType(parent, 'ELEMENT_NODE') &amp;&amp; isBlockEntityContainer(parent)
+                ? parent
+                : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
         }
-    });
+    }
 &nbsp;
-    const parent = format.id ? entityMap[format.id]<span class="branch-0 cbranch-no" title="branch not covered" >?.e</span>lement.parentElement : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
-&nbsp;
-    return isNodeOfType(parent, 'ELEMENT_NODE') &amp;&amp; isBlockEntityContainer(parent) ? parent : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+<span class="cstat-no" title="statement not covered" >    return null;</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -406,7 +388,7 @@ function tryGetEntityFromContainer(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Feb 29 2024 17:59:36 GMT+0000 (Coordinated Universal Time)
+                at Thu Feb 29 2024 18:07:25 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

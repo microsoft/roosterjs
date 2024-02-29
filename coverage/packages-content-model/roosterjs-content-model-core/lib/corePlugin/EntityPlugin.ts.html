@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.69% </span>
+                <span class="strong">95.54% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>111/116</span>
+                <span class='fraction'>107/112</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">85.39% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>78/91</span>
+                <span class='fraction'>76/89</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.45% </span>
+                <span class="strong">95% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>21/22</span>
+                <span class='fraction'>19/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.45% </span>
+                <span class="strong">95.28% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>105/110</span>
+                <span class='fraction'>101/106</span>
             </div>
         
             
@@ -350,8 +350,7 @@
 <a name='L291'></a><a href='#L291'>291</a>
 <a name='L292'></a><a href='#L292'>292</a>
 <a name='L293'></a><a href='#L293'>293</a>
-<a name='L294'></a><a href='#L294'>294</a>
-<a name='L295'></a><a href='#L295'>295</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L294'></a><a href='#L294'>294</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -359,7 +358,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -431,8 +429,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">131x</span>
-<span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-yes">132x</span>
+<span class="cline-any cline-yes">132x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -563,13 +561,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -598,9 +599,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">58x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -658,12 +656,11 @@ import {
     getAllEntityWrappers,
     getObjectKeys,
     isEntityElement,
-    parseEntityClassName,
+    parseEntityFormat,
 } from 'roosterjs-content-model-dom';
 import type {
     ChangedEntity,
     ContentChangedEvent,
-    ContentModelEntityFormat,
     EntityOperation,
     EntityPluginState,
     IEditor,
@@ -856,16 +853,19 @@ class EntityPlugin implements PluginWithState&lt;EntityPluginState&gt; {
                     result.splice(index, 1);
                 } else {
                     // Entity is not in editor, which means it is deleted, use a temporary entity here to represent this entity
-                    const tempEntity = createEntity(entry.element);
-                    let isEntity = false;
+                    const format = parseEntityFormat(entry.element);
 &nbsp;
-                    entry.element.classList.forEach(name =&gt; {
-                        isEntity = parseEntityClassName(name, tempEntity.entityFormat) || isEntity;
-                    });
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (!format.isFakeEntity) {
+                        const entity = createEntity(
+                            entry.element,
+                            format.isReadonly,
+                            {},
+                            format.entityType,
+                            format.id
+                        );
 &nbsp;
-                    <span class="missing-if-branch" title="else path not taken" >E</span>if (isEntity) {
                         result.push({
-                            entity: tempEntity,
+                            entity: entity,
                             operation: 'overwrite',
                         });
                     }
@@ -891,10 +891,7 @@ class EntityPlugin implements PluginWithState&lt;EntityPluginState&gt; {
         rawEvent?: Event,
         state?: string
     ) {
-        const format: ContentModelEntityFormat = {};
-        wrapper.classList.forEach(name =&gt; {
-            parseEntityClassName(name, format);
-        });
+        const format = parseEntityFormat(wrapper);
 &nbsp;
         return format.id &amp;&amp; format.entityType &amp;&amp; !format.isFakeEntity
             ? editor.triggerEvent('entityOperation', {
@@ -946,7 +943,7 @@ export function createEntityPlugin(): PluginWithState&lt;EntityPluginState&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Feb 29 2024 17:59:36 GMT+0000 (Coordinated Universal Time)
+                at Thu Feb 29 2024 18:07:25 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
