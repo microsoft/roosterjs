@@ -1787,9 +1787,6 @@ describe('mergeModel', () => {
     it('Merge with keepSourceEmphasisFormat and remove background color of model', () => {
         const MockedFormat = {
             formatName: 'mocked',
-            fontWeight: 'ToBeRemoved',
-            italic: 'ToBeRemoved',
-            underline: 'ToBeRemoved',
         } as any;
         const majorModel = createContentModelDocument(MockedFormat);
         const sourceModel: ContentModelDocument = {
@@ -1810,7 +1807,7 @@ describe('mergeModel', () => {
                         },
                     ],
                     format: {
-                        backgroundColor: 'Test',
+                        backgroundColor: 'ToBeRemoved',
                     },
                 },
             ],
