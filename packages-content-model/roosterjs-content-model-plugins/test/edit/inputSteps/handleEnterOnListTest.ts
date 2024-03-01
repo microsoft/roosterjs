@@ -1674,7 +1674,7 @@ describe('handleEnterOnList', () => {
     });
 });
 
-describe('keyboardInput -  handleEnterOnList', () => {
+describe(' handleEnterOnList - keyboardInput', () => {
     function runTest(
         input: ContentModelDocument,
         isShiftKey: boolean,
