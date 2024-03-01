@@ -3,7 +3,11 @@ import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
 import { normalizeAllSegments } from './normalizeSegment';
-import type { ContentModelParagraph } from 'roosterjs-content-model-types';
+import type {
+    ContentModelParagraph,
+    ContentModelSegment,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * @param paragraph The paragraph to normalize
@@ -42,6 +46,8 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
     removeEmptyLinks(paragraph);
 
     removeEmptySegments(paragraph);
+
+    moveUpSegmentFormat(paragraph);
 }
 
 function removeEmptySegments(block: ContentModelParagraph) {
@@ -72,5 +78,43 @@ function removeEmptyLinks(paragraph: ContentModelParagraph) {
         ) {
             delete marker.link;
         }
+    }
+}
+
+type FormatsToMoveUp = 'fontFamily' | 'fontSize' | 'textColor';
+const formatsToMoveUp: FormatsToMoveUp[] = ['fontFamily', 'fontSize', 'textColor'];
+
+// When all segments are sharing the same segment format (font name, size and color), we can move its format to paragraph
+function moveUpSegmentFormat(paragraph: ContentModelParagraph) {
+    if (!paragraph.decorator) {
+        const segments = paragraph.segments.filter(x => x.segmentType != 'SelectionMarker');
+        const target = paragraph.segmentFormat || {};
+        let changed = false;
+
+        formatsToMoveUp.forEach(key => {
+            changed = internalMoveUpSegmentFormat(segments, target, key) || changed;
+        });
+
+        if (changed) {
+            paragraph.segmentFormat = target;
+        }
+    }
+}
+
+function internalMoveUpSegmentFormat(
+    segments: ContentModelSegment[],
+    target: ContentModelSegmentFormat,
+    formatKey: FormatsToMoveUp
+): boolean {
+    const firstFormat = segments[0]?.format;
+
+    if (
+        firstFormat?.[formatKey] &&
+        segments.every(segment => segment.format[formatKey] == firstFormat[formatKey])
+    ) {
+        target[formatKey] = firstFormat[formatKey];
+        return true;
+    } else {
+        return false;
     }
 }

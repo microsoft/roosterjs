@@ -2,15 +2,10 @@ import {
     getAllEntityWrappers,
     isEntityElement,
     isNodeOfType,
-    parseEntityClassName,
+    parseEntityFormat,
     reuseCachedElement,
 } from 'roosterjs-content-model-dom';
-import type {
-    Snapshot,
-    EditorCore,
-    KnownEntityItem,
-    ContentModelEntityFormat,
-} from 'roosterjs-content-model-types';
+import type { Snapshot, EditorCore, KnownEntityItem } from 'roosterjs-content-model-types';
 
 const BlockEntityContainer = '_E_EBlockEntityContainer';
 
@@ -79,11 +74,7 @@ function tryGetEntityElement(
 
     if (isNodeOfType(node, 'ELEMENT_NODE')) {
         if (isEntityElement(node)) {
-            const format: ContentModelEntityFormat = {};
-
-            node.classList.forEach(name => {
-                parseEntityClassName(name, format);
-            });
+            const format = parseEntityFormat(node);
 
             result = (format.id && entityMap[format.id]?.element) || null;
         } else if (isBlockEntityContainer(node)) {
@@ -93,6 +84,7 @@ function tryGetEntityElement(
 
     return result;
 }
+
 function isBlockEntityContainer(node: HTMLElement) {
     return node.classList.contains(BlockEntityContainer);
 }
@@ -101,14 +93,16 @@ function tryGetEntityFromContainer(
     element: HTMLElement,
     entityMap: Record<string, KnownEntityItem>
 ): HTMLElement | null {
-    const format: ContentModelEntityFormat = {};
-    element.childNodes.forEach(node => {
+    for (let node = element.firstChild; node; node = node.nextSibling) {
         if (isEntityElement(node) && isNodeOfType(node, 'ELEMENT_NODE')) {
-            node.classList.forEach(name => parseEntityClassName(name, format));
+            const format = parseEntityFormat(node);
+            const parent = format.id ? entityMap[format.id]?.element.parentElement : null;
+
+            return isNodeOfType(parent, 'ELEMENT_NODE') && isBlockEntityContainer(parent)
+                ? parent
+                : null;
         }
-    });
+    }
 
-    const parent = format.id ? entityMap[format.id]?.element.parentElement : null;
-
-    return isNodeOfType(parent, 'ELEMENT_NODE') && isBlockEntityContainer(parent) ? parent : null;
+    return null;
 }

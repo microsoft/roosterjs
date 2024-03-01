@@ -27,6 +27,7 @@ import type {
     EditorOptions,
     TrustedHTMLHandler,
     Rect,
+    EntityState,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -174,11 +175,16 @@ export class Editor implements IEditor {
 
     /**
      * Add a single undo snapshot to undo stack
+     * @param entityState @optional State for entity if we want to add entity state for this snapshot
      */
-    takeSnapshot(): Snapshot | null {
+    takeSnapshot(entityState?: EntityState): Snapshot | null {
         const core = this.getCore();
 
-        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        return core.api.addUndoSnapshot(
+            core,
+            false /*canUndoByBackspace*/,
+            entityState ? [entityState] : undefined
+        );
     }
 
     /**

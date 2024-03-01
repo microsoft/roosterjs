@@ -33,11 +33,32 @@ export function getAllEntityWrappers(root: HTMLElement): HTMLElement[] {
 }
 
 /**
+ * Parse entity format from entity wrapper element
+ * @param wrapper The wrapper element to parse entity format from
+ * @returns Entity format
+ */
+export function parseEntityFormat(wrapper: HTMLElement): ContentModelEntityFormat {
+    let isEntity = false;
+    const format: ContentModelEntityFormat = {};
+
+    wrapper.classList.forEach(name => {
+        isEntity = parseEntityClassName(name, format) || isEntity;
+    });
+
+    if (!isEntity) {
+        format.isFakeEntity = true;
+        format.isReadonly = !wrapper.isContentEditable;
+    }
+
+    return format;
+}
+
+/**
  * Parse entity class names from entity wrapper element
  * @param className Class names of entity
  * @param format The output entity format object
  */
-export function parseEntityClassName(
+function parseEntityClassName(
     className: string,
     format: ContentModelEntityFormat
 ): boolean | undefined {

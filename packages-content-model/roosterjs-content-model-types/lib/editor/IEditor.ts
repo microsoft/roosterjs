@@ -17,6 +17,7 @@ import type {
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
+import type { EntityState } from '../parameter/FormatContentModelContext';
 
 /**
  * An interface of Editor, built on top of Content Model
@@ -125,8 +126,9 @@ export interface IEditor {
 
     /**
      * Add a single undo snapshot to undo stack
+     * @param entityState @optional State for entity if we want to add entity state for this snapshot
      */
-    takeSnapshot(): Snapshot | null;
+    takeSnapshot(entityState?: EntityState): Snapshot | null;
 
     /**
      * Restore an undo snapshot into editor
