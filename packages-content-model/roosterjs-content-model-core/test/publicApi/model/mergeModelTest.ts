@@ -2333,6 +2333,7 @@ describe('mergeModel', () => {
                 resultMarker,
             ],
             format: {},
+            segmentFormat: { fontFamily: 'sourceFontFamily' },
         };
 
         expect(majorModel).toEqual({
@@ -2510,6 +2511,7 @@ describe('mergeModel', () => {
                 marker,
             ],
             format: {},
+            segmentFormat: { fontFamily: 'Calibri', fontSize: '11pt', textColor: 'black' },
         };
 
         expect(majorModel).toEqual({
