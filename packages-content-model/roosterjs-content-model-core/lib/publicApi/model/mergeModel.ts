@@ -387,11 +387,7 @@ function applyDefaultFormat(
 }
 
 function mergeBlockFormat(applyDefaultFormatOption: string, block: ContentModelBlock) {
-    if (
-        applyDefaultFormatOption == 'keepSourceEmphasisFormat' &&
-        (block.blockType != 'BlockGroup' || block.blockGroupType != 'ListItem') &&
-        block.format.backgroundColor
-    ) {
+    if (applyDefaultFormatOption == 'keepSourceEmphasisFormat' && block.format.backgroundColor) {
         delete block.format.backgroundColor;
     }
 }
