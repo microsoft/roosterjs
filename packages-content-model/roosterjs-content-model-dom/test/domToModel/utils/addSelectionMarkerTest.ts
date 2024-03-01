@@ -88,6 +88,90 @@ describe('addSelectionMarker', () => {
         });
     });
 
+    it('add marker with block format from existing block', () => {
+        const doc = createContentModelDocument();
+        const context = createDomToModelContext();
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Arial',
+            },
+        });
+
+        addSelectionMarker(doc, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: { fontFamily: 'Arial', fontSize: undefined },
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('add marker with block format from existing block decorator', () => {
+        const doc = createContentModelDocument();
+        const context = createDomToModelContext();
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Arial',
+            },
+            decorator: {
+                tagName: 'h1',
+                format: {
+                    fontFamily: 'Tahoma',
+                },
+            },
+        });
+
+        addSelectionMarker(doc, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: { fontFamily: 'Tahoma', fontSize: undefined },
+                        },
+                    ],
+                    decorator: {
+                        tagName: 'h1',
+                        format: {
+                            fontFamily: 'Tahoma',
+                        },
+                    },
+                },
+            ],
+        });
+    });
+
     it('add marker with link format', () => {
         const doc = createContentModelDocument();
         const context = createDomToModelContext();

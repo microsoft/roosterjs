@@ -88,6 +88,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -131,6 +136,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -171,6 +181,11 @@ describe(ID, () => {
                                             blockType: 'Paragraph',
                                             format: {
                                                 textAlign: 'center',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
                                             },
                                         },
                                     ],
@@ -217,6 +232,11 @@ describe(ID, () => {
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
                                             },
                                         },
                                     ],
@@ -268,6 +288,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(5, 99, 193)',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -308,6 +333,11 @@ describe(ID, () => {
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(219, 219, 219)',
                                             },
                                         },
                                     ],
@@ -356,6 +386,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -406,6 +441,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(5, 99, 193)',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -446,6 +486,11 @@ describe(ID, () => {
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(219, 219, 219)',
                                             },
                                         },
                                     ],
@@ -494,6 +539,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -544,6 +594,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(5, 99, 193)',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -584,6 +639,11 @@ describe(ID, () => {
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(219, 219, 219)',
                                             },
                                         },
                                     ],
@@ -632,6 +692,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -682,6 +747,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(5, 99, 193)',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -722,6 +792,11 @@ describe(ID, () => {
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(219, 219, 219)',
                                             },
                                         },
                                     ],
@@ -770,6 +845,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -820,6 +900,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(5, 99, 193)',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -860,6 +945,11 @@ describe(ID, () => {
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(219, 219, 219)',
                                             },
                                         },
                                     ],
@@ -908,6 +998,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -958,6 +1053,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(5, 99, 193)',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -998,6 +1098,11 @@ describe(ID, () => {
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(219, 219, 219)',
                                             },
                                         },
                                     ],
@@ -1046,6 +1151,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -1096,6 +1206,11 @@ describe(ID, () => {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
                                             },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(5, 99, 193)',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -1136,6 +1251,11 @@ describe(ID, () => {
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
+                                            },
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'rgb(219, 219, 219)',
                                             },
                                         },
                                     ],
