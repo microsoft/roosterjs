@@ -19,13 +19,7 @@ module.exports = {
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.svg', '.scss', '.'],
-        modules: [
-            './demo/scripts',
-            'packages',
-            'packages-ui',
-            'packages-content-model',
-            './node_modules',
-        ],
+        modules: ['./demo/scripts', 'packages', './node_modules'],
     },
     mode: 'development',
     module: {
