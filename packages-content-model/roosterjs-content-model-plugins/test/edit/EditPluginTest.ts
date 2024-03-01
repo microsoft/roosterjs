@@ -1,6 +1,6 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
+import * as keyboardIndentation from '../../lib/edit/keyboardIndentation';
 import * as keyboardInput from '../../lib/edit/keyboardInput';
-import * as keyboardTab from '../../lib/edit/keyboardTab';
 import { DOMEventRecord, IEditor } from 'roosterjs-content-model-types';
 import { EditPlugin } from '../../lib/edit/EditPlugin';
 
@@ -44,7 +44,7 @@ describe('EditPlugin', () => {
         beforeEach(() => {
             keyboardDeleteSpy = spyOn(keyboardDelete, 'keyboardDelete');
             keyboardInputSpy = spyOn(keyboardInput, 'keyboardInput');
-            keyboardTabSpy = spyOn(keyboardTab, 'keyboardTab');
+            keyboardTabSpy = spyOn(keyboardIndentation, 'keyboardIndentation');
         });
 
         it('Backspace', () => {

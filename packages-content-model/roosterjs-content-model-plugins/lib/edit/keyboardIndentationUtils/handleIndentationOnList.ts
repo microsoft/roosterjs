@@ -1,5 +1,6 @@
-import { handleTabOnParagraph } from './handleTabOnParagraph';
+import { handleIndentationOnParagraph } from './handleIndentationOnParagraph';
 import { setModelIndentation } from 'roosterjs-content-model-api';
+import { shouldOutdent } from './shouldOutdent';
 import type { ContentModelDocument, ContentModelListItem } from 'roosterjs-content-model-types';
 
 /**
@@ -7,7 +8,7 @@ import type { ContentModelDocument, ContentModelListItem } from 'roosterjs-conte
  * 2. Otherwise call handleTabOnParagraph.
  * @internal
  */
-export function handleTabOnList(
+export function handleIndentationOnList(
     model: ContentModelDocument,
     listItem: ContentModelListItem,
     rawEvent: KeyboardEvent
@@ -18,9 +19,9 @@ export function handleTabOnList(
         selectedParagraph.length == 1 &&
         selectedParagraph[0].blockType === 'Paragraph'
     ) {
-        return handleTabOnParagraph(model, selectedParagraph[0], rawEvent);
+        return handleIndentationOnParagraph(model, selectedParagraph[0], rawEvent);
     } else {
-        setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
+        setModelIndentation(model, shouldOutdent(rawEvent) ? 'outdent' : 'indent');
         rawEvent.preventDefault();
         return true;
     }

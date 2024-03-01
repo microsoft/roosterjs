@@ -1,9 +1,9 @@
-import * as setModelIndentation from '../../../roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
+import * as setModelIndentation from 'roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
-import { keyboardTab } from '../../lib/edit/keyboardTab';
+import { keyboardIndentation } from '../../lib/edit/keyboardIndentation';
 
-describe('keyboardTab', () => {
+describe('keyboardIndentation', () => {
     let takeSnapshotSpy: jasmine.Spy;
     let setModelIndentationSpy: jasmine.Spy;
 
@@ -16,7 +16,9 @@ describe('keyboardTab', () => {
         input: ContentModelDocument,
         indent: 'outdent' | 'indent' | undefined,
         shiftKey: boolean,
-        expectedResult: boolean
+        expectedResult: boolean,
+        key: string = 'Tab',
+        altKey: boolean = false
     ) {
         const formatWithContentModelSpy = jasmine
             .createSpy('formatWithContentModel')
@@ -43,11 +45,12 @@ describe('keyboardTab', () => {
             },
         };
 
-        keyboardTab(
+        keyboardIndentation(
             editor as any,
             {
-                key: 'Tab',
+                key: key,
                 shiftKey: shiftKey,
+                altKey: altKey,
                 preventDefault: () => {},
             } as KeyboardEvent
         );
@@ -898,9 +901,190 @@ describe('keyboardTab', () => {
         };
         runTest(model, undefined, true, false);
     });
+
+    it('ArrowRight + Alt + Shift on the start first item on the list', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                marginTop: '0px',
+                                marginBottom: '0px',
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo: '{"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                marginTop: '0px',
+                                marginBottom: '0px',
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo: '{"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                marginTop: '0px',
+                                marginBottom: '0px',
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo: '{"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(model, 'indent', true, true, 'ArrowRight', true);
+    });
+
+    it('ArrowRight + Alt + Shift  on the end of paragraph', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(model, undefined, true, false, 'ArrowRight', true);
+    });
+
+    it('ArrowLeft + Alt + Shift  on the end of paragraph', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(model, undefined, true, false, 'ArrowLeft', true);
+    });
 });
 
-describe('keyboardTab - handleTabOnParagraph -', () => {
+describe('keyboardTab - handleTabOnParagraph', () => {
     function runTest(
         input: ContentModelDocument,
         key: string,
@@ -930,7 +1114,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     },
                 });
 
-                keyboardTab(editor, mockedEvent);
+                keyboardIndentation(editor, mockedEvent);
             },
             input,
             expectedResult,

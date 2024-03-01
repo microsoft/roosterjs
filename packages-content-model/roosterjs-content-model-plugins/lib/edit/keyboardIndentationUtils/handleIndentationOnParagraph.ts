@@ -1,5 +1,6 @@
 import { createSelectionMarker, createText } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from 'roosterjs-content-model-api';
+import { shouldOutdent } from './shouldOutdent';
 import type { ContentModelDocument, ContentModelParagraph } from 'roosterjs-content-model-types';
 
 const tabSpaces = '    ';
@@ -20,7 +21,7 @@ const space = ' ';
  * 4. When the selection is not collapsed, replace the selected range with a 4 space.
  * 5. When the selection is not collapsed, but all segments are selected, call setModelIndention function to outdent the whole paragraph
  */
-export function handleTabOnParagraph(
+export function handleIndentationOnParagraph(
     model: ContentModelDocument,
     paragraph: ContentModelParagraph,
     rawEvent: KeyboardEvent
@@ -30,8 +31,10 @@ export function handleTabOnParagraph(
         selectedSegments.length === 1 && selectedSegments[0].segmentType === 'SelectionMarker';
     const isAllSelected = paragraph.segments.every(segment => segment.isSelected);
     if ((paragraph.segments[0].segmentType === 'SelectionMarker' && isCollapsed) || isAllSelected) {
-        setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
-    } else {
+        setModelIndentation(model, shouldOutdent(rawEvent) ? 'outdent' : 'indent');
+        rawEvent.preventDefault();
+        return true;
+    } else if (rawEvent.key === 'Tab') {
         if (!isCollapsed) {
             let firstSelectedSegmentIndex: number | undefined = undefined;
             let lastSelectedSegmentIndex: number | undefined = undefined;
@@ -83,8 +86,8 @@ export function handleTabOnParagraph(
                 }
             }
         }
+        rawEvent.preventDefault();
+        return true;
     }
-
-    rawEvent.preventDefault();
-    return true;
+    return false;
 }

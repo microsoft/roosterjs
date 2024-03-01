@@ -1,11 +1,11 @@
-import { handleTabOnParagraph } from '../../../lib/edit/tabUtils/handleTabOnParagraph';
+import { handleIndentationOnParagraph } from '../../../lib/edit/keyboardIndentationUtils/handleIndentationOnParagraph';
 import {
     ContentModelDocument,
     ContentModelParagraph,
     RangeSelection,
 } from 'roosterjs-content-model-types';
 
-describe('handleTabOnParagraph', () => {
+describe('handleIndentationOnParagraph', () => {
     function runTest(
         model: ContentModelDocument,
         paragraph: ContentModelParagraph,
@@ -14,7 +14,7 @@ describe('handleTabOnParagraph', () => {
         expectedReturnValue: boolean
     ) {
         // Act
-        const result = handleTabOnParagraph(model, paragraph, rawEvent);
+        const result = handleIndentationOnParagraph(model, paragraph, rawEvent);
 
         // Assert
         expect(result).toBe(expectedReturnValue);

@@ -1,6 +1,6 @@
 import { keyboardDelete } from './keyboardDelete';
+import { keyboardIndentation } from './keyboardIndentation';
 import { keyboardInput } from './keyboardInput';
-import { keyboardTab } from './keyboardTab';
 import type {
     EditorPlugin,
     IEditor,
@@ -87,7 +87,9 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Tab':
-                    keyboardTab(editor, rawEvent);
+                case 'ArrowRight':
+                case 'ArrowLeft':
+                    keyboardIndentation(editor, rawEvent);
                     break;
                 case 'Unidentified':
                     if (editor.getEnvironment().isAndroid) {
