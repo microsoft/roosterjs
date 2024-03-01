@@ -76,6 +76,7 @@ describe('deleteEmptyQuoteTest', () => {
                             },
                         },
                     ],
+                    segmentFormat: { textColor: 'rgb(102, 102, 102)' },
                     format: {},
                 },
             ],
