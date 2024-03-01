@@ -11,15 +11,14 @@ import {
     getAllEntityWrappers,
     getObjectKeys,
     isEntityElement,
-    parseEntityClassName,
+    parseEntityFormat,
 } from 'roosterjs-content-model-dom';
 import type {
     ChangedEntity,
     ContentChangedEvent,
-    ContentModelEntityFormat,
     EntityOperation,
     EntityPluginState,
-    IStandaloneEditor,
+    IEditor,
     MouseUpEvent,
     PluginEvent,
     PluginWithState,
@@ -31,7 +30,7 @@ const ENTITY_ID_REGEX = /_(\d{1,8})$/;
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
  */
 class EntityPlugin implements PluginWithState<EntityPluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private state: EntityPluginState;
 
     /**
@@ -54,7 +53,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 
@@ -102,7 +101,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         }
     }
 
-    private handleMouseUpEvent(editor: IStandaloneEditor, event: MouseUpEvent) {
+    private handleMouseUpEvent(editor: IEditor, event: MouseUpEvent) {
         const { rawEvent, isClicking } = event;
         let node: Node | null = rawEvent.target as Node;
 
@@ -118,7 +117,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         }
     }
 
-    private handleContentChangedEvent(editor: IStandaloneEditor, event?: ContentChangedEvent) {
+    private handleContentChangedEvent(editor: IEditor, event?: ContentChangedEvent) {
         const modifiedEntities: ChangedEntity[] =
             event?.changedEntities ?? this.getChangedEntities(editor);
         const entityStates = event?.entityStates;
@@ -184,7 +183,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         handleDelimiterContentChangedEvent(editor);
     }
 
-    private getChangedEntities(editor: IStandaloneEditor): ChangedEntity[] {
+    private getChangedEntities(editor: IEditor): ChangedEntity[] {
         const result: ChangedEntity[] = [];
 
         editor.formatContentModel(model => {
@@ -209,16 +208,19 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                     result.splice(index, 1);
                 } else {
                     // Entity is not in editor, which means it is deleted, use a temporary entity here to represent this entity
-                    const tempEntity = createEntity(entry.element);
-                    let isEntity = false;
+                    const format = parseEntityFormat(entry.element);
 
-                    entry.element.classList.forEach(name => {
-                        isEntity = parseEntityClassName(name, tempEntity.entityFormat) || isEntity;
-                    });
+                    if (!format.isFakeEntity) {
+                        const entity = createEntity(
+                            entry.element,
+                            format.isReadonly,
+                            {},
+                            format.entityType,
+                            format.id
+                        );
 
-                    if (isEntity) {
                         result.push({
-                            entity: tempEntity,
+                            entity: entity,
                             operation: 'overwrite',
                         });
                     }
@@ -229,7 +231,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
         return result;
     }
 
-    private handleExtractContentWithDomEvent(editor: IStandaloneEditor, root: HTMLElement) {
+    private handleExtractContentWithDomEvent(editor: IEditor, root: HTMLElement) {
         getAllEntityWrappers(root).forEach(element => {
             element.removeAttribute('contentEditable');
 
@@ -238,16 +240,13 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
     }
 
     private triggerEvent(
-        editor: IStandaloneEditor,
+        editor: IEditor,
         wrapper: HTMLElement,
         operation: EntityOperation,
         rawEvent?: Event,
         state?: string
     ) {
-        const format: ContentModelEntityFormat = {};
-        wrapper.classList.forEach(name => {
-            parseEntityClassName(name, format);
-        });
+        const format = parseEntityFormat(wrapper);
 
         return format.id && format.entityType && !format.isFakeEntity
             ? editor.triggerEvent('entityOperation', {

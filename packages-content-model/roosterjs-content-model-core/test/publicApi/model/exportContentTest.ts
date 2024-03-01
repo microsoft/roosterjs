@@ -2,7 +2,7 @@ import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/c
 import * as contentModelToText from 'roosterjs-content-model-dom/lib/modelToText/contentModelToText';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import { exportContent } from '../../../lib/publicApi/model/exportContent';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 
 describe('exportContent', () => {
     it('PlainTextFast', () => {
@@ -10,7 +10,7 @@ describe('exportContent', () => {
         const getTextContentSpy = jasmine
             .createSpy('getTextContent')
             .and.returnValue(mockedTextContent);
-        const editor: IStandaloneEditor = {
+        const editor: IEditor = {
             getDOMHelper: () => ({
                 getTextContent: getTextContentSpy,
             }),
@@ -27,7 +27,7 @@ describe('exportContent', () => {
         const getContentModelCopySpy = jasmine
             .createSpy('getContentModelCopy')
             .and.returnValue(mockedModel);
-        const editor: IStandaloneEditor = {
+        const editor: IEditor = {
             getContentModelCopy: getContentModelCopySpy,
         } as any;
         const mockedText = 'TEXT';
@@ -56,7 +56,7 @@ describe('exportContent', () => {
             createElement: () => mockedDiv,
         } as any;
         const triggerEventSpy = jasmine.createSpy('triggerEvent');
-        const editor: IStandaloneEditor = {
+        const editor: IEditor = {
             getContentModelCopy: getContentModelCopySpy,
             getDocument: () => mockedDoc,
             triggerEvent: triggerEventSpy,
@@ -99,7 +99,7 @@ describe('exportContent', () => {
             createElement: () => mockedDiv,
         } as any;
         const triggerEventSpy = jasmine.createSpy('triggerEvent');
-        const editor: IStandaloneEditor = {
+        const editor: IEditor = {
             getContentModelCopy: getContentModelCopySpy,
             getDocument: () => mockedDoc,
             triggerEvent: triggerEventSpy,

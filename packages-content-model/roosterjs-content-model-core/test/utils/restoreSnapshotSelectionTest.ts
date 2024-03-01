@@ -1,8 +1,8 @@
+import { EditorCore, Snapshot, SnapshotSelection } from 'roosterjs-content-model-types';
 import { restoreSnapshotSelection } from '../../lib/utils/restoreSnapshotSelection';
-import { Snapshot, SnapshotSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('restoreSnapshotSelection', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let div: HTMLDivElement;
     let setDOMSelectionSpy: jasmine.Spy;
 
@@ -12,7 +12,8 @@ describe('restoreSnapshotSelection', () => {
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
 
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             api: {
                 setDOMSelection: setDOMSelectionSpy,
             },

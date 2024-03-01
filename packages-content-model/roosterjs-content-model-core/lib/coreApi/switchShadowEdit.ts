@@ -5,7 +5,7 @@ import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
 /**
  * @internal
  * Switch the Shadow Edit mode of editor On/Off
- * @param editorCore The StandaloneEditorCore object
+ * @param editorCore The EditorCore object
  * @param isOn True to switch On, False to switch Off
  */
 export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
@@ -14,8 +14,8 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
     if (isOn != !!core.lifecycle.shadowEditFragment) {
         if (isOn) {
             const model = !core.cache.cachedModel ? core.api.createContentModel(core) : null;
-            const fragment = core.contentDiv.ownerDocument.createDocumentFragment();
-            const clonedRoot = core.contentDiv.cloneNode(true /*deep*/);
+            const fragment = core.logicalRoot.ownerDocument.createDocumentFragment();
+            const clonedRoot = core.logicalRoot.cloneNode(true /*deep*/);
 
             moveChildNodes(fragment, clonedRoot);
 

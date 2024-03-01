@@ -6,11 +6,11 @@ import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     FormatContentModelContext,
-    StandaloneEditorCore,
+    EditorCore,
 } from 'roosterjs-content-model-types';
 
 describe('formatContentModel', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
@@ -56,7 +56,7 @@ describe('formatContentModel', () => {
             undo: {
                 snapshotsManager: {},
             },
-        } as any) as StandaloneEditorCore;
+        } as any) as EditorCore;
     });
 
     describe('Editor has focus', () => {
@@ -93,7 +93,7 @@ describe('formatContentModel', () => {
                 newImages: [],
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
-            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -725,7 +725,7 @@ describe('formatContentModel', () => {
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
-            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -750,7 +750,7 @@ describe('formatContentModel', () => {
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
-            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -771,7 +771,7 @@ describe('formatContentModel', () => {
             formatContentModel(core, callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
-            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -800,7 +800,7 @@ describe('formatContentModel', () => {
             formatContentModel(core, callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
-            expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);

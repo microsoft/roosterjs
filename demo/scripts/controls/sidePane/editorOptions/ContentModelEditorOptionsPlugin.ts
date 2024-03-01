@@ -4,6 +4,22 @@ import getDefaultContentEditFeatureSettings from './getDefaultContentEditFeature
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { SidePaneElementProps } from '../SidePaneElement';
 
+const listFeatures = {
+    autoBullet: false,
+    indentWhenTab: false,
+    outdentWhenShiftTab: false,
+    outdentWhenBackspaceOnEmptyFirstLine: false,
+    outdentWhenEnterOnEmptyLine: false,
+    mergeInNewLineWhenBackspaceOnFirstChar: false,
+    maintainListChain: false,
+    maintainListChainWhenDelete: false,
+    autoNumberingList: false,
+    autoBulletList: false,
+    mergeListOnBackspaceAfterList: false,
+    outdentWhenAltShiftLeft: false,
+    indentWhenAltShiftRight: false,
+};
+
 const initialState: BuildInPluginState = {
     pluginList: {
         contentEdit: true,
@@ -13,7 +29,6 @@ const initialState: BuildInPluginState = {
         imageEdit: true,
         cutPasteListChain: false,
         tableCellSelection: true,
-        tableResize: true,
         customReplace: true,
         listEditMenu: true,
         imageEditMenu: true,
@@ -22,7 +37,7 @@ const initialState: BuildInPluginState = {
         autoFormat: true,
         announce: true,
     },
-    contentEditFeatures: getDefaultContentEditFeatureSettings(),
+    contentEditFeatures: { ...getDefaultContentEditFeatureSettings(), ...listFeatures },
     defaultFormat: {},
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',

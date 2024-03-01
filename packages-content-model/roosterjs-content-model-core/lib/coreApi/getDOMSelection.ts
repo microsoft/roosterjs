@@ -1,8 +1,4 @@
-import type {
-    DOMSelection,
-    GetDOMSelection,
-    StandaloneEditorCore,
-} from 'roosterjs-content-model-types';
+import type { DOMSelection, GetDOMSelection, EditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -19,11 +15,11 @@ export const getDOMSelection: GetDOMSelection = core => {
     }
 };
 
-function getNewSelection(core: StandaloneEditorCore): DOMSelection | null {
-    const selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
+function getNewSelection(core: EditorCore): DOMSelection | null {
+    const selection = core.logicalRoot.ownerDocument.defaultView?.getSelection();
     const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
 
-    return range && core.contentDiv.contains(range.commonAncestorContainer)
+    return range && core.logicalRoot.contains(range.commonAncestorContainer)
         ? {
               type: 'range',
               range,

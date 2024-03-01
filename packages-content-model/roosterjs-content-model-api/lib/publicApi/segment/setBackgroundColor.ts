@@ -1,17 +1,14 @@
 import { createSelectionMarker } from 'roosterjs-content-model-dom';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { setSelection } from 'roosterjs-content-model-core';
-import type { ContentModelParagraph, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelParagraph, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Set background color
  * @param editor The editor to operate on
  * @param backgroundColor The color to set. Pass null to remove existing color.
  */
-export default function setBackgroundColor(
-    editor: IStandaloneEditor,
-    backgroundColor: string | null
-) {
+export default function setBackgroundColor(editor: IEditor, backgroundColor: string | null) {
     editor.focus();
 
     let lastParagraph: ContentModelParagraph | null = null;

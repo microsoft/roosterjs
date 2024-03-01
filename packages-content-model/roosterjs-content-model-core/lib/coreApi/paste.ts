@@ -9,7 +9,7 @@ import type {
     PasteType,
     ClipboardData,
     Paste,
-    StandaloneEditorCore,
+    EditorCore,
     TrustedHTMLHandler,
 } from 'roosterjs-content-model-types';
 
@@ -20,12 +20,12 @@ const CloneOption: CloneModelOptions = {
 /**
  * @internal
  * Paste into editor using a clipboardData object
- * @param core The StandaloneEditorCore object.
+ * @param core The EditorCore object.
  * @param clipboardData Clipboard data retrieved from clipboard
  * @param pasteType Type of content to paste. @default normal
  */
 export const paste: Paste = (
-    core: StandaloneEditorCore,
+    core: EditorCore,
     clipboardData: ClipboardData,
     pasteType: PasteType = 'normal'
 ) => {
@@ -45,7 +45,7 @@ export const paste: Paste = (
 
     // 3. Create target fragment
     const sourceFragment = createPasteFragment(
-        core.contentDiv.ownerDocument,
+        core.physicalRoot.ownerDocument,
         clipboardData,
         pasteType,
         (clipboardData.rawHtml == clipboardData.html

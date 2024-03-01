@@ -1,7 +1,7 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { cloneModel } from '../publicApi/model/cloneModel';
+import { createEditorCore } from './createEditorCore';
 import { createEmptyModel, tableProcessor } from 'roosterjs-content-model-dom';
-import { createStandaloneEditorCore } from './createStandaloneEditorCore';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import { transformColor } from '../publicApi/color/transformColor';
 import type { CachedElementHandler } from '../publicApi/model/cloneModel';
@@ -16,32 +16,33 @@ import type {
     DOMSelection,
     EditorEnvironment,
     FormatContentModelOptions,
-    IStandaloneEditor,
+    IEditor,
     PasteType,
     PluginEventData,
     PluginEventFromType,
     PluginEventType,
     Snapshot,
     SnapshotsManager,
-    StandaloneEditorCore,
-    StandaloneEditorOptions,
+    EditorCore,
+    EditorOptions,
     TrustedHTMLHandler,
     Rect,
+    EntityState,
 } from 'roosterjs-content-model-types';
 
 /**
- * The standalone editor class based on Content Model
+ * The main editor class based on Content Model
  */
-export class StandaloneEditor implements IStandaloneEditor {
-    private core: StandaloneEditorCore | null = null;
+export class Editor implements IEditor {
+    private core: EditorCore | null = null;
 
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: StandaloneEditorOptions = {}) {
-        this.core = createStandaloneEditorCore(contentDiv, options);
+    constructor(contentDiv: HTMLDivElement, options: EditorOptions = {}) {
+        this.core = createEditorCore(contentDiv, options);
 
         const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
 
@@ -174,11 +175,16 @@ export class StandaloneEditor implements IStandaloneEditor {
 
     /**
      * Add a single undo snapshot to undo stack
+     * @param entityState @optional State for entity if we want to add entity state for this snapshot
      */
-    takeSnapshot(): Snapshot | null {
+    takeSnapshot(entityState?: EntityState): Snapshot | null {
         const core = this.getCore();
 
-        return core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/);
+        return core.api.addUndoSnapshot(
+            core,
+            false /*canUndoByBackspace*/,
+            entityState ? [entityState] : undefined
+        );
     }
 
     /**
@@ -196,7 +202,7 @@ export class StandaloneEditor implements IStandaloneEditor {
      * @returns The HTML document which contains this editor
      */
     getDocument(): Document {
-        return this.getCore().contentDiv.ownerDocument;
+        return this.getCore().physicalRoot.ownerDocument;
     }
 
     /**
@@ -275,7 +281,7 @@ export class StandaloneEditor implements IStandaloneEditor {
 
         if (!!isDarkMode != core.lifecycle.isDarkMode) {
             transformColor(
-                core.contentDiv,
+                core.physicalRoot,
                 false /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
                 core.darkColorHandler
@@ -367,10 +373,10 @@ export class StandaloneEditor implements IStandaloneEditor {
     }
 
     /**
-     * @returns the current StandaloneEditorCore object
+     * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    protected getCore(): StandaloneEditorCore {
+    protected getCore(): EditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }

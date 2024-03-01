@@ -1,9 +1,9 @@
 import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
-import { DOMSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { DOMSelection, EditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../lib/coreApi/setDOMSelection';
 
 describe('setDOMSelection', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let querySelectorAllSpy: jasmine.Spy;
     let hasFocusSpy: jasmine.Spy;
     let triggerEventSpy: jasmine.Spy;
@@ -46,10 +46,11 @@ describe('setDOMSelection', () => {
         } as any;
 
         core = {
+            physicalRoot: contentDiv,
+            logicalRoot: contentDiv,
             selection: {
                 selectionStyleNode: mockedStyleNode,
             },
-            contentDiv,
             api: {
                 hasFocus: hasFocusSpy,
                 triggerEvent: triggerEventSpy,

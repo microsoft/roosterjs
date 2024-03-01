@@ -8,7 +8,7 @@ import {
 import {
     createDomToModelSettings,
     createModelToDomSettings,
-} from '../../lib/editor/createStandaloneEditorDefaultSettings';
+} from '../../lib/editor/createEditorDefaultSettings';
 
 describe('createDomToModelSettings', () => {
     const mockedCalculatedConfig = 'CONFIG' as any;

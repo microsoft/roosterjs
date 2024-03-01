@@ -3,9 +3,9 @@ import { isCharacterValue, isCursorMovingKey } from '../publicApi/domUtils/event
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type {
     DOMEventPluginState,
-    IStandaloneEditor,
+    IEditor,
     DOMEventRecord,
-    StandaloneEditorOptions,
+    EditorOptions,
     PluginWithState,
 } from 'roosterjs-content-model-types';
 
@@ -27,7 +27,7 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
  * It contains special handling for Safari since Safari cannot get correct selection when onBlur event is triggered in editor.
  */
 class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: DOMEventPluginState;
 
@@ -36,7 +36,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * @param options The editor options
      * @param contentDiv The editor content DIV
      */
-    constructor(options: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
+    constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
         this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
@@ -57,7 +57,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
 
         const document = this.editor.getDocument();
@@ -228,7 +228,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
  * @param contentDiv The editor content DIV element
  */
 export function createDOMEventPlugin(
-    option: StandaloneEditorOptions,
+    option: EditorOptions,
     contentDiv: HTMLDivElement
 ): PluginWithState<DOMEventPluginState> {
     return new DOMEventPlugin(option, contentDiv);

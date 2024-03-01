@@ -1,11 +1,11 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { setColor } from 'roosterjs-content-model-dom';
 import type {
-    IStandaloneEditor,
+    IEditor,
     LifecyclePluginState,
     PluginEvent,
     PluginWithState,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 const ContentEditableAttributeName = 'contenteditable';
@@ -16,7 +16,7 @@ const DefaultBackColor = '#ffffff';
  * Lifecycle plugin handles editor initialization and disposing
  */
 class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private state: LifecyclePluginState;
     private initializer: (() => void) | null = null;
     private disposer: (() => void) | null = null;
@@ -27,7 +27,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * @param options The editor options
      * @param contentDiv The editor content DIV
      */
-    constructor(options: StandaloneEditorOptions, contentDiv: HTMLDivElement) {
+    constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
         // Make the container editable and set its selection styles
         if (contentDiv.getAttribute(ContentEditableAttributeName) === null) {
             this.initializer = () => {
@@ -62,7 +62,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
 
         // Set content DIV to be editable
@@ -141,7 +141,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
  * @param contentDiv The editor content DIV element
  */
 export function createLifecyclePlugin(
-    option: StandaloneEditorOptions,
+    option: EditorOptions,
     contentDiv: HTMLDivElement
 ): PluginWithState<LifecyclePluginState> {
     return new LifecyclePlugin(option, contentDiv);

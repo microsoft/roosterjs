@@ -1,9 +1,9 @@
 import * as keyboardTrigger from '../../lib/autoFormat/keyboardListTrigger';
 import { AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
-import { IStandaloneEditor, KeyDownEvent } from 'roosterjs-content-model-types';
+import { IEditor, KeyDownEvent } from 'roosterjs-content-model-types';
 
 describe('Content Model Auto Format Plugin Test', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = ({
@@ -12,7 +12,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     describe('onPluginEvent', () => {

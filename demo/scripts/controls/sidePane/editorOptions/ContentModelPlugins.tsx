@@ -63,7 +63,6 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                             (state, value) => (state.applyChangesOnMouseUp = value)
                         )
                     )}
-                    {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
                     {this.renderPluginItem(
                         'contextMenu',

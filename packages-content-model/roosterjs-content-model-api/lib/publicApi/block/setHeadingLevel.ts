@@ -1,8 +1,5 @@
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import type {
-    ContentModelParagraphDecorator,
-    IStandaloneEditor,
-} from 'roosterjs-content-model-types';
+import type { ContentModelParagraphDecorator, IEditor } from 'roosterjs-content-model-types';
 
 type HeadingLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
@@ -20,10 +17,7 @@ const HeaderFontSizes: Record<HeadingLevelTags, string> = {
  * @param editor The editor to set heading level to
  * @param headingLevel Level of heading, from 1 to 6. Set to 0 means set it back to a regular paragraph
  */
-export default function setHeadingLevel(
-    editor: IStandaloneEditor,
-    headingLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6
-) {
+export default function setHeadingLevel(editor: IEditor, headingLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6) {
     editor.focus();
 
     formatParagraphWithContentModel(editor, 'setHeadingLevel', para => {

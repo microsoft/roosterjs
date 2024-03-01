@@ -6,11 +6,7 @@ import { deleteList } from '../../lib/edit/deleteSteps/deleteList';
 import { DeleteResult, DeleteSelectionStep } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
 import { keyboardDelete } from '../../lib/edit/keyboardDelete';
-import {
-    ContentModelDocument,
-    DOMSelection,
-    IStandaloneEditor,
-} from 'roosterjs-content-model-types';
+import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
@@ -489,7 +485,7 @@ describe('keyboardDelete', () => {
                 type: 'range',
                 range: { collapsed: false },
             }),
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
         const event = {
             which: Delete,
             key: 'Delete',

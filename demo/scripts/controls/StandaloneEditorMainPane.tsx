@@ -17,7 +17,6 @@ import { alignCenterButton } from './ribbonButtons/contentModel/alignCenterButto
 import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyButton';
 import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
 import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
-import { AutoFormatPlugin, EditPlugin } from 'roosterjs-content-model-plugins';
 import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
 import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
 import { boldButton } from './ribbonButtons/contentModel/boldButton';
@@ -30,6 +29,7 @@ import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentMo
 import { darkMode } from './ribbonButtons/contentModel/darkMode';
 import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
 import { decreaseIndentButton } from './ribbonButtons/contentModel/decreaseIndentButton';
+import { Editor } from 'roosterjs-content-model-core';
 import { exportContent } from './ribbonButtons/contentModel/export';
 import { fontButton } from './ribbonButtons/contentModel/fontButton';
 import { fontSizeButton } from './ribbonButtons/contentModel/fontSizeButton';
@@ -63,7 +63,6 @@ import { setTableCellShadeButton } from './ribbonButtons/contentModel/setTableCe
 import { setTableHeaderButton } from './ribbonButtons/contentModel/setTableHeaderButton';
 import { Snapshots } from 'roosterjs-editor-types';
 import { spacingButton } from './ribbonButtons/contentModel/spacingButton';
-import { StandaloneEditor } from 'roosterjs-content-model-core';
 import { strikethroughButton } from './ribbonButtons/contentModel/strikethroughButton';
 import { subscriptButton } from './ribbonButtons/contentModel/subscriptButton';
 import { superscriptButton } from './ribbonButtons/contentModel/superscriptButton';
@@ -77,10 +76,16 @@ import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
 import {
+    AutoFormatPlugin,
+    EditPlugin,
+    ShortcutPlugin,
+    TableEditPlugin,
+} from 'roosterjs-content-model-plugins';
+import {
     ContentModelSegmentFormat,
-    IStandaloneEditor,
+    IEditor,
     Snapshot,
-    StandaloneEditorOptions,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 import {
     spaceAfterButton,
@@ -152,7 +157,7 @@ const DarkTheme: PartialTheme = {
 };
 
 interface ContentModelMainPaneState extends MainPaneBaseState {
-    editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) => IStandaloneEditor;
+    editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
 }
 
 class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState> {
@@ -165,7 +170,9 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private contentModelRibbonPlugin: RibbonPlugin;
     private contentAutoFormatPlugin: AutoFormatPlugin;
     private snapshotPlugin: ContentModelSnapshotPlugin;
+    private shortcutPlugin: ShortcutPlugin;
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
+    private tableEditPlugin: TableEditPlugin;
     private snapshots: Snapshots<Snapshot>;
     private buttons: ContentModelRibbonButton<any>[] = [
         formatPainterButton,
@@ -251,8 +258,10 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.contentModelEditPlugin = new EditPlugin();
         this.contentAutoFormatPlugin = new AutoFormatPlugin();
+        this.shortcutPlugin = new ShortcutPlugin();
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
+        this.tableEditPlugin = new TableEditPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -305,8 +314,8 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
 
     resetEditor() {
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: StandaloneEditorOptions) =>
-                new StandaloneEditor(div, {
+            editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
+                new Editor(div, {
                     ...options,
                     cacheModel: this.state.initState.cacheModel,
                 }),
@@ -345,8 +354,10 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
                             plugins={[
                                 this.contentModelRibbonPlugin,
                                 this.formatPainterPlugin,
+                                this.tableEditPlugin,
                                 this.contentModelEditPlugin,
                                 this.contentAutoFormatPlugin,
+                                this.shortcutPlugin,
                             ]}
                             defaultSegmentFormat={defaultFormat}
                             inDarkMode={this.state.isDarkMode}

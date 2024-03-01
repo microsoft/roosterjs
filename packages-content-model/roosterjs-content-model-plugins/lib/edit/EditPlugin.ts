@@ -3,7 +3,7 @@ import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
 import type {
     EditorPlugin,
-    IStandaloneEditor,
+    IEditor,
     KeyDownEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
@@ -12,14 +12,14 @@ const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
 
 /**
- * ContentModel edit plugins helps editor to do editing operation on top of content model.
+ * Edit plugins helps editor to do editing operation on top of content model.
  * This includes:
  * 1. Delete Key
  * 2. Backspace Key
  * 3. Tab Key
  */
 export class EditPlugin implements EditorPlugin {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
 
@@ -36,7 +36,7 @@ export class EditPlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
@@ -74,7 +74,7 @@ export class EditPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
+    private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
 
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
@@ -103,7 +103,7 @@ export class EditPlugin implements EditorPlugin {
         }
     }
 
-    private handleBeforeInputEvent(editor: IStandaloneEditor, rawEvent: Event) {
+    private handleBeforeInputEvent(editor: IEditor, rawEvent: Event) {
         // Some Android IMEs doesn't fire correct keydown event for BACKSPACE/DELETE key
         // Here we translate input event to BACKSPACE/DELETE keydown event to be compatible with existing logic
         if (

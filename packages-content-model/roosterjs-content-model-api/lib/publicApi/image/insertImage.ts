@@ -1,13 +1,13 @@
 import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model-dom';
 import { mergeModel, readFile } from 'roosterjs-content-model-core';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Insert an image into current selected position
  * @param editor The editor to operate on
  * @param file Image Blob file or source string
  */
-export default function insertImage(editor: IStandaloneEditor, imageFileOrSrc: File | string) {
+export default function insertImage(editor: IEditor, imageFileOrSrc: File | string) {
     editor.focus();
 
     if (typeof imageFileOrSrc == 'string') {
@@ -21,7 +21,7 @@ export default function insertImage(editor: IStandaloneEditor, imageFileOrSrc: F
     }
 }
 
-function insertImageWithSrc(editor: IStandaloneEditor, src: string) {
+function insertImageWithSrc(editor: IEditor, src: string) {
     editor.formatContentModel(
         (model, context) => {
             const image = createImage(src, { backgroundColor: '' });

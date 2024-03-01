@@ -15,8 +15,13 @@ import type {
  * Set a list type to content model
  * @param model the model document
  * @param listType the list type OL | UL
+ * @param removeMargins true to remove margins, false to keep margins @default false
  */
-export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') {
+export function setListType(
+    model: ContentModelDocument,
+    listType: 'OL' | 'UL',
+    removeMargins: boolean = false
+) {
     const paragraphOrListItems = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],
@@ -76,8 +81,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                         : 1,
                                 direction: block.format.direction,
                                 textAlign: block.format.textAlign,
-                                marginTop: '0px',
-                                marginBottom: '0px',
+                                marginBottom: removeMargins ? '0px' : undefined,
+                                marginTop: removeMargins ? '0px' : undefined,
                             }),
                         ],
                         // For list bullet, we only want to carry over these formats from segments:
@@ -98,6 +103,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                         newListItem.format.marginRight = block.format.marginRight;
                         block.format.marginRight = undefined;
                     }
+
                     if (block.format.marginLeft) {
                         newListItem.format.marginLeft = block.format.marginLeft;
                         block.format.marginLeft = undefined;

@@ -6,7 +6,7 @@ import type { EditorContext, CreateEditorContext } from 'roosterjs-content-model
  * Create a EditorContext object used by ContentModel API
  */
 export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
-    const { lifecycle, format, darkColorHandler, contentDiv, cache, domHelper } = core;
+    const { lifecycle, format, darkColorHandler, logicalRoot, cache, domHelper } = core;
 
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,
@@ -17,10 +17,10 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         allowCacheElement: true,
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
-        ...getRootComputedStyleForContext(contentDiv.ownerDocument),
+        ...getRootComputedStyleForContext(logicalRoot.ownerDocument),
     };
 
-    checkRootRtl(contentDiv, context);
+    checkRootRtl(logicalRoot, context);
 
     return context;
 };

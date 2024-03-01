@@ -39,7 +39,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
               )
             : createDomToModelContextWithConfig(core.domToModelSettings.calculated, editorContext);
 
-        const model = domToContentModel(core.contentDiv, domToModelContext, selection);
+        const model = domToContentModel(core.logicalRoot, domToModelContext, selection);
 
         if (saveIndex) {
             core.cache.cachedModel = model;

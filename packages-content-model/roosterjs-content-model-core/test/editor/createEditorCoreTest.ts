@@ -1,14 +1,14 @@
-import * as createDefaultSettings from '../../lib/editor/createStandaloneEditorDefaultSettings';
-import * as createStandaloneEditorCorePlugins from '../../lib/corePlugin/createStandaloneEditorCorePlugins';
+import * as createDefaultSettings from '../../lib/editor/createEditorDefaultSettings';
+import * as createEditorCorePlugins from '../../lib/corePlugin/createEditorCorePlugins';
 import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
 import * as DOMHelperImpl from '../../lib/editor/DOMHelperImpl';
-import { standaloneCoreApiMap } from '../../lib/editor/standaloneCoreApiMap';
-import { StandaloneEditorCore, StandaloneEditorOptions } from 'roosterjs-content-model-types';
+import { coreApiMap } from '../../lib/editor/coreApiMap';
+import { EditorCore, EditorOptions } from 'roosterjs-content-model-types';
 import {
-    createStandaloneEditorCore,
+    createEditorCore,
     defaultTrustHtmlHandler,
     getDarkColorFallback,
-} from '../../lib/editor/createStandaloneEditorCore';
+} from '../../lib/editor/createEditorCore';
 
 describe('createEditorCore', () => {
     function createMockedPlugin(stateName: string): any {
@@ -43,10 +43,7 @@ describe('createEditorCore', () => {
     const mockedDOMHelper = 'DOMHELPER' as any;
 
     beforeEach(() => {
-        spyOn(
-            createStandaloneEditorCorePlugins,
-            'createStandaloneEditorCorePlugins'
-        ).and.returnValue(mockedPlugins);
+        spyOn(createEditorCorePlugins, 'createEditorCorePlugins').and.returnValue(mockedPlugins);
         spyOn(DarkColorHandlerImpl, 'createDarkColorHandler').and.returnValue(
             mockedDarkColorHandler
         );
@@ -61,15 +58,16 @@ describe('createEditorCore', () => {
 
     function runTest(
         contentDiv: HTMLDivElement,
-        options: StandaloneEditorOptions,
-        additionalResult: Partial<StandaloneEditorCore>
+        options: EditorOptions,
+        additionalResult: Partial<EditorCore>
     ) {
-        const core = createStandaloneEditorCore(contentDiv, options);
+        const core = createEditorCore(contentDiv, options);
 
         expect(core).toEqual({
-            contentDiv: contentDiv,
-            api: standaloneCoreApiMap,
-            originalApi: standaloneCoreApiMap,
+            physicalRoot: contentDiv,
+            logicalRoot: contentDiv,
+            api: coreApiMap,
+            originalApi: coreApiMap,
             plugins: [
                 mockedCachePlugin,
                 mockedFormatPlugin,
@@ -105,9 +103,10 @@ describe('createEditorCore', () => {
             ...additionalResult,
         });
 
-        expect(
-            createStandaloneEditorCorePlugins.createStandaloneEditorCorePlugins
-        ).toHaveBeenCalledWith(options, contentDiv);
+        expect(createEditorCorePlugins.createEditorCorePlugins).toHaveBeenCalledWith(
+            options,
+            contentDiv
+        );
         expect(createDefaultSettings.createDomToModelSettings).toHaveBeenCalledWith(options);
         expect(createDefaultSettings.createModelToDomSettings).toHaveBeenCalledWith(options);
     }
@@ -157,8 +156,9 @@ describe('createEditorCore', () => {
         } as any;
 
         runTest(mockedDiv, mockedOptions, {
-            contentDiv: mockedDiv,
-            api: { ...standaloneCoreApiMap, a: 'b' } as any,
+            physicalRoot: mockedDiv,
+            logicalRoot: mockedDiv,
+            api: { ...coreApiMap, a: 'b' } as any,
             plugins: [
                 mockedCachePlugin,
                 mockedFormatPlugin,

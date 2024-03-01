@@ -6,7 +6,8 @@ describe('getVisibleViewport', () => {
             getBoundingClientRect: () => ({ left: 100, right: 200, top: 300, bottom: 400 }),
         };
         const core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             domEvent: {
                 scrollContainer: div,
             },
@@ -25,7 +26,8 @@ describe('getVisibleViewport', () => {
             getBoundingClientRect: () => ({ left: 150, right: 250, top: 350, bottom: 450 }),
         };
         const core = {
-            contentDiv: div1,
+            physicalRoot: div1,
+            logicalRoot: div1,
             domEvent: {
                 scrollContainer: div2,
             },

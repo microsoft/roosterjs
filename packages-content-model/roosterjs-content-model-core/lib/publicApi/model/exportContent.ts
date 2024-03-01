@@ -3,11 +3,7 @@ import {
     contentModelToText,
     createModelToDomContext,
 } from 'roosterjs-content-model-dom';
-import type {
-    ExportContentMode,
-    IStandaloneEditor,
-    ModelToDomOption,
-} from 'roosterjs-content-model-types';
+import type { ExportContentMode, IEditor, ModelToDomOption } from 'roosterjs-content-model-types';
 
 /**
  * Export string content of editor
@@ -19,7 +15,7 @@ import type {
  * @param options @optional Options for Model to DOM conversion
  */
 export function exportContent(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     mode: ExportContentMode = 'HTML',
     options?: ModelToDomOption
 ): string {

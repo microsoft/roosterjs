@@ -2,7 +2,7 @@ import * as applyTableFormat from 'roosterjs-content-model-core/lib/publicApi/ta
 import * as ensureFocusableParagraphForTable from '../../../lib/modelApi/table/ensureFocusableParagraphForTable';
 import * as hasSelectionInBlock from 'roosterjs-content-model-core/lib/publicApi/selection/hasSelectionInBlock';
 import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
-import { ContentModelDocument, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 import { formatTableWithContentModel } from '../../../lib/publicApi/utils/formatTableWithContentModel';
 import {
     createContentModelDocument,
@@ -11,7 +11,7 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('formatTableWithContentModel', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let formatContentModelSpy: jasmine.Spy;
     let model: ContentModelDocument;
     let formatResult: boolean | undefined;

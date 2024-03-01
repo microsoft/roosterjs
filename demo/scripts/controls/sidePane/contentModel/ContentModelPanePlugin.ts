@@ -1,8 +1,8 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { ContentModelRibbonPlugin } from '../../ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor as ILegacyEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -17,10 +17,10 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
         this.contentModelRibbon = new ContentModelRibbonPlugin();
     }
 
-    initialize(editor: IEditor): void {
+    initialize(editor: ILegacyEditor): void {
         super.initialize(editor);
 
-        this.contentModelRibbon.initialize(editor as IEditor & IStandaloneEditor); //  TODO: Port side pane to use IStandaloneEditor
+        this.contentModelRibbon.initialize(editor as ILegacyEditor & IEditor); //  TODO: Port side pane to use IStandaloneEditor
         editor.getDocument().addEventListener('selectionchange', this.onModelChangeFromSelection);
     }
 
@@ -36,8 +36,7 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.ContentChanged && e.source == 'RefreshModel') {
             this.getComponent(component => {
-                // TODO: Port to use IStandaloneEditor and remove type cast here
-                const model = (this.editor as IEditor & IStandaloneEditor).getContentModelCopy(
+                const model = (this.editor as ILegacyEditor & IEditor).getContentModelCopy(
                     'connected'
                 );
                 component.setContentModel(model);
@@ -74,9 +73,7 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     private onModelChange = () => {
         this.getComponent(component => {
             // TODO: Port to use IStandaloneEditor and remove type cast here
-            const model = (this.editor as IEditor & IStandaloneEditor).getContentModelCopy(
-                'connected'
-            );
+            const model = (this.editor as ILegacyEditor & IEditor).getContentModelCopy('connected');
             component.setContentModel(model);
             setCurrentContentModel(model);
         });

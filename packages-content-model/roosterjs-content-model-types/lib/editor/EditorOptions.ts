@@ -1,7 +1,8 @@
+import type { PasteType } from '../enum/PasteType';
 import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
 import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import type { StandaloneCoreApiMap } from './StandaloneEditorCore';
+import type { CoreApiMap } from './EditorCore';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
@@ -9,9 +10,9 @@ import type { Snapshots } from '../parameter/Snapshot';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
 /**
- * Options for Content Model editor
+ * Options for editor
  */
-export interface StandaloneEditorOptions {
+export interface EditorOptions {
     /**
      * Default options used for DOM to Content Model conversion
      */
@@ -76,7 +77,7 @@ export interface StandaloneEditorOptions {
      * A function map to override default core API implementation
      * Default value is null
      */
-    coreApiOverride?: Partial<StandaloneCoreApiMap>;
+    coreApiOverride?: Partial<CoreApiMap>;
 
     /**
      * Color of the border of a selectedImage. Default color: '#DB626C'
@@ -109,4 +110,9 @@ export interface StandaloneEditorOptions {
      * @param error The error object we got
      */
     disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * Default paste type. By default will use the normal (as-is) paste type.
+     */
+    defaultPasteType?: PasteType;
 }

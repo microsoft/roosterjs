@@ -1,16 +1,17 @@
+import { EditorCore, Snapshot } from 'roosterjs-content-model-types';
 import { restoreSnapshotHTML } from '../../lib/utils/restoreSnapshotHTML';
-import { Snapshot, StandaloneEditorCore } from 'roosterjs-content-model-types';
 import { wrap } from 'roosterjs-content-model-dom';
 
 describe('restoreSnapshotHTML', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let div: HTMLDivElement;
 
     beforeEach(() => {
         div = document.createElement('div');
 
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             entity: {
                 entityMap: {},
             },

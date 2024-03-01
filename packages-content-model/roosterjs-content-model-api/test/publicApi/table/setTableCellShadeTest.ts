@@ -1,7 +1,7 @@
 import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
 import setTableCellShade from '../../../lib/publicApi/table/setTableCellShade';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelTable,
     ContentModelFormatter,
@@ -9,14 +9,14 @@ import {
 } from 'roosterjs-content-model-types';
 
 describe('setTableCellShade', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         spyOn(normalizeTable, 'normalizeTable');
 
         editor = ({
             focus: () => {},
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     function runTest(

@@ -2,27 +2,22 @@ import {
     getAllEntityWrappers,
     isEntityElement,
     isNodeOfType,
-    parseEntityClassName,
+    parseEntityFormat,
     reuseCachedElement,
 } from 'roosterjs-content-model-dom';
-import type {
-    Snapshot,
-    StandaloneEditorCore,
-    KnownEntityItem,
-    ContentModelEntityFormat,
-} from 'roosterjs-content-model-types';
+import type { Snapshot, EditorCore, KnownEntityItem } from 'roosterjs-content-model-types';
 
 const BlockEntityContainer = '_E_EBlockEntityContainer';
 
 /**
  * @internal
  */
-export function restoreSnapshotHTML(core: StandaloneEditorCore, snapshot: Snapshot) {
+export function restoreSnapshotHTML(core: EditorCore, snapshot: Snapshot) {
     const {
-        contentDiv,
+        physicalRoot,
         entity: { entityMap },
     } = core;
-    let refNode: Node | null = contentDiv.firstChild;
+    let refNode: Node | null = physicalRoot.firstChild;
 
     const body = new DOMParser().parseFromString(
         core.trustedHTMLHandler?.(snapshot.html) ?? snapshot.html,
@@ -34,9 +29,9 @@ export function restoreSnapshotHTML(core: StandaloneEditorCore, snapshot: Snapsh
         const originalEntityElement = tryGetEntityElement(entityMap, currentNode);
 
         if (originalEntityElement) {
-            refNode = reuseCachedElement(contentDiv, originalEntityElement, refNode);
+            refNode = reuseCachedElement(physicalRoot, originalEntityElement, refNode);
         } else {
-            contentDiv.insertBefore(currentNode, refNode);
+            physicalRoot.insertBefore(currentNode, refNode);
 
             if (isNodeOfType(currentNode, 'ELEMENT_NODE')) {
                 const childEntities = getAllEntityWrappers(currentNode);
@@ -51,7 +46,7 @@ export function restoreSnapshotHTML(core: StandaloneEditorCore, snapshot: Snapsh
                             // Then after replaceChild(), the original refNode will be moved away
                             const markerNode = wrapper.cloneNode();
 
-                            contentDiv.insertBefore(markerNode, refNode);
+                            physicalRoot.insertBefore(markerNode, refNode);
                             refNode = markerNode;
                         }
 
@@ -79,11 +74,7 @@ function tryGetEntityElement(
 
     if (isNodeOfType(node, 'ELEMENT_NODE')) {
         if (isEntityElement(node)) {
-            const format: ContentModelEntityFormat = {};
-
-            node.classList.forEach(name => {
-                parseEntityClassName(name, format);
-            });
+            const format = parseEntityFormat(node);
 
             result = (format.id && entityMap[format.id]?.element) || null;
         } else if (isBlockEntityContainer(node)) {
@@ -93,6 +84,7 @@ function tryGetEntityElement(
 
     return result;
 }
+
 function isBlockEntityContainer(node: HTMLElement) {
     return node.classList.contains(BlockEntityContainer);
 }
@@ -101,14 +93,16 @@ function tryGetEntityFromContainer(
     element: HTMLElement,
     entityMap: Record<string, KnownEntityItem>
 ): HTMLElement | null {
-    const format: ContentModelEntityFormat = {};
-    element.childNodes.forEach(node => {
+    for (let node = element.firstChild; node; node = node.nextSibling) {
         if (isEntityElement(node) && isNodeOfType(node, 'ELEMENT_NODE')) {
-            node.classList.forEach(name => parseEntityClassName(name, format));
+            const format = parseEntityFormat(node);
+            const parent = format.id ? entityMap[format.id]?.element.parentElement : null;
+
+            return isNodeOfType(parent, 'ELEMENT_NODE') && isBlockEntityContainer(parent)
+                ? parent
+                : null;
         }
-    });
+    }
 
-    const parent = format.id ? entityMap[format.id]?.element.parentElement : null;
-
-    return isNodeOfType(parent, 'ELEMENT_NODE') && isBlockEntityContainer(parent) ? parent : null;
+    return null;
 }

@@ -1,24 +1,24 @@
 import { isElementOfType, isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
-import type { SnapshotSelection, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import type { SnapshotSelection, EditorCore } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function createSnapshotSelection(core: StandaloneEditorCore): SnapshotSelection {
-    const { contentDiv, api } = core;
+export function createSnapshotSelection(core: EditorCore): SnapshotSelection {
+    const { physicalRoot, api } = core;
     const selection = api.getDOMSelection(core);
 
     // Normalize tables to ensure they have TBODY element between TABLE and TR so that the selection path will include correct values
     if (selection?.type == 'range') {
         const { startContainer, startOffset, endContainer, endOffset } = selection.range;
-        let isDOMChanged = normalizeTableTree(startContainer, contentDiv);
+        let isDOMChanged = normalizeTableTree(startContainer, physicalRoot);
 
         if (endContainer != startContainer) {
-            isDOMChanged = normalizeTableTree(endContainer, contentDiv) || isDOMChanged;
+            isDOMChanged = normalizeTableTree(endContainer, physicalRoot) || isDOMChanged;
         }
 
         if (isDOMChanged) {
-            const newRange = contentDiv.ownerDocument.createRange();
+            const newRange = physicalRoot.ownerDocument.createRange();
 
             newRange.setStart(startContainer, startOffset);
             newRange.setEnd(endContainer, endOffset);
@@ -56,8 +56,8 @@ export function createSnapshotSelection(core: StandaloneEditorCore): SnapshotSel
 
             return {
                 type: 'range',
-                start: getPath(range.startContainer, range.startOffset, contentDiv),
-                end: getPath(range.endContainer, range.endOffset, contentDiv),
+                start: getPath(range.startContainer, range.startOffset, physicalRoot),
+                end: getPath(range.endContainer, range.endOffset, physicalRoot),
                 isReverted: !!selection.isReverted,
             };
 

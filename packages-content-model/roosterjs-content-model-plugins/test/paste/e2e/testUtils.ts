@@ -1,17 +1,13 @@
-import { cloneModel, StandaloneEditor } from 'roosterjs-content-model-core';
+import { cloneModel, Editor } from 'roosterjs-content-model-core';
+import { ContentModelDocument, EditorOptions, IEditor } from 'roosterjs-content-model-types';
 import { PastePlugin } from '../../../lib/paste/PastePlugin';
-import {
-    ContentModelDocument,
-    IStandaloneEditor,
-    StandaloneEditorOptions,
-} from 'roosterjs-content-model-types';
 
-export function initEditor(id: string): IStandaloneEditor {
+export function initEditor(id: string): IEditor {
     let node = document.createElement('div');
     node.id = id;
     document.body.insertBefore(node, document.body.childNodes[0]);
 
-    let options: StandaloneEditorOptions = {
+    let options: EditorOptions = {
         plugins: [new PastePlugin()],
         coreApiOverride: {
             getVisibleViewport: () => {
@@ -25,7 +21,7 @@ export function initEditor(id: string): IStandaloneEditor {
         },
     };
 
-    let editor = new StandaloneEditor(node as HTMLDivElement, options);
+    let editor = new Editor(node as HTMLDivElement, options);
 
     return editor;
 }

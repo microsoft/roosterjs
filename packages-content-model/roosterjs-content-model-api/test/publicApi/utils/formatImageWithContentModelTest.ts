@@ -1,5 +1,5 @@
 import formatImageWithContentModel from '../../../lib/publicApi/utils/formatImageWithContentModel';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelImage,
@@ -196,7 +196,7 @@ describe('formatImageWithContentModel', () => {
 
 function segmentTestForPluginEvent(
     apiName: string,
-    executionCallback: (editor: IStandaloneEditor) => void,
+    executionCallback: (editor: IEditor) => void,
     model: ContentModelDocument,
     result: ContentModelDocument,
     calledTimes: number
@@ -215,7 +215,7 @@ function segmentTestForPluginEvent(
     const editor = ({
         formatContentModel,
         getPendingFormat: () => null as any,
-    } as any) as IStandaloneEditor;
+    } as any) as IEditor;
 
     executionCallback(editor);
 
