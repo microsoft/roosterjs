@@ -72,7 +72,7 @@ describe('createModelFromHtml', () => {
                             format: { fontSize: '20px', textColor: 'red', fontFamily: 'Arial' },
                         },
                     ],
-                    segmentFormat: { fontSize: '20px', fontFamily: 'Arial' },
+                    segmentFormat: { fontSize: '20px', fontFamily: 'Arial', textColor: 'red' },
                     format: {},
                 },
             ],
