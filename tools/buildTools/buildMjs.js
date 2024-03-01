@@ -2,15 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const {
-    packagesPath,
-    packagesUiPath,
-    nodeModulesPath,
-    allPackages,
-    distPath,
-    runNode,
-    packagesContentModelPath,
-} = require('./common');
+const { packagesPath, nodeModulesPath, distPath, runNode, packages } = require('./common');
 
 function buildMjs() {
     const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
@@ -23,23 +15,7 @@ function buildMjs() {
             )} -t es5 --moduleResolution node -m esnext`,
         packagesPath
     );
-    runNode(
-        typescriptPath +
-            ` -p ${path.join(
-                packagesUiPath,
-                'tsconfig.json'
-            )} -t es5 --moduleResolution node -m esnext`,
-        packagesPath
-    );
-    runNode(
-        typescriptPath +
-            ` -p ${path.join(
-                packagesContentModelPath,
-                'tsconfig.json'
-            )} -t es5 --moduleResolution node -m esnext`,
-        packagesPath
-    );
-    allPackages.forEach(packageName => {
+    packages.forEach(packageName => {
         const packagePath = path.join(distPath, packageName);
         fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-mjs`);
     });
