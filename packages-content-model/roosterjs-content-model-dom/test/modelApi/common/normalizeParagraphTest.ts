@@ -5,6 +5,7 @@ import { createParagraph } from '../../../lib/modelApi/creators/createParagraph'
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeContentModel';
+import { normalizeParagraph } from '../../../lib/modelApi/common/normalizeParagraph';
 
 describe('Normalize text that contains space', () => {
     function runTest(texts: string[], expected: string[], whiteSpace?: string) {
@@ -351,6 +352,159 @@ describe('Normalize text that contains space', () => {
                     ],
                 },
             ],
+        });
+    });
+});
+
+describe('Normalize paragraph with segmentFormat', () => {
+    it('Empty paragraph', () => {
+        const paragraph = createParagraph();
+
+        normalizeParagraph(paragraph);
+
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+        });
+    });
+
+    it('Single text segment', () => {
+        const paragraph = createParagraph();
+        const text = createText('test', {
+            fontFamily: 'Arial',
+        });
+
+        paragraph.segments.push(text);
+
+        normalizeParagraph(paragraph);
+
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: { fontFamily: 'Arial' },
+                    text: 'test',
+                },
+            ],
+            format: {},
+            segmentFormat: { fontFamily: 'Arial' },
+        });
+    });
+
+    it('text + selection marker + text', () => {
+        const paragraph = createParagraph();
+        const text1 = createText('test1', {
+            fontFamily: 'Arial',
+        });
+        const text2 = createText('test2', {
+            fontFamily: 'Arial',
+        });
+        const marker = createSelectionMarker();
+
+        paragraph.segments.push(text1, marker, text2);
+
+        normalizeParagraph(paragraph);
+
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: { fontFamily: 'Arial' },
+                    text: 'test1',
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                    isSelected: true,
+                },
+                {
+                    segmentType: 'Text',
+                    format: { fontFamily: 'Arial' },
+                    text: 'test2',
+                },
+            ],
+            format: {},
+            segmentFormat: { fontFamily: 'Arial' },
+        });
+    });
+
+    it('text + selection marker + text, formats are different', () => {
+        const paragraph = createParagraph();
+        const text1 = createText('test1', {
+            fontFamily: 'Arial',
+        });
+        const text2 = createText('test2', {
+            fontFamily: 'Tahoma',
+        });
+        const marker = createSelectionMarker();
+
+        paragraph.segments.push(text1, marker, text2);
+
+        normalizeParagraph(paragraph);
+
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: { fontFamily: 'Arial' },
+                    text: 'test1',
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                    isSelected: true,
+                },
+                {
+                    segmentType: 'Text',
+                    format: { fontFamily: 'Tahoma' },
+                    text: 'test2',
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('text + selection marker + text, formats are partially different', () => {
+        const paragraph = createParagraph();
+        const text1 = createText('test1', {
+            fontFamily: 'Arial',
+            fontSize: '10px',
+        });
+        const text2 = createText('test2', {
+            fontFamily: 'Tahoma',
+            fontSize: '10px',
+        });
+        const marker = createSelectionMarker();
+
+        paragraph.segments.push(text1, marker, text2);
+
+        normalizeParagraph(paragraph);
+
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: { fontFamily: 'Arial', fontSize: '10px' },
+                    text: 'test1',
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                    isSelected: true,
+                },
+                {
+                    segmentType: 'Text',
+                    format: { fontFamily: 'Tahoma', fontSize: '10px' },
+                    text: 'test2',
+                },
+            ],
+            format: {},
+            segmentFormat: { fontSize: '10px' },
         });
     });
 });

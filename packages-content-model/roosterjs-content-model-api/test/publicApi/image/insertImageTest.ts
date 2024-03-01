@@ -198,6 +198,7 @@ describe('insertImage', () => {
                                 isSelected: true,
                             },
                         ],
+                        segmentFormat: { fontFamily: 'Test', fontSize: '20px' },
                     },
                 ],
                 format: {

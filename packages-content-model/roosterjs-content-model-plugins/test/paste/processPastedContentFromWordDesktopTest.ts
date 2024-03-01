@@ -350,6 +350,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 ],
                                 format: {},
                                 isImplicit: true,
+                                segmentFormat: { fontSize: '2em' },
                             },
                         ],
                         levels: [
@@ -441,6 +442,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 ],
                                 format: {},
                                 isImplicit: true,
+                                segmentFormat: { fontSize: '2em' },
                             },
                         ],
                         levels: [
@@ -541,6 +543,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 ],
                                 format: {},
                                 isImplicit: true,
+                                segmentFormat: { fontSize: '2em' },
                             },
                         ],
                         levels: [
@@ -648,6 +651,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 ],
                                 format: {},
                                 isImplicit: true,
+                                segmentFormat: { fontSize: '2em' },
                             },
                         ],
                         levels: [
@@ -1302,6 +1306,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 ],
                                 format: {},
                                 isImplicit: true,
+                                segmentFormat: {
+                                    fontFamily: 'Calibri, sans-serif',
+                                    fontSize: '12pt',
+                                },
                             },
                         ],
                         levels: [
@@ -1372,6 +1380,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     format: {},
                                     isImplicit: true,
+                                    segmentFormat: { fontFamily: 'Arial, sans-serif' },
                                 },
                             ],
                             levels: [
@@ -1407,6 +1416,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     format: {},
                                     isImplicit: true,
+                                    segmentFormat: { fontFamily: 'Arial, sans-serif' },
                                 },
                             ],
                             levels: [
@@ -1512,6 +1522,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        textColor: 'rgb(70, 120, 134)',
+                                    },
                                 },
                             ],
                         },
@@ -1554,6 +1567,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        textColor: 'rgb(70, 120, 134)',
+                                    },
                                 },
                             ],
                         },
@@ -1596,6 +1612,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        textColor: 'rgb(70, 120, 134)',
+                                    },
                                 },
                             ],
                         },
@@ -1660,6 +1679,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        textColor: 'rgb(70, 120, 134)',
+                                    },
                                 },
                             ],
                         },
@@ -1702,6 +1724,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        textColor: 'rgb(70, 120, 134)',
+                                    },
                                 },
                             ],
                         },
@@ -2516,6 +2541,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -2579,6 +2608,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -2654,6 +2687,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -2741,6 +2778,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -2840,6 +2881,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -2951,6 +2996,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3074,6 +3123,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3209,6 +3262,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3356,6 +3413,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3490,6 +3551,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3612,6 +3677,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3722,6 +3791,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3820,6 +3893,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3906,6 +3983,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -3980,6 +4061,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -4042,6 +4127,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },
@@ -4092,6 +4181,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     ],
                                     blockType: 'Paragraph',
                                     format: {},
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
                             ],
                         },

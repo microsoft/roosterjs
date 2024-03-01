@@ -57,6 +57,11 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                     },
                                 ],
                                 isImplicit: true,
+                                segmentFormat: {
+                                    fontFamily: 'Calibri, sans-serif',
+                                    fontSize: '11pt',
+                                    textColor: 'black',
+                                },
                             },
                         ],
                         levels: [
@@ -99,6 +104,11 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                     },
                                 ],
                                 isImplicit: true,
+                                segmentFormat: {
+                                    fontFamily: 'Calibri, sans-serif',
+                                    fontSize: '11pt',
+                                    textColor: 'black',
+                                },
                             },
                         ],
                         levels: [
@@ -262,6 +272,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                 ],
                                 format: { whiteSpace: 'pre' },
                                 isImplicit: true,
+                                segmentFormat: { fontFamily: 'monospace' },
                             },
                         ],
                         format: {
@@ -329,6 +340,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                     },
                                 ],
                                 isImplicit: true,
+                                segmentFormat: { fontFamily: 'monospace' },
                             },
                         ],
                     },
@@ -353,6 +365,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                     },
                                 ],
                                 isImplicit: true,
+                                segmentFormat: { fontFamily: 'monospace' },
                             },
                         ],
                     },
@@ -905,6 +918,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                     whiteSpace: 'pre',
                                 },
                                 isImplicit: true,
+                                segmentFormat: { fontFamily: 'monospace' },
                             },
                         ],
                         format: {
@@ -934,6 +948,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                     whiteSpace: 'pre',
                                 },
                                 isImplicit: true,
+                                segmentFormat: { fontFamily: 'monospace', fontSize: '20px' },
                             },
                         ],
                         format: {
@@ -945,7 +960,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                 ],
             },
             'aaa\nbbb\r\naaa\nbb',
-            '<pre><div>aaa\nbbb</div></pre><pre><div><span style="font-size: 20px;">aaa\nbb</span></div></pre>'
+            '<pre><div>aaa\nbbb</div></pre><pre><div style="font-size: 20px;">aaa\nbb</div></pre>'
         );
     });
 
@@ -1034,6 +1049,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                             },
                         ],
                         format: {},
+                        segmentFormat: { textColor: 'red' },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -1054,6 +1070,11 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                     },
                                 ],
                                 format: {},
+                                segmentFormat: {
+                                    fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                                    fontSize: '12pt',
+                                    textColor: 'rgb(102, 102, 102)',
+                                },
                             },
                         ],
                         format: {
@@ -1077,6 +1098,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                             },
                         ],
                         format: {},
+                        segmentFormat: { textColor: 'red' },
                     },
                     {
                         blockType: 'Paragraph',
@@ -1090,6 +1112,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                             },
                         ],
                         format: {},
+                        segmentFormat: { textColor: 'red' },
                     },
                     {
                         blockType: 'Paragraph',
@@ -1108,6 +1131,11 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                             marginRight: '40px',
                             marginLeft: '40px',
                         },
+                        segmentFormat: {
+                            fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                            fontSize: '12pt',
+                            textColor: 'rgb(102, 102, 102)',
+                        },
                     },
                     {
                         blockType: 'Paragraph',
@@ -1121,11 +1149,14 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                             },
                         ],
                         format: {},
+                        segmentFormat: {
+                            textColor: 'red',
+                        },
                     },
                 ],
             },
             'aaaa\r\nbbbbbb\r\ncccc\r\naaaa\r\nbbbbbb\r\ncccc',
-            '<div><span style="color: red;">aaaa</span></div><blockquote style="padding-left: 10px; border-left: 3px solid rgb(200, 200, 200);"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</span></div></blockquote><div><span style="color: red;">cccc</span></div><div><span style="color: red;">aaaa</span></div><div style="margin-right: 40px; margin-left: 40px;"><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</span></div><div><span style="color: red;">cccc</span></div>'
+            '<div style="color: red;">aaaa</div><blockquote style="padding-left: 10px; border-left: 3px solid rgb(200, 200, 200);"><div style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</div></blockquote><div style="color: red;">cccc</div><div style="color: red;">aaaa</div><div style="margin-right: 40px; margin-left: 40px; font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</div><div style="color: red;">cccc</div>'
         );
     });
 
@@ -1166,6 +1197,9 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                 ],
                                 format: {
                                     whiteSpace: 'pre',
+                                },
+                                segmentFormat: {
+                                    fontFamily: 'monospace',
                                 },
                             },
                         ],
@@ -1570,6 +1604,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                 },
                             },
                         ],
+                        segmentFormat: { textColor: 'red' },
                     },
                 ],
             },
