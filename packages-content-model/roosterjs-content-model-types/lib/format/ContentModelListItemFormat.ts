@@ -1,3 +1,4 @@
+import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
 import type { ListStyleFormat } from './formatParts/ListStyleFormat';
@@ -15,4 +16,5 @@ export type ContentModelListItemFormat = DirectionFormat &
     PaddingFormat &
     TextAlignFormat &
     ListStyleFormat &
-    TextIndentFormat;
+    TextIndentFormat &
+    BackgroundColorFormat;
