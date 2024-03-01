@@ -214,7 +214,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private onSelectionChange = (event: Event) => {
+    private onSelectionChange = () => {
         if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
             // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
             // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
@@ -224,14 +224,16 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 this.state.selection = newSelection;
             }
 
-            const range = document.getSelection()?.getRangeAt(0);
-            if (range && newSelection?.type == 'image' && !this.suspendSelectionChangeEvent) {
-                this.editor.setDOMSelection({
-                    type: 'range',
-                    range,
-                    isReverted: false,
-                });
-                this.suspendSelectionChangeEvent = false;
+            if (!this.isSafari) {
+                const range = document.getSelection()?.getRangeAt(0);
+                if (range && newSelection?.type == 'image' && !this.suspendSelectionChangeEvent) {
+                    this.editor.setDOMSelection({
+                        type: 'range',
+                        range,
+                        isReverted: false,
+                    });
+                    this.suspendSelectionChangeEvent = false;
+                }
             }
         }
     };

@@ -187,6 +187,7 @@ describe('SelectionPlugin handle image selection', () => {
     let createRangeSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
     let hasFocusSpy: jasmine.Spy;
+    let isInShadowEditSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
@@ -195,6 +196,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy = jasmine.createSpy('createRange');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
         hasFocusSpy = jasmine.createSpy('hasFocus');
+        isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createElement: createElementSpy,
             createRange: createRangeSpy,
@@ -213,6 +215,7 @@ describe('SelectionPlugin handle image selection', () => {
                 return jasmine.createSpy('disposer');
             },
             hasFocus: hasFocusSpy,
+            isInShadowEdit: isInShadowEditSpy,
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -557,6 +560,11 @@ describe('SelectionPlugin handle image selection', () => {
         const plugin = createSelectionPlugin({});
         const state = plugin.getState();
         const mockedOldSelection = 'OLDSELECTION' as any;
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const rawEvent = {
+            key: 'A',
+            stopPropagation: stopPropagationSpy,
+        } as any;
 
         state.selection = mockedOldSelection;
 
@@ -613,6 +621,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         hasFocusSpy.and.returnValue(true);
         getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        isInShadowEditSpy.and.returnValue(false);
 
         onSelectionChange();
 
@@ -621,7 +630,7 @@ describe('SelectionPlugin handle image selection', () => {
             selectionStyleNode: MockedStyleNode,
             imageSelectionBorderColor: undefined,
         });
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(2);
         expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });
