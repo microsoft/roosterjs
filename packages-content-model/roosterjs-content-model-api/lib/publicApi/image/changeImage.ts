@@ -1,13 +1,13 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import { readFile, updateImageMetadata } from 'roosterjs-content-model-core';
-import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Change the selected image src
  * @param editor The editor instance
  * @param file The image file
  */
-export default function changeImage(editor: IStandaloneEditor, file: File) {
+export default function changeImage(editor: IEditor, file: File) {
     editor.focus();
 
     const selection = editor.getDOMSelection();

@@ -1,18 +1,22 @@
+import { EditorCore } from 'roosterjs-content-model-types';
 import { hasFocus } from '../../lib/coreApi/hasFocus';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('hasFocus', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let containsSpy: jasmine.Spy;
     let mockedElement = 'ELEMENT' as any;
 
     beforeEach(() => {
         containsSpy = jasmine.createSpy('contains');
+
+        const mockedRoot = {
+            ownerDocument: {},
+            contains: containsSpy,
+        };
+
         core = {
-            contentDiv: {
-                ownerDocument: {},
-                contains: containsSpy,
-            },
+            physicalRoot: mockedRoot,
+            logicalRoot: mockedRoot,
         } as any;
     });
 
@@ -21,7 +25,7 @@ describe('hasFocus', () => {
     });
 
     it('Has active element inside editor', () => {
-        (core.contentDiv.ownerDocument as any).activeElement = mockedElement;
+        (core.physicalRoot.ownerDocument as any).activeElement = mockedElement;
         containsSpy.and.returnValue(true);
 
         let result = hasFocus(core);
@@ -30,7 +34,7 @@ describe('hasFocus', () => {
     });
 
     it('Has active element outside editor', () => {
-        (core.contentDiv.ownerDocument as any).activeElement = mockedElement;
+        (core.physicalRoot.ownerDocument as any).activeElement = mockedElement;
         containsSpy.and.returnValue(false);
 
         let result = hasFocus(core);

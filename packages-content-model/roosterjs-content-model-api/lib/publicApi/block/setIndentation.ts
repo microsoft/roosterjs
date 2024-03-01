@@ -1,6 +1,6 @@
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Indent or outdent to selected paragraphs
@@ -9,7 +9,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
  * @param length The length of pixel to indent/outdent @default 40
  */
 export default function setIndentation(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     indentation: 'indent' | 'outdent',
     length?: number
 ) {

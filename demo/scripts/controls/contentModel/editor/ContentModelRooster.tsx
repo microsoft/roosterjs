@@ -2,12 +2,8 @@ import * as React from 'react';
 import { createUIUtilities, ReactEditorPlugin, UIUtilities } from 'roosterjs-react';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
 import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
+import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-content-model-types';
 import { useTheme } from '@fluentui/react/lib/Theme';
-import {
-    EditorPlugin,
-    IStandaloneEditor,
-    StandaloneEditorOptions,
-} from 'roosterjs-content-model-types';
 import type { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types';
 
 /**
@@ -20,7 +16,7 @@ export interface ContentModelRoosterProps
      * Creator function used for creating the instance of roosterjs editor.
      * Use this callback when you have your own sub class of roosterjs Editor or force trigging a reset of editor
      */
-    editorCreator?: (div: HTMLDivElement, options: StandaloneEditorOptions) => IStandaloneEditor;
+    editorCreator?: (div: HTMLDivElement, options: EditorOptions) => IEditor;
 
     /**
      * Whether editor should get focus once it is created
@@ -36,7 +32,7 @@ export interface ContentModelRoosterProps
  */
 export default function ContentModelRooster(props: ContentModelRoosterProps) {
     const editorDiv = React.useRef<HTMLDivElement>(null);
-    const editor = React.useRef<IStandaloneEditor | null>(null);
+    const editor = React.useRef<IEditor | null>(null);
     const theme = useTheme();
 
     const { focusOnInit, editorCreator, inDarkMode, plugins, legacyPlugins } = props;

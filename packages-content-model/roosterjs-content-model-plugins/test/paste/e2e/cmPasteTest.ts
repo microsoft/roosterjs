@@ -1,12 +1,12 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ClipboardData, IStandaloneEditor } from 'roosterjs-content-model-types';
+import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 
 const ID = 'CM_Paste_E2E';
 
 describe(ID, () => {
-    let editor: IStandaloneEditor = undefined!;
+    let editor: IEditor = undefined!;
 
     beforeEach(() => {
         editor = initEditor(ID);

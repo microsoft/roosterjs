@@ -14,7 +14,7 @@ import {
     isBold,
     redo,
     retrieveModelFormatState,
-    StandaloneEditor,
+    Editor,
     transformColor,
     undo,
 } from 'roosterjs-content-model-core';
@@ -54,7 +54,7 @@ import type {
     TableSelection,
     DOMEventHandlerObject,
     DarkColorHandler,
-    IEditor,
+    IEditor as ILegacyEditor,
 } from 'roosterjs-editor-types';
 import {
     convertDomSelectionToRangeEx,
@@ -93,8 +93,8 @@ import type {
     ContentModelFormatState,
     DOMEventRecord,
     ExportContentMode,
-    IStandaloneEditor,
-    StandaloneEditorOptions,
+    IEditor,
+    EditorOptions,
 } from 'roosterjs-content-model-types';
 
 const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
@@ -109,7 +109,7 @@ const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export class EditorAdapter extends StandaloneEditor implements IEditor {
+export class EditorAdapter extends Editor implements ILegacyEditor {
     private contentModelEditorCore: EditorAdapterCore | undefined;
 
     /**
@@ -139,7 +139,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                       options.defaultSegmentFormat
                   )
                 : options.initialModel;
-        const standaloneEditorOptions: StandaloneEditorOptions = {
+        const standaloneEditorOptions: EditorOptions = {
             ...options,
             plugins,
             initialModel,
@@ -199,14 +199,14 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                 insertToRegionRoot: false,
             };
 
-            const { contentDiv } = this.getCore();
+            const { physicalRoot } = this.getCore();
 
             if (option.updateCursor) {
                 this.focus();
             }
 
             if (option.position == ContentPosition.Outside) {
-                contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);
+                physicalRoot.parentNode?.insertBefore(node, physicalRoot.nextSibling);
             } else {
                 if (this.isDarkMode()) {
                     transformColor(
@@ -217,7 +217,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                     );
                 }
 
-                const selection = insertNode(contentDiv, this.getDOMSelection(), node, option);
+                const selection = insertNode(physicalRoot, this.getDOMSelection(), node, option);
 
                 if (selection && option.updateCursor) {
                     this.setDOMSelection(selection);
@@ -274,14 +274,14 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @returns The BlockElement result
      */
     getBlockElementAtNode(node: Node): BlockElement | null {
-        return getBlockElementAtNode(this.getCore().contentDiv, node);
+        return getBlockElementAtNode(this.getCore().logicalRoot, node);
     }
 
     contains(arg: Node | Range | null): boolean {
         if (!arg) {
             return false;
         }
-        return contains(this.getCore().contentDiv, <Node>arg);
+        return contains(this.getCore().logicalRoot, <Node>arg);
     }
 
     queryElements(
@@ -300,10 +300,16 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
         const selectionEx = scope == QueryScope.Body ? null : this.getSelectionRangeEx();
         if (selectionEx) {
             selectionEx.ranges.forEach(range => {
-                result.push(...queryElements(core.contentDiv, selector, callback, scope, range));
+                result.push(...queryElements(core.logicalRoot, selector, callback, scope, range));
             });
         } else {
-            return queryElements(core.contentDiv, selector, callback, scope, undefined /* range */);
+            return queryElements(
+                core.logicalRoot,
+                selector,
+                callback,
+                scope,
+                undefined /* range */
+            );
         }
 
         return result;
@@ -321,7 +327,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * otherwise just return start and end
      */
     collapseNodes(start: Node, end: Node, canSplitParent: boolean): Node[] {
-        return collapseNodes(this.getCore().contentDiv, start, end, canSplitParent);
+        return collapseNodes(this.getCore().physicalRoot, start, end, canSplitParent);
     }
 
     //#endregion
@@ -334,7 +340,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @returns True if there's no visible content, otherwise false
      */
     isEmpty(trim?: boolean): boolean {
-        return isNodeEmpty(this.getCore().contentDiv, trim);
+        return isNodeEmpty(this.getCore().physicalRoot, trim);
     }
 
     /**
@@ -357,7 +363,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      */
     setContent(content: string, triggerContentChangedEvent: boolean = true) {
         const core = this.getCore();
-        const { contentDiv, api, trustedHTMLHandler, lifecycle, darkColorHandler } = core;
+        const { physicalRoot, api, trustedHTMLHandler, lifecycle, darkColorHandler } = core;
 
         api.triggerEvent(
             core,
@@ -387,7 +393,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                 false /*broadcast*/
             );
         } else if (lifecycle.isDarkMode) {
-            transformColor(contentDiv, false /*includeSelf*/, 'lightToDark', darkColorHandler);
+            transformColor(physicalRoot, false /*includeSelf*/, 'lightToDark', darkColorHandler);
         }
     }
 
@@ -429,7 +435,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
     deleteSelectedContent(): NodePosition | null {
         const range = this.getSelectionRange();
         if (range && !range.collapsed) {
-            return deleteSelectedContent(this.getCore().contentDiv, range);
+            return deleteSelectedContent(this.getCore().physicalRoot, range);
         }
         return null;
     }
@@ -497,7 +503,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      */
     getSelectionPath(): SelectionPath | null {
         const range = this.getSelectionRange();
-        return range && getSelectionPath(this.getCore().contentDiv, range);
+        return range && getSelectionPath(this.getCore().physicalRoot, range);
     }
 
     select(
@@ -507,7 +513,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
-        const rangeEx = buildRangeEx(core.contentDiv, arg1, arg2, arg3, arg4);
+        const rangeEx = buildRangeEx(core.physicalRoot, arg1, arg2, arg3, arg4);
         const selection = convertRangeExToDomSelection(rangeEx);
 
         this.setDOMSelection(selection);
@@ -558,7 +564,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                 }
                 return (
                     startFrom &&
-                    findClosestElementAncestor(startFrom, this.getCore().contentDiv, selector)
+                    findClosestElementAncestor(startFrom, this.getCore().physicalRoot, selector)
                 );
             }) ?? null
         );
@@ -571,7 +577,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @returns True if position is at beginning of the editor, otherwise false
      */
     isPositionAtBeginning(position: NodePosition): boolean {
-        return isPositionAtBeginningOf(position, this.getCore().contentDiv);
+        return isPositionAtBeginningOf(position, this.getCore().logicalRoot);
     }
 
     /**
@@ -580,9 +586,9 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
     getSelectedRegions(type: RegionType | CompatibleRegionType = RegionType.Table): Region[] {
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
-        const contentDiv = this.getCore().contentDiv;
+        const logicalRoot = this.getCore().logicalRoot;
         selection.ranges.forEach(range => {
-            result.push(...(range ? getRegionsFromRange(contentDiv, range, type) : []));
+            result.push(...(range ? getRegionsFromRange(logicalRoot, range, type) : []));
         });
         return result.filter((value, index, self) => {
             return self.indexOf(value) === index;
@@ -826,7 +832,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
     getBodyTraverser(startNode?: Node): IContentTraverser {
-        return ContentTraverser.createBodyTraverser(this.getCore().contentDiv, startNode);
+        return ContentTraverser.createBodyTraverser(this.getCore().logicalRoot, startNode);
     }
 
     /**
@@ -836,7 +842,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
     getSelectionTraverser(range?: Range): IContentTraverser | null {
         range = range ?? this.getSelectionRange() ?? undefined;
         return range
-            ? ContentTraverser.createSelectionTraverser(this.getCore().contentDiv, range)
+            ? ContentTraverser.createSelectionTraverser(this.getCore().logicalRoot, range)
             : null;
     }
 
@@ -850,7 +856,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
     ): IContentTraverser | null {
         const range = this.getSelectionRange();
         return range
-            ? ContentTraverser.createBlockTraverser(this.getCore().contentDiv, range, startFrom)
+            ? ContentTraverser.createBlockTraverser(this.getCore().logicalRoot, range, startFrom)
             : null;
     }
 
@@ -865,7 +871,7 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
             const range = this.getSelectionRange();
             return (
                 range &&
-                new PositionContentSearcher(this.getCore().contentDiv, Position.getStart(range))
+                new PositionContentSearcher(this.getCore().logicalRoot, Position.getStart(range))
             );
         });
     }
@@ -875,8 +881,8 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      * @param callback The callback function to run
      * @returns a function to cancel this async run
      */
-    runAsync(callback: (editor: IEditor & IStandaloneEditor) => void) {
-        const win = this.getCore().contentDiv.ownerDocument.defaultView || window;
+    runAsync(callback: (editor: ILegacyEditor & IEditor) => void) {
+        const win = this.getCore().physicalRoot.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
                 callback(this);
@@ -916,8 +922,8 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
      */
     getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[] | null {
         if (this.contains(element)) {
-            const contentDiv = this.getCore().contentDiv;
-            const editorRect = contentDiv.getBoundingClientRect();
+            const physicalRoot = this.getCore().physicalRoot;
+            const editorRect = physicalRoot.getBoundingClientRect();
             const elementRect = element.getBoundingClientRect();
 
             if (editorRect && elementRect) {
@@ -925,8 +931,8 @@ export class EditorAdapter extends StandaloneEditor implements IEditor {
                 let y = elementRect.top - editorRect?.top;
 
                 if (addScroll) {
-                    x += contentDiv.scrollLeft;
-                    y += contentDiv.scrollTop;
+                    x += physicalRoot.scrollLeft;
+                    y += physicalRoot.scrollTop;
                 }
 
                 return [x, y];

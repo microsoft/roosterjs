@@ -1,10 +1,10 @@
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Redo to next undo snapshot
  * @param editor The editor to undo with
  */
-export function redo(editor: IStandaloneEditor): void {
+export function redo(editor: IEditor): void {
     editor.focus();
 
     const manager = editor.getSnapshotsManager();

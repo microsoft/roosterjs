@@ -1,6 +1,6 @@
 import insertLink from '../../../lib/publicApi/link/insertLink';
-import { ChangeSource, StandaloneEditor } from 'roosterjs-content-model-core';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { ChangeSource, Editor } from 'roosterjs-content-model-core';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelLink,
@@ -16,13 +16,13 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('insertLink', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = ({
             focus: () => {},
             getPendingFormat: () => null as any,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     function runTest(
@@ -326,7 +326,7 @@ describe('insertLink', () => {
             getName: () => 'mock',
             onPluginEvent: onPluginEvent,
         };
-        const editor = new StandaloneEditor(div, {
+        const editor = new Editor(div, {
             plugins: [mockedPlugin],
         });
 

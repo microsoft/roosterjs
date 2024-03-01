@@ -1,5 +1,5 @@
 import { setModelAlignment } from '../../modelApi/block/setModelAlignment';
-import type { IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Set text alignment of selected paragraphs
@@ -7,7 +7,7 @@ import type { IStandaloneEditor } from 'roosterjs-content-model-types';
  * @param alignment Alignment value: left, center or right
  */
 export default function setAlignment(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     alignment: 'left' | 'center' | 'right' | 'justify'
 ) {
     editor.focus();

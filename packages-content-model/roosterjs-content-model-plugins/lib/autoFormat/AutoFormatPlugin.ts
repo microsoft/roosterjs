@@ -1,7 +1,7 @@
 import { keyboardListTrigger } from './keyboardListTrigger';
 import type {
     EditorPlugin,
-    IStandaloneEditor,
+    IEditor,
     KeyDownEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
@@ -34,7 +34,7 @@ const DefaultOptions: Required<AutoFormatOptions> = {
  * It can be customized with options to enable or disable auto list features.
  */
 export class AutoFormatPlugin implements EditorPlugin {
-    private editor: IStandaloneEditor | null = null;
+    private editor: IEditor | null = null;
 
     /**
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
@@ -56,7 +56,7 @@ export class AutoFormatPlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IStandaloneEditor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 
@@ -85,7 +85,7 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(editor: IStandaloneEditor, event: KeyDownEvent) {
+    private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {

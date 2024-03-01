@@ -33,7 +33,7 @@ export {
 export { setSelection } from './publicApi/selection/setSelection';
 
 export { applyTableFormat } from './publicApi/table/applyTableFormat';
-export { normalizeTable } from './publicApi/table/normalizeTable';
+export { normalizeTable, MIN_ALLOWED_TABLE_CELL_WIDTH } from './publicApi/table/normalizeTable';
 export { setTableCellBackgroundColor } from './publicApi/table/setTableCellBackgroundColor';
 export { getSelectedCells } from './publicApi/table/getSelectedCells';
 
@@ -43,6 +43,7 @@ export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stri
 export { parseTableCells, createTableRanges } from './publicApi/domUtils/tableCellUtils';
 export { getSegmentTextFormat } from './publicApi/domUtils/getSegmentTextFormat';
 export { readFile } from './publicApi/domUtils/readFile';
+export { cacheGetEventData } from './publicApi/domUtils/cacheGetEventData';
 
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
@@ -60,4 +61,4 @@ export { BulletListType } from './constants/BulletListType';
 export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
-export { StandaloneEditor } from './editor/StandaloneEditor';
+export { Editor } from './editor/Editor';

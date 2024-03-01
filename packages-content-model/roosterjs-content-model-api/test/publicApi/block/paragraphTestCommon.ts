@@ -1,4 +1,4 @@
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -7,7 +7,7 @@ import {
 
 export function paragraphTestCommon(
     apiName: string,
-    executionCallback: (editor: IStandaloneEditor) => void,
+    executionCallback: (editor: IEditor) => void,
     model: ContentModelDocument,
     result: ContentModelDocument,
     calledTimes: number
@@ -26,7 +26,7 @@ export function paragraphTestCommon(
         focus: jasmine.createSpy(),
         getFocusedPosition: () => ({}),
         formatContentModel,
-    } as any) as IStandaloneEditor;
+    } as any) as IEditor;
 
     executionCallback(editor);
 

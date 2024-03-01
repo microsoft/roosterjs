@@ -5,7 +5,7 @@ import type {
     DOMSelection,
     FormatContentModel,
     FormatContentModelContext,
-    StandaloneEditorCore,
+    EditorCore,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -14,7 +14,7 @@ import type {
  * It will grab a Content Model for current editor content, and invoke a callback function
  * to do format change. Then according to the return value, write back the modified content model into editor.
  * If there is cached model, it will be used and updated.
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  * @param formatter Formatter function, see ContentModelFormatter
  * @param options More options, see FormatContentModelOptions
  */
@@ -42,9 +42,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         if (shouldAddSnapshot) {
             core.undo.isNested = true;
 
-            if (core.undo.snapshotsManager.hasNewContent || entityStates) {
-                core.api.addUndoSnapshot(core, !!canUndoByBackspace);
-            }
+            core.api.addUndoSnapshot(core, !!canUndoByBackspace, entityStates);
         }
 
         try {
@@ -97,7 +95,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
     }
 };
 
-function handleImages(core: StandaloneEditorCore, context: FormatContentModelContext) {
+function handleImages(core: EditorCore, context: FormatContentModelContext) {
     if (context.newImages.length > 0) {
         const viewport = core.api.getVisibleViewport(core);
 
@@ -113,7 +111,7 @@ function handleImages(core: StandaloneEditorCore, context: FormatContentModelCon
 }
 
 function handlePendingFormat(
-    core: StandaloneEditorCore,
+    core: EditorCore,
     context: FormatContentModelContext,
     selection?: DOMSelection | null
 ) {

@@ -3,7 +3,7 @@ import type { Focus } from 'roosterjs-content-model-types';
 /**
  * @internal
  * Focus to editor. If there is a cached selection range, use it as current selection
- * @param core The StandaloneEditorCore object
+ * @param core The EditorCore object
  */
 export const focus: Focus = core => {
     if (!core.lifecycle.shadowEditFragment) {
@@ -15,7 +15,7 @@ export const focus: Focus = core => {
 
         // fallback, in case editor still have no focus
         if (!core.api.hasFocus(core)) {
-            core.contentDiv.focus();
+            core.logicalRoot.focus();
         }
     }
 };

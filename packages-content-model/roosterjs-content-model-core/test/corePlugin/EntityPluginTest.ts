@@ -7,12 +7,12 @@ import {
     ContentModelDocument,
     DarkColorHandler,
     EntityPluginState,
-    IStandaloneEditor,
+    IEditor,
     PluginWithState,
 } from 'roosterjs-content-model-types';
 
 describe('EntityPlugin', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let plugin: PluginWithState<EntityPluginState>;
     let formatContentModelSpy: jasmine.Spy;
     let triggerPluginEventSpy: jasmine.Spy;
@@ -599,7 +599,7 @@ describe('EntityPlugin', () => {
         it('Click on entity', () => {
             const mockedNode = {
                 parentNode: null as any,
-                classList: ['_ENtity', '_EType_A', '_EId_A'],
+                classList: ['_Entity', '_EType_A', '_EId_A'],
             } as any;
             const mockedEvent = {
                 target: mockedNode,
@@ -631,7 +631,7 @@ describe('EntityPlugin', () => {
         it('Click on child of entity', () => {
             const mockedNode1 = {
                 parentNode: null as any,
-                classList: ['_ENtity', '_EType_A', '_EId_A'],
+                classList: ['_Entity', '_EType_A', '_EId_A'],
             } as any;
 
             const mockedNode2 = {
@@ -667,7 +667,7 @@ describe('EntityPlugin', () => {
         it('Not clicking', () => {
             const mockedNode = {
                 parentNode: null as any,
-                classList: ['_ENtity', '_EType_A', '_EId_A'],
+                classList: ['_Entity', '_EType_A', '_EId_A'],
             } as any;
             const mockedEvent = {
                 target: mockedNode,

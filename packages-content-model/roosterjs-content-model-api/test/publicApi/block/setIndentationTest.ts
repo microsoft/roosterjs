@@ -1,11 +1,11 @@
 import * as setModelIndentation from '../../../lib/modelApi/block/setModelIndentation';
 import setIndentation from '../../../lib/publicApi/block/setIndentation';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
 import { ContentModelFormatter, FormatContentModelContext } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 
 describe('setIndentation', () => {
     const fakeModel: any = { a: 'b' };
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let formatContentModelSpy: jasmine.Spy;
     let context: FormatContentModelContext;
 
@@ -26,7 +26,7 @@ describe('setIndentation', () => {
             formatContentModel: formatContentModelSpy,
             focus: jasmine.createSpy('focus'),
             getPendingFormat: () => null as any,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     it('indent', () => {

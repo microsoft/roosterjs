@@ -17,12 +17,12 @@ import type {
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
+import type { EntityState } from '../parameter/FormatContentModelContext';
 
 /**
- * An interface of standalone Content Model editor.
- * (This interface is still under development, and may still be changed in the future with some breaking changes)
+ * An interface of Editor, built on top of Content Model
  */
-export interface IStandaloneEditor {
+export interface IEditor {
     /**
      * Create Content Model from DOM tree in this editor
      * @param mode What kind of Content Model we want. Currently we support the following values:
@@ -126,8 +126,9 @@ export interface IStandaloneEditor {
 
     /**
      * Add a single undo snapshot to undo stack
+     * @param entityState @optional State for entity if we want to add entity state for this snapshot
      */
-    takeSnapshot(): Snapshot | null;
+    takeSnapshot(entityState?: EntityState): Snapshot | null;
 
     /**
      * Restore an undo snapshot into editor

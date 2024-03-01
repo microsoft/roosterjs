@@ -2,14 +2,13 @@ import { getListTypeStyle } from './utils/getListTypeStyle';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { setListStartNumber, setListStyle, setListType } from 'roosterjs-content-model-api';
-
-import type { ContentModelDocument, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function keyboardListTrigger(
-    editor: IStandaloneEditor,
+    editor: IEditor,
     rawEvent: KeyboardEvent,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
@@ -37,7 +36,7 @@ export function keyboardListTrigger(
 }
 
 const triggerList = (
-    editor: IStandaloneEditor,
+    editor: IEditor,
     model: ContentModelDocument,
     listType: 'OL' | 'UL',
     styleType: number,

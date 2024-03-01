@@ -1,6 +1,6 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleNumbering from '../../../lib/publicApi/list/toggleNumbering';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -9,7 +9,7 @@ import {
 } from 'roosterjs-content-model-types';
 
 describe('toggleNumbering', () => {
-    let editor = ({} as any) as IStandaloneEditor;
+    let editor = ({} as any) as IEditor;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let context: FormatContentModelContext;
@@ -35,7 +35,7 @@ describe('toggleNumbering', () => {
         editor = ({
             focus,
             formatContentModel,
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);
     });
@@ -44,7 +44,11 @@ describe('toggleNumbering', () => {
         toggleNumbering(editor);
 
         expect(setListType.setListType).toHaveBeenCalledTimes(1);
-        expect(setListType.setListType).toHaveBeenCalledWith(mockedModel, 'OL');
+        expect(setListType.setListType).toHaveBeenCalledWith(
+            mockedModel,
+            'OL',
+            false /** remove margins */
+        );
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],

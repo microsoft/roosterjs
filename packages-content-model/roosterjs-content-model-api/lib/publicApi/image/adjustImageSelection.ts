@@ -1,11 +1,11 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
-import type { ContentModelImage, IStandaloneEditor } from 'roosterjs-content-model-types';
+import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Adjust selection to make sure select an image if any
  * @return Content Model Image object if an image is select, or null
  */
-export default function adjustImageSelection(editor: IStandaloneEditor): ContentModelImage | null {
+export default function adjustImageSelection(editor: IEditor): ContentModelImage | null {
     let image: ContentModelImage | null = null;
 
     editor.formatContentModel(

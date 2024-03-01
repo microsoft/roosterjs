@@ -1,5 +1,5 @@
 import removeLink from '../../../lib/publicApi/link/removeLink';
-import { IStandaloneEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelLink,
@@ -15,12 +15,12 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('removeLink', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = ({
             focus: () => {},
-        } as any) as IStandaloneEditor;
+        } as any) as IEditor;
     });
 
     function runTest(model: ContentModelDocument, expectedModel: ContentModelDocument | null) {

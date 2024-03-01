@@ -1,13 +1,13 @@
 import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
 import { getFirstSelectedListItem, updateListMetadata } from 'roosterjs-content-model-core';
-import type { IStandaloneEditor, ListMetadataFormat } from 'roosterjs-content-model-types';
+import type { IEditor, ListMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * Set style of list items with in same thread of current item
  * @param editor The editor to operate on
  * @param style The target list item style to set
  */
-export default function setListStyle(editor: IStandaloneEditor, style: ListMetadataFormat) {
+export default function setListStyle(editor: IEditor, style: ListMetadataFormat) {
     editor.focus();
 
     editor.formatContentModel(

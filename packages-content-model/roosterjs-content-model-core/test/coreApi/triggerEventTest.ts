@@ -1,16 +1,17 @@
-import { EditorPlugin, PluginEvent, StandaloneEditorCore } from 'roosterjs-content-model-types';
+import { EditorCore, EditorPlugin, PluginEvent } from 'roosterjs-content-model-types';
 import { triggerEvent } from '../../lib/coreApi/triggerEvent';
 
 describe('triggerEvent', () => {
     let div: HTMLDivElement;
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
 
     beforeEach(() => {
         div = document.createElement('div');
         document.body.appendChild(div);
 
         core = {
-            contentDiv: div,
+            physicalRoot: div,
+            logicalRoot: div,
             api: {},
             plugins: [],
             lifecycle: {},

@@ -1,8 +1,8 @@
+import { EditorCore } from 'roosterjs-content-model-types';
 import { generatePasteOptionFromPlugins } from '../../../lib/utils/paste/generatePasteOptionFromPlugins';
-import { StandaloneEditorCore } from 'roosterjs-content-model-types';
 
 describe('generatePasteOptionFromPlugins', () => {
-    let core: StandaloneEditorCore;
+    let core: EditorCore;
     let triggerPluginEventSpy: jasmine.Spy;
 
     const mockedClipboardData = 'CLIPBOARDDATA' as any;

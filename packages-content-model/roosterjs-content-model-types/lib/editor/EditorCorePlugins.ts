@@ -10,9 +10,9 @@ import type { CachePluginState } from '../pluginState/CachePluginState';
 import type { FormatPluginState } from '../pluginState/FormatPluginState';
 
 /**
- * Core plugins for standalone editor
+ * Core plugins for editor
  */
-export interface StandaloneEditorCorePlugins {
+export interface EditorCorePlugins {
     /**
      * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
      */

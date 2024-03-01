@@ -7,7 +7,7 @@ import {
     ContentModelSegmentFormat,
     FormatContentModelContext,
     FormatContentModelOptions,
-    IStandaloneEditor,
+    IEditor,
     InsertPoint,
 } from 'roosterjs-content-model-types';
 import {
@@ -20,7 +20,7 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('applyDefaultFormat', () => {
-    let editor: IStandaloneEditor;
+    let editor: IEditor;
     let getDOMSelectionSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let deleteSelectionSpy: jasmine.Spy;
