@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export function shouldOutdent(rawEvent: KeyboardEvent) {
     return (
         (rawEvent.key === 'Tab' && rawEvent.shiftKey) ||
