@@ -9,9 +9,7 @@ import type { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types'
 /**
  * Properties for Rooster react component
  */
-export interface ContentModelRoosterProps
-    extends EditorAdapterOptions,
-        React.HTMLAttributes<HTMLDivElement> {
+export interface RoosterProps extends EditorAdapterOptions, React.HTMLAttributes<HTMLDivElement> {
     /**
      * Creator function used for creating the instance of roosterjs editor.
      * Use this callback when you have your own sub class of roosterjs Editor or force trigging a reset of editor
@@ -30,7 +28,7 @@ export interface ContentModelRoosterProps
  * @param props Properties of this component
  * @returns The react component
  */
-export default function ContentModelRooster(props: ContentModelRoosterProps) {
+export function Rooster(props: RoosterProps) {
     const editorDiv = React.useRef<HTMLDivElement>(null);
     const editor = React.useRef<IEditor | null>(null);
     const theme = useTheme();

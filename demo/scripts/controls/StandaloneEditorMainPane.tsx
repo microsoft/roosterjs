@@ -7,7 +7,6 @@ import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModel
 import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFormatStatePlugin';
 import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
 import ContentModelRibbonButton from './ribbonButtons/contentModel/ContentModelRibbonButton';
-import ContentModelRooster from './contentModel/editor/ContentModelRooster';
 import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
 import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
 import RibbonPlugin from './ribbonButtons/contentModel/RibbonPlugin';
@@ -55,6 +54,7 @@ import { pasteButton } from './ribbonButtons/contentModel/pasteButton';
 import { popout } from './ribbonButtons/contentModel/popout';
 import { redoButton } from './ribbonButtons/contentModel/redoButton';
 import { removeLinkButton } from './ribbonButtons/contentModel/removeLinkButton';
+import { Rooster } from '../controlsV2/roosterjsReact/rooster/component/Rooster';
 import { rtlButton } from './ribbonButtons/contentModel/rtlButton';
 import { setBulletedListStyleButton } from './ribbonButtons/contentModel/setBulletedListStyleButton';
 import { setHeadingLevelButton } from './ribbonButtons/contentModel/setHeadingLevelButton';
@@ -348,7 +348,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             <div className={styles.editorContainer} id="EditorContainer">
                 <div style={editorStyles}>
                     {this.state.editorCreator && (
-                        <ContentModelRooster
+                        <Rooster
                             id={MainPaneBase.editorDivId}
                             className={styles.editor}
                             plugins={[
