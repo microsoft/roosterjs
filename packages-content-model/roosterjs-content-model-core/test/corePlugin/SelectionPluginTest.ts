@@ -188,15 +188,22 @@ describe('SelectionPlugin handle image selection', () => {
     let addEventListenerSpy: jasmine.Spy;
     let hasFocusSpy: jasmine.Spy;
     let isInShadowEditSpy: jasmine.Spy;
+    let getSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         createElementSpy = jasmine.createSpy('createElement').and.returnValue(MockedStyleNode);
         createRangeSpy = jasmine.createSpy('createRange');
+        getSelectionSpy = jasmine.createSpy('getSelection').and.returnValue({
+            getRangeAt: (a: number) => {
+                return new Range();
+            },
+        });
         addEventListenerSpy = jasmine.createSpy('addEventListener');
         hasFocusSpy = jasmine.createSpy('hasFocus');
         isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
+
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createElement: createElementSpy,
             createRange: createRangeSpy,
@@ -204,6 +211,7 @@ describe('SelectionPlugin handle image selection', () => {
                 appendChild: () => {},
             },
             addEventListener: addEventListenerSpy,
+            getSelection: getSelectionSpy,
         });
 
         editor = {
