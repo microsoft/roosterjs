@@ -223,6 +223,7 @@ describe('BridgePlugin', () => {
         expect(mockedEvent).toEqual({
             eventDataCache: {
                 __ExclusivelyHandleEventPlugin: mockedPlugin2,
+                __OldEventFromNewEvent: 'NEW_[object Object]',
             },
         });
         expect(eventConverter.newEventToOldEvent).toHaveBeenCalledTimes(1);
@@ -298,12 +299,20 @@ describe('BridgePlugin', () => {
             {
                 eventType: 'new_old_newEvent' as any,
                 data: 'plugin2',
+                eventDataCache: {
+                    __ExclusivelyHandleEventPlugin: null,
+                    __OldEventFromNewEvent: { eventType: 'old_newEvent', data: 'plugin2' },
+                },
             }
         );
 
         expect(mockedEvent).toEqual({
             eventType: 'new_old_newEvent',
             data: 'plugin2',
+            eventDataCache: {
+                __ExclusivelyHandleEventPlugin: null,
+                __OldEventFromNewEvent: { eventType: 'old_newEvent', data: 'plugin2' },
+            },
         });
 
         plugin.dispose();
@@ -343,7 +352,7 @@ describe('BridgePlugin', () => {
         const mockedEvent = {
             eventType: 'newEvent',
             eventDataCache: {
-                ['__ExclusivelyHandleEventPlugin']: mockedPlugin2,
+                __ExclusivelyHandleEventPlugin: mockedPlugin2,
             },
         } as any;
 
@@ -354,7 +363,8 @@ describe('BridgePlugin', () => {
         expect(onPluginEventSpy2).toHaveBeenCalledWith({
             eventType: 'old_newEvent',
             eventDataCache: {
-                ['__ExclusivelyHandleEventPlugin']: mockedPlugin2,
+                __ExclusivelyHandleEventPlugin: mockedPlugin2,
+                __OldEventFromNewEvent: jasmine.anything(),
             },
         });
         expect(eventConverter.newEventToOldEvent).toHaveBeenCalledTimes(1);

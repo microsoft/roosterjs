@@ -13,7 +13,6 @@ const initialState: BuildInPluginState = {
         imageEdit: true,
         cutPasteListChain: true,
         tableCellSelection: true,
-        tableResize: true,
         customReplace: true,
         listEditMenu: true,
         imageEditMenu: true,

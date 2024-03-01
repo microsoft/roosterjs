@@ -1,9 +1,9 @@
+import { cacheGetEventData } from 'roosterjs-content-model-core';
 import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
 import type {
     EditorPlugin as LegacyEditorPlugin,
-    PluginEvent as LegacyPluginEvent,
     ContextMenuProvider as LegacyContextMenuProvider,
     IEditor as ILegacyEditor,
     ExperimentalFeatures,
@@ -15,6 +15,7 @@ import type {
 import type { ContextMenuProvider, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
+const OldEventKey = '__OldEventFromNewEvent';
 
 /**
  * @internal
@@ -107,33 +108,14 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     }
 
     willHandleEventExclusively(event: PluginEvent) {
-        let oldEvent: LegacyPluginEvent | undefined;
-
-        if (this.checkExclusivelyHandling && (oldEvent = newEventToOldEvent(event))) {
-            for (let i = 0; i < this.legacyPlugins.length; i++) {
-                const plugin = this.legacyPlugins[i];
-
-                if (plugin.willHandleEventExclusively?.(oldEvent)) {
-                    if (!event.eventDataCache) {
-                        event.eventDataCache = {};
-                    }
-
-                    event.eventDataCache[ExclusivelyHandleEventPluginKey] = plugin;
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return this.checkExclusivelyHandling && !!this.cacheGetExclusivelyHandlePlugin(event);
     }
 
     onPluginEvent(event: PluginEvent) {
-        const oldEvent = newEventToOldEvent(event);
+        const oldEvent = this.cacheGetOldEvent(event);
 
         if (oldEvent) {
-            const exclusivelyHandleEventPlugin = event.eventDataCache?.[
-                ExclusivelyHandleEventPluginKey
-            ] as LegacyEditorPlugin | undefined;
+            const exclusivelyHandleEventPlugin = this.cacheGetExclusivelyHandlePlugin(event);
 
             if (exclusivelyHandleEventPlugin) {
                 exclusivelyHandleEventPlugin.onPluginEvent?.(oldEvent);
@@ -165,6 +147,28 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         });
 
         return allItems;
+    }
+
+    private cacheGetExclusivelyHandlePlugin(event: PluginEvent) {
+        return cacheGetEventData(event, ExclusivelyHandleEventPluginKey, event => {
+            const oldEvent = this.cacheGetOldEvent(event);
+
+            if (oldEvent) {
+                for (let i = 0; i < this.legacyPlugins.length; i++) {
+                    const plugin = this.legacyPlugins[i];
+
+                    if (plugin.willHandleEventExclusively?.(oldEvent)) {
+                        return plugin;
+                    }
+                }
+            }
+
+            return null;
+        });
+    }
+
+    private cacheGetOldEvent(event: PluginEvent) {
+        return cacheGetEventData(event, OldEventKey, newEventToOldEvent);
     }
 
     private createEditorCore(editor: IEditor): EditorAdapterCore {
