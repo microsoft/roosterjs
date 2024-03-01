@@ -344,7 +344,6 @@ function applyDefaultFormat(
 ) {
     group.blocks.forEach(block => {
         mergeBlockFormat(applyDefaultFormatOption, block);
-
         switch (block.blockType) {
             case 'BlockGroup':
                 if (block.blockGroupType == 'ListItem') {
