@@ -101,12 +101,7 @@ module.exports = function (config) {
             },
             resolve: {
                 extensions: ['.ts', '.tsx', '.js'],
-                modules: [
-                    './packages',
-                    './packages-ui',
-                    './packages-content-model',
-                    './node_modules',
-                ],
+                modules: ['./packages', './node_modules'],
             },
             // Workaround karma-webpack issue https://github.com/ryanclark/karma-webpack/issues/493
             // Got this solution from https://github.com/ryanclark/karma-webpack/issues/493#issuecomment-780411348
