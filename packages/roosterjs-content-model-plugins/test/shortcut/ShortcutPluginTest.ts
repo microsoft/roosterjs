@@ -1,14 +1,22 @@
 import * as changeFontSize from 'roosterjs-content-model-api/lib/publicApi/segment/changeFontSize';
 import * as clearFormat from 'roosterjs-content-model-api/lib/publicApi/format/clearFormat';
 import * as redo from 'roosterjs-content-model-core/lib/publicApi/undo/redo';
+import * as setModelIndentation from 'roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
 import * as toggleBold from 'roosterjs-content-model-api/lib/publicApi/segment/toggleBold';
 import * as toggleBullet from 'roosterjs-content-model-api/lib/publicApi/list/toggleBullet';
 import * as toggleItalic from 'roosterjs-content-model-api/lib/publicApi/segment/toggleItalic';
 import * as toggleNumbering from 'roosterjs-content-model-api/lib/publicApi/list/toggleNumbering';
 import * as toggleUnderline from 'roosterjs-content-model-api/lib/publicApi/segment/toggleUnderline';
 import * as undo from 'roosterjs-content-model-core/lib/publicApi/undo/undo';
-import { EditorEnvironment, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { ShortcutPlugin } from '../../lib/shortcut/ShortcutPlugin';
+import {
+    ContentModelDocument,
+    ContentModelFormatter,
+    EditorEnvironment,
+    FormatContentModelOptions,
+    IEditor,
+    PluginEvent,
+} from 'roosterjs-content-model-types';
 
 const enum Keys {
     BACKSPACE = 8,
@@ -22,17 +30,74 @@ const enum Keys {
     COMMA = 188,
     PERIOD = 190,
     FORWARD_SLASH = 191,
+    ArrowLeft = 37,
+    ArrowRight = 39,
 }
 
 describe('ShortcutPlugin', () => {
     let preventDefaultSpy: jasmine.Spy;
     let mockedEditor: IEditor;
     let mockedEnvironment: EditorEnvironment;
+    const model: ContentModelDocument = {
+        blockGroupType: 'Document',
+        blocks: [
+            {
+                blockType: 'BlockGroup',
+                blockGroupType: 'ListItem',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                levels: [
+                    {
+                        listType: 'OL',
+                        format: {
+                            listStyleType: 'decimal',
+                        },
+                        dataset: {
+                            editingInfo: '{"orderedStyleType":1}',
+                        },
+                    },
+                ],
+                formatHolder: {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                format: {},
+            },
+        ],
+        format: {},
+    };
+    const formatContentModelSpy = jasmine
+        .createSpy('formatContentModel')
+        .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+            callback(model, {
+                newEntities: [],
+                deletedEntities: [],
+                newImages: [],
+                rawEvent: options.rawEvent,
+            });
+        });
 
     beforeEach(() => {
         preventDefaultSpy = jasmine.createSpy('preventDefault');
         mockedEnvironment = {};
         mockedEditor = {
+            formatContentModel: formatContentModelSpy,
             getEnvironment: () => mockedEnvironment,
         } as any;
     });
@@ -584,6 +649,69 @@ describe('ShortcutPlugin', () => {
             plugin.onPluginEvent(event);
 
             expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'decrease');
+        });
+
+        it('decrease font', () => {
+            const apiSpy = spyOn(changeFontSize, 'default');
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.COMMA, false, false, true, true),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'decrease');
+        });
+
+        it('indent list', () => {
+            const apiSpy = spyOn(setModelIndentation, 'setModelIndentation');
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.ArrowRight, false, true, true, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).toHaveBeenCalledTimes(1);
+            expect(apiSpy).toHaveBeenCalledWith(model, 'indent');
+        });
+
+        it('outdent list', () => {
+            const apiSpy = spyOn(setModelIndentation, 'setModelIndentation');
+
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.ArrowLeft, false, true, true, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).toHaveBeenCalledTimes(1);
+            expect(apiSpy).toHaveBeenCalledWith(model, 'outdent');
         });
     });
 });

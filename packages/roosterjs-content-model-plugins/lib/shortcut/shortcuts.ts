@@ -1,7 +1,8 @@
-import { redo, undo } from 'roosterjs-content-model-core';
+import { getFirstSelectedListItem, redo, undo } from 'roosterjs-content-model-core';
 import {
     changeFontSize,
     clearFormat,
+    setModelIndentation,
     toggleBold,
     toggleBullet,
     toggleItalic,
@@ -9,6 +10,7 @@ import {
     toggleUnderline,
 } from 'roosterjs-content-model-api';
 import type { ShortcutCommand } from './ShortcutCommand';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 const enum Keys {
     BACKSPACE = 8,
@@ -21,6 +23,8 @@ const enum Keys {
     COMMA = 188,
     PERIOD = 190,
     FORWARD_SLASH = 191,
+    ArrowRight = 39,
+    ArrowLeft = 37,
 }
 
 /**
@@ -193,3 +197,46 @@ export const ShortcutDecreaseFont: ShortcutCommand = {
     },
     onClick: editor => changeFontSize(editor, 'decrease'),
 };
+
+/**
+ * Shortcut command for Intent list
+ */
+export const ShortcutIndentList: ShortcutCommand = {
+    shortcutKey: {
+        modifierKey: 'alt',
+        shiftKey: true,
+        which: Keys.ArrowRight,
+    },
+    onClick: editor => {
+        setShortcutIndentationCommand(editor, 'indent');
+    },
+};
+
+/**
+ * Shortcut command for Intent list
+ */
+export const ShortcutOutdentList: ShortcutCommand = {
+    shortcutKey: {
+        modifierKey: 'alt',
+        shiftKey: true,
+        which: Keys.ArrowLeft,
+    },
+    onClick: editor => {
+        setShortcutIndentationCommand(editor, 'outdent');
+    },
+};
+
+function setShortcutIndentationCommand(editor: IEditor, operation: 'indent' | 'outdent') {
+    editor.formatContentModel(model => {
+        const listItem = getFirstSelectedListItem(model);
+        if (
+            listItem &&
+            listItem.blocks[0].blockType == 'Paragraph' &&
+            listItem.blocks[0].segments[0].segmentType == 'SelectionMarker'
+        ) {
+            setModelIndentation(model, operation);
+            return true;
+        }
+        return false;
+    });
+}

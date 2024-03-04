@@ -16,6 +16,8 @@ export {
     ShortcutNumbering,
     ShortcutIncreaseFont,
     ShortcutDecreaseFont,
+    ShortcutIndentList,
+    ShortcutOutdentList,
 } from './shortcut/shortcuts';
 export { ShortcutPlugin } from './shortcut/ShortcutPlugin';
 export { ShortcutKeyDefinition, ShortcutCommand } from './shortcut/ShortcutCommand';
