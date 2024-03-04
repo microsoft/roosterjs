@@ -7,7 +7,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor to operate on
  * @param file Image Blob file or source string
  */
-export default function insertImage(editor: IEditor, imageFileOrSrc: File | string) {
+export function insertImage(editor: IEditor, imageFileOrSrc: File | string) {
     editor.focus();
 
     if (typeof imageFileOrSrc == 'string') {

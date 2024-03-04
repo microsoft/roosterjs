@@ -11,7 +11,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor instance
  * @param color The color to set. Pass null to remove existing shade color
  */
-export default function setTableCellShade(editor: IEditor, color: string | null) {
+export function setTableCellShade(editor: IEditor, color: string | null) {
     editor.focus();
 
     editor.formatContentModel(

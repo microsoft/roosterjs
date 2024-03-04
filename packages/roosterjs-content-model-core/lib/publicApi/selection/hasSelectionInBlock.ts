@@ -1,12 +1,12 @@
-import hasSelectionInBlockGroup from './hasSelectionInBlockGroup';
-import hasSelectionInSegment from './hasSelectionInSegment';
+import { hasSelectionInBlockGroup } from './hasSelectionInBlockGroup';
+import { hasSelectionInSegment } from './hasSelectionInSegment';
 import type { ContentModelBlock } from 'roosterjs-content-model-types';
 
 /**
  * Check if there is selection within the given block
  * @param block The block to check
  */
-export default function hasSelectionInBlock(block: ContentModelBlock): boolean {
+export function hasSelectionInBlock(block: ContentModelBlock): boolean {
     switch (block.blockType) {
         case 'Paragraph':
             return block.segments.some(hasSelectionInSegment);

@@ -1,7 +1,7 @@
-import toArray from './toArray';
 import { applyFormat } from '../modelToDom/utils/applyFormat';
 import { isElementOfType } from './isElementOfType';
 import { isNodeOfType } from './isNodeOfType';
+import { toArray } from './toArray';
 import type {
     ContentModelEntityFormat,
     ContentModelSegmentFormat,

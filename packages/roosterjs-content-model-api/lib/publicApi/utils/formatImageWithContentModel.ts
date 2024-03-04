@@ -4,7 +4,7 @@ import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 /**
  * @internal
  */
-export default function formatImageWithContentModel(
+export function formatImageWithContentModel(
     editor: IEditor,
     apiName: string,
     callback: (segment: ContentModelImage) => void

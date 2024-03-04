@@ -1,5 +1,5 @@
-import addParser from '../utils/addParser';
-import getStyleMetadata from './getStyleMetadata';
+import { addParser } from '../utils/addParser';
+import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
