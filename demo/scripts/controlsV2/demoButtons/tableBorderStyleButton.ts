@@ -1,4 +1,4 @@
-import MainPaneBase from '../../controls/MainPaneBase';
+import { MainPane } from '../mainPane/MainPane';
 import { RibbonButton } from '../roosterjsReact/ribbon';
 
 const STYLES: Record<string, string> = {
@@ -26,7 +26,7 @@ export const tableBorderStyleButton: RibbonButton<'buttonNameTableBorderStyle'> 
         allowLivePreview: true,
     },
     onClick: (editor, style) => {
-        MainPaneBase.getInstance().setTableBorderStyle(style);
+        MainPane.getInstance().setTableBorderStyle(style);
         editor.focus();
 
         return true;

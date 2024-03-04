@@ -7,7 +7,7 @@ export interface TitleBarProps {
     className?: string;
 }
 
-export default class TitleBar extends React.Component<TitleBarProps, {}> {
+export class TitleBar extends React.Component<TitleBarProps, {}> {
     render() {
         const { className: baseClassName } = this.props;
         const className = styles.titleBar + ' ' + (baseClassName || '');
@@ -20,8 +20,8 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                 </div>
                 <div className={styles.version}></div>
                 <div className={styles.links}>
-                    <a href="?" className={styles.link}>
-                        New demo site
+                    <a href="?legacy=1" className={styles.link}>
+                        Legacy demo site
                     </a>
                     {' | '}
                     <a
