@@ -78,7 +78,6 @@ import {
     collapseNodes,
     contains,
     deleteSelectedContent,
-    findClosestElementAncestor,
     getBlockElementAtNode,
     getRegionsFromRange,
     getSelectionPath,
@@ -563,8 +562,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                     startFrom = position?.node;
                 }
                 return (
-                    startFrom &&
-                    findClosestElementAncestor(startFrom, this.getCore().physicalRoot, selector)
+                    startFrom && this.getDOMHelper().findClosestElementAncestor(startFrom, selector)
                 );
             }) ?? null
         );

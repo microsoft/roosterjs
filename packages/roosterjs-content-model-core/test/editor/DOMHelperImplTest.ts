@@ -123,4 +123,60 @@ describe('DOMHelperImpl', () => {
 
         expect(result).toBe(mockedValue);
     });
+
+    it('findClosestElementAncestor - text node, no parent, no selector', () => {
+        const startNode = document.createTextNode('test');
+        const container = document.createElement('div');
+
+        container.appendChild(startNode);
+
+        const domHelper = createDOMHelper(container);
+        const result = domHelper.findClosestElementAncestor(startNode);
+
+        expect(result).toBeNull();
+    });
+
+    it('findClosestElementAncestor - text node, has parent, no selector', () => {
+        const startNode = document.createTextNode('test');
+        const parent = document.createElement('span');
+        const container = document.createElement('div');
+
+        parent.appendChild(startNode);
+        container.appendChild(parent);
+
+        const domHelper = createDOMHelper(container);
+        const result = domHelper.findClosestElementAncestor(startNode);
+
+        expect(result).toBe(parent);
+    });
+
+    it('findClosestElementAncestor - element node, no selector', () => {
+        const startNode = document.createElement('span');
+        const container = document.createElement('div');
+
+        container.appendChild(startNode);
+
+        const domHelper = createDOMHelper(container);
+        const result = domHelper.findClosestElementAncestor(startNode);
+
+        expect(result).toBe(startNode);
+    });
+
+    it('findClosestElementAncestor - has selector', () => {
+        const startNode = document.createElement('span');
+        const parent1 = document.createElement('div');
+        const parent2 = document.createElement('div');
+        const container = document.createElement('div');
+
+        parent2.className = 'testClass';
+
+        parent1.appendChild(startNode);
+        parent2.appendChild(parent1);
+        container.appendChild(parent2);
+
+        const domHelper = createDOMHelper(container);
+        const result = domHelper.findClosestElementAncestor(startNode, '.testClass');
+
+        expect(result).toBe(parent2);
+    });
 });

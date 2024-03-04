@@ -11,7 +11,6 @@ const ContentHandlers: {
 };
 
 /**
- * @internal
  * Extract clipboard items to be a ClipboardData object for IE
  * @param items The clipboard items retrieve from a DataTransfer object
  * @param allowedCustomPasteType Allowed custom content type when paste besides text/plain, text/html and images
