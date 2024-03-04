@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ContentModelRibbonButton from '../../ribbonButtons/contentModel/ContentModelRibbonButton';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { ContentModelDocumentView } from '../../contentModel/components/model/ContentModelDocumentView';
+import { ContentModelDocumentView } from '../../../controlsV2/sidePane/contentModel/components/model/ContentModelDocumentView';
 import { ContentModelRibbon } from '../../ribbonButtons/contentModel/ContentModelRibbon';
 import { ContentModelRibbonPlugin } from '../../ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { exportButton } from './buttons/exportButton';
