@@ -6,7 +6,7 @@
         "baseUrl": "..",
         "jsx": "react",
         "paths": {
-            "*": ["packages/*", "packages-ui/*", "packages-content-model/*"]
+            "*": ["packages/*"]
         },
         "rootDir": "..",
         "downlevelIteration": true,
@@ -15,10 +15,8 @@
     },
     "include": [
         "../packages/**/lib/**/*.ts",
-        "../packages-ui/**/lib/**/*.ts",
-        "../packages-ui/**/lib/**/*.tsx",
-        "../packages/roosterjs-editor-types-compatible/**/lib/**/*.ts",
-        "../packages-content-model/**/lib/**/*.ts"
+        "../packages/**/lib/**/*.tsx",
+        "../packages/roosterjs-editor-types-compatible/**/lib/**/*.ts"
     ],
     "typedocOptions": {
         "entryPoints": [
