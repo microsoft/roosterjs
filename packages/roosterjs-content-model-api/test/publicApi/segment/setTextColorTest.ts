@@ -1,6 +1,6 @@
-import setTextColor from '../../../lib/publicApi/segment/setTextColor';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { setTextColor } from '../../../lib/publicApi/segment/setTextColor';
 
 describe('setTextColor', () => {
     function runTest(

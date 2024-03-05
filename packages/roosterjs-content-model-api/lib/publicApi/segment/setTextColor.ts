@@ -6,7 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor to operate on
  * @param textColor The text color to set. Pass null to remove existing color.
  */
-export default function setTextColor(editor: IEditor, textColor: string | null) {
+export function setTextColor(editor: IEditor, textColor: string | null) {
     editor.focus();
 
     formatSegmentWithContentModel(

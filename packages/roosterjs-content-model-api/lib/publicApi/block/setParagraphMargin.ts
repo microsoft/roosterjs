@@ -9,7 +9,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param marginTop value for top margin
  * @param marginBottom value for bottom margin
  */
-export default function setParagraphMargin(
+export function setParagraphMargin(
     editor: IEditor,
     marginTop?: string | null,
     marginBottom?: string | null

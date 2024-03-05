@@ -5,7 +5,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * Toggle subscript style
  * @param editor The editor to operate on
  */
-export default function toggleSubscript(editor: IEditor) {
+export function toggleSubscript(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

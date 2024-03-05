@@ -9,7 +9,13 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Invoke a callback to format the selected segment using Content Model
+ * @param editor The editor object
+ * @param apiName Name of API this calling this function. This is mostly for logging.
+ * @param toggleStyleCallback The callback to format the segment. It will be called with current selected table. If no table is selected, it will not be called.
+ * @param segmentHasStyleCallback The callback used for checking if the given segment already has required format
+ * @param includingFormatHolder True to also include format holder of list item when search selected segments
+ * @param afterFormatCallback A callback to invoke after format is applied to all selected segments and before the change is applied to DOM tree
  */
 export function formatSegmentWithContentModel(
     editor: IEditor,

@@ -1,4 +1,4 @@
-import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
+import { changeFontSize } from '../../../lib/publicApi/segment/changeFontSize';
 import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { IEditor } from 'roosterjs-content-model-types';

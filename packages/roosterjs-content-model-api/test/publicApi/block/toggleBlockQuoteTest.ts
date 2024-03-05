@@ -1,7 +1,7 @@
 import * as toggleModelBlockQuote from '../../../lib/modelApi/block/toggleModelBlockQuote';
-import toggleBlockQuote from '../../../lib/publicApi/block/toggleBlockQuote';
 import { ContentModelFormatter, FormatContentModelContext } from 'roosterjs-content-model-types';
 import { IEditor } from 'roosterjs-content-model-types';
+import { toggleBlockQuote } from '../../../lib/publicApi/block/toggleBlockQuote';
 
 describe('toggleBlockQuote', () => {
     const fakeModel: any = { a: 'b' };

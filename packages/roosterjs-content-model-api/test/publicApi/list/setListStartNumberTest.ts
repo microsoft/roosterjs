@@ -1,4 +1,4 @@
-import setListStartNumber from '../../../lib/publicApi/list/setListStartNumber';
+import { setListStartNumber } from '../../../lib/publicApi/list/setListStartNumber';
 import {
     ContentModelDocument,
     ContentModelFormatter,

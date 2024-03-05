@@ -6,7 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor to operate on
  * @param fontName The font name to set
  */
-export default function setFontName(editor: IEditor, fontName: string) {
+export function setFontName(editor: IEditor, fontName: string) {
     editor.focus();
 
     formatSegmentWithContentModel(

@@ -1,6 +1,6 @@
-import setImageAltText from '../../../lib/publicApi/image/setImageAltText';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from '../segment/segmentTestCommon';
+import { setImageAltText } from '../../../lib/publicApi/image/setImageAltText';
 import {
     addSegment,
     createContentModelDocument,

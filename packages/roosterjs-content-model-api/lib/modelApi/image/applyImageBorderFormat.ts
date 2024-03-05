@@ -5,7 +5,7 @@ import type { Border, ContentModelImage } from 'roosterjs-content-model-types';
 /**
  * @internal
  */
-export default function applyImageBorderFormat(
+export function applyImageBorderFormat(
     image: ContentModelImage,
     border: Border | null,
     borderRadius?: string

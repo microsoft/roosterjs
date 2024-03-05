@@ -1,6 +1,6 @@
-import toggleUnderline from '../../../lib/publicApi/segment/toggleUnderline';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { toggleUnderline } from '../../../lib/publicApi/segment/toggleUnderline';
 
 describe('toggleUnderline', () => {
     function runTest(
