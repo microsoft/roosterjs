@@ -1,5 +1,5 @@
-import toArray from '../domUtils/toArray';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
+import { toArray } from '../domUtils/toArray';
 import type {
     ContentModelDocument,
     DOMSelection,

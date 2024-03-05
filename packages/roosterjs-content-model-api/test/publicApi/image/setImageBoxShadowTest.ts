@@ -1,6 +1,6 @@
-import setImageBoxShadow from '../../../lib/publicApi/image/setImageBoxShadow';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from '../segment/segmentTestCommon';
+import { setImageBoxShadow } from '../../../lib/publicApi/image/setImageBoxShadow';
 import {
     addSegment,
     createContentModelDocument,

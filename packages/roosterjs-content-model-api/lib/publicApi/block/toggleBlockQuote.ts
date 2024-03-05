@@ -23,7 +23,7 @@ const BuildInQuoteFormat: ContentModelFormatContainerFormat = {
  * @param editor The editor object to toggle BLOCKQUOTE onto
  * @param quoteFormat @optional Block format for the new quote object
  */
-export default function toggleBlockQuote(
+export function toggleBlockQuote(
     editor: IEditor,
     quoteFormat?: ContentModelFormatContainerFormat,
     quoteFormatRtl?: ContentModelFormatContainerFormat

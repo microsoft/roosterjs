@@ -2,7 +2,7 @@
  * @internal
  * Represents a disposable object
  */
-export default interface Disposable {
+export interface Disposable {
     /**
      * Dispose this object
      */

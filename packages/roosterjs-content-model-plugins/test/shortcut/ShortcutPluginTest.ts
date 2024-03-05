@@ -1,6 +1,7 @@
 import * as changeFontSize from 'roosterjs-content-model-api/lib/publicApi/segment/changeFontSize';
 import * as clearFormat from 'roosterjs-content-model-api/lib/publicApi/format/clearFormat';
 import * as redo from 'roosterjs-content-model-core/lib/publicApi/undo/redo';
+import * as setShortcutIndentationCommand from '../../lib/shortcut/utils/setShortcutIndentationCommand';
 import * as toggleBold from 'roosterjs-content-model-api/lib/publicApi/segment/toggleBold';
 import * as toggleBullet from 'roosterjs-content-model-api/lib/publicApi/list/toggleBullet';
 import * as toggleItalic from 'roosterjs-content-model-api/lib/publicApi/segment/toggleItalic';
@@ -22,6 +23,8 @@ const enum Keys {
     COMMA = 188,
     PERIOD = 190,
     FORWARD_SLASH = 191,
+    ArrowLeft = 37,
+    ArrowRight = 39,
 }
 
 describe('ShortcutPlugin', () => {
@@ -56,7 +59,7 @@ describe('ShortcutPlugin', () => {
 
     describe('Windows', () => {
         it('not a shortcut', () => {
-            const apiSpy = spyOn(toggleBold, 'default');
+            const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -76,7 +79,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('bold', () => {
-            const apiSpy = spyOn(toggleBold, 'default');
+            const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -96,7 +99,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('italic', () => {
-            const apiSpy = spyOn(toggleItalic, 'default');
+            const apiSpy = spyOn(toggleItalic, 'toggleItalic');
             const plugin = new ShortcutPlugin();
 
             const event: PluginEvent = {
@@ -117,7 +120,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('underline', () => {
-            const apiSpy = spyOn(toggleUnderline, 'default');
+            const apiSpy = spyOn(toggleUnderline, 'toggleUnderline');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -137,7 +140,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('clear format', () => {
-            const apiSpy = spyOn(clearFormat, 'default');
+            const apiSpy = spyOn(clearFormat, 'clearFormat');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -237,7 +240,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('bullet list', () => {
-            const apiSpy = spyOn(toggleBullet, 'default');
+            const apiSpy = spyOn(toggleBullet, 'toggleBullet');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -257,7 +260,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('numbering list', () => {
-            const apiSpy = spyOn(toggleNumbering, 'default');
+            const apiSpy = spyOn(toggleNumbering, 'toggleNumbering');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -277,7 +280,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('increase font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
+            const apiSpy = spyOn(changeFontSize, 'changeFontSize');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -297,7 +300,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('decrease font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
+            const apiSpy = spyOn(changeFontSize, 'changeFontSize');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -323,7 +326,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('not a shortcut', () => {
-            const apiSpy = spyOn(toggleBold, 'default');
+            const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -343,7 +346,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('bold', () => {
-            const apiSpy = spyOn(toggleBold, 'default');
+            const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -363,7 +366,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('italic', () => {
-            const apiSpy = spyOn(toggleItalic, 'default');
+            const apiSpy = spyOn(toggleItalic, 'toggleItalic');
             const plugin = new ShortcutPlugin();
 
             const event: PluginEvent = {
@@ -384,7 +387,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('underline', () => {
-            const apiSpy = spyOn(toggleUnderline, 'default');
+            const apiSpy = spyOn(toggleUnderline, 'toggleUnderline');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -404,7 +407,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('clear format', () => {
-            const apiSpy = spyOn(clearFormat, 'default');
+            const apiSpy = spyOn(clearFormat, 'clearFormat');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -507,7 +510,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('bullet list', () => {
-            const apiSpy = spyOn(toggleBullet, 'default');
+            const apiSpy = spyOn(toggleBullet, 'toggleBullet');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -527,7 +530,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('numbering list', () => {
-            const apiSpy = spyOn(toggleNumbering, 'default');
+            const apiSpy = spyOn(toggleNumbering, 'toggleNumbering');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -547,7 +550,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('increase font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
+            const apiSpy = spyOn(changeFontSize, 'changeFontSize');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -567,7 +570,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('decrease font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
+            const apiSpy = spyOn(changeFontSize, 'changeFontSize');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -584,6 +587,48 @@ describe('ShortcutPlugin', () => {
             plugin.onPluginEvent(event);
 
             expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'decrease');
+        });
+
+        it('indent list', () => {
+            const apiSpy = spyOn(setShortcutIndentationCommand, 'setShortcutIndentationCommand');
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.ArrowRight, false, true, true, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).toHaveBeenCalledTimes(1);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'indent');
+        });
+
+        it('outdent list', () => {
+            const apiSpy = spyOn(setShortcutIndentationCommand, 'setShortcutIndentationCommand');
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.ArrowLeft, false, true, true, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).toHaveBeenCalledTimes(1);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'outdent');
         });
     });
 });

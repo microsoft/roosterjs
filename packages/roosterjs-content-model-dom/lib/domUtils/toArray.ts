@@ -2,25 +2,25 @@
  * Convert a named node map to an array
  * @param collection The map to convert
  */
-export default function toArray(collection: NamedNodeMap): Attr[];
+export function toArray(collection: NamedNodeMap): Attr[];
 
 /**
  * Convert a named node map to an array
  * @param collection The map to convert
  */
-export default function toArray(collection: DataTransferItemList): DataTransferItem[];
+export function toArray(collection: DataTransferItemList): DataTransferItem[];
 
 /**
  * Convert a collection to an array
  * @param collection The collection to convert
  */
-export default function toArray<T extends Node>(collection: NodeListOf<T>): T[];
+export function toArray<T extends Node>(collection: NodeListOf<T>): T[];
 
 /**
  * Convert a collection to an array
  * @param collection The collection to convert
  */
-export default function toArray<T extends Element>(collection: HTMLCollectionOf<T>): T[];
+export function toArray<T extends Element>(collection: HTMLCollectionOf<T>): T[];
 
 /**
  * Convert an array to an array.
@@ -28,8 +28,8 @@ export default function toArray<T extends Element>(collection: HTMLCollectionOf<
  * but the declaration is an array. e.g. ClipboardData.types
  * @param array The array to convert
  */
-export default function toArray<T>(array: readonly T[]): T[];
+export function toArray<T>(array: readonly T[]): T[];
 
-export default function toArray(collection: any): any[] {
+export function toArray(collection: any): any[] {
     return [].slice.call(collection);
 }

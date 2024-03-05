@@ -1,5 +1,5 @@
-import setListStyle from '../../../lib/publicApi/list/setListStyle';
 import { ContentModelDocument, ListMetadataFormat } from 'roosterjs-content-model-types';
+import { setListStyle } from '../../../lib/publicApi/list/setListStyle';
 
 describe('setListStyle', () => {
     function runTest(

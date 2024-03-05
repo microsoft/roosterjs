@@ -38,7 +38,7 @@ type Perimeter = {
  * @param border The border to apply
  * @param operation The operation to apply
  */
-export default function applyTableBorderFormat(
+export function applyTableBorderFormat(
     editor: IEditor,
     border: Border,
     operation: BorderOperations

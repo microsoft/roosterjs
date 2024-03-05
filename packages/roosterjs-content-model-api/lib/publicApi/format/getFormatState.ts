@@ -5,7 +5,7 @@ import type { IEditor, ContentModelFormatState } from 'roosterjs-content-model-t
  * Get current format state
  * @param editor The editor to get format from
  */
-export default function getFormatState(editor: IEditor): ContentModelFormatState {
+export function getFormatState(editor: IEditor): ContentModelFormatState {
     const pendingFormat = editor.getPendingFormat();
     const model = editor.getContentModelCopy('reduced');
     const manager = editor.getSnapshotsManager();

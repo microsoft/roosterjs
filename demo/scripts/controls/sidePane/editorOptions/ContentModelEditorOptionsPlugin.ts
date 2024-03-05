@@ -25,6 +25,11 @@ const autoLink = {
     unlinkWhenBackspaceAfterLink: false,
 };
 
+const quoteFeatures = {
+    unquoteWhenBackspaceOnEmptyFirstLine: false,
+    unquoteWhenEnterOnEmptyLine: false,
+};
+
 const initialState: BuildInPluginState = {
     pluginList: {
         contentEdit: true,
@@ -46,6 +51,7 @@ const initialState: BuildInPluginState = {
         ...getDefaultContentEditFeatureSettings(),
         ...listFeatures,
         ...autoLink,
+        ...quoteFeatures,
     },
     defaultFormat: {},
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,

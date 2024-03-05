@@ -1,4 +1,4 @@
-import adjustImageSelection from '../../../lib/publicApi/image/adjustImageSelection';
+import { adjustImageSelection } from '../../../lib/publicApi/image/adjustImageSelection';
 import { ContentModelDocument, ContentModelImage } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from '../segment/segmentTestCommon';
 import {

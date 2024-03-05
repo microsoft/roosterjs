@@ -1,4 +1,4 @@
-import normalizeRect from './normalizeRect';
+import { normalizeRect } from './normalizeRect';
 import type { Rect } from 'roosterjs-content-model-types';
 
 /**
@@ -26,7 +26,7 @@ import type { Rect } from 'roosterjs-content-model-types';
  * @param additionalRects additional rects to use
  * @returns If the Rect is valid return the rect, if not, return null.
  */
-export default function getIntersectedRect(
+export function getIntersectedRect(
     elements: HTMLElement[],
     additionalRects: Rect[] = []
 ): Rect | null {

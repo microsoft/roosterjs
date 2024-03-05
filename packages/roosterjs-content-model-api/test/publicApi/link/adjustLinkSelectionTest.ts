@@ -1,4 +1,4 @@
-import adjustLinkSelection from '../../../lib/publicApi/link/adjustLinkSelection';
+import { adjustLinkSelection } from '../../../lib/publicApi/link/adjustLinkSelection';
 import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
