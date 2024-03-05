@@ -8,7 +8,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
 export function setShortcutIndentationCommand(editor: IEditor, operation: 'indent' | 'outdent') {
     editor.formatContentModel(model => {
         const listItem = getFirstSelectedListItem(model);
-        console.log('listItem:', listItem);
+
         if (
             listItem &&
             listItem.blocks[0].blockType == 'Paragraph' &&
