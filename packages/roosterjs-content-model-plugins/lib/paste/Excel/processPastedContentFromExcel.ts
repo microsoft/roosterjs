@@ -1,4 +1,4 @@
-import addParser from '../utils/addParser';
+import { addParser } from '../utils/addParser';
 import { isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
 import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-content-model-types';

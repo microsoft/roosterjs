@@ -24,7 +24,7 @@ const FORMATING_REGEX = /[\n\t'{}"]+/g;
  * 5. Save data in record and only use the required information.
  *
  */
-export default function getStyleMetadata(
+export function getStyleMetadata(
     ev: BeforePasteEvent,
     trustedHTMLHandler: (val: string) => string
 ) {

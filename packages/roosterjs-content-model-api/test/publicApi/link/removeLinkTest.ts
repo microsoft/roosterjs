@@ -1,5 +1,5 @@
-import removeLink from '../../../lib/publicApi/link/removeLink';
 import { IEditor } from 'roosterjs-content-model-types';
+import { removeLink } from '../../../lib/publicApi/link/removeLink';
 import {
     ContentModelDocument,
     ContentModelLink,

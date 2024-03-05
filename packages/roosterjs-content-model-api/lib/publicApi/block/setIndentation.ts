@@ -8,7 +8,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param indentation Whether indent or outdent
  * @param length The length of pixel to indent/outdent @default 40
  */
-export default function setIndentation(
+export function setIndentation(
     editor: IEditor,
     indentation: 'indent' | 'outdent',
     length?: number

@@ -2,7 +2,7 @@
  * @internal
  * Drag and drop handler interface, used for implementing a handler object and pass into DragAndDropHelper class
  */
-export default interface DragAndDropHandler<TContext, TInitValue> {
+export interface DragAndDropHandler<TContext, TInitValue> {
     /**
      * A callback that will be called when user starts to drag (mouse down event from the trigger element)
      * @param context The context object that was passed into DragAndDropHelper from its constructor. We can use

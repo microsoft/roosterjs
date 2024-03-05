@@ -1,7 +1,7 @@
 import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
-import setTableCellShade from '../../../lib/publicApi/table/setTableCellShade';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { IEditor } from 'roosterjs-content-model-types';
+import { setTableCellShade } from '../../../lib/publicApi/table/setTableCellShade';
 import {
     ContentModelTable,
     ContentModelFormatter,

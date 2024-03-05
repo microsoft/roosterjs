@@ -29,7 +29,7 @@ const FTP_REGEX = /^ftp\./i;
  * If specified, the display text of link will be replaced with this text.
  * If not specified and there wasn't a link, the link url will be used as display text.
  */
-export default function insertLink(
+export function insertLink(
     editor: IEditor,
     link: string,
     anchorTitle?: string,

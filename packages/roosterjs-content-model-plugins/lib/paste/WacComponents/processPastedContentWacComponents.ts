@@ -1,4 +1,4 @@
-import addParser from '../utils/addParser';
+import { addParser } from '../utils/addParser';
 import { createListLevel, parseFormat } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
 import {

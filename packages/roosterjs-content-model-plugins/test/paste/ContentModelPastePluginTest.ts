@@ -18,7 +18,7 @@ describe('Content Model Paste Plugin Test', () => {
         editor = ({
             getTrustedHTMLHandler: () => trustedHTMLHandler,
         } as any) as IEditor;
-        spyOn(addParser, 'default').and.callThrough();
+        spyOn(addParser, 'addParser').and.callThrough();
         spyOn(setProcessor, 'setProcessor').and.callThrough();
     });
 
@@ -53,7 +53,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
@@ -70,7 +70,7 @@ describe('Content Model Paste Plugin Test', () => {
                 trustedHTMLHandler,
                 undefined /*allowExcelNoBorderTable*/
             );
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
@@ -87,7 +87,7 @@ describe('Content Model Paste Plugin Test', () => {
                 trustedHTMLHandler,
                 undefined /*allowExcelNoBorderTable*/
             );
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
         });
 
@@ -103,7 +103,7 @@ describe('Content Model Paste Plugin Test', () => {
                 trustedHTMLHandler,
                 undefined /*allowExcelNoBorderTable*/
             );
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
@@ -119,7 +119,7 @@ describe('Content Model Paste Plugin Test', () => {
                 trustedHTMLHandler,
                 undefined /*allowExcelNoBorderTable*/
             );
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
@@ -134,7 +134,7 @@ describe('Content Model Paste Plugin Test', () => {
                 event,
                 trustedHTMLHandler
             );
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
         });
 
@@ -146,7 +146,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(WacFile.processPastedContentWacComponents).toHaveBeenCalledWith(event);
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
@@ -156,7 +156,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
         });
 
@@ -166,7 +166,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(event.domToModelOption.additionalAllowedTags).toEqual([
                 PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>,

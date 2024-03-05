@@ -59,7 +59,7 @@ describe('ShortcutPlugin', () => {
 
     describe('Windows', () => {
         it('not a shortcut', () => {
-            const apiSpy = spyOn(toggleBold, 'default');
+            const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -79,7 +79,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('bold', () => {
-            const apiSpy = spyOn(toggleBold, 'default');
+            const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -99,7 +99,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('italic', () => {
-            const apiSpy = spyOn(toggleItalic, 'default');
+            const apiSpy = spyOn(toggleItalic, 'toggleItalic');
             const plugin = new ShortcutPlugin();
 
             const event: PluginEvent = {
@@ -120,7 +120,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('underline', () => {
-            const apiSpy = spyOn(toggleUnderline, 'default');
+            const apiSpy = spyOn(toggleUnderline, 'toggleUnderline');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -140,7 +140,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('clear format', () => {
-            const apiSpy = spyOn(clearFormat, 'default');
+            const apiSpy = spyOn(clearFormat, 'clearFormat');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -240,7 +240,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('bullet list', () => {
-            const apiSpy = spyOn(toggleBullet, 'default');
+            const apiSpy = spyOn(toggleBullet, 'toggleBullet');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -260,7 +260,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('numbering list', () => {
-            const apiSpy = spyOn(toggleNumbering, 'default');
+            const apiSpy = spyOn(toggleNumbering, 'toggleNumbering');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -280,7 +280,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('increase font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
+            const apiSpy = spyOn(changeFontSize, 'changeFontSize');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -300,7 +300,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('decrease font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
+            const apiSpy = spyOn(changeFontSize, 'changeFontSize');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -326,7 +326,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('not a shortcut', () => {
-            const apiSpy = spyOn(toggleBold, 'default');
+            const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -346,7 +346,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('bold', () => {
-            const apiSpy = spyOn(toggleBold, 'default');
+            const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -366,7 +366,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('italic', () => {
-            const apiSpy = spyOn(toggleItalic, 'default');
+            const apiSpy = spyOn(toggleItalic, 'toggleItalic');
             const plugin = new ShortcutPlugin();
 
             const event: PluginEvent = {
@@ -387,7 +387,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('underline', () => {
-            const apiSpy = spyOn(toggleUnderline, 'default');
+            const apiSpy = spyOn(toggleUnderline, 'toggleUnderline');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -407,7 +407,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('clear format', () => {
-            const apiSpy = spyOn(clearFormat, 'default');
+            const apiSpy = spyOn(clearFormat, 'clearFormat');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -510,7 +510,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('bullet list', () => {
-            const apiSpy = spyOn(toggleBullet, 'default');
+            const apiSpy = spyOn(toggleBullet, 'toggleBullet');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -530,7 +530,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('numbering list', () => {
-            const apiSpy = spyOn(toggleNumbering, 'default');
+            const apiSpy = spyOn(toggleNumbering, 'toggleNumbering');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -550,7 +550,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('increase font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
+            const apiSpy = spyOn(changeFontSize, 'changeFontSize');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -570,7 +570,7 @@ describe('ShortcutPlugin', () => {
         });
 
         it('decrease font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
+            const apiSpy = spyOn(changeFontSize, 'changeFontSize');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',

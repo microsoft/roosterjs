@@ -1,4 +1,4 @@
-import changeCapitalization from '../../../lib/publicApi/segment/changeCapitalization';
+import { changeCapitalization } from '../../../lib/publicApi/segment/changeCapitalization';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
 import {
