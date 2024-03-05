@@ -8,9 +8,7 @@
     "license": "MIT",
     "private": true,
     "workspaces": [
-        "packages/*",
-        "packages-ui/*",
-        "packages-content-model/*"
+        "packages/*"
     ],
     "scripts": {
         "clean": "node tools/build.js clean",
