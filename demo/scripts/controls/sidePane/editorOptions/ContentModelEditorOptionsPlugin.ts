@@ -20,6 +20,11 @@ const listFeatures = {
     indentWhenAltShiftRight: false,
 };
 
+const autoLink = {
+    autoLink: false,
+    unlinkWhenBackspaceAfterLink: false,
+};
+
 const initialState: BuildInPluginState = {
     pluginList: {
         contentEdit: true,
@@ -37,7 +42,11 @@ const initialState: BuildInPluginState = {
         autoFormat: true,
         announce: true,
     },
-    contentEditFeatures: { ...getDefaultContentEditFeatureSettings(), ...listFeatures },
+    contentEditFeatures: {
+        ...getDefaultContentEditFeatureSettings(),
+        ...listFeatures,
+        ...autoLink,
+    },
     defaultFormat: {},
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',

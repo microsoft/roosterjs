@@ -85,7 +85,6 @@ const linkMatchRules: Record<string, LinkMatchRule> = {
 };
 
 /**
- * @internal
  * Try to match a given string with link match rules, return matched link
  * @param url Input url to match
  * @param option Link match option, exact or partial. If it is exact match, we need

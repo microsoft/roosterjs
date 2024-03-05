@@ -47,3 +47,4 @@ export { formatTableWithContentModel } from './publicApi/utils/formatTableWithCo
 export { setListType } from './modelApi/list/setListType';
 export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';
+export { matchLink } from './modelApi/link/matchLink';
