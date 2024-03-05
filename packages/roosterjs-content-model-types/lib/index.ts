@@ -212,16 +212,13 @@ export {
     FormatContentModel,
     CoreApiMap,
     EditorCore,
-    ContentModelSettings,
     SwitchShadowEdit,
     TriggerEvent,
     AddUndoSnapshot,
-    HasFocus,
     Focus,
     AttachDomEvent,
     RestoreUndoSnapshot,
     GetVisibleViewport,
-    Paste,
 } from './editor/EditorCore';
 export { EditorCorePlugins } from './editor/EditorCorePlugins';
 export { EditorPlugin } from './editor/EditorPlugin';
@@ -246,7 +243,7 @@ export {
 } from './pluginState/PluginState';
 export { ContextMenuPluginState } from './pluginState/ContextMenuPluginState';
 
-export { EditorEnvironment } from './parameter/EditorEnvironment';
+export { EditorEnvironment, ContentModelSettings } from './parameter/EditorEnvironment';
 export {
     EntityState,
     DeletedEntity,

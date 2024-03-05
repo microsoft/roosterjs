@@ -47,6 +47,7 @@ export { cacheGetEventData } from './publicApi/domUtils/cacheGetEventData';
 
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
+export { paste } from './publicApi/paste/paste';
 export { transformColor } from './publicApi/color/transformColor';
 
 export { retrieveModelFormatState } from './publicApi/format/retrieveModelFormatState';

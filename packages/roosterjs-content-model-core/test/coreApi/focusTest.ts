@@ -28,8 +28,10 @@ describe('focus', () => {
             logicalRoot: div,
             lifecycle: {},
             api: {
-                hasFocus: hasFocusSpy,
                 setDOMSelection: setDOMSelectionSpy,
+            },
+            domHelper: {
+                hasFocus: hasFocusSpy,
             },
             selection: {},
         } as any;

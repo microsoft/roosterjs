@@ -6,7 +6,6 @@ import { reducedModelChildProcessor } from '../override/reducedModelChildProcess
 import { transformColor } from '../publicApi/color/transformColor';
 import type { CachedElementHandler } from '../publicApi/model/cloneModel';
 import type {
-    ClipboardData,
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
@@ -17,7 +16,6 @@ import type {
     EditorEnvironment,
     FormatContentModelOptions,
     IEditor,
-    PasteType,
     PluginEventData,
     PluginEventFromType,
     PluginEventType,
@@ -219,7 +217,7 @@ export class Editor implements IEditor {
      */
     hasFocus(): boolean {
         const core = this.getCore();
-        return core.api.hasFocus(core);
+        return core.domHelper.hasFocus();
     }
 
     /**
@@ -328,17 +326,6 @@ export class Editor implements IEditor {
     stopShadowEdit() {
         const core = this.getCore();
         core.api.switchShadowEdit(core, false /*isOn*/);
-    }
-
-    /**
-     * Paste into editor using a clipboardData object
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param pasteType Type of paste
-     */
-    pasteFromClipboard(clipboardData: ClipboardData, pasteType: PasteType = 'normal') {
-        const core = this.getCore();
-
-        core.api.paste(core, clipboardData, pasteType);
     }
 
     /**

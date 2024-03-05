@@ -1,6 +1,7 @@
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
+import { paste } from 'roosterjs-content-model-core';
 import type { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_Excel_E2E';
@@ -32,7 +33,7 @@ describe(ID, () => {
     it('E2E', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        editor.pasteFromClipboard(clipboardData);
+        paste(editor, clipboardData);
         editor.getContentModelCopy('connected');
 
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
@@ -41,7 +42,7 @@ describe(ID, () => {
     it('E2E paste as image', () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        editor.pasteFromClipboard(clipboardData, 'asImage');
+        paste(editor, clipboardData, 'asImage');
 
         const model = editor.getContentModelCopy('connected');
 
@@ -100,7 +101,7 @@ describe(ID, () => {
             snapshotBeforePaste: '<br><!--{"start":[0],"end":[0]}-->',
         });
 
-        editor.pasteFromClipboard(CD);
+        paste(editor, CD);
 
         const model = editor.getContentModelCopy('connected');
 

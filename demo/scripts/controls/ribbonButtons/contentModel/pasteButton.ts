@@ -1,5 +1,6 @@
 import ContentModelRibbonButton from './ContentModelRibbonButton';
 import { extractClipboardItems } from 'roosterjs-editor-dom';
+import { paste } from 'roosterjs-content-model-core';
 
 /**
  * @internal
@@ -19,7 +20,7 @@ export const pasteButton: ContentModelRibbonButton<'buttonNamePaste'> = {
                     createDataTransferItems(clipboardItems)
                 );
                 const clipboardData = await extractClipboardItems(dataTransferItems);
-                editor.pasteFromClipboard(clipboardData);
+                paste(editor, clipboardData);
             } catch {}
         }
 

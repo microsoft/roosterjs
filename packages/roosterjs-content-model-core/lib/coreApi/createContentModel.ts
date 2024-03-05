@@ -30,14 +30,10 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         const selection = selectionOverride || core.api.getDOMSelection(core) || undefined;
         const saveIndex = !option && !selectionOverride;
         const editorContext = core.api.createEditorContext(core, saveIndex);
+        const settings = core.environment.domToModelSettings;
         const domToModelContext = option
-            ? createDomToModelContext(
-                  editorContext,
-                  core.domToModelSettings.builtIn,
-                  core.domToModelSettings.customized,
-                  option
-              )
-            : createDomToModelContextWithConfig(core.domToModelSettings.calculated, editorContext);
+            ? createDomToModelContext(editorContext, settings.builtIn, settings.customized, option)
+            : createDomToModelContextWithConfig(settings.calculated, editorContext);
 
         const model = domToContentModel(core.logicalRoot, domToModelContext, selection);
 

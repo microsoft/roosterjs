@@ -567,8 +567,10 @@ describe('Editor', () => {
                 reset: resetSpy,
             },
             api: {
-                hasFocus: hasFocusSpy,
                 setContentModel: setContentModelSpy,
+            },
+            domHelper: {
+                hasFocus: hasFocusSpy,
             },
         } as any;
 
@@ -579,7 +581,7 @@ describe('Editor', () => {
         const result = editor.hasFocus();
 
         expect(result).toBe(mockedResult);
-        expect(hasFocusSpy).toHaveBeenCalledWith(mockedCore);
+        expect(hasFocusSpy).toHaveBeenCalledWith();
 
         editor.dispose();
         expect(resetSpy).toHaveBeenCalledWith();
@@ -742,42 +744,6 @@ describe('Editor', () => {
         expect(() => editor.isInShadowEdit()).toThrow();
         expect(() => editor.startShadowEdit()).toThrow();
         expect(() => editor.stopShadowEdit()).toThrow();
-    });
-
-    it('pasteFromClipboard', () => {
-        const div = document.createElement('div');
-        const pasteSpy = jasmine.createSpy('paste');
-        const resetSpy = jasmine.createSpy('reset');
-        const mockedCore = {
-            plugins: [],
-            darkColorHandler: {
-                updateKnownColor: updateKnownColorSpy,
-                reset: resetSpy,
-            },
-            api: {
-                paste: pasteSpy,
-                setContentModel: setContentModelSpy,
-            },
-        } as any;
-
-        createEditorCoreSpy.and.returnValue(mockedCore);
-
-        const mockedClipboardData = 'ClipboardData' as any;
-        const mockedPasteType = 'PASTETYPE' as any;
-
-        const editor = new Editor(div);
-
-        editor.pasteFromClipboard(mockedClipboardData);
-
-        expect(pasteSpy).toHaveBeenCalledWith(mockedCore, mockedClipboardData, 'normal');
-
-        editor.pasteFromClipboard(mockedClipboardData, mockedPasteType);
-
-        expect(pasteSpy).toHaveBeenCalledWith(mockedCore, mockedClipboardData, mockedPasteType);
-
-        editor.dispose();
-        expect(resetSpy).toHaveBeenCalledWith();
-        expect(() => editor.pasteFromClipboard(mockedClipboardData)).toThrow();
     });
 
     it('getColorManager', () => {

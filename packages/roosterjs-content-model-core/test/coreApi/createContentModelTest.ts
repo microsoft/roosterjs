@@ -44,7 +44,9 @@ describe('createContentModel', () => {
                 cachedModel: mockedCachedMode,
             },
             lifecycle: {},
-            domToModelSettings: {},
+            environment: {
+                domToModelSettings: {},
+            },
         } as any) as EditorCore;
     });
 
@@ -107,7 +109,9 @@ describe('createContentModel with selection', () => {
                 createEditorContext: createEditorContextSpy,
             },
             cache: {},
-            domToModelSettings: {},
+            environment: {
+                domToModelSettings: {},
+            },
         };
     });
 
