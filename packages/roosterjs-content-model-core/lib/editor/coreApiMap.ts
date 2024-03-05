@@ -11,6 +11,7 @@ import { paste } from '../coreApi/paste';
 import { restoreUndoSnapshot } from '../coreApi/restoreUndoSnapshot';
 import { setContentModel } from '../coreApi/setContentModel';
 import { setDOMSelection } from '../coreApi/setDOMSelection';
+import { setLogicalRoot } from '../coreApi/setLogicalRoot';
 import { switchShadowEdit } from '../coreApi/switchShadowEdit';
 import { triggerEvent } from '../coreApi/triggerEvent';
 import type { CoreApiMap } from 'roosterjs-content-model-types';
@@ -26,6 +27,7 @@ export const coreApiMap: CoreApiMap = {
     getDOMSelection: getDOMSelection,
     setContentModel: setContentModel,
     setDOMSelection: setDOMSelection,
+    setLogicalRoot: setLogicalRoot,
     switchShadowEdit: switchShadowEdit,
     getVisibleViewport: getVisibleViewport,
     focus: focus,

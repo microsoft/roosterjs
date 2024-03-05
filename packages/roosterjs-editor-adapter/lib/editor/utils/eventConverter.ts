@@ -98,6 +98,7 @@ export const OldEventTypeToNewEventType: Record<PluginEventType, NewPluginEventT
     [PluginEventType.PendingFormatStateChanged]: undefined,
     [PluginEventType.Scroll]: 'scroll',
     [PluginEventType.SelectionChanged]: 'selectionChanged',
+    [PluginEventType.SnapshotLogicalRoot]: 'snapshotLogicalRoot',
     [PluginEventType.ZoomChanged]: 'zoomChanged',
 };
 

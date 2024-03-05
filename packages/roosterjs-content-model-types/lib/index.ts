@@ -209,6 +209,7 @@ export {
     GetDOMSelection,
     SetContentModel,
     SetDOMSelection,
+    SetLogicalRoot,
     FormatContentModel,
     CoreApiMap,
     EditorCore,

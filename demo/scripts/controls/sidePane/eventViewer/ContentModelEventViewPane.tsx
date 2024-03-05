@@ -46,6 +46,7 @@ const EventTypeMap: { [key in PluginEventType]: string } = {
     [PluginEventType.BeforeSetContent]: 'BeforeSetContent',
     [PluginEventType.ZoomChanged]: 'ZoomChanged',
     [PluginEventType.SelectionChanged]: 'SelectionChanged',
+    [PluginEventType.SnapshotLogicalRoot]: 'SnapshotLogicalRoot',
     [PluginEventType.BeforeKeyboardEditing]: 'BeforeKeyboardEditing',
 };
 

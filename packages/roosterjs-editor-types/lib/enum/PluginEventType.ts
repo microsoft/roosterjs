@@ -129,4 +129,11 @@ export const enum PluginEventType {
      * This is only used by Content Model editing
      */
     BeforeKeyboardEditing = 23,
+
+    /**
+     * EXPERIMENTAL FEATURE
+     * A snapshot of logical root is about to be taken. Entities should return entity states they wish to include in the snapshot.
+     * This is only used by Content Model editing
+     */
+    SnapshotLogicalRoot = 24,
 }
