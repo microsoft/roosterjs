@@ -18,7 +18,7 @@ import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types
  * @param format (Optional) The table format. If not passed, the default format will be applied:
  * background color: #FFF; border color: #ABABAB
  */
-export default function insertTable(
+export function insertTable(
     editor: IEditor,
     columns: number,
     rows: number,

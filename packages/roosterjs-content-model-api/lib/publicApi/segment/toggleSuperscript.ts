@@ -5,7 +5,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * Toggle superscript style
  * @param editor The editor to operate on
  */
-export default function toggleSuperscript(editor: IEditor) {
+export function toggleSuperscript(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

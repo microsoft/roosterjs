@@ -8,7 +8,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * If only part of a link is selected, the whole link style will be removed.
  * @param editor The editor instance
  */
-export default function removeLink(editor: IEditor) {
+export function removeLink(editor: IEditor) {
     editor.focus();
 
     editor.formatContentModel(

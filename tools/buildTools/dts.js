@@ -335,19 +335,20 @@ function generateDts(library, isAmd, queue, version) {
         if (exports) {
             for (var name in exports) {
                 var alias = exports[name];
-                var texts = null;
+                var texts = [];
+
                 if (elements[name]) {
-                    texts = publicElement(elements[name]);
-                } else {
-                    for (var n in elements) {
-                        if (n.indexOf(alias + '<') == 0) {
-                            texts = publicElement(elements[n]);
-                            break;
-                        }
+                    texts = texts.concat(publicElement(elements[name]));
+                }
+
+                for (var n in elements) {
+                    if (n.indexOf(alias + '<') == 0) {
+                        texts = texts.concat(publicElement(elements[n]));
                     }
-                    if (!texts) {
-                        err(`Name not found: ${name}; alias: ${alias}; file: ${filename}`);
-                    }
+                }
+
+                if (texts.length == 0) {
+                    err(`Name not found: ${name}; alias: ${alias}; file: ${filename}`);
                 }
 
                 for (var text of texts) {

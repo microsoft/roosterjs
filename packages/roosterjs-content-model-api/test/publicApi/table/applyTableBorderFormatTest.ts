@@ -1,5 +1,5 @@
 import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
-import applyTableBorderFormat from '../../../lib/publicApi/table/applyTableBorderFormat';
+import { applyTableBorderFormat } from '../../../lib/publicApi/table/applyTableBorderFormat';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { IEditor } from 'roosterjs-content-model-types';

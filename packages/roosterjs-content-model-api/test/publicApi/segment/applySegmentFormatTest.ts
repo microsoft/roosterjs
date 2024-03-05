@@ -1,4 +1,4 @@
-import applySegmentFormat from '../../../lib/publicApi/segment/applySegmentFormat';
+import { applySegmentFormat } from '../../../lib/publicApi/segment/applySegmentFormat';
 import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
 

@@ -1,7 +1,7 @@
 import * as setModelIndentation from '../../../lib/modelApi/block/setModelIndentation';
-import setIndentation from '../../../lib/publicApi/block/setIndentation';
 import { ContentModelFormatter, FormatContentModelContext } from 'roosterjs-content-model-types';
 import { IEditor } from 'roosterjs-content-model-types';
+import { setIndentation } from '../../../lib/publicApi/block/setIndentation';
 
 describe('setIndentation', () => {
     const fakeModel: any = { a: 'b' };

@@ -1,4 +1,4 @@
-import formatImageWithContentModel from '../../../lib/publicApi/utils/formatImageWithContentModel';
+import { formatImageWithContentModel } from '../../../lib/publicApi/utils/formatImageWithContentModel';
 import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,

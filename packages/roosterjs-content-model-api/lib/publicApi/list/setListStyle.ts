@@ -7,7 +7,7 @@ import type { IEditor, ListMetadataFormat } from 'roosterjs-content-model-types'
  * @param editor The editor to operate on
  * @param style The target list item style to set
  */
-export default function setListStyle(editor: IEditor, style: ListMetadataFormat) {
+export function setListStyle(editor: IEditor, style: ListMetadataFormat) {
     editor.focus();
 
     editor.formatContentModel(

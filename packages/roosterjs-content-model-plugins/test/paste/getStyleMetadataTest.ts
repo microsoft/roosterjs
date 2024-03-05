@@ -1,5 +1,5 @@
-import getStyleMetadata from '../../lib/paste/WordDesktop/getStyleMetadata';
 import { BeforePasteEvent } from 'roosterjs-content-model-types';
+import { getStyleMetadata } from '../../lib/paste/WordDesktop/getStyleMetadata';
 
 describe('getStyleMetadata', () => {
     it('Extract metadata from style element', () => {

@@ -1,6 +1,6 @@
-import toggleStrikethrough from '../../../lib/publicApi/segment/toggleStrikethrough';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { toggleStrikethrough } from '../../../lib/publicApi/segment/toggleStrikethrough';
 
 describe('toggleStrikethrough', () => {
     function runTest(

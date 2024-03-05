@@ -17,7 +17,7 @@ const HeaderFontSizes: Record<HeadingLevelTags, string> = {
  * @param editor The editor to set heading level to
  * @param headingLevel Level of heading, from 1 to 6. Set to 0 means set it back to a regular paragraph
  */
-export default function setHeadingLevel(editor: IEditor, headingLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6) {
+export function setHeadingLevel(editor: IEditor, headingLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6) {
     editor.focus();
 
     formatParagraphWithContentModel(editor, 'setHeadingLevel', para => {

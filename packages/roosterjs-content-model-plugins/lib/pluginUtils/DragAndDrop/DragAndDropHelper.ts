@@ -1,5 +1,5 @@
-import type Disposable from '../Disposable';
-import type DragAndDropHandler from './DragAndDropHandler';
+import type { Disposable } from '../Disposable';
+import type { DragAndDropHandler } from './DragAndDropHandler';
 
 /**
  * @internal
@@ -65,7 +65,7 @@ function getTouchEventPageXY(e: TouchEvent): [number, number] {
  * @internal
  * A helper class to help manage drag and drop to an HTML element
  */
-export default class DragAndDropHelper<TContext, TInitValue> implements Disposable {
+export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
     private initX: number = 0;
     private initY: number = 0;
     private initValue: TInitValue | undefined = undefined;
