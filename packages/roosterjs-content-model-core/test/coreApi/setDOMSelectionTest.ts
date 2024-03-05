@@ -349,10 +349,13 @@ describe('setDOMSelection', () => {
 
     describe('Image selection', () => {
         let mockedImage: HTMLImageElement;
+        let scrollIntoViewSpy: jasmine.Spy;
 
         beforeEach(() => {
+            scrollIntoViewSpy = jasmine.createSpy('scrollIntoView');
             mockedImage = {
                 ownerDocument: doc,
+                scrollIntoView: scrollIntoViewSpy,
             } as any;
         });
 
@@ -399,6 +402,7 @@ describe('setDOMSelection', () => {
             expect(insertRuleSpy).toHaveBeenCalledWith(
                 '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
+            expect(scrollIntoViewSpy).toHaveBeenCalled();
         });
 
         it('image selection with duplicated id', () => {
@@ -447,6 +451,7 @@ describe('setDOMSelection', () => {
             expect(insertRuleSpy).toHaveBeenCalledWith(
                 '#contentDiv_0 #image_0_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
+            expect(scrollIntoViewSpy).toHaveBeenCalled();
         });
 
         it('image selection with customized selection border color', () => {
@@ -495,6 +500,7 @@ describe('setDOMSelection', () => {
             expect(insertRuleSpy).toHaveBeenCalledWith(
                 '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:red!important;}'
             );
+            expect(scrollIntoViewSpy).toHaveBeenCalled();
         });
 
         it('do not select if node is out of document', () => {
@@ -542,17 +548,21 @@ describe('setDOMSelection', () => {
             expect(insertRuleSpy).toHaveBeenCalledWith(
                 '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
             );
+            expect(scrollIntoViewSpy).toHaveBeenCalled();
         });
     });
 
     describe('Table selection', () => {
         let mockedTable: HTMLTableElement;
+        let scrollIntoViewSpy: jasmine.Spy;
 
         beforeEach(() => {
+            scrollIntoViewSpy = jasmine.createSpy('scrollIntoView');
             mockedTable = {
                 ownerDocument: doc,
                 rows: [],
                 childNodes: [],
+                scrollIntoView: scrollIntoViewSpy,
             } as any;
         });
 
@@ -596,6 +606,7 @@ describe('setDOMSelection', () => {
             expect(deleteRuleSpy).not.toHaveBeenCalled();
             expect(insertRuleSpy).toHaveBeenCalledTimes(1);
             expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
+            expect(scrollIntoViewSpy).toHaveBeenCalled();
         });
 
         function runTest(

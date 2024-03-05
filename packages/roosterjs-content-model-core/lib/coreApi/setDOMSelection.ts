@@ -44,6 +44,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 core.selection.selection = selection;
 
                 setRangeSelection(doc, image);
+                image.scrollIntoView();
                 break;
             case 'table':
                 const { table, firstColumn, firstRow } = selection;
@@ -56,6 +57,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 core.selection.selection = selection;
 
                 setRangeSelection(doc, table.rows[firstRow]?.cells[firstColumn]);
+                table.scrollIntoView();
                 break;
             case 'range':
                 addRangeToSelection(doc, selection.range, selection.isReverted);
