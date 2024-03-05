@@ -1,9 +1,9 @@
-import type Disposable from '../../../pluginUtils/Disposable';
+import type { Disposable } from '../../../pluginUtils/Disposable';
 
 /**
  * @internal
  */
-export default interface TableEditFeature {
+export interface TableEditFeature {
     node: Node;
     div: HTMLDivElement | null;
     featureHandler: Disposable | null;

@@ -11,7 +11,7 @@ import * as mergeTableColumn from '../../../lib/modelApi/table/mergeTableColumn'
 import * as mergeTableRow from '../../../lib/modelApi/table/mergeTableRow';
 import * as splitTableCellHorizontally from '../../../lib/modelApi/table/splitTableCellHorizontally';
 import * as splitTableCellVertically from '../../../lib/modelApi/table/splitTableCellVertically';
-import editTable from '../../../lib/publicApi/table/editTable';
+import { editTable } from '../../../lib/publicApi/table/editTable';
 import { IEditor, TableOperation } from 'roosterjs-content-model-types';
 
 describe('editTable', () => {

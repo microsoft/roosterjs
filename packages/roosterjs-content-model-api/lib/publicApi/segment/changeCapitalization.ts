@@ -9,7 +9,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * Identifying Languages". For example: 'en' or 'en-US' for English, 'tr' for Turkish.
  * Default is the host environment’s current locale.
  */
-export default function changeCapitalization(
+export function changeCapitalization(
     editor: IEditor,
     capitalization: 'sentence' | 'lowerCase' | 'upperCase' | 'capitalize',
     language?: string

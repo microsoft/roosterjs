@@ -1,6 +1,6 @@
-import formatImageWithContentModel from 'roosterjs-content-model-api/lib/publicApi/utils/formatImageWithContentModel';
 import { createContextMenuProvider } from '../utils/createContextMenuProvider';
 import { EditorPlugin, IEditor, ImageEditor } from 'roosterjs-content-model-types';
+import { formatImageWithContentModel } from 'roosterjs-content-model-api';
 import { iterateSelections, updateImageMetadata } from 'roosterjs-content-model-core';
 import { setImageAltText } from 'roosterjs-content-model-api';
 import { showInputDialog } from '../../inputDialog/utils/showInputDialog';

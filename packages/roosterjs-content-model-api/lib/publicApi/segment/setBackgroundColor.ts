@@ -8,7 +8,7 @@ import type { ContentModelParagraph, IEditor } from 'roosterjs-content-model-typ
  * @param editor The editor to operate on
  * @param backgroundColor The color to set. Pass null to remove existing color.
  */
-export default function setBackgroundColor(editor: IEditor, backgroundColor: string | null) {
+export function setBackgroundColor(editor: IEditor, backgroundColor: string | null) {
     editor.focus();
 
     let lastParagraph: ContentModelParagraph | null = null;

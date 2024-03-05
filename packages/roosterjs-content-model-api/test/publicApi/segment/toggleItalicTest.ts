@@ -1,6 +1,6 @@
-import toggleItalic from '../../../lib/publicApi/segment/toggleItalic';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { toggleItalic } from '../../../lib/publicApi/segment/toggleItalic';
 
 describe('toggleItalic', () => {
     function runTest(

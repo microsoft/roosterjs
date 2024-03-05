@@ -6,7 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor to operate on
  * @param spacing Unitless/px value to set line height
  */
-export default function setSpacing(editor: IEditor, spacing: number | string) {
+export function setSpacing(editor: IEditor, spacing: number | string) {
     editor.focus();
 
     formatParagraphWithContentModel(editor, 'setSpacing', paragraph => {

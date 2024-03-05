@@ -1,5 +1,5 @@
 import { getObjectKeys, isNodeOfType } from 'roosterjs-content-model-dom';
-import type CreateElementData from './CreateElementData';
+import type { CreateElementData } from './CreateElementData';
 
 /**
  * @internal
@@ -8,10 +8,7 @@ import type CreateElementData from './CreateElementData';
  * @param document The document to create the element from
  * @returns The root DOM element just created
  */
-export default function createElement(
-    elementData: CreateElementData,
-    document: Document
-): Element | null {
+export function createElement(elementData: CreateElementData, document: Document): Element | null {
     if (!elementData || !elementData.tag) {
         return null;
     }

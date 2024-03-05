@@ -1,10 +1,10 @@
-import createElement from '../../../pluginUtils/CreateElement/createElement';
-import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
+import { createElement } from '../../../pluginUtils/CreateElement/createElement';
+import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { getFirstSelectedTable, normalizeTable } from 'roosterjs-content-model-core';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { normalizeRect } from '../../../pluginUtils/Rect/normalizeRect';
 import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
-import type TableEditFeature from './TableEditorFeature';
+import type { TableEditFeature } from './TableEditFeature';
 
 const TABLE_RESIZER_LENGTH = 12;
 const TABLE_RESIZER_ID = '_Table_Resizer';
@@ -12,7 +12,7 @@ const TABLE_RESIZER_ID = '_Table_Resizer';
 /**
  * @internal
  */
-export default function createTableResizer(
+export function createTableResizer(
     table: HTMLTableElement,
     editor: IEditor,
     isRTL: boolean,

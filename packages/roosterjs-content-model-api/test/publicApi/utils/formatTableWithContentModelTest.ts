@@ -72,7 +72,7 @@ describe('formatTableWithContentModel', () => {
         table.rows[0].cells.push(tableCell);
         model.blocks.push(table);
 
-        spyOn(hasSelectionInBlock, 'default').and.returnValue(true);
+        spyOn(hasSelectionInBlock, 'hasSelectionInBlock').and.returnValue(true);
         spyOn(ensureFocusableParagraphForTable, 'ensureFocusableParagraphForTable');
         spyOn(normalizeTable, 'normalizeTable');
         spyOn(applyTableFormat, 'applyTableFormat');
@@ -104,7 +104,7 @@ describe('formatTableWithContentModel', () => {
         table.rows[0].cells.push(tableCell);
         model.blocks.push(table);
 
-        spyOn(hasSelectionInBlock, 'default').and.returnValue(false);
+        spyOn(hasSelectionInBlock, 'hasSelectionInBlock').and.returnValue(false);
         spyOn(
             ensureFocusableParagraphForTable,
             'ensureFocusableParagraphForTable'
@@ -165,7 +165,7 @@ describe('formatTableWithContentModel', () => {
         table.rows[0].cells.push(tableCell);
         model.blocks.push(table);
 
-        spyOn(hasSelectionInBlock, 'default').and.returnValue(false);
+        spyOn(hasSelectionInBlock, 'hasSelectionInBlock').and.returnValue(false);
         spyOn(
             ensureFocusableParagraphForTable,
             'ensureFocusableParagraphForTable'
@@ -228,7 +228,7 @@ describe('formatTableWithContentModel', () => {
         table.rows[0].cells.push(tableCell);
         model.blocks.push(table);
 
-        spyOn(hasSelectionInBlock, 'default').and.returnValue(false);
+        spyOn(hasSelectionInBlock, 'hasSelectionInBlock').and.returnValue(false);
         spyOn(
             ensureFocusableParagraphForTable,
             'ensureFocusableParagraphForTable'

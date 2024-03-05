@@ -6,7 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * Toggle underline style
  * @param editor The editor to operate on
  */
-export default function toggleUnderline(editor: IEditor) {
+export function toggleUnderline(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

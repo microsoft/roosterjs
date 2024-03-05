@@ -1,6 +1,6 @@
-import hasSelectionInBlock from '../../publicApi/selection/hasSelectionInBlock';
-import hasSelectionInBlockGroup from '../../publicApi/selection/hasSelectionInBlockGroup';
 import { getClosestAncestorBlockGroupIndex } from '../../publicApi/model/getClosestAncestorBlockGroupIndex';
+import { hasSelectionInBlock } from '../../publicApi/selection/hasSelectionInBlock';
+import { hasSelectionInBlockGroup } from '../../publicApi/selection/hasSelectionInBlockGroup';
 import type {
     ContentModelBlock,
     DeleteSelectionContext,
