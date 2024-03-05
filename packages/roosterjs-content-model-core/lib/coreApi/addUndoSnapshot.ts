@@ -1,6 +1,9 @@
-import type { SnapshotLogicalRootEvent } from 'roosterjs-content-model-types/lib/event/SnapshotLogicalRootEvent';
+import type {
+    AddUndoSnapshot,
+    Snapshot,
+    SnapshotLogicalRootEvent,
+} from 'roosterjs-content-model-types';
 import { createSnapshotSelection } from '../utils/createSnapshotSelection';
-import type { AddUndoSnapshot, Snapshot } from 'roosterjs-content-model-types';
 
 /**
  * @internal

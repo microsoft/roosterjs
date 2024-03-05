@@ -1,4 +1,4 @@
-import type { EntityState } from '..';
+import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { BasePluginEvent } from './BasePluginEvent';
 
 /**
