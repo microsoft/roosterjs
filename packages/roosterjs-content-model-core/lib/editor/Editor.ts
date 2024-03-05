@@ -4,7 +4,6 @@ import { createEditorCore } from './createEditorCore';
 import { createEmptyModel, tableProcessor } from 'roosterjs-content-model-dom';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import { transformColor } from '../publicApi/color/transformColor';
-import type { CachedElementHandler } from '../publicApi/model/cloneModel';
 import type {
     ContentModelDocument,
     ContentModelFormatter,
@@ -26,6 +25,7 @@ import type {
     TrustedHTMLHandler,
     Rect,
     EntityState,
+    CachedElementHandler,
 } from 'roosterjs-content-model-types';
 
 /**

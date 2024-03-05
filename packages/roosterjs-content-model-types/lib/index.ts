@@ -282,6 +282,7 @@ export { Rect } from './parameter/Rect';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
 export { DOMHelper } from './parameter/DOMHelper';
 export { ImageEditOperation, ImageEditor } from './parameter/ImageEditor';
+export { CachedElementHandler, CloneModelOptions } from './parameter/CloneModelOptions';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

@@ -1,5 +1,5 @@
 import { ChangeSource } from '../../constants/ChangeSource';
-import { cloneModel, CloneModelOptions } from '../../publicApi/model/cloneModel';
+import { cloneModel } from '../../publicApi/model/cloneModel';
 import { createDomToModelContextForSanitizing } from '../createDomToModelContextForSanitizing';
 import { domToContentModel } from 'roosterjs-content-model-dom';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
@@ -9,6 +9,7 @@ import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
     BeforePasteEvent,
     ClipboardData,
+    CloneModelOptions,
     ContentModelDocument,
     ContentModelSegmentFormat,
     IEditor,
