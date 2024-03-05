@@ -2,7 +2,7 @@
  * @internal
  * An interface represents the data for creating element used by createElement()
  */
-export default interface CreateElementData {
+export interface CreateElementData {
     /**
      * Tag name of this element.
      * It can be just a tag, or in format "namespace:tag"

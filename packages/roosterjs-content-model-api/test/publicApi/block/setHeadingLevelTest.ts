@@ -1,6 +1,6 @@
-import setHeadingLevel from '../../../lib/publicApi/block/setHeadingLevel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { paragraphTestCommon } from './paragraphTestCommon';
+import { setHeadingLevel } from '../../../lib/publicApi/block/setHeadingLevel';
 
 describe('setHeadingLevel to 1', () => {
     function runTest(

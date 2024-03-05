@@ -21,7 +21,7 @@ const MAX_FONT_SIZE = 1000;
  * @param change Whether increase or decrease font size
  * @param fontSizes A sorted font size array, in pt. Default value is FONT_SIZES
  */
-export default function changeFontSize(editor: IEditor, change: 'increase' | 'decrease') {
+export function changeFontSize(editor: IEditor, change: 'increase' | 'decrease') {
     editor.focus();
 
     formatSegmentWithContentModel(

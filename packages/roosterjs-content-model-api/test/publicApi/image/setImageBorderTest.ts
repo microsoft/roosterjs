@@ -1,6 +1,6 @@
-import setImageBorder from '../../../lib/publicApi/image/setImageBorder';
 import { Border, ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from '../segment/segmentTestCommon';
+import { setImageBorder } from '../../../lib/publicApi/image/setImageBorder';
 import {
     addSegment,
     createContentModelDocument,
