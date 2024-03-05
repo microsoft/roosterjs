@@ -1,8 +1,8 @@
 import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
-import setAlignment from '../../../lib/publicApi/block/setAlignment';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { IEditor } from 'roosterjs-content-model-types';
 import { paragraphTestCommon } from './paragraphTestCommon';
+import { setAlignment } from '../../../lib/publicApi/block/setAlignment';
 import {
     ContentModelDocument,
     ContentModelListItem,

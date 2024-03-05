@@ -1,6 +1,6 @@
-import setSpacing from '../../../lib/publicApi/block/setSpacing';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { paragraphTestCommon } from './paragraphTestCommon';
+import { setSpacing } from '../../../lib/publicApi/block/setSpacing';
 
 describe('setSpacing', () => {
     function runTest(

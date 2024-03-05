@@ -1,5 +1,5 @@
-import createElement from '../../lib/pluginUtils/CreateElement/createElement';
-import CreateElementData from '../../lib/pluginUtils/CreateElement/CreateElementData';
+import { createElement } from '../../lib/pluginUtils/CreateElement/createElement';
+import { CreateElementData } from '../../lib/pluginUtils/CreateElement/CreateElementData';
 
 describe('createElement', () => {
     function runTest(input: CreateElementData, output: string) {

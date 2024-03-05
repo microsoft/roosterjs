@@ -6,7 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor to operate on
  * @param value The number to set to, must be equal or greater than 1
  */
-export default function setListStartNumber(editor: IEditor, value: number) {
+export function setListStartNumber(editor: IEditor, value: number) {
     editor.focus();
 
     editor.formatContentModel(

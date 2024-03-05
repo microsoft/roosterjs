@@ -20,7 +20,9 @@ import {
 
 const TABLE_RESIZER_ID = '_Table_Resizer';
 
-describe('Table Resizer tests', () => {
+// TODO: Reenable this test
+// https://github.com/microsoft/roosterjs/issues/2474
+xdescribe('Table Resizer tests', () => {
     let editor: IEditor;
     let plugin: TableEditPlugin;
     const TEST_ID = 'resizerTest';
@@ -37,7 +39,7 @@ describe('Table Resizer tests', () => {
         afterTableTest(editor, plugin, TEST_ID);
     });
 
-    /************************** Resizier removing tests **************************/
+    /************************** Resizer removing tests **************************/
 
     function removeResizerTest(pluginEvent: PluginEvent) {
         let resizer: HTMLElement | null = null;

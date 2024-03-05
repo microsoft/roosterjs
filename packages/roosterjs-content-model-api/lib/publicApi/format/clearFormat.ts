@@ -12,7 +12,7 @@ import type {
  * Clear format of selection
  * @param editor The editor to clear format from
  */
-export default function clearFormat(editor: IEditor) {
+export function clearFormat(editor: IEditor) {
     editor.focus();
 
     editor.formatContentModel(

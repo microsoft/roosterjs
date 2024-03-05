@@ -5,7 +5,7 @@ import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
  * Adjust selection to make sure select an image if any
  * @return Content Model Image object if an image is select, or null
  */
-export default function adjustImageSelection(editor: IEditor): ContentModelImage | null {
+export function adjustImageSelection(editor: IEditor): ContentModelImage | null {
     let image: ContentModelImage | null = null;
 
     editor.formatContentModel(

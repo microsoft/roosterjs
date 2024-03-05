@@ -6,7 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor to set alignment
  * @param direction Direction value: ltr (Left to right) or rtl (Right to left)
  */
-export default function setDirection(editor: IEditor, direction: 'ltr' | 'rtl') {
+export function setDirection(editor: IEditor, direction: 'ltr' | 'rtl') {
     editor.focus();
 
     editor.formatContentModel(model => setModelDirection(model, direction), {

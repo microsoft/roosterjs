@@ -1,4 +1,4 @@
-import formatImageWithContentModel from '../utils/formatImageWithContentModel';
+import { formatImageWithContentModel } from '../utils/formatImageWithContentModel';
 import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -7,11 +7,7 @@ import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
  * @param boxShadow The image box boxShadow
  * @param margin The image margin for all sides (eg. "4px"), null to remove margin
  */
-export default function setImageBoxShadow(
-    editor: IEditor,
-    boxShadow: string,
-    margin?: string | null
-) {
+export function setImageBoxShadow(editor: IEditor, boxShadow: string, margin?: string | null) {
     editor.focus();
 
     formatImageWithContentModel(editor, 'setImageBoxShadow', (image: ContentModelImage) => {

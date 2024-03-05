@@ -1,15 +1,15 @@
-import createElement from '../../../pluginUtils/CreateElement/createElement';
-import getIntersectedRect from '../../../pluginUtils/Rect/getIntersectedRect';
-import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
+import { createElement } from '../../../pluginUtils/CreateElement/createElement';
+import { getIntersectedRect } from '../../../pluginUtils/Rect/getIntersectedRect';
 import { isElementOfType } from 'roosterjs-content-model-dom';
+import { normalizeRect } from '../../../pluginUtils/Rect/normalizeRect';
 import {
     formatTableWithContentModel,
     insertTableColumn,
     insertTableRow,
 } from 'roosterjs-content-model-api';
-import type CreateElementData from '../../../pluginUtils/CreateElement/CreateElementData';
-import type Disposable from '../../../pluginUtils/Disposable';
-import type TableEditFeature from './TableEditorFeature';
+import type { CreateElementData } from '../../../pluginUtils/CreateElement/CreateElementData';
+import type { Disposable } from '../../../pluginUtils/Disposable';
+import type { TableEditFeature } from './TableEditFeature';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 const INSERTER_COLOR = '#4A4A4A';
@@ -20,7 +20,7 @@ const INSERTER_BORDER_SIZE = 1;
 /**
  * @internal
  */
-export default function createTableInserter(
+export function createTableInserter(
     editor: IEditor,
     td: HTMLTableCellElement,
     table: HTMLTableElement,
