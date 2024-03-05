@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>96/96</span>
+                <span class='fraction'>102/102</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">31.25% </span>
+                <span class="strong">29.41% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>15/48</span>
+                <span class='fraction'>15/51</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>48/48</span>
+                <span class='fraction'>51/51</span>
             </div>
         
             
@@ -106,7 +106,11 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -152,55 +156,63 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export { <span class="fstat-no" title="function not covered" >default </span>as insertTable } from './publicApi/table/insertTable';
-export { <span class="fstat-no" title="function not covered" >default </span>as formatTable } from './publicApi/table/formatTable';
-export { <span class="fstat-no" title="function not covered" >default </span>as setTableCellShade } from './publicApi/table/setTableCellShade';
-export { <span class="fstat-no" title="function not covered" >default </span>as editTable } from './publicApi/table/editTable';
-export { <span class="fstat-no" title="function not covered" >default </span>as applyTableBorderFormat } from './publicApi/table/applyTableBorderFormat';
-export { default as toggleBullet } from './publicApi/list/toggleBullet';
-export { default as toggleNumbering } from './publicApi/list/toggleNumbering';
-export { default as toggleBold } from './publicApi/segment/toggleBold';
-export { default as toggleItalic } from './publicApi/segment/toggleItalic';
-export { default as toggleUnderline } from './publicApi/segment/toggleUnderline';
-export { <span class="fstat-no" title="function not covered" >default </span>as toggleStrikethrough } from './publicApi/segment/toggleStrikethrough';
-export { <span class="fstat-no" title="function not covered" >default </span>as toggleSubscript } from './publicApi/segment/toggleSubscript';
-export { <span class="fstat-no" title="function not covered" >default </span>as toggleSuperscript } from './publicApi/segment/toggleSuperscript';
-export { <span class="fstat-no" title="function not covered" >default </span>as setBackgroundColor } from './publicApi/segment/setBackgroundColor';
-export { <span class="fstat-no" title="function not covered" >default </span>as setFontName } from './publicApi/segment/setFontName';
-export { <span class="fstat-no" title="function not covered" >default </span>as setFontSize } from './publicApi/segment/setFontSize';
-export { <span class="fstat-no" title="function not covered" >default </span>as setTextColor } from './publicApi/segment/setTextColor';
-export { default as changeFontSize } from './publicApi/segment/changeFontSize';
-export { <span class="fstat-no" title="function not covered" >default </span>as applySegmentFormat } from './publicApi/segment/applySegmentFormat';
-export { <span class="fstat-no" title="function not covered" >default </span>as changeCapitalization } from './publicApi/segment/changeCapitalization';
-export { <span class="fstat-no" title="function not covered" >default </span>as insertImage } from './publicApi/image/insertImage';
-export { default as setListStyle } from './publicApi/list/setListStyle';
-export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
-export { <span class="fstat-no" title="function not covered" >default </span>as setIndentation } from './publicApi/block/setIndentation';
-export { <span class="fstat-no" title="function not covered" >default </span>as setAlignment } from './publicApi/block/setAlignment';
-export { <span class="fstat-no" title="function not covered" >default </span>as setDirection } from './publicApi/block/setDirection';
-export { <span class="fstat-no" title="function not covered" >default </span>as setHeadingLevel } from './publicApi/block/setHeadingLevel';
-export { <span class="fstat-no" title="function not covered" >default </span>as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
-export { <span class="fstat-no" title="function not covered" >default </span>as setSpacing } from './publicApi/block/setSpacing';
-export { <span class="fstat-no" title="function not covered" >default </span>as setImageBorder } from './publicApi/image/setImageBorder';
-export { <span class="fstat-no" title="function not covered" >default </span>as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
-export { <span class="fstat-no" title="function not covered" >default </span>as changeImage } from './publicApi/image/changeImage';
-export { <span class="fstat-no" title="function not covered" >default </span>as getFormatState } from './publicApi/format/getFormatState';
-export { default as clearFormat } from './publicApi/format/clearFormat';
-export { <span class="fstat-no" title="function not covered" >default </span>as insertLink } from './publicApi/link/insertLink';
-export { <span class="fstat-no" title="function not covered" >default </span>as removeLink } from './publicApi/link/removeLink';
-export { <span class="fstat-no" title="function not covered" >default </span>as adjustLinkSelection } from './publicApi/link/adjustLinkSelection';
-export { <span class="fstat-no" title="function not covered" >default </span>as setImageAltText } from './publicApi/image/setImageAltText';
-export { <span class="fstat-no" title="function not covered" >default </span>as adjustImageSelection } from './publicApi/image/adjustImageSelection';
-export { <span class="fstat-no" title="function not covered" >default </span>as setParagraphMargin } from './publicApi/block/setParagraphMargin';
-export { <span class="fstat-no" title="function not covered" >default </span>as toggleCode } from './publicApi/segment/toggleCode';
-export { <span class="fstat-no" title="function not covered" >default </span>as insertEntity } from './publicApi/entity/insertEntity';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export { <span class="fstat-no" title="function not covered" >insertTable </span>} from './publicApi/table/insertTable';
+export { <span class="fstat-no" title="function not covered" >formatTable </span>} from './publicApi/table/formatTable';
+export { <span class="fstat-no" title="function not covered" >setTableCellShade </span>} from './publicApi/table/setTableCellShade';
+export { <span class="fstat-no" title="function not covered" >editTable </span>} from './publicApi/table/editTable';
+export { <span class="fstat-no" title="function not covered" >applyTableBorderFormat </span>} from './publicApi/table/applyTableBorderFormat';
+export { toggleBullet } from './publicApi/list/toggleBullet';
+export { toggleNumbering } from './publicApi/list/toggleNumbering';
+export { toggleBold } from './publicApi/segment/toggleBold';
+export { toggleItalic } from './publicApi/segment/toggleItalic';
+export { toggleUnderline } from './publicApi/segment/toggleUnderline';
+export { <span class="fstat-no" title="function not covered" >toggleStrikethrough </span>} from './publicApi/segment/toggleStrikethrough';
+export { <span class="fstat-no" title="function not covered" >toggleSubscript </span>} from './publicApi/segment/toggleSubscript';
+export { <span class="fstat-no" title="function not covered" >toggleSuperscript </span>} from './publicApi/segment/toggleSuperscript';
+export { <span class="fstat-no" title="function not covered" >setBackgroundColor </span>} from './publicApi/segment/setBackgroundColor';
+export { <span class="fstat-no" title="function not covered" >setFontName </span>} from './publicApi/segment/setFontName';
+export { <span class="fstat-no" title="function not covered" >setFontSize </span>} from './publicApi/segment/setFontSize';
+export { <span class="fstat-no" title="function not covered" >setTextColor </span>} from './publicApi/segment/setTextColor';
+export { changeFontSize } from './publicApi/segment/changeFontSize';
+export { <span class="fstat-no" title="function not covered" >applySegmentFormat </span>} from './publicApi/segment/applySegmentFormat';
+export { <span class="fstat-no" title="function not covered" >changeCapitalization </span>} from './publicApi/segment/changeCapitalization';
+export { <span class="fstat-no" title="function not covered" >insertImage </span>} from './publicApi/image/insertImage';
+export { setListStyle } from './publicApi/list/setListStyle';
+export { setListStartNumber } from './publicApi/list/setListStartNumber';
+export { <span class="fstat-no" title="function not covered" >setIndentation </span>} from './publicApi/block/setIndentation';
+export { <span class="fstat-no" title="function not covered" >setAlignment </span>} from './publicApi/block/setAlignment';
+export { <span class="fstat-no" title="function not covered" >setDirection </span>} from './publicApi/block/setDirection';
+export { <span class="fstat-no" title="function not covered" >setHeadingLevel </span>} from './publicApi/block/setHeadingLevel';
+export { <span class="fstat-no" title="function not covered" >toggleBlockQuote </span>} from './publicApi/block/toggleBlockQuote';
+export { <span class="fstat-no" title="function not covered" >setSpacing </span>} from './publicApi/block/setSpacing';
+export { <span class="fstat-no" title="function not covered" >setImageBorder </span>} from './publicApi/image/setImageBorder';
+export { <span class="fstat-no" title="function not covered" >setImageBoxShadow </span>} from './publicApi/image/setImageBoxShadow';
+export { <span class="fstat-no" title="function not covered" >changeImage </span>} from './publicApi/image/changeImage';
+export { <span class="fstat-no" title="function not covered" >getFormatState </span>} from './publicApi/format/getFormatState';
+export { clearFormat } from './publicApi/format/clearFormat';
+export { <span class="fstat-no" title="function not covered" >insertLink </span>} from './publicApi/link/insertLink';
+export { <span class="fstat-no" title="function not covered" >removeLink </span>} from './publicApi/link/removeLink';
+export { <span class="fstat-no" title="function not covered" >adjustLinkSelection </span>} from './publicApi/link/adjustLinkSelection';
+export { <span class="fstat-no" title="function not covered" >setImageAltText </span>} from './publicApi/image/setImageAltText';
+export { <span class="fstat-no" title="function not covered" >adjustImageSelection </span>} from './publicApi/image/adjustImageSelection';
+export { <span class="fstat-no" title="function not covered" >setParagraphMargin </span>} from './publicApi/block/setParagraphMargin';
+export { <span class="fstat-no" title="function not covered" >toggleCode </span>} from './publicApi/segment/toggleCode';
+export { <span class="fstat-no" title="function not covered" >insertEntity </span>} from './publicApi/entity/insertEntity';
 export { insertTableRow } from './modelApi/table/insertTableRow';
 export { insertTableColumn } from './modelApi/table/insertTableColumn';
 &nbsp;
 export { formatTableWithContentModel } from './publicApi/utils/formatTableWithContentModel';
+export { <span class="fstat-no" title="function not covered" >formatImageWithContentModel </span>} from './publicApi/utils/formatImageWithContentModel';
+export { <span class="fstat-no" title="function not covered" >formatParagraphWithContentModel </span>} from './publicApi/utils/formatParagraphWithContentModel';
+export { <span class="fstat-no" title="function not covered" >formatSegmentWithContentModel </span>} from './publicApi/utils/formatSegmentWithContentModel';
+&nbsp;
 export { setListType } from './modelApi/list/setListType';
 export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';
@@ -211,7 +223,7 @@ export { setModelIndentation } from './modelApi/block/setModelIndentation';
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 05 2024 00:24:10 GMT+0000 (Coordinated Universal Time)
+                at Tue Mar 05 2024 17:58:38 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
