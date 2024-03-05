@@ -38,7 +38,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         const listItem = path[index];
         const listParent = path[index + 1];
 
-        if (listItem && listItem.blockGroupType === 'ListItem') {
+        if (listItem && listItem.blockGroupType === 'ListItem' && listParent) {
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
             if (deleteResult == 'range' && nextBlock) {
