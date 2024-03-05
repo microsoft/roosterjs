@@ -1,4 +1,4 @@
-import addParser from './utils/addParser';
+import { addParser } from './utils/addParser';
 import { BorderKeys } from 'roosterjs-content-model-dom';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';

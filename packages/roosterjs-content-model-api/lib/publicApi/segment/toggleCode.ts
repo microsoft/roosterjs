@@ -12,7 +12,7 @@ const DefaultCode: ContentModelCode = {
  * Toggle italic style
  * @param editor The editor to operate on
  */
-export default function toggleCode(editor: IEditor) {
+export function toggleCode(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

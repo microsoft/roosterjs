@@ -1,4 +1,4 @@
-import formatImageWithContentModel from '../utils/formatImageWithContentModel';
+import { formatImageWithContentModel } from '../utils/formatImageWithContentModel';
 import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -7,7 +7,7 @@ import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor instance
  * @param altText The image alt text
  */
-export default function setImageAltText(editor: IEditor, altText: string) {
+export function setImageAltText(editor: IEditor, altText: string) {
     editor.focus();
 
     formatImageWithContentModel(editor, 'setImageAltText', (image: ContentModelImage) => {

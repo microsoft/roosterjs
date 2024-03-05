@@ -10,7 +10,7 @@ import type {
  * @param editor The editor to operate on
  * @param fontSize The font size to set
  */
-export default function setFontSize(editor: IEditor, fontSize: string) {
+export function setFontSize(editor: IEditor, fontSize: string) {
     editor.focus();
 
     formatSegmentWithContentModel(

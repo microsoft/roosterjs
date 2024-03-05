@@ -11,11 +11,7 @@ import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types
  * @param format The table format to apply
  * @param keepCellShade Whether keep existing shade color when apply format if there is a manually set shade color
  */
-export default function formatTable(
-    editor: IEditor,
-    format: TableMetadataFormat,
-    keepCellShade?: boolean
-) {
+export function formatTable(editor: IEditor, format: TableMetadataFormat, keepCellShade?: boolean) {
     editor.focus();
 
     editor.formatContentModel(

@@ -1,6 +1,6 @@
-import setFontSize from '../../../lib/publicApi/segment/setFontSize';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { setFontSize } from '../../../lib/publicApi/segment/setFontSize';
 
 describe('setFontSize', () => {
     function runTest(

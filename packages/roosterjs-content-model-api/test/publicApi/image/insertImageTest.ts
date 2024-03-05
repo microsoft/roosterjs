@@ -1,6 +1,6 @@
 import * as readFile from 'roosterjs-content-model-core/lib/publicApi/domUtils/readFile';
-import insertImage from '../../../lib/publicApi/image/insertImage';
 import { IEditor } from 'roosterjs-content-model-types';
+import { insertImage } from '../../../lib/publicApi/image/insertImage';
 import {
     ContentModelDocument,
     ContentModelFormatter,

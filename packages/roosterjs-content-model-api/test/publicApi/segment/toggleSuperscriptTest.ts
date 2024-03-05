@@ -1,6 +1,6 @@
-import toggleSuperscript from '../../../lib/publicApi/segment/toggleSuperscript';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { toggleSuperscript } from '../../../lib/publicApi/segment/toggleSuperscript';
 
 describe('toggleSuperscript', () => {
     function runTest(
