@@ -199,6 +199,8 @@ export const ShortcutDecreaseFont: ShortcutCommand = {
 
 /**
  * Shortcut command for Intent list
+ * Windows: Alt + Shift + Arrow Right
+ * MacOS: Option + Shift+ Arrow Right
  */
 export const ShortcutIndentList: ShortcutCommand = {
     shortcutKey: {
@@ -212,7 +214,9 @@ export const ShortcutIndentList: ShortcutCommand = {
 };
 
 /**
- * Shortcut command for Intent list
+ * Shortcut command for Outdent list
+ * Windows: Alt + Shift + Arrow Left
+ * MacOS: Option + Shift+ Arrow Left
  */
 export const ShortcutOutdentList: ShortcutCommand = {
     shortcutKey: {

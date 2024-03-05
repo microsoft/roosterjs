@@ -589,26 +589,6 @@ describe('ShortcutPlugin', () => {
             expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'decrease');
         });
 
-        it('decrease font', () => {
-            const apiSpy = spyOn(changeFontSize, 'default');
-            const plugin = new ShortcutPlugin();
-            const event: PluginEvent = {
-                eventType: 'keyDown',
-                rawEvent: createMockedEvent(Keys.COMMA, false, false, true, true),
-            };
-
-            plugin.initialize(mockedEditor);
-
-            const exclusively = plugin.willHandleEventExclusively(event);
-
-            expect(exclusively).toBeTrue();
-            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
-
-            plugin.onPluginEvent(event);
-
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'decrease');
-        });
-
         it('indent list', () => {
             const apiSpy = spyOn(setShortcutIndentationCommand, 'setShortcutIndentationCommand');
             const plugin = new ShortcutPlugin();
