@@ -1,3 +1,4 @@
+import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
 import { handleEnterOnList } from './inputSteps/handleEnterOnList';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
@@ -45,7 +46,7 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
 }
 
 function getInputSteps(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
-    return shouldHandleEnterKey(selection, rawEvent) ? [handleEnterOnList] : [];
+    return shouldHandleEnterKey(selection, rawEvent) ? [handleEnterOnList, deleteEmptyQuote] : [];
 }
 
 function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {

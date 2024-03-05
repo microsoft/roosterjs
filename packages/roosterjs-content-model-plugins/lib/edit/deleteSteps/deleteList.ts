@@ -11,6 +11,7 @@ export const deleteList: DeleteSelectionStep = context => {
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem', 'TableCell']);
         const item = path[index];
         if (
+            item &&
             index >= 0 &&
             paragraph.segments[0] == marker &&
             item.blockGroupType == 'ListItem' &&
