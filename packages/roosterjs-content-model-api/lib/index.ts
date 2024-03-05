@@ -44,6 +44,10 @@ export { insertTableRow } from './modelApi/table/insertTableRow';
 export { insertTableColumn } from './modelApi/table/insertTableColumn';
 
 export { formatTableWithContentModel } from './publicApi/utils/formatTableWithContentModel';
+export { formatImageWithContentModel } from './publicApi/utils/formatImageWithContentModel';
+export { formatParagraphWithContentModel } from './publicApi/utils/formatParagraphWithContentModel';
+export { formatSegmentWithContentModel } from './publicApi/utils/formatSegmentWithContentModel';
+
 export { setListType } from './modelApi/list/setListType';
 export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';
