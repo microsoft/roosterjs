@@ -1,4 +1,4 @@
-import DragAndDropHelper from '../../lib/pluginUtils/DragAndDrop/DragAndDropHelper';
+import { DragAndDropHelper } from '../../lib/pluginUtils/DragAndDrop/DragAndDropHelper';
 
 interface DragAndDropContext {
     node: HTMLElement;

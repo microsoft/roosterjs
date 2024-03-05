@@ -1,7 +1,7 @@
 import * as retrieveModelFormatState from 'roosterjs-content-model-core/lib/publicApi/format/retrieveModelFormatState';
-import getFormatState from '../../../lib/publicApi/format/getFormatState';
 import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { ContentModelFormatState } from 'roosterjs-content-model-types';
+import { getFormatState } from '../../../lib/publicApi/format/getFormatState';
 import { IEditor } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from 'roosterjs-content-model-core/lib/override/reducedModelChildProcessor';
 import {

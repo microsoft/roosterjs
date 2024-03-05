@@ -1,6 +1,6 @@
-import setFontName from '../../../lib/publicApi/segment/setFontName';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { setFontName } from '../../../lib/publicApi/segment/setFontName';
 
 describe('setFontName', () => {
     function runTest(
