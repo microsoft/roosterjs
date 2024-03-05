@@ -1,7 +1,7 @@
 import getLinkSegment from './getLinkSegment';
-import { addLink } from 'roosterjs-content-model-dom/lib';
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core/lib';
-import { IEditor } from 'roosterjs-content-model-types';
+import { addLink } from 'roosterjs-content-model-dom';
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal

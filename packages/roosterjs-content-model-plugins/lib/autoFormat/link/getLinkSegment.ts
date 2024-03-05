@@ -1,6 +1,6 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
 import { matchLink } from 'roosterjs-editor-dom';
+import type { ContentModelDocument } from 'roosterjs-content-model-types';
 
 /**
  * @internal
