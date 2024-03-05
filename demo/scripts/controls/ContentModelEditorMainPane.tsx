@@ -7,7 +7,6 @@ import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModel
 import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFormatStatePlugin';
 import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
 import ContentModelRibbonButton from './ribbonButtons/contentModel/ContentModelRibbonButton';
-import ContentModelRooster from './contentModel/editor/ContentModelRooster';
 import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
@@ -29,6 +28,7 @@ import { clearFormatButton } from './ribbonButtons/contentModel/clearFormatButto
 import { codeButton } from './ribbonButtons/contentModel/codeButton';
 import { ContentModelRibbon } from './ribbonButtons/contentModel/ContentModelRibbon';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
+import { ContentModelSegmentFormat, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { createEmojiPlugin, createPasteOptionPlugin } from 'roosterjs-react';
 import { darkMode } from './ribbonButtons/contentModel/darkMode';
 import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
@@ -60,6 +60,7 @@ import { pasteButton } from './ribbonButtons/contentModel/pasteButton';
 import { popout } from './ribbonButtons/contentModel/popout';
 import { redoButton } from './ribbonButtons/contentModel/redoButton';
 import { removeLinkButton } from './ribbonButtons/contentModel/removeLinkButton';
+import { Rooster } from '../controlsV2/roosterjsReact/rooster/component/Rooster';
 import { rtlButton } from './ribbonButtons/contentModel/rtlButton';
 import { setBulletedListStyleButton } from './ribbonButtons/contentModel/setBulletedListStyleButton';
 import { setHeadingLevelButton } from './ribbonButtons/contentModel/setHeadingLevelButton';
@@ -79,7 +80,6 @@ import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
 import { undoButton } from './ribbonButtons/contentModel/undoButton';
 import { zoom } from './ribbonButtons/contentModel/zoom';
-import { ContentModelSegmentFormat, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import {
     AutoFormatPlugin,
     EditPlugin,
@@ -377,7 +377,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
             <div className={styles.editorContainer} id="EditorContainer">
                 <div style={editorStyles}>
                     {this.state.editorCreator && (
-                        <ContentModelRooster
+                        <Rooster
                             id={MainPaneBase.editorDivId}
                             className={styles.editor}
                             legacyPlugins={allPlugins}

@@ -4,26 +4,6 @@ const runCoverage = typeof argv.coverage !== 'undefined';
 const runFirefox = typeof argv.firefox !== 'undefined';
 const runChrome = typeof argv.chrome !== 'undefined';
 
-const testEntries = {
-    'Original RoosterJs': 'tools/karma.test.roosterjs.js',
-    UI: 'tools/karma.test.ui.js',
-    'Content Model': 'tools/karma.test.contentmodel.js',
-    All: 'tools/karma.test.all.js',
-};
-const currentEntry =
-    typeof argv.contentmodel !== 'undefined'
-        ? 'Content Model'
-        : typeof argv.roosterjs !== 'undefined'
-        ? 'Original RoosterJs'
-        : typeof argv.ui !== 'undefined'
-        ? 'UI'
-        : 'All';
-const currentFile = testEntries[currentEntry];
-const allPreprocessors = Object.keys(testEntries).reduce((value, entry) => {
-    value[testEntries[entry]] = ['webpack', 'sourcemap'];
-    return value;
-}, {});
-
 const rootPath = __dirname;
 
 module.exports = function (config) {
@@ -56,12 +36,7 @@ module.exports = function (config) {
             strict: false,
             downlevelIteration: true,
             paths: {
-                '*': [
-                    '*',
-                    rootPath + '/packages/*',
-                    rootPath + '/packages-ui/*',
-                    rootPath + '/packages-content-model/*',
-                ],
+                '*': ['*', rootPath + '/packages/*'],
             },
         },
     };
@@ -100,9 +75,11 @@ module.exports = function (config) {
             clearContext: false,
         },
         browsers: launcher,
-        files: [currentFile],
+        files: ['tools/karma.test.all.js'],
         frameworks: ['jasmine'],
-        preprocessors: allPreprocessors,
+        preprocessors: {
+            'tools/karma.test.all.js': ['webpack', 'sourcemap'],
+        },
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -124,12 +101,7 @@ module.exports = function (config) {
             },
             resolve: {
                 extensions: ['.ts', '.tsx', '.js'],
-                modules: [
-                    './packages',
-                    './packages-ui',
-                    './packages-content-model',
-                    './node_modules',
-                ],
+                modules: ['./packages', './node_modules'],
             },
             // Workaround karma-webpack issue https://github.com/ryanclark/karma-webpack/issues/493
             // Got this solution from https://github.com/ryanclark/karma-webpack/issues/493#issuecomment-780411348
@@ -150,8 +122,6 @@ module.exports = function (config) {
             dir: './dist/deploy/coverage',
         };
     }
-
-    console.log('Run ' + currentEntry + ' test cases...');
 
     config.set(settings);
 };

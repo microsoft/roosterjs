@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "strict": true,
+        "jsx": "react",
         "target": "es5",
         "module": "commonjs",
         "outDir": "../dist",
@@ -20,5 +21,5 @@
         "rootDir": ".",
         "lib": ["es6", "dom"]
     },
-    "include": ["./*/lib/**/*.ts"]
+    "include": ["./*/lib/**/*.ts", "./*/lib/**/*.tsx"]
 }
