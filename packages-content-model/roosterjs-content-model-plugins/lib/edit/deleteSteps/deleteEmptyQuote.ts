@@ -1,9 +1,10 @@
-import { unwrapBlock } from 'roosterjs-content-model-dom';
+import { createParagraph, createSelectionMarker, unwrapBlock } from 'roosterjs-content-model-dom';
 import {
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
 } from 'roosterjs-content-model-core';
 import type {
+    ContentModelBlockGroup,
     ContentModelFormatContainer,
     DeleteSelectionStep,
 } from 'roosterjs-content-model-types';
@@ -20,7 +21,7 @@ export const deleteEmptyQuote: DeleteSelectionStep = context => {
     ) {
         const { insertPoint, formatContext } = context;
         const { path } = insertPoint;
-        const rawEvent = formatContext?.rawEvent;
+        const rawEvent = formatContext?.rawEvent as KeyboardEvent;
         const index = getClosestAncestorBlockGroupIndex(
             path,
             ['FormatContainer', 'ListItem'],
@@ -28,12 +29,7 @@ export const deleteEmptyQuote: DeleteSelectionStep = context => {
         );
         const quote = path[index];
 
-        if (
-            quote &&
-            quote.blockGroupType === 'FormatContainer' &&
-            quote.tagName == 'blockquote' &&
-            isEmptyQuote(quote)
-        ) {
+        if (quote && quote.blockGroupType === 'FormatContainer' && quote.tagName == 'blockquote') {
             const parent = path[index + 1];
             const quoteBlockIndex = parent.blocks.indexOf(quote);
             const blockQuote = parent.blocks[quoteBlockIndex];
@@ -41,9 +37,15 @@ export const deleteEmptyQuote: DeleteSelectionStep = context => {
                 isBlockGroupOfType<ContentModelFormatContainer>(blockQuote, 'FormatContainer') &&
                 blockQuote.tagName === 'blockquote'
             ) {
-                unwrapBlock(parent, blockQuote);
-                rawEvent?.preventDefault();
-                context.deleteResult = 'range';
+                if (isEmptyQuote(blockQuote)) {
+                    unwrapBlock(parent, blockQuote);
+                    rawEvent?.preventDefault();
+                    context.deleteResult = 'range';
+                } else if (isSelectionOnEmptyLine(blockQuote) && rawEvent?.key === 'Enter') {
+                    insertNewLine(blockQuote, parent, quoteBlockIndex);
+                    rawEvent?.preventDefault();
+                    context.deleteResult = 'range';
+                }
             }
         }
     }
@@ -57,4 +59,27 @@ const isEmptyQuote = (quote: ContentModelFormatContainer) => {
             s => s.segmentType === 'SelectionMarker' || s.segmentType === 'Br'
         )
     );
+};
+
+const isSelectionOnEmptyLine = (quote: ContentModelFormatContainer) => {
+    const quoteLength = quote.blocks.length;
+    const lastParagraph = quote.blocks[quoteLength - 1];
+    if (lastParagraph && lastParagraph.blockType === 'Paragraph') {
+        return lastParagraph.segments.every(
+            s => s.segmentType === 'SelectionMarker' || s.segmentType === 'Br'
+        );
+    }
+};
+
+const insertNewLine = (
+    quote: ContentModelFormatContainer,
+    parent: ContentModelBlockGroup,
+    index: number
+) => {
+    const quoteLength = quote.blocks.length;
+    quote.blocks.splice(quoteLength - 1, 1);
+    const marker = createSelectionMarker();
+    const newParagraph = createParagraph(false /* isImplicit */);
+    newParagraph.segments.push(marker);
+    parent.blocks.splice(index + 1, 0, newParagraph);
 };
