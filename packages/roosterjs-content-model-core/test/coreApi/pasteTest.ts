@@ -345,8 +345,8 @@ describe('Paste with clipboardData', () => {
                         },
                     ],
                     format: {
-                        marginTop: '0px',
-                        marginBottom: '0px',
+                        marginTop: '1em',
+                        marginBottom: '1em',
                     },
                     decorator: {
                         tagName: 'p',
