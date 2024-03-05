@@ -1,4 +1,4 @@
-import { EntityState } from '..';
+import type { EntityState } from '..';
 import type { BasePluginEvent } from './BasePluginEvent';
 
 /**

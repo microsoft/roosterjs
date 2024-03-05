@@ -1,5 +1,4 @@
-import type { SetLogicalRoot } from 'roosterjs-content-model-types';
-import type { ContentChangedEvent } from 'roosterjs-content-model-types';
+import type { ContentChangedEvent, SetLogicalRoot } from 'roosterjs-content-model-types';
 import { ChangeSource } from '../constants/ChangeSource';
 
 /**
