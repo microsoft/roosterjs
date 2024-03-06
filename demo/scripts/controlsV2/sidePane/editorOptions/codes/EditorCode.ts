@@ -36,14 +36,14 @@ export class EditorCode extends CodeElement {
         code += `let plugins = ${this.plugins.getCode()};\n`;
         code += hasLegacyPlugin ? `let legacyPlugins = ${this.legacyPlugins.getCode()};\n` : '';
         code += defaultFormat ? `let defaultSegmentFormat = ${defaultFormat};\n` : '';
-        code += 'let options: roosterjs.EditorOptions = {\n';
+        code += 'let options = {\n';
         code += this.indent('plugins: plugins,\n');
         code += hasLegacyPlugin ? this.indent('legacyPlugins: legacyPlugins,\n') : '';
         code += defaultFormat ? this.indent('defaultSegmentFormat: defaultSegmentFormat,\n') : '';
         code += darkMode ? this.indent(`getDarkColor: ${darkMode},\n`) : '';
         code += '};\n';
         code += `let editor = new ${
-            hasLegacyPlugin ? 'roosterjs.EditorAdapter' : 'roosterjsContentModel.Editor'
+            hasLegacyPlugin ? 'roosterjsAdapter.EditorAdapter' : 'roosterjsContentModel.Editor'
         }(contentDiv, options);\n`;
         code += this.buttons ? this.buttons.getCode() : '';
 
