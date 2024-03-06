@@ -5,7 +5,10 @@ import type { IEditor } from 'roosterjs-content-model-types';
 /**
  * @internal
  */
-export function createLink(editor: IEditor) {
+export function createLink(editor: IEditor, autoLink: boolean) {
+    if (!autoLink) {
+        return;
+    }
     editor.formatContentModel(model => {
         const link = getLinkSegment(model);
         if (link && !link.link) {

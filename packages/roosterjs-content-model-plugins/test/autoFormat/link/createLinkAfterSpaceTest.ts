@@ -1,7 +1,7 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { unlink } from '../../../lib/autoFormat/link/unlink';
+import { createLinkAfterSpace } from '../../../lib/autoFormat/link/createLinkAfterSpace';
 
-describe('unlink', () => {
+describe('createLinkAfterSpace', () => {
     function runTest(
         input: ContentModelDocument,
         expectedModel: ContentModelDocument,
@@ -17,16 +17,12 @@ describe('unlink', () => {
                 });
                 expect(result).toBe(expectedResult);
             });
-        const rawEvent = {
-            preventDefault: () => {},
-        } as KeyboardEvent;
 
-        unlink(
+        createLinkAfterSpace(
             {
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
-            rawEvent,
             true
         );
 
@@ -78,10 +74,11 @@ describe('unlink', () => {
             ],
             format: {},
         };
+
         runTest(input, input, false);
     });
 
-    it('link segment with WWW but no link', () => {
+    it('link segment with WWW', () => {
         const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -105,7 +102,41 @@ describe('unlink', () => {
             format: {},
         };
 
-        runTest(input, input, false);
+        const expected: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'www.bing.com',
+                            format: {},
+                            link: {
+                                format: {
+                                    href: 'www.bing.com',
+                                    underline: true,
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, expected, true);
     });
 
     it('link segment with hyperlink', () => {
@@ -139,7 +170,11 @@ describe('unlink', () => {
             format: {},
         };
 
-        const expected: ContentModelDocument = {
+        runTest(input, input, false);
+    });
+
+    it('link with text', () => {
+        const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -147,9 +182,8 @@ describe('unlink', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'www.bing.com',
+                            text: 'this is the link www.bing.com',
                             format: {},
-                            link: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -162,12 +196,7 @@ describe('unlink', () => {
             ],
             format: {},
         };
-
-        runTest(input, expected, true);
-    });
-
-    it('link segment with text and  hyperlink', () => {
-        const input: ContentModelDocument = {
+        const expected: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -175,12 +204,17 @@ describe('unlink', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'Bing',
+                            text: 'this is the link ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'www.bing.com',
                             format: {},
                             link: {
                                 format: {
-                                    href: 'www.bing.com',
                                     underline: true,
+                                    href: 'www.bing.com',
                                 },
                                 dataset: {},
                             },
@@ -197,7 +231,11 @@ describe('unlink', () => {
             format: {},
         };
 
-        const expected: ContentModelDocument = {
+        runTest(input, expected, true);
+    });
+
+    it('link before text', () => {
+        const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -205,9 +243,8 @@ describe('unlink', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'Bing',
+                            text: 'www.bing.com this is the link',
                             format: {},
-                            link: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -220,7 +257,6 @@ describe('unlink', () => {
             ],
             format: {},
         };
-
-        runTest(input, expected, true);
+        runTest(input, input, false);
     });
 });

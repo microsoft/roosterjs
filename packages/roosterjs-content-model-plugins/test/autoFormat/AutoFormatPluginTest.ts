@@ -1,4 +1,5 @@
 import * as createLink from '../../lib/autoFormat/link/createLink';
+import * as createLinkAfterSpace from '../../lib/autoFormat/link/createLinkAfterSpace';
 import * as keyboardTrigger from '../../lib/autoFormat/list/keyboardListTrigger';
 import * as unlink from '../../lib/autoFormat/link/unlink';
 import { AutoFormatOptions, AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
@@ -31,11 +32,9 @@ describe('Content Model Auto Format Plugin Test', () => {
             options?: {
                 autoBullet: boolean;
                 autoNumbering: boolean;
-                autoUnlink: boolean;
-                autoLink: boolean;
             }
         ) {
-            const plugin = new AutoFormatPlugin(options);
+            const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
             plugin.initialize(editor);
 
             plugin.onPluginEvent(event);
@@ -44,8 +43,8 @@ describe('Content Model Auto Format Plugin Test', () => {
                 expect(keyboardListTriggerSpy).toHaveBeenCalledWith(
                     editor,
                     event.rawEvent,
-                    options?.autoBullet ?? true,
-                    options?.autoNumbering ?? true
+                    options ? options.autoBullet : true,
+                    options ? options.autoNumbering : true
                 );
             } else {
                 expect(keyboardListTriggerSpy).not.toHaveBeenCalled();
@@ -78,7 +77,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 handledByEditFeature: false,
             };
 
-            runTest(event, false, { autoBullet: false, autoNumbering: false } as AutoFormatOptions);
+            runTest(event, true, { autoBullet: false, autoNumbering: false } as AutoFormatOptions);
         });
 
         it('should trigger keyboardListTrigger with auto bullet only', () => {
@@ -140,7 +139,10 @@ describe('Content Model Auto Format Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             if (shouldCallTrigger) {
-                expect(createLinkSpy).toHaveBeenCalledWith(editor);
+                expect(createLinkSpy).toHaveBeenCalledWith(
+                    editor,
+                    options ? options.autoLink : true
+                );
             } else {
                 expect(createLinkSpy).not.toHaveBeenCalled();
             }
@@ -159,7 +161,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'contentChanged',
                 source: 'Paste',
             };
-            runTest(event, false, { autoLink: false });
+            runTest(event, true, { autoLink: false });
         });
 
         it('should not  call createLink - not paste', () => {
@@ -191,7 +193,11 @@ describe('Content Model Auto Format Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             if (shouldCallTrigger) {
-                expect(unlinkSpy).toHaveBeenCalledWith(editor, event.rawEvent);
+                expect(unlinkSpy).toHaveBeenCalledWith(
+                    editor,
+                    event.rawEvent,
+                    options ? options.autoUnlink : true
+                );
             } else {
                 expect(unlinkSpy).not.toHaveBeenCalled();
             }
@@ -210,7 +216,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'keyDown',
                 rawEvent: { key: 'Backspace', preventDefault: () => {} } as any,
             };
-            runTest(event, false, {
+            runTest(event, true, {
                 autoUnlink: false,
             });
         });
@@ -219,6 +225,62 @@ describe('Content Model Auto Format Plugin Test', () => {
             const event: KeyDownEvent = {
                 eventType: 'keyDown',
                 rawEvent: { key: ' ', preventDefault: () => {} } as any,
+            };
+            runTest(event, false);
+        });
+    });
+
+    describe('onPluginEvent - createLinkAfterSpace', () => {
+        let createLinkAfterSpaceSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            createLinkAfterSpaceSpy = spyOn(createLinkAfterSpace, 'createLinkAfterSpace');
+        });
+
+        function runTest(
+            event: KeyDownEvent,
+            shouldCallTrigger: boolean,
+            options?: {
+                autoLink: boolean;
+            }
+        ) {
+            const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent(event);
+
+            if (shouldCallTrigger) {
+                expect(createLinkAfterSpaceSpy).toHaveBeenCalledWith(
+                    editor,
+                    options ? options.autoLink : true
+                );
+            } else {
+                expect(createLinkAfterSpaceSpy).not.toHaveBeenCalled();
+            }
+        }
+
+        it('should call createLinkAfterSpace', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: { key: ' ', preventDefault: () => {} } as any,
+            };
+            runTest(event, true);
+        });
+
+        it('should not call createLinkAfterSpace - disable options', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: { key: ' ', preventDefault: () => {} } as any,
+            };
+            runTest(event, true, {
+                autoLink: false,
+            });
+        });
+
+        it('should not call createLinkAfterSpace - not backspace', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: { key: 'Backspace', preventDefault: () => {} } as any,
             };
             runTest(event, false);
         });

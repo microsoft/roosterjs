@@ -110,18 +110,11 @@ export class AutoFormatPlugin implements EditorPlugin {
             const { autoBullet, autoNumbering, autoUnlink, autoLink } = this.options;
             switch (rawEvent.key) {
                 case ' ':
-                    if (autoBullet || autoNumbering) {
-                        keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
-                    }
-                    if (autoLink) {
-                        createLinkAfterSpace(editor);
-                    }
+                    keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
+                    createLinkAfterSpace(editor, autoLink);
                     break;
                 case 'Backspace':
-                    if (autoUnlink) {
-                        unlink(editor, rawEvent);
-                    }
-
+                    unlink(editor, rawEvent, autoUnlink);
                     break;
             }
         }
@@ -129,8 +122,8 @@ export class AutoFormatPlugin implements EditorPlugin {
 
     private handleContentChangedEvent(editor: IEditor, event: ContentChangedEvent) {
         const { autoLink } = this.options;
-        if (event.source == 'Paste' && autoLink) {
-            createLink(editor);
+        if (event.source == 'Paste') {
+            createLink(editor, autoLink);
         }
     }
 }

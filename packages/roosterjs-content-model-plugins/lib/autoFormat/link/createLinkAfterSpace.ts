@@ -6,7 +6,10 @@ import type { IEditor } from 'roosterjs-content-model-types';
 /**
  * @internal
  */
-export function createLinkAfterSpace(editor: IEditor) {
+export function createLinkAfterSpace(editor: IEditor, autoLink: boolean) {
+    if (!autoLink) {
+        return;
+    }
     editor.formatContentModel(model => {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
             model,
@@ -16,7 +19,11 @@ export function createLinkAfterSpace(editor: IEditor) {
             const length = selectedSegmentsAndParagraphs[0][1].segments.length;
             const marker = selectedSegmentsAndParagraphs[0][1].segments[length - 1];
             const textSegment = selectedSegmentsAndParagraphs[0][1].segments[length - 2];
-            if (marker.segmentType == 'SelectionMarker' && textSegment.segmentType == 'Text') {
+            if (
+                marker.segmentType == 'SelectionMarker' &&
+                textSegment.segmentType == 'Text' &&
+                !textSegment.link
+            ) {
                 const link = textSegment.text.split(' ').pop();
                 if (link && matchLink(link)) {
                     textSegment.text = textSegment.text.replace(link, '');
