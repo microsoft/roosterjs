@@ -1,13 +1,11 @@
-import { mount as mountClassicalEditorMainPane } from './controls/MainPane';
-import { mount as mountContentModelEditorMainPane } from './controls/ContentModelEditorMainPane';
-import { mount as mountStandaloneEditorMainPane } from './controls/StandaloneEditorMainPane';
+import { mount } from './controls/MainPane';
+import { mount as mountV2 } from './controlsV2/mainPane/MainPane';
 
 const search = document.location.search.substring(1).split('&');
+const mainPaneDiv = document.getElementById('mainPane');
 
-if (search.some(x => x == 'cm=1')) {
-    mountContentModelEditorMainPane(document.getElementById('mainPane'));
-} else if (search.some(x => x == 'cm=2')) {
-    mountStandaloneEditorMainPane(document.getElementById('mainPane'));
+if (search.some(x => x == 'legacy=1')) {
+    mount(mainPaneDiv);
 } else {
-    mountClassicalEditorMainPane(document.getElementById('mainPane'));
+    mountV2(mainPaneDiv);
 }
