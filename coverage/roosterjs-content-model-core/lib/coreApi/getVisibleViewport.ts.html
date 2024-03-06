@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.25% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/16</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -115,19 +115,8 @@
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,20 +173,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">55x</span>
-<span class="cline-any cline-yes">55x</span>
-<span class="cline-any cline-yes">55x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { GetVisibleViewport, Rect } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { normalizeRect } from 'roosterjs-content-model-dom';
+import type { GetVisibleViewport, Rect } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
@@ -254,19 +231,6 @@ function getIntersectedRect(elements: HTMLElement[], <span class="missing-if-bra
 &nbsp;
     return result.top &lt; result.bottom &amp;&amp; result.left &lt; result.right ? result : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
 }
-&nbsp;
-function normalizeRect(clientRect: DOMRect): Rect | null {
-    const { left, right, top, bottom } =
-        clientRect || &lt;DOMRect&gt;<span class="branch-1 cbranch-no" title="branch not covered" >{ left: 0, right: 0, top: 0, bottom: 0 };</span>
-    return left === 0 &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >right === 0 </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >top === 0 </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >bottom === 0</span>
-        ? <span class="branch-0 cbranch-no" title="branch not covered" >null</span>
-        : {
-              left: Math.round(left),
-              right: Math.round(right),
-              top: Math.round(top),
-              bottom: Math.round(bottom),
-          };
-}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -274,7 +238,7 @@ function normalizeRect(clientRect: DOMRect): Rect | null {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Mar 06 2024 04:24:28 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 06 2024 06:33:38 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
