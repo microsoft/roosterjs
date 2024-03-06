@@ -1,4 +1,4 @@
-import MainPaneBase from '../../controls/MainPaneBase';
+import { MainPane } from '../mainPane/MainPane';
 import { RibbonButton } from '../roosterjsReact/ribbon';
 
 const WIDTH = [0.25, 0.5, 0.75, 1, 1.5, 2.25, 3, 4.5, 6];
@@ -20,7 +20,7 @@ export const tableBorderWidthButton: RibbonButton<'buttonNameTableBorderWidth'> 
         allowLivePreview: true,
     },
     onClick: (editor, width) => {
-        MainPaneBase.getInstance().setTableBorderWidth(width);
+        MainPane.getInstance().setTableBorderWidth(width);
         editor.focus();
 
         return true;
