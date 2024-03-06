@@ -2,9 +2,9 @@ import * as cloneModel from '../../lib/publicApi/model/cloneModel';
 import * as createEditorCore from '../../lib/editor/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
 import * as transformColor from '../../lib/publicApi/color/transformColor';
+import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
 import { ChangeSource } from '../../lib/constants/ChangeSource';
 import { Editor } from '../../lib/editor/Editor';
-import { EditorCore, Rect } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 
@@ -189,7 +189,7 @@ describe('Editor', () => {
 
         const transformColorSpy = spyOn(transformColor, 'transformColor');
         const onClone = cloneModelSpy.calls.argsFor(0)[1]!
-            .includeCachedElement as cloneModel.CachedElementHandler;
+            .includeCachedElement as CachedElementHandler;
 
         const clonedNode = {
             style: {
