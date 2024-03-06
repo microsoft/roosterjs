@@ -1,7 +1,7 @@
-import ContentModelRibbonButton from '../../../ribbonButtons/contentModel/ContentModelRibbonButton';
 import { getCurrentContentModel } from '../currentModel';
+import { RibbonButton } from '../../../../controlsV2/roosterjsReact/ribbon';
 
-export const exportButton: ContentModelRibbonButton<'buttonNameExport'> = {
+export const exportButton: RibbonButton<'buttonNameExport'> = {
     key: 'buttonNameExport',
     unlocalizedText: 'Create DOM tree',
     iconName: 'DOM',

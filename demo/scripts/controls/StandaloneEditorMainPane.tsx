@@ -6,75 +6,89 @@ import ContentModelEventViewPlugin from './sidePane/eventViewer/ContentModelEven
 import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModelFormatPainterPlugin';
 import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFormatStatePlugin';
 import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
-import ContentModelRibbonButton from './ribbonButtons/contentModel/ContentModelRibbonButton';
 import ContentModelSnapshotPlugin from './sidePane/snapshot/ContentModelSnapshotPlugin';
 import MainPaneBase, { MainPaneBaseState } from './MainPaneBase';
-import RibbonPlugin from './ribbonButtons/contentModel/RibbonPlugin';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
-import { alignCenterButton } from './ribbonButtons/contentModel/alignCenterButton';
-import { alignJustifyButton } from './ribbonButtons/contentModel/alignJustifyButton';
-import { alignLeftButton } from './ribbonButtons/contentModel/alignLeftButton';
-import { alignRightButton } from './ribbonButtons/contentModel/alignRightButton';
-import { backgroundColorButton } from './ribbonButtons/contentModel/backgroundColorButton';
-import { blockQuoteButton } from './ribbonButtons/contentModel/blockQuoteButton';
-import { boldButton } from './ribbonButtons/contentModel/boldButton';
-import { bulletedListButton } from './ribbonButtons/contentModel/bulletedListButton';
-import { changeImageButton } from './ribbonButtons/contentModel/changeImageButton';
-import { clearFormatButton } from './ribbonButtons/contentModel/clearFormatButton';
-import { codeButton } from './ribbonButtons/contentModel/codeButton';
-import { ContentModelRibbon } from './ribbonButtons/contentModel/ContentModelRibbon';
-import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { darkMode } from './ribbonButtons/contentModel/darkMode';
-import { decreaseFontSizeButton } from './ribbonButtons/contentModel/decreaseFontSizeButton';
-import { decreaseIndentButton } from './ribbonButtons/contentModel/decreaseIndentButton';
+import { alignCenterButton } from '../controlsV2/roosterjsReact/ribbon/buttons/alignCenterButton';
+import { alignJustifyButton } from '../controlsV2/roosterjsReact/ribbon/buttons/alignJustifyButton';
+import { alignLeftButton } from '../controlsV2/roosterjsReact/ribbon/buttons/alignLeftButton';
+import { alignRightButton } from '../controlsV2/roosterjsReact/ribbon/buttons/alignRightButton';
+import { backgroundColorButton } from '../controlsV2/roosterjsReact/ribbon/buttons/backgroundColorButton';
+import { blockQuoteButton } from '../controlsV2/roosterjsReact/ribbon/buttons/blockQuoteButton';
+import { boldButton } from '../controlsV2/roosterjsReact/ribbon/buttons/boldButton';
+import { bulletedListButton } from '../controlsV2/roosterjsReact/ribbon/buttons/bulletedListButton';
+import { changeImageButton } from '../controlsV2/demoButtons/changeImageButton';
+import { clearFormatButton } from '../controlsV2/roosterjsReact/ribbon/buttons/clearFormatButton';
+import { codeButton } from '../controlsV2/roosterjsReact/ribbon/buttons/codeButton';
+import { darkModeButton } from '../controlsV2/demoButtons/darkModeButton';
+import { decreaseFontSizeButton } from '../controlsV2/roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
+import { decreaseIndentButton } from '../controlsV2/roosterjsReact/ribbon/buttons/decreaseIndentButton';
 import { Editor } from 'roosterjs-content-model-core';
-import { exportContent } from './ribbonButtons/contentModel/export';
-import { fontButton } from './ribbonButtons/contentModel/fontButton';
-import { fontSizeButton } from './ribbonButtons/contentModel/fontSizeButton';
-import { formatPainterButton } from './ribbonButtons/contentModel/formatPainterButton';
-import { formatTableButton } from './ribbonButtons/contentModel/formatTableButton';
+import { exportContentButton } from '../controlsV2/demoButtons/exportContentButton';
+import { fontButton } from '../controlsV2/roosterjsReact/ribbon/buttons/fontButton';
+import { fontSizeButton } from '../controlsV2/roosterjsReact/ribbon/buttons/fontSizeButton';
+import { formatPainterButton } from '../controlsV2/demoButtons/formatPainterButton';
+import { formatTableButton } from '../controlsV2/demoButtons/formatTableButton';
 import { getDarkColor } from 'roosterjs-color-utils';
-import { imageBorderColorButton } from './ribbonButtons/contentModel/imageBorderColorButton';
-import { imageBorderRemoveButton } from './ribbonButtons/contentModel/imageBorderRemoveButton';
-import { imageBorderStyleButton } from './ribbonButtons/contentModel/imageBorderStyleButton';
-import { imageBorderWidthButton } from './ribbonButtons/contentModel/imageBorderWidthButton';
-import { imageBoxShadowButton } from './ribbonButtons/contentModel/imageBoxShadowButton';
-import { increaseFontSizeButton } from './ribbonButtons/contentModel/increaseFontSizeButton';
-import { increaseIndentButton } from './ribbonButtons/contentModel/increaseIndentButton';
-import { insertImageButton } from './ribbonButtons/contentModel/insertImageButton';
-import { insertLinkButton } from './ribbonButtons/contentModel/insertLinkButton';
-import { insertTableButton } from './ribbonButtons/contentModel/insertTableButton';
-import { italicButton } from './ribbonButtons/contentModel/italicButton';
-import { listStartNumberButton } from './ribbonButtons/contentModel/listStartNumberButton';
-import { ltrButton } from './ribbonButtons/contentModel/ltrButton';
-import { numberedListButton } from './ribbonButtons/contentModel/numberedListButton';
+import { imageBorderColorButton } from '../controlsV2/demoButtons/imageBorderColorButton';
+import { imageBorderRemoveButton } from '../controlsV2/demoButtons/imageBorderRemoveButton';
+import { imageBorderStyleButton } from '../controlsV2/demoButtons/imageBorderStyleButton';
+import { imageBorderWidthButton } from '../controlsV2/demoButtons/imageBorderWidthButton';
+import { imageBoxShadowButton } from '../controlsV2/demoButtons/imageBoxShadowButton';
+import { increaseFontSizeButton } from '../controlsV2/roosterjsReact/ribbon/buttons/increaseFontSizeButton';
+import { increaseIndentButton } from '../controlsV2/roosterjsReact/ribbon/buttons/increaseIndentButton';
+import { insertImageButton } from '../controlsV2/roosterjsReact/ribbon/buttons/insertImageButton';
+import { insertLinkButton } from '../controlsV2/roosterjsReact/ribbon/buttons/insertLinkButton';
+import { insertTableButton } from '../controlsV2/roosterjsReact/ribbon/buttons/insertTableButton';
+import { italicButton } from '../controlsV2/roosterjsReact/ribbon/buttons/italicButton';
+import { listStartNumberButton } from '../controlsV2/demoButtons/listStartNumberButton';
+import { ltrButton } from '../controlsV2/roosterjsReact/ribbon/buttons/ltrButton';
+import { numberedListButton } from '../controlsV2/roosterjsReact/ribbon/buttons/numberedListButton';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
-import { pasteButton } from './ribbonButtons/contentModel/pasteButton';
-import { popout } from './ribbonButtons/contentModel/popout';
-import { redoButton } from './ribbonButtons/contentModel/redoButton';
-import { removeLinkButton } from './ribbonButtons/contentModel/removeLinkButton';
+import { pasteButton } from '../controlsV2/demoButtons/pasteButton';
+import { popoutButton } from '../controlsV2/demoButtons/popoutButton';
+import { redoButton } from '../controlsV2/roosterjsReact/ribbon/buttons/redoButton';
+import { removeLinkButton } from '../controlsV2/roosterjsReact/ribbon/buttons/removeLinkButton';
 import { Rooster } from '../controlsV2/roosterjsReact/rooster/component/Rooster';
-import { rtlButton } from './ribbonButtons/contentModel/rtlButton';
-import { setBulletedListStyleButton } from './ribbonButtons/contentModel/setBulletedListStyleButton';
-import { setHeadingLevelButton } from './ribbonButtons/contentModel/setHeadingLevelButton';
-import { setNumberedListStyleButton } from './ribbonButtons/contentModel/setNumberedListStyleButton';
-import { setTableCellShadeButton } from './ribbonButtons/contentModel/setTableCellShadeButton';
-import { setTableHeaderButton } from './ribbonButtons/contentModel/setTableHeaderButton';
+import { rtlButton } from '../controlsV2/roosterjsReact/ribbon/buttons/rtlButton';
+import { setBulletedListStyleButton } from '../controlsV2/demoButtons/setBulletedListStyleButton';
+import { setHeadingLevelButton } from '../controlsV2/roosterjsReact/ribbon/buttons/setHeadingLevelButton';
+import { setNumberedListStyleButton } from '../controlsV2/demoButtons/setNumberedListStyleButton';
+import { setTableCellShadeButton } from '../controlsV2/demoButtons/setTableCellShadeButton';
+import { setTableHeaderButton } from '../controlsV2/demoButtons/setTableHeaderButton';
 import { Snapshots } from 'roosterjs-editor-types';
-import { spacingButton } from './ribbonButtons/contentModel/spacingButton';
-import { strikethroughButton } from './ribbonButtons/contentModel/strikethroughButton';
-import { subscriptButton } from './ribbonButtons/contentModel/subscriptButton';
-import { superscriptButton } from './ribbonButtons/contentModel/superscriptButton';
-import { tableBorderApplyButton } from './ribbonButtons/contentModel/tableBorderApplyButton';
-import { tableBorderColorButton } from './ribbonButtons/contentModel/tableBorderColorButton';
-import { tableBorderStyleButton } from './ribbonButtons/contentModel/tableBorderStyleButton';
-import { tableBorderWidthButton } from './ribbonButtons/contentModel/tableBorderWidthButton';
-import { textColorButton } from './ribbonButtons/contentModel/textColorButton';
+import { spacingButton } from '../controlsV2/demoButtons/spacingButton';
+import { strikethroughButton } from '../controlsV2/roosterjsReact/ribbon/buttons/strikethroughButton';
+import { subscriptButton } from '../controlsV2/roosterjsReact/ribbon/buttons/subscriptButton';
+import { superscriptButton } from '../controlsV2/roosterjsReact/ribbon/buttons/superscriptButton';
+import { tableBorderApplyButton } from '../controlsV2/demoButtons/tableBorderApplyButton';
+import { tableBorderColorButton } from '../controlsV2/demoButtons/tableBorderColorButton';
+import { tableBorderStyleButton } from '../controlsV2/demoButtons/tableBorderStyleButton';
+import { tableBorderWidthButton } from '../controlsV2/demoButtons/tableBorderWidthButton';
+import { textColorButton } from '../controlsV2/roosterjsReact/ribbon/buttons/textColorButton';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
-import { underlineButton } from './ribbonButtons/contentModel/underlineButton';
-import { undoButton } from './ribbonButtons/contentModel/undoButton';
-import { zoom } from './ribbonButtons/contentModel/zoom';
+import { underlineButton } from '../controlsV2/roosterjsReact/ribbon/buttons/underlineButton';
+import { undoButton } from '../controlsV2/roosterjsReact/ribbon/buttons/undoButton';
+import { zoomButton } from '../controlsV2/demoButtons/zoomButton';
+import {
+    createRibbonPlugin,
+    Ribbon,
+    RibbonButton,
+    RibbonPlugin,
+} from '../controlsV2/roosterjsReact/ribbon';
+import {
+    spaceAfterButton,
+    spaceBeforeButton,
+} from '../controlsV2/demoButtons/spaceBeforeAfterButtons';
+import {
+    tableAlignCellButton,
+    tableAlignTableButton,
+    tableDeleteButton,
+    tableInsertButton,
+    tableMergeButton,
+    tableSplitButton,
+} from '../controlsV2/demoButtons/tableEditButtons';
 import {
     AutoFormatPlugin,
     EditPlugin,
@@ -87,18 +101,6 @@ import {
     Snapshot,
     EditorOptions,
 } from 'roosterjs-content-model-types';
-import {
-    spaceAfterButton,
-    spaceBeforeButton,
-} from './ribbonButtons/contentModel/spaceBeforeAfterButtons';
-import {
-    tableAlignCellButton,
-    tableAlignTableButton,
-    tableDeleteButton,
-    tableInsertButton,
-    tableMergeButton,
-    tableSplitButton,
-} from './ribbonButtons/contentModel/tableEditButtons';
 
 const styles = require('./StandaloneEditorMainPane.scss');
 
@@ -174,7 +176,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private tableEditPlugin: TableEditPlugin;
     private snapshots: Snapshots<Snapshot>;
-    private buttons: ContentModelRibbonButton<any>[] = [
+    private buttons: RibbonButton<any>[] = [
         formatPainterButton,
         boldButton,
         italicButton,
@@ -234,9 +236,9 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         spaceBeforeButton,
         spaceAfterButton,
         pasteButton,
-        darkMode,
-        zoom,
-        exportContent,
+        darkModeButton,
+        zoomButton,
+        exportContentButton,
     ];
 
     constructor(props: {}) {
@@ -259,7 +261,7 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
         this.contentModelEditPlugin = new EditPlugin();
         this.contentAutoFormatPlugin = new AutoFormatPlugin();
         this.shortcutPlugin = new ShortcutPlugin();
-        this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
+        this.contentModelRibbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.tableEditPlugin = new TableEditPlugin();
         this.state = {
@@ -287,9 +289,9 @@ class ContentModelEditorMainPane extends MainPaneBase<ContentModelMainPaneState>
     }
 
     renderRibbon(isPopout: boolean) {
-        const buttons = isPopout ? this.buttons : this.buttons.concat([popout]);
+        const buttons = isPopout ? this.buttons : this.buttons.concat([popoutButton]);
         return (
-            <ContentModelRibbon
+            <Ribbon
                 buttons={buttons}
                 plugin={this.contentModelRibbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
