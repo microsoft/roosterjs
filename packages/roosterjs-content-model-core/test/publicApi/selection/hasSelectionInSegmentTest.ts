@@ -1,5 +1,5 @@
-import hasSelectionInSegment from '../../../lib/publicApi/selection/hasSelectionInSegment';
 import { ContentModelSegment } from 'roosterjs-content-model-types';
+import { hasSelectionInSegment } from '../../../lib/publicApi/selection/hasSelectionInSegment';
 
 describe('hasSelectionInSegment', () => {
     it('Simple text segment', () => {

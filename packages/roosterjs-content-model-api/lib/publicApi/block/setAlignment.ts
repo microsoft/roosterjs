@@ -6,10 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor to set alignment
  * @param alignment Alignment value: left, center or right
  */
-export default function setAlignment(
-    editor: IEditor,
-    alignment: 'left' | 'center' | 'right' | 'justify'
-) {
+export function setAlignment(editor: IEditor, alignment: 'left' | 'center' | 'right' | 'justify') {
     editor.focus();
 
     editor.formatContentModel(model => setModelAlignment(model, alignment), {

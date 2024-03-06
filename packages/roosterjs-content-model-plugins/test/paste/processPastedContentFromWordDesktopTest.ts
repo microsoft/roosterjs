@@ -290,7 +290,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const dta = {
                 'mso-level-number-format': 'bullet',
             };
-            spyOn(getStyleMetadata, 'default').and.returnValue(
+            spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
                 new Map<string, WordMetadata>().set('l0:level1', dta)
             );
 
@@ -382,7 +382,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const dta = {
                 'mso-level-number-format': 'bullet',
             };
-            spyOn(getStyleMetadata, 'default').and.returnValue(
+            spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
                 new Map<string, WordMetadata>().set('l0:level1', dta).set('l0:level2', dta)
             );
 
@@ -483,7 +483,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const dta = {
                 'mso-level-number-format': 'bullet',
             };
-            spyOn(getStyleMetadata, 'default').and.returnValue(
+            spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
                 new Map<string, WordMetadata>().set('l0:level1', dta).set('l0:level3', dta)
             );
 
@@ -592,7 +592,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const dta = {
                 'mso-level-number-format': 'bullet',
             };
-            spyOn(getStyleMetadata, 'default').and.returnValue(
+            spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
                 new Map<string, WordMetadata>().set('l0:level1', dta).set('l1:level3', dta)
             );
             runTest(html, {
@@ -704,7 +704,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const dta = {
                 'mso-level-number-format': 'bullet',
             };
-            spyOn(getStyleMetadata, 'default').and.returnValue(
+            spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
                 new Map<string, WordMetadata>()
                     .set('l1:level2', dta)
                     .set('l1:level3', dta)
@@ -1230,7 +1230,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const source =
                 '<p style="margin:0in;font-size:12pt;font-family:Calibri, sans-serif">Test</p><p style="margin:0in;font-size:12pt;font-family:Calibri, sans-serif">Test</p><p style="margin:0in 0in 0in 0.5in;font-size:12pt;font-family:Calibri, sans-serif;text-indent:-.25in;mso-list:l0 level1 lfo1"><span style="font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n</span></span></span>TEST</p>';
 
-            spyOn(getStyleMetadata, 'default').and.returnValue(
+            spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
                 new Map<string, WordMetadata>().set('l0:level1', {
                     'mso-level-number-format': 'bullet',
                     'mso-level-start-at': '1',

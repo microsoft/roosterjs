@@ -1,7 +1,7 @@
-import createTableMover from '../../lib/tableEdit/editors/features/TableMover';
-import TableEditor from '../../lib/tableEdit/editors/TableEditor';
+import { createTableMover } from '../../lib/tableEdit/editors/features/TableMover';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptions, IEditor } from 'roosterjs-content-model-types';
+import { TableEditor } from '../../lib/tableEdit/editors/TableEditor';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 
 describe('Table Mover Tests', () => {

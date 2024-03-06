@@ -1,5 +1,5 @@
 import * as TestHelper from '../TestHelper';
-import createElement from '../../lib/pluginUtils/CreateElement/createElement';
+import { createElement } from '../../lib/pluginUtils/CreateElement/createElement';
 import { getModelTable } from './tableData';
 import { IEditor } from 'roosterjs-content-model-types';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
