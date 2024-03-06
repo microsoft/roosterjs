@@ -18,7 +18,6 @@ export function createLink(editor: IEditor) {
             });
             return true;
         }
-
         return false;
     });
 }
