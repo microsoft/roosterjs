@@ -3,8 +3,7 @@ import { createTableInserter } from './features/TableInserter';
 import { createTableMover } from './features/TableMover';
 import { createTableResizer } from './features/TableResizer';
 import { disposeTableEditFeature } from './features/TableEditFeature';
-import { isNodeOfType } from 'roosterjs-content-model-dom';
-import { normalizeRect } from '../../pluginUtils/Rect/normalizeRect';
+import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './features/TableEditFeature';
 import type { IEditor, TableSelection } from 'roosterjs-content-model-types';
 
