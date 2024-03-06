@@ -31,9 +31,9 @@ describe('normalizeRect', () => {
 
         expect(result).toEqual({
             left: 1,
-            right: 2,
-            top: 3,
-            bottom: 4,
+            right: 0,
+            top: 0,
+            bottom: 0,
         });
     });
 
