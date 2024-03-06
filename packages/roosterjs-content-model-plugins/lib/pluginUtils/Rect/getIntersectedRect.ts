@@ -1,4 +1,4 @@
-import { normalizeRect } from './normalizeRect';
+import { normalizeRect } from 'roosterjs-content-model-dom';
 import type { Rect } from 'roosterjs-content-model-types';
 
 /**

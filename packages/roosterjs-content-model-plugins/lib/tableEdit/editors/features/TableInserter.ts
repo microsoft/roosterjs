@@ -1,7 +1,6 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { getIntersectedRect } from '../../../pluginUtils/Rect/getIntersectedRect';
-import { isElementOfType } from 'roosterjs-content-model-dom';
-import { normalizeRect } from '../../../pluginUtils/Rect/normalizeRect';
+import { isElementOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import {
     formatTableWithContentModel,
     insertTableColumn,
