@@ -1,11 +1,11 @@
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
-import { matchLink } from 'roosterjs-editor-dom';
+import { matchLink } from 'roosterjs-content-model-api';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export default function getLinkSegment(model: ContentModelDocument) {
+export function getLinkSegment(model: ContentModelDocument) {
     const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
         model,
         false /* includingFormatHolder */

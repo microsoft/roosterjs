@@ -1,4 +1,4 @@
-import getLinkSegment from './getLinkSegment';
+import { getLinkSegment } from './getLinkSegment';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
 import type { IEditor } from 'roosterjs-content-model-types';
 

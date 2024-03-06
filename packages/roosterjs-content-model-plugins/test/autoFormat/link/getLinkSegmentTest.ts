@@ -1,5 +1,5 @@
-import getLinkSegment from '../../../lib/autoFormat/link/getLinkSegment';
 import { ContentModelDocument, ContentModelText } from 'roosterjs-content-model-types';
+import { getLinkSegment } from '../../../lib/autoFormat/link/getLinkSegment';
 
 describe('getLinkSegment', () => {
     function runTest(model: ContentModelDocument, link: ContentModelText | undefined) {

@@ -1,7 +1,7 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 
 /**
- * @internal
+ * Data of aS link
  */
 export interface LinkData {
     /**
