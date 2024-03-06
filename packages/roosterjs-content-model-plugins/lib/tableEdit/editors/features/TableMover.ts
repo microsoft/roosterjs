@@ -1,7 +1,6 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { isNodeOfType } from 'roosterjs-content-model-dom';
-import { normalizeRect } from '../../../pluginUtils/Rect/normalizeRect';
+import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, Rect } from 'roosterjs-content-model-types';
 import type { TableEditFeature } from './TableEditFeature';
