@@ -1,6 +1,6 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
-import { ContentModelRibbonPlugin } from '../../ribbonButtons/contentModel/ContentModelRibbonPlugin';
+import { createRibbonPlugin, RibbonPlugin } from '../../../controlsV2/roosterjsReact/ribbon';
 import { IEditor as ILegacyEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IEditor } from 'roosterjs-content-model-types';
 import { setCurrentContentModel } from './currentModel';
@@ -10,11 +10,11 @@ export default class ContentModelPanePlugin extends SidePanePluginImpl<
     ContentModelPane,
     ContentModelPaneProps
 > {
-    private contentModelRibbon: ContentModelRibbonPlugin;
+    private contentModelRibbon: RibbonPlugin;
 
     constructor() {
         super(ContentModelPane, 'contentModel', 'Content Model (Under development)');
-        this.contentModelRibbon = new ContentModelRibbonPlugin();
+        this.contentModelRibbon = createRibbonPlugin();
     }
 
     initialize(editor: ILegacyEditor): void {
