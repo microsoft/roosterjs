@@ -1,4 +1,4 @@
-import { getListTypeStyle } from './utils/getListTypeStyle';
+import { getListTypeStyle } from './getListTypeStyle';
 import { setListStartNumber, setListStyle, setListType } from 'roosterjs-content-model-api';
 import {
     normalizeContentModel,

@@ -136,7 +136,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -341,8 +341,8 @@ describe('Paste with clipboardData', () => {
                         },
                     ],
                     format: {
-                        marginTop: '0px',
-                        marginBottom: '0px',
+                        marginTop: '1em',
+                        marginBottom: '1em',
                     },
                     decorator: {
                         tagName: 'p',

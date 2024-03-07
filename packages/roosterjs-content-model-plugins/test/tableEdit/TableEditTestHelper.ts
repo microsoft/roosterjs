@@ -52,7 +52,7 @@ export function beforeTableTest(TEST_ID: string) {
  * @param TEST_ID The id of the editor div
  */
 export function afterTableTest(editor: IEditor, plugin: TableEditPlugin, TEST_ID: string) {
-    editor.dispose();
+    !editor.isDisposed() && editor.dispose();
     plugin.dispose();
     TestHelper.removeElement(TEST_ID);
     document.body = document.createElement('body');
