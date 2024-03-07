@@ -41,7 +41,7 @@ export type AutoFormatOptions = {
 const DefaultOptions: Required<AutoFormatOptions> = {
     autoBullet: true,
     autoNumbering: true,
-    autoUnlink: true,
+    autoUnlink: false,
     autoLink: true,
 };
 
