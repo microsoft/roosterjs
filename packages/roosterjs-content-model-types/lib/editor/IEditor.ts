@@ -34,8 +34,12 @@ export interface IEditor {
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
      * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
      * instead to improve performance. This is mostly used for retrieve current format state.
+     * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
+     * This is usually used for exporting content
      */
-    getContentModelCopy(mode: 'connected' | 'disconnected' | 'reduced'): ContentModelDocument;
+    getContentModelCopy(
+        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
+    ): ContentModelDocument;
 
     /**
      * Get current running environment, such as if editor is running on Mac

@@ -34,12 +34,13 @@ export type CreateEditorContext = (core: EditorCore, saveIndex: boolean) => Edit
  * Create Content Model from DOM tree in this editor
  * @param core The EditorCore object
  * @param option The option to customize the behavior of DOM to Content Model conversion
- * @param selectionOverride When passed, use this selection range instead of current selection in editor
+ * @param selectionOverride When passed a valid selection, use this selection range instead of current selection in editor.
+ * When pass "none", it means we don't need a selection in content model
  */
 export type CreateContentModel = (
     core: EditorCore,
     option?: DomToModelOption,
-    selectionOverride?: DOMSelection
+    selectionOverride?: DOMSelection | 'none'
 ) => ContentModelDocument;
 
 /**
@@ -168,9 +169,11 @@ export type Paste = (core: EditorCore, clipboardData: ClipboardData, pasteType: 
  */
 export interface CoreApiMap {
     /**
-     * Create a EditorContext object used by ContentModel API
+     * Create Content Model from DOM tree in this editor
      * @param core The EditorCore object
-     * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
+     * @param option The option to customize the behavior of DOM to Content Model conversion
+     * @param selectionOverride When passed a valid selection, use this selection range instead of current selection in editor.
+     * When pass "none", it means we don't need a selection in content model
      */
     createEditorContext: CreateEditorContext;
 

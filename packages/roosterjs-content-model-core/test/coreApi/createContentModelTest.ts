@@ -223,4 +223,31 @@ describe('createContentModel with selection', () => {
         expect(model).toBe(updatedModel);
         expect(flushMutationsSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('With selection override', () => {
+        const MockedContainer = 'MockedContainer';
+        const MockedRange = {
+            name: 'MockedRange',
+            commonAncestorContainer: MockedContainer,
+        } as any;
+        const mockedSelection = {
+            type: 'range',
+            range: MockedRange,
+        } as any;
+
+        createContentModel(core, undefined, mockedSelection);
+
+        expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
+            type: 'range',
+            range: MockedRange,
+        } as any);
+    });
+
+    it('With selection override, selection=none', () => {
+        createContentModel(core, undefined, 'none');
+
+        expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, undefined);
+    });
 });
