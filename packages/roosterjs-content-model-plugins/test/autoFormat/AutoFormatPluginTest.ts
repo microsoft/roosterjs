@@ -202,7 +202,9 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'keyDown',
                 rawEvent: { key: 'Backspace', preventDefault: () => {} } as any,
             };
-            runTest(event, true);
+            runTest(event, true, {
+                autoUnlink: true,
+            });
         });
 
         it('should not call unlink - disable options', () => {

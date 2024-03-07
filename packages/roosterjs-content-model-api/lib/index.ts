@@ -51,4 +51,4 @@ export { formatSegmentWithContentModel } from './publicApi/utils/formatSegmentWi
 export { setListType } from './modelApi/list/setListType';
 export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';
-export { matchLink, LinkData } from './modelApi/link/matchLink';
+export { matchLink } from './modelApi/link/matchLink';
