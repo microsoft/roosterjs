@@ -1,5 +1,14 @@
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
-import { iterateSelections } from '../../publicApi/selection/iterateSelections';
+import {
+    addDelimiters,
+    createBr,
+    createModelToDomContext,
+    createParagraph,
+    isEntityDelimiter,
+    isEntityElement,
+    isNodeOfType,
+    iterateSelections,
+} from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,
     ContentModelBlockGroup,
@@ -10,15 +19,6 @@ import type {
     KeyDownEvent,
     RangeSelection,
 } from 'roosterjs-content-model-types';
-import {
-    addDelimiters,
-    createBr,
-    createModelToDomContext,
-    createParagraph,
-    isEntityDelimiter,
-    isEntityElement,
-    isNodeOfType,
-} from 'roosterjs-content-model-dom';
 
 const DelimiterBefore = 'entityDelimiterBefore';
 const DelimiterAfter = 'entityDelimiterAfter';

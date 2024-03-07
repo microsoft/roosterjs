@@ -1,4 +1,4 @@
-import * as iterateSelections from '../../../lib/publicApi/selection/iterateSelections';
+import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,

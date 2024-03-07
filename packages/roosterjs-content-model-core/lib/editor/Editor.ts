@@ -1,8 +1,12 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { cloneModel } from '../publicApi/model/cloneModel';
-import { createEditorCore } from './createEditorCore';
-import { createEmptyModel, tableProcessor, transformColor } from 'roosterjs-content-model-dom';
+import { createEditorCore } from './core/createEditorCore';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
+import {
+    cloneModel,
+    createEmptyModel,
+    tableProcessor,
+    transformColor,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelFormatter,

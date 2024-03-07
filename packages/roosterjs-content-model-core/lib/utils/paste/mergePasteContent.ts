@@ -1,7 +1,6 @@
 import { ChangeSource } from '../../constants/ChangeSource';
-import { cloneModel } from '../../publicApi/model/cloneModel';
+import { cloneModel, domToContentModel } from 'roosterjs-content-model-dom';
 import { createDomToModelContextForSanitizing } from '../createDomToModelContextForSanitizing';
-import { domToContentModel } from 'roosterjs-content-model-dom';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';

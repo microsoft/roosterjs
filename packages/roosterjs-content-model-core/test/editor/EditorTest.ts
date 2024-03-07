@@ -1,5 +1,5 @@
-import * as cloneModel from '../../lib/publicApi/model/cloneModel';
-import * as createEditorCore from '../../lib/editor/createEditorCore';
+import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/common/cloneModel';
+import * as createEditorCore from '../../lib/editor/core/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/color/transformColor';
 import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';

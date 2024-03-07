@@ -1,16 +1,16 @@
 import { addUndoSnapshot } from './addUndoSnapshot/addUndoSnapshot';
-import { attachDomEvent } from './attachDomEvent';
-import { createContentModel } from './createContentModel';
-import { createEditorContext } from './createEditorContext';
-import { focus } from './focus';
-import { formatContentModel } from './formatContentModel';
-import { getDOMSelection } from './getDOMSelection';
-import { getVisibleViewport } from './getVisibleViewport';
-import { restoreUndoSnapshot } from './restoreUndoSnapshot';
-import { setContentModel } from './setContentModel';
-import { setDOMSelection } from './setDOMSelection';
-import { switchShadowEdit } from './switchShadowEdit';
-import { triggerEvent } from './triggerEvent';
+import { attachDomEvent } from './attachDomEvent/attachDomEvent';
+import { createContentModel } from './createContentModel/createContentModel';
+import { createEditorContext } from './createEditorContext/createEditorContext';
+import { focus } from './focus/focus';
+import { formatContentModel } from './formatContentModel/formatContentModel';
+import { getDOMSelection } from './getDOMSelection/getDOMSelection';
+import { getVisibleViewport } from './getVisibleViewport/getVisibleViewport';
+import { restoreUndoSnapshot } from './restoreUndoSnapshot/restoreUndoSnapshot';
+import { setContentModel } from './setContentModel/setContentModel';
+import { setDOMSelection } from './setDOMSelection/setDOMSelection';
+import { switchShadowEdit } from './switchShadowEdit/switchShadowEdit';
+import { triggerEvent } from './triggerEvent/triggerEvent';
 import type { CoreApiMap } from 'roosterjs-content-model-types';
 
 /**

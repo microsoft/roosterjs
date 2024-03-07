@@ -1,5 +1,4 @@
-import { createText } from 'roosterjs-content-model-dom';
-import { iterateSelections } from 'roosterjs-content-model-core';
+import { createText, iterateSelections } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelParagraph,

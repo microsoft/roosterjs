@@ -1,9 +1,9 @@
-import * as addRangeToSelection from '../../../lib/utils/addRangeToSelection';
+import * as addRangeToSelection from '../../../lib/coreApi/setDOMSelection/addRangeToSelection';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as copyPasteEntityOverride from '../../../lib/override/pasteCopyBlockEntityParser';
 import * as deleteSelectionsFile from '../../../lib/publicApi/selection/deleteSelection';
 import * as extractClipboardItemsFile from '../../../lib/utils/extractClipboardItems';
-import * as iterateSelectionsFile from '../../../lib/publicApi/selection/iterateSelections';
+import * as iterateSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as paste from '../../../lib/publicApi/paste/paste';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';

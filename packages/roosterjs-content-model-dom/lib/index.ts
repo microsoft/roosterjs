@@ -34,6 +34,7 @@ export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
 export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode';
 export { transformColor } from './domUtils/color/transformColor';
+export { parseTableCells } from './domUtils/table/parseTableCells';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
@@ -57,6 +58,7 @@ export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
 export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
+export { cloneModel } from './modelApi/common/cloneModel';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';
@@ -66,6 +68,8 @@ export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
+
+export { iterateSelections } from './modelApi/selection/iterateSelections';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';

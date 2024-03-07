@@ -1,3 +1,4 @@
+import { IterateSelectionsCallback } from 'roosterjs-content-model-types';
 import {
     addSegment,
     createContentModelDocument,
@@ -13,11 +14,8 @@ import {
     createTable,
     createTableCell,
     createText,
-} from 'roosterjs-content-model-dom';
-import {
     iterateSelections,
-    IterateSelectionsCallback,
-} from '../../../lib/publicApi/selection/iterateSelections';
+} from 'roosterjs-content-model-dom';
 
 describe('iterateSelections', () => {
     let callback: jasmine.Spy<IterateSelectionsCallback>;

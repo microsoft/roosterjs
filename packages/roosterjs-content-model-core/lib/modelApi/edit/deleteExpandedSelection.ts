@@ -1,8 +1,13 @@
 import { deleteBlock } from '../../publicApi/selection/deleteBlock';
 import { deleteSegment } from '../../publicApi/selection/deleteSegment';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
-import { iterateSelections } from '../../publicApi/selection/iterateSelections';
-import type { IterateSelectionsOption } from '../../publicApi/selection/iterateSelections';
+import {
+    createBr,
+    createParagraph,
+    createSelectionMarker,
+    iterateSelections,
+    setParagraphNotImplicit,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockGroup,
     ContentModelDocument,
@@ -12,13 +17,8 @@ import type {
     FormatContentModelContext,
     InsertPoint,
     TableSelectionContext,
+    IterateSelectionsOption,
 } from 'roosterjs-content-model-types';
-import {
-    createBr,
-    createParagraph,
-    createSelectionMarker,
-    setParagraphNotImplicit,
-} from 'roosterjs-content-model-dom';
 
 const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
     contentUnderSelectedTableCell: 'ignoreForTableOrCell', // When a table cell is selected, we replace all content for this cell, so no need to go into its content

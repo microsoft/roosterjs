@@ -1,10 +1,10 @@
-import { iterateSelections } from '../../publicApi/selection/iterateSelections';
-import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 import {
     createText,
+    iterateSelections,
     normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
+import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 
 const ANSI_SPACE = '\u0020';
 const NON_BREAK_SPACE = '\u00A0';
