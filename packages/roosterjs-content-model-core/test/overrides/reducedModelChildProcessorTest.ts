@@ -1,4 +1,4 @@
-import * as getSelectionRootNode from '../../lib/publicApi/selection/getSelectionRootNode';
+import * as getSelectionRootNode from 'roosterjs-content-model-dom/lib/domUtils/selection/getSelectionRootNode';
 import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model-dom';
 import { DomToModelContext } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';

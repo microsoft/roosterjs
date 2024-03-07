@@ -14,7 +14,6 @@ export {
     IterateSelectionsCallback,
     IterateSelectionsOption,
 } from './publicApi/selection/iterateSelections';
-export { getSelectionRootNode } from './publicApi/selection/getSelectionRootNode';
 export { deleteSelection } from './publicApi/selection/deleteSelection';
 export { deleteSegment } from './publicApi/selection/deleteSegment';
 export { deleteBlock } from './publicApi/selection/deleteBlock';
@@ -48,7 +47,6 @@ export { cacheGetEventData } from './publicApi/domUtils/cacheGetEventData';
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
 export { paste } from './publicApi/paste/paste';
-export { transformColor } from './publicApi/color/transformColor';
 
 export { retrieveModelFormatState } from './publicApi/format/retrieveModelFormatState';
 

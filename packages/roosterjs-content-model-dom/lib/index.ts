@@ -32,6 +32,8 @@ export {
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
+export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode';
+export { transformColor } from './domUtils/color/transformColor';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';

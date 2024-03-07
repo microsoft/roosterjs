@@ -1,4 +1,4 @@
-import * as transformColor from '../../lib/publicApi/color/transformColor';
+import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/color/transformColor';
 import { DarkColorHandler, EditorCore, Snapshot } from 'roosterjs-content-model-types';
 import { restoreSnapshotColors } from '../../lib/utils/restoreSnapshotColors';
 

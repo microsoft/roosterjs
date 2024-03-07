@@ -1,4 +1,4 @@
-import { coreApiMap } from './coreApiMap';
+import { coreApiMap } from '../coreApi/coreApiMap';
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createDOMHelper } from './DOMHelperImpl';
 import { createDomToModelSettings, createModelToDomSettings } from './createEditorDefaultSettings';

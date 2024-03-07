@@ -1,4 +1,4 @@
-import * as addRangeToSelection from '../../lib/corePlugin/utils/addRangeToSelection';
+import * as addRangeToSelection from '../../lib/utils/addRangeToSelection';
 import { DOMSelection, EditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../lib/coreApi/setDOMSelection';
 

@@ -1,4 +1,4 @@
-import { addRangeToSelection } from '../corePlugin/utils/addRangeToSelection';
+import { addRangeToSelection } from '../utils/addRangeToSelection';
 import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { parseTableCells } from '../publicApi/domUtils/tableCellUtils';
 import type {

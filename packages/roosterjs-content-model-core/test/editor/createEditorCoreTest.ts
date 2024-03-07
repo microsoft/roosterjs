@@ -2,7 +2,7 @@ import * as createDefaultSettings from '../../lib/editor/createEditorDefaultSett
 import * as createEditorCorePlugins from '../../lib/corePlugin/createEditorCorePlugins';
 import * as DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
 import * as DOMHelperImpl from '../../lib/editor/DOMHelperImpl';
-import { coreApiMap } from '../../lib/editor/coreApiMap';
+import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { EditorCore, EditorOptions } from 'roosterjs-content-model-types';
 import {
     createEditorCore,

@@ -1,4 +1,4 @@
-import { deleteEmptyList } from '../../../lib/corePlugin/utils/deleteEmptyList';
+import { deleteEmptyList } from '../../../lib/corePlugin/copyPaste/deleteEmptyList';
 import { deleteSelection } from '../../../lib/publicApi/selection/deleteSelection';
 import {
     ContentModelBlockGroup,
