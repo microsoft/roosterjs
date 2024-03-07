@@ -1,3 +1,4 @@
+import * as TestHelper from '../TestHelper';
 import { getModelTable } from './tableData';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 import {
@@ -34,6 +35,11 @@ describe('Table Resizer tests', () => {
     });
 
     afterEach(() => {
+        TestHelper.removeElement(TEST_ID);
+        document.body = document.createElement('body');
+    });
+
+    afterAll(() => {
         afterTableTest(editor, plugin, TEST_ID);
     });
 
@@ -54,7 +60,7 @@ describe('Table Resizer tests', () => {
         expect(!!resizer).toBe(false);
     }
 
-    xit('removes table resizer on input', () => {
+    it('removes table resizer on input', () => {
         const pluginEvent: PluginEvent = {
             eventType: 'input',
             rawEvent: null,
@@ -62,7 +68,7 @@ describe('Table Resizer tests', () => {
         removeResizerTest(pluginEvent);
     });
 
-    xit('removes table resizer on content change', () => {
+    it('removes table resizer on content change', () => {
         const pluginEvent: PluginEvent = {
             eventType: 'contentChanged',
             source: null,
@@ -70,7 +76,7 @@ describe('Table Resizer tests', () => {
         removeResizerTest(pluginEvent);
     });
 
-    xit('removes table resizer on scrolling', () => {
+    it('removes table resizer on scrolling', () => {
         const pluginEvent: PluginEvent = {
             eventType: 'scroll',
             scrollContainer: editor.getDocument().body as HTMLElement,
