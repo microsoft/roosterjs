@@ -1,4 +1,5 @@
-import { LinkData, matchLink } from '../../../lib/modelApi/link/matchLink';
+import { matchLink } from '../../../lib/modelApi/link/matchLink';
+import type { LinkData } from 'roosterjs-content-model-types';
 
 function runMatchTestWithValidLink(link: string, expected: LinkData): void {
     let resultData = matchLink(link);
