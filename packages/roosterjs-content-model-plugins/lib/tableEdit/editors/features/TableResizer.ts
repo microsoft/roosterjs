@@ -199,6 +199,7 @@ function onDragEnd(
     initValue: DragAndDropInitValue | undefined
 ) {
     if (
+        !context.editor.isDisposed() &&
         isTableBottomVisible(
             context.editor,
             normalizeRect(context.table.getBoundingClientRect()),
