@@ -1,27 +1,11 @@
 import * as React from 'react';
-import { createUIUtilities, ReactEditorPlugin, UIUtilities } from 'roosterjs-react';
+import { createUIUtilities } from '../../common/index';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
-import { EditorAdapter, EditorAdapterOptions } from 'roosterjs-editor-adapter';
-import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-content-model-types';
+import { Editor } from 'roosterjs-content-model-core';
 import { useTheme } from '@fluentui/react/lib/Theme';
-import type { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types';
-
-/**
- * Properties for Rooster react component
- */
-export interface RoosterProps extends EditorAdapterOptions, React.HTMLAttributes<HTMLDivElement> {
-    /**
-     * Creator function used for creating the instance of roosterjs editor.
-     * Use this callback when you have your own sub class of roosterjs Editor or force trigging a reset of editor
-     */
-    editorCreator?: (div: HTMLDivElement, options: EditorOptions) => IEditor;
-
-    /**
-     * Whether editor should get focus once it is created
-     * Changing of this value after editor is created will not reset editor
-     */
-    focusOnInit?: boolean;
-}
+import type { RoosterProps } from '../type/RoosterProps';
+import type { ReactEditorPlugin } from '../../common/index';
+import type { EditorPlugin, IEditor, EditorOptions } from 'roosterjs-content-model-types';
 
 /**
  * Main component of react wrapper for roosterjs
@@ -33,14 +17,17 @@ export function Rooster(props: RoosterProps) {
     const editor = React.useRef<IEditor | null>(null);
     const theme = useTheme();
 
-    const { focusOnInit, editorCreator, inDarkMode, plugins, legacyPlugins } = props;
+    const { focusOnInit, editorCreator, inDarkMode, plugins } = props;
 
     React.useEffect(() => {
-        if (editorDiv.current) {
+        if (plugins && editorDiv.current) {
             const uiUtilities = createUIUtilities(editorDiv.current, theme);
 
-            setUIUtilities(uiUtilities, plugins);
-            setUIUtilities(uiUtilities, legacyPlugins);
+            plugins.forEach(plugin => {
+                if (isReactEditorPlugin(plugin)) {
+                    plugin.setUIUtilities(uiUtilities);
+                }
+            });
         }
     }, [theme, editorCreator]);
 
@@ -69,23 +56,10 @@ export function Rooster(props: RoosterProps) {
     return <div ref={editorDiv} tabIndex={0} {...(divProps || {})}></div>;
 }
 
-function setUIUtilities(
-    uiUtilities: UIUtilities,
-    plugins: (LegacyEditorPlugin | EditorPlugin)[] | undefined
-) {
-    plugins?.forEach(plugin => {
-        if (isReactEditorPlugin(plugin)) {
-            plugin.setUIUtilities(uiUtilities);
-        }
-    });
+function defaultEditorCreator(div: HTMLDivElement, options: EditorOptions) {
+    return new Editor(div, options);
 }
 
-function defaultEditorCreator(div: HTMLDivElement, options: EditorAdapterOptions) {
-    return new EditorAdapter(div, options);
-}
-
-function isReactEditorPlugin(
-    plugin: LegacyEditorPlugin | EditorPlugin
-): plugin is ReactEditorPlugin {
+function isReactEditorPlugin(plugin: EditorPlugin): plugin is ReactEditorPlugin {
     return !!(plugin as ReactEditorPlugin)?.setUIUtilities;
 }

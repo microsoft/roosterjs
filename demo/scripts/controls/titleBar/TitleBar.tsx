@@ -1,42 +1,17 @@
 import * as React from 'react';
 
-const classicalStyles = require('./TitleBar.scss');
-const contentModelStyles = require('./ContentModelTitleBar.scss');
-const standaloneStyles = require('./StandaloneTitleBar.scss');
-
+const styles = require('./TitleBar.scss');
 const github = require('./iconmonstr-github-1.svg');
 
 export interface TitleBarProps {
     className?: string;
-    mode: 'classical' | 'contentModel' | 'standalone';
 }
 
 export default class TitleBar extends React.Component<TitleBarProps, {}> {
     render() {
-        const { mode, className: baseClassName } = this.props;
-        const styles =
-            mode == 'contentModel'
-                ? contentModelStyles
-                : mode == 'standalone'
-                ? standaloneStyles
-                : classicalStyles;
+        const { className: baseClassName } = this.props;
         const className = styles.titleBar + ' ' + (baseClassName || '');
-        const titleText =
-            mode == 'contentModel'
-                ? 'RoosterJs Content Model Demo Site'
-                : mode == 'classical'
-                ? 'RoosterJs Demo Site'
-                : 'RoosterJs Standalone Demo Site';
-        const switchLink =
-            mode == 'contentModel' ? (
-                <a className={styles.link} href="?cm=0">
-                    Switch to classical demo
-                </a>
-            ) : (
-                <a className={styles.link} href="?cm=1">
-                    Switch to Content Model demo
-                </a>
-            );
+        const titleText = 'RoosterJs Demo Site';
 
         return (
             <div className={className}>
@@ -45,7 +20,10 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                 </div>
                 <div className={styles.version}></div>
                 <div className={styles.links}>
-                    {switchLink} {' | '}
+                    <a href="?" className={styles.link}>
+                        New demo site
+                    </a>
+                    {' | '}
                     <a
                         href="https://github.com/Microsoft/roosterjs/wiki"
                         target="_blank"

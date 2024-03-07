@@ -1,4 +1,4 @@
-import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import { Rect } from 'roosterjs-content-model-types';
 
 /**
@@ -58,17 +58,4 @@ export function getPositionRect(container: Node, offset: number): Rect | null {
     }
 
     return null;
-}
-
-function normalizeRect(clientRect: DOMRect): Rect | null {
-    const { left, right, top, bottom } =
-        clientRect || <DOMRect>{ left: 0, right: 0, top: 0, bottom: 0 };
-    return left === 0 && right === 0 && top === 0 && bottom === 0
-        ? null
-        : {
-              left: Math.round(left),
-              right: Math.round(right),
-              top: Math.round(top),
-              bottom: Math.round(bottom),
-          };
 }
