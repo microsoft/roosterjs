@@ -1,6 +1,6 @@
 import { BulletListType, NumberingListType } from 'roosterjs-content-model-core';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { getListTypeStyle } from '../../../lib/autoFormat/utils/getListTypeStyle';
+import { getListTypeStyle } from '../../../lib/autoFormat/list/getListTypeStyle';
 
 describe('getListTypeStyle', () => {
     function runTest(
