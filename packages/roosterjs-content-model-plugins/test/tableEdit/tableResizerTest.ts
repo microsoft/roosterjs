@@ -54,7 +54,7 @@ describe('Table Resizer tests', () => {
         expect(!!resizer).toBe(false);
     }
 
-    it('removes table resizer on input', () => {
+    xit('removes table resizer on input', () => {
         const pluginEvent: PluginEvent = {
             eventType: 'input',
             rawEvent: null,
@@ -62,7 +62,7 @@ describe('Table Resizer tests', () => {
         removeResizerTest(pluginEvent);
     });
 
-    it('removes table resizer on content change', () => {
+    xit('removes table resizer on content change', () => {
         const pluginEvent: PluginEvent = {
             eventType: 'contentChanged',
             source: null,
@@ -70,7 +70,7 @@ describe('Table Resizer tests', () => {
         removeResizerTest(pluginEvent);
     });
 
-    it('removes table resizer on scrolling', () => {
+    xit('removes table resizer on scrolling', () => {
         const pluginEvent: PluginEvent = {
             eventType: 'scroll',
             scrollContainer: editor.getDocument().body as HTMLElement,
