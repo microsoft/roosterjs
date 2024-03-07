@@ -1,24 +1,5 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-
-/**
- * @internal
- */
-export interface LinkData {
-    /**
-     * Schema of a hyperlink
-     */
-    scheme: string;
-
-    /**
-     * Original url of a hyperlink
-     */
-    originalUrl: string;
-
-    /**
-     * Normalized url of a hyperlink
-     */
-    normalizedUrl: string;
-}
+import type { LinkData } from 'roosterjs-content-model-types';
 
 interface LinkMatchRule {
     match: RegExp;
@@ -85,7 +66,6 @@ const linkMatchRules: Record<string, LinkMatchRule> = {
 };
 
 /**
- * @internal
  * Try to match a given string with link match rules, return matched link
  * @param url Input url to match
  * @param option Link match option, exact or partial. If it is exact match, we need

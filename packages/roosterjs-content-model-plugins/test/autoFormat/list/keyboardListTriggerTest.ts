@@ -1,6 +1,6 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { keyboardListTrigger } from '../../lib/autoFormat/keyboardListTrigger';
+import { keyboardListTrigger } from '../../../lib/autoFormat/list/keyboardListTrigger';
 
 describe('keyboardListTrigger', () => {
     let normalizeContentModelSpy: jasmine.Spy;
