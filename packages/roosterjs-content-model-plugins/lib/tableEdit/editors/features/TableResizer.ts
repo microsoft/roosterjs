@@ -245,5 +245,5 @@ function isTableBottomVisible(
         );
     }
 
-    return false;
+    return true;
 }
