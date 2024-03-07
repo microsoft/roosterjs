@@ -144,7 +144,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
         runTest(source, { blockGroupType: 'Document', blocks: [] }, true);
     });
 
-    it('Remove Line height less than default', () => {
+    it('Dont remove Line height less than default', () => {
         let source = '<p style="line-height:102%">Test</p>';
         runTest(
             source,
@@ -154,7 +154,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     {
                         segments: [{ text: 'Test', segmentType: 'Text', format: {} }],
                         blockType: 'Paragraph',
-                        format: { marginTop: '1em', marginBottom: '1em' },
+                        format: { marginTop: '1em', marginBottom: '1em', lineHeight: '102%' },
                         decorator: { tagName: 'p', format: {} },
                     },
                 ],
