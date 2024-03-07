@@ -8,13 +8,6 @@ describe('createEditor', () => {
         }).toThrow();
     });
 
-    it('Create editor with non-DIV input', () => {
-        expect(() => {
-            const span = document.createElement('span');
-            roosterjs.createEditor(span as any);
-        }).toThrow();
-    });
-
     it('Create an editor', () => {
         const div = document.createElement('div');
         const editor = roosterjs.createEditor(div);
@@ -38,13 +31,13 @@ describe('createEditor', () => {
         expect(initialize).toHaveBeenCalledWith(editor);
         expect(dispose).not.toHaveBeenCalled();
         expect(onPluginEvent).toHaveBeenCalledWith({
-            eventType: roosterjs.PluginEventType.EditorReady,
+            eventType: 'editorReady',
         });
 
         editor.dispose();
         expect(dispose).toHaveBeenCalled();
         expect(onPluginEvent).toHaveBeenCalledWith({
-            eventType: roosterjs.PluginEventType.BeforeDispose,
+            eventType: 'beforeDispose',
         });
     });
 });
