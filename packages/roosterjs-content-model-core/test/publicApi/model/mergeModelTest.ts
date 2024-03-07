@@ -2028,6 +2028,62 @@ describe('mergeModel', () => {
         });
     });
 
+    it('Divider to single selected paragraph both models with block format', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const para1 = createParagraph(false, {
+            marginBottom: 'ShouldBeRemoved',
+            marginTop: 'ShouldBeRemoved',
+            marginLeft: 'ShouldBeRemoved',
+            marginRight: 'ShouldBeRemoved',
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        const divider = createParagraph(false, {
+            marginBottom: 'KeepThisStyle',
+            marginTop: 'KeepThisStyle',
+            marginLeft: 'KeepThisStyle',
+            marginRight: 'KeepThisStyle',
+        });
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        sourceModel.blocks.push(divider);
+
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'test1', format: {} },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {
+                        marginBottom: 'KeepThisStyle',
+                        marginTop: 'KeepThisStyle',
+                        marginLeft: 'KeepThisStyle',
+                        marginRight: 'KeepThisStyle',
+                    },
+                },
+            ],
+        });
+    });
+
     it('Keep Paragraph format of source on merge', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
