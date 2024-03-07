@@ -198,8 +198,10 @@ function onDragEnd(
     event: MouseEvent,
     initValue: DragAndDropInitValue | undefined
 ) {
+    if (context.editor.isDisposed()) {
+        return false;
+    }
     if (
-        !context.editor.isDisposed() &&
         isTableBottomVisible(
             context.editor,
             normalizeRect(context.table.getBoundingClientRect()),
