@@ -1,4 +1,5 @@
 import { redo, undo } from 'roosterjs-content-model-core';
+import { setShortcutIndentationCommand } from './utils/setShortcutIndentationCommand';
 import {
     changeFontSize,
     clearFormat,
@@ -21,6 +22,8 @@ const enum Keys {
     COMMA = 188,
     PERIOD = 190,
     FORWARD_SLASH = 191,
+    ArrowRight = 39,
+    ArrowLeft = 37,
 }
 
 /**
@@ -192,4 +195,36 @@ export const ShortcutDecreaseFont: ShortcutCommand = {
         which: Keys.COMMA,
     },
     onClick: editor => changeFontSize(editor, 'decrease'),
+};
+
+/**
+ * Shortcut command for Intent list
+ * Windows: Alt + Shift + Arrow Right
+ * MacOS: Option + Shift+ Arrow Right
+ */
+export const ShortcutIndentList: ShortcutCommand = {
+    shortcutKey: {
+        modifierKey: 'alt',
+        shiftKey: true,
+        which: Keys.ArrowRight,
+    },
+    onClick: editor => {
+        setShortcutIndentationCommand(editor, 'indent');
+    },
+};
+
+/**
+ * Shortcut command for Outdent list
+ * Windows: Alt + Shift + Arrow Left
+ * MacOS: Option + Shift+ Arrow Left
+ */
+export const ShortcutOutdentList: ShortcutCommand = {
+    shortcutKey: {
+        modifierKey: 'alt',
+        shiftKey: true,
+        which: Keys.ArrowLeft,
+    },
+    onClick: editor => {
+        setShortcutIndentationCommand(editor, 'outdent');
+    },
 };

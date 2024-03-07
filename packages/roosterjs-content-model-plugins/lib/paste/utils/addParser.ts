@@ -8,7 +8,7 @@ import type {
 /**
  * @internal
  */
-export default function addParser<TKey extends keyof ElementFormatParserPerCategory>(
+export function addParser<TKey extends keyof ElementFormatParserPerCategory>(
     domToModelOption: DomToModelOption,
     entry: TKey,
     additionalFormatParsers: FormatParser<ContentModelFormatMap[TKey]>

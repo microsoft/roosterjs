@@ -1,6 +1,5 @@
-import normalizeRect from '../pluginUtils/Rect/normalizeRect';
-import TableEditor from './editors/TableEditor';
-import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import { TableEditor } from './editors/TableEditor';
 import type { EditorPlugin, IEditor, PluginEvent, Rect } from 'roosterjs-content-model-types';
 
 const TABLE_RESIZER_LENGTH = 12;

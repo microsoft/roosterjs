@@ -1,6 +1,6 @@
-import toggleCode from '../../../lib/publicApi/segment/toggleCode';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { toggleCode } from '../../../lib/publicApi/segment/toggleCode';
 
 describe('toggleCode', () => {
     function runTest(

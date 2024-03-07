@@ -1,6 +1,6 @@
-import toggleSubscript from '../../../lib/publicApi/segment/toggleSubscript';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
+import { toggleSubscript } from '../../../lib/publicApi/segment/toggleSubscript';
 
 describe('toggleSubscript', () => {
     function runTest(

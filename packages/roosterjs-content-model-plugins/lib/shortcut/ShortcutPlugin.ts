@@ -6,8 +6,10 @@ import {
     ShortcutClearFormat,
     ShortcutDecreaseFont,
     ShortcutIncreaseFont,
+    ShortcutIndentList,
     ShortcutItalic,
     ShortcutNumbering,
+    ShortcutOutdentList,
     ShortcutRedo,
     ShortcutRedoMacOS,
     ShortcutUnderline,
@@ -34,6 +36,8 @@ const defaultShortcuts: ShortcutCommand[] = [
     ShortcutNumbering,
     ShortcutIncreaseFont,
     ShortcutDecreaseFont,
+    ShortcutIndentList,
+    ShortcutOutdentList,
 ];
 const CommandCacheKey = '__ShortcutCommandCache';
 

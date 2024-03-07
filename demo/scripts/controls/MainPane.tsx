@@ -151,7 +151,7 @@ class MainPane extends MainPaneBase<MainPaneState> {
     }
 
     renderTitleBar() {
-        return <TitleBar className={styles.noGrow} mode="classical" />;
+        return <TitleBar className={styles.noGrow} />;
     }
 
     renderRibbon(isPopout: boolean) {
@@ -171,7 +171,6 @@ class MainPane extends MainPaneBase<MainPaneState> {
             <SidePane
                 ref={this.sidePane}
                 plugins={this.getSidePanePlugins()}
-                mode="classical"
                 className={`main-pane ${styles.sidePane} ${
                     fullWidth ? styles.sidePaneFullWidth : ''
                 }`}

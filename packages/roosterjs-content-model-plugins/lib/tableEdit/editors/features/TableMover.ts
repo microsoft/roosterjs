@@ -1,10 +1,9 @@
-import createElement from '../../../pluginUtils/CreateElement/createElement';
-import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
-import { isNodeOfType } from 'roosterjs-content-model-dom';
-import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
+import { createElement } from '../../../pluginUtils/CreateElement/createElement';
+import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, Rect } from 'roosterjs-content-model-types';
-import type TableEditorFeature from './TableEditorFeature';
+import type { TableEditFeature } from './TableEditFeature';
 
 const TABLE_MOVER_LENGTH = 12;
 const TABLE_MOVER_ID = '_Table_Mover';
@@ -14,7 +13,7 @@ const TABLE_MOVER_ID = '_Table_Mover';
  * Contains the function to select whole table
  * Moving behavior not implemented yet
  */
-export default function createTableMover(
+export function createTableMover(
     table: HTMLTableElement,
     editor: IEditor,
     isRTL: boolean,
@@ -22,7 +21,7 @@ export default function createTableMover(
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement
-): TableEditorFeature | null {
+): TableEditFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
     if (!isTableTopVisible(editor, rect, contentDiv as Node)) {

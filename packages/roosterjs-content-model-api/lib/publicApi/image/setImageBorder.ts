@@ -1,5 +1,5 @@
-import applyImageBorderFormat from '../../modelApi/image/applyImageBorderFormat';
-import formatImageWithContentModel from '../utils/formatImageWithContentModel';
+import { applyImageBorderFormat } from '../../modelApi/image/applyImageBorderFormat';
+import { formatImageWithContentModel } from '../utils/formatImageWithContentModel';
 import type { Border, ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -9,11 +9,7 @@ import type { Border, ContentModelImage, IEditor } from 'roosterjs-content-model
  * its value will not be changed. Passing null instead of an object will remove the border
  * @param borderRadius the border radius value, if undefined, the border radius will keep the actual value
  */
-export default function setImageBorder(
-    editor: IEditor,
-    border: Border | null,
-    borderRadius?: string
-) {
+export function setImageBorder(editor: IEditor, border: Border | null, borderRadius?: string) {
     editor.focus();
 
     formatImageWithContentModel(editor, 'setImageBorder', (image: ContentModelImage) => {

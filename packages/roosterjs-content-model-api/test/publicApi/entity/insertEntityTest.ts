@@ -1,9 +1,9 @@
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
 import * as insertEntityModel from '../../../lib/modelApi/entity/insertEntityModel';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import insertEntity from '../../../lib/publicApi/entity/insertEntity';
 import { ChangeSource } from 'roosterjs-content-model-core';
 import { IEditor } from 'roosterjs-content-model-types';
+import { insertEntity } from '../../../lib/publicApi/entity/insertEntity';
 import {
     FormatContentModelContext,
     FormatContentModelOptions,

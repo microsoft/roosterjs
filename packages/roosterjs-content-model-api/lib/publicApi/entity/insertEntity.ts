@@ -28,7 +28,7 @@ const InlineEntityTag = 'span';
  * the beginning of this range (when focusAfterEntity is not set to true) or after the new entity (when focusAfterEntity is set to true)
  * @param options Move options to insert. See InsertEntityOptions
  */
-export default function insertEntity(
+export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: boolean,
@@ -47,7 +47,7 @@ export default function insertEntity(
  * the beginning of this range (when focusAfterEntity is not set to true) or after the new entity (when focusAfterEntity is set to true)
  * @param options Move options to insert. See InsertEntityOptions
  */
-export default function insertEntity(
+export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: true,
@@ -55,7 +55,7 @@ export default function insertEntity(
     options?: InsertEntityOptions
 ): ContentModelEntity | null;
 
-export default function insertEntity(
+export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: boolean,

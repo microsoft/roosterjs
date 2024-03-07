@@ -1,11 +1,10 @@
-import createCellResizer from './features/CellResizer';
-import createTableInserter from './features/TableInserter';
-import createTableMover from './features/TableMover';
-import createTableResizer from './features/TableResizer';
-import normalizeRect from '../../pluginUtils/Rect/normalizeRect';
-import { disposeTableEditFeature } from './features/TableEditorFeature';
-import { isNodeOfType } from 'roosterjs-content-model-dom';
-import type TableEditFeature from './features/TableEditorFeature';
+import { createCellResizer } from './features/CellResizer';
+import { createTableInserter } from './features/TableInserter';
+import { createTableMover } from './features/TableMover';
+import { createTableResizer } from './features/TableResizer';
+import { disposeTableEditFeature } from './features/TableEditFeature';
+import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import type { TableEditFeature } from './features/TableEditFeature';
 import type { IEditor, TableSelection } from 'roosterjs-content-model-types';
 
 const INSERTER_HOVER_OFFSET = 6;
@@ -42,7 +41,7 @@ const enum TOP_OR_SIDE {
  *
  * When set a different current table or change current TD, we need to update these areas
  */
-export default class TableEditor {
+export class TableEditor {
     // 1, 2 - Insert a column or a row
     private horizontalInserter: TableEditFeature | null = null;
     private verticalInserter: TableEditFeature | null = null;

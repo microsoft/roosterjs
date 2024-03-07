@@ -1,5 +1,5 @@
 import * as readFile from 'roosterjs-content-model-core/lib/publicApi/domUtils/readFile';
-import changeImage from '../../../lib/publicApi/image/changeImage';
+import { changeImage } from '../../../lib/publicApi/image/changeImage';
 import { IEditor } from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,

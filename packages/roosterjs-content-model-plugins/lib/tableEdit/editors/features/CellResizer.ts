@@ -1,22 +1,21 @@
-import createElement from '../../../pluginUtils/CreateElement/createElement';
-import DragAndDropHelper from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import normalizeRect from '../../../pluginUtils/Rect/normalizeRect';
-import { isElementOfType } from 'roosterjs-content-model-dom';
+import { createElement } from '../../../pluginUtils/CreateElement/createElement';
+import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { isElementOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import {
     getFirstSelectedTable,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     normalizeTable,
 } from 'roosterjs-content-model-core';
-import type DragAndDropHandler from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
+import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
-import type TableEditFeature from './TableEditorFeature';
+import type { TableEditFeature } from './TableEditFeature';
 
 const CELL_RESIZER_WIDTH = 4;
 
 /**
  * @internal
  */
-export default function createCellResizer(
+export function createCellResizer(
     editor: IEditor,
     td: HTMLTableCellElement,
     table: HTMLTableElement,

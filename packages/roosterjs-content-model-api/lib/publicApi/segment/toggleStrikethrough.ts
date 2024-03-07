@@ -5,7 +5,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * Toggle strikethrough style
  * @param editor The editor to operate on
  */
-export default function toggleStrikethrough(editor: IEditor) {
+export function toggleStrikethrough(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(

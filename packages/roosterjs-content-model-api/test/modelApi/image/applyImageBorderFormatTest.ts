@@ -1,4 +1,4 @@
-import applyImageBorderFormat from '../../../lib/modelApi/image/applyImageBorderFormat';
+import { applyImageBorderFormat } from '../../../lib/modelApi/image/applyImageBorderFormat';
 import { Border, ContentModelImage } from 'roosterjs-content-model-types';
 
 describe('applyImageBorderFormat', () => {

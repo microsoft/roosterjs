@@ -319,7 +319,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     const trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
 
                     // If we hit a case where wordBeforeCursor is just the trigger character,
-                    // that means we've gotten a onKeyUp event right after it's been typed.
+                    // that means we've gotten an onKeyUp event right after it's been typed.
                     // Otherwise, update the query string when:
                     // 1. There's an actual value
                     // 2. That actual value isn't just pure whitespace
@@ -346,7 +346,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     if (
                         wordBeforeCursor != null &&
                         wordBeforeCursor.split(' ').length <= 4 &&
-                        wordBeforeCursor[0] == this.pickerOptions.triggerCharacter
+                        (wordBeforeCursor[0] == this.pickerOptions.triggerCharacter ||
+                            (wordBeforeCursor[0] == '(' &&
+                                wordBeforeCursor[1] == this.pickerOptions.triggerCharacter))
                     ) {
                         this.setIsSuggesting(true);
                         const wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);

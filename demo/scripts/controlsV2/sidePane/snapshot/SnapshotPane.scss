@@ -1,0 +1,57 @@
+@import '../../theme/theme.scss';
+
+.snapshotPane {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons {
+    margin-bottom: 10px;
+    flex: 0 0 auto;
+}
+
+.textarea {
+    flex: 1 1 auto;
+    resize: none;
+    min-height: 100px;
+    border-color: $primaryBorder;
+}
+
+.snapshotList {
+    min-height: 100px;
+    max-height: 200px;
+    overflow: hidden auto;
+    border: solid 1px $primaryBorder;
+
+    pre {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        margin: 0;
+        &:hover {
+            background-color: #eee;
+        }
+
+        &.current {
+            font-weight: bold;
+        }
+
+        &.autoComplete {
+            background-color: #ff0;
+        }
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .snapshotList {
+        border: solid 1px $primaryBorderDark;
+    }
+    .textarea {
+        border-color: $primaryBorderDark;
+    }
+    .snapshotList {
+        border: solid 1px $primaryBorderDark;
+    }
+}

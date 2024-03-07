@@ -8,7 +8,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @param editor The editor to operate on
  * @param removeMargins true to remove margins, false to keep margins @default false
  */
-export default function toggleBullet(editor: IEditor, removeMargins: boolean = false) {
+export function toggleBullet(editor: IEditor, removeMargins: boolean = false) {
     editor.focus();
 
     editor.formatContentModel(

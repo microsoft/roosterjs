@@ -6,7 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * Toggle bold style
  * @param editor The editor to operate on
  */
-export default function toggleBold(editor: IEditor) {
+export function toggleBold(editor: IEditor) {
     editor.focus();
 
     formatSegmentWithContentModel(
