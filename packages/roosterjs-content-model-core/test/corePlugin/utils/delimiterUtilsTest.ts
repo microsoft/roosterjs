@@ -1125,4 +1125,165 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         });
     });
+
+    it('handle before entity as first segment', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                entityType: '',
+                                isReadonly: true,
+                            },
+                            wrapper: <any>{},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '_',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                entityType: '',
+                                isReadonly: true,
+                            },
+                            wrapper: jasmine.anything(),
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '_',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('handle after entity as last segment', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '_',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                entityType: '',
+                                isReadonly: true,
+                            },
+                            wrapper: <any>{},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '_',
+                            format: {},
+                        },
+
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                entityType: '',
+                                isReadonly: true,
+                            },
+                            wrapper: jasmine.anything(),
+                        },
+                    ],
+
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+    });
 });

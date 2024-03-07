@@ -292,6 +292,16 @@ export const handleEnterInlineEntity: ContentModelFormatter = model => {
                 selectionBlock.segmentFormat,
                 selectionBlock.decorator
             );
+
+            if (
+                selectionBlock.segments.every(
+                    x => x.segmentType == 'SelectionMarker' || x.segmentType == 'Br'
+                ) ||
+                segmentsAfterMarker.every(x => x.segmentType == 'SelectionMarker')
+            ) {
+                newPara.segments.push(createBr(selectionBlock.format));
+            }
+
             newPara.segments.push(...segmentsAfterMarker);
 
             const selectionBlockIndex = selectionBlockParent.blocks.indexOf(selectionBlock);
