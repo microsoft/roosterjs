@@ -4,12 +4,7 @@ import ContentEditCode from './ContentEditCode';
 import HyperLinkCode from './HyperLinkCode';
 import TableCellSelectionCode from './TableCellSelectionCode';
 import WatermarkCode from './WatermarkCode';
-import {
-    CustomReplaceCode,
-    CutPasteListChainCode,
-    ImageEditCode,
-    ContentModelPasteCode,
-} from './SimplePluginCode';
+import { CustomReplaceCode, CutPasteListChainCode, ImageEditCode } from './SimplePluginCode';
 
 export default class PluginsCode extends CodeElement {
     private plugins: CodeElement[];
@@ -21,7 +16,6 @@ export default class PluginsCode extends CodeElement {
         this.plugins = [
             pluginList.contentEdit && new ContentEditCode(state.contentEditFeatures),
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
-            new ContentModelPasteCode(),
             pluginList.watermark && new WatermarkCode(this.state.watermarkText),
             pluginList.imageEdit && new ImageEditCode(),
             pluginList.cutPasteListChain && new CutPasteListChainCode(),

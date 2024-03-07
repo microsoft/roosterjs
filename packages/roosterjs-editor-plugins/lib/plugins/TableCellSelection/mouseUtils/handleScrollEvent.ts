@@ -7,6 +7,7 @@ import type { IEditor } from 'roosterjs-editor-types';
 import type { TableCellSelectionState } from '../TableCellSelectionState';
 
 /**
+ * @internal
  * Handle Scroll Event and mantains the selection range,
  * Since when we scroll the cursor does not trigger the on Mouse Move event
  * The table selection gets removed.

@@ -23,12 +23,12 @@ export class EditorCode extends CodeElement {
     }
 
     requireLegacyCode() {
-        return this.legacyPlugins.getPluginCount() > 0 || !!this.darkMode;
+        return this.legacyPlugins.getPluginCount() > 0;
     }
 
     getCode() {
         let defaultFormat = this.defaultFormat.getCode();
-        let code = "let contentDiv = document.getElementById('contentDiv') as HTMLDivElement;\n";
+        let code = "let contentDiv = document.getElementById('contentDiv');\n";
         let darkMode = this.darkMode.getCode();
 
         const hasLegacyPlugin = this.legacyPlugins.getPluginCount() > 0;
@@ -40,10 +40,10 @@ export class EditorCode extends CodeElement {
         code += this.indent('plugins: plugins,\n');
         code += hasLegacyPlugin ? this.indent('legacyPlugins: legacyPlugins,\n') : '';
         code += defaultFormat ? this.indent('defaultSegmentFormat: defaultSegmentFormat,\n') : '';
-        code += darkMode ? this.indent(`getDarkColor: ${darkMode},\n`) : '';
+        code += this.indent(`getDarkColor: ${darkMode},\n`);
         code += '};\n';
         code += `let editor = new ${
-            hasLegacyPlugin ? 'roosterjs.EditorAdapter' : 'roosterjsContentModel.Editor'
+            hasLegacyPlugin ? 'roosterjsAdapter.EditorAdapter' : 'roosterjs.Editor'
         }(contentDiv, options);\n`;
         code += this.buttons ? this.buttons.getCode() : '';
 

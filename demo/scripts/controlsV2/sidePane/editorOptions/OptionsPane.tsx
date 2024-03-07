@@ -21,10 +21,9 @@ const htmlButtons =
     '<button id=buttonTable>Insert Table</button>\n' +
     '<button id=buttonDark>Dark mode</button>\n';
 '<button id=buttonDark>Dark Mode</button>\n';
+const jsCode = '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n';
 const legacyJsCode =
-    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n';
-const jsCode =
-    '<script src="https://microsoft.github.io/roosterjs/rooster-content-model-min.js"></script>\n';
+    '<script src="https://microsoft.github.io/roosterjs/rooster-legacy-min.js"></script>\n<script src="https://microsoft.github.io/roosterjs/rooster-adapter-min.js"></script>\n';
 const htmlEnd = '</body>\n' + '</html>';
 
 export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {

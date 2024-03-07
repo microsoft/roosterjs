@@ -106,7 +106,6 @@ const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
 
 /**
  * Editor for Content Model.
- * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export class EditorAdapter extends Editor implements ILegacyEditor {
     private contentModelEditorCore: EditorAdapterCore | undefined;

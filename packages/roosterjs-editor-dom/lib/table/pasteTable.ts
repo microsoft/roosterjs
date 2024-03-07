@@ -5,7 +5,7 @@ import { TableOperation } from 'roosterjs-editor-types';
 import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
- *
+ * @internal
  * Pastes a table inside another, modifying the original to create a merged one
  * @param currentTd The cell where the cursor is in the table to paste into
  * @param rootNodeToInsert A Node containing the table to be inserted

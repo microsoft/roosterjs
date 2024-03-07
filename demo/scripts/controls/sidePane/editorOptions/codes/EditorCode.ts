@@ -30,7 +30,7 @@ export default class EditorCode extends CodeElement {
         let code = "let contentDiv = document.getElementById('contentDiv') as HTMLDivElement;\n";
         code += `let plugins = ${this.plugins.getCode()};\n`;
         code += defaultFormat ? `let defaultFormat: DefaultFormat = ${defaultFormat};\n` : '';
-        code += 'let options: roosterjs.EditorOptions = {\n';
+        code += 'let options: roosterjsLegacy.EditorOptions = {\n';
         code += this.indent('plugins: plugins,\n');
         code += defaultFormat ? this.indent('defaultFormat: defaultFormat,\n') : '';
         code += expermientalFeatures
@@ -38,7 +38,7 @@ export default class EditorCode extends CodeElement {
             : '';
         code += darkMode ? this.indent(`getDarkColor: ${darkMode},\n`) : '';
         code += '};\n';
-        code += 'let editor = new roosterjs.Editor(contentDiv, options);\n';
+        code += 'let editor = new roosterjsLegacy.Editor(contentDiv, options);\n';
         code += this.buttons ? this.buttons.getCode() : '';
 
         return code;

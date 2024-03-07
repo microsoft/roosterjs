@@ -13,7 +13,9 @@ const {
     buildConfig,
 } = require('./common');
 
-const filesToCopy = Object.values(buildConfig).map(x => x.jsFileBaseName);
+const filesToCopy = Object.values(buildConfig)
+    .map(x => x.jsFileBaseName)
+    .filter(x => !!x);
 
 async function buildDemoSite() {
     const sourcePathRoot = path.join(rootPath, 'demo');
@@ -66,12 +68,11 @@ async function buildDemoSite() {
             ],
         },
         externals: getWebpackExternalCallback([
-            [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
-            [/^roosterjs-editor-adapter\/.*$/, 'roosterjs'],
+            [/^roosterjs-editor-plugins\/.*$/, 'roosterjsLegacy'],
+            [/^roosterjs-editor-adapter\/.*$/, 'roosterjsAdapter'],
             [/^roosterjs-react\/.*$/, 'roosterjsReact'],
             [/^roosterjs-react$/, 'roosterjsReact'],
-            [/^roosterjs-content-model.*/, 'roosterjsContentModel'],
-            [/^roosterjs-adapter\/.*$/, 'roosterjsAdapter'],
+            [/^roosterjs-content-model.*/, 'roosterjs'],
         ]),
         stats: 'minimal',
         mode: 'production',

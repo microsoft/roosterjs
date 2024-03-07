@@ -42,7 +42,7 @@ export default class ReactEditorCode extends CodeElement {
 
         code += `let plugins = ${this.plugins.getCode()};\n`;
         code += defaultFormat ? `let defaultFormat: DefaultFormat = ${defaultFormat};\n` : '';
-        code += 'let options: roosterjs.EditorOptions = {\n';
+        code += 'let options: roosterjsLegacy.EditorOptions = {\n';
         code += this.indent('plugins: plugins,\n');
         code += defaultFormat ? this.indent('defaultFormat: defaultFormat,\n') : '';
         code += expermientalFeatures

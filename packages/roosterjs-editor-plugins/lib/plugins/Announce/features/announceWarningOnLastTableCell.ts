@@ -5,7 +5,10 @@ import type { AnnounceFeature } from '../AnnounceFeature';
 const TABLE_CELL_SELECTOR = 'td,th';
 const TABLE_SELECTOR = 'table';
 
-const announceWarningOnLastCell: AnnounceFeature = {
+/**
+ * @internal
+ */
+export const announceWarningOnLastCell: AnnounceFeature = {
     shouldHandle: (editor, lastFocusedElement) => {
         const selection = editor.getSelectionRangeEx();
 
@@ -36,5 +39,3 @@ const announceWarningOnLastCell: AnnounceFeature = {
     },
     keys: [Keys.TAB, Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT],
 };
-
-export default announceWarningOnLastCell;
