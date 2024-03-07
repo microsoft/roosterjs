@@ -1,7 +1,6 @@
 import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
 import { ChangeSource } from '../../constants/ChangeSource';
 import { deleteEmptyList } from './deleteEmptyList';
-import { deleteSelection } from '../../publicApi/selection/deleteSelection';
 import { extractClipboardItems } from '../../utils/extractClipboardItems';
 import { getSelectedCells } from '../../publicApi/table/getSelectedCells';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
@@ -9,6 +8,7 @@ import { paste } from '../../publicApi/paste/paste';
 import {
     contentModelToDom,
     createModelToDomContext,
+    deleteSelection,
     isElementOfType,
     isNodeOfType,
     iterateSelections,

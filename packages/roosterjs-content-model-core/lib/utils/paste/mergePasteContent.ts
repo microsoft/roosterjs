@@ -1,9 +1,12 @@
 import { ChangeSource } from '../../constants/ChangeSource';
-import { cloneModel, domToContentModel } from 'roosterjs-content-model-dom';
 import { createDomToModelContextForSanitizing } from '../createDomToModelContextForSanitizing';
-import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
-import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
+import {
+    cloneModel,
+    domToContentModel,
+    getSegmentTextFormat,
+    getSelectedSegments,
+} from 'roosterjs-content-model-dom';
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
     BeforePasteEvent,

@@ -1,7 +1,6 @@
-import { parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { getFirstSelectedTable, parseValueWithUnit } from 'roosterjs-content-model-dom';
 import {
     extractBorderValues,
-    getFirstSelectedTable,
     getSelectedCells,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-core';

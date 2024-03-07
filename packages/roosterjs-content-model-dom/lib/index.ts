@@ -29,6 +29,7 @@ export {
     addDelimiters,
     isEntityDelimiter,
 } from './domUtils/entityUtils';
+export { normalizeText } from './domUtils/normalizeText';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
@@ -59,17 +60,31 @@ export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
 export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
 export { cloneModel } from './modelApi/common/cloneModel';
-
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
 export { isGeneralSegment } from './modelApi/common/isGeneralSegment';
 export { unwrapBlock } from './modelApi/common/unwrapBlock';
 export { addSegment } from './modelApi/common/addSegment';
 export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
+export { getSegmentTextFormat } from './modelApi/common/getSegmentTextFormat';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
+export { getClosestAncestorBlockGroupIndex } from './modelApi/block/getClosestAncestorBlockGroupIndex';
+export { isBlockGroupOfType } from './modelApi/block/isBlockGroupOfType';
 
 export { iterateSelections } from './modelApi/selection/iterateSelections';
+export {
+    getFirstSelectedListItem,
+    getFirstSelectedTable,
+    getOperationalBlocks,
+    getSelectedParagraphs,
+    getSelectedSegments,
+    getSelectedSegmentsAndParagraphs,
+} from './modelApi/selection/collectSelections';
+
+export { deleteSelection } from './modelApi/editing/deleteSelection';
+export { deleteSegment } from './modelApi/editing/deleteSegment';
+export { deleteBlock } from './modelApi/editing/deleteBlock';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';

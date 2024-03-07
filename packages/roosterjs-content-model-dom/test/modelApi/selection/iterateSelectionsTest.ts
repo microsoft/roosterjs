@@ -1,21 +1,19 @@
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createDivider } from '../../../lib/modelApi/creators/createDivider';
+import { createEntity } from '../../../lib/modelApi/creators/createEntity';
+import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
+import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
+import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
+import { createListItem } from '../../../lib/modelApi/creators/createListItem';
+import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
+import { createTable } from '../../../lib/modelApi/creators/createTable';
+import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { createText } from '../../../lib/modelApi/creators/createText';
+import { iterateSelections } from '../../../lib/modelApi/selection/iterateSelections';
 import { IterateSelectionsCallback } from 'roosterjs-content-model-types';
-import {
-    addSegment,
-    createContentModelDocument,
-    createDivider,
-    createEntity,
-    createFormatContainer,
-    createGeneralBlock,
-    createGeneralSegment,
-    createListItem,
-    createListLevel,
-    createParagraph,
-    createSelectionMarker,
-    createTable,
-    createTableCell,
-    createText,
-    iterateSelections,
-} from 'roosterjs-content-model-dom';
 
 describe('iterateSelections', () => {
     let callback: jasmine.Spy<IterateSelectionsCallback>;

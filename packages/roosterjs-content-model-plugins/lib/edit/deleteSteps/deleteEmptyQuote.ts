@@ -1,8 +1,10 @@
-import { createParagraph, createSelectionMarker, unwrapBlock } from 'roosterjs-content-model-dom';
 import {
+    createParagraph,
+    createSelectionMarker,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
-} from 'roosterjs-content-model-core';
+    unwrapBlock,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockGroup,
     ContentModelFormatContainer,

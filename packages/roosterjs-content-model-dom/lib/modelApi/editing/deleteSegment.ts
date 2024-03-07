@@ -1,6 +1,6 @@
-import { deleteSingleChar } from '../../modelApi/edit/deleteSingleChar';
+import { deleteSingleChar } from '../../modelApi/editing/deleteSingleChar';
 import { isWhiteSpacePreserved, normalizeSingleSegment } from 'roosterjs-content-model-dom';
-import { normalizeText } from '../domUtils/stringUtil';
+import { normalizeText } from '../../domUtils/normalizeText';
 import type {
     ContentModelParagraph,
     ContentModelSegment,

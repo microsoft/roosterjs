@@ -287,6 +287,8 @@ export {
     IterateSelectionsCallback,
     IterateSelectionsOption,
 } from './parameter/IterateSelectionsOption';
+export { TypeOfBlockGroup } from './parameter/TypeOfBlockGroup';
+export { OperationalBlocks } from './parameter/OperationalBlocks';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

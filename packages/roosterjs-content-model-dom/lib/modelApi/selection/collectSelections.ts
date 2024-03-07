@@ -1,6 +1,6 @@
-import { getClosestAncestorBlockGroupIndex } from '../model/getClosestAncestorBlockGroupIndex';
-import { isBlockGroupOfType } from '../model/isBlockGroupOfType';
-import { iterateSelections } from 'roosterjs-content-model-dom';
+import { getClosestAncestorBlockGroupIndex } from '../block/getClosestAncestorBlockGroupIndex';
+import { isBlockGroupOfType } from '../block/isBlockGroupOfType';
+import { iterateSelections } from './iterateSelections';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -11,29 +11,10 @@ import type {
     ContentModelSegment,
     ContentModelTable,
     IterateSelectionsOption,
+    OperationalBlocks,
     TableSelectionContext,
+    TypeOfBlockGroup,
 } from 'roosterjs-content-model-types';
-import type { TypeOfBlockGroup } from '../model/getClosestAncestorBlockGroupIndex';
-
-/**
- * Represent a pair of parent block group and child block
- */
-export type OperationalBlocks<T extends ContentModelBlockGroup> = {
-    /**
-     * The parent block group
-     */
-    parent: ContentModelBlockGroup;
-
-    /**
-     * The child block
-     */
-    block: ContentModelBlock | T;
-
-    /**
-     * Selection path of this block
-     */
-    path: ContentModelBlockGroup[];
-};
 
 /**
  * Get an array of selected parent paragraph and child segment pair

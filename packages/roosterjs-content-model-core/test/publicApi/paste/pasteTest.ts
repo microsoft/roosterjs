@@ -2,7 +2,7 @@ import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/add
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
 import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
-import * as getSelectedSegmentsF from '../../../lib/publicApi/selection/collectSelections';
+import * as getSelectedSegmentsF from 'roosterjs-content-model-dom/lib/modelApi/selection/collectSelections';
 import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
 import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';

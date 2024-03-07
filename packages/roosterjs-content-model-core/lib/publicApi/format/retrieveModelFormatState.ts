@@ -1,8 +1,11 @@
 import { extractBorderValues } from '../domUtils/borderValues';
-import { getClosestAncestorBlockGroupIndex } from '../model/getClosestAncestorBlockGroupIndex';
 import { isBold } from '../model/isBold';
-import { iterateSelections, parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { updateTableMetadata } from '../../metadata/updateTableMetadata';
+import {
+    getClosestAncestorBlockGroupIndex,
+    iterateSelections,
+    parseValueWithUnit,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelFormatState,
     ContentModelBlock,

@@ -1,6 +1,6 @@
-import { deleteBlock } from '../../publicApi/selection/deleteBlock';
-import { deleteSegment } from '../../publicApi/selection/deleteSegment';
-import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
+import { deleteBlock } from '../../modelApi/editing/deleteBlock';
+import { deleteSegment } from '../../modelApi/editing/deleteSegment';
+import { getSegmentTextFormat } from '../common/getSegmentTextFormat';
 import {
     createBr,
     createParagraph,

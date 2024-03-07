@@ -1,4 +1,4 @@
-import { getClosestAncestorBlockGroupIndex } from '../../publicApi/model/getClosestAncestorBlockGroupIndex';
+import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-dom';
 import { hasSelectionInBlock } from '../../publicApi/selection/hasSelectionInBlock';
 import { hasSelectionInBlockGroup } from '../../publicApi/selection/hasSelectionInBlockGroup';
 import type {

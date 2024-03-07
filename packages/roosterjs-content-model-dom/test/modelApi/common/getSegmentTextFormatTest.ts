@@ -1,5 +1,6 @@
-import { createImage, createText } from 'roosterjs-content-model-dom';
-import { getSegmentTextFormat } from '../../../lib/publicApi/domUtils/getSegmentTextFormat';
+import { createImage } from '../../../lib/modelApi/creators/createImage';
+import { createText } from '../../../lib/modelApi/creators/createText';
+import { getSegmentTextFormat } from '../../../lib/modelApi/common/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
     it('get format from text segment', () => {

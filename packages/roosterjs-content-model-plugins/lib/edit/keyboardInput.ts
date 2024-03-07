@@ -1,7 +1,7 @@
 import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
-import { deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
+import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { handleEnterOnList } from './inputSteps/handleEnterOnList';
-import { normalizeContentModel } from 'roosterjs-content-model-dom';
+import { isModifierKey } from 'roosterjs-content-model-core';
 import type { DOMSelection, IEditor } from 'roosterjs-content-model-types';
 
 /**

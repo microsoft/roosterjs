@@ -1,8 +1,5 @@
-import {
-    applyTableFormat,
-    getFirstSelectedTable,
-    updateTableCellMetadata,
-} from 'roosterjs-content-model-core';
+import { applyTableFormat, updateTableCellMetadata } from 'roosterjs-content-model-core';
+import { getFirstSelectedTable } from 'roosterjs-content-model-dom';
 import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**

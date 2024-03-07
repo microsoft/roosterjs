@@ -1,4 +1,4 @@
-import { getFirstSelectedListItem } from 'roosterjs-content-model-core';
+import { getFirstSelectedListItem } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from 'roosterjs-content-model-api';
 import type { IEditor } from 'roosterjs-content-model-types';
 

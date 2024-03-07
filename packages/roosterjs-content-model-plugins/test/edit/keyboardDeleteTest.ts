@@ -1,4 +1,4 @@
-import * as deleteSelection from 'roosterjs-content-model-core/lib/publicApi/selection/deleteSelection';
+import * as deleteSelection from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCommon';
 import { ChangeSource } from 'roosterjs-content-model-core';
 import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';

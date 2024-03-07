@@ -1,4 +1,4 @@
-import { getClosestAncestorBlockGroupIndex } from '../../../lib/publicApi/model/getClosestAncestorBlockGroupIndex';
+import { getClosestAncestorBlockGroupIndex } from '../../../lib/modelApi/block/getClosestAncestorBlockGroupIndex';
 
 describe('getClosestAncestorBlockGroupIndex', () => {
     it('Empty path', () => {

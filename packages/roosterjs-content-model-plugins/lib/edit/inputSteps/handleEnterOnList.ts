@@ -1,13 +1,11 @@
 import {
-    getClosestAncestorBlockGroupIndex,
-    isBlockGroupOfType,
-} from 'roosterjs-content-model-core';
-import {
     createBr,
     createListItem,
     createListLevel,
     createParagraph,
     createSelectionMarker,
+    getClosestAncestorBlockGroupIndex,
+    isBlockGroupOfType,
     normalizeContentModel,
     normalizeParagraph,
     setParagraphNotImplicit,

@@ -1,4 +1,4 @@
-import { deleteExpandedSelection } from '../../modelApi/edit/deleteExpandedSelection';
+import { deleteExpandedSelection } from './deleteExpandedSelection';
 import type {
     ContentModelDocument,
     DeleteSelectionContext,

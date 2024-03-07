@@ -1,28 +1,11 @@
 export { mergeModel, MergeModelOption } from './publicApi/model/mergeModel';
-export { isBlockGroupOfType } from './publicApi/model/isBlockGroupOfType';
-export {
-    getClosestAncestorBlockGroupIndex,
-    TypeOfBlockGroup,
-} from './publicApi/model/getClosestAncestorBlockGroupIndex';
 export { isBold } from './publicApi/model/isBold';
 export { createModelFromHtml } from './publicApi/model/createModelFromHtml';
 export { exportContent } from './publicApi/model/exportContent';
 
-export { deleteSelection } from './publicApi/selection/deleteSelection';
-export { deleteSegment } from './publicApi/selection/deleteSegment';
-export { deleteBlock } from './publicApi/selection/deleteBlock';
 export { hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
 export { hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
 export { hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
-export {
-    OperationalBlocks,
-    getFirstSelectedListItem,
-    getFirstSelectedTable,
-    getOperationalBlocks,
-    getSelectedParagraphs,
-    getSelectedSegments,
-    getSelectedSegmentsAndParagraphs,
-} from './publicApi/selection/collectSelections';
 export { setSelection } from './publicApi/selection/setSelection';
 
 export { applyTableFormat } from './publicApi/table/applyTableFormat';
@@ -32,8 +15,7 @@ export { getSelectedCells } from './publicApi/table/getSelectedCells';
 
 export { isCharacterValue, isModifierKey } from './publicApi/domUtils/eventUtils';
 export { combineBorderValue, extractBorderValues } from './publicApi/domUtils/borderValues';
-export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stringUtil';
-export { getSegmentTextFormat } from './publicApi/domUtils/getSegmentTextFormat';
+export { isPunctuation, isSpace } from './publicApi/domUtils/stringUtil';
 export { readFile } from './publicApi/domUtils/readFile';
 export { cacheGetEventData } from './publicApi/domUtils/cacheGetEventData';
 

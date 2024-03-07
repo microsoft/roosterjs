@@ -1,6 +1,6 @@
+import { getFirstSelectedTable } from 'roosterjs-content-model-dom';
 import {
     hasSelectionInBlockGroup,
-    getFirstSelectedTable,
     normalizeTable,
     setTableCellBackgroundColor,
 } from 'roosterjs-content-model-core';

@@ -1,4 +1,4 @@
-import { getFirstSelectedListItem } from 'roosterjs-content-model-core';
+import { getFirstSelectedListItem } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**

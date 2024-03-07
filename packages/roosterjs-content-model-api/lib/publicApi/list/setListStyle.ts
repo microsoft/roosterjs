@@ -1,5 +1,6 @@
 import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
-import { getFirstSelectedListItem, updateListMetadata } from 'roosterjs-content-model-core';
+import { getFirstSelectedListItem } from 'roosterjs-content-model-dom';
+import { updateListMetadata } from 'roosterjs-content-model-core';
 import type { IEditor, ListMetadataFormat } from 'roosterjs-content-model-types';
 
 /**

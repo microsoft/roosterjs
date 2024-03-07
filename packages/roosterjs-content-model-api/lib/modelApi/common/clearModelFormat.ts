@@ -1,8 +1,11 @@
 import { adjustWordSelection } from '../selection/adjustWordSelection';
-import { createFormatContainer, iterateSelections } from 'roosterjs-content-model-dom';
+import {
+    createFormatContainer,
+    getClosestAncestorBlockGroupIndex,
+    iterateSelections,
+} from 'roosterjs-content-model-dom';
 import {
     applyTableFormat,
-    getClosestAncestorBlockGroupIndex,
     updateTableCellMetadata,
     updateTableMetadata,
 } from 'roosterjs-content-model-core';

@@ -1,4 +1,4 @@
-import { isBlockGroupOfType } from '../../../lib/publicApi/model/isBlockGroupOfType';
+import { isBlockGroupOfType } from '../../../lib/modelApi/block/isBlockGroupOfType';
 
 describe('isBlockGroupOfType', () => {
     it('null input', () => {

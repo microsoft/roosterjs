@@ -1,7 +1,6 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteList } from '../../../lib/edit/deleteSteps/deleteList';
-import { deleteSelection } from 'roosterjs-content-model-core';
-import { normalizeContentModel } from 'roosterjs-content-model-dom';
+import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 
 describe('deleteList', () => {
     it('deletes the list item when there is only one list item', () => {

@@ -1,12 +1,10 @@
-import {
-    deleteSelection,
-    getClosestAncestorBlockGroupIndex,
-    setSelection,
-} from 'roosterjs-content-model-core';
+import { setSelection } from 'roosterjs-content-model-core';
 import {
     createBr,
     createParagraph,
     createSelectionMarker,
+    deleteSelection,
+    getClosestAncestorBlockGroupIndex,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
 import type {
