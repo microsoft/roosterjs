@@ -24,7 +24,6 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
         const selection = createSnapshotSelection(core);
         const html = physicalRoot.innerHTML;
 
-        // if (!entityStates && core.physicalRoot !== core.logicalRoot) {
         if (!entityStates) {
             // give plugins the chance to share entity states to include in the snapshot
             const event = <SnapshotLogicalRootEvent>{
