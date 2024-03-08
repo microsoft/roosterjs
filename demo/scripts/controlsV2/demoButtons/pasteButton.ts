@@ -1,5 +1,5 @@
-import { extractClipboardItems } from 'roosterjs-content-model-core';
-import { RibbonButton } from '../roosterjsReact/ribbon';
+import { extractClipboardItems, paste } from 'roosterjs-content-model-core';
+import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 /**
  * @internal
@@ -19,7 +19,7 @@ export const pasteButton: RibbonButton<'buttonNamePaste'> = {
                     createDataTransferItems(clipboardItems)
                 );
                 const clipboardData = await extractClipboardItems(dataTransferItems);
-                editor.pasteFromClipboard(clipboardData);
+                paste(editor, clipboardData);
             } catch {}
         }
     },

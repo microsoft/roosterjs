@@ -26,7 +26,7 @@ describe('getDOMSelection', () => {
             logicalRoot: contentDiv,
             lifecycle: {},
             selection: {},
-            api: {
+            domHelper: {
                 hasFocus: hasFocusSpy,
             },
         } as any;
