@@ -139,8 +139,7 @@ export default class HtmlSanitizer {
      */
     private splitSelectors(selectorText: string) {
         let regex = /(?![^(]*\)),/;
-        const t = selectorText.split(regex).map(s => s.trim());
-        return t;
+        return selectorText.split(regex).map(s => s.trim());
     }
 
     /**
