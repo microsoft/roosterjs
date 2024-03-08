@@ -133,6 +133,17 @@ export default class HtmlSanitizer {
     }
 
     /**
+     * Splits CSS selectors, avoiding splits within parentheses
+     * @param selectorText The CSS selector string
+     * @return Array of trimmed selectors
+     */
+    private splitSelectors(selectorText: string) {
+        let regex = /(?![^(]*\)),/;
+        const t = selectorText.split(regex).map(s => s.trim());
+        return t;
+    }
+
+    /**
      * Convert global CSS into inline CSS
      * @param rootNode The HTML Document
      */
@@ -152,8 +163,8 @@ export default class HtmlSanitizer {
                     continue;
                 }
                 // Make sure the selector is not empty
-                for (const selector of styleRule.selectorText.split(',')) {
-                    if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
+                for (const selector of this.splitSelectors(styleRule.selectorText)) {
+                    if (!selector || !selector.trim()) {
                         continue;
                     }
                     const nodes = toArray(rootNode.querySelectorAll(selector));
