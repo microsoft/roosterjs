@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { ContentModelFormatState, EditorEnvironment } from 'roosterjs-content-model-types';
 import { SidePaneElementProps } from '../SidePaneElement';
+import {
+    ContentModelFormatState,
+    EditorEnvironment,
+    TableMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 const styles = require('./FormatStatePane.scss');
 
@@ -34,9 +38,40 @@ export default class FormatStatePane extends React.Component<
         const { format, x, y } = this.state;
         const { isMac, isAndroid, isSafari, isMobileOrTablet } = this.props.env ?? {};
 
+        const TableFormat = () => {
+            const tableFormat = format.tableFormat;
+            if (!tableFormat) {
+                return <></>;
+            }
+            const tableFromatRows = Object.keys(tableFormat).map(
+                (key: keyof TableMetadataFormat, index: number, array) => {
+                    const rowStyle: React.CSSProperties =
+                        index == 0
+                            ? { borderTop: 'solid' }
+                            : index == array.length - 1
+                            ? { borderBottom: 'solid' }
+                            : {};
+                    return (
+                        <tr style={rowStyle}>
+                            <td style={{ fontSize: 'small' }}>{key}</td>
+                            <td>{String(tableFormat[key])}</td>
+                        </tr>
+                    );
+                }
+            );
+            return tableFromatRows;
+        };
         return format ? (
-            <table>
+            <table style={{ borderCollapse: 'collapse' }}>
                 <tbody>
+                    <tr hidden={!format.isInTable}>
+                        <td className={styles.title}>Table</td>
+                        <td>
+                            {this.renderSpan(format.canMergeTableCell, 'Can merge')}
+                            {this.renderSpan(format.tableHasHeader, 'Table has header')}
+                        </td>
+                    </tr>
+                    {TableFormat()}
                     <tr>
                         <td className={styles.title}>Position</td>
                         <td>{`${x},${y}`}</td>
@@ -80,8 +115,6 @@ export default class FormatStatePane extends React.Component<
                             {this.renderSpan(format.isBlockQuote, 'Quote')}
                             {this.renderSpan(format.canUnlink, 'In Link')}
                             {this.renderSpan(format.canAddImageAltText, 'In Image')}
-                            {this.renderSpan(format.isInTable, 'In Table')}
-                            {this.renderSpan(format.tableHasHeader, 'Table Has Header')}
                         </td>
                     </tr>
                     <tr>
