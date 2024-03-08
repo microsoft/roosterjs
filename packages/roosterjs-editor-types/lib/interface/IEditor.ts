@@ -212,12 +212,14 @@ export default interface IEditor {
      * @param applyCurrentStyle True if apply format of current selection to the pasted content,
      * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
      * @param pasteAsImage: When set to true, if the clipboardData contains a imageDataUri will paste the image to the editor
+     * @param pasteAsTextWithClickableLinks When set to true, preserve clickable links in the pasted content. Default value is false
      */
     paste(
         clipboardData: ClipboardData,
         pasteAsText?: boolean,
         applyCurrentFormat?: boolean,
-        pasteAsImage?: boolean
+        pasteAsImage?: boolean,
+        pasteAsTextWithClickableLinks?: boolean
     ): void;
 
     //#endregion

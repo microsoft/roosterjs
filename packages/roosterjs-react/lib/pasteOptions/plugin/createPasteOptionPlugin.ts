@@ -151,6 +151,15 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                         false /*applyCurrentFormat*/,
                         true /** pasteAsImage **/
                     );
+                    break;
+                case 'pasteOptionPasteAsTextAndLinks':
+                    this.editor.paste(
+                        this.clipboardData,
+                        false /*pasteAsText*/,
+                        false /*applyCurrentFormat*/,
+                        false /** pasteAsImage **/,
+                        true /**pasteAsTextWithClickableLinks */
+                    );
             }
 
             this.pasteOptionRef.current?.setSelectedKey(key);
@@ -185,6 +194,7 @@ function cancelEvent(event: UIEvent) {
  * - Paste as is
  * - Paste as text
  * - Paste and merge format
+ * - Paste as plain text with clickable links
  * @param strings Localized string for this plugin
  * @returns A paste option plugin
  */
