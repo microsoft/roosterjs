@@ -1,5 +1,6 @@
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
+
 import type {
     CompositionEndEvent,
     ContentModelBlockGroup,
@@ -18,6 +19,7 @@ import {
     isEntityDelimiter,
     isEntityElement,
     isNodeOfType,
+    parseEntityFormat,
 } from 'roosterjs-content-model-dom';
 
 const DelimiterBefore = 'entityDelimiterBefore';
@@ -201,7 +203,7 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
         return;
     }
     const isEnter = rawEvent.key === 'Enter';
-    if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
+    if (selection.range.collapsed && isCharacterValue(rawEvent)) {
         const helper = editor.getDOMHelper();
         const node = getFocusedElement(selection);
         if (node && isEntityDelimiter(node) && helper.isNodeInEditor(node)) {
@@ -209,16 +211,16 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
             if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
                 const isAfter = node.classList.contains(DelimiterAfter);
 
+                if (isEnter) {
+                    event.rawEvent.preventDefault();
+                }
+
                 if (isAfter) {
                     selection.range.setStartAfter(blockEntityContainer);
                 } else {
                     selection.range.setStartBefore(blockEntityContainer);
                 }
                 selection.range.collapse(true /* toStart */);
-
-                if (isEnter) {
-                    event.rawEvent.preventDefault();
-                }
 
                 editor.formatContentModel(handleKeyDownInBlockDelimiter, {
                     selectionOverride: {
@@ -239,6 +241,16 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
                             preventTypeInDelimiter(node, editor)
                         );
                 }
+            }
+        }
+    } else {
+        const helper = editor.getDOMHelper();
+        const entity = getSelectedEntity(selection);
+
+        if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
+            selection.range.selectNode(entity);
+            if (isEnter) {
+                triggerEntityEventOnEnter(editor, entity, rawEvent);
             }
         }
     }
@@ -312,4 +324,32 @@ export const handleEnterInlineEntity: ContentModelFormatter = model => {
     }
 
     return true;
+};
+
+const triggerEntityEventOnEnter = (
+    editor: IEditor,
+    wrapper: HTMLElement,
+    rawEvent: KeyboardEvent
+) => {
+    const format = parseEntityFormat(wrapper);
+    if (format.id && format.entityType && !format.isFakeEntity) {
+        editor.triggerEvent('entityOperation', {
+            operation: 'click',
+            entity: {
+                id: format.id,
+                type: format.entityType,
+                isReadonly: !!format.isReadonly,
+                wrapper,
+            },
+            rawEvent: rawEvent,
+        });
+    }
+};
+
+const getSelectedEntity = (selection: RangeSelection) => {
+    let node = selection.range.startContainer;
+    while (node && node.parentElement && !isEntityElement(node)) {
+        node = node.parentElement;
+    }
+    return isEntityElement(node) ? node : null;
 };
