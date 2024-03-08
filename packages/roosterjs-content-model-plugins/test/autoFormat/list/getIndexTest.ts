@@ -1,4 +1,4 @@
-import { getIndex } from '../../../lib/autoFormat/utils/getIndex';
+import { getIndex } from '../../../lib/autoFormat/list/getIndex';
 
 describe('getIndex', () => {
     function runTest(listMarker: string, expectedResult: number) {
