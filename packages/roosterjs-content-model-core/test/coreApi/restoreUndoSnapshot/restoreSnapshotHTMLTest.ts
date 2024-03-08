@@ -64,6 +64,7 @@ describe('restoreSnapshotHTML', () => {
         entityWrapper.id = 'div2';
         core.entity.entityMap.C = {
             element: entityWrapper,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -83,6 +84,7 @@ describe('restoreSnapshotHTML', () => {
         entityWrapper.id = 'div2';
         core.entity.entityMap.B = {
             element: entityWrapper,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -105,12 +107,38 @@ describe('restoreSnapshotHTML', () => {
         entityWrapper.id = 'div2';
         core.entity.entityMap.B = {
             element: entityWrapper,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
 
         expect(div.innerHTML).toBe('<div>test1</div><div id="div2"></div><div>test2</div>');
         expect(div.childNodes[1]).toBe(entityWrapper);
+    });
+
+    it('HTML with block entity at root level, cannot persist, entity is already in editor', () => {
+        const snapshot: Snapshot = {
+            html: '<div>test1</div><div class="_Entity _EType_A _EId_B"><br></div><div>test2</div>',
+        } as any;
+
+        const entityWrapper = document.createElement('DIV');
+
+        div.appendChild(document.createTextNode('test1'));
+        div.appendChild(entityWrapper);
+        div.appendChild(document.createTextNode('test2'));
+
+        entityWrapper.id = 'div2';
+        core.entity.entityMap.B = {
+            element: entityWrapper,
+            canPersist: false,
+        };
+
+        restoreSnapshotHTML(core, snapshot);
+
+        expect(div.innerHTML).toBe(
+            '<div>test1</div><div class="_Entity _EType_A _EId_B"><br></div><div>test2</div>'
+        );
+        expect(div.childNodes[1]).not.toBe(entityWrapper);
     });
 
     it('HTML with double block entity at root level, entity is already in editor in the same order', () => {
@@ -133,9 +161,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -166,9 +196,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -200,9 +232,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -234,9 +268,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -267,9 +303,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -301,9 +339,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -334,9 +374,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -365,9 +407,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -389,6 +433,7 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -411,6 +456,7 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper,
+            canPersist: true,
         };
 
         div.appendChild(entityWrapper);
@@ -434,6 +480,7 @@ describe('restoreSnapshotHTML', () => {
         entityWrapper.id = 'div2';
         core.entity.entityMap.C = {
             element: entityWrapper,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -455,6 +502,7 @@ describe('restoreSnapshotHTML', () => {
         entityWrapper.id = 'div2';
         core.entity.entityMap.B = {
             element: entityWrapper,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -482,6 +530,7 @@ describe('restoreSnapshotHTML', () => {
         entityWrapper.id = 'div2';
         core.entity.entityMap.B = {
             element: entityWrapper,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -515,9 +564,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -552,9 +603,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -590,9 +643,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -628,9 +683,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -665,9 +722,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -703,9 +762,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -740,9 +801,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -775,9 +838,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -812,9 +877,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -847,9 +914,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -883,9 +952,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -919,9 +990,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -954,9 +1027,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -990,9 +1065,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -1025,9 +1102,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);
@@ -1058,9 +1137,11 @@ describe('restoreSnapshotHTML', () => {
 
         core.entity.entityMap.B1 = {
             element: entityWrapper1,
+            canPersist: true,
         };
         core.entity.entityMap.B2 = {
             element: entityWrapper2,
+            canPersist: true,
         };
 
         restoreSnapshotHTML(core, snapshot);

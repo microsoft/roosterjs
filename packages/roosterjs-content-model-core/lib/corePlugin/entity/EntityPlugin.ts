@@ -259,6 +259,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                       wrapper,
                   },
                   state: operation == 'updateEntityState' ? state : undefined,
+                  shouldPersist: operation == 'newEntity' ? true : undefined, // By default, we always persist entity now
               })
             : null;
     }

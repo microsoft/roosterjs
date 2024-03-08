@@ -209,7 +209,7 @@ describe('Editor', () => {
         expect(cloneNodeSpy).toHaveBeenCalledWith(true);
 
         expect(model).toBe(mockedClonedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, undefined, undefined);
         expect(transformColorSpy).not.toHaveBeenCalled();
 
         // Clone in dark mode
@@ -218,7 +218,7 @@ describe('Editor', () => {
         expect(cloneNodeSpy).toHaveBeenCalledWith(true);
 
         expect(model).toBe(mockedClonedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, undefined, undefined);
         expect(transformColorSpy).toHaveBeenCalledWith(
             clonedNode,
             true,
