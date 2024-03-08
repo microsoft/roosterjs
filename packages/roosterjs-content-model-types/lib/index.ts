@@ -213,16 +213,13 @@ export {
     FormatContentModel,
     CoreApiMap,
     EditorCore,
-    ContentModelSettings,
     SwitchShadowEdit,
     TriggerEvent,
     AddUndoSnapshot,
-    HasFocus,
     Focus,
     AttachDomEvent,
     RestoreUndoSnapshot,
     GetVisibleViewport,
-    Paste,
 } from './editor/EditorCore';
 export { EditorCorePlugins } from './editor/EditorCorePlugins';
 export { EditorPlugin } from './editor/EditorPlugin';
@@ -247,7 +244,7 @@ export {
 } from './pluginState/PluginState';
 export { ContextMenuPluginState } from './pluginState/ContextMenuPluginState';
 
-export { EditorEnvironment } from './parameter/EditorEnvironment';
+export { EditorEnvironment, ContentModelSettings } from './parameter/EditorEnvironment';
 export {
     EntityState,
     DeletedEntity,
@@ -286,6 +283,7 @@ export { Rect } from './parameter/Rect';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
 export { DOMHelper } from './parameter/DOMHelper';
 export { ImageEditOperation, ImageEditor } from './parameter/ImageEditor';
+export { CachedElementHandler, CloneModelOptions } from './parameter/CloneModelOptions';
 export { LinkData } from './parameter/LinkData';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';

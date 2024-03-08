@@ -7,8 +7,6 @@ import { focus } from '../coreApi/focus';
 import { formatContentModel } from '../coreApi/formatContentModel';
 import { getDOMSelection } from '../coreApi/getDOMSelection';
 import { getVisibleViewport } from '../coreApi/getVisibleViewport';
-import { hasFocus } from '../coreApi/hasFocus';
-import { paste } from '../coreApi/paste';
 import { restoreUndoSnapshot } from '../coreApi/restoreUndoSnapshot';
 import { setContentModel } from '../coreApi/setContentModel';
 import { setDOMSelection } from '../coreApi/setDOMSelection';
@@ -24,17 +22,19 @@ export const coreApiMap: CoreApiMap = {
     createContentModel: createContentModel,
     createEditorContext: createEditorContext,
     formatContentModel: formatContentModel,
-    getDOMSelection: getDOMSelection,
     setContentModel: setContentModel,
-    setDOMSelection: setDOMSelection,
     setLogicalRoot: setLogicalRoot,
-    switchShadowEdit: switchShadowEdit,
-    getVisibleViewport: getVisibleViewport,
+
+    getDOMSelection: getDOMSelection,
+    setDOMSelection: setDOMSelection,
     focus: focus,
-    hasFocus: hasFocus,
+
     addUndoSnapshot: addUndoSnapshot,
     restoreUndoSnapshot: restoreUndoSnapshot,
+
     attachDomEvent: attachDomEvent,
     triggerEvent: triggerEvent,
-    paste: paste,
+
+    switchShadowEdit: switchShadowEdit,
+    getVisibleViewport: getVisibleViewport,
 };

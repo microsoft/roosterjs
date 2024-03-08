@@ -4,9 +4,7 @@ import { createEditorCore } from './createEditorCore';
 import { createEmptyModel, tableProcessor } from 'roosterjs-content-model-dom';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import { transformColor } from '../publicApi/color/transformColor';
-import type { CachedElementHandler } from '../publicApi/model/cloneModel';
 import type {
-    ClipboardData,
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
@@ -17,7 +15,6 @@ import type {
     EditorEnvironment,
     FormatContentModelOptions,
     IEditor,
-    PasteType,
     PluginEventData,
     PluginEventFromType,
     PluginEventType,
@@ -28,6 +25,7 @@ import type {
     TrustedHTMLHandler,
     Rect,
     EntityState,
+    CachedElementHandler,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -91,8 +89,12 @@ export class Editor implements IEditor {
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
      * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
      * instead to improve performance. This is mostly used for retrieve current format state.
+     * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
+     * This is usually used for exporting content
      */
-    getContentModelCopy(mode: 'connected' | 'disconnected' | 'reduced'): ContentModelDocument {
+    getContentModelCopy(
+        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
+    ): ContentModelDocument {
         const core = this.getCore();
 
         switch (mode) {
@@ -104,9 +106,17 @@ export class Editor implements IEditor {
                 });
 
             case 'disconnected':
-                return cloneModel(core.api.createContentModel(core), {
-                    includeCachedElement: this.cloneOptionCallback,
-                });
+            case 'clean':
+                return cloneModel(
+                    core.api.createContentModel(
+                        core,
+                        undefined /*option*/,
+                        mode == 'clean' ? 'none' : undefined /*selectionOverride*/
+                    ),
+                    {
+                        includeCachedElement: this.cloneOptionCallback,
+                    }
+                );
             case 'reduced':
                 return core.api.createContentModel(core, {
                     processorOverride: {
@@ -229,7 +239,7 @@ export class Editor implements IEditor {
      */
     hasFocus(): boolean {
         const core = this.getCore();
-        return core.api.hasFocus(core);
+        return core.domHelper.hasFocus();
     }
 
     /**
@@ -338,17 +348,6 @@ export class Editor implements IEditor {
     stopShadowEdit() {
         const core = this.getCore();
         core.api.switchShadowEdit(core, false /*isOn*/);
-    }
-
-    /**
-     * Paste into editor using a clipboardData object
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param pasteType Type of paste
-     */
-    pasteFromClipboard(clipboardData: ClipboardData, pasteType: PasteType = 'normal') {
-        const core = this.getCore();
-
-        core.api.paste(core, clipboardData, pasteType);
     }
 
     /**
