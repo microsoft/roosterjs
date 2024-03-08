@@ -5,7 +5,7 @@ import * as deleteSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi/
 import * as extractClipboardItemsFile from '../../../lib/utils/extractClipboardItems';
 import * as iterateSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import * as paste from '../../../lib/publicApi/paste/paste';
+import * as paste from '../../../lib/editorCommand/paste';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
