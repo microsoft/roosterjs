@@ -1,9 +1,9 @@
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/utils/findAllEntities';
+import { ContentModelDocument, EditorContext, EditorCore } from 'roosterjs-content-model-types';
 import { EditorAdapter } from '../../lib/editor/EditorAdapter';
 import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelDocument, EditorContext, EditorCore } from 'roosterjs-content-model-types';
 
 const editorContext: EditorContext = {
     isDarkMode: false,
@@ -105,6 +105,7 @@ describe('EditorAdapter', () => {
         };
         const editor = new EditorAdapter(div, {
             legacyPlugins: [plugin],
+            disableCache: true,
         });
         editor.dispose();
 
