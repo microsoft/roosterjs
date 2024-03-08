@@ -179,8 +179,8 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
     };
 
     private getHtml(requireLegacyCode: boolean) {
-        return `${htmlStart}${htmlButtons}${
+        return `${htmlStart}${htmlButtons}${jsCode}${
             requireLegacyCode ? legacyJsCode : ''
-        }${jsCode}${htmlEnd}`;
+        }${htmlEnd}`;
     }
 }
