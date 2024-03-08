@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-core/lib/coreApi/paste.ts</title>
+    <title>Code coverage report for roosterjs-content-model-core/lib/publicApi/paste/paste.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../prettify.css" />
-    <link rel="stylesheet" href="../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../sort-arrow-sprite.png);
+            background-image: url(../../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-core/lib/coreApi</a> paste.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-core/lib/publicApi/paste</a> paste.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.43% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/14</span>
+                <span class='fraction'>9/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
@@ -127,16 +127,7 @@
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -150,28 +141,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -213,65 +197,57 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">29x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { cloneModel } from '../publicApi/model/cloneModel';
-import { convertInlineCss } from '../utils/convertInlineCss';
-import { createPasteFragment } from '../utils/paste/createPasteFragment';
-import { generatePasteOptionFromPlugins } from '../utils/paste/generatePasteOptionFromPlugins';
-import { mergePasteContent } from '../utils/paste/mergePasteContent';
-import { retrieveHtmlInfo } from '../utils/paste/retrieveHtmlInfo';
-import type { CloneModelOptions } from '../publicApi/model/cloneModel';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { convertInlineCss } from '../../utils/convertInlineCss';
+import { createPasteFragment } from '../../utils/paste/createPasteFragment';
+import { generatePasteOptionFromPlugins } from '../../utils/paste/generatePasteOptionFromPlugins';
+import { mergePasteContent } from '../../utils/paste/mergePasteContent';
+import { retrieveHtmlInfo } from '../../utils/paste/retrieveHtmlInfo';
 import type {
     PasteType,
     ClipboardData,
-    Paste,
-    EditorCore,
     TrustedHTMLHandler,
+    IEditor,
 } from 'roosterjs-content-model-types';
 &nbsp;
-const CloneOption: CloneModelOptions = {
-    includeCachedElement: (node, type) =&gt; (type == 'cache' ? undefined : <span class="branch-1 cbranch-no" title="branch not covered" >node)</span>,
-};
-&nbsp;
 /**
- * @internal
  * Paste into editor using a clipboardData object
- * @param core The EditorCore object.
+ * @param editor The Editor object.
  * @param clipboardData Clipboard data retrieved from clipboard
  * @param pasteType Type of content to paste. @default normal
  */
-export const paste: Paste = (
-    core: EditorCore,
+export function paste(
+    editor: IEditor,
     clipboardData: ClipboardData,
-    <span class="missing-if-branch" title="if path not taken" >I</span>pasteType: PasteType = 'normal'
-) =&gt; {
-    core.api.focus(core);
+    pasteType: PasteType = 'normal'
+) {
+    editor.focus();
 &nbsp;
-    if (clipboardData.modelBeforePaste) {
-        core.api.setContentModel(core, cloneModel(clipboardData.modelBeforePaste, CloneOption));
-    } else {
-        clipboardData.modelBeforePaste = cloneModel(core.api.createContentModel(core), CloneOption);
+    const trustedHTMLHandler = editor.getTrustedHTMLHandler();
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (!clipboardData.modelBeforePaste) {
+        clipboardData.modelBeforePaste = editor.getContentModelCopy('connected');
     }
 &nbsp;
     // 1. Prepare variables
-    const doc = createDOMFromHtml(clipboardData.rawHtml, core.trustedHTMLHandler);
+    const doc = createDOMFromHtml(clipboardData.rawHtml, trustedHTMLHandler);
 &nbsp;
     // 2. Handle HTML from clipboard
     const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
 &nbsp;
     // 3. Create target fragment
     const sourceFragment = createPasteFragment(
-        core.physicalRoot.ownerDocument,
+        editor.getDocument(),
         clipboardData,
         pasteType,
         (clipboardData.rawHtml == clipboardData.html
             ? doc
-            : createDOMFromHtml(clipboardData.html, core.trustedHTMLHandler)
+            : createDOMFromHtml(clipboardData.html, trustedHTMLHandler)
         )<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>ody
     );
 &nbsp;
     // 4. Trigger BeforePaste event to allow plugins modify the fragment
     const eventResult = generatePasteOptionFromPlugins(
-        core,
+        editor,
         clipboardData,
         sourceFragment,
         htmlFromClipboard,
@@ -282,8 +258,8 @@ export const paste: Paste = (
     convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
 &nbsp;
     // 6. Merge pasted content into main Content Model
-    mergePasteContent(core, eventResult, clipboardData);
-};
+    mergePasteContent(editor, eventResult, clipboardData);
+}
 &nbsp;
 function createDOMFromHtml(
     html: string | null | undefined,
@@ -298,17 +274,17 @@ function createDOMFromHtml(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Mar 08 2024 17:17:23 GMT+0000 (Coordinated Universal Time)
+                at Fri Mar 08 2024 17:22:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
-        <script src="../../../prettify.js"></script>
+        <script src="../../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../sorter.js"></script>
-        <script src="../../../block-navigation.js"></script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
     </body>
 </html>
     

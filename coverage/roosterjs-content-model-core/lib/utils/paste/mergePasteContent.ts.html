@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.65% </span>
+                <span class="strong">96.55% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/23</span>
+                <span class='fraction'>28/29</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.47% </span>
+                <span class="strong">76.19% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>13/17</span>
+                <span class='fraction'>16/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.65% </span>
+                <span class="strong">96.55% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/23</span>
+                <span class='fraction'>28/29</span>
             </div>
         
             
@@ -154,22 +154,20 @@
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
 <a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,7 +179,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -195,6 +207,10 @@
 <span class="cline-any cline-yes">108x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">27x</span>
@@ -252,19 +268,20 @@
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource } from '../../constants/ChangeSource';
+import { cloneModel } from '../../publicApi/model/cloneModel';
 import { createDomToModelContextForSanitizing } from '../createDomToModelContextForSanitizing';
 import { domToContentModel } from 'roosterjs-content-model-dom';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
-&nbsp;
 import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
     BeforePasteEvent,
     ClipboardData,
+    CloneModelOptions,
     ContentModelDocument,
     ContentModelSegmentFormat,
-    EditorCore,
+    IEditor,
 } from 'roosterjs-content-model-types';
 &nbsp;
 const EmptySegmentFormat: Required&lt;ContentModelSegmentFormat&gt; = {
@@ -280,25 +297,32 @@ const EmptySegmentFormat: Required&lt;ContentModelSegmentFormat&gt; = {
     textColor: '',
     underline: false,
 };
+const CloneOption: CloneModelOptions = {
+    includeCachedElement: (node, type) =&gt; (type == 'cache' ? undefined : <span class="branch-1 cbranch-no" title="branch not covered" >node)</span>,
+};
 &nbsp;
 /**
  * @internal
  */
 export function mergePasteContent(
-    core: EditorCore,
+    editor: IEditor,
     eventResult: BeforePasteEvent,
     clipboardData: ClipboardData
 ) {
     const { fragment, domToModelOption, customizedMerge, pasteType } = eventResult;
 &nbsp;
-    core.api.formatContentModel(
-        core,
+    editor.formatContentModel(
         (model, context) =&gt; {
+            if (clipboardData.modelBeforePaste) {
+                const clonedModel = cloneModel(clipboardData.modelBeforePaste, CloneOption);
+                model.blocks = clonedModel.blocks;
+            }
+&nbsp;
             const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
             const domToModelContext = createDomToModelContextForSanitizing(
-                core.physicalRoot.ownerDocument,
+                editor.getDocument(),
                 undefined /*defaultFormat*/,
-                core.domToModelSettings.customized,
+                editor.getEnvironment().domToModelSettings.customized,
                 domToModelOption
             );
 &nbsp;
@@ -355,7 +379,7 @@ function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Mar 08 2024 17:17:23 GMT+0000 (Coordinated Universal Time)
+                at Fri Mar 08 2024 17:22:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
