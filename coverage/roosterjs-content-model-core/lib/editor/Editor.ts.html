@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.02% </span>
+                <span class="strong">91.3% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>40/43</span>
+                <span class='fraction'>42/46</span>
             </div>
         
             
@@ -461,7 +461,19 @@
 <a name='L402'></a><a href='#L402'>402</a>
 <a name='L403'></a><a href='#L403'>403</a>
 <a name='L404'></a><a href='#L404'>404</a>
-<a name='L405'></a><a href='#L405'>405</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L405'></a><a href='#L405'>405</a>
+<a name='L406'></a><a href='#L406'>406</a>
+<a name='L407'></a><a href='#L407'>407</a>
+<a name='L408'></a><a href='#L408'>408</a>
+<a name='L409'></a><a href='#L409'>409</a>
+<a name='L410'></a><a href='#L410'>410</a>
+<a name='L411'></a><a href='#L411'>411</a>
+<a name='L412'></a><a href='#L412'>412</a>
+<a name='L413'></a><a href='#L413'>413</a>
+<a name='L414'></a><a href='#L414'>414</a>
+<a name='L415'></a><a href='#L415'>415</a>
+<a name='L416'></a><a href='#L416'>416</a>
+<a name='L417'></a><a href='#L417'>417</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -555,7 +567,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
@@ -567,7 +583,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -681,8 +705,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">9398x</span>
-<span class="cline-any cline-yes">9397x</span>
+<span class="cline-any cline-yes">9388x</span>
+<span class="cline-any cline-yes">9387x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -840,10 +864,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">11448x</span>
+<span class="cline-any cline-yes">11438x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11421x</span>
+<span class="cline-any cline-yes">11411x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">80x</span>
@@ -958,8 +982,12 @@ export class Editor implements IEditor {
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
      * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
      * instead to improve performance. This is mostly used for retrieve current format state.
+     * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
+     * This is usually used for exporting content
      */
-    getContentModelCopy(mode: 'connected' | 'disconnected' | 'reduced'): ContentModelDocument {
+    getContentModelCopy(
+        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
+    ): ContentModelDocument {
         const core = this.getCore();
 &nbsp;
         switch (mode) {
@@ -971,9 +999,17 @@ export class Editor implements IEditor {
                 });
 &nbsp;
             case 'disconnected':
-                return cloneModel(core.api.createContentModel(core), {
-                    includeCachedElement: this.cloneOptionCallback,
-                });
+            case 'clean':
+                return cloneModel(
+                    core.api.createContentModel(
+                        core,
+                        undefined /*option*/,
+                        mode == 'clean' ? <span class="branch-0 cbranch-no" title="branch not covered" >'none' </span>: undefined /*selectionOverride*/
+                    ),
+                    {
+                        includeCachedElement: this.cloneOptionCallback,
+                    }
+                );
             case 'reduced':
                 return core.api.createContentModel(core, {
                     processorOverride: {
@@ -1276,7 +1312,7 @@ export class Editor implements IEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Mar 08 2024 17:11:32 GMT+0000 (Coordinated Universal Time)
+                at Fri Mar 08 2024 17:17:23 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
