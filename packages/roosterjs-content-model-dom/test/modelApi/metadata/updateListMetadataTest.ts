@@ -1,6 +1,7 @@
-import { BulletListType } from '../../lib/constants/BulletListType';
+import { BulletListType } from '../../../lib/constants/BulletListType';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
-import { NumberingListType } from '../../lib/constants/NumberingListType';
+import { NumberingListType } from '../../../lib/constants/NumberingListType';
+import { updateListMetadata } from '../../../lib/modelApi/metadata/updateListMetadata';
 import {
     ContentModelListItemFormat,
     ContentModelWithDataset,
@@ -10,8 +11,7 @@ import {
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
-    updateListMetadata,
-} from '../../lib/metadata/updateListMetadata';
+} from 'roosterjs-content-model-core/lib/override/listMetadata';
 
 describe('updateListMetadata', () => {
     it('No value', () => {

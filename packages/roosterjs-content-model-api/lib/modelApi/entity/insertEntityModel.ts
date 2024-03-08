@@ -1,4 +1,3 @@
-import { setSelection } from 'roosterjs-content-model-core';
 import {
     createBr,
     createParagraph,
@@ -6,6 +5,7 @@ import {
     deleteSelection,
     getClosestAncestorBlockGroupIndex,
     normalizeContentModel,
+    setSelection,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlock,

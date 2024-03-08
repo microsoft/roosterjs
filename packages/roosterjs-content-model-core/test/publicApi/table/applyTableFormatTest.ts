@@ -1,5 +1,5 @@
 import { applyTableFormat } from '../../../lib/publicApi/table/applyTableFormat';
-import { TableBorderFormat } from '../../../lib/constants/TableBorderFormat';
+import { TableBorderFormat } from 'roosterjs-content-model-dom';
 import {
     ContentModelTable,
     ContentModelTableCell,

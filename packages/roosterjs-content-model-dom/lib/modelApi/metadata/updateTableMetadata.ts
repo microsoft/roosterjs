@@ -1,4 +1,4 @@
-import { TableBorderFormat } from '../constants/TableBorderFormat';
+import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateMetadata } from 'roosterjs-content-model-dom';
 import {
     createBooleanDefinition,

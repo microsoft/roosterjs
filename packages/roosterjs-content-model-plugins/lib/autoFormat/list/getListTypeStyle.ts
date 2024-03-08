@@ -1,16 +1,17 @@
-import { BulletListType, updateListMetadata } from 'roosterjs-content-model-core';
 import { findListItemsInSameThread } from 'roosterjs-content-model-api';
 import { getNumberingListStyle } from './getNumberingListStyle';
+import {
+    BulletListType,
+    getOperationalBlocks,
+    getSelectedSegmentsAndParagraphs,
+    isBlockGroupOfType,
+    updateListMetadata,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelListItem,
     ContentModelParagraph,
 } from 'roosterjs-content-model-types';
-import {
-    isBlockGroupOfType,
-    getOperationalBlocks,
-    getSelectedSegmentsAndParagraphs,
-} from 'roosterjs-content-model-dom';
 
 /**
  * @internal

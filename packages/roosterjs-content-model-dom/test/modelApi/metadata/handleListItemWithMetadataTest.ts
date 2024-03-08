@@ -18,7 +18,7 @@ import {
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
-} from '../../lib/metadata/updateListMetadata';
+} from 'roosterjs-content-model-core/lib/override/listMetadata';
 
 describe('handleListItem with metadata', () => {
     let context: ModelToDomContext;

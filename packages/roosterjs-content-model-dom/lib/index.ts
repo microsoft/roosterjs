@@ -81,10 +81,24 @@ export {
     getSelectedSegments,
     getSelectedSegmentsAndParagraphs,
 } from './modelApi/selection/collectSelections';
+export { hasSelectionInBlock } from './modelApi/selection/hasSelectionInBlock';
+export { hasSelectionInSegment } from './modelApi/selection/hasSelectionInSegment';
+export { hasSelectionInBlockGroup } from './modelApi/selection/hasSelectionInBlockGroup';
+export { setSelection } from './modelApi/selection/setSelection';
 
 export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';
 export { deleteBlock } from './modelApi/editing/deleteBlock';
+
+export { updateImageMetadata } from './modelApi/metadata/updateImageMetadata';
+export { updateTableCellMetadata } from './modelApi/metadata/updateTableCellMetadata';
+export { updateTableMetadata } from './modelApi/metadata/updateTableMetadata';
+export {
+    updateListMetadata,
+    listMetadataDefinition,
+    OrderedMap,
+    UnorderedMap,
+} from './modelApi/metadata/updateListMetadata';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
@@ -100,3 +114,7 @@ export {
     createModelToDomContextWithConfig,
     createModelToDomConfig,
 } from './modelToDom/context/createModelToDomContext';
+
+export { TableBorderFormat } from './constants/TableBorderFormat';
+export { BulletListType } from './constants/BulletListType';
+export { NumberingListType } from './constants/NumberingListType';

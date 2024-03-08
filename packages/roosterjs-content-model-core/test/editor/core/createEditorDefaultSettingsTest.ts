@@ -4,7 +4,7 @@ import { tablePreProcessor } from '../../../lib/override/tablePreProcessor';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
-} from '../../../lib/metadata/updateListMetadata';
+} from '../../../lib/override/listMetadata';
 import {
     createDomToModelSettings,
     createModelToDomSettings,

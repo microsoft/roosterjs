@@ -1,16 +1,13 @@
+import { applyTableFormat, normalizeTable } from 'roosterjs-content-model-core';
 import { ensureFocusableParagraphForTable } from '../../modelApi/table/ensureFocusableParagraphForTable';
 import {
     createSelectionMarker,
     getFirstSelectedTable,
     hasMetadata,
-    setParagraphNotImplicit,
-} from 'roosterjs-content-model-dom';
-import {
     hasSelectionInBlock,
-    applyTableFormat,
-    normalizeTable,
+    setParagraphNotImplicit,
     setSelection,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type { ContentModelTable, IEditor, TableSelection } from 'roosterjs-content-model-types';
 
 /**

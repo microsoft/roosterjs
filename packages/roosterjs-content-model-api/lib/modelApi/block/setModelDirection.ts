@@ -1,6 +1,10 @@
-import { applyTableFormat, updateTableCellMetadata } from 'roosterjs-content-model-core';
+import { applyTableFormat } from 'roosterjs-content-model-core';
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
-import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-dom';
+import {
+    getOperationalBlocks,
+    isBlockGroupOfType,
+    updateTableCellMetadata,
+} from 'roosterjs-content-model-dom';
 import type {
     BorderFormat,
     ContentModelBlock,

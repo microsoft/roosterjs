@@ -1,10 +1,10 @@
 import { extractBorderValues } from '../domUtils/borderValues';
 import { isBold } from '../model/isBold';
-import { updateTableMetadata } from '../../metadata/updateTableMetadata';
 import {
     getClosestAncestorBlockGroupIndex,
     iterateSelections,
     parseValueWithUnit,
+    updateTableMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelFormatState,

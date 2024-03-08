@@ -1,9 +1,9 @@
-import { getFirstSelectedTable, parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { extractBorderValues, getSelectedCells } from 'roosterjs-content-model-core';
 import {
-    extractBorderValues,
-    getSelectedCells,
+    getFirstSelectedTable,
+    parseValueWithUnit,
     updateTableCellMetadata,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type {
     IEditor,
     Border,

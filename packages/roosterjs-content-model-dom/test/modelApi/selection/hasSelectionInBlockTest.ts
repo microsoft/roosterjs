@@ -1,5 +1,5 @@
-import { hasSelectionInBlock } from '../../../lib/publicApi/selection/hasSelectionInBlock';
-import { hasSelectionInBlockGroup } from '../../../lib/publicApi/selection/hasSelectionInBlockGroup';
+import { hasSelectionInBlock } from '../../../lib/modelApi/selection/hasSelectionInBlock';
+import { hasSelectionInBlockGroup } from '../../../lib/modelApi/selection/hasSelectionInBlockGroup';
 import {
     ContentModelBlock,
     ContentModelDivider,

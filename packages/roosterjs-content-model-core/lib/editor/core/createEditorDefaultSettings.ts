@@ -1,9 +1,6 @@
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
+import { listItemMetadataApplier, listLevelMetadataApplier } from '../../override/listMetadata';
 import { tablePreProcessor } from '../../override/tablePreProcessor';
-import {
-    listItemMetadataApplier,
-    listLevelMetadataApplier,
-} from '../../metadata/updateListMetadata';
 import type {
     ContentModelSettings,
     DomToModelOption,

@@ -1,9 +1,5 @@
-import { getFirstSelectedTable } from 'roosterjs-content-model-dom';
-import {
-    hasSelectionInBlockGroup,
-    normalizeTable,
-    setTableCellBackgroundColor,
-} from 'roosterjs-content-model-core';
+import { getFirstSelectedTable, hasSelectionInBlockGroup } from 'roosterjs-content-model-dom';
+import { normalizeTable, setTableCellBackgroundColor } from 'roosterjs-content-model-core';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**

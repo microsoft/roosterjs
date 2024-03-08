@@ -1,12 +1,15 @@
-import { getListStyleTypeFromString, updateListMetadata } from 'roosterjs-content-model-core';
 import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
 import type { WordMetadata } from './WordMetadata';
 import {
     addBlock,
     createListItem,
     createListLevel,
+    getObjectKeys,
     isEmpty,
+    OrderedMap,
     parseFormat,
+    UnorderedMap,
+    updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockGroup,
@@ -255,4 +258,20 @@ function getLastNotEmptyBlock(listParent: ContentModelBlockGroup | undefined) {
     }
 
     return undefined;
+}
+
+/**
+ * Gets the list style type that the bullet is part of, using the Constant record
+ * @param listType whether the list is ordered or unordered
+ * @param bullet bullet string
+ * @returns the number of the style override or undefined if was not found in the Record
+ */
+function getListStyleTypeFromString(listType: 'OL' | 'UL', bullet: string) {
+    const map = listType == 'OL' ? OrderedMap : UnorderedMap;
+    const keys = getObjectKeys(map);
+    const result = keys.find(key => map[key] == bullet);
+    if (result) {
+        return typeof result == 'string' ? parseInt(result) : result;
+    }
+    return result;
 }

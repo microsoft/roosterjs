@@ -1,6 +1,8 @@
-import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-dom';
-import { hasSelectionInBlock } from '../../publicApi/selection/hasSelectionInBlock';
-import { hasSelectionInBlockGroup } from '../../publicApi/selection/hasSelectionInBlockGroup';
+import {
+    getClosestAncestorBlockGroupIndex,
+    hasSelectionInBlock,
+    hasSelectionInBlockGroup,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlock,
     DeleteSelectionContext,

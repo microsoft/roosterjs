@@ -1,4 +1,4 @@
-import { setSelection } from 'roosterjs-content-model-core';
+import { setSelection } from 'roosterjs-content-model-dom';
 import type { ContentModelTable, TableSelectionCoordinates } from 'roosterjs-content-model-types';
 
 /**
