@@ -1,4 +1,4 @@
-import MainPaneBase from '../../controls/MainPaneBase';
+import { MainPane } from '../mainPane/MainPane';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 /**
@@ -18,7 +18,7 @@ export const darkModeButton: RibbonButton<DarkModeButtonStringKey> = {
         editor.focus();
 
         // Let main pane know this state change so that it can be persisted when pop out/pop in
-        MainPaneBase.getInstance().toggleDarkMode();
+        MainPane.getInstance().toggleDarkMode();
         return true;
     },
 };
