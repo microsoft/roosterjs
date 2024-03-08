@@ -1,4 +1,4 @@
-import { getListTypeStyle } from './utils/getListTypeStyle';
+import { getListTypeStyle } from './getListTypeStyle';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { setListStartNumber, setListStyle, setListType } from 'roosterjs-content-model-api';
