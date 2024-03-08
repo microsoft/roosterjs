@@ -55,6 +55,11 @@ class DOMHelperImpl implements DOMHelper {
             ? closestElement
             : null;
     }
+
+    hasFocus(): boolean {
+        const activeElement = this.contentDiv.ownerDocument.activeElement;
+        return !!(activeElement && this.contentDiv.contains(activeElement));
+    }
 }
 
 /**

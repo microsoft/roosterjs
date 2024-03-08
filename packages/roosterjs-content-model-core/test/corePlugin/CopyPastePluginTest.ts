@@ -5,6 +5,7 @@ import * as deleteSelectionsFile from '../../lib/publicApi/selection/deleteSelec
 import * as extractClipboardItemsFile from '../../lib/utils/extractClipboardItems';
 import * as iterateSelectionsFile from '../../lib/publicApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
+import * as paste from '../../lib/publicApi/paste/paste';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
@@ -19,7 +20,6 @@ import {
     CopyPastePluginState,
     PluginWithState,
     DarkColorHandler,
-    PasteType,
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
@@ -28,8 +28,14 @@ import {
     preprocessTable,
 } from '../../lib/corePlugin/CopyPastePlugin';
 
-const modelValue = 'model' as any;
-const pasteModelValue = 'pasteModelValue' as any;
+const modelValue = {
+    blocks: [],
+    name: 'model1',
+} as any;
+const pasteModelValue = {
+    blocks: [],
+    name: 'model2',
+} as any;
 const insertPointValue = 'insertPoint' as any;
 const deleteResultValue = 'deleteResult' as any;
 
@@ -100,7 +106,6 @@ describe('CopyPastePlugin |', () => {
         pasteSpy = jasmine.createSpy('paste_');
         isDisposed = jasmine.createSpy('isDisposed');
         getVisibleViewportSpy = jasmine.createSpy('getVisibleViewport');
-
         mockedDarkColorHandler = 'DARKCOLORHANDLER' as any;
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
@@ -139,6 +144,7 @@ describe('CopyPastePlugin |', () => {
             getDocument() {
                 return {
                     createRange: () => document.createRange(),
+                    createDocumentFragment: () => document.createDocumentFragment(),
                     defaultView: {
                         requestAnimationFrame: (func: Function) => {
                             func();
@@ -149,15 +155,19 @@ describe('CopyPastePlugin |', () => {
             isDarkMode: () => {
                 return false;
             },
-            pasteFromClipboard: (ar1: any, pasteType?: PasteType) => {
-                pasteSpy(ar1, pasteType);
-            },
             getColorManager: () => mockedDarkColorHandler,
             isDisposed,
             getVisibleViewport: getVisibleViewportSpy,
             formatContentModel: formatContentModelSpy,
+            getTrustedHTMLHandler: () => (html: string) => html,
+            getEnvironment: () =>
+                ({
+                    domToModelSettings: {},
+                    modelToDomSettings: {},
+                } as any),
         });
 
+        pasteSpy = spyOn(paste, 'paste');
         plugin.initialize(editor);
     });
 
@@ -556,7 +566,7 @@ describe('CopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, undefined);
+            expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, undefined);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType
@@ -585,7 +595,7 @@ describe('CopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, undefined);
+            expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, undefined);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType
@@ -615,7 +625,7 @@ describe('CopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, 'mergeFormat');
+            expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'mergeFormat');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType
@@ -645,7 +655,7 @@ describe('CopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, 'asImage');
+            expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'asImage');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType
@@ -675,7 +685,7 @@ describe('CopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, 'asPlainText');
+            expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'asPlainText');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType
@@ -705,7 +715,7 @@ describe('CopyPastePlugin |', () => {
 
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData, 'normal');
+            expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'normal');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType

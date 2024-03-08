@@ -1,5 +1,9 @@
-import { keyboardListTrigger } from './keyboardListTrigger';
+import { createLink } from './link/createLink';
+import { createLinkAfterSpace } from './link/createLinkAfterSpace';
+import { keyboardListTrigger } from './list/keyboardListTrigger';
+import { unlink } from './link/unlink';
 import type {
+    ContentChangedEvent,
     EditorPlugin,
     IEditor,
     KeyDownEvent,
@@ -19,6 +23,16 @@ export type AutoFormatOptions = {
      * When true, after type 1, A, a, i, I followed by ., ), - or between () and space key a type of numbering list will be triggered. @default true
      */
     autoNumbering: boolean;
+
+    /**
+     * When press backspace before a link, remove the hyperlink
+     */
+    autoUnlink: boolean;
+
+    /**
+     * When paste content, create hyperlink for the pasted link
+     */
+    autoLink: boolean;
 };
 
 /**
@@ -27,6 +41,8 @@ export type AutoFormatOptions = {
 const DefaultOptions: Required<AutoFormatOptions> = {
     autoBullet: true,
     autoNumbering: true,
+    autoUnlink: false,
+    autoLink: true,
 };
 
 /**
@@ -81,6 +97,9 @@ export class AutoFormatPlugin implements EditorPlugin {
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
+                case 'contentChanged':
+                    this.handleContentChangedEvent(this.editor, event);
+                    break;
             }
         }
     }
@@ -88,14 +107,27 @@ export class AutoFormatPlugin implements EditorPlugin {
     private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
+            const { autoBullet, autoNumbering, autoUnlink, autoLink } = this.options;
             switch (rawEvent.key) {
                 case ' ':
-                    const { autoBullet, autoNumbering } = this.options;
-                    if (autoBullet || autoNumbering) {
-                        keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
+                    keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
+                    if (autoLink) {
+                        createLinkAfterSpace(editor);
+                    }
+                    break;
+                case 'Backspace':
+                    if (autoUnlink) {
+                        unlink(editor, rawEvent);
                     }
                     break;
             }
+        }
+    }
+
+    private handleContentChangedEvent(editor: IEditor, event: ContentChangedEvent) {
+        const { autoLink } = this.options;
+        if (event.source == 'Paste' && autoLink) {
+            createLink(editor);
         }
     }
 }

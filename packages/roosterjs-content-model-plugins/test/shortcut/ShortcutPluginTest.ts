@@ -34,7 +34,7 @@ describe('ShortcutPlugin', () => {
 
     beforeEach(() => {
         preventDefaultSpy = jasmine.createSpy('preventDefault');
-        mockedEnvironment = {};
+        mockedEnvironment = {} as any;
         mockedEditor = {
             getEnvironment: () => mockedEnvironment,
         } as any;
@@ -322,7 +322,7 @@ describe('ShortcutPlugin', () => {
 
     describe('Mac', () => {
         beforeEach(() => {
-            mockedEnvironment.isMac = true;
+            (mockedEnvironment as any).isMac = true;
         });
 
         it('not a shortcut', () => {

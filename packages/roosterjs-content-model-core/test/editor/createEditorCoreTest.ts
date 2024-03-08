@@ -84,11 +84,11 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: false,
                 isMobileOrTablet: false,
+                domToModelSettings: mockedDomToModelSettings,
+                modelToDomSettings: mockedModelToDomSettings,
             },
             darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: defaultTrustHtmlHandler,
-            domToModelSettings: mockedDomToModelSettings,
-            modelToDomSettings: mockedModelToDomSettings,
             cache: 'cache' as any,
             format: 'format' as any,
             copyPaste: 'copyPaste' as any,
@@ -205,6 +205,8 @@ describe('createEditorCore', () => {
                 isAndroid: true,
                 isSafari: false,
                 isMobileOrTablet: true,
+                domToModelSettings: mockedDomToModelSettings,
+                modelToDomSettings: mockedModelToDomSettings,
             },
         });
 
@@ -236,6 +238,8 @@ describe('createEditorCore', () => {
                 isAndroid: true,
                 isSafari: false,
                 isMobileOrTablet: true,
+                domToModelSettings: mockedDomToModelSettings,
+                modelToDomSettings: mockedModelToDomSettings,
             },
         });
 
@@ -267,6 +271,8 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: false,
                 isMobileOrTablet: false,
+                domToModelSettings: mockedDomToModelSettings,
+                modelToDomSettings: mockedModelToDomSettings,
             },
         });
 
@@ -298,6 +304,8 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: true,
                 isMobileOrTablet: false,
+                domToModelSettings: mockedDomToModelSettings,
+                modelToDomSettings: mockedModelToDomSettings,
             },
         });
 
@@ -329,6 +337,8 @@ describe('createEditorCore', () => {
                 isAndroid: false,
                 isSafari: false,
                 isMobileOrTablet: false,
+                domToModelSettings: mockedDomToModelSettings,
+                modelToDomSettings: mockedModelToDomSettings,
             },
         });
 

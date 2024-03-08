@@ -1,16 +1,16 @@
 import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
-import * as cloneModel from '../../lib/publicApi/model/cloneModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
 import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
-import * as getSelectedSegmentsF from '../../lib/publicApi/selection/collectSelections';
-import * as mergeModelFile from '../../lib/publicApi/model/mergeModel';
+import * as getSelectedSegmentsF from '../../../lib/publicApi/selection/collectSelections';
+import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
 import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { Editor } from '../../lib/editor/Editor';
+import { Editor } from '../../../lib/editor/Editor';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
+import { paste } from '../../../lib/publicApi/paste/paste';
 import { PastePlugin } from 'roosterjs-content-model-plugins/lib/paste/PastePlugin';
 import {
     ClipboardData,
@@ -32,13 +32,10 @@ describe('Paste ', () => {
     let mockedMergeModel: ContentModelDocument;
     let getVisibleViewport: jasmine.Spy;
 
-    const mockedCloneModel = 'CloneModel' as any;
-
     let div: HTMLDivElement;
 
     beforeEach(() => {
         spyOn(domToContentModel, 'domToContentModel').and.callThrough();
-        spyOn(cloneModel, 'cloneModel').and.returnValue(mockedCloneModel);
         clipboardData = {
             types: ['image/png', 'text/html'],
             text: '',
@@ -78,7 +75,6 @@ describe('Paste ', () => {
                 focus,
                 createContentModel,
                 getVisibleViewport,
-                //                formatContentModel,
             },
         });
 
@@ -92,13 +88,13 @@ describe('Paste ', () => {
     });
 
     it('Execute', () => {
-        editor.pasteFromClipboard(clipboardData);
+        paste(editor, clipboardData);
 
         expect(mockedModel).toEqual(mockedMergeModel);
     });
 
     it('Execute | As plain text', () => {
-        editor.pasteFromClipboard(clipboardData, 'asPlainText');
+        paste(editor, clipboardData, 'asPlainText');
 
         expect(mockedModel).toEqual(mockedMergeModel);
     });
@@ -137,10 +133,10 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wordDesktop');
         spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData);
+        paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -148,7 +144,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wacComponents');
         spyOn(WacComponents, 'processPastedContentWacComponents').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData);
+        paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
@@ -159,7 +155,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelOnline');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData);
+        paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
@@ -170,7 +166,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelDesktop');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData);
+        paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
@@ -181,7 +177,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
         spyOn(PPT, 'processPastedContentFromPowerPoint').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData);
+        paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
@@ -193,7 +189,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wordDesktop');
         spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
+        paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.addParser).toHaveBeenCalledTimes(0);
@@ -204,7 +200,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wacComponents');
         spyOn(WacComponents, 'processPastedContentWacComponents').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
+        paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.addParser).toHaveBeenCalledTimes(0);
@@ -215,7 +211,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelOnline');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
+        paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.addParser).toHaveBeenCalledTimes(0);
@@ -226,7 +222,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelDesktop');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
+        paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.addParser).toHaveBeenCalledTimes(0);
@@ -237,7 +233,7 @@ describe('paste with content model & paste plugin', () => {
         spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
         spyOn(PPT, 'processPastedContentFromPowerPoint').and.callThrough();
 
-        editor?.pasteFromClipboard(clipboardData, 'asPlainText');
+        paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
         expect(addParserF.addParser).toHaveBeenCalledTimes(0);
@@ -273,7 +269,7 @@ describe('paste with content model & paste plugin', () => {
             ],
         });
 
-        editor?.pasteFromClipboard(clipboardData);
+        paste(editor!, clipboardData);
 
         expect(eventChecker?.clipboardData).toEqual(clipboardData);
         expect(eventChecker?.htmlBefore).toBeTruthy();
@@ -309,7 +305,7 @@ describe('Paste with clipboardData', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><p style="color: windowtext;">Test</p></body></html>';
 
-        editor.pasteFromClipboard(clipboardData);
+        paste(editor, clipboardData);
 
         const model = editor.getContentModelCopy('connected');
 
@@ -345,8 +341,8 @@ describe('Paste with clipboardData', () => {
                         },
                     ],
                     format: {
-                        marginTop: '0px',
-                        marginBottom: '0px',
+                        marginTop: '1em',
+                        marginBottom: '1em',
                     },
                     decorator: {
                         tagName: 'p',
@@ -362,7 +358,7 @@ describe('Paste with clipboardData', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><a href="file://mylocalfile">Link</a></body></html>';
 
-        editor.pasteFromClipboard(clipboardData);
+        paste(editor, clipboardData);
 
         const model = editor.getContentModelCopy('connected');
 
@@ -402,7 +398,7 @@ describe('Paste with clipboardData', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><a href="https://github.com/microsoft/roosterjs">Link</a></body></html>';
 
-        editor.pasteFromClipboard(clipboardData);
+        paste(editor, clipboardData);
 
         const model = editor.getContentModelCopy('connected');
 

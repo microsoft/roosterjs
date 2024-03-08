@@ -9,7 +9,7 @@ export const getDOMSelection: GetDOMSelection = core => {
     } else {
         const selection = core.selection.selection;
 
-        return selection && (selection.type != 'range' || !core.api.hasFocus(core))
+        return selection && (selection.type != 'range' || !core.domHelper.hasFocus())
             ? selection
             : getNewSelection(core);
     }

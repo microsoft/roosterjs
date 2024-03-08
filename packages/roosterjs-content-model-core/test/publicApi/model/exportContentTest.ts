@@ -39,7 +39,7 @@ describe('exportContent', () => {
         const text = exportContent(editor, 'PlainText');
 
         expect(text).toBe(mockedText);
-        expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
+        expect(getContentModelCopySpy).toHaveBeenCalledWith('clean');
         expect(contentModelToTextSpy).toHaveBeenCalledWith(mockedModel);
     });
 
@@ -71,7 +71,8 @@ describe('exportContent', () => {
         const html = exportContent(editor, 'HTML');
 
         expect(html).toBe(mockedHTML);
-        expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
+        expect(getContentModelCopySpy).toHaveBeenCalledWith('clean');
+        1;
         expect(createModelToDomContextSpy).toHaveBeenCalledWith(undefined, undefined);
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
@@ -115,7 +116,7 @@ describe('exportContent', () => {
         const html = exportContent(editor, 'HTML', mockedOptions);
 
         expect(html).toBe(mockedHTML);
-        expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
+        expect(getContentModelCopySpy).toHaveBeenCalledWith('clean');
         expect(createModelToDomContextSpy).toHaveBeenCalledWith(undefined, mockedOptions);
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
