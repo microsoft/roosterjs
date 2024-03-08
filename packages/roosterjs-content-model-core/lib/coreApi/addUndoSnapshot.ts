@@ -1,5 +1,10 @@
+import type {
+    AddUndoSnapshot,
+    Snapshot,
+    SnapshotLogicalRootEvent,
+} from 'roosterjs-content-model-types';
 import { createSnapshotSelection } from '../utils/createSnapshotSelection';
-import type { AddUndoSnapshot, Snapshot } from 'roosterjs-content-model-types';
+import { getPath } from '../utils/getPath';
 
 /**
  * @internal
@@ -11,7 +16,7 @@ import type { AddUndoSnapshot, Snapshot } from 'roosterjs-content-model-types';
  * when undo/redo to this snapshot
  */
 export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entityStates) => {
-    const { lifecycle, physicalRoot, undo } = core;
+    const { lifecycle, physicalRoot, logicalRoot, undo } = core;
     let snapshot: Snapshot | null = null;
 
     if (!lifecycle.shadowEditFragment) {
@@ -19,11 +24,26 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
         const selection = createSnapshotSelection(core);
         const html = physicalRoot.innerHTML;
 
+        // if (!entityStates && core.physicalRoot !== core.logicalRoot) {
+        if (!entityStates) {
+            // give plugins the chance to share entity states to include in the snapshot
+            const event = <SnapshotLogicalRootEvent>{
+                eventType: 'snapshotLogicalRoot',
+                logicalRoot,
+                entityStates: [],
+            };
+            core.api.triggerEvent(core, event, false);
+
+            // copy out any entity states from the plugins
+            entityStates = event.entityStates;
+        }
+
         snapshot = {
             html,
             entityStates,
             isDarkMode: !!lifecycle.isDarkMode,
             selection,
+            logicalRootPath: getPath(logicalRoot, 0, physicalRoot),
         };
 
         undo.snapshotsManager.addSnapshot(snapshot, !!canUndoByBackspace);

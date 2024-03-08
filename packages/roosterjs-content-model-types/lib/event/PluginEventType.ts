@@ -119,6 +119,19 @@ export type PluginEventType =
 
     /**
      * EXPERIMENTAL FEATURE
+     * A snapshot of logical root is about to be taken. Entities should return entity states they wish to include in the snapshot.
+     * This is only used by Content Model editing
+     */
+    | 'snapshotLogicalRoot'
+
+    /**
+     * EXPERIMENTAL FEATURE
+     * The logical root changed
+     */
+    | 'logicalRootChanged'
+
+    /**
+     * EXPERIMENTAL FEATURE
      * Editor content is about to be changed by keyboard event.
      * This is only used by Content Model editing
      */

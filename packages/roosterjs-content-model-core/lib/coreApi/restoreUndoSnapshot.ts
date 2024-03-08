@@ -1,4 +1,5 @@
 import { ChangeSource } from '../constants/ChangeSource';
+import { getPositionFromPath } from '../utils/getPositionFromPath';
 import { restoreSnapshotColors } from '../utils/restoreSnapshotColors';
 import { restoreSnapshotHTML } from '../utils/restoreSnapshotHTML';
 import { restoreSnapshotSelection } from '../utils/restoreSnapshotSelection';
@@ -23,8 +24,24 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, snapshot) => {
     try {
         core.undo.isRestoring = true;
 
+        // reset logical root to physical root
+        core.api.setLogicalRoot(core, null);
+
+        // put back the HTML
         restoreSnapshotHTML(core, snapshot);
-        restoreSnapshotSelection(core, snapshot);
+
+        // restore logical root if needed
+        const restoredLogicalRoot = getPositionFromPath(core.physicalRoot, snapshot.logicalRootPath)
+            .node as HTMLDivElement;
+        if (restoredLogicalRoot !== core.logicalRoot) {
+            core.api.setLogicalRoot(core, restoredLogicalRoot);
+        }
+
+        // restore selection and colors
+        try {
+            // might fail if the selection is not present, but we do not want to crash
+            restoreSnapshotSelection(core, snapshot);
+        } catch {}
         restoreSnapshotColors(core, snapshot);
 
         const event: ContentChangedEvent = {

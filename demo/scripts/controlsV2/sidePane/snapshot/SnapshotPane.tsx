@@ -73,6 +73,7 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
             entityStates,
             isDarkMode,
             selection,
+            logicalRootPath: [],
         };
     }
 
@@ -114,6 +115,7 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
                         entityStates: [],
                         isDarkMode: isDarkMode,
                         selection: metadata as SnapshotSelection,
+                        logicalRootPath: [],
                     });
 
                     event.preventDefault();

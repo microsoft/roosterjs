@@ -209,6 +209,7 @@ export {
     GetDOMSelection,
     SetContentModel,
     SetDOMSelection,
+    SetLogicalRoot,
     FormatContentModel,
     CoreApiMap,
     EditorCore,
@@ -305,6 +306,7 @@ export {
     KeyUpEvent,
     CompositionEndEvent,
 } from './event/KeyboardEvent';
+export { LogicalRootChangedEvent } from './event/LogicalRootChangedEvent';
 export { MouseDownEvent, MouseUpEvent } from './event/MouseEvent';
 export { PluginEvent } from './event/PluginEvent';
 export {
@@ -316,5 +318,6 @@ export {
 export { PluginEventType } from './event/PluginEventType';
 export { ScrollEvent } from './event/ScrollEvent';
 export { SelectionChangedEvent } from './event/SelectionChangedEvent';
+export { SnapshotLogicalRootEvent } from './event/SnapshotLogicalRootEvent';
 export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
 export { ZoomChangedEvent } from './event/ZoomChangedEvent';
