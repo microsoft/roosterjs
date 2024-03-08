@@ -1,7 +1,4 @@
-import {
-    combineBorderValue,
-    extractBorderValues,
-} from '../../../lib/publicApi/domUtils/borderValues';
+import { combineBorderValue, extractBorderValues } from '../../lib/domUtils/borderValues';
 
 describe('extractBorderValues', () => {
     it('undefined string', () => {

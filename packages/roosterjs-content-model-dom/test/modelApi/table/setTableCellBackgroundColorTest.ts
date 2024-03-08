@@ -1,6 +1,6 @@
 import { ContentModelTableCell, ContentModelTableCellFormat } from 'roosterjs-content-model-types';
 import { createTableCell as originalCreateTableCell } from 'roosterjs-content-model-dom';
-import { setTableCellBackgroundColor } from '../../../lib/publicApi/table/setTableCellBackgroundColor';
+import { setTableCellBackgroundColor } from '../../../lib/modelApi/table/setTableCellBackgroundColor';
 
 function createTableCell(
     spanLeftOrColSpan?: boolean | number,

@@ -36,6 +36,7 @@ export { normalizeRect } from './domUtils/normalizeRect';
 export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode';
 export { transformColor } from './domUtils/color/transformColor';
 export { parseTableCells } from './domUtils/table/parseTableCells';
+export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
@@ -67,6 +68,7 @@ export { addSegment } from './modelApi/common/addSegment';
 export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 export { getSegmentTextFormat } from './modelApi/common/getSegmentTextFormat';
+export { mergeModel } from './modelApi/common/mergeModel';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 export { getClosestAncestorBlockGroupIndex } from './modelApi/block/getClosestAncestorBlockGroupIndex';
@@ -99,6 +101,11 @@ export {
     OrderedMap,
     UnorderedMap,
 } from './modelApi/metadata/updateListMetadata';
+
+export { normalizeTable, MIN_ALLOWED_TABLE_CELL_WIDTH } from './modelApi/table/normalizeTable';
+export { setTableCellBackgroundColor } from './modelApi/table/setTableCellBackgroundColor';
+export { applyTableFormat } from './modelApi/table/applyTableFormat';
+export { getSelectedCells } from './modelApi/table/getSelectedCells';
 
 export { parseValueWithUnit } from './domUtils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';

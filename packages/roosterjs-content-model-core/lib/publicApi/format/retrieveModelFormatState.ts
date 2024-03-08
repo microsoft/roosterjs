@@ -1,6 +1,6 @@
-import { extractBorderValues } from '../domUtils/borderValues';
 import { isBold } from '../model/isBold';
 import {
+    extractBorderValues,
     getClosestAncestorBlockGroupIndex,
     iterateSelections,
     parseValueWithUnit,

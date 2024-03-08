@@ -290,6 +290,7 @@ export {
 export { TypeOfBlockGroup } from './parameter/TypeOfBlockGroup';
 export { OperationalBlocks } from './parameter/OperationalBlocks';
 export { LinkData } from './parameter/LinkData';
+export { MergeModelOption } from './parameter/MergeModelOption';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

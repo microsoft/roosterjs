@@ -1,6 +1,6 @@
 import * as createDomToModelContextForSanitizing from '../../../lib/utils/createDomToModelContextForSanitizing';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import * as mergeModelFile from '../../../lib/publicApi/model/mergeModel';
+import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/common/mergeModel';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { mergePasteContent } from '../../../lib/utils/paste/mergePasteContent';
 import {

@@ -1,8 +1,7 @@
 import * as TestHelper from '../TestHelper';
 import { DOMEventHandlerFunction } from 'roosterjs-editor-types';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
-import { normalizeTable } from 'roosterjs-content-model-core';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
+import { getObjectKeys, normalizeTable } from 'roosterjs-content-model-dom';
 import {
     ContentModelTable,
     DOMEventRecord,

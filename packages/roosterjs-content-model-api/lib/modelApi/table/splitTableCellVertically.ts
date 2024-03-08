@@ -1,5 +1,4 @@
-import { createTableCell } from 'roosterjs-content-model-dom';
-import { getSelectedCells } from 'roosterjs-content-model-core';
+import { createTableCell, getSelectedCells } from 'roosterjs-content-model-dom';
 import type { ContentModelTable, ContentModelTableRow } from 'roosterjs-content-model-types';
 
 const MIN_HEIGHT = 22;

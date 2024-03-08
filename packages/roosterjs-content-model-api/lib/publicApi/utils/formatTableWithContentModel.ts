@@ -1,10 +1,11 @@
-import { applyTableFormat, normalizeTable } from 'roosterjs-content-model-core';
 import { ensureFocusableParagraphForTable } from '../../modelApi/table/ensureFocusableParagraphForTable';
 import {
+    applyTableFormat,
     createSelectionMarker,
     getFirstSelectedTable,
     hasMetadata,
     hasSelectionInBlock,
+    normalizeTable,
     setParagraphNotImplicit,
     setSelection,
 } from 'roosterjs-content-model-dom';

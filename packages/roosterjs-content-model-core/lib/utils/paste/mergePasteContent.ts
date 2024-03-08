@@ -1,13 +1,12 @@
 import { ChangeSource } from '../../constants/ChangeSource';
 import { createDomToModelContextForSanitizing } from '../createDomToModelContextForSanitizing';
-import { mergeModel } from '../../publicApi/model/mergeModel';
 import {
     cloneModel,
     domToContentModel,
     getSegmentTextFormat,
     getSelectedSegments,
+    mergeModel,
 } from 'roosterjs-content-model-dom';
-import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
     BeforePasteEvent,
     ClipboardData,
@@ -15,6 +14,7 @@ import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
     IEditor,
+    MergeModelOption,
 } from 'roosterjs-content-model-types';
 
 const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {

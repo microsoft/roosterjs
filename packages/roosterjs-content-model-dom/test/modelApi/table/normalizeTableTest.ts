@@ -1,4 +1,4 @@
-import { normalizeTable } from '../../../lib/publicApi/table/normalizeTable';
+import { normalizeTable } from '../../../lib/modelApi/table/normalizeTable';
 import {
     ContentModelParagraph,
     ContentModelSegmentFormat,

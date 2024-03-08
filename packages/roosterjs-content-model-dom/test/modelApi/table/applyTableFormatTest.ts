@@ -1,4 +1,4 @@
-import { applyTableFormat } from '../../../lib/publicApi/table/applyTableFormat';
+import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
 import { TableBorderFormat } from 'roosterjs-content-model-dom';
 import {
     ContentModelTable,

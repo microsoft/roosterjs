@@ -1,4 +1,5 @@
-import { parseColor, updateTableCellMetadata } from 'roosterjs-content-model-dom';
+import { parseColor } from '../../domUtils/color/color';
+import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
 import type { ContentModelTableCell } from 'roosterjs-content-model-types';
 
 // Using the HSL (hue, saturation and lightness) representation for RGB color values.

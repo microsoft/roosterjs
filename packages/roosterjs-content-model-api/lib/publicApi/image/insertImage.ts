@@ -1,5 +1,10 @@
-import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model-dom';
-import { mergeModel, readFile } from 'roosterjs-content-model-core';
+import { readFile } from 'roosterjs-content-model-core';
+import {
+    addSegment,
+    createContentModelDocument,
+    createImage,
+    mergeModel,
+} from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
