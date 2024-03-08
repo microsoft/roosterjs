@@ -1,5 +1,6 @@
 import { ChangeSource, deleteSelection, isModifierKey } from 'roosterjs-content-model-core';
 import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
+import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { deleteList } from './deleteSteps/deleteList';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import {
@@ -64,7 +65,14 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
     const deleteCollapsedSelection = isForward
         ? forwardDeleteCollapsedSelection
         : backwardDeleteCollapsedSelection;
-    return [deleteAllSegmentBeforeStep, deleteWordSelection, deleteCollapsedSelection, deleteList];
+    const deleteQuote = !isForward ? deleteEmptyQuote : null;
+    return [
+        deleteAllSegmentBeforeStep,
+        deleteWordSelection,
+        deleteCollapsedSelection,
+        deleteList,
+        deleteQuote,
+    ];
 }
 
 function shouldDeleteWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {

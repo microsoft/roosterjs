@@ -31,6 +31,7 @@ export {
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
+export { normalizeRect } from './domUtils/normalizeRect';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';

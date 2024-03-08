@@ -29,7 +29,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         newImages: [],
     };
 
-    const hasFocus = core.api.hasFocus(core);
+    const hasFocus = core.domHelper.hasFocus();
 
     const changed = formatter(model, context);
     const { skipUndoSnapshot, clearModelCache, entityStates, canUndoByBackspace } = context;

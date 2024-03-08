@@ -1,5 +1,4 @@
-import { isNodeOfType } from 'roosterjs-content-model-dom';
-import { normalizeRect } from '../pluginUtils/Rect/normalizeRect';
+import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import { TableEditor } from './editors/TableEditor';
 import type { EditorPlugin, IEditor, PluginEvent, Rect } from 'roosterjs-content-model-types';
 

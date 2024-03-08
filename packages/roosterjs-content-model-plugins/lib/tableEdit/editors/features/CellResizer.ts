@@ -1,7 +1,6 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { isElementOfType } from 'roosterjs-content-model-dom';
-import { normalizeRect } from '../../../pluginUtils/Rect/normalizeRect';
+import { isElementOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import {
     getFirstSelectedTable,
     MIN_ALLOWED_TABLE_CELL_WIDTH,

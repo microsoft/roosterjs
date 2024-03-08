@@ -4,14 +4,14 @@ import type {
     ClipboardData,
     DomToModelOptionForSanitizing,
     PasteType,
-    EditorCore,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function generatePasteOptionFromPlugins(
-    core: EditorCore,
+    editor: IEditor,
     clipboardData: ClipboardData,
     fragment: DocumentFragment,
     htmlFromClipboard: HtmlFromClipboard,
@@ -38,9 +38,7 @@ export function generatePasteOptionFromPlugins(
         domToModelOption,
     };
 
-    if (pasteType !== 'asPlainText') {
-        core.api.triggerEvent(core, event, true /* broadcast */);
-    }
-
-    return event;
+    return pasteType == 'asPlainText'
+        ? event
+        : editor.triggerEvent('beforePaste', event, true /* broadcast */);
 }
