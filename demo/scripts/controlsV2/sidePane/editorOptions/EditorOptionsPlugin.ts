@@ -21,7 +21,7 @@ const initialState: OptionState = {
         hyperlink: false,
         watermark: false,
         imageEdit: false,
-        tableCellSelection: false,
+        tableCellSelection: true,
         customReplace: false,
         announce: false,
     },
