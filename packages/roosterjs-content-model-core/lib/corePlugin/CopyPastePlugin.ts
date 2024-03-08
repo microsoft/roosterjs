@@ -6,6 +6,7 @@ import { extractClipboardItems } from '../utils/extractClipboardItems';
 import { getSelectedCells } from '../publicApi/table/getSelectedCells';
 import { iterateSelections } from '../publicApi/selection/iterateSelections';
 import { onCreateCopyEntityNode } from '../override/pasteCopyBlockEntityParser';
+import { paste } from '../publicApi/paste/paste';
 
 import {
     contentModelToDom,
@@ -200,7 +201,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                     this.state.allowedCustomPasteType
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
-                        editor.pasteFromClipboard(clipboardData, this.state.defaultPasteType);
+                        paste(editor, clipboardData, this.state.defaultPasteType);
                     }
                 });
             }

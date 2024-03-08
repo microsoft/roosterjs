@@ -1,4 +1,4 @@
-export { CachedElementHandler, CloneModelOptions, cloneModel } from './publicApi/model/cloneModel';
+export { cloneModel } from './publicApi/model/cloneModel';
 export { mergeModel, MergeModelOption } from './publicApi/model/mergeModel';
 export { isBlockGroupOfType } from './publicApi/model/isBlockGroupOfType';
 export {
@@ -47,6 +47,7 @@ export { cacheGetEventData } from './publicApi/domUtils/cacheGetEventData';
 
 export { undo } from './publicApi/undo/undo';
 export { redo } from './publicApi/undo/redo';
+export { paste } from './publicApi/paste/paste';
 export { transformColor } from './publicApi/color/transformColor';
 
 export { retrieveModelFormatState } from './publicApi/format/retrieveModelFormatState';

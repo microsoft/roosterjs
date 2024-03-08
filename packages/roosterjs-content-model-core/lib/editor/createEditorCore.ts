@@ -1,8 +1,8 @@
 import { coreApiMap } from './coreApiMap';
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createDOMHelper } from './DOMHelperImpl';
-import { createEditorCorePlugins } from '../corePlugin/createEditorCorePlugins';
 import { createDomToModelSettings, createModelToDomSettings } from './createEditorDefaultSettings';
+import { createEditorCorePlugins } from '../corePlugin/createEditorCorePlugins';
 import type {
     EditorEnvironment,
     PluginState,
@@ -36,27 +36,30 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
             corePlugins.contextMenu,
             corePlugins.lifecycle,
         ],
-        environment: createEditorEnvironment(contentDiv),
+        environment: createEditorEnvironment(contentDiv, options),
         darkColorHandler: createDarkColorHandler(
             contentDiv,
             options.getDarkColor ?? getDarkColorFallback,
             options.knownColors
         ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
-        domToModelSettings: createDomToModelSettings(options),
-        modelToDomSettings: createModelToDomSettings(options),
         domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
     };
 }
 
-function createEditorEnvironment(contentDiv: HTMLElement): EditorEnvironment {
+function createEditorEnvironment(
+    contentDiv: HTMLElement,
+    options: EditorOptions
+): EditorEnvironment {
     const navigator = contentDiv.ownerDocument.defaultView?.navigator;
     const userAgent = navigator?.userAgent ?? '';
     const appVersion = navigator?.appVersion ?? '';
 
     return {
+        domToModelSettings: createDomToModelSettings(options),
+        modelToDomSettings: createModelToDomSettings(options),
         isMac: appVersion.indexOf('Mac') != -1,
         isAndroid: /android/i.test(userAgent),
         isSafari:
