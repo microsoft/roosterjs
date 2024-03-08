@@ -1,62 +1,54 @@
-import { cloneModel } from '../publicApi/model/cloneModel';
-import { convertInlineCss } from '../utils/convertInlineCss';
-import { createPasteFragment } from '../utils/paste/createPasteFragment';
-import { generatePasteOptionFromPlugins } from '../utils/paste/generatePasteOptionFromPlugins';
-import { mergePasteContent } from '../utils/paste/mergePasteContent';
-import { retrieveHtmlInfo } from '../utils/paste/retrieveHtmlInfo';
-import type { CloneModelOptions } from '../publicApi/model/cloneModel';
+import { convertInlineCss } from '../../utils/convertInlineCss';
+import { createPasteFragment } from '../../utils/paste/createPasteFragment';
+import { generatePasteOptionFromPlugins } from '../../utils/paste/generatePasteOptionFromPlugins';
+import { mergePasteContent } from '../../utils/paste/mergePasteContent';
+import { retrieveHtmlInfo } from '../../utils/paste/retrieveHtmlInfo';
 import type {
     PasteType,
     ClipboardData,
-    Paste,
-    EditorCore,
     TrustedHTMLHandler,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
-const CloneOption: CloneModelOptions = {
-    includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
-};
-
 /**
- * @internal
  * Paste into editor using a clipboardData object
- * @param core The EditorCore object.
+ * @param editor The Editor object.
  * @param clipboardData Clipboard data retrieved from clipboard
  * @param pasteType Type of content to paste. @default normal
  */
-export const paste: Paste = (
-    core: EditorCore,
+export function paste(
+    editor: IEditor,
     clipboardData: ClipboardData,
     pasteType: PasteType = 'normal'
-) => {
-    core.api.focus(core);
+) {
+    editor.focus();
 
-    if (clipboardData.modelBeforePaste) {
-        core.api.setContentModel(core, cloneModel(clipboardData.modelBeforePaste, CloneOption));
-    } else {
-        clipboardData.modelBeforePaste = cloneModel(core.api.createContentModel(core), CloneOption);
+    const trustedHTMLHandler = editor.getTrustedHTMLHandler();
+
+    if (!clipboardData.modelBeforePaste) {
+        clipboardData.modelBeforePaste = editor.getContentModelCopy('connected');
     }
 
     // 1. Prepare variables
-    const doc = createDOMFromHtml(clipboardData.rawHtml, core.trustedHTMLHandler);
+    const doc = createDOMFromHtml(clipboardData.rawHtml, trustedHTMLHandler);
 
     // 2. Handle HTML from clipboard
     const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
 
     // 3. Create target fragment
     const sourceFragment = createPasteFragment(
-        core.physicalRoot.ownerDocument,
+        editor.getDocument(),
         clipboardData,
         pasteType,
         (clipboardData.rawHtml == clipboardData.html
             ? doc
-            : createDOMFromHtml(clipboardData.html, core.trustedHTMLHandler)
+            : createDOMFromHtml(clipboardData.html, trustedHTMLHandler)
         )?.body
     );
 
     // 4. Trigger BeforePaste event to allow plugins modify the fragment
     const eventResult = generatePasteOptionFromPlugins(
-        core,
+        editor,
         clipboardData,
         sourceFragment,
         htmlFromClipboard,
@@ -67,8 +59,8 @@ export const paste: Paste = (
     convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
 
     // 6. Merge pasted content into main Content Model
-    mergePasteContent(core, eventResult, clipboardData);
-};
+    mergePasteContent(editor, eventResult, clipboardData);
+}
 
 function createDOMFromHtml(
     html: string | null | undefined,

@@ -2,8 +2,6 @@ import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from '../pluginState/PluginState';
 import type { EditorPlugin } from './EditorPlugin';
-import type { ClipboardData } from '../parameter/ClipboardData';
-import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatContentModelContext';
@@ -11,11 +9,10 @@ import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
-import type { DomToModelSettings } from '../context/DomToModelSettings';
 import type { EditorContext } from '../context/EditorContext';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
-import type { ModelToDomSettings, OnNodeCreated } from '../context/ModelToDomSettings';
+import type { OnNodeCreated } from '../context/ModelToDomSettings';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
 import type {
@@ -126,13 +123,6 @@ export type AddUndoSnapshot = (
 export type GetVisibleViewport = (core: EditorCore) => Rect | null;
 
 /**
- * Check if the editor has focus now
- * @param core The EditorCore object
- * @returns True if the editor has focus, otherwise false
- */
-export type HasFocus = (core: EditorCore) => boolean;
-
-/**
  * Focus to editor. If there is a cached selection range, use it as current selection
  * @param core The EditorCore object
  */
@@ -154,14 +144,6 @@ export type AttachDomEvent = (
  * @param step Steps to move, can be 0, positive or negative
  */
 export type RestoreUndoSnapshot = (core: EditorCore, snapshot: Snapshot) => void;
-
-/**
- * Paste into editor using a clipboardData object
- * @param core The EditorCore object.
- * @param clipboardData Clipboard data retrieved from clipboard
- * @param pasteType Type of content to paste. @default normal
- */
-export type Paste = (core: EditorCore, clipboardData: ClipboardData, pasteType: PasteType) => void;
 
 /**
  * The interface for the map of core API for Editor.
@@ -231,13 +213,6 @@ export interface CoreApiMap {
     getVisibleViewport: GetVisibleViewport;
 
     /**
-     * Check if the editor has focus now
-     * @param core The EditorCore object
-     * @returns True if the editor has focus, otherwise false
-     */
-    hasFocus: HasFocus;
-
-    /**
      * Focus to editor. If there is a cached selection range, use it as current selection
      * @param core The EditorCore object
      */
@@ -274,14 +249,6 @@ export interface CoreApiMap {
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
-
-    /**
-     * Paste into editor using a clipboardData object
-     * @param editor The editor to paste content into
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param pasteType Type of content to paste. @default normal
-     */
-    paste: Paste;
 }
 
 /**
@@ -316,16 +283,6 @@ export interface EditorCore extends PluginState {
     readonly plugins: EditorPlugin[];
 
     /**
-     * Settings used by DOM to Content Model conversion
-     */
-    readonly domToModelSettings: ContentModelSettings<DomToModelOption, DomToModelSettings>;
-
-    /**
-     * Settings used by Content Model to DOM conversion
-     */
-    readonly modelToDomSettings: ContentModelSettings<ModelToDomOption, ModelToDomSettings>;
-
-    /**
      * Editor running environment
      */
     readonly environment: EditorEnvironment;
@@ -354,26 +311,4 @@ export interface EditorCore extends PluginState {
      * @param error The error object we got
      */
     readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
-}
-
-/**
- * Default DOM and Content Model conversion settings for an editor
- */
-export interface ContentModelSettings<OptionType, ConfigType> {
-    /**
-     * Built in options used by editor
-     */
-    builtIn: OptionType;
-
-    /**
-     * Customize options passed in from Editor Options, used for overwrite default option.
-     * This will also be used by copy/paste
-     */
-    customized: OptionType;
-
-    /**
-     * Configuration calculated from default and customized options.
-     * This is a cached object so that we don't need to cache it every time when we use Content Model
-     */
-    calculated: ConfigType;
 }

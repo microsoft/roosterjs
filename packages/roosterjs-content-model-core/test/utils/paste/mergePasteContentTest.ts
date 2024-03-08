@@ -10,7 +10,7 @@ import {
     FormatContentModelContext,
     FormatContentModelOptions,
     InsertPoint,
-    EditorCore,
+    IEditor,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
@@ -18,7 +18,7 @@ describe('mergePasteContent', () => {
     let context: FormatContentModelContext | undefined;
     let formatContentModel: jasmine.Spy;
     let sourceModel: ContentModelDocument;
-    let core: EditorCore;
+    let editor: IEditor;
     const mockedClipboard = 'CLIPBOARD' as any;
 
     beforeEach(() => {
@@ -27,33 +27,25 @@ describe('mergePasteContent', () => {
 
         formatContentModel = jasmine
             .createSpy('formatContentModel')
-            .and.callFake(
-                (
-                    core: any,
-                    callback: ContentModelFormatter,
-                    options: FormatContentModelOptions
-                ) => {
-                    context = {
-                        newEntities: [],
-                        deletedEntities: [],
-                        newImages: [],
-                    };
-                    formatResult = callback(sourceModel, context);
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                context = {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                };
+                formatResult = callback(sourceModel, context);
 
-                    const changedData = options.getChangeData!();
+                const changedData = options.getChangeData!();
 
-                    expect(changedData).toBe(mockedClipboard);
-                }
-            );
+                expect(changedData).toBe(mockedClipboard);
+            });
 
-        core = {
-            api: {
-                formatContentModel,
-            },
-            domToModelSettings: {},
-            physicalRoot: <any>{
-                ownerDocument: document,
-            },
+        editor = {
+            formatContentModel,
+            getEnvironment: () => ({
+                domToModelSettings: {},
+            }),
+            getDocument: () => document,
         } as any;
     });
 
@@ -163,7 +155,7 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
         } as any;
 
-        mergePasteContent(core, eventResult, mockedClipboard);
+        mergePasteContent(editor, eventResult, mockedClipboard);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -268,7 +260,7 @@ describe('mergePasteContent', () => {
             customizedMerge,
         } as any;
 
-        mergePasteContent(core, eventResult, mockedClipboard);
+        mergePasteContent(editor, eventResult, mockedClipboard);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -289,7 +281,7 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
         } as any;
 
-        mergePasteContent(core, eventResult, mockedClipboard);
+        mergePasteContent(editor, eventResult, mockedClipboard);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -363,12 +355,14 @@ describe('mergePasteContent', () => {
         const mockedDefaultDomToModelOptions = 'OPTIONS3' as any;
         const mockedFragment = 'FRAGMENT' as any;
 
-        (core as any).domToModelSettings = {
-            customized: mockedDomToModelOptions,
-        };
+        (editor as any).getEnvironment = () => ({
+            domToModelSettings: {
+                customized: mockedDomToModelOptions,
+            },
+        });
 
         mergePasteContent(
-            core,
+            editor,
             {
                 fragment: mockedFragment,
                 domToModelOption: mockedDefaultDomToModelOptions,
@@ -429,7 +423,7 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
         } as any;
 
-        mergePasteContent(core, eventResult, mockedClipboard);
+        mergePasteContent(editor, eventResult, mockedClipboard);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();

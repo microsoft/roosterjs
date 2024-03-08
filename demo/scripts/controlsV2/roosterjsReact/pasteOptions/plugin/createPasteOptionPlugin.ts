@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ButtonKeys, Buttons } from '../utils/buttons';
-import { ChangeSource } from 'roosterjs-content-model-core';
+import { ChangeSource, paste } from 'roosterjs-content-model-core';
 import { ClipboardData, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { showPasteOptionPane } from '../component/showPasteOptionPane';
 import type { PasteOptionPane } from '../component/showPasteOptionPane';
@@ -130,18 +130,18 @@ class PasteOptionPlugin implements ReactEditorPlugin {
 
             switch (key) {
                 case 'pasteOptionPasteAsIs':
-                    this.editor.pasteFromClipboard(this.clipboardData);
+                    paste(this.editor, this.clipboardData);
                     break;
 
                 case 'pasteOptionPasteText':
-                    this.editor.pasteFromClipboard(this.clipboardData, 'asPlainText');
+                    paste(this.editor, this.clipboardData, 'asPlainText');
                     break;
 
                 case 'pasteOptionMergeFormat':
-                    this.editor.pasteFromClipboard(this.clipboardData, 'mergeFormat');
+                    paste(this.editor, this.clipboardData, 'mergeFormat');
                     break;
                 case 'pasteOptionPasteAsImage':
-                    this.editor.pasteFromClipboard(this.clipboardData, 'asImage');
+                    paste(this.editor, this.clipboardData, 'asImage');
             }
 
             this.pasteOptionRef.current?.setSelectedKey(key);
