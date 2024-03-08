@@ -17,6 +17,7 @@ const BlockEntityContainer = '_E_EBlockEntityContainer';
 describe('EntityDelimiterUtils |', () => {
     let queryElementsSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
+    let triggerPluginEventSpy: jasmine.Spy;
     let mockedEditor: any;
     beforeEach(() => {
         mockedEditor = (<any>{
@@ -24,6 +25,7 @@ describe('EntityDelimiterUtils |', () => {
                 queryElements: queryElementsSpy,
                 isNodeInEditor: () => true,
             }),
+            triggerPluginEvent: triggerPluginEventSpy,
             getPendingFormat: <any>((): any => null),
         }) as Partial<IEditor>;
     });
@@ -499,7 +501,7 @@ describe('EntityDelimiterUtils |', () => {
             );
         });
 
-        it('Handle, range selection & delimiter after wrapped in block entity', () => {
+        it('Handle, range selection & delimiter after wrapped in block entity | Enter key', () => {
             const div = document.createElement('div');
             const parent = document.createElement('span');
             const el = document.createElement('span');
@@ -552,6 +554,114 @@ describe('EntityDelimiterUtils |', () => {
                     selectionOverride: mockedSelection,
                 }
             );
+        });
+
+        it('Handle, range expanded selection ', () => {
+            const div = document.createElement('div');
+            const parent = document.createElement('span');
+            const el = document.createElement('span');
+            const text = document.createTextNode('span');
+            el.appendChild(text);
+            parent.appendChild(el);
+            el.classList.add('entityDelimiterAfter');
+            div.classList.add(BlockEntityContainer);
+            div.appendChild(parent);
+
+            const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
+            const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
+            const collapseSpy = jasmine.createSpy('collapseSpy');
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+
+            mockedSelection = {
+                type: 'range',
+                range: <any>{
+                    endContainer: text,
+                    endOffset: 0,
+                    collapsed: false,
+                    setStartAfter: setStartAfterSpy,
+                    setStartBefore: setStartBeforeSpy,
+                    collapse: collapseSpy,
+                },
+                isReverted: false,
+            };
+            spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
+
+            handleDelimiterKeyDownEvent(mockedEditor, {
+                eventType: 'keyDown',
+                rawEvent: <any>{
+                    ctrlKey: false,
+                    altKey: false,
+                    metaKey: false,
+                    key: 'A',
+                    preventDefault: preventDefaultSpy,
+                },
+            });
+
+            expect(rafSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(setStartAfterSpy).toHaveBeenCalled();
+            expect(setStartBeforeSpy).not.toHaveBeenCalled();
+            expect(collapseSpy).not.toHaveBeenCalled();
+            expect(selectNodeSpy).toHaveBeenCalledTimes(1);
+            expect(selectNodeSpy).toHaveBeenCalledWith(el);
+        });
+
+        it('Handle, range expanded selection | EnterKey', () => {
+            const div = document.createElement('div');
+            const parent = document.createElement('span');
+            const el = document.createElement('span');
+            const text = document.createTextNode('span');
+            el.appendChild(text);
+            parent.appendChild(el);
+            el.classList.add('entityDelimiterAfter');
+            div.classList.add(BlockEntityContainer);
+            div.appendChild(parent);
+
+            const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
+            const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
+            const collapseSpy = jasmine.createSpy('collapseSpy');
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+
+            mockedSelection = {
+                type: 'range',
+                range: <any>{
+                    endContainer: text,
+                    endOffset: 0,
+                    collapsed: false,
+                    setStartAfter: setStartAfterSpy,
+                    setStartBefore: setStartBeforeSpy,
+                    collapse: collapseSpy,
+                },
+                isReverted: false,
+            };
+            spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
+
+            handleDelimiterKeyDownEvent(mockedEditor, {
+                eventType: 'keyDown',
+                rawEvent: <any>{
+                    ctrlKey: false,
+                    altKey: false,
+                    metaKey: false,
+                    key: 'A',
+                    preventDefault: preventDefaultSpy,
+                },
+            });
+
+            expect(rafSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(setStartAfterSpy).not.toHaveBeenCalled();
+            expect(setStartBeforeSpy).not.toHaveBeenCalled();
+            expect(collapseSpy).not.toHaveBeenCalled();
+            expect(selectNodeSpy).toHaveBeenCalledTimes(1);
+            expect(selectNodeSpy).toHaveBeenCalledWith(el);
+            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
+                operation: 'click',
+                entityType: 'span',
+                format: {},
+                entity: el,
+            });
         });
     });
 });

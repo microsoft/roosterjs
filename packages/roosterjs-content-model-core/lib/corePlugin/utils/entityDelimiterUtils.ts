@@ -1,6 +1,5 @@
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
-
 import type {
     CompositionEndEvent,
     ContentModelBlockGroup,
@@ -203,7 +202,7 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
         return;
     }
     const isEnter = rawEvent.key === 'Enter';
-    if (selection.range.collapsed && isCharacterValue(rawEvent)) {
+    if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
         const helper = editor.getDOMHelper();
         const node = getFocusedElement(selection);
         if (node && isEntityDelimiter(node) && helper.isNodeInEditor(node)) {
@@ -211,16 +210,16 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
             if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
                 const isAfter = node.classList.contains(DelimiterAfter);
 
-                if (isEnter) {
-                    event.rawEvent.preventDefault();
-                }
-
                 if (isAfter) {
                     selection.range.setStartAfter(blockEntityContainer);
                 } else {
                     selection.range.setStartBefore(blockEntityContainer);
                 }
                 selection.range.collapse(true /* toStart */);
+
+                if (isEnter) {
+                    event.rawEvent.preventDefault();
+                }
 
                 editor.formatContentModel(handleKeyDownInBlockDelimiter, {
                     selectionOverride: {
@@ -246,7 +245,6 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
     } else {
         const helper = editor.getDOMHelper();
         const entity = getSelectedEntity(selection);
-
         if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
             selection.range.selectNode(entity);
             if (isEnter) {
