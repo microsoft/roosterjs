@@ -1,5 +1,5 @@
 import { IEditor, SnapshotsManager } from 'roosterjs-content-model-types';
-import { undo } from '../../../lib/publicApi/undo/undo';
+import { undo } from '../../lib/editorCommand/undo';
 
 describe('undo', () => {
     let editor: IEditor;

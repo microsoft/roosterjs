@@ -1,5 +1,5 @@
 import { IEditor, SnapshotsManager } from 'roosterjs-content-model-types';
-import { redo } from '../../../lib/publicApi/undo/redo';
+import { redo } from '../../lib/editorCommand/redo';
 
 describe('redo', () => {
     let editor: IEditor;

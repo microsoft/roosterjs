@@ -8,9 +8,9 @@ import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/proce
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from 'roosterjs-content-model-plugins/lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { Editor } from '../../../lib/editor/Editor';
+import { Editor } from '../../lib/editor/Editor';
 import { expectEqual, initEditor } from 'roosterjs-content-model-plugins/test/paste/e2e/testUtils';
-import { paste } from '../../../lib/publicApi/paste/paste';
+import { paste } from '../../lib/publicApi/paste/paste';
 import { PastePlugin } from 'roosterjs-content-model-plugins/lib/paste/PastePlugin';
 import {
     ClipboardData,

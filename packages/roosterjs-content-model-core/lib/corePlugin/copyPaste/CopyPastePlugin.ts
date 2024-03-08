@@ -3,7 +3,7 @@ import { ChangeSource } from '../../constants/ChangeSource';
 import { deleteEmptyList } from './deleteEmptyList';
 import { extractClipboardItems } from '../../utils/extractClipboardItems';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
-import { paste } from '../../publicApi/paste/paste';
+import { paste } from '../../editorCommand/paste';
 import {
     contentModelToDom,
     createModelToDomContext,
