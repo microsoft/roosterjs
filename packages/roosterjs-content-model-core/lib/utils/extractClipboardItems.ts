@@ -6,6 +6,7 @@ const ContentHandlers: {
 } = {
     ['text/html']: (data, value) => (data.rawHtml = value),
     ['text/plain']: (data, value) => (data.text = value),
+    ['text/rtf']: (data, value) => (data.rtf = value),
     ['text/*']: (data, value, type?) => !!type && (data.customValues[type] = value),
     ['text/link-preview']: tryParseLinkPreview,
 };

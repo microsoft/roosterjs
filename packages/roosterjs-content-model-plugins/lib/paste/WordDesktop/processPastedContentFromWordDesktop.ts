@@ -1,6 +1,7 @@
 import { addParser } from '../utils/addParser';
 import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
+import { handleInlineImages } from './handleInlineImages';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
@@ -31,6 +32,8 @@ export function processPastedContentFromWordDesktop(
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'container', wordTableParser);
     addParser(ev.domToModelOption, 'table', wordTableParser);
+
+    handleInlineImages(ev.fragment, ev.clipboardData.rtf);
 }
 
 const wordDesktopElementProcessor = (
