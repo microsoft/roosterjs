@@ -1,4 +1,15 @@
-import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
+import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createDivider } from '../../../lib/modelApi/creators/createDivider';
+import { createEntity } from '../../../lib/modelApi/creators/createEntity';
+import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
+import { createListItem } from '../../../lib/modelApi/creators/createListItem';
+import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
+import { createTable } from '../../../lib/modelApi/creators/createTable';
+import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -9,19 +20,6 @@ import {
     OperationalBlocks,
     TableSelectionContext,
 } from 'roosterjs-content-model-types';
-import {
-    createContentModelDocument,
-    createDivider,
-    createEntity,
-    createFormatContainer,
-    createListItem,
-    createListLevel,
-    createParagraph,
-    createSelectionMarker,
-    createTable,
-    createTableCell,
-    createText,
-} from 'roosterjs-content-model-dom';
 import {
     getSelectedParagraphs,
     getFirstSelectedListItem,

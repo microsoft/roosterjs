@@ -1,6 +1,6 @@
 import { BulletListType } from '../../constants/BulletListType';
 import { NumberingListType } from '../../constants/NumberingListType';
-import { updateMetadata } from 'roosterjs-content-model-dom';
+import { updateMetadata } from '../../domUtils/metadata/updateMetadata';
 import {
     createBooleanDefinition,
     createNumberDefinition,

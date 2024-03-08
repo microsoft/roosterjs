@@ -1,5 +1,5 @@
 import { BulletListType } from '../../../lib/constants/BulletListType';
-import { createModelToDomContext } from 'roosterjs-content-model-dom';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { NumberingListType } from '../../../lib/constants/NumberingListType';
 import { updateListMetadata } from '../../../lib/modelApi/metadata/updateListMetadata';
 import {

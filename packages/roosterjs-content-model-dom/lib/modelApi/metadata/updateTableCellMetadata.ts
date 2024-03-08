@@ -1,5 +1,5 @@
 import { createBooleanDefinition, createObjectDefinition } from './definitionCreators';
-import { updateMetadata } from 'roosterjs-content-model-dom';
+import { updateMetadata } from '../../domUtils/metadata/updateMetadata';
 import type { ContentModelTableCell, TableCellMetadataFormat } from 'roosterjs-content-model-types';
 
 const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableCellMetadataFormat>>(

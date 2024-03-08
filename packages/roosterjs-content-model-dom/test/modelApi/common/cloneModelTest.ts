@@ -1,6 +1,6 @@
 import { cloneModel } from '../../../lib/modelApi/common/cloneModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { createEntity } from 'roosterjs-content-model-dom';
+import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 
 describe('cloneModel', () => {
     function compareObjects(o1: any, o2: any, allowCache: boolean, path: string = '/') {

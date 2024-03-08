@@ -1,4 +1,9 @@
-import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
+import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
+import { createDivider } from '../../../lib/modelApi/creators/createDivider';
+import { createEntity } from '../../../lib/modelApi/creators/createEntity';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSelectedSegments } from '../../../lib/modelApi/selection/collectSelections';
 import {
     ContentModelBlock,
@@ -6,13 +11,6 @@ import {
     ContentModelSegment,
     TableSelectionContext,
 } from 'roosterjs-content-model-types';
-import {
-    createDivider,
-    createEntity,
-    createParagraph,
-    createSelectionMarker,
-    createText,
-} from 'roosterjs-content-model-dom';
 
 interface SelectionInfo {
     path: ContentModelBlockGroup[];

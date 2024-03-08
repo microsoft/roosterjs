@@ -1,11 +1,9 @@
-import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
-import { handleList } from 'roosterjs-content-model-dom/lib/modelToDom/handlers/handleList';
+import { createListItem } from '../../../lib/modelApi/creators/createListItem';
+import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { expectHtml } from '../../testUtils';
+import { handleList } from '../../../lib/modelToDom/handlers/handleList';
 import { ModelToDomContext } from 'roosterjs-content-model-types';
-import {
-    createListItem,
-    createListLevel,
-    createModelToDomContext,
-} from 'roosterjs-content-model-dom';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,

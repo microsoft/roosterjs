@@ -1,4 +1,4 @@
-import * as validate from 'roosterjs-content-model-dom/lib/domUtils/metadata/validate';
+import * as validate from '../../../lib/domUtils/metadata/validate';
 import { ContentModelWithDataset, Definition } from 'roosterjs-content-model-types';
 import { hasMetadata, updateMetadata } from '../../../lib/domUtils/metadata/updateMetadata';
 

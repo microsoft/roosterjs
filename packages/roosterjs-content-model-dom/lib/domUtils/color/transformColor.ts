@@ -1,4 +1,4 @@
-import { getColor, setColor } from 'roosterjs-content-model-dom';
+import { getColor, setColor } from '../../formatHandlers/utils/color';
 import type { DarkColorHandler } from 'roosterjs-content-model-types';
 
 /**

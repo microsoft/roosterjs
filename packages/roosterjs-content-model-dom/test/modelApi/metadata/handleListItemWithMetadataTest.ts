@@ -1,13 +1,11 @@
-import * as applyFormat from 'roosterjs-content-model-dom/lib/modelToDom/utils/applyFormat';
-import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
-import { handleList as originalHandleList } from 'roosterjs-content-model-dom/lib/modelToDom/handlers/handleList';
-import { handleListItem } from 'roosterjs-content-model-dom/lib/modelToDom/handlers/handleListItem';
-import {
-    createListItem,
-    createListLevel,
-    createModelToDomContext,
-    createParagraph,
-} from 'roosterjs-content-model-dom';
+import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
+import { createListItem } from '../../../lib/modelApi/creators/createListItem';
+import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { expectHtml } from '../../testUtils';
+import { handleList as originalHandleList } from '../../../lib/modelToDom/handlers/handleList';
+import { handleListItem } from '../../../lib/modelToDom/handlers/handleListItem';
 import {
     ContentModelBlockGroup,
     ContentModelBlockHandler,

@@ -1,13 +1,11 @@
+import { createBr } from '../creators/createBr';
+import { createParagraph } from '../creators/createParagraph';
+import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { deleteBlock } from '../../modelApi/editing/deleteBlock';
 import { deleteSegment } from '../../modelApi/editing/deleteSegment';
 import { getSegmentTextFormat } from '../common/getSegmentTextFormat';
-import {
-    createBr,
-    createParagraph,
-    createSelectionMarker,
-    iterateSelections,
-    setParagraphNotImplicit,
-} from 'roosterjs-content-model-dom';
+import { iterateSelections } from '../selection/iterateSelections';
+import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import type {
     ContentModelBlockGroup,
     ContentModelDocument,

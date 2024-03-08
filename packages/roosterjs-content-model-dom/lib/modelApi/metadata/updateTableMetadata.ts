@@ -1,5 +1,5 @@
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
-import { updateMetadata } from 'roosterjs-content-model-dom';
+import { updateMetadata } from '../../domUtils/metadata/updateMetadata';
 import {
     createBooleanDefinition,
     createNumberDefinition,
