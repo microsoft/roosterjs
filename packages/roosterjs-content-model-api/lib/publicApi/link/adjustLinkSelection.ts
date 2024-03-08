@@ -1,7 +1,6 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { getSelectedSegments } from 'roosterjs-content-model-dom';
-import { setSelection } from 'roosterjs-content-model-core';
+import { getSelectedSegments, setSelection } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
