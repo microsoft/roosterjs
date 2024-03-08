@@ -1,7 +1,7 @@
 import CodeElement from './CodeElement';
 
 class SimplePluginCode extends CodeElement {
-    constructor(private name: string, private namespace: string = 'roosterjs') {
+    constructor(private name: string, private namespace: string = 'roosterjsLegacy') {
         super();
     }
 

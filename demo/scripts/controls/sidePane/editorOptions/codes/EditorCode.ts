@@ -27,10 +27,10 @@ export default class EditorCode extends CodeElement {
         let defaultFormat = this.defaultFormat.getCode();
         let expermientalFeatures = this.experimentalFeatures.getCode();
         let darkMode = this.darkMode.getCode();
-        let code = "let contentDiv = document.getElementById('contentDiv') as HTMLDivElement;\n";
+        let code = "let contentDiv = document.getElementById('contentDiv');\n";
         code += `let plugins = ${this.plugins.getCode()};\n`;
         code += defaultFormat ? `let defaultFormat: DefaultFormat = ${defaultFormat};\n` : '';
-        code += 'let options: roosterjsLegacy.EditorOptions = {\n';
+        code += 'let options = {\n';
         code += this.indent('plugins: plugins,\n');
         code += defaultFormat ? this.indent('defaultFormat: defaultFormat,\n') : '';
         code += expermientalFeatures
