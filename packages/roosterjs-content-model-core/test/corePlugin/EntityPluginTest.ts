@@ -110,6 +110,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper,
                 },
                 state: undefined,
+                shouldPersist: true,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
@@ -154,6 +155,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper,
                 },
                 state: undefined,
+                shouldPersist: true,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
@@ -200,6 +202,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper,
                 },
                 state: undefined,
+                shouldPersist: true,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
@@ -242,6 +245,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper,
                 },
                 state: undefined,
+                shouldPersist: true,
             });
             expect(transformColorSpy).toHaveBeenCalledTimes(1);
             expect(transformColorSpy).toHaveBeenCalledWith(
@@ -300,6 +304,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper,
                 },
                 state: undefined,
+                shouldPersist: true,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
                 operation: 'overwrite',
@@ -311,6 +316,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper2,
                 },
                 state: undefined,
+                shouldPersist: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
@@ -388,6 +394,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper,
                 },
                 state: undefined,
+                shouldPersist: true,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
@@ -454,6 +461,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper2,
                 },
                 state: undefined,
+                shouldPersist: true,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
                 operation: 'removeFromStart',
@@ -465,6 +473,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper1,
                 },
                 state: undefined,
+                shouldPersist: undefined,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
@@ -524,6 +533,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper2,
                 },
                 state: undefined,
+                shouldPersist: true,
             });
             expect(transformColorSpy).not.toHaveBeenCalled();
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
@@ -571,6 +581,7 @@ describe('EntityPlugin', () => {
                     wrapper,
                 },
                 state: entityState,
+                shouldPersist: undefined,
             });
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
@@ -625,6 +636,7 @@ describe('EntityPlugin', () => {
                     wrapper: mockedNode,
                 },
                 state: undefined,
+                shouldPersist: undefined,
             });
         });
 
@@ -661,6 +673,7 @@ describe('EntityPlugin', () => {
                     wrapper: mockedNode1,
                 },
                 state: undefined,
+                shouldPersist: undefined,
             });
         });
 
@@ -721,6 +734,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper1,
                 },
                 state: undefined,
+                shouldPersist: undefined,
             });
             expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
                 operation: 'replaceTemporaryContent',
@@ -732,6 +746,7 @@ describe('EntityPlugin', () => {
                     wrapper: wrapper2,
                 },
                 state: undefined,
+                shouldPersist: undefined,
             });
         });
     });

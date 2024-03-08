@@ -42,8 +42,8 @@ export function restoreSnapshotHTML(core: EditorCore, snapshot: Snapshot) {
                     if (wrapper) {
                         if (wrapper == refNode) {
                             // In case the node we are moving is just the ref node,
-                            // We create a temporary clone and insert it before the refNode, the use this cloned node as refNode
-                            // Then after replaceChild(), the original refNode will be moved away
+                            // We create a temporary clone and insert it before the refNode, and use this cloned node as refNode
+                            // After replaceChild(), the original refNode will be moved away
                             const markerNode = wrapper.cloneNode();
 
                             physicalRoot.insertBefore(markerNode, refNode);
@@ -76,7 +76,7 @@ function tryGetEntityElement(
         if (isEntityElement(node)) {
             const format = parseEntityFormat(node);
 
-            result = (format.id && entityMap[format.id]?.element) || null;
+            result = getEntityWrapperForReuse(entityMap, format.id);
         } else if (isBlockEntityContainer(node)) {
             result = tryGetEntityFromContainer(node, entityMap);
         }
@@ -96,7 +96,7 @@ function tryGetEntityFromContainer(
     for (let node = element.firstChild; node; node = node.nextSibling) {
         if (isEntityElement(node) && isNodeOfType(node, 'ELEMENT_NODE')) {
             const format = parseEntityFormat(node);
-            const parent = format.id ? entityMap[format.id]?.element.parentElement : null;
+            const parent = getEntityWrapperForReuse(entityMap, format.id)?.parentElement;
 
             return isNodeOfType(parent, 'ELEMENT_NODE') && isBlockEntityContainer(parent)
                 ? parent
@@ -105,4 +105,13 @@ function tryGetEntityFromContainer(
     }
 
     return null;
+}
+
+function getEntityWrapperForReuse(
+    entityMap: Record<string, KnownEntityItem>,
+    entityId: string | undefined
+): HTMLElement | null {
+    const entry = entityId ? entityMap[entityId] : undefined;
+
+    return entry?.canPersist ? entry.element : null;
 }
