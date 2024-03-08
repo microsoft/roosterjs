@@ -26,8 +26,7 @@ describe('unlink', () => {
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
-            rawEvent,
-            true
+            rawEvent
         );
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();

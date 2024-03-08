@@ -18,13 +18,10 @@ describe('createLinkAfterSpace', () => {
                 expect(result).toBe(expectedResult);
             });
 
-        createLinkAfterSpace(
-            {
-                focus: () => {},
-                formatContentModel: formatWithContentModelSpy,
-            } as any,
-            true
-        );
+        createLinkAfterSpace({
+            focus: () => {},
+            formatContentModel: formatWithContentModelSpy,
+        } as any);
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         expect(input).toEqual(expectedModel);

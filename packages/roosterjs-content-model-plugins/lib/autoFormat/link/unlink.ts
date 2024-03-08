@@ -4,10 +4,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
 /**
  * @internal
  */
-export function unlink(editor: IEditor, rawEvent: KeyboardEvent, unlink: boolean) {
-    if (!unlink) {
-        return;
-    }
+export function unlink(editor: IEditor, rawEvent: KeyboardEvent) {
     editor.formatContentModel(model => {
         const link = getLinkSegment(model);
         if (link?.link) {

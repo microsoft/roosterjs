@@ -139,10 +139,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             if (shouldCallTrigger) {
-                expect(createLinkSpy).toHaveBeenCalledWith(
-                    editor,
-                    options ? options.autoLink : true
-                );
+                expect(createLinkSpy).toHaveBeenCalledWith(editor);
             } else {
                 expect(createLinkSpy).not.toHaveBeenCalled();
             }
@@ -161,7 +158,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'contentChanged',
                 source: 'Paste',
             };
-            runTest(event, true, { autoLink: false });
+            runTest(event, false, { autoLink: false });
         });
 
         it('should not  call createLink - not paste', () => {
@@ -193,11 +190,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             if (shouldCallTrigger) {
-                expect(unlinkSpy).toHaveBeenCalledWith(
-                    editor,
-                    event.rawEvent,
-                    options ? options.autoUnlink : true
-                );
+                expect(unlinkSpy).toHaveBeenCalledWith(editor, event.rawEvent);
             } else {
                 expect(unlinkSpy).not.toHaveBeenCalled();
             }
@@ -218,7 +211,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'keyDown',
                 rawEvent: { key: 'Backspace', preventDefault: () => {} } as any,
             };
-            runTest(event, true, {
+            runTest(event, false, {
                 autoUnlink: false,
             });
         });
@@ -252,10 +245,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             if (shouldCallTrigger) {
-                expect(createLinkAfterSpaceSpy).toHaveBeenCalledWith(
-                    editor,
-                    options ? options.autoLink : true
-                );
+                expect(createLinkAfterSpaceSpy).toHaveBeenCalledWith(editor);
             } else {
                 expect(createLinkAfterSpaceSpy).not.toHaveBeenCalled();
             }
@@ -274,7 +264,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'keyDown',
                 rawEvent: { key: ' ', preventDefault: () => {} } as any,
             };
-            runTest(event, true, {
+            runTest(event, false, {
                 autoLink: false,
             });
         });

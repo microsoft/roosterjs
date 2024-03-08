@@ -6,10 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
 /**
  * @internal
  */
-export function createLinkAfterSpace(editor: IEditor, autoLink: boolean) {
-    if (!autoLink) {
-        return;
-    }
+export function createLinkAfterSpace(editor: IEditor) {
     editor.formatContentModel(model => {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
             model,

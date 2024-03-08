@@ -18,13 +18,10 @@ describe('createLink', () => {
                 expect(result).toBe(expectedResult);
             });
 
-        createLink(
-            {
-                focus: () => {},
-                formatContentModel: formatWithContentModelSpy,
-            } as any,
-            true
-        );
+        createLink({
+            focus: () => {},
+            formatContentModel: formatWithContentModelSpy,
+        } as any);
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         expect(input).toEqual(expectedModel);
