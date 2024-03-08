@@ -22,7 +22,7 @@ export function exportContent(
     if (mode == 'PlainTextFast') {
         return editor.getDOMHelper().getTextContent();
     } else {
-        const model = editor.getContentModelCopy('disconnected');
+        const model = editor.getContentModelCopy('clean');
 
         if (mode == 'PlainText') {
             return contentModelToText(model);
