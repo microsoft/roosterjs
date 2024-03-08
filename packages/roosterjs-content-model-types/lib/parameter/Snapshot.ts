@@ -89,7 +89,7 @@ export interface Snapshot {
     /**
      * Path to logical root from physical at the time of snapshot
      */
-    logicalRootPath: number[];
+    logicalRootPath?: number[];
 }
 
 /**

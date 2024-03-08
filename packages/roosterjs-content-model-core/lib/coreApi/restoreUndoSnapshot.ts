@@ -31,10 +31,14 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, snapshot) => {
         restoreSnapshotHTML(core, snapshot);
 
         // restore logical root if needed
-        const restoredLogicalRoot = getPositionFromPath(core.physicalRoot, snapshot.logicalRootPath)
-            .node as HTMLDivElement;
-        if (restoredLogicalRoot !== core.logicalRoot) {
-            core.api.setLogicalRoot(core, restoredLogicalRoot);
+        if (snapshot.logicalRootPath && snapshot.logicalRootPath.length > 0) {
+            const restoredLogicalRoot = getPositionFromPath(
+                core.physicalRoot,
+                snapshot.logicalRootPath
+            ).node as HTMLDivElement;
+            if (restoredLogicalRoot !== core.logicalRoot) {
+                core.api.setLogicalRoot(core, restoredLogicalRoot);
+            }
         }
 
         // restore selection and colors

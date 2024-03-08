@@ -8,13 +8,15 @@ describe('addUndoSnapshot', () => {
     let addSnapshotSpy: jasmine.Spy;
     let getKnownColorsCopySpy: jasmine.Spy;
     let createSnapshotSelectionSpy: jasmine.Spy;
+    let triggerEventSpy: jasmine.Spy;
     let snapshotsManager: SnapshotsManager;
 
     beforeEach(() => {
         addSnapshotSpy = jasmine.createSpy('addSnapshot');
         getKnownColorsCopySpy = jasmine.createSpy('getKnownColorsCopy');
         createSnapshotSelectionSpy = spyOn(createSnapshotSelection, 'createSnapshotSelection');
-        contentDiv = { innerHTML: '' } as any;
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
+        contentDiv = { innerHTML: '', contains: () => false } as any;
 
         snapshotsManager = {
             addSnapshot: addSnapshotSpy,
@@ -30,6 +32,9 @@ describe('addUndoSnapshot', () => {
             undo: {
                 snapshotsManager,
             },
+            api: {
+                triggerEvent: triggerEventSpy,
+            },
         } as any;
     });
 
@@ -40,6 +45,7 @@ describe('addUndoSnapshot', () => {
 
         expect(createSnapshotSelectionSpy).not.toHaveBeenCalled();
         expect(addSnapshotSpy).not.toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
         expect(result).toEqual(null);
     });
 
@@ -66,6 +72,16 @@ describe('addUndoSnapshot', () => {
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
+                logicalRootPath: [],
+            },
+            false
+        );
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'snapshotLogicalRoot',
+                logicalRoot: contentDiv,
+                entityStates: [],
             },
             false
         );
@@ -74,6 +90,7 @@ describe('addUndoSnapshot', () => {
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
+            logicalRootPath: [],
         });
     });
 
@@ -100,14 +117,25 @@ describe('addUndoSnapshot', () => {
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
+                logicalRootPath: [],
             },
             true
+        );
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'snapshotLogicalRoot',
+                logicalRoot: contentDiv,
+                entityStates: [],
+            },
+            false
         );
         expect(result).toEqual({
             html: mockedHTML,
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
+            logicalRootPath: [],
         });
     });
 
@@ -135,6 +163,7 @@ describe('addUndoSnapshot', () => {
                 entityStates: mockedEntityStates,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
+                logicalRootPath: [],
             },
             false
         );
@@ -143,6 +172,7 @@ describe('addUndoSnapshot', () => {
             entityStates: mockedEntityStates,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
+            logicalRootPath: [],
         });
     });
 
@@ -173,6 +203,16 @@ describe('addUndoSnapshot', () => {
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
+                logicalRootPath: [],
+            },
+            false
+        );
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'snapshotLogicalRoot',
+                logicalRoot: contentDiv,
+                entityStates: [],
             },
             false
         );
@@ -181,6 +221,7 @@ describe('addUndoSnapshot', () => {
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
+            logicalRootPath: [],
         });
     });
 });

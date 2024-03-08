@@ -34,7 +34,9 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
             core.api.triggerEvent(core, event, false);
 
             // copy out any entity states from the plugins
-            entityStates = event.entityStates;
+            if (event.entityStates.length > 0) {
+                entityStates = event.entityStates;
+            }
         }
 
         snapshot = {
