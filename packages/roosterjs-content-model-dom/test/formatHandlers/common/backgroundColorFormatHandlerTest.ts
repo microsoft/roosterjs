@@ -1,7 +1,7 @@
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
+import { DeprecatedColors } from '../../../lib/domUtils/color/color';
 import { expectHtml } from '../../testUtils';
 import {
     BackgroundColorFormat,

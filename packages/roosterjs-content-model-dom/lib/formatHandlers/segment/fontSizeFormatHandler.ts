@@ -1,5 +1,5 @@
 import { isSuperOrSubScript } from './superOrSubScriptFormatHandler';
-import { parseValueWithUnit } from '../utils/parseValueWithUnit';
+import { parseValueWithUnit } from '../../domUtils/parseValueWithUnit';
 import type { EditorContext, FontSizeFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 

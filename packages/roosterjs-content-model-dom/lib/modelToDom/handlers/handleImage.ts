@@ -1,6 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
-import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
+import { parseValueWithUnit } from '../../domUtils/parseValueWithUnit';
 import type { ContentModelImage, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
 
 /**

@@ -1,4 +1,4 @@
-import { parseValueWithUnit } from '../utils/parseValueWithUnit';
+import { parseValueWithUnit } from '../../domUtils/parseValueWithUnit';
 import type { FormatHandler } from '../FormatHandler';
 import type { MarginFormat } from 'roosterjs-content-model-types';
 

@@ -1,4 +1,4 @@
-import { getColor, setColor } from '../utils/color';
+import { getColor, setColor } from '../../domUtils/color/color';
 import type { FormatHandler } from '../FormatHandler';
 import type { TextColorFormat } from 'roosterjs-content-model-types';
 

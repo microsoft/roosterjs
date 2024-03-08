@@ -1,4 +1,4 @@
-import { parseValueWithUnit } from '../../../lib/formatHandlers/utils/parseValueWithUnit';
+import { parseValueWithUnit } from '../../lib/domUtils/parseValueWithUnit';
 
 describe('parseValueWithUnit with element', () => {
     function runTest(unit: string, results: number[]) {

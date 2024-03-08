@@ -1,5 +1,5 @@
 import { Colors, DarkColorHandler } from 'roosterjs-content-model-types';
-import { getColor, parseColor, setColor } from '../../../lib/formatHandlers/utils/color';
+import { getColor, parseColor, setColor } from '../../../lib/domUtils/color/color';
 
 describe('getColor without darkColorHandler', () => {
     it('no color', () => {

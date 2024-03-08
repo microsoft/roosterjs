@@ -100,9 +100,9 @@ export {
     UnorderedMap,
 } from './modelApi/metadata/updateListMetadata';
 
-export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
+export { parseValueWithUnit } from './domUtils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
-export { DeprecatedColors, getColor, setColor, parseColor } from './formatHandlers/utils/color';
+export { DeprecatedColors, getColor, setColor, parseColor } from './domUtils/color/color';
 
 export {
     createDomToModelContext,

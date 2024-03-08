@@ -1,4 +1,4 @@
-import { getColor, setColor } from '../utils/color';
+import { getColor, setColor } from '../../../lib/domUtils/color/color';
 import { shouldSetValue } from '../utils/shouldSetValue';
 import type { BackgroundColorFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';

@@ -5,7 +5,7 @@ import { getBoundingClientRect } from '../utils/getBoundingClientRect';
 import { isElementOfType } from '../../domUtils/isElementOfType';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { parseFormat } from '../utils/parseFormat';
-import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
+import { parseValueWithUnit } from '../../domUtils/parseValueWithUnit';
 import { stackFormat } from '../utils/stackFormat';
 import type {
     ContentModelTableCellFormat,
