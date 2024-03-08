@@ -184,6 +184,11 @@ function mergeParagraph(
 
     if (!mergeToCurrentParagraph) {
         newParagraph.format = newPara.format;
+    } else {
+        newParagraph.format = {
+            ...newParagraph.format,
+            ...newPara.format,
+        };
     }
 }
 
