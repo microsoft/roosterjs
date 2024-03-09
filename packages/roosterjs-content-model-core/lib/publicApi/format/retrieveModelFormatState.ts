@@ -1,7 +1,7 @@
-import { isBold } from '../model/isBold';
 import {
     extractBorderValues,
     getClosestAncestorBlockGroupIndex,
+    isBold,
     iterateSelections,
     parseValueWithUnit,
     updateTableMetadata,

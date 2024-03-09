@@ -1,5 +1,5 @@
 import * as SnapshotsManagerImpl from '../../../lib/corePlugin/undo/SnapshotsManagerImpl';
-import * as undo from '../../../lib/editorCommand/undo';
+import * as undo from '../../../lib/editorCommand/undo/undo';
 import { ChangeSource } from '../../../lib/constants/ChangeSource';
 import { createUndoPlugin } from '../../../lib/corePlugin/undo/UndoPlugin';
 import {

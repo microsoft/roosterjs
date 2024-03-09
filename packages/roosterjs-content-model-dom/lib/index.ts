@@ -37,6 +37,9 @@ export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode'
 export { transformColor } from './domUtils/color/transformColor';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
+export { isBold } from './domUtils/isBold';
+export { readFile } from './domUtils/readFile';
+export { extractClipboardItems } from './domUtils/extractClipboardItems';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';

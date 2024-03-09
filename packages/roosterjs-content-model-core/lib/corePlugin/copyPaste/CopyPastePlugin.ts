@@ -1,13 +1,13 @@
 import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
 import { ChangeSource } from '../../constants/ChangeSource';
 import { deleteEmptyList } from './deleteEmptyList';
-import { extractClipboardItems } from '../../utils/extractClipboardItems';
-import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
-import { paste } from '../../editorCommand/paste';
+import { onCreateCopyEntityNode } from '../../editorCommand/createModelFromHtml/sanitizeCopyBlockEntityParser';
+import { paste } from '../../editorCommand/paste/paste';
 import {
     contentModelToDom,
     createModelToDomContext,
     deleteSelection,
+    extractClipboardItems,
     getSelectedCells,
     isElementOfType,
     isNodeOfType,

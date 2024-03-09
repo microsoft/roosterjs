@@ -1,6 +1,6 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { getObjectKeys, transformColor } from 'roosterjs-content-model-dom';
+import { getObjectKeys, isBold, transformColor } from 'roosterjs-content-model-dom';
 import { insertNode } from './utils/insertNode';
 import type { EditorAdapterCore } from '../corePlugins/BridgePlugin';
 import {
@@ -11,7 +11,6 @@ import {
 import {
     createModelFromHtml,
     exportContent,
-    isBold,
     redo,
     retrieveModelFormatState,
     Editor,

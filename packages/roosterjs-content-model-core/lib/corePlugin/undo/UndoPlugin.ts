@@ -1,7 +1,7 @@
 import { ChangeSource } from '../../constants/ChangeSource';
 import { createSnapshotsManager } from './SnapshotsManagerImpl';
 import { isCursorMovingKey } from '../../publicApi/domUtils/eventUtils';
-import { undo } from '../../editorCommand/undo';
+import { undo } from '../../editorCommand/undo/undo';
 import type {
     ContentChangedEvent,
     IEditor,
