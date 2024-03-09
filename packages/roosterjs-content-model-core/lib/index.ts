@@ -1,5 +1,3 @@
-export { isPunctuation, isSpace } from './publicApi/domUtils/stringUtil';
-
 export { createModelFromHtml } from './editorCommand/createModelFromHtml/createModelFromHtml';
 export { exportContent } from './editorCommand/exportContent/exportContent';
 export { undo } from './editorCommand/undo/undo';

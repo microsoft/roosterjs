@@ -118,6 +118,8 @@ export { DeprecatedColors, getColor, setColor, parseColor } from './domUtils/col
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/event/eventUtils';
 
+export { isPunctuation, isSpace } from './domUtils/string/stringUtil';
+
 export {
     createDomToModelContext,
     createDomToModelContextWithConfig,
