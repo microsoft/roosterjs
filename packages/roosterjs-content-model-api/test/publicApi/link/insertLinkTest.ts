@@ -1,19 +1,20 @@
-import { ChangeSource, Editor } from 'roosterjs-content-model-core';
+import { Editor } from 'roosterjs-content-model-core';
 import { IEditor } from 'roosterjs-content-model-types';
 import { insertLink } from '../../../lib/publicApi/link/insertLink';
+import {
+    addSegment,
+    ChangeSource,
+    createContentModelDocument,
+    createImage,
+    createSelectionMarker,
+    createText,
+} from 'roosterjs-content-model-dom';
 import {
     ContentModelDocument,
     ContentModelLink,
     ContentModelFormatter,
     FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
-import {
-    addSegment,
-    createContentModelDocument,
-    createImage,
-    createSelectionMarker,
-    createText,
-} from 'roosterjs-content-model-dom';
 
 describe('insertLink', () => {
     let editor: IEditor;

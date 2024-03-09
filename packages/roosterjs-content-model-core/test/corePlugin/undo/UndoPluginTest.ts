@@ -1,6 +1,6 @@
 import * as SnapshotsManagerImpl from '../../../lib/corePlugin/undo/SnapshotsManagerImpl';
 import * as undo from '../../../lib/editorCommand/undo/undo';
-import { ChangeSource } from '../../../lib/constants/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createUndoPlugin } from '../../../lib/corePlugin/undo/UndoPlugin';
 import {
     IEditor,

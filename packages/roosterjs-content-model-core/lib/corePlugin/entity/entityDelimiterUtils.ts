@@ -1,9 +1,9 @@
-import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import {
     addDelimiters,
     createBr,
     createModelToDomContext,
     createParagraph,
+    isCharacterValue,
     isEntityDelimiter,
     isEntityElement,
     isNodeOfType,

@@ -1,5 +1,4 @@
-import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
-import { isModifierKey } from '../../publicApi/domUtils/eventUtils';
+import { isElementOfType, isModifierKey, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import type {
     DOMSelection,
     IEditor,

@@ -1,6 +1,6 @@
 import * as deleteSelection from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCommon';
-import { ChangeSource } from 'roosterjs-content-model-core';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteEmptyQuote } from '../../lib/edit/deleteSteps/deleteEmptyQuote';

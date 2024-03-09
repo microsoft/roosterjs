@@ -116,6 +116,7 @@ export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
 export { DeprecatedColors, getColor, setColor, parseColor } from './domUtils/color/color';
 
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
+export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/event/eventUtils';
 
 export {
     createDomToModelContext,
@@ -128,6 +129,7 @@ export {
     createModelToDomConfig,
 } from './modelToDom/context/createModelToDomContext';
 
+export { ChangeSource } from './constants/ChangeSource';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 export { BulletListType } from './constants/BulletListType';
 export { NumberingListType } from './constants/NumberingListType';

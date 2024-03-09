@@ -1,6 +1,9 @@
-import { ChangeSource } from '../../constants/ChangeSource';
-import { isCharacterValue, isCursorMovingKey } from '../../publicApi/domUtils/eventUtils';
-import { isNodeOfType } from 'roosterjs-content-model-dom';
+import {
+    ChangeSource,
+    isCharacterValue,
+    isCursorMovingKey,
+    isNodeOfType,
+} from 'roosterjs-content-model-dom';
 import type {
     DOMEventPluginState,
     IEditor,

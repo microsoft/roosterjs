@@ -37,7 +37,6 @@ export function isCharacterValue(event: KeyboardEvent): boolean {
 }
 
 /**
- * @internal
  * Returns true if the given event is a cursor moving event (Left, Right, Up, Down, Home, End, Page Up, Page Down).
  * This does not check modifier keys (Ctrl, Alt, Meta). So if there are modifier keys pressed, it can still return true if one of the modifier key is pressed
  * @param event The keyboard event to check

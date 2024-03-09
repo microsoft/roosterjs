@@ -1,7 +1,7 @@
 import * as restoreSnapshotColors from '../../../lib/coreApi/restoreUndoSnapshot/restoreSnapshotColors';
 import * as restoreSnapshotHTML from '../../../lib/coreApi/restoreUndoSnapshot/restoreSnapshotHTML';
 import * as restoreSnapshotSelection from '../../../lib/coreApi/restoreUndoSnapshot/restoreSnapshotSelection';
-import { ChangeSource } from '../../../lib/constants/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { EditorCore, Snapshot } from 'roosterjs-content-model-types';
 import { restoreUndoSnapshot } from '../../../lib/coreApi/restoreUndoSnapshot/restoreUndoSnapshot';
 

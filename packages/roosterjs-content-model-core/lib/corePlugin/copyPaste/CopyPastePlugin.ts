@@ -1,9 +1,9 @@
 import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
-import { ChangeSource } from '../../constants/ChangeSource';
 import { deleteEmptyList } from './deleteEmptyList';
 import { onCreateCopyEntityNode } from '../../editorCommand/createModelFromHtml/sanitizeCopyBlockEntityParser';
 import { paste } from '../../editorCommand/paste/paste';
 import {
+    ChangeSource,
     contentModelToDom,
     createModelToDomContext,
     deleteSelection,

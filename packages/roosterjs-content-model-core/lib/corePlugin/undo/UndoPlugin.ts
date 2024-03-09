@@ -1,6 +1,5 @@
-import { ChangeSource } from '../../constants/ChangeSource';
+import { ChangeSource, isCursorMovingKey } from 'roosterjs-content-model-dom';
 import { createSnapshotsManager } from './SnapshotsManagerImpl';
-import { isCursorMovingKey } from '../../publicApi/domUtils/eventUtils';
 import { undo } from '../../editorCommand/undo/undo';
 import type {
     ContentChangedEvent,

@@ -1,6 +1,5 @@
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/color/transformColor';
-import { ChangeSource } from '../../../lib/constants/ChangeSource';
-import { createImage } from 'roosterjs-content-model-dom';
+import { ChangeSource, createImage } from 'roosterjs-content-model-dom';
 import { formatContentModel } from '../../../lib/coreApi/formatContentModel/formatContentModel';
 import {
     ContentModelDocument,

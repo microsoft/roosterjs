@@ -1,8 +1,12 @@
-import { ChangeSource, isModifierKey } from 'roosterjs-content-model-core';
 import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
 import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { deleteList } from './deleteSteps/deleteList';
-import { deleteSelection, isNodeOfType } from 'roosterjs-content-model-dom';
+import {
+    ChangeSource,
+    deleteSelection,
+    isModifierKey,
+    isNodeOfType,
+} from 'roosterjs-content-model-dom';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,

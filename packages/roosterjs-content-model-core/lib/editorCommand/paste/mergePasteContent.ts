@@ -1,6 +1,6 @@
-import { ChangeSource } from '../../constants/ChangeSource';
 import { createDomToModelContextForSanitizing } from '../createModelFromHtml/createDomToModelContextForSanitizing';
 import {
+    ChangeSource,
     cloneModel,
     domToContentModel,
     getSegmentTextFormat,

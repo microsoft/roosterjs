@@ -1,5 +1,5 @@
 import * as color from 'roosterjs-content-model-dom/lib/domUtils/color/color';
-import { ChangeSource } from '../../../lib/constants/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createLifecyclePlugin } from '../../../lib/corePlugin/lifecycle/LifecyclePlugin';
 import { DarkColorHandler, IEditor } from 'roosterjs-content-model-types';
 

@@ -1,7 +1,7 @@
-import { ChangeSource } from '../constants/ChangeSource';
 import { createEditorCore } from './core/createEditorCore';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import {
+    ChangeSource,
     cloneModel,
     createEmptyModel,
     tableProcessor,
