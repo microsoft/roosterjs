@@ -1,5 +1,6 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
+import { createModelFromHtml, Editor, exportContent, paste } from 'roosterjs-content-model-core';
 import { insertNode } from './utils/insertNode';
 import {
     getObjectKeys,
@@ -13,14 +14,6 @@ import {
     oldEventToNewEvent,
     OldEventTypeToNewEventType,
 } from './utils/eventConverter';
-import {
-    createModelFromHtml,
-    exportContent,
-    redo,
-    Editor,
-    undo,
-    paste,
-} from 'roosterjs-content-model-core';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -683,20 +676,6 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     //#endregion
 
     //#region Undo API
-
-    /**
-     * Undo last edit operation
-     */
-    undo() {
-        undo(this);
-    }
-
-    /**
-     * Redo next edit operation
-     */
-    redo() {
-        redo(this);
-    }
 
     /**
      * Add undo snapshot, and execute a format callback function, then add another undo snapshot, then trigger

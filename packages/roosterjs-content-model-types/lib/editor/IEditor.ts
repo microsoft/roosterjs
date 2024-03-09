@@ -133,6 +133,16 @@ export interface IEditor {
     takeSnapshot(entityState?: EntityState): Snapshot | null;
 
     /**
+     * Undo last edit operation
+     */
+    undo(): void;
+
+    /**
+     * Redo next edit operation
+     */
+    redo(): void;
+
+    /**
      * Restore an undo snapshot into editor
      * @param snapshot The snapshot to restore
      */

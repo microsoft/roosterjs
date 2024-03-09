@@ -3,7 +3,6 @@ import { isModifierKey, isNodeOfType, iterateSelections } from 'roosterjs-conten
 import { KeyCodes } from '@fluentui/react/lib/Utilities';
 import { MoreEmoji } from '../utils/emojiList';
 import { showEmojiCallout } from '../components/showEmojiCallout';
-import { undo } from 'roosterjs-content-model-core';
 import type { EmojiICallout } from '../components/showEmojiCallout';
 import type { Emoji } from '../type/Emoji';
 import type { EmojiPane } from '../components/EmojiPane';
@@ -79,7 +78,7 @@ class EmojiPlugin implements ReactEditorPlugin {
             } else if (event.rawEvent.key === 'Backspace' && this.canUndoEmoji) {
                 //TODO: 1051
                 // If KeyDown is backspace and canUndoEmoji, call editor undo
-                undo(this.editor);
+                this.editor.undo();
 
                 this.handleEventOnKeyDown(event);
                 this.canUndoEmoji = false;

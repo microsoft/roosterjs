@@ -1,4 +1,3 @@
-import { undo } from 'roosterjs-content-model-core';
 import type { RibbonButton } from '../type/RibbonButton';
 import type { UndoButtonStringKey } from '../type/RibbonButtonStringKeys';
 
@@ -12,6 +11,6 @@ export const undoButton: RibbonButton<UndoButtonStringKey> = {
     iconName: 'undo',
     isDisabled: formatState => !formatState.canUndo,
     onClick: editor => {
-        undo(editor);
+        editor.undo();
     },
 };

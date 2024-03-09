@@ -1,4 +1,3 @@
-import { redo } from 'roosterjs-content-model-core';
 import { RedoButtonStringKey } from '../type/RibbonButtonStringKeys';
 import { RibbonButton } from '../type/RibbonButton';
 
@@ -12,6 +11,6 @@ export const redoButton: RibbonButton<RedoButtonStringKey> = {
     iconName: 'Redo',
     isDisabled: formatState => !formatState.canRedo,
     onClick: editor => {
-        redo(editor);
+        editor.redo();
     },
 };

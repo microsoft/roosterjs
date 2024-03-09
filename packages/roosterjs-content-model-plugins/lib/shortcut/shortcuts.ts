@@ -1,4 +1,3 @@
-import { redo, undo } from 'roosterjs-content-model-core';
 import { setShortcutIndentationCommand } from './utils/setShortcutIndentationCommand';
 import {
     changeFontSize,
@@ -93,7 +92,7 @@ export const ShortcutUndo: ShortcutCommand = {
         shiftKey: false,
         which: Keys.Z,
     },
-    onClick: editor => undo(editor),
+    onClick: editor => editor.undo(),
 };
 
 /**
@@ -107,7 +106,7 @@ export const ShortcutUndo2: ShortcutCommand = {
         shiftKey: false,
         which: Keys.BACKSPACE,
     },
-    onClick: editor => undo(editor),
+    onClick: editor => editor.undo(),
     environment: 'nonMac',
 };
 
@@ -122,7 +121,7 @@ export const ShortcutRedo: ShortcutCommand = {
         shiftKey: false,
         which: Keys.Y,
     },
-    onClick: editor => redo(editor),
+    onClick: editor => editor.redo(),
     environment: 'nonMac',
 };
 
@@ -137,7 +136,7 @@ export const ShortcutRedoMacOS: ShortcutCommand = {
         shiftKey: true,
         which: Keys.Z,
     },
-    onClick: editor => redo(editor),
+    onClick: editor => editor.redo(),
     environment: 'mac',
 };
 

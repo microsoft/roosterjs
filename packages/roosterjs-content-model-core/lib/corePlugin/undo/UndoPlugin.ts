@@ -1,6 +1,5 @@
 import { ChangeSource, isCursorMovingKey } from 'roosterjs-content-model-dom';
 import { createSnapshotsManager } from './SnapshotsManagerImpl';
-import { undo } from '../../editorCommand/undo/undo';
 import type {
     ContentChangedEvent,
     IEditor,
@@ -128,7 +127,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
         if ((evt.key == Backspace && !evt.altKey) || evt.key == Delete) {
             if (evt.key == Backspace && !evt.ctrlKey && this.canUndoAutoComplete(editor)) {
                 evt.preventDefault();
-                undo(editor);
+                editor.undo();
                 this.state.posContainer = null;
                 this.state.posOffset = null;
                 this.state.lastKeyPress = evt.key;

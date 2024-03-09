@@ -1,13 +1,11 @@
 import * as changeFontSize from 'roosterjs-content-model-api/lib/publicApi/segment/changeFontSize';
 import * as clearFormat from 'roosterjs-content-model-api/lib/publicApi/format/clearFormat';
-import * as redo from 'roosterjs-content-model-core/lib/editorCommand/redo/redo';
 import * as setShortcutIndentationCommand from '../../lib/shortcut/utils/setShortcutIndentationCommand';
 import * as toggleBold from 'roosterjs-content-model-api/lib/publicApi/segment/toggleBold';
 import * as toggleBullet from 'roosterjs-content-model-api/lib/publicApi/list/toggleBullet';
 import * as toggleItalic from 'roosterjs-content-model-api/lib/publicApi/segment/toggleItalic';
 import * as toggleNumbering from 'roosterjs-content-model-api/lib/publicApi/list/toggleNumbering';
 import * as toggleUnderline from 'roosterjs-content-model-api/lib/publicApi/segment/toggleUnderline';
-import * as undo from 'roosterjs-content-model-core/lib/editorCommand/undo/undo';
 import { EditorEnvironment, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { ShortcutPlugin } from '../../lib/shortcut/ShortcutPlugin';
 
@@ -31,12 +29,18 @@ describe('ShortcutPlugin', () => {
     let preventDefaultSpy: jasmine.Spy;
     let mockedEditor: IEditor;
     let mockedEnvironment: EditorEnvironment;
+    let undoSpy: jasmine.Spy;
+    let redoSpy: jasmine.Spy;
 
     beforeEach(() => {
         preventDefaultSpy = jasmine.createSpy('preventDefault');
+        undoSpy = jasmine.createSpy('undo');
+        redoSpy = jasmine.createSpy('redo');
         mockedEnvironment = {} as any;
         mockedEditor = {
             getEnvironment: () => mockedEnvironment,
+            undo: undoSpy,
+            redo: redoSpy,
         } as any;
     });
 
@@ -160,7 +164,6 @@ describe('ShortcutPlugin', () => {
         });
 
         it('undo 1', () => {
-            const apiSpy = spyOn(undo, 'undo');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -176,11 +179,10 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(undoSpy).toHaveBeenCalledWith();
         });
 
         it('undo 2', () => {
-            const apiSpy = spyOn(undo, 'undo');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -196,11 +198,10 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(undoSpy).toHaveBeenCalledWith();
         });
 
         it('redo 1', () => {
-            const apiSpy = spyOn(redo, 'redo');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -216,11 +217,10 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(redoSpy).toHaveBeenCalledWith();
         });
 
         it('redo 2', () => {
-            const apiSpy = spyOn(redo, 'redo');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -236,7 +236,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).not.toHaveBeenCalled();
+            expect(redoSpy).not.toHaveBeenCalled();
         });
 
         it('bullet list', () => {
@@ -427,7 +427,6 @@ describe('ShortcutPlugin', () => {
         });
 
         it('undo 1', () => {
-            const apiSpy = spyOn(undo, 'undo');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -443,12 +442,10 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(undoSpy).toHaveBeenCalledWith();
         });
 
         it('undo 2', () => {
-            const apiSpy = spyOn(undo, 'undo');
-
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -464,12 +461,10 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).not.toHaveBeenCalled();
+            expect(undoSpy).not.toHaveBeenCalled();
         });
 
         it('redo 1', () => {
-            const apiSpy = spyOn(redo, 'redo');
-
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -485,12 +480,10 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).not.toHaveBeenCalled();
+            expect(redoSpy).not.toHaveBeenCalled();
         });
 
         it('redo 2', () => {
-            const apiSpy = spyOn(redo, 'redo');
-
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
                 eventType: 'keyDown',
@@ -506,7 +499,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(redoSpy).toHaveBeenCalledWith();
         });
 
         it('bullet list', () => {

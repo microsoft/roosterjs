@@ -201,6 +201,39 @@ export class Editor implements IEditor {
     }
 
     /**
+     * Undo last edit operation
+     */
+    undo() {
+        this.focus();
+
+        const manager = this.getSnapshotsManager();
+
+        if (manager.hasNewContent) {
+            this.takeSnapshot();
+        }
+
+        const snapshot = manager.move(-1);
+
+        if (snapshot) {
+            this.restoreSnapshot(snapshot);
+        }
+    }
+
+    /**
+     * Redo next edit operation
+     */
+    redo() {
+        this.focus();
+
+        const manager = this.getSnapshotsManager();
+        const snapshot = manager.move(1);
+
+        if (snapshot) {
+            this.restoreSnapshot(snapshot);
+        }
+    }
+
+    /**
      * Restore an undo snapshot into editor
      * @param snapshot The snapshot to restore
      */
