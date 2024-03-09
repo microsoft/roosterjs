@@ -1,4 +1,4 @@
-import { retrieveModelFormatState } from 'roosterjs-content-model-core';
+import { retrieveModelFormatState } from 'roosterjs-content-model-dom';
 import type { IEditor, ContentModelFormatState } from 'roosterjs-content-model-types';
 
 /**

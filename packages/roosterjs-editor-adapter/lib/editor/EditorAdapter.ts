@@ -1,7 +1,12 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { getObjectKeys, isBold, transformColor } from 'roosterjs-content-model-dom';
 import { insertNode } from './utils/insertNode';
+import {
+    getObjectKeys,
+    isBold,
+    transformColor,
+    retrieveModelFormatState,
+} from 'roosterjs-content-model-dom';
 import type { EditorAdapterCore } from '../corePlugins/BridgePlugin';
 import {
     newEventToOldEvent,
@@ -12,7 +17,6 @@ import {
     createModelFromHtml,
     exportContent,
     redo,
-    retrieveModelFormatState,
     Editor,
     undo,
     paste,

@@ -1,4 +1,4 @@
-import { cacheGetEventData } from 'roosterjs-content-model-core';
+import { cacheGetEventData } from 'roosterjs-content-model-dom';
 import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';

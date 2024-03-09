@@ -1,4 +1,4 @@
-import { cacheGetEventData } from '../../../lib/publicApi/domUtils/cacheGetEventData';
+import { cacheGetEventData } from '../../../lib/domUtils/event/cacheGetEventData';
 import { EditorReadyEvent } from 'roosterjs-content-model-types';
 
 describe('cacheGetEventData', () => {

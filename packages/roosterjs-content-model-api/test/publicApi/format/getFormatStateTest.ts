@@ -1,4 +1,4 @@
-import * as retrieveModelFormatState from 'roosterjs-content-model-core/lib/publicApi/format/retrieveModelFormatState';
+import * as retrieveModelFormatState from 'roosterjs-content-model-dom/lib/modelApi/common/retrieveModelFormatState';
 import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { ContentModelFormatState } from 'roosterjs-content-model-types';
 import { getFormatState } from '../../../lib/publicApi/format/getFormatState';

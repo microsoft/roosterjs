@@ -1,7 +1,7 @@
 import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import { applyTableFormat } from 'roosterjs-content-model-dom/lib/modelApi/table/applyTableFormat';
 import { ContentModelFormatState, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { retrieveModelFormatState } from '../../../lib/publicApi/format/retrieveModelFormatState';
+import { retrieveModelFormatState } from '../../../lib/modelApi/common/retrieveModelFormatState';
 import {
     addCode,
     addSegment,

@@ -72,6 +72,7 @@ export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 export { getSegmentTextFormat } from './modelApi/common/getSegmentTextFormat';
 export { mergeModel } from './modelApi/common/mergeModel';
+export { retrieveModelFormatState } from './modelApi/common/retrieveModelFormatState';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 export { getClosestAncestorBlockGroupIndex } from './modelApi/block/getClosestAncestorBlockGroupIndex';
@@ -113,6 +114,8 @@ export { getSelectedCells } from './modelApi/table/getSelectedCells';
 export { parseValueWithUnit } from './domUtils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
 export { DeprecatedColors, getColor, setColor, parseColor } from './domUtils/color/color';
+
+export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 
 export {
     createDomToModelContext,
