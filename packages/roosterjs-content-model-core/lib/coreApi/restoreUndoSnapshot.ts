@@ -1,7 +1,7 @@
 import { ChangeSource } from '../constants/ChangeSource';
-import { getPositionFromPath } from '../utils/getPositionFromPath';
 import { restoreSnapshotColors } from '../utils/restoreSnapshotColors';
 import { restoreSnapshotHTML } from '../utils/restoreSnapshotHTML';
+import { restoreSnapshotLogicalRoot } from '../utils/restoreSnapshotLogicalRoot';
 import { restoreSnapshotSelection } from '../utils/restoreSnapshotSelection';
 import type { ContentChangedEvent, RestoreUndoSnapshot } from 'roosterjs-content-model-types';
 
@@ -24,28 +24,9 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, snapshot) => {
     try {
         core.undo.isRestoring = true;
 
-        // reset logical root to physical root
-        core.api.setLogicalRoot(core, null);
-
-        // put back the HTML
         restoreSnapshotHTML(core, snapshot);
-
-        // restore logical root if needed
-        if (snapshot.logicalRootPath && snapshot.logicalRootPath.length > 0) {
-            const restoredLogicalRoot = getPositionFromPath(
-                core.physicalRoot,
-                snapshot.logicalRootPath
-            ).node as HTMLDivElement;
-            if (restoredLogicalRoot !== core.logicalRoot) {
-                core.api.setLogicalRoot(core, restoredLogicalRoot);
-            }
-        }
-
-        // restore selection and colors
-        try {
-            // might fail if the selection is not present, but we do not want to crash
-            restoreSnapshotSelection(core, snapshot);
-        } catch {}
+        restoreSnapshotLogicalRoot(core, snapshot);
+        restoreSnapshotSelection(core, snapshot);
         restoreSnapshotColors(core, snapshot);
 
         const event: ContentChangedEvent = {

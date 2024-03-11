@@ -317,6 +317,5 @@ export {
 export { PluginEventType } from './event/PluginEventType';
 export { ScrollEvent } from './event/ScrollEvent';
 export { SelectionChangedEvent } from './event/SelectionChangedEvent';
-export { SnapshotLogicalRootEvent } from './event/SnapshotLogicalRootEvent';
 export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
 export { ZoomChangedEvent } from './event/ZoomChangedEvent';

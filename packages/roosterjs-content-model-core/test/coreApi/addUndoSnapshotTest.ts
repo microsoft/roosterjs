@@ -16,7 +16,11 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy = jasmine.createSpy('getKnownColorsCopy');
         createSnapshotSelectionSpy = spyOn(createSnapshotSelection, 'createSnapshotSelection');
         triggerEventSpy = jasmine.createSpy('triggerEvent');
-        contentDiv = { innerHTML: '', contains: () => false } as any;
+        contentDiv = {
+            innerHTML: '',
+            contains: () => false,
+            closest: () => null,
+        } as any;
 
         snapshotsManager = {
             addSnapshot: addSnapshotSpy,
@@ -76,15 +80,7 @@ describe('addUndoSnapshot', () => {
             },
             false
         );
-        expect(triggerEventSpy).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: 'snapshotLogicalRoot',
-                logicalRoot: contentDiv,
-                entityStates: [],
-            },
-            false
-        );
+        expect(triggerEventSpy).not.toHaveBeenCalled();
         expect(result).toEqual({
             html: mockedHTML,
             entityStates: undefined,
@@ -121,15 +117,7 @@ describe('addUndoSnapshot', () => {
             },
             true
         );
-        expect(triggerEventSpy).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: 'snapshotLogicalRoot',
-                logicalRoot: contentDiv,
-                entityStates: [],
-            },
-            false
-        );
+        expect(triggerEventSpy).not.toHaveBeenCalled();
         expect(result).toEqual({
             html: mockedHTML,
             entityStates: undefined,
@@ -207,15 +195,7 @@ describe('addUndoSnapshot', () => {
             },
             false
         );
-        expect(triggerEventSpy).toHaveBeenCalledWith(
-            core,
-            {
-                eventType: 'snapshotLogicalRoot',
-                logicalRoot: contentDiv,
-                entityStates: [],
-            },
-            false
-        );
+        expect(triggerEventSpy).not.toHaveBeenCalled();
         expect(result).toEqual({
             html: mockedHTML2,
             entityStates: undefined,

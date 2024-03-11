@@ -1,10 +1,13 @@
+import { parseEntityFormat } from 'roosterjs-content-model-dom';
 import type {
     AddUndoSnapshot,
+    EntityOperationEvent,
     Snapshot,
-    SnapshotLogicalRootEvent,
 } from 'roosterjs-content-model-types';
 import { createSnapshotSelection } from '../utils/createSnapshotSelection';
 import { getPath } from '../utils/getPath';
+
+const ENTITY_INFO_NAME = '_Entity';
 
 /**
  * @internal
@@ -24,18 +27,35 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
         const selection = createSnapshotSelection(core);
         const html = physicalRoot.innerHTML;
 
-        if (!entityStates) {
-            // give plugins the chance to share entity states to include in the snapshot
-            const event = <SnapshotLogicalRootEvent>{
-                eventType: 'snapshotLogicalRoot',
-                logicalRoot,
-                entityStates: [],
-            };
-            core.api.triggerEvent(core, event, false);
+        // give plugins the chance to share entity states to include in the snapshot
+        const logicalRootEntityWrapper = logicalRoot.closest<HTMLElement>(`.${ENTITY_INFO_NAME}`);
+        if (!entityStates && logicalRootEntityWrapper) {
+            const entityFormat = parseEntityFormat(logicalRootEntityWrapper);
+            if (entityFormat.entityType && entityFormat.id) {
+                const event = <EntityOperationEvent>{
+                    eventType: 'entityOperation',
+                    operation: 'snapshotEntityState',
+                    entity: {
+                        type: entityFormat.entityType,
+                        id: entityFormat.id,
+                        wrapper: logicalRootEntityWrapper,
+                        isReadonly: entityFormat.isReadonly,
+                    },
+                    state: undefined,
+                };
 
-            // copy out any entity states from the plugins
-            if (event.entityStates.length > 0) {
-                entityStates = event.entityStates;
+                core.api.triggerEvent(core, event, false);
+
+                // copy out any entity states from the plugins
+                if (event.state) {
+                    entityStates = [
+                        {
+                            type: entityFormat.entityType,
+                            id: entityFormat.id,
+                            state: event.state,
+                        },
+                    ];
+                }
             }
         }
 

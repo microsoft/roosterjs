@@ -30,6 +30,7 @@ export const setLogicalRoot: SetLogicalRoot = (core, logicalRoot) => {
             // tell plugins in case they need to clear their caches
             const event: LogicalRootChangedEvent = {
                 eventType: 'logicalRootChanged',
+                logicalRoot,
             };
             core.api.triggerEvent(core, event, false /*broadcast*/);
         }

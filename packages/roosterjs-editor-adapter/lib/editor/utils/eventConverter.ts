@@ -53,6 +53,7 @@ const EntityOperationOldToNew: Record<OldEntityOperation, NewEntityOperation | u
     [OldEntityOperation.RemoveFromStart]: 'removeFromStart',
     [OldEntityOperation.ReplaceTemporaryContent]: 'replaceTemporaryContent',
     [OldEntityOperation.UpdateEntityState]: 'updateEntityState',
+    [OldEntityOperation.SnapshotEntityState]: 'snapshotEntityState',
     [OldEntityOperation.Click]: 'click',
     [OldEntityOperation.ContextMenu]: undefined,
     [OldEntityOperation.Escape]: undefined,
@@ -68,6 +69,7 @@ const EntityOperationNewToOld: Record<NewEntityOperation, OldEntityOperation> = 
     removeFromStart: OldEntityOperation.RemoveFromStart,
     replaceTemporaryContent: OldEntityOperation.ReplaceTemporaryContent,
     updateEntityState: OldEntityOperation.UpdateEntityState,
+    snapshotEntityState: OldEntityOperation.SnapshotEntityState,
     click: OldEntityOperation.Click,
 };
 

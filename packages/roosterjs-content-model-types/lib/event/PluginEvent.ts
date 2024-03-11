@@ -16,7 +16,6 @@ import type { MouseDownEvent, MouseUpEvent } from './MouseEvent';
 import type { ScrollEvent } from './ScrollEvent';
 import type { SelectionChangedEvent } from './SelectionChangedEvent';
 import type { EnterShadowEditEvent, LeaveShadowEditEvent } from './ShadowEditEvent';
-import type { SnapshotLogicalRootEvent } from './SnapshotLogicalRootEvent';
 import type { ZoomChangedEvent } from './ZoomChangedEvent';
 
 /**
@@ -46,5 +45,4 @@ export type PluginEvent =
     | MouseUpEvent
     | ScrollEvent
     | SelectionChangedEvent
-    | SnapshotLogicalRootEvent
     | ZoomChangedEvent;
