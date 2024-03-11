@@ -2,7 +2,7 @@ import { containerSizeFormatParser } from '../override/containerSizeFormatParser
 import { createDomToModelContext } from 'roosterjs-content-model-dom';
 import { createPasteEntityProcessor } from '../override/pasteEntityProcessor';
 import { createPasteGeneralProcessor } from '../override/pasteGeneralProcessor';
-import { getRootComputedStyleForContext } from './getRootComputedStyleForContext';
+import { getRootComputedStyleForContext } from '../coreApi/createEditorContext/getRootComputedStyleForContext';
 import { pasteBlockEntityParser } from '../override/pasteCopyBlockEntityParser';
 import { pasteDisplayFormatParser } from '../override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../override/pasteTextProcessor';
