@@ -49,12 +49,14 @@ describe('formatContentModel', () => {
                 getFocusedPosition,
                 triggerEvent,
                 getDOMSelection,
-                hasFocus,
             },
             lifecycle: {},
             cache: {},
             undo: {
                 snapshotsManager: {},
+            },
+            domHelper: {
+                hasFocus,
             },
         } as any) as EditorCore;
     });
