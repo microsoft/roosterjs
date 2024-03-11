@@ -16,10 +16,8 @@ export function createLink(editor: IEditor) {
                 },
                 dataset: {},
             });
-
             return true;
         }
-
         return false;
     });
 }
