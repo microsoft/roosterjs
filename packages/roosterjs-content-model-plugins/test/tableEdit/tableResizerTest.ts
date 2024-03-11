@@ -1,4 +1,3 @@
-import * as TestHelper from '../TestHelper';
 import { getModelTable } from './tableData';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 import {

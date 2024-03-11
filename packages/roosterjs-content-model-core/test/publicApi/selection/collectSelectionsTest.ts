@@ -6,6 +6,7 @@ import {
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelTable,
+    OperationalBlocks,
     TableSelectionContext,
 } from 'roosterjs-content-model-types';
 import {
@@ -26,7 +27,6 @@ import {
     getFirstSelectedListItem,
     getFirstSelectedTable,
     getOperationalBlocks,
-    OperationalBlocks,
     getSelectedSegmentsAndParagraphs,
 } from '../../../lib/publicApi/selection/collectSelections';
 

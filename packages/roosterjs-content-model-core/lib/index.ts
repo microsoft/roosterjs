@@ -1,19 +1,12 @@
 export { cloneModel } from './publicApi/model/cloneModel';
-export { mergeModel, MergeModelOption } from './publicApi/model/mergeModel';
+export { mergeModel } from './publicApi/model/mergeModel';
 export { isBlockGroupOfType } from './publicApi/model/isBlockGroupOfType';
-export {
-    getClosestAncestorBlockGroupIndex,
-    TypeOfBlockGroup,
-} from './publicApi/model/getClosestAncestorBlockGroupIndex';
+export { getClosestAncestorBlockGroupIndex } from './publicApi/model/getClosestAncestorBlockGroupIndex';
 export { isBold } from './publicApi/model/isBold';
 export { createModelFromHtml } from './publicApi/model/createModelFromHtml';
 export { exportContent } from './publicApi/model/exportContent';
 
-export {
-    iterateSelections,
-    IterateSelectionsCallback,
-    IterateSelectionsOption,
-} from './publicApi/selection/iterateSelections';
+export { iterateSelections } from './publicApi/selection/iterateSelections';
 export { getSelectionRootNode } from './publicApi/selection/getSelectionRootNode';
 export { deleteSelection } from './publicApi/selection/deleteSelection';
 export { deleteSegment } from './publicApi/selection/deleteSegment';
@@ -22,7 +15,6 @@ export { hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
 export { hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
 export { hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export {
-    OperationalBlocks,
     getFirstSelectedListItem,
     getFirstSelectedTable,
     getOperationalBlocks,
