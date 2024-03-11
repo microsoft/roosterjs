@@ -31,6 +31,9 @@ export function getListTypeStyle(
     shouldSearchForNumbering: boolean = true
 ): ListTypeStyle | undefined {
     const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, true);
+    if (!selectedSegmentsAndParagraphs[0]) {
+        return undefined;
+    }
     const marker = selectedSegmentsAndParagraphs[0][0];
     const paragraph = selectedSegmentsAndParagraphs[0][1];
     const listMarkerSegment = paragraph?.segments[0];
