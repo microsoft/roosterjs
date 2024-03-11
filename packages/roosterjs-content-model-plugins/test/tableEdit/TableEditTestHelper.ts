@@ -12,10 +12,11 @@ import {
 /**
  * Function to be called before each Table Edit test
  * @param TEST_ID The id of the editor div
+ * @param anchorContainerSelector The selector for the anchor container
  * @returns The editor, plugin, and handler to be used in the test
  */
-export function beforeTableTest(TEST_ID: string) {
-    const plugin = new TableEditPlugin();
+export function beforeTableTest(TEST_ID: string, anchorContainerSelector?: string) {
+    const plugin = new TableEditPlugin('.' + anchorContainerSelector);
 
     let handler: Record<string, DOMEventHandlerFunction> = {};
     const attachDomEvent = jasmine
@@ -37,7 +38,13 @@ export function beforeTableTest(TEST_ID: string) {
     const coreApiOverride = {
         attachDomEvent,
     };
-    const editor = TestHelper.initEditor(TEST_ID, [plugin], undefined, coreApiOverride);
+    const editor = TestHelper.initEditor(
+        TEST_ID,
+        [plugin],
+        undefined,
+        coreApiOverride,
+        anchorContainerSelector
+    );
 
     plugin.initialize(editor);
 
@@ -178,11 +185,7 @@ export function moveAndResize(
     }
 
     // Move mouse to show resizer
-    const mouseMoveEvent = new MouseEvent('mousemove', {
-        clientX: mouseStart.x,
-        clientY: mouseStart.y,
-    });
-    handler.mousemove(mouseMoveEvent);
+    mouseToPoint(mouseStart, handler);
 
     let resizer = editor.getDocument().getElementById(resizerId);
     if (!!resizer && editorDiv) {
@@ -211,6 +214,23 @@ export function moveAndResize(
         const mouseMoveEndEvent = new MouseEvent('mouseup');
         editorDiv.dispatchEvent(mouseMoveEndEvent);
     }
+}
+
+/**
+ * Function to move the mouse to a point
+ * @param mouseStart The starting position of the mouse
+ * @param handler The handler to handle the mouse events
+ */
+export function mouseToPoint(
+    mouseStart: Position,
+    handler: Record<string, DOMEventHandlerFunction>
+) {
+    // Move mouse to point
+    const mouseMoveEvent = new MouseEvent('mousemove', {
+        clientX: mouseStart.x,
+        clientY: mouseStart.y,
+    });
+    handler.mousemove(mouseMoveEvent);
 }
 
 /**
