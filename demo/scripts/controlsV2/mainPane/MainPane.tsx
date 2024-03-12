@@ -41,6 +41,7 @@ import {
     PastePlugin,
     ShortcutPlugin,
     TableEditPlugin,
+    WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
 
 const styles = require('./MainPane.scss');
@@ -256,6 +257,11 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                     ? new EditorAdapter(div, {
                           ...options,
                           legacyPlugins: legacyPluginList,
+                          defaultSegmentFormat: {
+                              fontWeight: 'bold',
+                              italic: true,
+                              underline: true,
+                          },
                       })
                     : new Editor(div, options);
             },
@@ -291,7 +297,11 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             id={MainPane.editorDivId}
                             className={styles.editor}
                             plugins={plugins}
-                            defaultSegmentFormat={this.state.initState.defaultFormat}
+                            defaultSegmentFormat={{
+                                fontWeight: 'bold',
+                                italic: true,
+                                underline: true,
+                            }}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
                             snapshots={this.snapshotPlugin.getSnapshots()}
@@ -417,6 +427,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             listMenu,
             tableMenu,
             imageMenu,
+            watermarkText,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(),
@@ -428,6 +439,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),
             pluginList.contextMenu && createContextMenuPlugin(),
+            pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.contextMenu && listMenu && createListEditMenuProvider(),
             pluginList.contextMenu && tableMenu && createTableEditMenuProvider(),
             pluginList.contextMenu && imageMenu && createImageEditMenuProvider(),

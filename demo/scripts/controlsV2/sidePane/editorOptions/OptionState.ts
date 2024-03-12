@@ -5,7 +5,6 @@ import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 export interface LegacyPluginList {
     contentEdit: boolean;
     hyperlink: boolean;
-    watermark: boolean;
     imageEdit: boolean;
     tableCellSelection: boolean;
     customReplace: boolean;
@@ -22,6 +21,7 @@ export interface NewPluginList {
     emoji: boolean;
     pasteOption: boolean;
     sampleEntity: boolean;
+    watermark: boolean;
 }
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
