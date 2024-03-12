@@ -146,6 +146,24 @@ export type AttachDomEvent = (
 export type RestoreUndoSnapshot = (core: EditorCore, snapshot: Snapshot) => void;
 
 /**
+ * Add CSS rules for editor
+ * @param core The EditorCore object
+ * @param key A string to identify the CSS rule type. When set CSS rules with the same key again, existing rules with the same key will be replaced.
+ * @param cssRule The CSS rule string, must be a valid CSS rule string, or browser may throw exception. Pass null to remove existing rules
+ * @param subSelectors @optional If the rule is used for child element under editor, use this parameter to specify the child elements. Each item will be
+ * combined with root selector together to build a separate rule. It also accepts pseudo classes "before" and "after" to create pseudo class rule "::before"
+ * and "::after" to the editor root element itself
+ * @param maxRuleLength @optional Set maximum length for a single rule. This is used by test code only
+ */
+export type SetEditorStyle = (
+    core: EditorCore,
+    key: string,
+    cssRule: string | null,
+    subSelectors?: 'before' | 'after' | string[],
+    maxRuleLength?: number
+) => void;
+
+/**
  * The interface for the map of core API for Editor.
  * Editor can call call API from this map under EditorCore object
  */
@@ -249,6 +267,16 @@ export interface CoreApiMap {
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
+
+    /**
+     * Add CSS rules for editor
+     * @param core The EditorCore object
+     * @param key A string to identify the CSS rule type. When set CSS rules with the same key again, existing rules with the same key will be replaced.
+     * @param cssRule The CSS rule string, must be a valid CSS rule string, or browser may throw exception
+     * @param subSelectors @optional If the rule is used for child element under editor, use this parameter to specify the child elements. Each item will be
+     * combined with root selector together to build a separate rule.
+     */
+    setEditorStyle: SetEditorStyle;
 }
 
 /**

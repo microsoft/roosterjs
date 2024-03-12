@@ -20,6 +20,7 @@ describe('LifecyclePlugin', () => {
         expect(state).toEqual({
             isDarkMode: false,
             shadowEditFragment: null,
+            styleElements: {},
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -57,6 +58,7 @@ describe('LifecyclePlugin', () => {
         expect(state).toEqual({
             isDarkMode: false,
             shadowEditFragment: null,
+            styleElements: {},
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -131,6 +133,7 @@ describe('LifecyclePlugin', () => {
         expect(state).toEqual({
             isDarkMode: false,
             shadowEditFragment: null,
+            styleElements: {},
         });
 
         plugin.onPluginEvent({
@@ -161,6 +164,7 @@ describe('LifecyclePlugin', () => {
         expect(state).toEqual({
             isDarkMode: false,
             shadowEditFragment: null,
+            styleElements: {},
         });
 
         const mockedIsDarkColor = 'Dark' as any;
@@ -205,7 +209,7 @@ describe('LifecyclePlugin', () => {
 
         plugin.initialize(<IEditor>(<any>{
             triggerEvent,
-            getDarkColorHandler: () => mockedDarkColorHandler,
+            getColorManager: () => mockedDarkColorHandler,
         }));
 
         expect(setColorSpy).toHaveBeenCalledTimes(0);
@@ -213,6 +217,7 @@ describe('LifecyclePlugin', () => {
         expect(state).toEqual({
             isDarkMode: false,
             shadowEditFragment: null,
+            styleElements: {},
         });
 
         const mockedIsDarkColor = 'Dark' as any;
@@ -225,5 +230,35 @@ describe('LifecyclePlugin', () => {
         });
 
         expect(setColorSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('Dispose plugin and clean up style nodes', () => {
+        const div = document.createElement('div');
+        const plugin = createLifecyclePlugin({}, div);
+
+        plugin.initialize(<any>{
+            getColorManager: jasmine.createSpy(),
+            triggerEvent: jasmine.createSpy(),
+        });
+
+        const state = plugin.getState();
+        const removeChildSpy = jasmine.createSpy('removeChild');
+        const style = {
+            parentElement: {
+                removeChild: removeChildSpy,
+            },
+        } as any;
+
+        state.styleElements.a = style;
+
+        plugin.dispose();
+
+        expect(removeChildSpy).toHaveBeenCalledTimes(1);
+        expect(removeChildSpy).toHaveBeenCalledWith(style);
+        expect(state).toEqual({
+            styleElements: {},
+            isDarkMode: false,
+            shadowEditFragment: null,
+        });
     });
 });
