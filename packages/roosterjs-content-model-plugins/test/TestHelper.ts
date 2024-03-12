@@ -5,11 +5,20 @@ export function initEditor(
     id: string,
     plugins?: EditorPlugin[],
     initialModel?: ContentModelDocument,
-    coreApiOverride?: Partial<CoreApiMap>
+    coreApiOverride?: Partial<CoreApiMap>,
+    anchorContainerSelector?: string
 ) {
     let node = document.createElement('div');
     node.id = id;
-    document.body.insertBefore(node, document.body.childNodes[0]);
+
+    if (anchorContainerSelector) {
+        let anchorContainer = document.createElement('div');
+        anchorContainer.className = anchorContainerSelector;
+        document.body.insertBefore(anchorContainer, document.body.childNodes[0]);
+        anchorContainer.insertBefore(node, anchorContainer.childNodes[0]);
+    } else {
+        document.body.insertBefore(node, document.body.childNodes[0]);
+    }
 
     return new Editor(node, {
         plugins,

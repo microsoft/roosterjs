@@ -17,11 +17,14 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     const modelToDomContext = option
         ? createModelToDomContext(
               editorContext,
-              core.modelToDomSettings.builtIn,
-              core.modelToDomSettings.customized,
+              core.environment.modelToDomSettings.builtIn,
+              core.environment.modelToDomSettings.customized,
               option
           )
-        : createModelToDomContextWithConfig(core.modelToDomSettings.calculated, editorContext);
+        : createModelToDomContextWithConfig(
+              core.environment.modelToDomSettings.calculated,
+              editorContext
+          );
 
     modelToDomContext.onNodeCreated = onNodeCreated;
 

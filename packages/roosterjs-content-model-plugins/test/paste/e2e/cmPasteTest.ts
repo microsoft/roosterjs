@@ -2,6 +2,7 @@ import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFr
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
+import { paste } from 'roosterjs-content-model-core';
 
 const ID = 'CM_Paste_E2E';
 
@@ -33,7 +34,7 @@ describe(ID, () => {
                 '<table style="text-align: left; white-space: normal; width: 170pt; box-sizing: border-box; border-collapse: collapse; border-spacing: 0px; background-color: rgb(255, 255, 255);"><tbody><tr><td data-ogsb="white" style="text-align: center; white-space: nowrap; border-width: 0.5pt; border-style: solid; border-color: initial; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 52pt; height: 28.5pt; background-color: white;"><div style="text-align: center; white-space: nowrap; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">No.</span></div></td><td data-ogsb="white" style="text-align: center; white-space: nowrap; border-top: 0.5pt solid; border-right: 0.5pt solid; border-bottom: 0.5pt solid; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 56pt; background-color: white;"><div style="text-align: center; white-space: nowrap; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">ID</span></div></td><td data-ogsb="white" style="text-align: center; white-space: normal; border-top: 0.5pt solid; border-right: 0.5pt solid; border-bottom: 0.5pt solid; padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; width: 62pt; background-color: white;"><div style="text-align: center; white-space: normal; margin: 0px;"><span style="letter-spacing: normal; font-family: Calibri, sans-serif; font-size: 11pt; font-weight: 700; color: black;">Work Item Type</span></div></td></tr></tbody></table><div><br></div><!--{"start":[0],"end":[1,0]}-->',
         });
 
-        editor.pasteFromClipboard(clipboardData);
+        paste(editor, clipboardData);
 
         const model = editor.getContentModelCopy('connected');
 

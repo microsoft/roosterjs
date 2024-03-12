@@ -45,8 +45,10 @@ describe('setContentModel', () => {
             },
             lifecycle: {},
             cache: {},
-            modelToDomSettings: {
-                calculated: mockedConfig,
+            environment: {
+                modelToDomSettings: {
+                    calculated: mockedConfig,
+                },
             },
         } as any) as EditorCore;
     });
@@ -107,7 +109,7 @@ describe('setContentModel', () => {
 
         contentModelToDomSpy.and.returnValue(mockedRange);
 
-        core.modelToDomSettings.builtIn = defaultOption;
+        core.environment.modelToDomSettings.builtIn = defaultOption;
         setContentModel(core, mockedModel, additionalOption);
 
         expect(createModelToDomContextSpy).toHaveBeenCalledWith(
