@@ -22,4 +22,9 @@ export const enum PasteType {
      * If there is a image uri in the clipboard, paste the content as image element
      */
     AsImage,
+
+    /**
+     * If there is plain text with links in the clipboard, paste the content as plain text with clickable links
+     */
+    AsPlainTextWithClickableLinks,
 }

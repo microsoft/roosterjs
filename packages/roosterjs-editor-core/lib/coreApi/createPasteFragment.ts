@@ -36,13 +36,19 @@ export const createPasteFragment: CreatePasteFragment = (
     position: NodePosition | null,
     pasteAsText: boolean,
     applyCurrentStyle: boolean,
-    pasteAsImage: boolean = false
+    pasteAsImage: boolean = false,
+    pasteAsTextWithClickableLinks: boolean
 ) => {
     if (!clipboardData) {
         return null;
     }
 
-    const pasteType = getPasteType(pasteAsText, applyCurrentStyle, pasteAsImage);
+    const pasteType = getPasteType(
+        pasteAsText,
+        applyCurrentStyle,
+        pasteAsImage,
+        pasteAsTextWithClickableLinks
+    );
 
     // Step 1: Prepare BeforePasteEvent object
     const event = createBeforePasteEvent(core, clipboardData, pasteType);

@@ -447,12 +447,14 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @param applyCurrentStyle True if apply format of current selection to the pasted content,
      * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
      * @param pasteAsImage: When set to true, if the clipboardData contains a imageDataUri will paste the image to the editor
+     * @param pasteAsTextWithClickableLinks When set to true, preserve clickable links in the pasted content. Default value is false
      */
     paste(
         clipboardData: ClipboardData,
         pasteAsText: boolean = false,
         applyCurrentFormat: boolean = false,
-        pasteAsImage: boolean = false
+        pasteAsImage: boolean = false,
+        pasteAsTextWithClickableLinks: boolean = false
     ) {
         paste(
             this,
@@ -463,6 +465,8 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 ? 'mergeFormat'
                 : pasteAsImage
                 ? 'asImage'
+                : pasteAsTextWithClickableLinks
+                ? 'asPlainTextWithClickableLinks'
                 : 'normal'
         );
     }

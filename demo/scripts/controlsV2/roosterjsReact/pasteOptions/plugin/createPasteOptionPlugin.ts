@@ -140,6 +140,11 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                 case 'pasteOptionMergeFormat':
                     paste(this.editor, this.clipboardData, 'mergeFormat');
                     break;
+
+                case 'pasteOptionPasteAsTextAndLinks':
+                    paste(this.editor, this.clipboardData, 'asPlainTextWithClickableLinks');
+                    break;
+
                 case 'pasteOptionPasteAsImage':
                     paste(this.editor, this.clipboardData, 'asImage');
             }

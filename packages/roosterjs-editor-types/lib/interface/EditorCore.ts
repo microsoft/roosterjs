@@ -128,6 +128,7 @@ export type AttachDomEvent = (
  * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
  * @param applyCurrentStyle True if apply format of current selection to the pasted content,
  * false to keep original format
+ * @param pasteAsTextWithClickableLinks
  */
 export type CreatePasteFragment = (
     core: EditorCore,
@@ -135,7 +136,8 @@ export type CreatePasteFragment = (
     position: NodePosition | null,
     pasteAsText: boolean,
     applyCurrentStyle: boolean,
-    pasteAsImage: boolean
+    pasteAsImage: boolean,
+    pasteAsTextWithClickableLinks: boolean
 ) => DocumentFragment | null;
 
 /**

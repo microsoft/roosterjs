@@ -24,6 +24,7 @@ const PasteTypeNewToOld: Record<NewPasteType, OldPasteType> = {
     asImage: OldPasteType.AsImage,
     asPlainText: OldPasteType.AsPlainText,
     mergeFormat: OldPasteType.MergeFormat,
+    asPlainTextWithClickableLinks: OldPasteType.AsPlainTextWithClickableLinks,
     normal: OldPasteType.Normal,
 };
 
@@ -31,6 +32,7 @@ const PasteTypeOldToNew: Record<OldPasteType, NewPasteType> = {
     [OldPasteType.AsImage]: 'asImage',
     [OldPasteType.AsPlainText]: 'asPlainText',
     [OldPasteType.MergeFormat]: 'mergeFormat',
+    [OldPasteType.AsPlainTextWithClickableLinks]: 'asPlainTextWithClickableLinks',
     [OldPasteType.Normal]: 'normal',
 };
 

@@ -33,6 +33,11 @@ export const Buttons: Record<PasteOptionButtonKeys, PasteOptionButtonType> = {
         shortcut: 'I',
         icon: 'PictureFill',
     },
+    pasteOptionPasteAsTextAndLinks: {
+        unlocalizedText: 'Paste with clickable links',
+        shortcut: 'L',
+        icon: 'Link',
+    },
 };
 
 /**

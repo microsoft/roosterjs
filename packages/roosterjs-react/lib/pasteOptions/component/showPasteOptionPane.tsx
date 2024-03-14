@@ -101,7 +101,6 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
     ref: React.Ref<PasteOptionPane>
 ) {
     const { strings, position, paste, dismiss, isRtl } = props;
-    console.log(props);
     const theme = useTheme();
     const classNames = getPasteOptionClassNames(theme);
     const [selectedKey, setSelectedKey] = React.useState<PasteOptionButtonKeys | null>(null);
