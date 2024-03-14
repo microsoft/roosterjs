@@ -60,7 +60,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
             case 'range':
                 addRangeToSelection(doc, selection.range, selection.isReverted);
 
-                core.selection.selection = core.api.hasFocus(core) ? null : selection;
+                core.selection.selection = core.domHelper.hasFocus() ? null : selection;
                 break;
 
             default:

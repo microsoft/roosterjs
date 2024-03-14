@@ -17,6 +17,7 @@ import {
     Editor,
     transformColor,
     undo,
+    paste,
 } from 'roosterjs-content-model-core';
 import {
     ChangeSource,
@@ -351,7 +352,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         return exportContent(
             this,
             GetContentModeMap[mode],
-            this.getCore().modelToDomSettings.customized
+            this.getCore().environment.modelToDomSettings.customized
         );
     }
 
@@ -375,7 +376,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 
         const newModel = createModelFromHtml(
             content,
-            core.domToModelSettings.customized,
+            core.environment.domToModelSettings.customized,
             trustedHTMLHandler,
             core.format.defaultFormat
         );
@@ -453,7 +454,8 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         applyCurrentFormat: boolean = false,
         pasteAsImage: boolean = false
     ) {
-        this.pasteFromClipboard(
+        paste(
+            this,
             clipboardData,
             pasteAsText
                 ? 'asPlainText'
