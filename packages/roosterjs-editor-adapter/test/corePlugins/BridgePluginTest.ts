@@ -27,11 +27,13 @@ describe('BridgePlugin', () => {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy1,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
         const mockedPlugin2 = {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy2,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
         const mockedEditor = {
             queryElements: queryElementsSpy,
@@ -111,11 +113,13 @@ describe('BridgePlugin', () => {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy1,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
         const mockedPlugin2 = {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy2,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
         const mockedEditor = {
             queryElements: queryElementsSpy,
@@ -198,12 +202,14 @@ describe('BridgePlugin', () => {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy1,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
         const mockedPlugin2 = {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy2,
             willHandleEventExclusively: willHandleEventExclusivelySpy,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
         const mockedEditor = 'EDITOR' as any;
         const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
@@ -246,11 +252,13 @@ describe('BridgePlugin', () => {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy1,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
         const mockedPlugin2 = {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy2,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
 
         const mockedEditor = 'EDITOR' as any;
@@ -328,11 +336,13 @@ describe('BridgePlugin', () => {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy1,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
         const mockedPlugin2 = {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy2,
             dispose: disposeSpy,
+            getName: () => '',
         } as any;
 
         const mockedEditor = 'EDITOR' as any;
@@ -391,12 +401,14 @@ describe('BridgePlugin', () => {
             onPluginEvent: onPluginEventSpy1,
             dispose: disposeSpy,
             getContextMenuItems: getContextMenuItemsSpy1,
+            getName: () => '',
         } as any;
         const mockedPlugin2 = {
             initialize: initializeSpy,
             onPluginEvent: onPluginEventSpy2,
             dispose: disposeSpy,
             getContextMenuItems: getContextMenuItemsSpy2,
+            getName: () => '',
         } as any;
         const mockedEditor = {
             queryElements: queryElementsSpy,
