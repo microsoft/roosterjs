@@ -139,16 +139,6 @@ function getFocusedElement(
         offset = pos.offset;
     }
 
-    while (node?.lastChild) {
-        if (offset == node.childNodes.length) {
-            node = node.lastChild;
-            offset = node.childNodes.length;
-        } else {
-            node = node.childNodes[offset];
-            offset = 0;
-        }
-    }
-
     if (!isNodeOfType(node, 'ELEMENT_NODE')) {
         const textToCheck = existingTextInDelimiter
             ? ZeroWidthSpace + existingTextInDelimiter

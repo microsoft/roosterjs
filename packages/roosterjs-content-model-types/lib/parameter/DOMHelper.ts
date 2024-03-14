@@ -82,5 +82,3 @@ export interface DOMHelper {
      */
     hasFocus(): boolean;
 }
-
-document.createElement;
