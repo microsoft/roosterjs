@@ -140,7 +140,6 @@ export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
                         )
                     )}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
-                    {this.renderPluginItem('tableCellSelection', 'Table Cell Selection')}
                     {this.renderPluginItem('announce', 'Announce')}
                 </tbody>
             </table>

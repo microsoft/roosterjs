@@ -62,6 +62,18 @@ export interface DOMHelper {
      * @returns An HTML element which matches the given selector. If the given start node matches the selector,
      * returns the given node
      */
+    findClosestElementAncestor<T extends keyof HTMLElementTagNameMap>(
+        node: Node,
+        selector?: T
+    ): HTMLElementTagNameMap[T] | null;
+
+    /**
+     * Find closest element ancestor start from the given node which matches the given selector
+     * @param node Find ancestor start from this node
+     * @param selector The expected selector. If null, return the first HTML Element found from start node
+     * @returns An HTML element which matches the given selector. If the given start node matches the selector,
+     * returns the given node
+     */
     findClosestElementAncestor(node: Node, selector?: string): HTMLElement | null;
 
     /**
@@ -70,3 +82,5 @@ export interface DOMHelper {
      */
     hasFocus(): boolean;
 }
+
+document.createElement;
