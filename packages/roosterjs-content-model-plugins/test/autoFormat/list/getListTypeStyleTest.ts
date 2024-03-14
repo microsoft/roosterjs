@@ -984,4 +984,25 @@ describe('getListTypeStyle', () => {
         };
         runTest(model, undefined);
     });
+
+    it('No selection', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '1)',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(model, undefined);
+    });
 });
