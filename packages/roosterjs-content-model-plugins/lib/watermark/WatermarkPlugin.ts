@@ -22,7 +22,7 @@ export class WatermarkPlugin implements EditorPlugin {
      * Create an instance of Watermark plugin
      * @param watermark The watermark string
      */
-    constructor(private watermark: string | (() => string), format?: WatermarkFormat) {
+    constructor(private watermark: string, format?: WatermarkFormat) {
         this.format = format || {
             fontSize: '14px',
             textColor: '#AAAAAA',
@@ -78,10 +78,8 @@ export class WatermarkPlugin implements EditorPlugin {
         }
     }
 
-    private show(editor: IEditor) {
-        let rule = `position: absolute; pointer-events: none; content: "${
-            typeof this.watermark == 'function' ? this.watermark() : this.watermark
-        }";`;
+    protected show(editor: IEditor) {
+        let rule = `position: absolute; pointer-events: none; content: "${this.watermark}";`;
 
         getObjectKeys(styleMap).forEach(x => {
             if (this.format[x]) {
@@ -94,7 +92,7 @@ export class WatermarkPlugin implements EditorPlugin {
         this.isShowing = true;
     }
 
-    private hide(editor: IEditor) {
+    protected hide(editor: IEditor) {
         editor.setEditorStyle(WATERMARK_CONTENT_KEY, null);
         this.isShowing = false;
     }
