@@ -1,6 +1,7 @@
+import { findTableCellElement, parseTableCells } from '../publicApi/domUtils/tableCellUtils';
+import { isCharacterValue, isModifierKey } from '../publicApi/domUtils/eventUtils';
 import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
-import { isModifierKey } from '../publicApi/domUtils/eventUtils';
-import { parseTableCells } from '../publicApi/domUtils/tableCellUtils';
+import { normalizePos } from '../publicApi/domUtils/normalizePos';
 import type {
     DOMSelection,
     IEditor,
@@ -10,16 +11,21 @@ import type {
     EditorOptions,
     DOMHelper,
     MouseUpEvent,
+    ParsedTable,
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
 const MouseMiddleButton = 1;
 const MouseRightButton = 2;
 const TableCellSelector = 'TH,TD';
+const Up = 'ArrowUp';
+const Down = 'ArrowDown';
+const Left = 'ArrowLeft';
+const Right = 'ArrowRight';
 
 interface TableSelectionInfo {
     table: HTMLTableElement;
-    vTable: (HTMLTableCellElement | null)[][];
+    parsedTable: ParsedTable;
     firstCo: [number, number];
     lastCo?: [number, number];
 }
@@ -58,6 +64,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.disposer = this.editor.attachDomEvent({
             focus: { beforeDispatch: this.onFocus },
             blur: { beforeDispatch: this.isSafari ? undefined : this.onBlur },
+            drop: { beforeDispatch: this.onDrop },
         });
     }
 
@@ -69,11 +76,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             this.disposer = null;
         }
 
-        if (this.mouseDisposer) {
-            this.mouseDisposer();
-            this.mouseDisposer = null;
-        }
-
+        this.detachMouseEvent();
         this.editor = null;
     }
 
@@ -109,6 +112,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const selection = editor.getDOMSelection();
         let image: HTMLImageElement | null;
 
+        // Image selection
         if (
             rawEvent.button === MouseRightButton &&
             (image =
@@ -125,26 +129,19 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             return;
         }
 
+        // Table selection
         if (selection?.type == 'table' && rawEvent.button == MouseLeftButton) {
             this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
         }
 
-        let table: HTMLTableElement | null;
-        let vTable: (HTMLTableCellElement | null)[][] | null;
-        let firstCo: [number, number] | null;
+        let tableSelection: TableSelectionInfo | null;
         const target = rawEvent.target as Node;
 
         if (
             rawEvent.button == MouseLeftButton &&
-            (table = editor.getDOMHelper().findClosestElementAncestor(target, 'table')) &&
-            (vTable = parseTableCells(table)) &&
-            (firstCo = this.findCoordinate(vTable, target, editor.getDOMHelper()))
+            (tableSelection = this.parseTableSelection(target, target, editor.getDOMHelper()))
         ) {
-            this.tableSelection = {
-                firstCo,
-                table,
-                vTable,
-            };
+            this.tableSelection = tableSelection;
             this.mouseDisposer = editor.attachDomEvent({
                 mousemove: {
                     beforeDispatch: this.onMouseMove,
@@ -166,7 +163,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         if (
             (lastCo = this.findCoordinate(
-                this.tableSelection.vTable,
+                this.tableSelection.parsedTable,
                 event.target as Node,
                 this.editor.getDOMHelper()
             )) &&
@@ -190,49 +187,161 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             this.selectImage(image);
         }
 
-        if (this.mouseDisposer) {
-            this.mouseDisposer();
-            this.mouseDisposer = null;
-        }
+        this.detachMouseEvent();
     }
+
+    private onDrop = () => {
+        this.detachMouseEvent();
+    };
 
     private onKeyDown(editor: IEditor, rawEvent: KeyboardEvent) {
         const key = rawEvent.key;
         const selection = editor.getDOMSelection();
 
-        if (
-            !isModifierKey(rawEvent) &&
-            !rawEvent.shiftKey &&
-            selection?.type == 'image' &&
-            selection.image.parentNode
-        ) {
-            if (key === 'Escape') {
-                this.selectBeforeImage(editor, selection.image);
-                rawEvent.stopPropagation();
-            } else if (key !== 'Delete' && key !== 'Backspace') {
-                this.selectBeforeImage(editor, selection.image);
-            }
-        } else if (this.tableSelection?.lastCo && rawEvent.shiftKey && rawEvent.key != 'Shift') {
-            const { table, lastCo, vTable } = this.tableSelection;
-            const win = editor.getDocument().defaultView;
-            const isRtl = win?.getComputedStyle(table).direction == 'rtl';
-            const row = lastCo[0] + (key == 'ArrowUp' ? -1 : key == 'ArrowDown' ? 1 : 0);
-            const col =
-                lastCo[1] +
-                (key == 'ArrowLeft' ? -1 : key == 'ArrowRight' ? 1 : 0) * (isRtl ? -1 : 1);
-
-            if (row != lastCo[0] || col != lastCo[1]) {
-                rawEvent.preventDefault();
-
-                if (row >= 0 && row < vTable.length && col >= 0 && col < vTable[row].length) {
-                    this.updateTableSelection([row, col]);
+        switch (selection?.type) {
+            case 'image':
+                if (!isModifierKey(rawEvent) && !rawEvent.shiftKey && selection.image.parentNode) {
+                    if (key === 'Escape') {
+                        this.selectBeforeImage(editor, selection.image);
+                        rawEvent.stopPropagation();
+                    } else if (key !== 'Delete' && key !== 'Backspace') {
+                        this.selectBeforeImage(editor, selection.image);
+                    }
                 }
-            } else {
-                this.setDOMSelection(null, null);
+                break;
+
+            case 'table':
+                if (this.tableSelection?.lastCo) {
+                    const { shiftKey, key } = rawEvent;
+
+                    if (shiftKey && (key == Left || key == Right)) {
+                        const win = editor.getDocument().defaultView;
+                        const isRtl =
+                            win?.getComputedStyle(this.tableSelection.table).direction == 'rtl';
+
+                        this.updateTableSelectionFromKeyboard(
+                            0,
+                            (key == Left ? -1 : 1) * (isRtl ? -1 : 1)
+                        );
+                        rawEvent.preventDefault();
+                    } else if (shiftKey && (key == Up || key == Down)) {
+                        this.updateTableSelectionFromKeyboard(key == Up ? -1 : 1, 0);
+                        rawEvent.preventDefault();
+                    } else if (key != 'Shift' && !isCharacterValue(rawEvent)) {
+                        if (key == Up || key == Down || key == Left || key == Right) {
+                            this.setDOMSelection(null /*domSelection*/, this.tableSelection);
+                            editor
+                                .getDocument()
+                                .defaultView?.requestAnimationFrame(() =>
+                                    this.handleSelectionInTable(key)
+                                );
+                        }
+                    }
+                }
+                break;
+
+            case 'range':
+                if (key == Up || key == Down || key == Left || key == Right) {
+                    const start = selection.range.startContainer;
+                    this.tableSelection = this.parseTableSelection(
+                        start,
+                        start,
+                        editor.getDOMHelper()
+                    );
+
+                    if (this.tableSelection) {
+                        editor
+                            .getDocument()
+                            .defaultView?.requestAnimationFrame(() =>
+                                this.handleSelectionInTable(key)
+                            );
+                    }
+                }
+                break;
+        }
+    }
+
+    private handleSelectionInTable(key: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') {
+        if (!this.editor || !this.tableSelection) {
+            return;
+        }
+
+        const selection = this.editor.getDOMSelection();
+        const domHelper = this.editor.getDOMHelper();
+
+        if (selection?.type == 'range') {
+            const {
+                range: { collapsed, startContainer, endContainer, commonAncestorContainer },
+                isReverted,
+            } = selection;
+            const start = isReverted ? endContainer : startContainer;
+            const end: Node | null = isReverted ? startContainer : endContainer;
+            const tableSel = this.parseTableSelection(commonAncestorContainer, start, domHelper);
+
+            if (tableSel) {
+                let lastCo = this.findCoordinate(tableSel?.parsedTable, end, domHelper);
+
+                if (
+                    lastCo &&
+                    (key == Up || key == Down) &&
+                    tableSel.table == this.tableSelection.table &&
+                    lastCo[1] != this.tableSelection.firstCo[1]
+                ) {
+                    const { parsedTable, firstCo: oldCo } = this.tableSelection;
+                    const change = key == Up ? -1 : 1;
+                    const originalTd = findTableCellElement(parsedTable, oldCo[0], oldCo[1]);
+                    let td: HTMLTableCellElement | null = null;
+
+                    lastCo = [oldCo[0] + change, oldCo[1]];
+
+                    while (lastCo[0] >= 0 && lastCo[0] < parsedTable.length) {
+                        td = findTableCellElement(parsedTable, lastCo[0], lastCo[1]);
+
+                        if (td == originalTd) {
+                            lastCo[0] += change;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if (collapsed && td) {
+                        const { node, offset } = normalizePos(
+                            td,
+                            key == Up ? td.childNodes.length : 0
+                        );
+                        const range = this.editor.getDocument().createRange();
+
+                        range.setStart(node, offset);
+                        range.collapse(true /*toStart*/);
+
+                        this.setDOMSelection(
+                            {
+                                type: 'range',
+                                range,
+                                isReverted: false,
+                            },
+                            null /*tableSelection*/
+                        );
+                    }
+                }
+
+                if (!collapsed && lastCo) {
+                    this.tableSelection = tableSel;
+                    this.updateTableSelection(lastCo);
+                }
             }
-        } else {
-            //this.tableSelection = null;
-            //this.setDOMSelection(null, null);
+        }
+    }
+
+    private updateTableSelectionFromKeyboard(rowChange: number, colChange: number) {
+        if (this.tableSelection?.lastCo && this.editor) {
+            const { lastCo, parsedTable } = this.tableSelection;
+            const row = lastCo[0] + rowChange;
+            const col = lastCo[1] + colChange;
+
+            if (row >= 0 && row < parsedTable.length && col >= 0 && col < parsedTable[row].length) {
+                this.updateTableSelection([row, col]);
+            }
         }
     }
 
@@ -323,48 +432,33 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
                     this.state.selection = newSelection;
                 }
-
-                if (!this.tableSelection?.lastCo) {
-                    const {
-                        range: { collapsed, startContainer, endContainer, commonAncestorContainer },
-                        isReverted,
-                    } = newSelection;
-
-                    const domHelper = this.editor.getDOMHelper();
-                    let table: HTMLTableElement | null;
-                    let vTable: (HTMLTableCellElement | null)[][] | null;
-                    let firstCo: [number, number] | null;
-                    let lastCo: [number, number] | null;
-
-                    if (
-                        !collapsed &&
-                        (table = domHelper.findClosestElementAncestor(
-                            commonAncestorContainer,
-                            'table'
-                        )) &&
-                        (vTable = parseTableCells(table)) &&
-                        (firstCo = this.findCoordinate(
-                            vTable,
-                            isReverted ? endContainer : startContainer,
-                            domHelper
-                        )) &&
-                        (lastCo = this.findCoordinate(
-                            vTable,
-                            isReverted ? startContainer : endContainer,
-                            domHelper
-                        ))
-                    ) {
-                        this.tableSelection = { table, vTable, firstCo };
-                        this.updateTableSelection(lastCo);
-                    }
-                }
             }
         }
     };
 
+    private parseTableSelection(
+        tableStart: Node,
+        tdStart: Node,
+        domHelper: DOMHelper
+    ): TableSelectionInfo | null {
+        let table: HTMLTableElement | null;
+        let parsedTable: ParsedTable | null;
+        let firstCo: [number, number] | null;
+
+        if (
+            (table = domHelper.findClosestElementAncestor(tableStart, 'table')) &&
+            (parsedTable = parseTableCells(table)) &&
+            (firstCo = this.findCoordinate(parsedTable, tdStart, domHelper))
+        ) {
+            return { table, parsedTable, firstCo };
+        } else {
+            return null;
+        }
+    }
+
     private updateTableSelection(lastCo: [number, number]) {
         if (this.tableSelection) {
-            const { table, firstCo, vTable, lastCo: oldCo } = this.tableSelection;
+            const { table, firstCo, parsedTable, lastCo: oldCo } = this.tableSelection;
 
             if (oldCo || firstCo[0] != lastCo[0] || firstCo[1] != lastCo[1]) {
                 this.tableSelection.lastCo = lastCo;
@@ -378,7 +472,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         lastRow: Math.max(firstCo[0], lastCo[0]),
                         lastColumn: Math.max(firstCo[1], lastCo[1]),
                     },
-                    { table, firstCo, lastCo, vTable }
+                    { table, firstCo, lastCo, parsedTable }
                 );
 
                 return true;
@@ -397,7 +491,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     private findCoordinate(
-        vTable: (HTMLTableCellElement | null)[][],
+        parsedTable: ParsedTable,
         node: Node,
         domHelper: DOMHelper
     ): [number, number] | null {
@@ -406,7 +500,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         // Try to do a fast check if both TD are in the given TABLE
         if (td) {
-            vTable.some((row, rowIndex) => {
+            parsedTable.some((row, rowIndex) => {
                 const colIndex = td ? row.indexOf(td as HTMLTableCellElement) : -1;
 
                 return (result = colIndex >= 0 ? [rowIndex, colIndex] : null);
@@ -415,14 +509,23 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         // For nested table scenario, try to find the outer TAble cells
         if (!result) {
-            vTable.some((row, rowIndex) => {
-                const colIndex = row.findIndex(cell => cell?.contains(node));
+            parsedTable.some((row, rowIndex) => {
+                const colIndex = row.findIndex(
+                    cell => typeof cell == 'object' && cell.contains(node)
+                );
 
                 return (result = colIndex >= 0 ? [rowIndex, colIndex] : null);
             });
         }
 
         return result;
+    }
+
+    private detachMouseEvent() {
+        if (this.mouseDisposer) {
+            this.mouseDisposer();
+            this.mouseDisposer = null;
+        }
     }
 }
 

@@ -40,7 +40,11 @@ export { getSelectedCells } from './publicApi/table/getSelectedCells';
 export { isCharacterValue, isModifierKey } from './publicApi/domUtils/eventUtils';
 export { combineBorderValue, extractBorderValues } from './publicApi/domUtils/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './publicApi/domUtils/stringUtil';
-export { parseTableCells, createTableRanges } from './publicApi/domUtils/tableCellUtils';
+export {
+    parseTableCells,
+    createTableRanges,
+    findTableCellElement,
+} from './publicApi/domUtils/tableCellUtils';
 export { getSegmentTextFormat } from './publicApi/domUtils/getSegmentTextFormat';
 export { readFile } from './publicApi/domUtils/readFile';
 export { cacheGetEventData } from './publicApi/domUtils/cacheGetEventData';

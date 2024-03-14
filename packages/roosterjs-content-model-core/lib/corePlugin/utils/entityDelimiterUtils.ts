@@ -1,5 +1,6 @@
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
+import { normalizePos } from '../../publicApi/domUtils/normalizePos';
 import type {
     CompositionEndEvent,
     ContentModelBlockGroup,
@@ -131,6 +132,12 @@ function getFocusedElement(
     const { range, isReverted } = selection;
     let node: Node | null = isReverted ? range.startContainer : range.endContainer;
     let offset = isReverted ? range.startOffset : range.endOffset;
+
+    if (node) {
+        const pos = normalizePos(node, offset);
+        node = pos.node;
+        offset = pos.offset;
+    }
 
     while (node?.lastChild) {
         if (offset == node.childNodes.length) {

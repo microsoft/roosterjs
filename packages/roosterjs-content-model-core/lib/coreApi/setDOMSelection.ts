@@ -1,8 +1,9 @@
 import { addRangeToSelection } from '../corePlugin/utils/addRangeToSelection';
 import { ensureUniqueId } from './setEditorStyle/ensureUniqueId';
+import { findTableCellElement, parseTableCells } from '../publicApi/domUtils/tableCellUtils';
 import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
-import { parseTableCells } from '../publicApi/domUtils/tableCellUtils';
 import type {
+    ParsedTable,
     SelectionChangedEvent,
     SetDOMSelection,
     TableSelection,
@@ -50,7 +51,9 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 break;
             case 'table':
                 const { table, firstColumn, firstRow } = selection;
+                const parsedTable = parseTableCells(selection.table);
                 const tableSelectors = buildTableSelectors(
+                    parsedTable,
                     ensureUniqueId(table, TABLE_ID),
                     selection
                 );
@@ -64,7 +67,11 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 );
                 core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
 
-                setRangeSelection(doc, table.rows[firstRow]?.cells[firstColumn]);
+                const td = findTableCellElement(parsedTable, firstRow, firstColumn);
+                const nodeToSelect = td?.firstElementChild || td;
+
+                setRangeSelection(doc, (nodeToSelect as HTMLElement) || undefined);
+
                 break;
             case 'range':
                 addRangeToSelection(doc, selection.range, selection.isReverted);
@@ -90,24 +97,23 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 };
 
-function buildTableSelectors(tableId: string, selection: TableSelection): string[] {
+function buildTableSelectors(
+    parsedTable: ParsedTable,
+    tableId: string,
+    selection: TableSelection
+): string[] {
     const { firstColumn, firstRow, lastColumn, lastRow } = selection;
-    const cells = parseTableCells(selection.table);
     const isAllTableSelected =
         firstRow == 0 &&
         firstColumn == 0 &&
-        lastRow == cells.length - 1 &&
-        lastColumn == (cells[lastRow]?.length ?? 0) - 1;
+        lastRow == parsedTable.length - 1 &&
+        lastColumn == (parsedTable[lastRow]?.length ?? 0) - 1;
     return isAllTableSelected
         ? [`#${tableId}`, `#${tableId} *`]
-        : handleTableSelected(tableId, selection, cells);
+        : handleTableSelected(tableId, selection, parsedTable);
 }
 
-function handleTableSelected(
-    tableId: string,
-    selection: TableSelection,
-    cells: (HTMLTableCellElement | null)[][]
-) {
+function handleTableSelected(tableId: string, selection: TableSelection, parsedTable: ParsedTable) {
     const { firstRow, firstColumn, lastRow, lastColumn, table } = selection;
     const selectors: string[] = [];
 
@@ -132,7 +138,7 @@ function handleTableSelected(
             return result;
         });
 
-    cells.forEach((row, rowIndex) => {
+    parsedTable.forEach((row, rowIndex) => {
         let tdCount = 0;
 
         //Get current TBODY/THEAD/TFOOT
@@ -146,7 +152,7 @@ function handleTableSelected(
         for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
             const cell = row[cellIndex];
 
-            if (cell) {
+            if (typeof cell == 'object') {
                 tdCount++;
 
                 if (
