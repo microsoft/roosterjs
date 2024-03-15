@@ -16,7 +16,7 @@ import { Editor } from 'roosterjs-content-model-core';
 import { EditorAdapter } from 'roosterjs-editor-adapter';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
-import { exportButton } from '../sidePane/contentModel/buttons/exportButton';
+import { exportContentButton } from '../demoButtons/exportContentButton';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
 import { FormatStatePlugin } from '../sidePane/formatState/FormatStatePlugin';
 import { getButtons, tabNames } from './ribbonButtons';
@@ -254,7 +254,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             redoButton,
             zoomButton,
             darkModeButton,
-            exportButton,
+            exportContentButton,
         ];
         this.state.popoutWindow ? null : buttons.push(popoutButton);
 

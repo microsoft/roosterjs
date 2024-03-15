@@ -16,9 +16,4 @@ export const exportButton: RibbonButton<'buttonNameExport'> = {
             });
         }
     },
-    commandBarProperties: {
-        buttonStyles: {
-            icon: { paddingBottom: '10px' },
-        },
-    },
 };
