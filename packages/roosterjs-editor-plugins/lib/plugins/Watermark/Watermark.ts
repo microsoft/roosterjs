@@ -34,6 +34,28 @@ export default class Watermark implements EditorPlugin {
     }
 
     /**
+     * Updates the watermark text.
+     * @param watermark - The new watermark text.
+     */
+    updateWatermark(watermark: string) {
+        this.watermark = watermark;
+
+        if (!this.editor) {
+            return;
+        }
+        const watermarks = this.editor.queryElements(getEntitySelector(ENTITY_TYPE));
+        const isShowing = watermarks.length > 0;
+        // re-render watermark only if it's already displayed
+        if (isShowing) {
+            // hide watermark
+            const watermarks = this.editor.queryElements(getEntitySelector(ENTITY_TYPE));
+            watermarks.forEach(this.removeWatermark);
+            // show watermark
+            this.showHideWatermark();
+        }
+    }
+
+    /**
      * Get a friendly name of  this plugin
      */
     getName() {
@@ -102,7 +124,6 @@ export default class Watermark implements EditorPlugin {
         const hasFocus = this.editor.hasFocus();
         const watermarks = this.editor.queryElements(getEntitySelector(ENTITY_TYPE));
         const isShowing = watermarks.length > 0;
-
         if (hasFocus && isShowing) {
             watermarks.forEach(this.removeWatermark);
             this.editor.focus();
