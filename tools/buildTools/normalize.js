@@ -5,20 +5,34 @@ const mkdirp = require('mkdirp');
 const fs = require('fs');
 const processConstEnum = require('./processConstEnum');
 const {
-    allPackages,
+    packages,
     distPath,
     readPackageJson,
     mainPackageJson,
     err,
-    findPackageRoot,
     versions,
+    buildConfig,
 } = require('./common');
+
+function findPackageKey(packageName) {
+    const key = Object.keys(buildConfig).find(
+        x => buildConfig[x].packages.indexOf(packageName) >= 0
+    );
+
+    if (!key) {
+        throw new Error(
+            `Unrecognized package name ${packageName}. If this is a new package, please update buildConfig in tools/common.js to include this package in proper config.`
+        );
+    }
+
+    return key;
+}
 
 function normalize() {
     const knownCustomizedPackages = {};
 
-    allPackages.forEach(packageName => {
-        const versionKey = findPackageRoot(packageName);
+    packages.forEach(packageName => {
+        const versionKey = findPackageKey(packageName);
         const version = versions.overrides?.[packageName] ?? versions[versionKey];
         const packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
 
@@ -27,7 +41,7 @@ function normalize() {
                 // No op, keep the specified value
             } else if (knownCustomizedPackages[dep]) {
                 packageJson.dependencies[dep] = '^' + knownCustomizedPackages[dep];
-            } else if (allPackages.indexOf(dep) > -1) {
+            } else if (packages.indexOf(dep) > -1) {
                 var depKey = findPackageRoot(dep);
                 var depVersion = versions[depKey];
                 packageJson.dependencies[dep] = '^' + depVersion;

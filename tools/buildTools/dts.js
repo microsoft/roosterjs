@@ -7,7 +7,6 @@ const mkdirp = require('mkdirp');
 const {
     rootPath,
     distPath,
-    roosterJsDistPath,
     nodeModulesPath,
     runNode,
     err,
@@ -336,19 +335,20 @@ function generateDts(library, isAmd, queue, version) {
         if (exports) {
             for (var name in exports) {
                 var alias = exports[name];
-                var texts = null;
+                var texts = [];
+
                 if (elements[name]) {
-                    texts = publicElement(elements[name]);
-                } else {
-                    for (var n in elements) {
-                        if (n.indexOf(alias + '<') == 0) {
-                            texts = publicElement(elements[n]);
-                            break;
-                        }
+                    texts = texts.concat(publicElement(elements[name]));
+                }
+
+                for (var n in elements) {
+                    if (n.indexOf(alias + '<') == 0) {
+                        texts = texts.concat(publicElement(elements[n]));
                     }
-                    if (!texts) {
-                        err(`Name not found: ${name}; alias: ${alias}; file: ${filename}`);
-                    }
+                }
+
+                if (texts.length == 0) {
+                    err(`Name not found: ${name}; alias: ${alias}; file: ${filename}`);
                 }
 
                 for (var text of texts) {
@@ -427,6 +427,7 @@ function dts(isAmd, target) {
         externalHandler,
         dependsOnRoosterJs,
         dependsOnReact,
+        dependsOnMain,
     } = buildConfig[target];
 
     mkdirp.sync(targetPath);
@@ -451,13 +452,15 @@ function dts(isAmd, target) {
     let dependencies = '';
 
     if (dependsOnRoosterJs) {
-        const roosterjsDtsFileName = `rooster${isAmd ? '-amd' : ''}.d.ts`;
-        fs.copyFileSync(
-            path.join(roosterJsDistPath, roosterjsDtsFileName),
-            path.join(targetPath, roosterjsDtsFileName)
-        );
+        dependencies += `/// <reference path="./${buildConfig['legacy'].jsFileBaseName}${
+            isAmd ? '-amd' : ''
+        }" />\n`;
+    }
 
-        dependencies += `/// <reference path="./rooster${isAmd ? '-amd' : ''}" />\n`;
+    if (dependsOnMain) {
+        dependencies += `/// <reference path="./${buildConfig['main'].jsFileBaseName}${
+            isAmd ? '-amd' : ''
+        }" />\n`;
     }
 
     if (dependsOnReact) {
@@ -475,32 +478,42 @@ function dts(isAmd, target) {
 module.exports = {
     dtsCommonJs: {
         message: `Generating type definition file (rooster.d.ts) for CommonJs...`,
-        callback: () => dts(false /*isAmd*/, 'packages'),
+        callback: () => dts(false /*isAmd*/, 'legacy'),
         enabled: options => options.dts,
     },
     dtsAmd: {
         message: `Generating type definition file (rooster-amd.d.ts) for AMD...`,
-        callback: () => dts(true /*isAmd*/, 'packages'),
+        callback: () => dts(true /*isAmd*/, 'legacy'),
         enabled: options => options.dts,
     },
     dtsCommonJsUi: {
         message: `Generating type definition file (rooster-react.d.ts) for CommonJs...`,
-        callback: () => dts(false /*isAmd*/, 'packages-ui'),
+        callback: () => dts(false /*isAmd*/, 'react'),
         enabled: options => options.dts,
     },
     dtsAmdUi: {
         message: `Generating type definition file (rooster-react-amd.d.ts) for AMD...`,
-        callback: () => dts(true /*isAmd*/, 'packages-ui'),
+        callback: () => dts(true /*isAmd*/, 'react'),
         enabled: options => options.dts,
     },
-    dtsCommonJsContentModel: {
+    dtsCommonJsMain: {
         message: `Generating type definition file (rooster-content-model.d.ts) for CommonJs...`,
-        callback: () => dts(false /*isAmd*/, 'packages-content-model'),
+        callback: () => dts(false /*isAmd*/, 'main'),
         enabled: options => options.dts,
     },
-    dtsAmdContentModel: {
+    dtsAmdMain: {
         message: `Generating type definition file (rooster-content-model-amd.d.ts) for AMD...`,
-        callback: () => dts(true /*isAmd*/, 'packages-content-model'),
+        callback: () => dts(true /*isAmd*/, 'main'),
         enabled: options => options.dts,
     },
+    // dtsCommonJsAdapter: {
+    //     message: `Generating type definition file (rooster-adapter.d.ts) for CommonJs...`,
+    //     callback: () => dts(false /*isAmd*/, 'legacyAdapter'),
+    //     enabled: options => options.dts,
+    // },
+    // dtsAmdAdapter: {
+    //     message: `Generating type definition file (rooster-adapter-amd.d.ts) for AMD...`,
+    //     callback: () => dts(true /*isAmd*/, 'legacyAdapter'),
+    //     enabled: options => options.dts,
+    // },
 };
