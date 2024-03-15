@@ -8,13 +8,12 @@ const {
     packagesPath,
     deployPath,
     roosterJsDistPath,
-    packagesUiPath,
-    roosterJsUiDistPath,
     runWebPack,
     getWebpackExternalCallback,
-    contentModelDistPath,
-    packagesContentModelPath,
+    buildConfig,
 } = require('./common');
+
+const filesToCopy = Object.values(buildConfig).map(x => x.jsFileBaseName);
 
 async function buildDemoSite() {
     const sourcePathRoot = path.join(rootPath, 'demo');
@@ -29,13 +28,7 @@ async function buildDemoSite() {
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js', '.svg', '.scss', '.'],
-            modules: [
-                sourcePath,
-                packagesPath,
-                packagesUiPath,
-                packagesContentModelPath,
-                nodeModulesPath,
-            ],
+            modules: [sourcePath, packagesPath, nodeModulesPath],
         },
         module: {
             rules: [
@@ -72,15 +65,14 @@ async function buildDemoSite() {
                 },
             ],
         },
-        externals: getWebpackExternalCallback(
-            [
-                [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
-                [/^roosterjs-react\/.*$/, 'roosterjsReact'],
-                [/^roosterjs-react$/, 'roosterjsReact'],
-                [/^roosterjs-content-model((?!-editor).)*\/.*$/, 'roosterjsContentModel'],
-            ],
-            ['roosterjs-editor-adapter']
-        ),
+        externals: getWebpackExternalCallback([
+            [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
+            [/^roosterjs-editor-adapter\/.*$/, 'roosterjs'],
+            [/^roosterjs-react\/.*$/, 'roosterjsReact'],
+            [/^roosterjs-react$/, 'roosterjsReact'],
+            [/^roosterjs-content-model.*/, 'roosterjsContentModel'],
+            [/^roosterjs-adapter\/.*$/, 'roosterjsAdapter'],
+        ]),
         stats: 'minimal',
         mode: 'production',
         optimization: {
@@ -90,30 +82,14 @@ async function buildDemoSite() {
 
     await runWebPack(webpackConfig);
 
-    fs.copyFileSync(
-        path.resolve(roosterJsDistPath, 'rooster-min.js'),
-        path.resolve(deployPath, 'rooster-min.js')
-    );
-    fs.copyFileSync(
-        path.resolve(roosterJsDistPath, 'rooster-min.js.map'),
-        path.resolve(deployPath, 'rooster-min.js.map')
-    );
-    fs.copyFileSync(
-        path.resolve(roosterJsUiDistPath, 'rooster-react-min.js'),
-        path.resolve(deployPath, 'rooster-react-min.js')
-    );
-    fs.copyFileSync(
-        path.resolve(roosterJsUiDistPath, 'rooster-react-min.js.map'),
-        path.resolve(deployPath, 'rooster-react-min.js.map')
-    );
-    fs.copyFileSync(
-        path.resolve(contentModelDistPath, 'rooster-content-model-min.js'),
-        path.resolve(deployPath, 'rooster-content-model-min.js')
-    );
-    fs.copyFileSync(
-        path.resolve(contentModelDistPath, 'rooster-content-model-min.js.map'),
-        path.resolve(deployPath, 'rooster-content-model-min.js.map')
-    );
+    filesToCopy.forEach(file => {
+        const source = path.resolve(roosterJsDistPath, `${file}-min.js`);
+        const target = path.resolve(deployPath, `${file}-min.js`);
+
+        fs.copyFileSync(source, target);
+        fs.copyFileSync(source + '.map', target + '.map');
+    });
+
     fs.copyFileSync(
         path.resolve(sourcePathRoot, 'index.html'),
         path.resolve(deployPath, 'index.html')

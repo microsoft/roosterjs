@@ -1,13 +1,10 @@
 import * as React from 'react';
 import SidePanePlugin from '../SidePanePlugin';
 
-const classicStyles = require('./SidePane.scss');
-const contentModelStyles = require('./ContentModelSidePane.scss');
-const standaloneModelStyles = require('./StandaloneSidePane.scss');
+const styles = require('./SidePane.scss');
 
 export interface SidePaneProps {
     plugins: SidePanePlugin[];
-    mode: 'classical' | 'contentModel' | 'standalone';
     className?: string;
 }
 
@@ -36,7 +33,6 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
     }
 
     render() {
-        const styles = this.getStyles();
         const className = (this.props.className || '') + ' ' + styles.sidePane;
 
         return (
@@ -82,7 +78,6 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
     private renderSidePane = (plugin: SidePanePlugin): JSX.Element => {
         const title = plugin.getTitle();
         const isCurrent = this.state.currentPane == plugin;
-        const styles = this.getStyles();
 
         return (
             <div key={title} className={isCurrent ? styles.activePane : styles.inactivePane}>
@@ -95,12 +90,4 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
             </div>
         );
     };
-
-    private getStyles() {
-        return this.props.mode == 'contentModel'
-            ? contentModelStyles
-            : this.props.mode == 'standalone'
-            ? standaloneModelStyles
-            : classicStyles;
-    }
 }
