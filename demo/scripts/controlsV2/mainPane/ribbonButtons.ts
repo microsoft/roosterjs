@@ -9,10 +9,8 @@ import { bulletedListButton } from '../roosterjsReact/ribbon/buttons/bulletedLis
 import { changeImageButton } from '../demoButtons/changeImageButton';
 import { clearFormatButton } from '../roosterjsReact/ribbon/buttons/clearFormatButton';
 import { codeButton } from '../roosterjsReact/ribbon/buttons/codeButton';
-import { darkModeButton } from '../demoButtons/darkModeButton';
 import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
 import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseIndentButton';
-import { exportContentButton } from '../demoButtons/exportContentButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
 import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
 import { formatPainterButton } from '../demoButtons/formatPainterButton';
@@ -32,8 +30,6 @@ import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
 import { ltrButton } from '../roosterjsReact/ribbon/buttons/ltrButton';
 import { numberedListButton } from '../roosterjsReact/ribbon/buttons/numberedListButton';
 import { pasteButton } from '../demoButtons/pasteButton';
-import { popoutButton } from '../demoButtons/popoutButton';
-import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
 import { removeLinkButton } from '../roosterjsReact/ribbon/buttons/removeLinkButton';
 import { rtlButton } from '../roosterjsReact/ribbon/buttons/rtlButton';
 import { setBulletedListStyleButton } from '../demoButtons/setBulletedListStyleButton';
@@ -52,8 +48,6 @@ import { tableBorderStyleButton } from '../demoButtons/tableBorderStyleButton';
 import { tableBorderWidthButton } from '../demoButtons/tableBorderWidthButton';
 import { textColorButton } from '../roosterjsReact/ribbon/buttons/textColorButton';
 import { underlineButton } from '../roosterjsReact/ribbon/buttons/underlineButton';
-import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
-import { zoomButton } from '../demoButtons/zoomButton';
 import {
     tableAlignCellButton,
     tableAlignTableButton,
@@ -64,7 +58,81 @@ import {
 } from '../demoButtons/tableEditButtons';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
-export const buttons: RibbonButton<any>[] = [
+const textButtons: RibbonButton<any>[] = [
+    formatPainterButton,
+    boldButton,
+    italicButton,
+    underlineButton,
+    fontButton,
+    fontSizeButton,
+    increaseFontSizeButton,
+    decreaseFontSizeButton,
+    textColorButton,
+    backgroundColorButton,
+    superscriptButton,
+    subscriptButton,
+    strikethroughButton,
+];
+
+const tableButtons: RibbonButton<any>[] = [
+    insertTableButton,
+    formatTableButton,
+    setTableCellShadeButton,
+    setTableHeaderButton,
+    tableInsertButton,
+    tableDeleteButton,
+    tableBorderApplyButton,
+    tableBorderColorButton,
+    tableBorderWidthButton,
+    tableBorderStyleButton,
+    tableMergeButton,
+    tableSplitButton,
+    tableAlignCellButton,
+    tableAlignTableButton,
+];
+
+const imageButtons: RibbonButton<any>[] = [
+    insertImageButton,
+    imageBorderColorButton,
+    imageBorderWidthButton,
+    imageBorderStyleButton,
+    imageBorderRemoveButton,
+    changeImageButton,
+    imageBoxShadowButton,
+];
+
+const insertButtons: RibbonButton<any>[] = [
+    insertLinkButton,
+    removeLinkButton,
+    insertTableButton,
+    insertImageButton,
+];
+
+const paragraphButtons: RibbonButton<any>[] = [
+    bulletedListButton,
+    numberedListButton,
+    decreaseIndentButton,
+    increaseIndentButton,
+    blockQuoteButton,
+    alignLeftButton,
+    alignCenterButton,
+    alignRightButton,
+    alignJustifyButton,
+    setHeadingLevelButton,
+    codeButton,
+    ltrButton,
+    rtlButton,
+    clearFormatButton,
+    setBulletedListStyleButton,
+    setNumberedListStyleButton,
+    listStartNumberButton,
+    spacingButton,
+    spaceBeforeButton,
+    spaceAfterButton,
+    pasteButton,
+];
+
+const allButtons: RibbonButton<any>[] = [
     formatPainterButton,
     boldButton,
     italicButton,
@@ -95,8 +163,6 @@ export const buttons: RibbonButton<any>[] = [
     codeButton,
     ltrButton,
     rtlButton,
-    undoButton,
-    redoButton,
     clearFormatButton,
     setBulletedListStyleButton,
     setNumberedListStyleButton,
@@ -124,9 +190,23 @@ export const buttons: RibbonButton<any>[] = [
     spaceBeforeButton,
     spaceAfterButton,
     pasteButton,
-    darkModeButton,
-    zoomButton,
-    exportContentButton,
 ];
 
-export const buttonsWithPopout: RibbonButton<any>[] = buttons.concat(popoutButton);
+export type tabNames = 'all' | 'text' | 'paragraph' | 'insert' | 'table' | 'image';
+
+export function getButtons(id: tabNames) {
+    switch (id) {
+        case 'text':
+            return textButtons;
+        case 'paragraph':
+            return paragraphButtons;
+        case 'insert':
+            return insertButtons;
+        case 'image':
+            return imageButtons;
+        case 'table':
+            return tableButtons;
+        case 'all':
+            return allButtons;
+    }
+}
