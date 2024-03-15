@@ -1,5 +1,7 @@
 import { toArray } from 'roosterjs-content-model-dom';
-import type { ParsedTable, TableSelection } from 'roosterjs-content-model-types';
+import type { DOMHelper, ParsedTable, TableSelection } from 'roosterjs-content-model-types';
+
+const TableCellSelector = 'TH,TD';
 
 /**
  * Parse a table into a two dimensions array of TD elements. For those merged cells, the value will be null.
@@ -42,6 +44,7 @@ export function parseTableCells(table: HTMLTableElement): ParsedTable {
 }
 
 /**
+ * @internal
  * Try to find a TD/TH element from the given row and col number from the given parsed table
  * @param parsedTable The parsed table
  * @param row Row index
@@ -71,6 +74,41 @@ export function findTableCellElement(
         }
     }
     return null;
+}
+
+/**
+ * @internal
+ * Find coordinate of a given element from a parsed table
+ */
+export function findCoordinate(
+    parsedTable: ParsedTable,
+    element: Node,
+    domHelper: DOMHelper
+): [number, number] | null {
+    const td = domHelper.findClosestElementAncestor(element, TableCellSelector);
+    let result: [number, number] | null = null;
+
+    // Try to do a fast check if both TD are in the given TABLE
+    if (td) {
+        parsedTable.some((row, rowIndex) => {
+            const colIndex = td ? row.indexOf(td as HTMLTableCellElement) : -1;
+
+            return (result = colIndex >= 0 ? [rowIndex, colIndex] : null);
+        });
+    }
+
+    // For nested table scenario, try to find the outer TAble cells
+    if (!result) {
+        parsedTable.some((row, rowIndex) => {
+            const colIndex = row.findIndex(
+                cell => typeof cell == 'object' && cell.contains(element)
+            );
+
+            return (result = colIndex >= 0 ? [rowIndex, colIndex] : null);
+        });
+    }
+
+    return result;
 }
 
 /**

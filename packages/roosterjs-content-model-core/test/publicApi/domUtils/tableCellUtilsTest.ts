@@ -1,5 +1,11 @@
-import { createTableRanges, parseTableCells } from '../../../lib/publicApi/domUtils/tableCellUtils';
-import { DOMSelection } from 'roosterjs-content-model-types';
+import { createDOMHelper } from '../../../lib/editor/DOMHelperImpl';
+import { DOMHelper, DOMSelection, ParsedTable } from 'roosterjs-content-model-types';
+import {
+    createTableRanges,
+    findCoordinate,
+    findTableCellElement,
+    parseTableCells,
+} from '../../../lib/publicApi/domUtils/tableCellUtils';
 
 describe('parseTableCells', () => {
     function runTest(html: string, expectedResult: string[][]) {
@@ -78,6 +84,146 @@ describe('parseTableCells', () => {
                 ['spanTop', 'td8', 'spanLeft'],
             ]
         );
+    });
+});
+
+describe('findTableCellElement', () => {
+    const mockedTd1 = { id: 'TD1' } as any;
+    const mockedTd2 = { id: 'TD2' } as any;
+    const mockedTd3 = { id: 'TD3' } as any;
+    const mockedTd4 = { id: 'TD4' } as any;
+    const mockedTd5 = { id: 'TD5' } as any;
+
+    function runTest(parsedTable: ParsedTable, row: number, col: number, expectedResult: any) {
+        const result = findTableCellElement(parsedTable, row, col);
+
+        expect(result).toBe(expectedResult);
+    }
+
+    it('Null', () => {
+        runTest([], 0, 0, null);
+    });
+
+    it('Simple table', () => {
+        const parsedTable: ParsedTable = [
+            [mockedTd1, mockedTd2],
+            [mockedTd3, mockedTd4],
+        ];
+        runTest(parsedTable, 0, 0, mockedTd1);
+        runTest(parsedTable, 0, 1, mockedTd2);
+        runTest(parsedTable, 0, 2, null);
+        runTest(parsedTable, 1, 0, mockedTd3);
+        runTest(parsedTable, 2, 0, null);
+        runTest(parsedTable, 2, 2, null);
+    });
+
+    it('Complex table', () => {
+        const parsedTable: ParsedTable = [
+            [mockedTd1, mockedTd2, 'spanLeft'],
+            ['spanTop', mockedTd3, mockedTd4],
+            [mockedTd5, 'spanLeft', 'spanTop'],
+        ];
+
+        runTest(parsedTable, 0, 0, mockedTd1);
+        runTest(parsedTable, 0, 1, mockedTd2);
+        runTest(parsedTable, 0, 2, mockedTd2);
+        runTest(parsedTable, 0, 3, null);
+        runTest(parsedTable, 1, 0, mockedTd1);
+        runTest(parsedTable, 1, 1, mockedTd3);
+        runTest(parsedTable, 1, 2, mockedTd4);
+        runTest(parsedTable, 1, 3, null);
+        runTest(parsedTable, 2, 0, mockedTd5);
+        runTest(parsedTable, 2, 1, mockedTd5);
+        runTest(parsedTable, 2, 2, mockedTd4);
+        runTest(parsedTable, 2, 3, null);
+        runTest(parsedTable, 3, 0, null);
+        runTest(parsedTable, 3, 1, null);
+        runTest(parsedTable, 3, 2, null);
+        runTest(parsedTable, 3, 3, null);
+    });
+
+    it('span both', () => {
+        const parsedTable: ParsedTable = [
+            [mockedTd1, 'spanLeft'],
+            ['spanTop', 'spanBoth'],
+        ];
+
+        runTest(parsedTable, 0, 0, mockedTd1);
+        runTest(parsedTable, 0, 1, mockedTd1);
+        runTest(parsedTable, 0, 2, null);
+        runTest(parsedTable, 1, 0, mockedTd1);
+        runTest(parsedTable, 1, 1, mockedTd1);
+        runTest(parsedTable, 1, 2, null);
+        runTest(parsedTable, 2, 0, null);
+        runTest(parsedTable, 2, 1, null);
+        runTest(parsedTable, 2, 2, null);
+    });
+});
+
+describe('findCoordinate', () => {
+    let domHelper: DOMHelper;
+    let root: HTMLElement;
+
+    beforeEach(() => {
+        root = document.createElement('div');
+        domHelper = createDOMHelper(root);
+    });
+
+    it('Empty table', () => {
+        const table: ParsedTable = [];
+        const text = document.createTextNode('test');
+
+        root.appendChild(text);
+
+        const result = findCoordinate(table, text, domHelper);
+
+        expect(result).toBeNull();
+    });
+
+    it('Table contains node', () => {
+        const container = document.createElement('div') as any;
+        root.appendChild(container);
+
+        const table: ParsedTable = [[container]];
+        const text = document.createTextNode('test');
+
+        container.appendChild(text);
+
+        const result = findCoordinate(table, text, domHelper);
+
+        expect(result).toEqual([0, 0]);
+    });
+
+    it('Table contains node indirectly', () => {
+        const container = document.createElement('div') as any;
+        root.appendChild(container);
+
+        const table: ParsedTable = [[container]];
+        const span = document.createElement('span');
+        const text = document.createTextNode('test');
+
+        span.appendChild(text);
+        container.appendChild(span);
+
+        const result = findCoordinate(table, text, domHelper);
+
+        expect(result).toEqual([0, 0]);
+    });
+
+    it('Table contains node on second row', () => {
+        const container = document.createElement('div') as any;
+        root.appendChild(container);
+
+        const table: ParsedTable = [[], ['spanLeft', container]];
+        const span = document.createElement('span');
+        const text = document.createTextNode('test');
+
+        span.appendChild(text);
+        container.appendChild(span);
+
+        const result = findCoordinate(table, text, domHelper);
+
+        expect(result).toEqual([1, 1]);
     });
 });
 

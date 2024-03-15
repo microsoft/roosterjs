@@ -10,6 +10,7 @@ describe('setDOMSelection', () => {
     let addRangeToSelectionSpy: jasmine.Spy;
     let createRangeSpy: jasmine.Spy;
     let setEditorStyleSpy: jasmine.Spy;
+    let containsSpy: jasmine.Spy;
     let doc: Document;
     let contentDiv: HTMLDivElement;
     let mockedRange = 'RANGE' as any;
@@ -25,11 +26,12 @@ describe('setDOMSelection', () => {
         );
         createRangeSpy = jasmine.createSpy('createRange');
         setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
+        containsSpy = jasmine.createSpy('contains').and.returnValue(true);
 
         doc = {
             querySelectorAll: querySelectorAllSpy,
             createRange: createRangeSpy,
-            contains: () => true,
+            contains: containsSpy,
         } as any;
         contentDiv = {
             ownerDocument: doc,
@@ -585,6 +587,22 @@ describe('setDOMSelection', () => {
                 '#table_0> tr:nth-child(2)>TH:nth-child(1)',
                 '#table_0> tr:nth-child(2)>TH:nth-child(1) *',
             ]);
+        });
+
+        it('Select TD after merged cell', () => {
+            const div = document.createElement('div');
+            div.innerHTML =
+                '<table><tr><td colspan=2></td><td><div id="div1"><br></div></td></tr></table>';
+            const table = div.firstChild as HTMLTableElement;
+            const innerDIV = div.querySelector('#div1');
+
+            runTest(table, 2, 0, 2, 0, [
+                '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2)',
+                '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
+            ]);
+
+            expect(containsSpy).toHaveBeenCalledTimes(1);
+            expect(containsSpy).toHaveBeenCalledWith(innerDIV);
         });
 
         it('Select Table Cells THEAD, TBODY', () => {

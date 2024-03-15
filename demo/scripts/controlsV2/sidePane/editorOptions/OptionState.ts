@@ -1,15 +1,4 @@
-import type {
-    AutoLinkFeatureSettings,
-    CodeFeatureSettings,
-    CursorFeatureSettings,
-    EntityFeatureSettings,
-    MarkdownFeatureSettings,
-    ShortcutFeatureSettings,
-    StructuredNodeFeatureSettings,
-    TableFeatureSettings,
-    TextFeatureSettings,
-    ContentEditFeatureSettings as ContentEditFeatureSettingsOriginal,
-} from 'roosterjs-editor-types';
+import type { ContentEditFeatureSettings } from 'roosterjs-editor-types';
 import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
@@ -36,16 +25,6 @@ export interface NewPluginList {
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
 
-export type ContentEditFeatureSettings = Omit<TableFeatureSettings, 'upDownInTable'> &
-    StructuredNodeFeatureSettings &
-    AutoLinkFeatureSettings &
-    ShortcutFeatureSettings &
-    CursorFeatureSettings &
-    MarkdownFeatureSettings &
-    EntityFeatureSettings &
-    TextFeatureSettings &
-    CodeFeatureSettings;
-
 export interface OptionState {
     pluginList: BuildInPluginList;
 
@@ -57,7 +36,7 @@ export interface OptionState {
     watermarkText: string;
 
     // Legacy plugin options
-    contentEditFeatures: ContentEditFeatureSettingsOriginal;
+    contentEditFeatures: ContentEditFeatureSettings;
     defaultFormat: ContentModelSegmentFormat;
     linkTitle: string;
     forcePreserveRatio: boolean;

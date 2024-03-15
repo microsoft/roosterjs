@@ -17,23 +17,32 @@ describe('BridgePlugin', () => {
     });
 
     it('Ctor and init', () => {
-        const initializeSpy = jasmine.createSpy('initialize');
+        const initializeSpy1 = jasmine.createSpy('initialize1');
+        const initializeSpy2 = jasmine.createSpy('initialize2');
+        const initializeSpy3 = jasmine.createSpy('initialize3');
         const onPluginEventSpy1 = jasmine.createSpy('onPluginEvent1');
         const onPluginEventSpy2 = jasmine.createSpy('onPluginEvent2');
+        const onPluginEventSpy3 = jasmine.createSpy('onPluginEvent3');
         const disposeSpy = jasmine.createSpy('dispose');
         const queryElementsSpy = jasmine.createSpy('queryElement').and.returnValue([]);
 
         const mockedPlugin1 = {
-            initialize: initializeSpy,
+            initialize: initializeSpy1,
             onPluginEvent: onPluginEventSpy1,
             dispose: disposeSpy,
             getName: () => '',
         } as any;
         const mockedPlugin2 = {
-            initialize: initializeSpy,
+            initialize: initializeSpy2,
             onPluginEvent: onPluginEventSpy2,
             dispose: disposeSpy,
             getName: () => '',
+        } as any;
+        const mockedPlugin3 = {
+            initialize: initializeSpy3,
+            onPluginEvent: onPluginEventSpy3,
+            dispose: disposeSpy,
+            getName: () => 'TableCellSelection',
         } as any;
         const mockedEditor = {
             queryElements: queryElementsSpy,
@@ -42,8 +51,11 @@ describe('BridgePlugin', () => {
         const plugin = new BridgePlugin.BridgePlugin(onInitializeSpy, [
             mockedPlugin1,
             mockedPlugin2,
+            mockedPlugin3,
         ]);
-        expect(initializeSpy).not.toHaveBeenCalled();
+        expect(initializeSpy1).not.toHaveBeenCalled();
+        expect(initializeSpy2).not.toHaveBeenCalled();
+        expect(initializeSpy3).not.toHaveBeenCalled();
         expect(onPluginEventSpy1).not.toHaveBeenCalled();
         expect(onPluginEventSpy2).not.toHaveBeenCalled();
         expect(disposeSpy).not.toHaveBeenCalled();
@@ -78,9 +90,12 @@ describe('BridgePlugin', () => {
             contextMenuProviders: [],
         } as any);
         expect(createDarkColorHandlerSpy).toHaveBeenCalledWith(mockedInnerDarkColorHandler);
-        expect(initializeSpy).toHaveBeenCalledTimes(2);
+        expect(initializeSpy1).toHaveBeenCalledTimes(1);
+        expect(initializeSpy2).toHaveBeenCalledTimes(1);
+        expect(initializeSpy3).toHaveBeenCalledTimes(0);
         expect(disposeSpy).not.toHaveBeenCalled();
-        expect(initializeSpy).toHaveBeenCalledWith(mockedEditor);
+        expect(initializeSpy1).toHaveBeenCalledWith(mockedEditor);
+        expect(initializeSpy2).toHaveBeenCalledWith(mockedEditor);
         expect(onPluginEventSpy1).not.toHaveBeenCalled();
         expect(onPluginEventSpy2).not.toHaveBeenCalled();
 

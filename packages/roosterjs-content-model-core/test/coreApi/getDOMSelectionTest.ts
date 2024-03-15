@@ -132,6 +132,40 @@ describe('getDOMSelection', () => {
         });
     });
 
+    it('no cached selection, range selection is in editor, isReverted - 2', () => {
+        const mockedElement = 'ELEMENT' as any;
+        const mockedElementOffset = 'MOCKED_ELEMENT_OFFSET' as any;
+        const secondaryMockedElement = 'ELEMENT_2' as any;
+        const mockedRange = {
+            commonAncestorContainer: mockedElement,
+            startContainer: mockedElement,
+            startOffset: mockedElementOffset,
+            endContainer: secondaryMockedElement,
+            endOffset: mockedElementOffset,
+            collapsed: false,
+        } as any;
+        const setBaseAndExtendSpy = jasmine.createSpy('setBaseAndExtendSpy');
+        const mockedSelection = {
+            rangeCount: 1,
+            getRangeAt: () => mockedRange,
+            setBaseAndExtend: setBaseAndExtendSpy,
+            focusNode: mockedElement,
+            focusOffset: mockedElementOffset,
+        };
+
+        getSelectionSpy.and.returnValue(mockedSelection);
+        containsSpy.and.returnValue(true);
+        hasFocusSpy.and.returnValue(true);
+
+        const result = getDOMSelection(core);
+
+        expect(result).toEqual({
+            type: 'range',
+            range: mockedRange,
+            isReverted: true,
+        });
+    });
+
     it('has cached selection, editor is in shadowEdit', () => {
         const mockedSelection = 'SELECTION' as any;
         core.selection.selection = mockedSelection;
