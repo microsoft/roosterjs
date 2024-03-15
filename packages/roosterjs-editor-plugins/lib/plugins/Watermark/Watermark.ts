@@ -124,6 +124,7 @@ export default class Watermark implements EditorPlugin {
         const hasFocus = this.editor.hasFocus();
         const watermarks = this.editor.queryElements(getEntitySelector(ENTITY_TYPE));
         const isShowing = watermarks.length > 0;
+
         if (hasFocus && isShowing) {
             watermarks.forEach(this.removeWatermark);
             this.editor.focus();
