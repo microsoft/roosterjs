@@ -22,6 +22,7 @@ export class SidePane extends React.Component<SidePaneProps, SidePaneState> {
         };
 
         window.addEventListener('hashchange', this.updateStateFromHash);
+        window.location.hash ? this.updateStateFromHash() : this.updateHash();
     }
 
     componentDidMount() {
