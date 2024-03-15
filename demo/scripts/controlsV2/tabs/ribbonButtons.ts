@@ -46,6 +46,7 @@ import { tableBorderApplyButton } from '../demoButtons/tableBorderApplyButton';
 import { tableBorderColorButton } from '../demoButtons/tableBorderColorButton';
 import { tableBorderStyleButton } from '../demoButtons/tableBorderStyleButton';
 import { tableBorderWidthButton } from '../demoButtons/tableBorderWidthButton';
+import { tabNames } from './getTabs';
 import { textColorButton } from '../roosterjsReact/ribbon/buttons/textColorButton';
 import { underlineButton } from '../roosterjsReact/ribbon/buttons/underlineButton';
 import {
@@ -191,9 +192,6 @@ const allButtons: RibbonButton<any>[] = [
     spaceAfterButton,
     pasteButton,
 ];
-
-export type tabNames = 'all' | 'text' | 'paragraph' | 'insert' | 'table' | 'image';
-
 export function getButtons(id: tabNames) {
     switch (id) {
         case 'text':

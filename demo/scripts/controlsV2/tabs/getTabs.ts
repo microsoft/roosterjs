@@ -1,8 +1,9 @@
 import { MainPane } from '../mainPane/MainPane';
 import { RibbonButton } from '../roosterjsReact/ribbon';
-import { tabNames } from '../mainPane/ribbonButtons';
 
 const styles = require('../mainPane/MainPane.scss');
+
+export type tabNames = 'all' | 'text' | 'paragraph' | 'insert' | 'table' | 'image';
 
 export type TabMainStringKey = 'tabNameMain';
 export type TabTextStringKey = 'tabNameText';

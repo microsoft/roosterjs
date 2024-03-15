@@ -19,10 +19,10 @@ import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
 import { exportContentButton } from '../demoButtons/exportContentButton';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
 import { FormatStatePlugin } from '../sidePane/formatState/FormatStatePlugin';
-import { getButtons, tabNames } from './ribbonButtons';
+import { getButtons } from '../tabs/ribbonButtons';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { getPresetModelById } from '../sidePane/presets/allPresets/allPresets';
-import { getTabs } from '../demoButtons/getTabs';
+import { getTabs, tabNames } from '../tabs/getTabs';
 import { getTheme } from '../theme/themes';
 import { OptionState } from '../sidePane/editorOptions/OptionState';
 import { popoutButton } from '../demoButtons/popoutButton';
@@ -249,14 +249,14 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     private renderTabs() {
         const tabs = getTabs();
-        const buttons: RibbonButton<any>[] = [
+        const topRightButtons: RibbonButton<any>[] = [
             undoButton,
             redoButton,
             zoomButton,
             darkModeButton,
             exportContentButton,
         ];
-        this.state.popoutWindow ? null : buttons.push(popoutButton);
+        this.state.popoutWindow ? null : topRightButtons.push(popoutButton);
 
         return (
             <div
@@ -266,7 +266,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                     buttons={tabs}
                     plugin={this.ribbonPlugin}
                     dir={this.state.isRtl ? 'rtl' : 'ltr'}></Ribbon>
-                <Ribbon buttons={buttons} plugin={this.ribbonPlugin}></Ribbon>
+                <Ribbon buttons={topRightButtons} plugin={this.ribbonPlugin}></Ribbon>
             </div>
         );
     }
