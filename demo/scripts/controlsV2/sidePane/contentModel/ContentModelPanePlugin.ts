@@ -16,7 +16,7 @@ export class ContentModelPanePlugin extends SidePanePluginImpl<
         this.contentModelRibbon = createRibbonPlugin();
     }
 
-    initialize(editor: ILegacyEditor): void {
+    initialize(editor: IEditor): void {
         super.initialize(editor);
 
         this.contentModelRibbon.initialize(editor);

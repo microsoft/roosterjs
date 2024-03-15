@@ -20,7 +20,6 @@ import {
     CopyPastePluginState,
     PluginWithState,
     DarkColorHandler,
-    PasteType,
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
