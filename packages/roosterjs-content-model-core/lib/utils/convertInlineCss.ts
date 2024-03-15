@@ -10,6 +10,18 @@ export interface CssRule {
 
 /**
  * @internal
+ *
+ * Splits CSS selectors, avoiding splits within parentheses
+ * @param selectorText The CSS selector string
+ * @return Array of trimmed selectors
+ */
+export function splitSelectors(selectorText: string) {
+    const regex = /(?![^(]*\)),/;
+    return selectorText.split(regex).map(s => s.trim());
+}
+
+/**
+ * @internal
  */
 export function retrieveCssRules(doc: Document): CssRule[] {
     const styles = toArray(doc.querySelectorAll('style'));
@@ -23,7 +35,7 @@ export function retrieveCssRules(doc: Document): CssRule[] {
 
             if (rule.type == CSSRule.STYLE_RULE && rule.selectorText) {
                 result.push({
-                    selectors: rule.selectorText.split(','),
+                    selectors: splitSelectors(rule.selectorText),
                     text: rule.style.cssText,
                 });
             }
@@ -43,7 +55,7 @@ export function convertInlineCss(root: ParentNode, cssRules: CssRule[]) {
         const { selectors, text } = cssRules[i];
 
         for (const selector of selectors) {
-            if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
+            if (!selector || !selector.trim()) {
                 continue;
             }
 

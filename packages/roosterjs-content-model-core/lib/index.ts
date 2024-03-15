@@ -62,5 +62,6 @@ export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 
 export { extractClipboardItems } from './utils/extractClipboardItems';
+export { splitSelectors } from './utils/convertInlineCss';
 
 export { Editor } from './editor/Editor';

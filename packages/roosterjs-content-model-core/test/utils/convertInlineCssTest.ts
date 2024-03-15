@@ -1,4 +1,4 @@
-import { convertInlineCss, CssRule } from '../../lib/utils/convertInlineCss';
+import { convertInlineCss, CssRule, splitSelectors } from '../../lib/utils/convertInlineCss';
 
 describe('convertInlineCss', () => {
     it('Empty DOM, empty CSS', () => {
@@ -117,6 +117,44 @@ describe('convertInlineCss', () => {
 
         expect(root.innerHTML).toEqual(
             '<div id="div1"><span style="color:red;">test</span></div><span>test2</span>'
+        );
+    });
+});
+
+describe('splitSelectors', () => {
+    it('testing regex', () => {
+        const inputSelector = 'div:not(.example, .sample), li:first-child';
+
+        expect(splitSelectors(inputSelector)).toEqual([
+            'div:not(.example, .sample)',
+            'li:first-child',
+        ]);
+    });
+
+    it('Split pseudo-classes correctly, and avoid splitting whats inside parenthesis', () => {
+        const root = document.createElement('div');
+
+        root.innerHTML = '<div class="bar">test1<div class="baz">test2</div></div>';
+
+        const cssRules: CssRule[] = [
+            {
+                selectors: ['div:not(.bar, .baz)'],
+                text: 'color:green;',
+            },
+            {
+                selectors: ['.baz'],
+                text: 'color:blue;',
+            },
+            {
+                selectors: ['div:not(.baz)'],
+                text: 'color:red;',
+            },
+        ];
+
+        convertInlineCss(root, cssRules);
+
+        expect(root.innerHTML).toEqual(
+            '<div class="bar" style="color:red;">test1<div class="baz" style="color:blue;">test2</div></div>'
         );
     });
 });
