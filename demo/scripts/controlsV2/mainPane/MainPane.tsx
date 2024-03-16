@@ -352,7 +352,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             editorCreator={this.state.editorCreator}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
                             knownColors={this.knownColors}
-                            cacheModel={this.state.initState.cacheModel}
+                            disableCache={this.state.initState.disableCache}
                         />
                     )}
                 </div>
