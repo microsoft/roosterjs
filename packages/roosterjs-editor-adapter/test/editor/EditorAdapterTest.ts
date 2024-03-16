@@ -105,6 +105,7 @@ describe('EditorAdapter', () => {
         };
         const editor = new EditorAdapter(div, {
             legacyPlugins: [plugin],
+            disableCache: true,
         });
         editor.dispose();
 

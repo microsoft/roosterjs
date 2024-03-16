@@ -55,7 +55,7 @@ describe('CachePlugin', () => {
         });
 
         it('initialize', () => {
-            init({});
+            init({ disableCache: true });
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
             expect(plugin.getState()).toEqual({});
         });
@@ -71,7 +71,7 @@ describe('CachePlugin', () => {
                 mockedObserver
             );
             init({
-                cacheModel: true,
+                disableCache: false,
             });
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
             expect(plugin.getState()).toEqual({
@@ -84,7 +84,7 @@ describe('CachePlugin', () => {
 
     describe('KeyDown event', () => {
         beforeEach(() => {
-            init({});
+            init({ disableCache: true });
         });
         afterEach(() => {
             plugin.dispose();
@@ -177,7 +177,9 @@ describe('CachePlugin', () => {
 
     describe('Input event', () => {
         beforeEach(() => {
-            init({});
+            init({
+                disableCache: true,
+            });
         });
         afterEach(() => {
             plugin.dispose();
@@ -203,7 +205,7 @@ describe('CachePlugin', () => {
 
     describe('SelectionChanged', () => {
         beforeEach(() => {
-            init({});
+            init({ disableCache: true });
         });
         afterEach(() => {
             plugin.dispose();
@@ -289,7 +291,7 @@ describe('CachePlugin', () => {
 
     describe('ContentChanged', () => {
         beforeEach(() => {
-            init({});
+            init({ disableCache: true });
         });
         afterEach(() => {
             plugin.dispose();
