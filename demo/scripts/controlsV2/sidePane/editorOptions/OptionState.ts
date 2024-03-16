@@ -45,7 +45,7 @@ export interface OptionState {
 
     // Editor options
     isRtl: boolean;
-    cacheModel: boolean;
+    disableCache: boolean;
     applyChangesOnMouseUp: boolean;
 }
 
