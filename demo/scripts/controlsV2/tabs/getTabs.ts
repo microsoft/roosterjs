@@ -36,7 +36,7 @@ const TabNames: TabData[] = [
 ];
 
 export function getTabs() {
-    const Tabs: RibbonButton<any>[] = [];
+    const Tabs: RibbonButton<AllTabStringKeys>[] = [];
     TabNames.forEach(tab => {
         const tabButton: RibbonButton<AllTabStringKeys> = {
             key: tab.key,

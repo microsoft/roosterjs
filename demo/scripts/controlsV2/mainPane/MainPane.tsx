@@ -262,7 +262,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             <div
                 style={{ display: 'inline-flex', justifyContent: 'space-between', height: '30px' }}>
                 <Ribbon
-                    className={styles.menuTab}
                     buttons={tabs}
                     plugin={this.ribbonPlugin}
                     dir={this.state.isRtl ? 'rtl' : 'ltr'}></Ribbon>
