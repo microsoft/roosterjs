@@ -1,15 +1,8 @@
 import type {
     ContentModelBlockGroup,
-    ContentModelBlockGroupBase,
     ContentModelBlockGroupType,
+    TypeOfBlockGroup,
 } from 'roosterjs-content-model-types';
-
-/**
- * Retrieve block group type string from a given block group
- */
-export type TypeOfBlockGroup<
-    T extends ContentModelBlockGroup
-> = T extends ContentModelBlockGroupBase<infer U> ? U : never;
 
 /**
  * Get index of closest ancestor block group of the expected block group type. If not found, return -1
