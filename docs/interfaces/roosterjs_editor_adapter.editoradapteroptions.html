@@ -94,12 +94,12 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#allowedcustompastetype" class="tsd-kind-icon">allowed<wbr>Custom<wbr>Paste<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#cachemodel" class="tsd-kind-icon">cache<wbr>Model</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#coreapioverride" class="tsd-kind-icon">core<wbr>Api<wbr>Override</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#defaultdomtomodeloptions" class="tsd-kind-icon">default<wbr>Dom<wbr>ToModel<wbr>Options</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#defaultmodeltodomoptions" class="tsd-kind-icon">default<wbr>Model<wbr>ToDom<wbr>Options</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#defaultpastetype" class="tsd-kind-icon">default<wbr>Paste<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#defaultsegmentformat" class="tsd-kind-icon">default<wbr>Segment<wbr>Format</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#disablecache" class="tsd-kind-icon">disable<wbr>Cache</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#disposeerrorhandler" class="tsd-kind-icon">dispose<wbr>Error<wbr>Handler</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_adapter.editoradapteroptions.html#donotadjusteditorcolor" class="tsd-kind-icon">do<wbr>Not<wbr>Adjust<wbr>Editor<wbr>Color</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_adapter.editoradapteroptions.html#experimentalfeatures" class="tsd-kind-icon">experimental<wbr>Features</a></li>
@@ -128,7 +128,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#allowedcustompastetype">allowedCustomPasteType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L50">roosterjs-content-model-types/lib/editor/EditorOptions.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L52">roosterjs-content-model-types/lib/editor/EditorOptions.ts:52</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -139,29 +139,13 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="cachemodel" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cache<wbr>Model</h3>
-					<div class="tsd-signature tsd-kind-icon">cache<wbr>Model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#cachemodel">cacheModel</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L29">roosterjs-content-model-types/lib/editor/EditorOptions.ts:29</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Reuse existing DOM structure if possible, and update the model when content or selection is changed</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="coreapioverride" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> core<wbr>Api<wbr>Override</h3>
 					<div class="tsd-signature tsd-kind-icon">core<wbr>Api<wbr>Override<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="roosterjs_content_model_types.coreapimap.html" class="tsd-signature-type" data-tsd-kind="Interface">CoreApiMap</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#coreapioverride">coreApiOverride</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L80">roosterjs-content-model-types/lib/editor/EditorOptions.ts:80</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L82">roosterjs-content-model-types/lib/editor/EditorOptions.ts:82</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -178,7 +162,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#defaultdomtomodeloptions">defaultDomToModelOptions</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L19">roosterjs-content-model-types/lib/editor/EditorOptions.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L19">roosterjs-content-model-types/lib/editor/EditorOptions.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -194,7 +178,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#defaultmodeltodomoptions">defaultModelToDomOptions</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L24">roosterjs-content-model-types/lib/editor/EditorOptions.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L24">roosterjs-content-model-types/lib/editor/EditorOptions.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -210,7 +194,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#defaultpastetype">defaultPasteType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L117">roosterjs-content-model-types/lib/editor/EditorOptions.ts:117</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L119">roosterjs-content-model-types/lib/editor/EditorOptions.ts:119</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -226,7 +210,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#defaultsegmentformat">defaultSegmentFormat</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L44">roosterjs-content-model-types/lib/editor/EditorOptions.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L46">roosterjs-content-model-types/lib/editor/EditorOptions.ts:46</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -238,13 +222,35 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="disablecache" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> disable<wbr>Cache</h3>
+					<div class="tsd-signature tsd-kind-icon">disable<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#disablecache">disableCache</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L31">roosterjs-content-model-types/lib/editor/EditorOptions.ts:31</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether content model should be cached in order to improve editing performance.
+							Pass true to disable the cache.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>default</dt>
+							<dd><p>false</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="disposeerrorhandler" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> dispose<wbr>Error<wbr>Handler</h3>
 					<div class="tsd-signature tsd-kind-icon">dispose<wbr>Error<wbr>Handler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>plugin<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.editorplugin.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorPlugin</a>, error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Error</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#disposeerrorhandler">disposeErrorHandler</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L112">roosterjs-content-model-types/lib/editor/EditorOptions.ts:112</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L114">roosterjs-content-model-types/lib/editor/EditorOptions.ts:114</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -294,7 +300,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#donotadjusteditorcolor">doNotAdjustEditorColor</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L95">roosterjs-content-model-types/lib/editor/EditorOptions.ts:95</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L97">roosterjs-content-model-types/lib/editor/EditorOptions.ts:97</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -309,7 +315,7 @@
 					<div class="tsd-signature tsd-kind-icon">experimental<wbr>Features<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.experimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ExperimentalFeatures</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts#L17">roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts#L17">roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -325,7 +331,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#getdarkcolor">getDarkColor</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L62">roosterjs-content-model-types/lib/editor/EditorOptions.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L64">roosterjs-content-model-types/lib/editor/EditorOptions.ts:64</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -342,7 +348,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#imageselectionbordercolor">imageSelectionBorderColor</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L85">roosterjs-content-model-types/lib/editor/EditorOptions.ts:85</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L87">roosterjs-content-model-types/lib/editor/EditorOptions.ts:87</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -358,7 +364,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#indarkmode">inDarkMode</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L100">roosterjs-content-model-types/lib/editor/EditorOptions.ts:100</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L102">roosterjs-content-model-types/lib/editor/EditorOptions.ts:102</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -373,7 +379,7 @@
 					<div class="tsd-signature tsd-kind-icon">initial<wbr>Content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts#L12">roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts#L12">roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -390,7 +396,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#initialmodel">initialModel</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L90">roosterjs-content-model-types/lib/editor/EditorOptions.ts:90</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L92">roosterjs-content-model-types/lib/editor/EditorOptions.ts:92</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -406,7 +412,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#knowncolors">knownColors</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L67">roosterjs-content-model-types/lib/editor/EditorOptions.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L69">roosterjs-content-model-types/lib/editor/EditorOptions.ts:69</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -421,7 +427,7 @@
 					<div class="tsd-signature tsd-kind-icon">legacy<wbr>Plugins<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.editorplugin.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorPlugin</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts#L22">roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts#L22">roosterjs-editor-adapter/lib/publicTypes/EditorAdapterOptions.ts:22</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -437,7 +443,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#plugins">plugins</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L37">roosterjs-content-model-types/lib/editor/EditorOptions.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L39">roosterjs-content-model-types/lib/editor/EditorOptions.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -456,7 +462,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#scrollcontainer">scrollContainer</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L56">roosterjs-content-model-types/lib/editor/EditorOptions.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L58">roosterjs-content-model-types/lib/editor/EditorOptions.ts:58</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -473,7 +479,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#snapshots">snapshots</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L105">roosterjs-content-model-types/lib/editor/EditorOptions.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L107">roosterjs-content-model-types/lib/editor/EditorOptions.ts:107</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -489,7 +495,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.editoroptions.html">EditorOptions</a>.<a href="roosterjs_content_model_types.editoroptions.html#trustedhtmlhandler">trustedHTMLHandler</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c073faf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L74">roosterjs-content-model-types/lib/editor/EditorOptions.ts:74</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ea284cf/packages/roosterjs-content-model-types/lib/editor/EditorOptions.ts#L76">roosterjs-content-model-types/lib/editor/EditorOptions.ts:76</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -575,9 +581,6 @@
 								<a href="roosterjs_editor_adapter.editoradapteroptions.html#allowedcustompastetype" class="tsd-kind-icon">allowed<wbr>Custom<wbr>Paste<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_adapter.editoradapteroptions.html#cachemodel" class="tsd-kind-icon">cache<wbr>Model</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_adapter.editoradapteroptions.html#coreapioverride" class="tsd-kind-icon">core<wbr>Api<wbr>Override</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -591,6 +594,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_adapter.editoradapteroptions.html#defaultsegmentformat" class="tsd-kind-icon">default<wbr>Segment<wbr>Format</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_editor_adapter.editoradapteroptions.html#disablecache" class="tsd-kind-icon">disable<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_adapter.editoradapteroptions.html#disposeerrorhandler" class="tsd-kind-icon">dispose<wbr>Error<wbr>Handler</a>
