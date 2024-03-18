@@ -1,4 +1,4 @@
-import { convertInlineCss, CssRule, splitSelectors } from '../../lib/utils/convertInlineCss';
+import { convertInlineCss, CssRule } from '../../lib/utils/convertInlineCss';
 
 describe('convertInlineCss', () => {
     it('Empty DOM, empty CSS', () => {
@@ -122,6 +122,11 @@ describe('convertInlineCss', () => {
 });
 
 describe('splitSelectors', () => {
+    function splitSelectors(selectorText: string) {
+        const regex = /(?![^(]*\)),/;
+        return selectorText.split(regex).map(s => s.trim());
+    }
+
     it('testing regex', () => {
         const inputSelector = 'div:not(.example, .sample), li:first-child';
 
