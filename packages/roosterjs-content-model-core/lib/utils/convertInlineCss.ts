@@ -15,7 +15,7 @@ export interface CssRule {
  * @param selectorText The CSS selector string
  * @return Array of trimmed selectors
  */
-export function splitSelectors(selectorText: string) {
+function splitSelectors(selectorText: string) {
     const regex = /(?![^(]*\)),/;
     return selectorText.split(regex).map(s => s.trim());
 }

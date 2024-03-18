@@ -10,7 +10,6 @@ import toArray from '../jsUtils/toArray';
 import { cloneObject } from './cloneObject';
 import { isCssVariable, processCssVariable } from './processCssVariable';
 import { NodeType } from 'roosterjs-editor-types';
-import { splitSelectors } from 'roosterjs-content-model-core';
 import {
     getAllowedAttributes,
     getAllowedCssClassesRegex,
@@ -120,6 +119,16 @@ export default class HtmlSanitizer {
     }
 
     /**
+     * Splits CSS selectors, avoiding splits within parentheses
+     * @param selectorText The CSS selector string
+     * @return Array of trimmed selectors
+     */
+    private splitSelectors(selectorText: string) {
+        const regex = /(?![^(]*\)),/;
+        return selectorText.split(regex).map(s => s.trim());
+    }
+
+    /**
      * Sanitize an HTML element, remove unnecessary or dangerous elements/attribute/CSS rules
      * @param rootNode Root node to sanitize
      * @param currentStyles Current CSS styles. Inheritable styles in the given node which has
@@ -153,7 +162,7 @@ export default class HtmlSanitizer {
                     continue;
                 }
                 // Make sure the selector is not empty
-                for (const selector of splitSelectors(styleRule.selectorText)) {
+                for (const selector of this.splitSelectors(styleRule.selectorText)) {
                     if (!selector || !selector.trim()) {
                         continue;
                     }
