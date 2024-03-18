@@ -5,7 +5,7 @@ import type {
     Snapshot,
 } from 'roosterjs-content-model-types';
 import { createSnapshotSelection } from './createSnapshotSelection';
-import { getPath } from 'roosterjs-content-model-core/lib/utils/getPath';
+import { getPath } from './getPath';
 
 const ENTITY_INFO_NAME = '_Entity';
 
