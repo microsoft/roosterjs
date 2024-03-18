@@ -1,4 +1,3 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { isBlockGroupOfType } from 'roosterjs-content-model-core';
 import { showInputDialog } from '../../../roosterjsReact/inputDialog/utils/showInputDialog';
 import type { RibbonButton } from '../../../roosterjsReact/ribbon/type/RibbonButton';
@@ -30,7 +29,7 @@ export const importModelButton: RibbonButton<'buttonNameImportModel'> = {
             10 /* rows */
         ).then(values => {
             try {
-                const importedModel = JSON.parse(values.model) as ContentModelDocument;
+                const importedModel = JSON.parse(values.model);
                 if (isBlockGroupOfType(importedModel, 'Document')) {
                     editor.formatContentModel(model => {
                         model.blocks = importedModel.blocks;
