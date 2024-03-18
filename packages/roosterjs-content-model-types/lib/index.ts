@@ -232,7 +232,11 @@ export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
-export { SelectionPluginState, TableSelectionInfo } from './pluginState/SelectionPluginState';
+export {
+    SelectionPluginState,
+    TableSelectionInfo,
+    TableCellCoordinate,
+} from './pluginState/SelectionPluginState';
 export { UndoPluginState } from './pluginState/UndoPluginState';
 export {
     PluginKey,

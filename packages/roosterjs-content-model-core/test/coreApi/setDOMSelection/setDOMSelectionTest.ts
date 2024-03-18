@@ -451,35 +451,16 @@ describe('setDOMSelection', () => {
 
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
-                selection: mockedSelection,
             } as any);
-            expect(triggerEventSpy).toHaveBeenCalledWith(
-                core,
-                {
-                    eventType: 'selectionChanged',
-                    newSelection: mockedSelection,
-                },
-                true
-            );
+            expect(triggerEventSpy).not.toHaveBeenCalled();
             expect(selectNodeSpy).not.toHaveBeenCalled();
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
-            expect(mockedTable.id).toBe('table_0');
+            expect(mockedTable.id).toBeUndefined();
 
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(
-                core,
-                '_DOMSelection',
-                'background-color:#C6C6C6!important;',
-                []
-            );
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(
-                core,
-                '_DOMSelectionHideCursor',
-                'caret-color: transparent'
-            );
         });
 
         function runTest(
@@ -603,6 +584,77 @@ describe('setDOMSelection', () => {
 
             expect(containsSpy).toHaveBeenCalledTimes(1);
             expect(containsSpy).toHaveBeenCalledWith(innerDIV);
+        });
+
+        it('Select TD with double merged cell', () => {
+            const div = document.createElement('div');
+            div.innerHTML =
+                '<table>' +
+                '<tr><td colspan=2 rowspan=2></td><td></td><td></td></tr>' +
+                '<tr><td></td><td></td></tr>' +
+                '<tr><td></td><td></td><td colspan=2 rowspan=2></td></tr>' +
+                '<tr><td></td><td></td></tr>' +
+                '</table>';
+            const table = div.firstChild as HTMLTableElement;
+
+            const mockedSelection = {
+                type: 'table',
+                table: table,
+                firstColumn: 2,
+                firstRow: 1,
+                lastColumn: 1,
+                lastRow: 2,
+            } as any;
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                selectNode: selectNodeSpy,
+                collapse: collapseSpy,
+            };
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            querySelectorAllSpy.and.returnValue([]);
+            hasFocusSpy.and.returnValue(false);
+
+            setDOMSelection(core, mockedSelection);
+
+            const resultSelection = {
+                type: 'table',
+                table: table,
+                firstColumn: 0,
+                firstRow: 0,
+                lastColumn: 3,
+                lastRow: 3,
+            };
+
+            expect(core.selection).toEqual({
+                skipReselectOnFocus: undefined,
+                selection: resultSelection,
+            } as any);
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'selectionChanged',
+                    newSelection: resultSelection,
+                },
+                true
+            );
+            expect(table.id).toBe('table_0');
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'background-color:#C6C6C6!important;',
+                ['#table_0', '#table_0 *']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideCursor',
+                'caret-color: transparent'
+            );
         });
 
         it('Select Table Cells THEAD, TBODY', () => {

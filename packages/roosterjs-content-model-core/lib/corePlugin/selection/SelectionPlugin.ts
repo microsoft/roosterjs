@@ -17,6 +17,7 @@ import type {
     MouseUpEvent,
     ParsedTable,
     TableSelectionInfo,
+    TableCellCoordinate,
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
@@ -276,19 +277,19 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             let lastCo = findCoordinate(tableSel?.parsedTable, end, domHelper);
             const { parsedTable, firstCo: oldCo, table } = this.state.tableSelection;
 
-            if (lastCo && tableSel.table == table && lastCo[1] != oldCo[1]) {
+            if (lastCo && tableSel.table == table && lastCo.col != oldCo.col) {
                 if (key == Up || key == Down) {
                     const change = key == Up ? -1 : 1;
-                    const originalTd = findTableCellElement(parsedTable, oldCo[0], oldCo[1]);
+                    const originalTd = findTableCellElement(parsedTable, oldCo)?.cell;
                     let td: HTMLTableCellElement | null = null;
 
-                    lastCo = [oldCo[0] + change, oldCo[1]];
+                    lastCo = { row: oldCo.row + change, col: oldCo.col };
 
-                    while (lastCo[0] >= 0 && lastCo[0] < parsedTable.length) {
-                        td = findTableCellElement(parsedTable, lastCo[0], lastCo[1]);
+                    while (lastCo.row >= 0 && lastCo.row < parsedTable.length) {
+                        td = findTableCellElement(parsedTable, lastCo)?.cell || null;
 
                         if (td == originalTd) {
-                            lastCo[0] += change;
+                            lastCo.row += change;
                         } else {
                             break;
                         }
@@ -328,11 +329,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private updateTableSelectionFromKeyboard(rowChange: number, colChange: number) {
         if (this.state.tableSelection?.lastCo && this.editor) {
             const { lastCo, parsedTable } = this.state.tableSelection;
-            const row = lastCo[0] + rowChange;
-            const col = lastCo[1] + colChange;
+            const row = lastCo.row + rowChange;
+            const col = lastCo.col + colChange;
 
             if (row >= 0 && row < parsedTable.length && col >= 0 && col < parsedTable[row].length) {
-                this.updateTableSelection([row, col]);
+                this.updateTableSelection({ row, col });
             }
         }
     }
@@ -433,7 +434,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     ): TableSelectionInfo | null {
         let table: HTMLTableElement | null;
         let parsedTable: ParsedTable | null;
-        let firstCo: [number, number] | null;
+        let firstCo: { row: number; col: number } | null;
 
         if (
             (table = domHelper.findClosestElementAncestor(tableStart, 'table')) &&
@@ -446,21 +447,21 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private updateTableSelection(lastCo: [number, number]) {
-        if (this.state.tableSelection) {
+    private updateTableSelection(lastCo: TableCellCoordinate) {
+        if (this.state.tableSelection && this.editor) {
             const { table, firstCo, parsedTable, lastCo: oldCo } = this.state.tableSelection;
 
-            if (oldCo || firstCo[0] != lastCo[0] || firstCo[1] != lastCo[1]) {
+            if (oldCo || firstCo.row != lastCo.row || firstCo.col != lastCo.col) {
                 this.state.tableSelection.lastCo = lastCo;
 
                 this.setDOMSelection(
                     {
                         type: 'table',
-                        table: table,
-                        firstRow: Math.min(firstCo[0], lastCo[0]),
-                        firstColumn: Math.min(firstCo[1], lastCo[1]),
-                        lastRow: Math.max(firstCo[0], lastCo[0]),
-                        lastColumn: Math.max(firstCo[1], lastCo[1]),
+                        table,
+                        firstRow: firstCo.row,
+                        firstColumn: firstCo.col,
+                        lastRow: lastCo.row,
+                        lastColumn: lastCo.col,
                     },
                     { table, firstCo, lastCo, parsedTable }
                 );

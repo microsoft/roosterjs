@@ -177,7 +177,7 @@ describe('SelectionPlugin handle image selection', () => {
 
     it('No selection, mouse down to div', () => {
         const node = document.createElement('div');
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 target: node,
@@ -207,7 +207,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         const node = document.createElement('div');
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 target: node,
@@ -239,7 +239,7 @@ describe('SelectionPlugin handle image selection', () => {
         createRangeSpy.and.returnValue(mockedRange);
 
         const node = document.createElement('div');
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 target: node,
@@ -258,7 +258,7 @@ describe('SelectionPlugin handle image selection', () => {
             image: mockedImage,
         });
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
@@ -278,7 +278,7 @@ describe('SelectionPlugin handle image selection', () => {
             image: mockedImage,
         });
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
@@ -293,7 +293,7 @@ describe('SelectionPlugin handle image selection', () => {
         const mockedImage = document.createElement('img');
 
         mockedImage.contentEditable = 'true';
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
@@ -307,7 +307,7 @@ describe('SelectionPlugin handle image selection', () => {
     it('Image selection, mouse down to div right click', () => {
         const node = document.createElement('div');
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 target: node,
@@ -323,7 +323,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         mockedImage.contentEditable = 'true';
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseUp',
             isClicking: true,
             rawEvent: {
@@ -343,7 +343,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         mockedImage.contentEditable = 'false';
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseUp',
             isClicking: true,
             rawEvent: {
@@ -359,7 +359,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         mockedImage.contentEditable = 'true';
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseUp',
             isClicking: false,
             rawEvent: {
@@ -376,7 +376,7 @@ describe('SelectionPlugin handle image selection', () => {
         } as any;
         getDOMSelectionSpy.and.returnValue(null);
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'keyDown',
             rawEvent,
         });
@@ -392,7 +392,7 @@ describe('SelectionPlugin handle image selection', () => {
             type: 'range',
         });
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'keyDown',
             rawEvent,
         });
@@ -424,7 +424,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         createRangeSpy.and.returnValue(mockedRange);
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'keyDown',
             rawEvent,
         });
@@ -462,7 +462,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         createRangeSpy.and.returnValue(mockedRange);
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'keyDown',
             rawEvent,
         });
@@ -501,7 +501,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         createRangeSpy.and.returnValue(mockedRange);
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'keyDown',
             rawEvent,
         });
@@ -533,7 +533,7 @@ describe('SelectionPlugin handle image selection', () => {
 
         createRangeSpy.and.returnValue(mockedRange);
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'keyDown',
             rawEvent,
         });
@@ -598,8 +598,8 @@ describe('SelectionPlugin handle table selection', () => {
     });
 
     afterEach(() => {
-        focusDispatcher = undefined;
-        mouseDispatcher = undefined;
+        focusDispatcher = undefined!;
+        mouseDispatcher = undefined!;
     });
 
     it('MouseDown - has tableSelection, clear it when left click', () => {
@@ -611,7 +611,7 @@ describe('SelectionPlugin handle table selection', () => {
             type: 'table',
         });
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 button: 2,
@@ -624,7 +624,7 @@ describe('SelectionPlugin handle table selection', () => {
             imageSelectionBorderColor: undefined,
         });
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 button: 0,
@@ -655,7 +655,7 @@ describe('SelectionPlugin handle table selection', () => {
             type: 'table',
         });
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 button: 0,
@@ -669,7 +669,7 @@ describe('SelectionPlugin handle table selection', () => {
             imageSelectionBorderColor: undefined,
         });
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 button: 0,
@@ -682,7 +682,7 @@ describe('SelectionPlugin handle table selection', () => {
             tableSelection: {
                 table: table,
                 parsedTable: [[td]],
-                firstCo: [0, 0],
+                firstCo: { row: 0, col: 0 },
             },
             mouseDisposer: mouseMoveDisposer,
             imageSelectionBorderColor: undefined,
@@ -708,7 +708,7 @@ describe('SelectionPlugin handle table selection', () => {
             type: 'table',
         });
 
-        plugin.onPluginEvent({
+        plugin.onPluginEvent!({
             eventType: 'mouseDown',
             rawEvent: {
                 button: 0,
@@ -720,13 +720,13 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state.tableSelection).toEqual({
             table,
             parsedTable: [[td1, td2]],
-            firstCo: [0, 0],
+            firstCo: { row: 0, col: 0 },
         });
         expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
 
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-        mouseDispatcher.mousemove.beforeDispatch({
+        mouseDispatcher.mousemove.beforeDispatch!({
             target: td1,
             preventDefault: preventDefaultSpy,
         } as any);
@@ -736,10 +736,10 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state.tableSelection).toEqual({
             table,
             parsedTable: [[td1, td2]],
-            firstCo: [0, 0],
+            firstCo: { row: 0, col: 0 },
         });
 
-        mouseDispatcher.mousemove.beforeDispatch({
+        mouseDispatcher.mousemove.beforeDispatch!({
             target: td2,
             preventDefault: preventDefaultSpy,
         } as any);
@@ -757,11 +757,11 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state.tableSelection).toEqual({
             table,
             parsedTable: [[td1, td2]],
-            firstCo: [0, 0],
-            lastCo: [0, 1],
+            firstCo: { row: 0, col: 0 },
+            lastCo: { row: 0, col: 1 },
         });
 
-        mouseDispatcher.mousemove.beforeDispatch({
+        mouseDispatcher.mousemove.beforeDispatch!({
             target: div,
             preventDefault: preventDefaultSpy,
         } as any);
@@ -779,8 +779,8 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state.tableSelection).toEqual({
             table,
             parsedTable: [[td1, td2]],
-            firstCo: [0, 0],
-            lastCo: [0, 1],
+            firstCo: { row: 0, col: 0 },
+            lastCo: { row: 0, col: 1 },
         });
     });
 
@@ -792,12 +792,12 @@ describe('SelectionPlugin handle table selection', () => {
 
         state.mouseDisposer = disposer;
 
-        focusDispatcher.drop.beforeDispatch(null!);
+        focusDispatcher.drop.beforeDispatch!(null!);
 
         expect(disposer).toHaveBeenCalledTimes(1);
         expect(state.mouseDisposer).toBeUndefined();
 
-        focusDispatcher.drop.beforeDispatch(null!);
+        focusDispatcher.drop.beforeDispatch!(null!);
 
         expect(disposer).toHaveBeenCalledTimes(1);
         expect(state.mouseDisposer).toBeUndefined();
@@ -845,7 +845,7 @@ describe('SelectionPlugin handle table selection', () => {
                 isReverted: false,
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'a',
@@ -885,7 +885,7 @@ describe('SelectionPlugin handle table selection', () => {
                 func();
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowRight',
@@ -940,7 +940,7 @@ describe('SelectionPlugin handle table selection', () => {
 
             createRangeSpy.and.returnValue(mockedRange);
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowDown',
@@ -992,7 +992,7 @@ describe('SelectionPlugin handle table selection', () => {
                 func();
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowUp',
@@ -1009,8 +1009,8 @@ describe('SelectionPlugin handle table selection', () => {
                         [td1, td2],
                         [td3, td4],
                     ],
-                    firstCo: [1, 1],
-                    lastCo: [0, 1],
+                    firstCo: { row: 1, col: 1 },
+                    lastCo: { row: 0, col: 1 },
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1018,9 +1018,9 @@ describe('SelectionPlugin handle table selection', () => {
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
                 type: 'table',
                 table,
-                firstRow: 0,
+                firstRow: 1,
                 firstColumn: 1,
-                lastRow: 1,
+                lastRow: 0,
                 lastColumn: 1,
             });
         });
@@ -1055,7 +1055,7 @@ describe('SelectionPlugin handle table selection', () => {
                 func();
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowDown',
@@ -1072,8 +1072,8 @@ describe('SelectionPlugin handle table selection', () => {
                         [td1, td2],
                         [td3, td4],
                     ],
-                    firstCo: [0, 1],
-                    lastCo: [1, 1],
+                    firstCo: { row: 0, col: 1 },
+                    lastCo: { row: 1, col: 1 },
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1118,7 +1118,7 @@ describe('SelectionPlugin handle table selection', () => {
                 func();
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowDown',
@@ -1135,7 +1135,7 @@ describe('SelectionPlugin handle table selection', () => {
                         [td1, td2],
                         [td3, td4],
                     ],
-                    firstCo: [0, 1],
+                    firstCo: { row: 0, col: 1 },
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1152,13 +1152,13 @@ describe('SelectionPlugin handle table selection', () => {
                     [td1, td2],
                     [td3, td4],
                 ],
-                firstCo: [0, 1],
-                lastCo: [1, 1],
+                firstCo: { row: 0, col: 1 },
+                lastCo: { row: 1, col: 1 },
             };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'a',
@@ -1175,8 +1175,8 @@ describe('SelectionPlugin handle table selection', () => {
                         [td1, td2],
                         [td3, td4],
                     ],
-                    firstCo: [0, 1],
-                    lastCo: [1, 1],
+                    firstCo: { row: 0, col: 1 },
+                    lastCo: { row: 1, col: 1 },
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1194,8 +1194,8 @@ describe('SelectionPlugin handle table selection', () => {
                     [td1, td2],
                     [td3, td4],
                 ],
-                firstCo: [0, 1],
-                lastCo: [1, 1],
+                firstCo: { row: 0, col: 1 },
+                lastCo: { row: 1, col: 1 },
             };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
@@ -1217,7 +1217,7 @@ describe('SelectionPlugin handle table selection', () => {
                 func();
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowLeft',
@@ -1234,8 +1234,8 @@ describe('SelectionPlugin handle table selection', () => {
                         [td1, td2],
                         [td3, td4],
                     ],
-                    firstCo: [0, 1],
-                    lastCo: [1, 1],
+                    firstCo: { row: 0, col: 1 },
+                    lastCo: { row: 1, col: 1 },
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1255,15 +1255,15 @@ describe('SelectionPlugin handle table selection', () => {
                     [td1, td2],
                     [td3, td4],
                 ],
-                firstCo: [0, 1],
-                lastCo: [1, 1],
+                firstCo: { row: 0, col: 1 },
+                lastCo: { row: 1, col: 1 },
             };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
             getComputedStyleSpy.and.returnValue({});
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowLeft',
@@ -1280,8 +1280,8 @@ describe('SelectionPlugin handle table selection', () => {
                         [td1, td2],
                         [td3, td4],
                     ],
-                    firstCo: [0, 1],
-                    lastCo: [1, 0],
+                    firstCo: { row: 0, col: 1 },
+                    lastCo: { row: 1, col: 0 },
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1290,9 +1290,9 @@ describe('SelectionPlugin handle table selection', () => {
                 type: 'table',
                 table,
                 firstRow: 0,
-                firstColumn: 0,
+                firstColumn: 1,
                 lastRow: 1,
-                lastColumn: 1,
+                lastColumn: 0,
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
         });
@@ -1308,15 +1308,15 @@ describe('SelectionPlugin handle table selection', () => {
                     [td1, td2],
                     [td3, td4],
                 ],
-                firstCo: [1, 0],
-                lastCo: [1, 1],
+                firstCo: { row: 1, col: 0 },
+                lastCo: { row: 1, col: 1 },
             };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
             getComputedStyleSpy.and.returnValue({});
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'ArrowUp',
@@ -1333,8 +1333,8 @@ describe('SelectionPlugin handle table selection', () => {
                         [td1, td2],
                         [td3, td4],
                     ],
-                    firstCo: [1, 0],
-                    lastCo: [0, 1],
+                    firstCo: { row: 1, col: 0 },
+                    lastCo: { row: 0, col: 1 },
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1342,9 +1342,9 @@ describe('SelectionPlugin handle table selection', () => {
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
                 type: 'table',
                 table,
-                firstRow: 0,
+                firstRow: 1,
                 firstColumn: 0,
-                lastRow: 1,
+                lastRow: 0,
                 lastColumn: 1,
             });
             expect(preventDefaultSpy).toHaveBeenCalled();

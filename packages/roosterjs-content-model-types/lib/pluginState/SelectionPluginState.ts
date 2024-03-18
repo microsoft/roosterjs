@@ -2,6 +2,21 @@ import type { ParsedTable } from '../parameter/ParsedTable';
 import type { DOMSelection } from '../selection/DOMSelection';
 
 /**
+ * Logical coordinate of a table cell
+ */
+export interface TableCellCoordinate {
+    /**
+     * Row index
+     */
+    row: number;
+
+    /**
+     * Column index
+     */
+    col: number;
+}
+
+/**
  * Table selection internal info for SelectionPlugin
  */
 export interface TableSelectionInfo {
@@ -18,12 +33,12 @@ export interface TableSelectionInfo {
     /**
      * Coordinate for first selected table cell
      */
-    firstCo: [number, number];
+    firstCo: TableCellCoordinate;
 
     /**
      * Coordinate for last selected table cell
      */
-    lastCo?: [number, number];
+    lastCo?: TableCellCoordinate;
 }
 
 /**

@@ -1,8 +1,14 @@
-import { createDOMHelper } from '../../../lib/editor/DOMHelperImpl';
-import { DOMHelper, DOMSelection, ParsedTable } from 'roosterjs-content-model-types';
+import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
+import {
+    DOMHelper,
+    DOMSelection,
+    ParsedTable,
+    TableCellCoordinate,
+} from 'roosterjs-content-model-types';
 import {
     createTableRanges,
     findCoordinate,
+    findLastedCoInMergedCell,
     findTableCellElement,
     parseTableCells,
 } from '../../../lib/publicApi/domUtils/tableCellUtils';
@@ -94,10 +100,15 @@ describe('findTableCellElement', () => {
     const mockedTd4 = { id: 'TD4' } as any;
     const mockedTd5 = { id: 'TD5' } as any;
 
-    function runTest(parsedTable: ParsedTable, row: number, col: number, expectedResult: any) {
-        const result = findTableCellElement(parsedTable, row, col);
+    function runTest(
+        parsedTable: ParsedTable,
+        row: number,
+        col: number,
+        expectedResult: ({ cell: HTMLTableCellElement } & TableCellCoordinate) | null
+    ) {
+        const result = findTableCellElement(parsedTable, { row, col });
 
-        expect(result).toBe(expectedResult);
+        expect(result).toEqual(expectedResult);
     }
 
     it('Null', () => {
@@ -109,10 +120,10 @@ describe('findTableCellElement', () => {
             [mockedTd1, mockedTd2],
             [mockedTd3, mockedTd4],
         ];
-        runTest(parsedTable, 0, 0, mockedTd1);
-        runTest(parsedTable, 0, 1, mockedTd2);
+        runTest(parsedTable, 0, 0, { cell: mockedTd1, row: 0, col: 0 });
+        runTest(parsedTable, 0, 1, { cell: mockedTd2, row: 0, col: 1 });
         runTest(parsedTable, 0, 2, null);
-        runTest(parsedTable, 1, 0, mockedTd3);
+        runTest(parsedTable, 1, 0, { cell: mockedTd3, row: 1, col: 0 });
         runTest(parsedTable, 2, 0, null);
         runTest(parsedTable, 2, 2, null);
     });
@@ -124,17 +135,17 @@ describe('findTableCellElement', () => {
             [mockedTd5, 'spanLeft', 'spanTop'],
         ];
 
-        runTest(parsedTable, 0, 0, mockedTd1);
-        runTest(parsedTable, 0, 1, mockedTd2);
-        runTest(parsedTable, 0, 2, mockedTd2);
+        runTest(parsedTable, 0, 0, { cell: mockedTd1, row: 0, col: 0 });
+        runTest(parsedTable, 0, 1, { cell: mockedTd2, row: 0, col: 1 });
+        runTest(parsedTable, 0, 2, { cell: mockedTd2, row: 0, col: 1 });
         runTest(parsedTable, 0, 3, null);
-        runTest(parsedTable, 1, 0, mockedTd1);
-        runTest(parsedTable, 1, 1, mockedTd3);
-        runTest(parsedTable, 1, 2, mockedTd4);
+        runTest(parsedTable, 1, 0, { cell: mockedTd1, row: 0, col: 0 });
+        runTest(parsedTable, 1, 1, { cell: mockedTd3, row: 1, col: 1 });
+        runTest(parsedTable, 1, 2, { cell: mockedTd4, row: 1, col: 2 });
         runTest(parsedTable, 1, 3, null);
-        runTest(parsedTable, 2, 0, mockedTd5);
-        runTest(parsedTable, 2, 1, mockedTd5);
-        runTest(parsedTable, 2, 2, mockedTd4);
+        runTest(parsedTable, 2, 0, { cell: mockedTd5, row: 2, col: 0 });
+        runTest(parsedTable, 2, 1, { cell: mockedTd5, row: 2, col: 0 });
+        runTest(parsedTable, 2, 2, { cell: mockedTd4, row: 1, col: 2 });
         runTest(parsedTable, 2, 3, null);
         runTest(parsedTable, 3, 0, null);
         runTest(parsedTable, 3, 1, null);
@@ -148,11 +159,84 @@ describe('findTableCellElement', () => {
             ['spanTop', 'spanBoth'],
         ];
 
-        runTest(parsedTable, 0, 0, mockedTd1);
-        runTest(parsedTable, 0, 1, mockedTd1);
+        runTest(parsedTable, 0, 0, { cell: mockedTd1, row: 0, col: 0 });
+        runTest(parsedTable, 0, 1, { cell: mockedTd1, row: 0, col: 0 });
         runTest(parsedTable, 0, 2, null);
-        runTest(parsedTable, 1, 0, mockedTd1);
-        runTest(parsedTable, 1, 1, mockedTd1);
+        runTest(parsedTable, 1, 0, { cell: mockedTd1, row: 0, col: 0 });
+        runTest(parsedTable, 1, 1, { cell: mockedTd1, row: 0, col: 0 });
+        runTest(parsedTable, 1, 2, null);
+        runTest(parsedTable, 2, 0, null);
+        runTest(parsedTable, 2, 1, null);
+        runTest(parsedTable, 2, 2, null);
+    });
+});
+
+describe('findLastedCoInMergedCell', () => {
+    const mockedTd1 = { id: 'TD1' } as any;
+    const mockedTd2 = { id: 'TD2' } as any;
+    const mockedTd3 = { id: 'TD3' } as any;
+    const mockedTd4 = { id: 'TD4' } as any;
+    const mockedTd5 = { id: 'TD5' } as any;
+
+    function runTest(parsedTable: ParsedTable, row: number, col: number, expectedResult: any) {
+        const result = findLastedCoInMergedCell(parsedTable, { row, col });
+
+        expect(result).toEqual(expectedResult);
+    }
+
+    it('Null', () => {
+        runTest([], 0, 0, null);
+    });
+
+    it('Simple table', () => {
+        const parsedTable: ParsedTable = [
+            [mockedTd1, mockedTd2],
+            [mockedTd3, mockedTd4],
+        ];
+        runTest(parsedTable, 0, 0, { row: 0, col: 0 });
+        runTest(parsedTable, 0, 1, { row: 0, col: 1 });
+        runTest(parsedTable, 0, 2, null);
+        runTest(parsedTable, 1, 0, { row: 1, col: 0 });
+        runTest(parsedTable, 2, 0, null);
+        runTest(parsedTable, 2, 2, null);
+    });
+
+    it('Complex table', () => {
+        const parsedTable: ParsedTable = [
+            [mockedTd1, mockedTd2, 'spanLeft'],
+            ['spanTop', mockedTd3, mockedTd4],
+            [mockedTd5, 'spanLeft', 'spanTop'],
+        ];
+
+        runTest(parsedTable, 0, 0, { row: 1, col: 0 });
+        runTest(parsedTable, 0, 1, { row: 0, col: 2 });
+        runTest(parsedTable, 0, 2, { row: 0, col: 2 });
+        runTest(parsedTable, 0, 3, null);
+        runTest(parsedTable, 1, 0, { row: 1, col: 0 });
+        runTest(parsedTable, 1, 1, { row: 1, col: 1 });
+        runTest(parsedTable, 1, 2, { row: 2, col: 2 });
+        runTest(parsedTable, 1, 3, null);
+        runTest(parsedTable, 2, 0, { row: 2, col: 1 });
+        runTest(parsedTable, 2, 1, { row: 2, col: 1 });
+        runTest(parsedTable, 2, 2, { row: 2, col: 2 });
+        runTest(parsedTable, 2, 3, null);
+        runTest(parsedTable, 3, 0, null);
+        runTest(parsedTable, 3, 1, null);
+        runTest(parsedTable, 3, 2, null);
+        runTest(parsedTable, 3, 3, null);
+    });
+
+    it('span both', () => {
+        const parsedTable: ParsedTable = [
+            [mockedTd1, 'spanLeft'],
+            ['spanTop', 'spanBoth'],
+        ];
+
+        runTest(parsedTable, 0, 0, { row: 1, col: 1 });
+        runTest(parsedTable, 0, 1, { row: 1, col: 1 });
+        runTest(parsedTable, 0, 2, null);
+        runTest(parsedTable, 1, 0, { row: 1, col: 1 });
+        runTest(parsedTable, 1, 1, { row: 1, col: 1 });
         runTest(parsedTable, 1, 2, null);
         runTest(parsedTable, 2, 0, null);
         runTest(parsedTable, 2, 1, null);
@@ -191,7 +275,7 @@ describe('findCoordinate', () => {
 
         const result = findCoordinate(table, text, domHelper);
 
-        expect(result).toEqual([0, 0]);
+        expect(result).toEqual({ row: 0, col: 0 });
     });
 
     it('Table contains node indirectly', () => {
@@ -207,7 +291,7 @@ describe('findCoordinate', () => {
 
         const result = findCoordinate(table, text, domHelper);
 
-        expect(result).toEqual([0, 0]);
+        expect(result).toEqual({ row: 0, col: 0 });
     });
 
     it('Table contains node on second row', () => {
@@ -223,7 +307,7 @@ describe('findCoordinate', () => {
 
         const result = findCoordinate(table, text, domHelper);
 
-        expect(result).toEqual([1, 1]);
+        expect(result).toEqual({ row: 1, col: 1 });
     });
 });
 

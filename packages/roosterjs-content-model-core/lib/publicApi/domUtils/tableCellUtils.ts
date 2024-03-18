@@ -1,5 +1,10 @@
 import { toArray } from 'roosterjs-content-model-dom';
-import type { DOMHelper, ParsedTable, TableSelection } from 'roosterjs-content-model-types';
+import type {
+    DOMHelper,
+    ParsedTable,
+    TableCellCoordinate,
+    TableSelection,
+} from 'roosterjs-content-model-types';
 
 const TableCellSelector = 'TH,TD';
 
@@ -49,12 +54,14 @@ export function parseTableCells(table: HTMLTableElement): ParsedTable {
  * @param parsedTable The parsed table
  * @param row Row index
  * @param col Column index
+ * @param findLast True to find last merged cell instead of the first cell
  */
 export function findTableCellElement(
     parsedTable: ParsedTable,
-    row: number,
-    col: number
-): HTMLTableCellElement | null {
+    coordinate: TableCellCoordinate
+): ({ cell: HTMLTableCellElement } & TableCellCoordinate) | null {
+    let { row, col } = coordinate;
+
     while (
         row >= 0 &&
         col >= 0 &&
@@ -66,11 +73,44 @@ export function findTableCellElement(
         if (!cell) {
             break;
         } else if (typeof cell == 'object') {
-            return cell;
+            return { cell, row, col };
         } else if (cell == 'spanLeft' || cell == 'spanBoth') {
             col--;
         } else {
             row--;
+        }
+    }
+    return null;
+}
+
+/**
+ * @internal
+ * Try to find the last logic cell of a merged table cell
+ * @param parsedTable The parsed table
+ * @param row Row index
+ * @param col Column index
+ */
+export function findLastedCoInMergedCell(
+    parsedTable: ParsedTable,
+    coordinate: TableCellCoordinate
+): TableCellCoordinate | null {
+    let { row, col } = coordinate;
+
+    while (
+        row >= 0 &&
+        col >= 0 &&
+        row < parsedTable.length &&
+        col < (parsedTable[row]?.length ?? 0)
+    ) {
+        const right = parsedTable[row]?.[col + 1];
+        const below = parsedTable[row + 1]?.[col];
+
+        if (right == 'spanLeft' || right == 'spanBoth') {
+            col++;
+        } else if (below == 'spanTop' || below == 'spanBoth') {
+            row++;
+        } else {
+            return { row, col };
         }
     }
     return null;
@@ -84,16 +124,16 @@ export function findCoordinate(
     parsedTable: ParsedTable,
     element: Node,
     domHelper: DOMHelper
-): [number, number] | null {
+): { row: number; col: number } | null {
     const td = domHelper.findClosestElementAncestor(element, TableCellSelector);
-    let result: [number, number] | null = null;
+    let result: { row: number; col: number } | null = null;
 
     // Try to do a fast check if both TD are in the given TABLE
     if (td) {
         parsedTable.some((row, rowIndex) => {
             const colIndex = td ? row.indexOf(td as HTMLTableCellElement) : -1;
 
-            return (result = colIndex >= 0 ? [rowIndex, colIndex] : null);
+            return (result = colIndex >= 0 ? { row: rowIndex, col: colIndex } : null);
         });
     }
 
@@ -104,7 +144,7 @@ export function findCoordinate(
                 cell => typeof cell == 'object' && cell.contains(element)
             );
 
-            return (result = colIndex >= 0 ? [rowIndex, colIndex] : null);
+            return (result = colIndex >= 0 ? { row: rowIndex, col: colIndex } : null);
         });
     }
 
