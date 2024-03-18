@@ -22,12 +22,12 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * @param contentDiv The editor content DIV
      */
     constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
-        this.state = option.cacheModel
-            ? {
+        this.state = option.disableCache
+            ? {}
+            : {
                   domIndexer: domIndexerImpl,
                   textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
-              }
-            : {};
+              };
     }
 
     /**

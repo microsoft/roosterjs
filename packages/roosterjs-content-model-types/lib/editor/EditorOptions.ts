@@ -24,9 +24,11 @@ export interface EditorOptions {
     defaultModelToDomOptions?: ModelToDomOption;
 
     /**
-     * Reuse existing DOM structure if possible, and update the model when content or selection is changed
+     * Whether content model should be cached in order to improve editing performance.
+     * Pass true to disable the cache.
+     * @default false
      */
-    cacheModel?: boolean;
+    disableCache?: boolean;
 
     /**
      * List of plugins.
