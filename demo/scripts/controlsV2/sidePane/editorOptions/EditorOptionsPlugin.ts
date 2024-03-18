@@ -31,7 +31,7 @@ const initialState: OptionState = {
     forcePreserveRatio: false,
     applyChangesOnMouseUp: false,
     isRtl: false,
-    cacheModel: true,
+    disableCache: false,
     tableFeaturesContainerSelector: '#' + 'EditorContainer',
     allowExcelNoBorderTable: false,
     imageMenu: true,
