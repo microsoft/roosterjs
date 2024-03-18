@@ -33,6 +33,7 @@ export const importModelButton: RibbonButton<'buttonNameImportModel'> = {
                 if (isBlockGroupOfType(importedModel, 'Document')) {
                     editor.formatContentModel(model => {
                         model.blocks = importedModel.blocks;
+                        model.format = importedModel.format;
                         return true;
                     });
                 }
