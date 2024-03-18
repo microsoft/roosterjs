@@ -917,4 +917,38 @@ describe('Editor', () => {
         expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.getVisibleViewport()).toThrow();
     });
+
+    it('setEditorStyle', () => {
+        const div = document.createElement('div');
+        const mockedScrollContainer: Rect = { top: 0, bottom: 100, left: 0, right: 100 };
+        const resetSpy = jasmine.createSpy('reset');
+        const setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+                setEditorStyle: setEditorStyleSpy,
+            },
+            domEvent: { scrollContainer: mockedScrollContainer },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        editor.setEditorStyle('key', 'rule', ['rule1', 'rule2']);
+
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(mockedCore, 'key', 'rule', [
+            'rule1',
+            'rule2',
+        ]);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.getVisibleViewport()).toThrow();
+    });
 });

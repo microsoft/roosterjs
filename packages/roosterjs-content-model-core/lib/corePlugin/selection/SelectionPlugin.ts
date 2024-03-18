@@ -22,7 +22,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     constructor(options: EditorOptions) {
         this.state = {
             selection: null,
-            selectionStyleNode: null,
             imageSelectionBorderColor: options.imageSelectionBorderColor,
         };
     }
@@ -33,12 +32,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     initialize(editor: IEditor) {
         this.editor = editor;
-
-        const doc = this.editor.getDocument();
-        const styleNode = doc.createElement('style');
-
-        doc.head.appendChild(styleNode);
-        this.state.selectionStyleNode = styleNode;
 
         const env = this.editor.getEnvironment();
         const document = this.editor.getDocument();
@@ -61,11 +54,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.editor
             ?.getDocument()
             .removeEventListener('selectionchange', this.onSelectionChangeSafari);
-
-        if (this.state.selectionStyleNode) {
-            this.state.selectionStyleNode.parentNode?.removeChild(this.state.selectionStyleNode);
-            this.state.selectionStyleNode = null;
-        }
 
         if (this.disposer) {
             this.disposer();

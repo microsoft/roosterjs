@@ -5,7 +5,6 @@ import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 export interface LegacyPluginList {
     contentEdit: boolean;
     hyperlink: boolean;
-    watermark: boolean;
     imageEdit: boolean;
     tableCellSelection: boolean;
     customReplace: boolean;
@@ -19,6 +18,7 @@ export interface NewPluginList {
     shortcut: boolean;
     tableEdit: boolean;
     contextMenu: boolean;
+    watermark: boolean;
     emoji: boolean;
     pasteOption: boolean;
     sampleEntity: boolean;
@@ -34,12 +34,12 @@ export interface OptionState {
     listMenu: boolean;
     tableMenu: boolean;
     imageMenu: boolean;
+    watermarkText: string;
 
     // Legacy plugin options
     contentEditFeatures: ContentEditFeatureSettings;
     defaultFormat: ContentModelSegmentFormat;
     linkTitle: string;
-    watermarkText: string;
     forcePreserveRatio: boolean;
     tableFeaturesContainerSelector: string;
 

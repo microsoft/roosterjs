@@ -9,6 +9,7 @@ import { getVisibleViewport } from './getVisibleViewport/getVisibleViewport';
 import { restoreUndoSnapshot } from './restoreUndoSnapshot/restoreUndoSnapshot';
 import { setContentModel } from './setContentModel/setContentModel';
 import { setDOMSelection } from './setDOMSelection/setDOMSelection';
+import { setEditorStyle } from './setEditorStyle/setEditorStyle';
 import { switchShadowEdit } from './switchShadowEdit/switchShadowEdit';
 import { triggerEvent } from './triggerEvent/triggerEvent';
 import type { CoreApiMap } from 'roosterjs-content-model-types';
@@ -35,4 +36,5 @@ export const coreApiMap: CoreApiMap = {
 
     switchShadowEdit: switchShadowEdit,
     getVisibleViewport: getVisibleViewport,
+    setEditorStyle: setEditorStyle,
 };

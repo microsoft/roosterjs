@@ -159,7 +159,6 @@ describe('setContentModel', () => {
 
         core.selection = {
             selection: null,
-            selectionStyleNode: null,
         };
         setContentModel(core, mockedModel, {
             ignoreSelection: true,
@@ -192,7 +191,6 @@ describe('setContentModel', () => {
 
         core.selection = {
             selection: null,
-            selectionStyleNode: null,
         };
         setContentModel(core, mockedModel, {
             ignoreSelection: true,
@@ -221,7 +219,6 @@ describe('setContentModel', () => {
 
         core.selection = {
             selection: null,
-            selectionStyleNode: null,
         };
         setContentModel(core, mockedModel, {
             ignoreSelection: true,

@@ -1,4 +1,5 @@
 import { addRangeToSelection } from './addRangeToSelection';
+import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { parseTableCells } from '../../publicApi/domUtils/tableCellUtils';
 import type {
@@ -7,13 +8,13 @@ import type {
     TableSelection,
 } from 'roosterjs-content-model-types';
 
+const DOM_SELECTION_CSS_KEY = '_DOMSelection';
+const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
-const CONTENT_DIV_ID = 'contentDiv';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
-const TABLE_CSS_RULE = '{background-color: rgb(198,198,198) !important;}';
-const CARET_CSS_RULE = '{caret-color: transparent}';
-const MAX_RULE_SELECTOR_LENGTH = 9000;
+const TABLE_CSS_RULE = 'background-color:#C6C6C6!important;';
+const CARET_CSS_RULE = 'caret-color: transparent';
 
 /**
  * @internal
@@ -24,36 +25,44 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
 
     const doc = core.physicalRoot.ownerDocument;
-    const sheet = core.selection.selectionStyleNode?.sheet;
 
     core.selection.skipReselectOnFocus = true;
+    core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
+    core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
 
     try {
-        let selectionRules: string[] | undefined;
-        const rootSelector = '#' + addUniqueId(core.physicalRoot, CONTENT_DIV_ID);
-
         switch (selection?.type) {
             case 'image':
                 const image = selection.image;
 
-                selectionRules = buildImageCSS(
-                    rootSelector,
-                    addUniqueId(image, IMAGE_ID),
-                    core.selection.imageSelectionBorderColor
-                );
                 core.selection.selection = selection;
+                core.api.setEditorStyle(
+                    core,
+                    DOM_SELECTION_CSS_KEY,
+                    `outline-style:auto!important; outline-color:${
+                        core.selection.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR
+                    }!important;`,
+                    [`#${ensureUniqueId(image, IMAGE_ID)}`]
+                );
+                core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
 
                 setRangeSelection(doc, image);
                 break;
             case 'table':
                 const { table, firstColumn, firstRow } = selection;
-
-                selectionRules = buildTableCss(
-                    rootSelector,
-                    addUniqueId(table, TABLE_ID),
+                const tableSelectors = buildTableSelectors(
+                    ensureUniqueId(table, TABLE_ID),
                     selection
                 );
+
                 core.selection.selection = selection;
+                core.api.setEditorStyle(
+                    core,
+                    DOM_SELECTION_CSS_KEY,
+                    TABLE_CSS_RULE,
+                    tableSelectors
+                );
+                core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
 
                 setRangeSelection(doc, table.rows[firstRow]?.cells[firstColumn]);
                 break;
@@ -66,18 +75,6 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
             default:
                 core.selection.selection = null;
                 break;
-        }
-
-        if (sheet) {
-            for (let i = sheet.cssRules.length - 1; i >= 0; i--) {
-                sheet.deleteRule(i);
-            }
-
-            if (selectionRules) {
-                for (let i = 0; i < selectionRules.length; i++) {
-                    sheet.insertRule(selectionRules[i]);
-                }
-            }
         }
     } finally {
         core.selection.skipReselectOnFocus = skipReselectOnFocus;
@@ -93,20 +90,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 };
 
-function buildImageCSS(editorSelector: string, imageId: string, borderColor?: string): string[] {
-    const color = borderColor || DEFAULT_SELECTION_BORDER_COLOR;
-
-    return [
-        `${editorSelector} #${imageId} {outline-style:auto!important;outline-color:${color}!important;}`,
-        `${editorSelector} ${CARET_CSS_RULE}`,
-    ];
-}
-
-function buildTableCss(
-    editorSelector: string,
-    tableId: string,
-    selection: TableSelection
-): string[] {
+function buildTableSelectors(tableId: string, selection: TableSelection): string[] {
     const { firstColumn, firstRow, lastColumn, lastRow } = selection;
     const cells = parseTableCells(selection.table);
     const isAllTableSelected =
@@ -114,31 +98,13 @@ function buildTableCss(
         firstColumn == 0 &&
         lastRow == cells.length - 1 &&
         lastColumn == (cells[lastRow]?.length ?? 0) - 1;
-    const rootSelector = editorSelector + ' #' + tableId;
-    const selectors = isAllTableSelected
-        ? [rootSelector, `${rootSelector} *`]
-        : handleTableSelected(rootSelector, selection, cells);
-
-    const cssRules: string[] = [`${editorSelector} ${CARET_CSS_RULE}`];
-    let currentRules: string = '';
-
-    for (let i = 0; i < selectors.length; i++) {
-        currentRules += (currentRules.length > 0 ? ',' : '') + selectors[i] || '';
-
-        if (
-            currentRules.length + (selectors[0]?.length || 0) > MAX_RULE_SELECTOR_LENGTH ||
-            i == selectors.length - 1
-        ) {
-            cssRules.push(currentRules + ' ' + TABLE_CSS_RULE);
-            currentRules = '';
-        }
-    }
-
-    return cssRules;
+    return isAllTableSelected
+        ? [`#${tableId}`, `#${tableId} *`]
+        : handleTableSelected(tableId, selection, cells);
 }
 
 function handleTableSelected(
-    rootSelector: string,
+    tableId: string,
     selection: TableSelection,
     cells: (HTMLTableCellElement | null)[][]
 ) {
@@ -189,7 +155,7 @@ function handleTableSelected(
                     cellIndex >= firstColumn &&
                     cellIndex <= lastColumn
                 ) {
-                    const selector = `${rootSelector}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
+                    const selector = `#${tableId}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
 
                     selectors.push(selector, selector + ' *');
                 }
@@ -209,17 +175,4 @@ function setRangeSelection(doc: Document, element: HTMLElement | undefined) {
 
         addRangeToSelection(doc, range);
     }
-}
-
-function addUniqueId(element: HTMLElement, idPrefix: string): string {
-    idPrefix = element.id || idPrefix;
-
-    const doc = element.ownerDocument;
-    let i = 0;
-
-    while (!element.id || doc.querySelectorAll('#' + element.id).length > 1) {
-        element.id = idPrefix + '_' + i++;
-    }
-
-    return element.id;
 }

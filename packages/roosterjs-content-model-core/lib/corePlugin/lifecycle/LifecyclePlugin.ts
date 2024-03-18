@@ -1,5 +1,5 @@
 import { ChangeSource } from '../../constants/ChangeSource';
-import { setColor } from 'roosterjs-content-model-dom';
+import { getObjectKeys, setColor } from 'roosterjs-content-model-dom';
 import type {
     IEditor,
     LifecyclePluginState,
@@ -48,6 +48,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         this.state = {
             isDarkMode: !!options.inDarkMode,
             shadowEditFragment: null,
+            styleElements: {},
         };
     }
 
@@ -80,6 +81,13 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
      */
     dispose() {
         this.editor?.triggerEvent('beforeDispose', {}, true /*broadcast*/);
+
+        getObjectKeys(this.state.styleElements).forEach(key => {
+            const element = this.state.styleElements[key];
+
+            element.parentElement?.removeChild(element);
+            delete this.state.styleElements[key];
+        });
 
         if (this.disposer) {
             this.disposer();
