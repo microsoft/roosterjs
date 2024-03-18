@@ -11,4 +11,9 @@ export interface LifecyclePluginState {
      * Cached document fragment for original content
      */
     shadowEditFragment: DocumentFragment | null;
+
+    /**
+     * Style elements used for adding CSS rules for editor
+     */
+    readonly styleElements: Record<string, HTMLStyleElement>;
 }

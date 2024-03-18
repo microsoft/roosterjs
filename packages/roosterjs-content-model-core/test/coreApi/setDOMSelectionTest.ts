@@ -9,12 +9,10 @@ describe('setDOMSelection', () => {
     let triggerEventSpy: jasmine.Spy;
     let addRangeToSelectionSpy: jasmine.Spy;
     let createRangeSpy: jasmine.Spy;
-    let deleteRuleSpy: jasmine.Spy;
-    let insertRuleSpy: jasmine.Spy;
+    let setEditorStyleSpy: jasmine.Spy;
     let doc: Document;
     let contentDiv: HTMLDivElement;
     let mockedRange = 'RANGE' as any;
-    let mockedStyleNode: HTMLStyleElement;
 
     beforeEach(() => {
         querySelectorAllSpy = jasmine.createSpy('querySelectorAll');
@@ -26,8 +24,7 @@ describe('setDOMSelection', () => {
             }
         );
         createRangeSpy = jasmine.createSpy('createRange');
-        deleteRuleSpy = jasmine.createSpy('deleteRule');
-        insertRuleSpy = jasmine.createSpy('insertRule');
+        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         doc = {
             querySelectorAll: querySelectorAllSpy,
@@ -37,22 +34,14 @@ describe('setDOMSelection', () => {
         contentDiv = {
             ownerDocument: doc,
         } as any;
-        mockedStyleNode = {
-            sheet: {
-                cssRules: [],
-                deleteRule: deleteRuleSpy,
-                insertRule: insertRuleSpy,
-            },
-        } as any;
 
         core = {
             physicalRoot: contentDiv,
             logicalRoot: contentDiv,
-            selection: {
-                selectionStyleNode: mockedStyleNode,
-            },
+            selection: {},
             api: {
                 triggerEvent: triggerEventSpy,
+                setEditorStyle: setEditorStyleSpy,
             },
             domHelper: {
                 hasFocus: hasFocusSpy,
@@ -67,14 +56,12 @@ describe('setDOMSelection', () => {
 
         function runTest(originalSelection: DOMSelection | null) {
             core.selection.selection = originalSelection;
-            (core.selection.selectionStyleNode!.sheet!.cssRules as any) = ['Rule1', 'Rule2'];
 
             setDOMSelection(core, null);
 
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: null,
-                selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -85,11 +72,9 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
-            expect(contentDiv.id).toBe('contentDiv_0');
-            expect(deleteRuleSpy).toHaveBeenCalledTimes(2);
-            expect(deleteRuleSpy).toHaveBeenCalledWith(1);
-            expect(deleteRuleSpy).toHaveBeenCalledWith(0);
-            expect(insertRuleSpy).not.toHaveBeenCalled();
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
         }
 
         it('From null selection', () => {
@@ -131,8 +116,6 @@ describe('setDOMSelection', () => {
                 isReverted: false,
             } as any;
 
-            (core.selection.selectionStyleNode!.sheet!.cssRules as any) = ['Rule1', 'Rule2'];
-
             querySelectorAllSpy.and.returnValue([]);
             hasFocusSpy.and.returnValue(true);
 
@@ -141,8 +124,10 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: null,
-                selectionStyleNode: mockedStyleNode,
             } as any);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
@@ -156,41 +141,6 @@ describe('setDOMSelection', () => {
                 mockedRange,
                 false /* isReverted */
             );
-            expect(contentDiv.id).toBe('contentDiv_0');
-            expect(deleteRuleSpy).toHaveBeenCalledTimes(2);
-            expect(deleteRuleSpy).toHaveBeenCalledWith(1);
-            expect(deleteRuleSpy).toHaveBeenCalledWith(0);
-            expect(insertRuleSpy).not.toHaveBeenCalled();
-        });
-
-        it('range selection, with existing css rule', () => {
-            const mockedSelection = {
-                type: 'range',
-                range: mockedRange,
-            } as any;
-
-            querySelectorAllSpy.and.returnValue([]);
-            hasFocusSpy.and.returnValue(true);
-
-            setDOMSelection(core, mockedSelection);
-
-            expect(core.selection).toEqual({
-                skipReselectOnFocus: undefined,
-                selection: null,
-                selectionStyleNode: mockedStyleNode,
-            } as any);
-            expect(triggerEventSpy).toHaveBeenCalledWith(
-                core,
-                {
-                    eventType: 'selectionChanged',
-                    newSelection: mockedSelection,
-                },
-                true
-            );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
-            expect(contentDiv.id).toBe('contentDiv_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).not.toHaveBeenCalled();
         });
 
         it('range selection, editor id is unique, editor has focus, do not trigger event', () => {
@@ -208,13 +158,12 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: null,
-                selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).not.toHaveBeenCalled();
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
-            expect(contentDiv.id).toBe('contentDiv_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).not.toHaveBeenCalled();
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
         });
 
         it('range selection, editor id is unique, editor does not have focus', () => {
@@ -232,7 +181,6 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -243,109 +191,9 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
-            expect(contentDiv.id).toBe('contentDiv_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).not.toHaveBeenCalled();
-        });
-
-        it('range selection, editor has unique id', () => {
-            const mockedSelection = {
-                type: 'range',
-                range: mockedRange,
-                isReverted: false,
-            } as any;
-            contentDiv.id = 'testId';
-
-            querySelectorAllSpy.and.returnValue([]);
-            hasFocusSpy.and.returnValue(false);
-
-            setDOMSelection(core, mockedSelection);
-
-            expect(core.selection).toEqual({
-                skipReselectOnFocus: undefined,
-                selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
-            } as any);
-            expect(triggerEventSpy).toHaveBeenCalledWith(
-                core,
-                {
-                    eventType: 'selectionChanged',
-                    newSelection: mockedSelection,
-                },
-                true
-            );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
-            expect(contentDiv.id).toBe('testId');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).not.toHaveBeenCalled();
-        });
-
-        it('range selection, editor has duplicated id', () => {
-            const mockedSelection = {
-                type: 'range',
-                range: mockedRange,
-                isReverted: false,
-            } as any;
-            contentDiv.id = 'testId';
-
-            querySelectorAllSpy.and.callFake(selector => {
-                return selector == '#testId' ? ['', ''] : [''];
-            });
-            hasFocusSpy.and.returnValue(false);
-
-            setDOMSelection(core, mockedSelection);
-
-            expect(core.selection).toEqual({
-                skipReselectOnFocus: undefined,
-                selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
-            } as any);
-            expect(triggerEventSpy).toHaveBeenCalledWith(
-                core,
-                {
-                    eventType: 'selectionChanged',
-                    newSelection: mockedSelection,
-                },
-                true
-            );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
-            expect(contentDiv.id).toBe('testId_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).not.toHaveBeenCalled();
-        });
-
-        it('range selection, editor has duplicated id - 2', () => {
-            const mockedSelection = {
-                type: 'range',
-                range: mockedRange,
-                isReverted: false,
-            } as any;
-            contentDiv.id = 'testId';
-
-            querySelectorAllSpy.and.callFake(selector => {
-                return selector == '#testId' || selector == '#testId_0' ? ['', ''] : [''];
-            });
-            hasFocusSpy.and.returnValue(false);
-
-            setDOMSelection(core, mockedSelection);
-
-            expect(core.selection).toEqual({
-                skipReselectOnFocus: undefined,
-                selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
-            } as any);
-            expect(triggerEventSpy).toHaveBeenCalledWith(
-                core,
-                {
-                    eventType: 'selectionChanged',
-                    newSelection: mockedSelection,
-                },
-                true
-            );
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
-            expect(contentDiv.id).toBe('testId_1');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).not.toHaveBeenCalled();
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
         });
     });
 
@@ -380,7 +228,6 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -393,13 +240,20 @@ describe('setDOMSelection', () => {
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
             expect(collapseSpy).toHaveBeenCalledWith();
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
-            expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedImage.id).toBe('image_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
-            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
-            expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'outline-style:auto!important; outline-color:#DB626C!important;',
+                ['#image_0']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideCursor',
+                'caret-color: transparent'
             );
         });
 
@@ -428,7 +282,6 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -441,13 +294,19 @@ describe('setDOMSelection', () => {
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
             expect(collapseSpy).toHaveBeenCalledWith();
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
-            expect(contentDiv.id).toBe('contentDiv_0');
-            expect(mockedImage.id).toBe('image_0_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
-            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
-            expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'outline-style:auto!important; outline-color:#DB626C!important;',
+                ['#image_0_0']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideCursor',
+                'caret-color: transparent'
             );
         });
 
@@ -475,7 +334,6 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
                 imageSelectionBorderColor: 'red',
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
@@ -489,13 +347,19 @@ describe('setDOMSelection', () => {
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
             expect(collapseSpy).toHaveBeenCalledWith();
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
-            expect(contentDiv.id).toBe('contentDiv_0');
-            expect(mockedImage.id).toBe('image_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
-            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
-            expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:red!important;}'
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'outline-style:auto!important; outline-color:red!important;',
+                ['#image_0']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideCursor',
+                'caret-color: transparent'
             );
         });
 
@@ -523,7 +387,6 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -536,13 +399,20 @@ describe('setDOMSelection', () => {
             expect(selectNodeSpy).not.toHaveBeenCalled();
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
-            expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedImage.id).toBe('image_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).toHaveBeenCalledTimes(2);
-            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
-            expect(insertRuleSpy).toHaveBeenCalledWith(
-                '#contentDiv_0 #image_0 {outline-style:auto!important;outline-color:#DB626C!important;}'
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'outline-style:auto!important; outline-color:#DB626C!important;',
+                ['#image_0']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideCursor',
+                'caret-color: transparent'
             );
         });
     });
@@ -580,7 +450,6 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -593,11 +462,22 @@ describe('setDOMSelection', () => {
             expect(selectNodeSpy).not.toHaveBeenCalled();
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
-            expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedTable.id).toBe('table_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).toHaveBeenCalledTimes(1);
-            expect(insertRuleSpy).toHaveBeenCalledWith('#contentDiv_0 {caret-color: transparent}');
+
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'background-color:#C6C6C6!important;',
+                []
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideCursor',
+                'caret-color: transparent'
+            );
         });
 
         function runTest(
@@ -606,7 +486,7 @@ describe('setDOMSelection', () => {
             firstRow: number,
             lastColumn: number,
             lastRow: number,
-            ...result: string[]
+            result: string[]
         ) {
             const mockedSelection = {
                 type: 'table',
@@ -633,7 +513,6 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
-                selectionStyleNode: mockedStyleNode,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -643,38 +522,39 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(contentDiv.id).toBe('contentDiv_0');
             expect(mockedTable.id).toBe('table_0');
-            expect(deleteRuleSpy).not.toHaveBeenCalled();
-            expect(insertRuleSpy).toHaveBeenCalledTimes(result.length);
-
-            result.forEach(rule => {
-                expect(insertRuleSpy).toHaveBeenCalledWith(rule);
-            });
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'background-color:#C6C6C6!important;',
+                result
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideCursor',
+                'caret-color: transparent'
+            );
         }
 
         it('Select Table Cells TR under Table Tag', () => {
-            runTest(
-                buildTable(true),
-                1,
-                0,
-                1,
-                1,
-                '#contentDiv_0 {caret-color: transparent}',
-                '#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
-            );
+            runTest(buildTable(true), 1, 0, 1, 1, [
+                '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2)',
+                '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
+                '#table_0>TBODY> tr:nth-child(2)>TD:nth-child(2)',
+                '#table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *',
+            ]);
         });
 
         it('Select Table Cells TBODY', () => {
-            runTest(
-                buildTable(false),
-                0,
-                0,
-                0,
-                1,
-                '#contentDiv_0 {caret-color: transparent}',
-                '#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TD:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TD:nth-child(1) * {background-color: rgb(198,198,198) !important;}'
-            );
+            runTest(buildTable(false), 0, 0, 0, 1, [
+                '#table_0> tr:nth-child(1)>TD:nth-child(1)',
+                '#table_0> tr:nth-child(1)>TD:nth-child(1) *',
+                '#table_0> tr:nth-child(2)>TD:nth-child(1)',
+                '#table_0> tr:nth-child(2)>TD:nth-child(1) *',
+            ]);
         });
 
         it('Select TH and TR in the same row', () => {
@@ -699,75 +579,59 @@ describe('setDOMSelection', () => {
             table.appendChild(tr1);
             table.appendChild(tr2);
 
-            runTest(
-                table,
-                0,
-                0,
-                0,
-                1,
-                '#contentDiv_0 {caret-color: transparent}',
-                '#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(1)>TH:nth-child(1) *,#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1),#contentDiv_0 #table_0> tr:nth-child(2)>TH:nth-child(1) * {background-color: rgb(198,198,198) !important;}'
-            );
+            runTest(table, 0, 0, 0, 1, [
+                '#table_0> tr:nth-child(1)>TH:nth-child(1)',
+                '#table_0> tr:nth-child(1)>TH:nth-child(1) *',
+                '#table_0> tr:nth-child(2)>TH:nth-child(1)',
+                '#table_0> tr:nth-child(2)>TH:nth-child(1) *',
+            ]);
         });
 
         it('Select Table Cells THEAD, TBODY', () => {
-            runTest(
-                buildTable(true /* tbody */, true /* thead */),
-                1,
-                1,
-                2,
-                2,
-                '#contentDiv_0 {caret-color: transparent}',
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
-            );
+            runTest(buildTable(true /* tbody */, true /* thead */), 1, 1, 2, 2, [
+                '#table_0>THEAD> tr:nth-child(2)>TD:nth-child(2)',
+                '#table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *',
+                '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2)',
+                '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
+            ]);
         });
 
         it('Select Table Cells TBODY, TFOOT', () => {
-            runTest(
-                buildTable(true /* tbody */, false /* thead */, true /* tfoot */),
-                1,
-                1,
-                2,
-                2,
-                '#contentDiv_0 {caret-color: transparent}',
-                '#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
-            );
+            runTest(buildTable(true /* tbody */, false /* thead */, true /* tfoot */), 1, 1, 2, 2, [
+                '#table_0>TBODY> tr:nth-child(2)>TD:nth-child(2)',
+                '#table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *',
+                '#table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2)',
+                '#table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) *',
+            ]);
         });
 
         it('Select Table Cells THEAD, TBODY, TFOOT', () => {
-            runTest(
-                buildTable(true /* tbody */, true /* thead */, true /* tfoot */),
-                1,
-                1,
-                1,
-                4,
-                '#contentDiv_0 {caret-color: transparent}',
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
-            );
+            runTest(buildTable(true /* tbody */, true /* thead */, true /* tfoot */), 1, 1, 1, 4, [
+                '#table_0>THEAD> tr:nth-child(2)>TD:nth-child(2)',
+                '#table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *',
+                '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2)',
+                '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
+                '#table_0>TBODY> tr:nth-child(2)>TD:nth-child(2)',
+                '#table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *',
+                '#table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2)',
+                '#table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) *',
+            ]);
         });
 
         it('Select Table Cells THEAD, TFOOT', () => {
-            runTest(
-                buildTable(false /* tbody */, true /* thead */, true /* tfoot */),
-                1,
-                1,
-                1,
-                2,
-                '#contentDiv_0 {caret-color: transparent}',
-                '#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important;}'
-            );
+            runTest(buildTable(false /* tbody */, true /* thead */, true /* tfoot */), 1, 1, 1, 2, [
+                '#table_0>THEAD> tr:nth-child(2)>TD:nth-child(2)',
+                '#table_0>THEAD> tr:nth-child(2)>TD:nth-child(2) *',
+                '#table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2)',
+                '#table_0>TFOOT> tr:nth-child(1)>TD:nth-child(2) *',
+            ]);
         });
 
         it('Select All', () => {
-            runTest(
-                buildTable(true /* tbody */, false, false),
-                0,
-                0,
-                1,
-                1,
-                '#contentDiv_0 {caret-color: transparent}',
-                '#contentDiv_0 #table_0,#contentDiv_0 #table_0 * {background-color: rgb(198,198,198) !important;}'
-            );
+            runTest(buildTable(true /* tbody */, false, false), 0, 0, 1, 1, [
+                '#table_0',
+                '#table_0 *',
+            ]);
         });
     });
 });
