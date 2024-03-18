@@ -1,5 +1,6 @@
 import * as DelimiterFile from '../../../lib/corePlugin/utils/entityDelimiterUtils';
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
+import * as isNodeOfType from 'roosterjs-content-model-dom/lib/domUtils/isNodeOfType';
 import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 import {
     handleDelimiterContentChangedEvent,
@@ -17,7 +18,6 @@ const BlockEntityContainer = '_E_EBlockEntityContainer';
 describe('EntityDelimiterUtils |', () => {
     let queryElementsSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
-    let triggerPluginEventSpy: jasmine.Spy;
     let mockedEditor: any;
     beforeEach(() => {
         mockedEditor = (<any>{
@@ -25,7 +25,6 @@ describe('EntityDelimiterUtils |', () => {
                 queryElements: queryElementsSpy,
                 isNodeInEditor: () => true,
             }),
-            triggerPluginEvent: triggerPluginEventSpy,
             getPendingFormat: <any>((): any => null),
         }) as Partial<IEditor>;
     });
@@ -159,12 +158,14 @@ describe('EntityDelimiterUtils |', () => {
         let mockedSelection: DOMSelection;
         let rafSpy: jasmine.Spy;
         let takeSnapshotSpy: jasmine.Spy;
+        let triggerEventSpy: jasmine.Spy;
 
         beforeEach(() => {
             mockedSelection = undefined!;
             rafSpy = jasmine.createSpy('requestAnimationFrame');
             formatContentModelSpy = jasmine.createSpy('formatContentModel');
             takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
+            triggerEventSpy = jasmine.createSpy('triggerEvent');
 
             mockedEditor = (<any>{
                 getDOMSelection: () => mockedSelection,
@@ -179,6 +180,7 @@ describe('EntityDelimiterUtils |', () => {
                     queryElements: queryElementsSpy,
                     isNodeInEditor: () => true,
                 }),
+                triggerEvent: triggerEventSpy,
                 takeSnapshot: takeSnapshotSpy,
             }) as Partial<IEditor>;
             spyOn(DelimiterFile, 'preventTypeInDelimiter').and.callThrough();
@@ -560,8 +562,11 @@ describe('EntityDelimiterUtils |', () => {
             const div = document.createElement('div');
             const parent = document.createElement('span');
             const el = document.createElement('span');
+            const textSpan = document.createElement('span');
             const text = document.createTextNode('span');
-            el.appendChild(text);
+            textSpan.appendChild(text);
+            textSpan.classList.add('_Entity');
+            el.appendChild(textSpan);
             parent.appendChild(el);
             el.classList.add('entityDelimiterAfter');
             div.classList.add(BlockEntityContainer);
@@ -582,61 +587,17 @@ describe('EntityDelimiterUtils |', () => {
                     setStartAfter: setStartAfterSpy,
                     setStartBefore: setStartBeforeSpy,
                     collapse: collapseSpy,
+                    startContainer: textSpan,
+                    selectNode: selectNodeSpy,
                 },
                 isReverted: false,
             };
             spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
-
-            handleDelimiterKeyDownEvent(mockedEditor, {
-                eventType: 'keyDown',
-                rawEvent: <any>{
-                    ctrlKey: false,
-                    altKey: false,
-                    metaKey: false,
-                    key: 'A',
-                    preventDefault: preventDefaultSpy,
-                },
+            spyOn(isNodeOfType, 'isNodeOfType').and.returnValue(true);
+            spyOn(mockedEditor, 'getDOMSelection').and.returnValue({
+                type: 'range',
+                range: mockedSelection.range,
             });
-
-            expect(rafSpy).not.toHaveBeenCalled();
-            expect(preventDefaultSpy).not.toHaveBeenCalled();
-            expect(setStartAfterSpy).toHaveBeenCalled();
-            expect(setStartBeforeSpy).not.toHaveBeenCalled();
-            expect(collapseSpy).not.toHaveBeenCalled();
-            expect(selectNodeSpy).toHaveBeenCalledTimes(1);
-            expect(selectNodeSpy).toHaveBeenCalledWith(el);
-        });
-
-        it('Handle, range expanded selection | EnterKey', () => {
-            const div = document.createElement('div');
-            const parent = document.createElement('span');
-            const el = document.createElement('span');
-            const text = document.createTextNode('span');
-            el.appendChild(text);
-            parent.appendChild(el);
-            el.classList.add('entityDelimiterAfter');
-            div.classList.add(BlockEntityContainer);
-            div.appendChild(parent);
-
-            const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
-            const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
-            const collapseSpy = jasmine.createSpy('collapseSpy');
-            const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
-            const selectNodeSpy = jasmine.createSpy('selectNode');
-
-            mockedSelection = {
-                type: 'range',
-                range: <any>{
-                    endContainer: text,
-                    endOffset: 0,
-                    collapsed: false,
-                    setStartAfter: setStartAfterSpy,
-                    setStartBefore: setStartBeforeSpy,
-                    collapse: collapseSpy,
-                },
-                isReverted: false,
-            };
-            spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
 
             handleDelimiterKeyDownEvent(mockedEditor, {
                 eventType: 'keyDown',
@@ -655,12 +616,83 @@ describe('EntityDelimiterUtils |', () => {
             expect(setStartBeforeSpy).not.toHaveBeenCalled();
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(selectNodeSpy).toHaveBeenCalledTimes(1);
-            expect(selectNodeSpy).toHaveBeenCalledWith(el);
-            expect(triggerPluginEventSpy).toHaveBeenCalledWith('entityOperation', {
+            expect(selectNodeSpy).toHaveBeenCalledWith(textSpan);
+        });
+
+        it('Handle, range expanded selection | EnterKey', () => {
+            const div = document.createElement('div');
+            const parent = document.createElement('span');
+            const el = document.createElement('span');
+            const textSpan = document.createElement('span');
+            const text = document.createTextNode('span');
+            textSpan.appendChild(text);
+            textSpan.classList.add('_Entity');
+            el.appendChild(textSpan);
+            parent.appendChild(el);
+            el.classList.add('entityDelimiterAfter');
+            div.classList.add(BlockEntityContainer);
+            div.appendChild(parent);
+
+            const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
+            const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
+            const collapseSpy = jasmine.createSpy('collapseSpy');
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+
+            mockedSelection = {
+                type: 'range',
+                range: <any>{
+                    endContainer: text,
+                    endOffset: 0,
+                    collapsed: false,
+                    setStartAfter: setStartAfterSpy,
+                    setStartBefore: setStartBeforeSpy,
+                    collapse: collapseSpy,
+                    startContainer: textSpan,
+                    selectNode: selectNodeSpy,
+                },
+                isReverted: false,
+            };
+            spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
+            spyOn(isNodeOfType, 'isNodeOfType').and.returnValue(true);
+            spyOn(mockedEditor, 'getDOMSelection').and.returnValue({
+                type: 'range',
+                range: mockedSelection.range,
+            });
+            spyOn(entityUtils, 'parseEntityFormat').and.returnValue({
+                isReadonly: true,
+                id: 'test',
+                entityType: 'test',
+            });
+            const mockedEvent = <any>{
+                ctrlKey: false,
+                altKey: false,
+                metaKey: false,
+                key: 'Enter',
+                preventDefault: preventDefaultSpy,
+            };
+
+            handleDelimiterKeyDownEvent(mockedEditor, {
+                eventType: 'keyDown',
+                rawEvent: mockedEvent,
+            });
+
+            expect(rafSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(setStartAfterSpy).not.toHaveBeenCalled();
+            expect(setStartBeforeSpy).not.toHaveBeenCalled();
+            expect(collapseSpy).not.toHaveBeenCalled();
+            expect(selectNodeSpy).toHaveBeenCalledTimes(1);
+            expect(selectNodeSpy).toHaveBeenCalledWith(textSpan);
+            expect(triggerEventSpy).toHaveBeenCalledWith('entityOperation', {
                 operation: 'click',
-                entityType: 'span',
-                format: {},
-                entity: el,
+                entity: {
+                    id: 'test',
+                    type: 'test',
+                    isReadonly: true,
+                    wrapper: textSpan,
+                },
+                rawEvent: mockedEvent,
             });
         });
     });

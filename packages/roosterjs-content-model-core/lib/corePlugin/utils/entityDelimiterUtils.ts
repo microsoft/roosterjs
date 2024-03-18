@@ -202,6 +202,7 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
         return;
     }
     const isEnter = rawEvent.key === 'Enter';
+    const helper = editor.getDOMHelper();
     if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
         const helper = editor.getDOMHelper();
         const node = getFocusedElement(selection);
@@ -243,7 +244,6 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
             }
         }
     } else {
-        const helper = editor.getDOMHelper();
         const entity = getSelectedEntity(selection);
         if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
             selection.range.selectNode(entity);
