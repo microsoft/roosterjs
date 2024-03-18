@@ -434,7 +434,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     ): TableSelectionInfo | null {
         let table: HTMLTableElement | null;
         let parsedTable: ParsedTable | null;
-        let firstCo: { row: number; col: number } | null;
+        let firstCo: TableCellCoordinate | null;
 
         if (
             (table = domHelper.findClosestElementAncestor(tableStart, 'table')) &&

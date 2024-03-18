@@ -131,9 +131,9 @@ export function findCoordinate(
     parsedTable: ParsedTable,
     element: Node,
     domHelper: DOMHelper
-): { row: number; col: number } | null {
+): TableCellCoordinate | null {
     const td = domHelper.findClosestElementAncestor(element, TableCellSelector);
-    let result: { row: number; col: number } | null = null;
+    let result: TableCellCoordinate | null = null;
 
     // Try to do a fast check if both TD are in the given TABLE
     if (td) {
