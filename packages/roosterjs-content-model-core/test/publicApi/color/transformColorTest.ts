@@ -1,4 +1,4 @@
-import { createDarkColorHandler } from '../../../lib/editor/DarkColorHandlerImpl';
+import { createDarkColorHandler } from '../../../lib/editor/core/DarkColorHandlerImpl';
 import { transformColor } from '../../../lib/publicApi/color/transformColor';
 
 describe('transform to dark mode', () => {
