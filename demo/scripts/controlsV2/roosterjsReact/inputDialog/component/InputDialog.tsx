@@ -3,13 +3,7 @@ import InputDialogItem from './InputDialogItem';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { getLocalizedString } from '../../common/index';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import {
-    Dialog,
-    DialogFooter,
-    DialogType,
-    IDialogContentProps,
-    IDialogStyles,
-} from '@fluentui/react/lib/Dialog';
+import { Dialog, DialogFooter, DialogType, IDialogContentProps } from '@fluentui/react/lib/Dialog';
 import type { DialogItem } from '../type/DialogItem';
 import type {
     CancelButtonStringKey,
