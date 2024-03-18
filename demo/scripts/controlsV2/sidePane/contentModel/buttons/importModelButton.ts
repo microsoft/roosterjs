@@ -28,14 +28,17 @@ export const importModelButton: RibbonButton<'buttonNameImportModel'> = {
             undefined /* onChange */,
             10 /* rows */
         ).then(values => {
-            const importedModel = JSON.parse(values.model) as ContentModelDocument;
-            editor.formatContentModel(model => {
-                if (importedModel) {
-                    model.blocks = importedModel.blocks;
-                    return true;
+            try {
+                const importedModel = JSON.parse(values.model) as ContentModelDocument;
+                if (importedModel && importedModel.blocks && importedModel.blocks.length > 0) {
+                    editor.formatContentModel(model => {
+                        model.blocks = importedModel.blocks;
+                        return true;
+                    });
                 }
-                return false;
-            });
+            } catch (e) {
+                throw new Error('Invalid model');
+            }
         });
     },
 };
