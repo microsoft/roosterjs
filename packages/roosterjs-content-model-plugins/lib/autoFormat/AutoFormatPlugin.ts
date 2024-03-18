@@ -1,4 +1,5 @@
 import { createLink } from './link/createLink';
+import { createLinkAfterSpace } from './link/createLinkAfterSpace';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { unlink } from './link/unlink';
 import type {
@@ -106,18 +107,18 @@ export class AutoFormatPlugin implements EditorPlugin {
     private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
-            const { autoBullet, autoNumbering, autoUnlink } = this.options;
+            const { autoBullet, autoNumbering, autoUnlink, autoLink } = this.options;
             switch (rawEvent.key) {
                 case ' ':
-                    if (autoBullet || autoNumbering) {
-                        keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
+                    keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
+                    if (autoLink) {
+                        createLinkAfterSpace(editor);
                     }
                     break;
                 case 'Backspace':
                     if (autoUnlink) {
                         unlink(editor, rawEvent);
                     }
-
                     break;
             }
         }

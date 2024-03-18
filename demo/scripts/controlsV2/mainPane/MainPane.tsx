@@ -7,11 +7,12 @@ import { buttons, buttonsWithPopout } from './ribbonButtons';
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
+import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
 import { createLegacyPlugins } from '../plugins/createLegacyPlugins';
 import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
 import { createPasteOptionPlugin } from '../roosterjsReact/pasteOptions';
-import { createRibbonPlugin, Ribbon, RibbonPlugin } from '../roosterjsReact/ribbon';
+import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorAdapter } from 'roosterjs-editor-adapter';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
@@ -41,6 +42,7 @@ import {
     PastePlugin,
     ShortcutPlugin,
     TableEditPlugin,
+    WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
 
 const styles = require('./MainPane.scss');
@@ -75,6 +77,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
     private snapshots: Snapshots;
+    private buttons: RibbonButton<any>[];
+    private buttonsWithPopout: RibbonButton<any>[];
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -110,6 +114,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.contentModelPanePlugin = new ContentModelPanePlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
+
+        const baseButtons = [createFormatPainterButton(this.formatPainterPlugin)];
+        this.buttons = baseButtons.concat(buttons);
+        this.buttonsWithPopout = baseButtons.concat(buttonsWithPopout);
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -228,7 +236,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private renderRibbon(isPopout: boolean) {
         return (
             <Ribbon
-                buttons={isPopout ? buttons : buttonsWithPopout}
+                buttons={isPopout ? this.buttons : this.buttonsWithPopout}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
             />
@@ -300,7 +308,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             editorCreator={this.state.editorCreator}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
                             knownColors={this.knownColors}
-                            cacheModel={this.state.initState.cacheModel}
+                            disableCache={this.state.initState.disableCache}
                         />
                     )}
                 </div>
@@ -417,6 +425,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             listMenu,
             tableMenu,
             imageMenu,
+            watermarkText,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(),
@@ -424,6 +433,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
+            pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),

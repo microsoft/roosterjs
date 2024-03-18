@@ -41,7 +41,6 @@ export default class SampleEntityPlugin implements EditorPlugin {
                     hydratedEntity?.dehydrate();
                     this.hydratedEntities[entity.id] = new HydratedEntity(entity, this.onClick);
 
-                    event.shouldPersist = true;
                     break;
 
                 case 'removeFromEnd':

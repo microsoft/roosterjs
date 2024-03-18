@@ -1,17 +1,18 @@
 import { ChangeSource } from '../../constants/ChangeSource';
+import { cloneModel } from '../../publicApi/model/cloneModel';
 import { createDomToModelContextForSanitizing } from '../createDomToModelContextForSanitizing';
 import { domToContentModel } from 'roosterjs-content-model-dom';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { getSelectedSegments } from '../../publicApi/selection/collectSelections';
 import { mergeModel } from '../../publicApi/model/mergeModel';
-
-import type { MergeModelOption } from '../../publicApi/model/mergeModel';
 import type {
     BeforePasteEvent,
     ClipboardData,
+    CloneModelOptions,
     ContentModelDocument,
     ContentModelSegmentFormat,
-    EditorCore,
+    IEditor,
+    MergeModelOption,
 } from 'roosterjs-content-model-types';
 
 const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
@@ -27,25 +28,32 @@ const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
     textColor: '',
     underline: false,
 };
+const CloneOption: CloneModelOptions = {
+    includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
+};
 
 /**
  * @internal
  */
 export function mergePasteContent(
-    core: EditorCore,
+    editor: IEditor,
     eventResult: BeforePasteEvent,
     clipboardData: ClipboardData
 ) {
     const { fragment, domToModelOption, customizedMerge, pasteType } = eventResult;
 
-    core.api.formatContentModel(
-        core,
+    editor.formatContentModel(
         (model, context) => {
+            if (clipboardData.modelBeforePaste) {
+                const clonedModel = cloneModel(clipboardData.modelBeforePaste, CloneOption);
+                model.blocks = clonedModel.blocks;
+            }
+
             const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
             const domToModelContext = createDomToModelContextForSanitizing(
-                core.physicalRoot.ownerDocument,
+                editor.getDocument(),
                 undefined /*defaultFormat*/,
-                core.domToModelSettings.customized,
+                editor.getEnvironment().domToModelSettings.customized,
                 domToModelOption
             );
 

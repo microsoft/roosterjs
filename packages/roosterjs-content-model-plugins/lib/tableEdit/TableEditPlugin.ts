@@ -130,15 +130,16 @@ export class TableEditPlugin implements EditorPlugin {
         }
 
         if (!this.tableEditor && table && this.editor && table.rows.length > 0) {
+            // anchorContainerSelector is used to specify the container to host the plugin, which can be outside of the editor's div
             const container = this.anchorContainerSelector
-                ? this.editor.getDOMHelper().queryElements(this.anchorContainerSelector)[0]
+                ? this.editor.getDocument().querySelector(this.anchorContainerSelector)
                 : undefined;
 
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
                 this.invalidateTableRects,
-                isNodeOfType(container as Node, 'ELEMENT_NODE') ? container : undefined,
+                isNodeOfType(container, 'ELEMENT_NODE') ? container : undefined,
                 event?.currentTarget
             );
         }
