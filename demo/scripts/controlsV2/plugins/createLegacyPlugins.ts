@@ -6,7 +6,6 @@ import {
     HyperLink,
     ImageEdit,
     TableCellSelection,
-    Watermark,
 } from 'roosterjs-editor-plugins';
 import {
     LegacyPluginList,
@@ -28,7 +27,6 @@ export function createLegacyPlugins(initState: OptionState): LegacyEditorPlugin[
                       : null
               )
             : null,
-        watermark: pluginList.watermark ? new Watermark(initState.watermarkText) : null,
         imageEdit: pluginList.imageEdit
             ? new ImageEdit({
                   preserveRatio: initState.forcePreserveRatio,

@@ -104,7 +104,6 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
 
 export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
     private linkTitle = React.createRef<HTMLInputElement>();
-    private watermarkText = React.createRef<HTMLInputElement>();
     private forcePreserveRatio = React.createRef<HTMLInputElement>();
 
     render() {
@@ -131,17 +130,6 @@ export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
                         )
                     )}
                     {this.renderPluginItem(
-                        'watermark',
-                        'Watermark Plugin',
-                        this.renderInputBox(
-                            'Watermark text: ',
-                            this.watermarkText,
-                            this.props.state.watermarkText,
-                            '',
-                            (state, value) => (state.watermarkText = value)
-                        )
-                    )}
-                    {this.renderPluginItem(
                         'imageEdit',
                         'Image Edit Plugin',
                         this.renderCheckBox(
@@ -165,6 +153,7 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
     private listMenu = React.createRef<HTMLInputElement>();
     private tableMenu = React.createRef<HTMLInputElement>();
     private imageMenu = React.createRef<HTMLInputElement>();
+    private watermarkText = React.createRef<HTMLInputElement>();
 
     render(): JSX.Element {
         return (
@@ -207,6 +196,17 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                                 (state, value) => (state.imageMenu = value)
                             )}
                         </>
+                    )}
+                    {this.renderPluginItem(
+                        'watermark',
+                        'Watermark Plugin',
+                        this.renderInputBox(
+                            'Watermark text: ',
+                            this.watermarkText,
+                            this.props.state.watermarkText,
+                            '',
+                            (state, value) => (state.watermarkText = value)
+                        )
                     )}
                     {this.renderPluginItem('emoji', 'Emoji')}
                     {this.renderPluginItem('pasteOption', 'PasteOptions')}
