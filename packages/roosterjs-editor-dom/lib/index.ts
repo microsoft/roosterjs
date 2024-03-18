@@ -23,6 +23,7 @@ export { default as extractClipboardItems } from './clipboard/extractClipboardIt
 export { default as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
 export { default as handleImagePaste } from './clipboard/handleImagePaste';
 export { default as handleTextPaste } from './clipboard/handleTextPaste';
+export { default as handleTextPasteWithClickableLinks } from './clipboard/handleTextPasteWithLinks';
 export { default as retrieveMetadataFromClipboard } from './clipboard/retrieveMetadataFromClipboard';
 export { default as sanitizePasteContent } from './clipboard/sanitizePasteContent';
 export { default as getPasteType } from './clipboard/getPasteType';

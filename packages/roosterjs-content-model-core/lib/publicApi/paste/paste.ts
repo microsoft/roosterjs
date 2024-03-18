@@ -66,6 +66,5 @@ function createDOMFromHtml(
     html: string | null | undefined,
     trustedHTMLHandler: TrustedHTMLHandler
 ): Document | null {
-    console.log('llll');
     return html ? new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html') : null;
 }

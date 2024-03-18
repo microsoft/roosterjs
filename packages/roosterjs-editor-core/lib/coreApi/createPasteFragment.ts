@@ -6,6 +6,7 @@ import {
     getPasteType,
     handleImagePaste,
     handleTextPaste,
+    handleTextPasteWithClickableLinks,
     moveChildNodes,
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
@@ -59,6 +60,7 @@ export const createPasteFragment: CreatePasteFragment = (
         pasteAsText,
         applyCurrentStyle,
         pasteAsImage,
+        pasteAsTextWithClickableLinks,
         event
     );
 };
@@ -93,6 +95,7 @@ function createBeforePasteEvent(
  * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
  * @param applyCurrentStyle True if apply format of current selection to the pasted content,
  * @param pasteAsImage Whether to force paste as image
+ * @param pasteAsTextWithClickableLinks True to paste plain text with clickable links if any
  * @param event Event to trigger.
  * false to keep original format
  */
@@ -103,6 +106,7 @@ function createFragmentFromClipboardData(
     pasteAsText: boolean,
     applyCurrentStyle: boolean,
     pasteAsImage: boolean,
+    pasteAsTextWithClickableLinks: boolean,
     event: BeforePasteEvent
 ) {
     const { fragment } = event;
@@ -115,16 +119,24 @@ function createFragmentFromClipboardData(
     retrieveMetadataFromClipboard(doc, event, core.trustedHTMLHandler);
 
     // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
-    if ((pasteAsImage && imageDataUri) || (!pasteAsText && !text && imageDataUri)) {
+    if (
+        (pasteAsImage && imageDataUri) ||
+        (!pasteAsText && !pasteAsTextWithClickableLinks && !text && imageDataUri)
+    ) {
         // Paste image
         handleImagePaste(imageDataUri, fragment);
-    } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
+    } else if (
+        !pasteAsText && !pasteAsTextWithClickableLinks && rawHtml && doc ? doc.body : false
+    ) {
         moveChildNodes(fragment, doc?.body);
 
         if (applyCurrentStyle && position) {
             const format = getCurrentFormat(core, position.node);
             applyTextStyle(fragment, node => applyFormat(node, format));
         }
+    } else if (pasteAsTextWithClickableLinks) {
+        // Paste text with clickable links
+        handleTextPasteWithClickableLinks(text, position, fragment);
     } else if (text) {
         // Paste text
         handleTextPaste(text, position, fragment);

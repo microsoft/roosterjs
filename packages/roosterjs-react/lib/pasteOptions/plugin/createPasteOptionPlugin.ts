@@ -160,6 +160,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                         false /** pasteAsImage **/,
                         true /**pasteAsTextWithClickableLinks */
                     );
+                    break;
             }
 
             this.pasteOptionRef.current?.setSelectedKey(key);

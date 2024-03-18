@@ -147,6 +147,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
 
                 case 'pasteOptionPasteAsImage':
                     paste(this.editor, this.clipboardData, 'asImage');
+                    break;
             }
 
             this.pasteOptionRef.current?.setSelectedKey(key);

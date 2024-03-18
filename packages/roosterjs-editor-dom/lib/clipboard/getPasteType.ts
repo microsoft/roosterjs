@@ -5,7 +5,7 @@ import { PasteType } from 'roosterjs-editor-types';
  * @param pasteAsText Whether to paste as Text
  * @param applyCurrentStyle Whether to apply the current format to the content
  * @param pasteAsImage Whether to only paste the image
- * @param pasteAsTextWithClickableLinks whether to past plain text with clickable links
+ * @param pasteAsTextWithClickableLinks whether to paste plain text with clickable links
  * @returns
  */
 export default function getPasteType(

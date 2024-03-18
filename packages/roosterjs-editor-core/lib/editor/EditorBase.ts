@@ -340,6 +340,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      * @param applyCurrentStyle True if apply format of current selection to the pasted content,
      * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
      * @param pasteAsImage: When set to true, if the clipboardData contains a imageDataUri will paste the image to the editor
+     * @param pasteAsTextWithClickableLinks True if the plain pasted text contains links that needs to be in a clickable format. Default value is false.
      */
     public paste(
         clipboardData: ClipboardData,
