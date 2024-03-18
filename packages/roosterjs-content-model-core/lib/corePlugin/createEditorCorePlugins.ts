@@ -1,12 +1,12 @@
-import { createCachePlugin } from './CachePlugin';
-import { createContextMenuPlugin } from './ContextMenuPlugin';
-import { createCopyPastePlugin } from './CopyPastePlugin';
-import { createDOMEventPlugin } from './DOMEventPlugin';
-import { createEntityPlugin } from './EntityPlugin';
-import { createFormatPlugin } from './FormatPlugin';
-import { createLifecyclePlugin } from './LifecyclePlugin';
-import { createSelectionPlugin } from './SelectionPlugin';
-import { createUndoPlugin } from './UndoPlugin';
+import { createCachePlugin } from './cache/CachePlugin';
+import { createContextMenuPlugin } from './contextMenu/ContextMenuPlugin';
+import { createCopyPastePlugin } from './copyPaste/CopyPastePlugin';
+import { createDOMEventPlugin } from './domEvent/DOMEventPlugin';
+import { createEntityPlugin } from './entity/EntityPlugin';
+import { createFormatPlugin } from './format/FormatPlugin';
+import { createLifecyclePlugin } from './lifecycle/LifecyclePlugin';
+import { createSelectionPlugin } from './selection/SelectionPlugin';
+import { createUndoPlugin } from './undo/UndoPlugin';
 import type { EditorCorePlugins, EditorOptions } from 'roosterjs-content-model-types';
 
 /**
