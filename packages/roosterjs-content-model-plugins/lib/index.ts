@@ -22,3 +22,5 @@ export {
 export { ShortcutPlugin } from './shortcut/ShortcutPlugin';
 export { ShortcutKeyDefinition, ShortcutCommand } from './shortcut/ShortcutCommand';
 export { ContextMenuPluginBase, ContextMenuOptions } from './contextMenuBase/ContextMenuPluginBase';
+export { WatermarkPlugin } from './watermark/WatermarkPlugin';
+export { WatermarkFormat } from './watermark/WatermarkFormat';
