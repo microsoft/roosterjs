@@ -15,7 +15,7 @@ export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { isBlockElement } from './domToModel/utils/isBlockElement';
 
 export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
-export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
+export { isNodeOfType } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';
 export { toArray } from './domUtils/toArray';

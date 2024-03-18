@@ -284,6 +284,14 @@ export { DOMHelper } from './parameter/DOMHelper';
 export { ImageEditOperation, ImageEditor } from './parameter/ImageEditor';
 export { CachedElementHandler, CloneModelOptions } from './parameter/CloneModelOptions';
 export { LinkData } from './parameter/LinkData';
+export { MergeModelOption } from './parameter/MergeModelOption';
+export {
+    IterateSelectionsCallback,
+    IterateSelectionsOption,
+} from './parameter/IterateSelectionsOption';
+export { NodeTypeMap } from './parameter/NodeTypeMap';
+export { TypeOfBlockGroup } from './parameter/TypeOfBlockGroup';
+export { OperationalBlocks } from './parameter/OperationalBlocks';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

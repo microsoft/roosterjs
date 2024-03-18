@@ -1,6 +1,6 @@
 import * as TestHelper from '../TestHelper';
 import { createElement } from '../../lib/pluginUtils/CreateElement/createElement';
-import { DOMEventHandlerFunction, IEditor } from 'roosterjs-editor-types';
+import { DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types';
 import { getModelTable } from './tableData';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 import {
