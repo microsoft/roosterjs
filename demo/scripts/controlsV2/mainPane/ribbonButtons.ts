@@ -15,7 +15,6 @@ import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseI
 import { exportContentButton } from '../demoButtons/exportContentButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
 import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
-import { formatPainterButton } from '../demoButtons/formatPainterButton';
 import { formatTableButton } from '../demoButtons/formatTableButton';
 import { imageBorderColorButton } from '../demoButtons/imageBorderColorButton';
 import { imageBorderRemoveButton } from '../demoButtons/imageBorderRemoveButton';
@@ -65,7 +64,6 @@ import {
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 export const buttons: RibbonButton<any>[] = [
-    formatPainterButton,
     boldButton,
     italicButton,
     underlineButton,

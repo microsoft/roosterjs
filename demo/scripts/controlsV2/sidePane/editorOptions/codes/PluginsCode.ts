@@ -44,6 +44,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.paste && new PastePluginCode(),
             pluginList.tableEdit && new TableEditPluginCode(),
             pluginList.shortcut && new ShortcutPluginCode(),
+            pluginList.watermark && new WatermarkCode(state.watermarkText),
         ]);
     }
 }
@@ -55,7 +56,6 @@ export class LegacyPluginCode extends PluginsCodeBase {
         const plugins: CodeElement[] = [
             pluginList.contentEdit && new ContentEditCode(state.contentEditFeatures),
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
-            pluginList.watermark && new WatermarkCode(state.watermarkText),
             pluginList.imageEdit && new ImageEditCode(),
             pluginList.customReplace && new CustomReplaceCode(),
             pluginList.tableCellSelection && new TableCellSelectionCode(),
