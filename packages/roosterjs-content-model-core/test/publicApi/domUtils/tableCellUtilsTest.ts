@@ -1,11 +1,7 @@
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
+import { DOMHelper, DOMSelection, ParsedTable } from 'roosterjs-content-model-types';
 import {
-    DOMHelper,
-    DOMSelection,
-    ParsedTable,
-    TableCellCoordinate,
-} from 'roosterjs-content-model-types';
-import {
+    TableCellCoordinateWithCell,
     createTableRanges,
     findCoordinate,
     findLastedCoInMergedCell,
@@ -104,7 +100,7 @@ describe('findTableCellElement', () => {
         parsedTable: ParsedTable,
         row: number,
         col: number,
-        expectedResult: ({ cell: HTMLTableCellElement } & TableCellCoordinate) | null
+        expectedResult: TableCellCoordinateWithCell | null
     ) {
         const result = findTableCellElement(parsedTable, { row, col });
 

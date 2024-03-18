@@ -50,6 +50,13 @@ export function parseTableCells(table: HTMLTableElement): ParsedTable {
 
 /**
  * @internal
+ */
+export interface TableCellCoordinateWithCell extends TableCellCoordinate {
+    cell: HTMLTableCellElement;
+}
+
+/**
+ * @internal
  * Try to find a TD/TH element from the given row and col number from the given parsed table
  * @param parsedTable The parsed table
  * @param row Row index
@@ -59,7 +66,7 @@ export function parseTableCells(table: HTMLTableElement): ParsedTable {
 export function findTableCellElement(
     parsedTable: ParsedTable,
     coordinate: TableCellCoordinate
-): ({ cell: HTMLTableCellElement } & TableCellCoordinate) | null {
+): TableCellCoordinateWithCell | null {
     let { row, col } = coordinate;
 
     while (
