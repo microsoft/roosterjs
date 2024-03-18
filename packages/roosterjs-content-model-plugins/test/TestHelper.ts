@@ -1,4 +1,9 @@
-import { ContentModelDocument, CoreApiMap, EditorPlugin } from 'roosterjs-content-model-types';
+import {
+    ContentModelDocument,
+    CoreApiMap,
+    EditorPlugin,
+    IEditor,
+} from 'roosterjs-content-model-types';
 import { Editor } from 'roosterjs-content-model-core';
 
 export function initEditor(
@@ -7,7 +12,7 @@ export function initEditor(
     initialModel?: ContentModelDocument,
     coreApiOverride?: Partial<CoreApiMap>,
     anchorContainerSelector?: string
-) {
+): IEditor {
     let node = document.createElement('div');
     node.id = id;
 
