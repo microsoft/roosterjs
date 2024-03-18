@@ -20,8 +20,6 @@ import {
 
 const TABLE_RESIZER_ID = '_Table_Resizer';
 
-// TODO: Reenable this test
-// https://github.com/microsoft/roosterjs/issues/2474
 xdescribe('Table Resizer tests', () => {
     let editor: IEditor;
     let plugin: TableEditPlugin;
@@ -75,7 +73,7 @@ xdescribe('Table Resizer tests', () => {
     it('removes table resizer on scrolling', () => {
         const pluginEvent: PluginEvent = {
             eventType: 'scroll',
-            scrollContainer: editor.getDocument().body as HTMLElement,
+            scrollContainer: editor.getScrollContainer(),
             rawEvent: null,
         };
         removeResizerTest(pluginEvent);

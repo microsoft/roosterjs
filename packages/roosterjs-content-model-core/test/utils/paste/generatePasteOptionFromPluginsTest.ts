@@ -1,8 +1,8 @@
-import { EditorCore } from 'roosterjs-content-model-types';
 import { generatePasteOptionFromPlugins } from '../../../lib/utils/paste/generatePasteOptionFromPlugins';
+import { IEditor } from 'roosterjs-content-model-types';
 
 describe('generatePasteOptionFromPlugins', () => {
-    let core: EditorCore;
+    let editor: IEditor;
     let triggerPluginEventSpy: jasmine.Spy;
 
     const mockedClipboardData = 'CLIPBOARDDATA' as any;
@@ -19,10 +19,8 @@ describe('generatePasteOptionFromPlugins', () => {
 
     beforeEach(() => {
         triggerPluginEventSpy = jasmine.createSpy('triggerEvent');
-        core = {
-            api: {
-                triggerEvent: triggerPluginEventSpy,
-            },
+        editor = {
+            triggerEvent: triggerPluginEventSpy,
         } as any;
     });
 
@@ -32,9 +30,11 @@ describe('generatePasteOptionFromPlugins', () => {
         triggerPluginEventSpy.and.callFake((core, event) => {
             originalEvent = { ...event };
             Object.assign(event, mockedResult);
+
+            return event;
         });
         const result = generatePasteOptionFromPlugins(
-            core,
+            editor,
             mockedClipboardData,
             mockedFragment,
             {
@@ -76,7 +76,7 @@ describe('generatePasteOptionFromPlugins', () => {
             },
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
-            core,
+            'beforePaste',
             {
                 eventType: 'beforePaste',
                 clipboardData: mockedClipboardData,
@@ -99,10 +99,12 @@ describe('generatePasteOptionFromPlugins', () => {
             event.domToModelOption = 'OptionResult';
             event.pasteType = 'TypeResult';
             event.customizedMerge = mockedCustomizedMerge;
+
+            return event;
         });
 
         const result = generatePasteOptionFromPlugins(
-            core,
+            editor,
             mockedClipboardData,
             mockedFragment,
             {
@@ -127,7 +129,7 @@ describe('generatePasteOptionFromPlugins', () => {
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
-            core,
+            'beforePaste',
             {
                 eventType: 'beforePaste',
                 clipboardData: mockedClipboardData,
@@ -149,9 +151,11 @@ describe('generatePasteOptionFromPlugins', () => {
         triggerPluginEventSpy.and.callFake((core, event) => {
             originalEvent = { ...event };
             Object.assign(event, mockedResult);
+
+            return event;
         });
         const result = generatePasteOptionFromPlugins(
-            core,
+            editor,
             mockedClipboardData,
             mockedFragment,
             {
@@ -173,7 +177,7 @@ describe('generatePasteOptionFromPlugins', () => {
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
-            core,
+            'beforePaste',
             {
                 eventType: 'beforePaste',
                 clipboardData: mockedClipboardData,
@@ -211,7 +215,7 @@ describe('generatePasteOptionFromPlugins', () => {
             Object.assign(event, mockedResult);
         });
         const result = generatePasteOptionFromPlugins(
-            core,
+            editor,
             mockedClipboardData,
             mockedFragment,
             {

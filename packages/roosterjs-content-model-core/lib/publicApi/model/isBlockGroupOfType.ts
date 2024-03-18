@@ -1,5 +1,8 @@
-import type { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
-import type { TypeOfBlockGroup } from './getClosestAncestorBlockGroupIndex';
+import type {
+    ContentModelBlock,
+    ContentModelBlockGroup,
+    TypeOfBlockGroup,
+} from 'roosterjs-content-model-types';
 
 /**
  * Check if the given content model block or block group is of the expected block group type

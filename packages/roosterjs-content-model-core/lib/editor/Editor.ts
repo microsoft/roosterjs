@@ -1,12 +1,10 @@
 import { ChangeSource } from '../constants/ChangeSource';
 import { cloneModel } from '../publicApi/model/cloneModel';
-import { createEditorCore } from './createEditorCore';
+import { createEditorCore } from './core/createEditorCore';
 import { createEmptyModel, tableProcessor } from 'roosterjs-content-model-dom';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import { transformColor } from '../publicApi/color/transformColor';
-import type { CachedElementHandler } from '../publicApi/model/cloneModel';
 import type {
-    ClipboardData,
     ContentModelDocument,
     ContentModelFormatter,
     ContentModelSegmentFormat,
@@ -17,7 +15,6 @@ import type {
     EditorEnvironment,
     FormatContentModelOptions,
     IEditor,
-    PasteType,
     PluginEventData,
     PluginEventFromType,
     PluginEventType,
@@ -28,6 +25,7 @@ import type {
     TrustedHTMLHandler,
     Rect,
     EntityState,
+    CachedElementHandler,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -91,8 +89,12 @@ export class Editor implements IEditor {
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
      * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
      * instead to improve performance. This is mostly used for retrieve current format state.
+     * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
+     * This is usually used for exporting content
      */
-    getContentModelCopy(mode: 'connected' | 'disconnected' | 'reduced'): ContentModelDocument {
+    getContentModelCopy(
+        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
+    ): ContentModelDocument {
         const core = this.getCore();
 
         switch (mode) {
@@ -104,9 +106,17 @@ export class Editor implements IEditor {
                 });
 
             case 'disconnected':
-                return cloneModel(core.api.createContentModel(core), {
-                    includeCachedElement: this.cloneOptionCallback,
-                });
+            case 'clean':
+                return cloneModel(
+                    core.api.createContentModel(
+                        core,
+                        undefined /*option*/,
+                        mode == 'clean' ? 'none' : undefined /*selectionOverride*/
+                    ),
+                    {
+                        includeCachedElement: this.cloneOptionCallback,
+                    }
+                );
             case 'reduced':
                 return core.api.createContentModel(core, {
                     processorOverride: {
@@ -219,7 +229,7 @@ export class Editor implements IEditor {
      */
     hasFocus(): boolean {
         const core = this.getCore();
-        return core.api.hasFocus(core);
+        return core.domHelper.hasFocus();
     }
 
     /**
@@ -331,17 +341,6 @@ export class Editor implements IEditor {
     }
 
     /**
-     * Paste into editor using a clipboardData object
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param pasteType Type of paste
-     */
-    pasteFromClipboard(clipboardData: ClipboardData, pasteType: PasteType = 'normal') {
-        const core = this.getCore();
-
-        core.api.paste(core, clipboardData, pasteType);
-    }
-
-    /**
      * Get a color manager object for this editor.
      */
     getColorManager(): DarkColorHandler {
@@ -370,6 +369,23 @@ export class Editor implements IEditor {
      */
     getVisibleViewport(): Rect | null {
         return this.getCore().api.getVisibleViewport(this.getCore());
+    }
+
+    /**
+     * Add CSS rules for editor
+     * @param key A string to identify the CSS rule type. When set CSS rules with the same key again, existing rules with the same key will be replaced.
+     * @param cssRule The CSS rule string, must be a valid CSS rule string, or browser may throw exception. Pass null to clear existing rules
+     * @param subSelectors @optional If the rule is used for child element under editor, use this parameter to specify the child elements. Each item will be
+     * combined with root selector together to build a separate rule.
+     */
+    setEditorStyle(
+        key: string,
+        cssRule: string | null,
+        subSelectors?: 'before' | 'after' | string[]
+    ): void {
+        const core = this.getCore();
+
+        core.api.setEditorStyle(core, key, cssRule, subSelectors);
     }
 
     /**

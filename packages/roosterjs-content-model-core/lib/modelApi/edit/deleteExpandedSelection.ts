@@ -2,7 +2,6 @@ import { deleteBlock } from '../../publicApi/selection/deleteBlock';
 import { deleteSegment } from '../../publicApi/selection/deleteSegment';
 import { getSegmentTextFormat } from '../../publicApi/domUtils/getSegmentTextFormat';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
-import type { IterateSelectionsOption } from '../../publicApi/selection/iterateSelections';
 import type {
     ContentModelBlockGroup,
     ContentModelDocument,
@@ -11,6 +10,7 @@ import type {
     DeleteSelectionContext,
     FormatContentModelContext,
     InsertPoint,
+    IterateSelectionsOption,
     TableSelectionContext,
 } from 'roosterjs-content-model-types';
 import {

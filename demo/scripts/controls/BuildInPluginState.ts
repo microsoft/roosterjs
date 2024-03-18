@@ -15,6 +15,7 @@ export interface BuildInPluginList {
     imageEdit: boolean;
     cutPasteListChain: boolean;
     tableCellSelection: boolean;
+    tableResize: boolean;
     customReplace: boolean;
     listEditMenu: boolean;
     imageEditMenu: boolean;

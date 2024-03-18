@@ -2,8 +2,6 @@ import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from '../pluginState/PluginState';
 import type { EditorPlugin } from './EditorPlugin';
-import type { ClipboardData } from '../parameter/ClipboardData';
-import type { PasteType } from '../enum/PasteType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatContentModelContext';
@@ -11,11 +9,10 @@ import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOption } from '../context/DomToModelOption';
-import type { DomToModelSettings } from '../context/DomToModelSettings';
 import type { EditorContext } from '../context/EditorContext';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
-import type { ModelToDomSettings, OnNodeCreated } from '../context/ModelToDomSettings';
+import type { OnNodeCreated } from '../context/ModelToDomSettings';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
 import type {
@@ -34,12 +31,13 @@ export type CreateEditorContext = (core: EditorCore, saveIndex: boolean) => Edit
  * Create Content Model from DOM tree in this editor
  * @param core The EditorCore object
  * @param option The option to customize the behavior of DOM to Content Model conversion
- * @param selectionOverride When passed, use this selection range instead of current selection in editor
+ * @param selectionOverride When passed a valid selection, use this selection range instead of current selection in editor.
+ * When pass "none", it means we don't need a selection in content model
  */
 export type CreateContentModel = (
     core: EditorCore,
     option?: DomToModelOption,
-    selectionOverride?: DOMSelection
+    selectionOverride?: DOMSelection | 'none'
 ) => ContentModelDocument;
 
 /**
@@ -125,13 +123,6 @@ export type AddUndoSnapshot = (
 export type GetVisibleViewport = (core: EditorCore) => Rect | null;
 
 /**
- * Check if the editor has focus now
- * @param core The EditorCore object
- * @returns True if the editor has focus, otherwise false
- */
-export type HasFocus = (core: EditorCore) => boolean;
-
-/**
  * Focus to editor. If there is a cached selection range, use it as current selection
  * @param core The EditorCore object
  */
@@ -155,12 +146,22 @@ export type AttachDomEvent = (
 export type RestoreUndoSnapshot = (core: EditorCore, snapshot: Snapshot) => void;
 
 /**
- * Paste into editor using a clipboardData object
- * @param core The EditorCore object.
- * @param clipboardData Clipboard data retrieved from clipboard
- * @param pasteType Type of content to paste. @default normal
+ * Add CSS rules for editor
+ * @param core The EditorCore object
+ * @param key A string to identify the CSS rule type. When set CSS rules with the same key again, existing rules with the same key will be replaced.
+ * @param cssRule The CSS rule string, must be a valid CSS rule string, or browser may throw exception. Pass null to remove existing rules
+ * @param subSelectors @optional If the rule is used for child element under editor, use this parameter to specify the child elements. Each item will be
+ * combined with root selector together to build a separate rule. It also accepts pseudo classes "before" and "after" to create pseudo class rule "::before"
+ * and "::after" to the editor root element itself
+ * @param maxRuleLength @optional Set maximum length for a single rule. This is used by test code only
  */
-export type Paste = (core: EditorCore, clipboardData: ClipboardData, pasteType: PasteType) => void;
+export type SetEditorStyle = (
+    core: EditorCore,
+    key: string,
+    cssRule: string | null,
+    subSelectors?: 'before' | 'after' | string[],
+    maxRuleLength?: number
+) => void;
 
 /**
  * The interface for the map of core API for Editor.
@@ -168,9 +169,11 @@ export type Paste = (core: EditorCore, clipboardData: ClipboardData, pasteType: 
  */
 export interface CoreApiMap {
     /**
-     * Create a EditorContext object used by ContentModel API
+     * Create Content Model from DOM tree in this editor
      * @param core The EditorCore object
-     * @param saveIndex True to allow saving index info into node using domIndexer, otherwise false
+     * @param option The option to customize the behavior of DOM to Content Model conversion
+     * @param selectionOverride When passed a valid selection, use this selection range instead of current selection in editor.
+     * When pass "none", it means we don't need a selection in content model
      */
     createEditorContext: CreateEditorContext;
 
@@ -228,13 +231,6 @@ export interface CoreApiMap {
     getVisibleViewport: GetVisibleViewport;
 
     /**
-     * Check if the editor has focus now
-     * @param core The EditorCore object
-     * @returns True if the editor has focus, otherwise false
-     */
-    hasFocus: HasFocus;
-
-    /**
      * Focus to editor. If there is a cached selection range, use it as current selection
      * @param core The EditorCore object
      */
@@ -273,12 +269,14 @@ export interface CoreApiMap {
     triggerEvent: TriggerEvent;
 
     /**
-     * Paste into editor using a clipboardData object
-     * @param editor The editor to paste content into
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param pasteType Type of content to paste. @default normal
+     * Add CSS rules for editor
+     * @param core The EditorCore object
+     * @param key A string to identify the CSS rule type. When set CSS rules with the same key again, existing rules with the same key will be replaced.
+     * @param cssRule The CSS rule string, must be a valid CSS rule string, or browser may throw exception
+     * @param subSelectors @optional If the rule is used for child element under editor, use this parameter to specify the child elements. Each item will be
+     * combined with root selector together to build a separate rule.
      */
-    paste: Paste;
+    setEditorStyle: SetEditorStyle;
 }
 
 /**
@@ -313,16 +311,6 @@ export interface EditorCore extends PluginState {
     readonly plugins: EditorPlugin[];
 
     /**
-     * Settings used by DOM to Content Model conversion
-     */
-    readonly domToModelSettings: ContentModelSettings<DomToModelOption, DomToModelSettings>;
-
-    /**
-     * Settings used by Content Model to DOM conversion
-     */
-    readonly modelToDomSettings: ContentModelSettings<ModelToDomOption, ModelToDomSettings>;
-
-    /**
      * Editor running environment
      */
     readonly environment: EditorEnvironment;
@@ -351,26 +339,4 @@ export interface EditorCore extends PluginState {
      * @param error The error object we got
      */
     readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
-}
-
-/**
- * Default DOM and Content Model conversion settings for an editor
- */
-export interface ContentModelSettings<OptionType, ConfigType> {
-    /**
-     * Built in options used by editor
-     */
-    builtIn: OptionType;
-
-    /**
-     * Customize options passed in from Editor Options, used for overwrite default option.
-     * This will also be used by copy/paste
-     */
-    customized: OptionType;
-
-    /**
-     * Configuration calculated from default and customized options.
-     * This is a cached object so that we don't need to cache it every time when we use Content Model
-     */
-    calculated: ConfigType;
 }
