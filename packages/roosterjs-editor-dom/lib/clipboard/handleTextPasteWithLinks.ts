@@ -41,9 +41,11 @@ export default function handleTextPasteWithClickableLinks(
         } else if (index > 0 && index < lines.length - 1) {
             // Middle line of >=3 lines scenario
             fragment.appendChild(
-                linksFragment.childNodes.length === 0
-                    ? document.createElement('br')
-                    : wrap(linksFragment)
+                wrap(
+                    linksFragment.childNodes.length === 0
+                        ? document.createElement('br')
+                        : linksFragment
+                )
             );
         } else {
             fragment.appendChild(linksFragment);
