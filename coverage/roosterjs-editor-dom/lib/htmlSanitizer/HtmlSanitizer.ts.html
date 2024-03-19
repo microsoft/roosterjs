@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.01% </span>
+                <span class="strong">93.57% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>157/167</span>
+                <span class='fraction'>160/171</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.58% </span>
+                <span class="strong">86.84% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>134/153</span>
+                <span class='fraction'>132/152</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95% </span>
+                <span class="strong">95.45% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>19/20</span>
+                <span class='fraction'>21/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.59% </span>
+                <span class="strong">93.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>146/156</span>
+                <span class='fraction'>148/159</span>
             </div>
         
             
@@ -399,7 +399,17 @@
 <a name='L340'></a><a href='#L340'>340</a>
 <a name='L341'></a><a href='#L341'>341</a>
 <a name='L342'></a><a href='#L342'>342</a>
-<a name='L343'></a><a href='#L343'>343</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L343'></a><a href='#L343'>343</a>
+<a name='L344'></a><a href='#L344'>344</a>
+<a name='L345'></a><a href='#L345'>345</a>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -524,6 +534,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">224x</span>
@@ -555,13 +575,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -862,6 +882,16 @@ export default class HtmlSanitizer {
     }
 &nbsp;
     /**
+     * Splits CSS selectors, avoiding splits within parentheses
+     * @param selectorText The CSS selector string
+     * @return Array of trimmed selectors
+     */
+    private splitSelectors(selectorText: string) {
+        const regex = /(?![^(]*\)),/;
+        return selectorText.split(regex).map(s =&gt; s.trim());
+    }
+&nbsp;
+    /**
      * Sanitize an HTML element, remove unnecessary or dangerous elements/attribute/CSS rules
      * @param rootNode Root node to sanitize
      * @param currentStyles Current CSS styles. Inheritable styles in the given node which has
@@ -895,9 +925,9 @@ export default class HtmlSanitizer {
                     continue;
                 }
                 // Make sure the selector is not empty
-                for (const selector of styleRule.selectorText.split(',')) {
-                    if (!selector || !selector.trim() || selector.indexOf(':') &gt;= 0) {
-                        continue;
+                for (const selector of this.splitSelectors(styleRule.selectorText)) {
+                    <span class="missing-if-branch" title="if path not taken" >I</span>if (!selector || !selector.trim()) {
+<span class="cstat-no" title="statement not covered" >                        continue;</span>
                     }
                     const nodes = toArray(rootNode.querySelectorAll(selector));
                     // Always put existing styles after so that they have higher priority
@@ -1090,7 +1120,7 @@ export default class HtmlSanitizer {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Mar 18 2024 18:29:18 GMT+0000 (Coordinated Universal Time)
+                at Tue Mar 19 2024 02:44:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
