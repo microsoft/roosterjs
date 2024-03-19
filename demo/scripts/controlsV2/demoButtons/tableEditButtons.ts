@@ -84,7 +84,7 @@ export const tableMergeButton: RibbonButton<
     'ribbonButtonTableMerge' | TableEditMergeMenuItemStringKey
 > = {
     key: 'ribbonButtonTableMerge',
-    iconName: 'TableComputed',
+    iconName: '',
     unlocalizedText: 'Merge',
     isDisabled: formatState => !formatState.isInTable,
     dropDownMenu: {
@@ -102,13 +102,16 @@ export const tableMergeButton: RibbonButton<
             editTable(editor, TableEditOperationMap[key]);
         }
     },
+    commandBarProperties: {
+        iconOnly: false,
+    },
 };
 
 export const tableSplitButton: RibbonButton<
     'ribbonButtonTableSplit' | TableEditSplitMenuItemStringKey
 > = {
     key: 'ribbonButtonTableSplit',
-    iconName: 'TableComputed',
+    iconName: '',
     unlocalizedText: 'Split',
     isDisabled: formatState => !formatState.isInTable,
     dropDownMenu: {
@@ -122,13 +125,16 @@ export const tableSplitButton: RibbonButton<
             editTable(editor, TableEditOperationMap[key]);
         }
     },
+    commandBarProperties: {
+        iconOnly: false,
+    },
 };
 
 export const tableAlignCellButton: RibbonButton<
     'ribbonButtonTableAlignCell' | TableEditAlignMenuItemStringKey
 > = {
     key: 'ribbonButtonTableAlignCell',
-    iconName: 'TableComputed',
+    iconName: '',
     unlocalizedText: 'Align table cell',
     isDisabled: formatState => !formatState.isInTable,
     dropDownMenu: {
@@ -147,13 +153,16 @@ export const tableAlignCellButton: RibbonButton<
             editTable(editor, TableEditOperationMap[key]);
         }
     },
+    commandBarProperties: {
+        iconOnly: false,
+    },
 };
 
 export const tableAlignTableButton: RibbonButton<
     'ribbonButtonTableAlignTable' | TableEditAlignTableMenuItemStringKey
 > = {
     key: 'ribbonButtonTableAlignTable',
-    iconName: 'TableComputed',
+    iconName: '',
     unlocalizedText: 'Align table',
     isDisabled: formatState => !formatState.isInTable,
     dropDownMenu: {
@@ -167,5 +176,8 @@ export const tableAlignTableButton: RibbonButton<
         if (key != 'ribbonButtonTableAlignTable') {
             editTable(editor, TableEditOperationMap[key]);
         }
+    },
+    commandBarProperties: {
+        iconOnly: false,
     },
 };

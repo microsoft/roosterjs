@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { MainPane } from '../../mainPane/MainPane';
 import { SidePaneElementProps } from '../SidePaneElement';
 import {
     ContentModelFormatState,
     EditorEnvironment,
+    ImageFormatState,
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
 
@@ -37,9 +39,13 @@ export default class FormatStatePane extends React.Component<
     render() {
         const { format, x, y } = this.state;
         const { isMac, isAndroid, isSafari, isMobileOrTablet } = this.props.env ?? {};
+        const mpState = MainPane.getInstance();
 
         const TableFormat = () => {
             const tableFormat = format.tableFormat;
+            const tableBorder = mpState.getTableBorder();
+            const tableBorderFormat =
+                tableBorder.style + ' ' + tableBorder.width + ' ' + tableBorder.color;
             if (!tableFormat) {
                 return <></>;
             }
@@ -47,9 +53,11 @@ export default class FormatStatePane extends React.Component<
                 (key: keyof TableMetadataFormat, index: number, array) => {
                     const rowStyle: React.CSSProperties =
                         index == 0
-                            ? { borderTop: 'solid' }
+                            ? {
+                                  borderTop: tableBorderFormat,
+                              }
                             : index == array.length - 1
-                            ? { borderBottom: 'solid' }
+                            ? { borderBottom: tableBorderFormat }
                             : {};
                     return (
                         <tr style={rowStyle}>
@@ -61,9 +69,32 @@ export default class FormatStatePane extends React.Component<
             );
             return tableFromatRows;
         };
+
+        const ImageFormat = () => {
+            const imageFormat = format.imageFormat;
+            if (!imageFormat) {
+                return <></>;
+            }
+            const imageFormatRows = Object.keys(imageFormat).map(
+                (key: keyof ImageFormatState, index: number, array) => {
+                    return (
+                        <tr>
+                            <td style={{ fontSize: 'small' }}>{key}</td>
+                            <td>{String(imageFormat[key])}</td>
+                        </tr>
+                    );
+                }
+            );
+            return imageFormatRows;
+        };
+
         return format ? (
             <table style={{ borderCollapse: 'collapse' }}>
                 <tbody>
+                    <tr hidden={!format.canAddImageAltText}>
+                        <td className={styles.title}>Image</td>
+                    </tr>
+                    {ImageFormat()}
                     <tr hidden={!format.isInTable}>
                         <td className={styles.title}>Table</td>
                         <td>
