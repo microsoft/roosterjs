@@ -1,4 +1,4 @@
-import { ENTITY_INFO_NAME, parseEntityFormat } from 'roosterjs-content-model-dom';
+import { findClosestEntityWrapper, parseEntityFormat } from 'roosterjs-content-model-dom';
 import type {
     AddUndoSnapshot,
     EntityOperationEvent,
@@ -25,13 +25,10 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
         const selection = createSnapshotSelection(core);
         const html = physicalRoot.innerHTML;
 
-        // give plugins the chance to share entity states to include in the snapshot
-        const logicalRootEntityWrapper = core.domHelper.findClosestElementAncestor(
-            logicalRoot,
-            `.${ENTITY_INFO_NAME}`
-        );
-        if (!entityStates && logicalRootEntityWrapper) {
-            const entityFormat = parseEntityFormat(logicalRootEntityWrapper);
+        // give plugins the chance to share entity states to include in the snapshot if the logical root is in an entity
+        const entityWrapper = findClosestEntityWrapper(logicalRoot, core.domHelper);
+        if (!entityStates && entityWrapper) {
+            const entityFormat = parseEntityFormat(entityWrapper);
             if (entityFormat.entityType && entityFormat.id) {
                 const event = <EntityOperationEvent>{
                     eventType: 'entityOperation',
@@ -39,7 +36,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
                     entity: {
                         type: entityFormat.entityType,
                         id: entityFormat.id,
-                        wrapper: logicalRootEntityWrapper,
+                        wrapper: entityWrapper,
                         isReadonly: entityFormat.isReadonly,
                     },
                     state: undefined,

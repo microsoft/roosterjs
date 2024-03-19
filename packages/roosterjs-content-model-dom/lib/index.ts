@@ -22,8 +22,8 @@ export { toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
 export {
-    ENTITY_INFO_NAME,
     isEntityElement,
+    findClosestEntityWrapper,
     getAllEntityWrappers,
     parseEntityFormat,
     generateEntityClassNames,

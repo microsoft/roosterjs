@@ -5,11 +5,11 @@ import { toArray } from './toArray';
 import type {
     ContentModelEntityFormat,
     ContentModelSegmentFormat,
+    DOMHelper,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
-// @internal
-export const ENTITY_INFO_NAME = '_Entity';
+const ENTITY_INFO_NAME = '_Entity';
 const ENTITY_TYPE_PREFIX = '_EType_';
 const ENTITY_ID_PREFIX = '_EId_';
 const ENTITY_READONLY_PREFIX = '_EReadonly_';
@@ -22,6 +22,16 @@ const DELIMITER_AFTER = 'entityDelimiterAfter';
  */
 export function isEntityElement(node: Node): boolean {
     return isNodeOfType(node, 'ELEMENT_NODE') && node.classList.contains(ENTITY_INFO_NAME);
+}
+
+/**
+ * Get the entity wrapper element for a given DOM node
+ */
+export function findClosestEntityWrapper(
+    startNode: Node,
+    domHelper: DOMHelper
+): HTMLElement | null {
+    return domHelper.findClosestElementAncestor(startNode, `.${ENTITY_INFO_NAME}`);
 }
 
 /**

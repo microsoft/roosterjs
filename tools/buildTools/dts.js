@@ -29,7 +29,7 @@ const regEnum = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(?:\/\/.*\n)?(export\s+)?(default
 // 4. [export ][default |declare ]type <NAME> = ...;
 const regType = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?type\s+([0-9a-zA-Z_]+(\s*<[^>]+>)?)\s*=\s*/g;
 // 5. [export ][default |declare ]const <NAME>: ...;
-const regConst = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?const\s+([0-9a-zA-Z_<>]+)\s*:\s*/g;
+const regConst = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?const\s+([0-9a-zA-Z_<>]+)(\s*:)?\s*/g;
 // 6. export[ default] <NAME>|{NAMES};
 const regExport = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)(default\s+([0-9a-zA-Z_]+)\s*,?)?(\s*{([^}]+)})?\s*;/g;
 
