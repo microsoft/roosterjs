@@ -21,4 +21,9 @@ export const darkModeButton: RibbonButton<DarkModeButtonStringKey> = {
         MainPane.getInstance().toggleDarkMode();
         return true;
     },
+    commandBarProperties: {
+        buttonStyles: {
+            icon: { paddingBottom: '10px' },
+        },
+    },
 };

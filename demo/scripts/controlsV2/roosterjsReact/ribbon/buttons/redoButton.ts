@@ -14,4 +14,9 @@ export const redoButton: RibbonButton<RedoButtonStringKey> = {
     onClick: editor => {
         redo(editor);
     },
+    commandBarProperties: {
+        buttonStyles: {
+            icon: { paddingBottom: '10px' },
+        },
+    },
 };
