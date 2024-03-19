@@ -57,3 +57,9 @@ export class TableCellSelectionCode extends SimplePluginCode {
         super('TableCellSelection', 'roosterjs');
     }
 }
+
+export class MarkdownPluginCode extends SimplePluginCode {
+    constructor() {
+        super('MarkdownPlugin');
+    }
+}

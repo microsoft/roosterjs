@@ -22,6 +22,7 @@ export interface NewPluginList {
     emoji: boolean;
     pasteOption: boolean;
     sampleEntity: boolean;
+    markdown: boolean;
 }
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
