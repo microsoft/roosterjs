@@ -1,5 +1,6 @@
 import { setFormat } from './utils/setFormat';
 import type {
+    ContentModelSegmentFormat,
     EditorPlugin,
     IEditor,
     KeyDownEvent,
@@ -21,11 +22,17 @@ const DefaultOptions: Required<MarkdownOptions> = {
     italic: true,
 };
 
+interface Markdown {
+    character: string;
+    format: ContentModelSegmentFormat;
+}
+
 /**
  * Markdown plugin handles markdown formatting, such as transforming * characters into bold text.
  */
 export class MarkdownPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
+    private lastCharacterAndFormat: Markdown | undefined = undefined;
 
     /**
      * @param options An optional parameter that takes in an object of type MarkdownOptions, which includes the following properties:
@@ -59,6 +66,7 @@ export class MarkdownPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+        this.lastCharacterAndFormat = undefined;
     }
 
     /**
@@ -80,25 +88,46 @@ export class MarkdownPlugin implements EditorPlugin {
     private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
         const { strikethrough, bold, italic } = this.options;
-        if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
+        const selection = editor.getDOMSelection();
+        if (
+            !rawEvent.defaultPrevented &&
+            !event.handledByEditFeature &&
+            selection &&
+            selection.type == 'range' &&
+            selection.range.collapsed
+        ) {
             if (rawEvent.shiftKey) {
                 switch (rawEvent.key) {
                     case '*':
                         if (bold) {
-                            setFormat(editor, '*', { fontWeight: 'bold' }, rawEvent);
+                            this.lastCharacterAndFormat = {
+                                character: '*',
+                                format: { fontWeight: 'bold' },
+                            };
                         }
                         break;
                     case '~':
                         if (strikethrough) {
-                            setFormat(editor, '~', { strikethrough: true }, rawEvent);
+                            this.lastCharacterAndFormat = {
+                                character: '~',
+                                format: { strikethrough: true },
+                            };
                         }
                         break;
                     case '_':
                         if (italic) {
-                            setFormat(editor, '_', { italic: true }, rawEvent);
+                            this.lastCharacterAndFormat = {
+                                character: '_',
+                                format: { italic: true },
+                            };
                         }
                         break;
                 }
+            }
+            if (rawEvent.key === ' ' && this.lastCharacterAndFormat) {
+                const { character, format } = this.lastCharacterAndFormat;
+                setFormat(editor, character, format);
+                this.lastCharacterAndFormat = undefined;
             }
         }
     }
