@@ -41,4 +41,10 @@ export const zoomButton: RibbonButton<ZoomButtonStringKey> = {
 
         editor.triggerEvent('zoomChanged', { newZoomScale: zoomScale });
     },
+    commandBarProperties: {
+        buttonStyles: {
+            icon: { paddingBottom: '10px' },
+            menuIcon: { paddingBottom: '10px' },
+        },
+    },
 };
