@@ -243,13 +243,10 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
                 }
             }
         }
-    } else {
+    } else if (isEnter) {
         const entity = getSelectedEntity(selection);
         if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
-            selection.range.selectNode(entity);
-            if (isEnter) {
-                triggerEntityEventOnEnter(editor, entity, rawEvent);
-            }
+            triggerEntityEventOnEnter(editor, entity, rawEvent);
         }
     }
 }

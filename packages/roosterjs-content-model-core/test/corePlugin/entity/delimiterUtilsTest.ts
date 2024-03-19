@@ -558,67 +558,6 @@ describe('EntityDelimiterUtils |', () => {
             );
         });
 
-        it('Handle, range expanded selection ', () => {
-            const div = document.createElement('div');
-            const parent = document.createElement('span');
-            const el = document.createElement('span');
-            const textSpan = document.createElement('span');
-            const text = document.createTextNode('span');
-            textSpan.appendChild(text);
-            textSpan.classList.add('_Entity');
-            el.appendChild(textSpan);
-            parent.appendChild(el);
-            el.classList.add('entityDelimiterAfter');
-            div.classList.add(BlockEntityContainer);
-            div.appendChild(parent);
-
-            const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
-            const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
-            const collapseSpy = jasmine.createSpy('collapseSpy');
-            const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
-            const selectNodeSpy = jasmine.createSpy('selectNode');
-
-            mockedSelection = {
-                type: 'range',
-                range: <any>{
-                    endContainer: text,
-                    endOffset: 0,
-                    collapsed: false,
-                    setStartAfter: setStartAfterSpy,
-                    setStartBefore: setStartBeforeSpy,
-                    collapse: collapseSpy,
-                    startContainer: textSpan,
-                    selectNode: selectNodeSpy,
-                },
-                isReverted: false,
-            };
-            spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
-            spyOn(isNodeOfType, 'isNodeOfType').and.returnValue(true);
-            spyOn(mockedEditor, 'getDOMSelection').and.returnValue({
-                type: 'range',
-                range: mockedSelection.range,
-            });
-
-            handleDelimiterKeyDownEvent(mockedEditor, {
-                eventType: 'keyDown',
-                rawEvent: <any>{
-                    ctrlKey: false,
-                    altKey: false,
-                    metaKey: false,
-                    key: 'A',
-                    preventDefault: preventDefaultSpy,
-                },
-            });
-
-            expect(rafSpy).not.toHaveBeenCalled();
-            expect(preventDefaultSpy).not.toHaveBeenCalled();
-            expect(setStartAfterSpy).not.toHaveBeenCalled();
-            expect(setStartBeforeSpy).not.toHaveBeenCalled();
-            expect(collapseSpy).not.toHaveBeenCalled();
-            expect(selectNodeSpy).toHaveBeenCalledTimes(1);
-            expect(selectNodeSpy).toHaveBeenCalledWith(textSpan);
-        });
-
         it('Handle, range expanded selection | EnterKey', () => {
             const div = document.createElement('div');
             const parent = document.createElement('span');
@@ -637,7 +576,6 @@ describe('EntityDelimiterUtils |', () => {
             const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
             const collapseSpy = jasmine.createSpy('collapseSpy');
             const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
-            const selectNodeSpy = jasmine.createSpy('selectNode');
 
             mockedSelection = {
                 type: 'range',
@@ -649,7 +587,6 @@ describe('EntityDelimiterUtils |', () => {
                     setStartBefore: setStartBeforeSpy,
                     collapse: collapseSpy,
                     startContainer: textSpan,
-                    selectNode: selectNodeSpy,
                 },
                 isReverted: false,
             };
@@ -682,8 +619,6 @@ describe('EntityDelimiterUtils |', () => {
             expect(setStartAfterSpy).not.toHaveBeenCalled();
             expect(setStartBeforeSpy).not.toHaveBeenCalled();
             expect(collapseSpy).not.toHaveBeenCalled();
-            expect(selectNodeSpy).toHaveBeenCalledTimes(1);
-            expect(selectNodeSpy).toHaveBeenCalledWith(textSpan);
             expect(triggerEventSpy).toHaveBeenCalledWith('entityOperation', {
                 operation: 'click',
                 entity: {
