@@ -690,6 +690,52 @@ describe('SelectionPlugin handle table selection', () => {
         expect(mouseDispatcher).toBeDefined();
     });
 
+    it('MouseDown - triple click', () => {
+        const state = plugin.getState();
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+        contentDiv.appendChild(table);
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+                detail: 3,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: {
+                table: table,
+                parsedTable: [[td]],
+                firstCo: { row: 0, col: 0 },
+                lastCo: { row: 0, col: 0 },
+            },
+            mouseDisposer: mouseMoveDisposer,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(mouseDispatcher).toBeDefined();
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'table',
+            table: table,
+            firstRow: 0,
+            firstColumn: 0,
+            lastRow: 0,
+            lastColumn: 0,
+        });
+    });
+
     it('MouseMove', () => {
         const state = plugin.getState();
         const table = document.createElement('table');

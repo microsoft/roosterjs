@@ -148,6 +148,22 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             (tableSelection = this.parseTableSelection(target, target, editor.getDOMHelper()))
         ) {
             this.state.tableSelection = tableSelection;
+
+            if (rawEvent.detail >= 3) {
+                const lastCo = findCoordinate(
+                    tableSelection.parsedTable,
+                    rawEvent.target as Node,
+                    editor.getDOMHelper()
+                );
+
+                if (lastCo) {
+                    // Triple click, select the current cell
+                    tableSelection.lastCo = lastCo;
+                    this.updateTableSelection(lastCo);
+                    rawEvent.preventDefault();
+                }
+            }
+
             this.state.mouseDisposer = editor.attachDomEvent({
                 mousemove: {
                     beforeDispatch: this.onMouseMove,
