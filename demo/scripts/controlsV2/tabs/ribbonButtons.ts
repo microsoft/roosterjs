@@ -9,11 +9,12 @@ import { bulletedListButton } from '../roosterjsReact/ribbon/buttons/bulletedLis
 import { changeImageButton } from '../demoButtons/changeImageButton';
 import { clearFormatButton } from '../roosterjsReact/ribbon/buttons/clearFormatButton';
 import { codeButton } from '../roosterjsReact/ribbon/buttons/codeButton';
+import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
 import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseIndentButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
 import { fontSizeButton } from '../roosterjsReact/ribbon/buttons/fontSizeButton';
-import { formatPainterButton } from '../demoButtons/formatPainterButton';
+import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
 import { formatTableButton } from '../demoButtons/formatTableButton';
 import { imageBorderColorButton } from '../demoButtons/imageBorderColorButton';
 import { imageBorderRemoveButton } from '../demoButtons/imageBorderRemoveButton';
@@ -60,7 +61,6 @@ import {
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 const textButtons: RibbonButton<any>[] = [
-    formatPainterButton,
     boldButton,
     italicButton,
     underlineButton,
@@ -134,7 +134,6 @@ const paragraphButtons: RibbonButton<any>[] = [
 ];
 
 const allButtons: RibbonButton<any>[] = [
-    formatPainterButton,
     boldButton,
     italicButton,
     underlineButton,
@@ -192,10 +191,10 @@ const allButtons: RibbonButton<any>[] = [
     spaceAfterButton,
     pasteButton,
 ];
-export function getButtons(id: tabNames) {
+export function getButtons(id: tabNames, formatPlainerPlugin?: FormatPainterPlugin) {
     switch (id) {
         case 'text':
-            return textButtons;
+            return [createFormatPainterButton(formatPlainerPlugin), ...textButtons];
         case 'paragraph':
             return paragraphButtons;
         case 'insert':
@@ -205,6 +204,6 @@ export function getButtons(id: tabNames) {
         case 'table':
             return tableButtons;
         case 'all':
-            return allButtons;
+            return [createFormatPainterButton(formatPlainerPlugin), ...allButtons];
     }
 }

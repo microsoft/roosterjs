@@ -6,7 +6,6 @@ import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-m
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
-import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
 import { createLegacyPlugins } from '../plugins/createLegacyPlugins';
 import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
@@ -88,8 +87,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
     private snapshots: Snapshots;
-    private buttons: RibbonButton<any>[];
-    private buttonsWithPopout: RibbonButton<any>[];
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -127,9 +124,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
 
-        const baseButtons = [createFormatPainterButton(this.formatPainterPlugin)];
-        this.buttons = baseButtons.concat(buttons);
-        this.buttonsWithPopout = baseButtons.concat(buttonsWithPopout);
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -280,7 +274,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private renderRibbon() {
         return (
             <Ribbon
-                buttons={getButtons(this.state.activeTab)}
+                buttons={getButtons(this.state.activeTab, this.formatPainterPlugin)}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
             />
