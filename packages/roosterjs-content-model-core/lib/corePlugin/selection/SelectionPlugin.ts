@@ -201,7 +201,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             const newTableSelection = this.parseTableSelection(tableStart, startNode, domHelper);
 
             if (newTableSelection) {
-                let lastCo = findCoordinate(newTableSelection.parsedTable, currentNode, domHelper);
+                const lastCo = findCoordinate(
+                    newTableSelection.parsedTable,
+                    currentNode,
+                    domHelper
+                );
 
                 if (newTableSelection.table != this.state.tableSelection.table) {
                     // Move mouse into another table (nest table scenario)
