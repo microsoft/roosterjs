@@ -28,7 +28,8 @@ export function showInputDialog<Strings extends string, ItemNames extends string
         changedItemName: ItemNames,
         newValue: string,
         currentValues: Record<ItemNames, string>
-    ) => Record<ItemNames, string> | null
+    ) => Record<ItemNames, string> | null,
+    rows?: number
 ): Promise<Record<ItemNames, string> | null> {
     return new Promise<Record<ItemNames, string> | null>(resolve => {
         let disposer: null | (() => void) = null;
@@ -49,6 +50,7 @@ export function showInputDialog<Strings extends string, ItemNames extends string
                 onOk={onOk}
                 onCancel={onCancel}
                 onChange={onChange}
+                rows={rows}
             />
         );
 

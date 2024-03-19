@@ -15,6 +15,7 @@ export interface InputDialogItemProps<Strings extends string, ItemNames extends 
     currentValues: Record<ItemNames, string>;
     onEnterKey: () => void;
     onChanged: (itemName: ItemNames, newValue: string) => void;
+    rows?: number;
 }
 
 const classNames = mergeStyleSets({
@@ -33,7 +34,7 @@ const classNames = mergeStyleSets({
 export default function InputDialogItem<Strings extends string, ItemNames extends string>(
     props: InputDialogItemProps<Strings, ItemNames>
 ) {
-    const { itemName, strings, items, currentValues, onChanged, onEnterKey } = props;
+    const { itemName, strings, items, currentValues, onChanged, onEnterKey, rows } = props;
     const { labelKey, unlocalizedLabel, autoFocus } = items[itemName];
     const value = currentValues[itemName];
     const onValueChange = React.useCallback(
@@ -64,6 +65,8 @@ export default function InputDialogItem<Strings extends string, ItemNames extend
                     onChange={onValueChange}
                     onKeyPress={onKeyPress}
                     autoFocus={autoFocus}
+                    rows={rows}
+                    multiline={!!rows}
                 />
             </div>
         </div>
