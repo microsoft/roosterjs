@@ -53,7 +53,6 @@ const EntityOperationOldToNew: Record<OldEntityOperation, NewEntityOperation | u
     [OldEntityOperation.RemoveFromStart]: 'removeFromStart',
     [OldEntityOperation.ReplaceTemporaryContent]: 'replaceTemporaryContent',
     [OldEntityOperation.UpdateEntityState]: 'updateEntityState',
-    [OldEntityOperation.SnapshotEntityState]: 'snapshotEntityState',
     [OldEntityOperation.Click]: 'click',
     [OldEntityOperation.ContextMenu]: undefined,
     [OldEntityOperation.Escape]: undefined,
@@ -62,14 +61,14 @@ const EntityOperationOldToNew: Record<OldEntityOperation, NewEntityOperation | u
     [OldEntityOperation.RemoveShadowRoot]: undefined,
 };
 
-const EntityOperationNewToOld: Record<NewEntityOperation, OldEntityOperation> = {
+const EntityOperationNewToOld: Record<NewEntityOperation, OldEntityOperation | null> = {
     newEntity: OldEntityOperation.NewEntity,
     overwrite: OldEntityOperation.Overwrite,
     removeFromEnd: OldEntityOperation.RemoveFromEnd,
     removeFromStart: OldEntityOperation.RemoveFromStart,
     replaceTemporaryContent: OldEntityOperation.ReplaceTemporaryContent,
     updateEntityState: OldEntityOperation.UpdateEntityState,
-    snapshotEntityState: OldEntityOperation.SnapshotEntityState,
+    snapshotEntityState: null,
     click: OldEntityOperation.Click,
 };
 
@@ -441,15 +440,20 @@ export function newEventToOldEvent(input: NewEvent, refEvent?: OldEvent): OldEve
             };
 
         case 'entityOperation':
-            return {
-                eventType: PluginEventType.EntityOperation,
-                eventDataCache: input.eventDataCache,
-                rawEvent: input.rawEvent,
-                entity: input.entity,
-                operation: EntityOperationNewToOld[input.operation],
-                shouldPersist: input.shouldPersist,
-                state: input.state,
-            };
+            const oldOperation = EntityOperationNewToOld[input.operation];
+            if (oldOperation !== null) {
+                return {
+                    eventType: PluginEventType.EntityOperation,
+                    eventDataCache: input.eventDataCache,
+                    rawEvent: input.rawEvent,
+                    entity: input.entity,
+                    operation: oldOperation,
+                    shouldPersist: input.shouldPersist,
+                    state: input.state,
+                };
+            } else {
+                return undefined;
+            }
 
         case 'extractContentWithDom':
             return {

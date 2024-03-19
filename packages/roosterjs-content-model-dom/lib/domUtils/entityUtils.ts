@@ -8,7 +8,8 @@ import type {
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
-const ENTITY_INFO_NAME = '_Entity';
+// @internal
+export const ENTITY_INFO_NAME = '_Entity';
 const ENTITY_TYPE_PREFIX = '_EType_';
 const ENTITY_ID_PREFIX = '_EId_';
 const ENTITY_READONLY_PREFIX = '_EReadonly_';

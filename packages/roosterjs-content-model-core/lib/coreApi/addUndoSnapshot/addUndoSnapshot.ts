@@ -1,4 +1,5 @@
 import { parseEntityFormat } from 'roosterjs-content-model-dom';
+import { ENTITY_INFO_NAME } from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
 import type {
     AddUndoSnapshot,
     EntityOperationEvent,
@@ -6,8 +7,6 @@ import type {
 } from 'roosterjs-content-model-types';
 import { createSnapshotSelection } from './createSnapshotSelection';
 import { getPath } from './getPath';
-
-const ENTITY_INFO_NAME = '_Entity';
 
 /**
  * @internal
@@ -28,7 +27,10 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
         const html = physicalRoot.innerHTML;
 
         // give plugins the chance to share entity states to include in the snapshot
-        const logicalRootEntityWrapper = logicalRoot.closest<HTMLElement>(`.${ENTITY_INFO_NAME}`);
+        const logicalRootEntityWrapper = core.domHelper.findClosestElementAncestor(
+            logicalRoot,
+            `.${ENTITY_INFO_NAME}`
+        );
         if (!entityStates && logicalRootEntityWrapper) {
             const entityFormat = parseEntityFormat(logicalRootEntityWrapper);
             if (entityFormat.entityType && entityFormat.id) {
@@ -59,12 +61,14 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
             }
         }
 
+        const logicalRootPath =
+            logicalRoot === physicalRoot ? [0] : getPath(logicalRoot, 0, physicalRoot);
         snapshot = {
             html,
             entityStates,
             isDarkMode: !!lifecycle.isDarkMode,
             selection,
-            logicalRootPath: getPath(logicalRoot, 0, physicalRoot),
+            logicalRootPath,
         };
 
         undo.snapshotsManager.addSnapshot(snapshot, !!canUndoByBackspace);
