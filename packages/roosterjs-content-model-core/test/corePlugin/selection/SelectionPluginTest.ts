@@ -683,6 +683,7 @@ describe('SelectionPlugin handle table selection', () => {
                 table: table,
                 parsedTable: [[td]],
                 firstCo: { row: 0, col: 0 },
+                startNode: td,
             },
             mouseDisposer: mouseMoveDisposer,
             imageSelectionBorderColor: undefined,
@@ -719,6 +720,7 @@ describe('SelectionPlugin handle table selection', () => {
                 parsedTable: [[td]],
                 firstCo: { row: 0, col: 0 },
                 lastCo: { row: 0, col: 0 },
+                startNode: td,
             },
             mouseDisposer: mouseMoveDisposer,
             imageSelectionBorderColor: undefined,
@@ -736,13 +738,16 @@ describe('SelectionPlugin handle table selection', () => {
         });
     });
 
-    it('MouseMove', () => {
+    it('MouseMove - in same table', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
         const tr = document.createElement('tr');
         const td1 = document.createElement('td');
         const td2 = document.createElement('td');
         const div = document.createElement('div');
+
+        td1.id = 'td1';
+        td2.id = 'td2';
 
         tr.appendChild(td1);
         tr.appendChild(td2);
@@ -767,10 +772,19 @@ describe('SelectionPlugin handle table selection', () => {
             table,
             parsedTable: [[td1, td2]],
             firstCo: { row: 0, col: 0 },
+            startNode: td1,
         });
         expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
 
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const setStartSpy = jasmine.createSpy('setStart');
+        const setEndSpy = jasmine.createSpy('setEnd');
+
+        createRangeSpy.and.returnValue({
+            setStart: setStartSpy,
+            setEnd: setEndSpy,
+            commonAncestorContainer: table,
+        });
 
         mouseDispatcher.mousemove.beforeDispatch!({
             target: td1,
@@ -783,7 +797,10 @@ describe('SelectionPlugin handle table selection', () => {
             table,
             parsedTable: [[td1, td2]],
             firstCo: { row: 0, col: 0 },
+            startNode: td1,
         });
+        expect(setStartSpy).toHaveBeenCalledWith(td1, 0);
+        expect(setEndSpy).toHaveBeenCalledWith(td1, 0);
 
         mouseDispatcher.mousemove.beforeDispatch!({
             target: td2,
@@ -805,6 +822,7 @@ describe('SelectionPlugin handle table selection', () => {
             parsedTable: [[td1, td2]],
             firstCo: { row: 0, col: 0 },
             lastCo: { row: 0, col: 1 },
+            startNode: td1,
         });
 
         mouseDispatcher.mousemove.beforeDispatch!({
@@ -827,6 +845,145 @@ describe('SelectionPlugin handle table selection', () => {
             parsedTable: [[td1, td2]],
             firstCo: { row: 0, col: 0 },
             lastCo: { row: 0, col: 1 },
+            startNode: td1,
+        });
+    });
+
+    it('MouseMove - move to outer table', () => {
+        const state = plugin.getState();
+        const table1 = document.createElement('table');
+        const table2 = document.createElement('table');
+        const tr1 = document.createElement('tr');
+        const tr2 = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        const div = document.createElement('div');
+
+        td1.id = 'td1';
+        td2.id = 'td2';
+
+        tr1.appendChild(td1);
+        tr2.appendChild(td2);
+        table1.appendChild(tr1);
+        table2.appendChild(tr2);
+
+        td1.appendChild(table2);
+
+        contentDiv.appendChild(table1);
+        contentDiv.appendChild(div);
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'table',
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td2,
+            } as any,
+        });
+
+        expect(mouseDispatcher.mousemove).toBeDefined();
+        expect(state.tableSelection).toEqual({
+            table: table2,
+            parsedTable: [[td2]],
+            firstCo: { row: 0, col: 0 },
+            startNode: td2,
+        });
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
+
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const setStartSpy = jasmine.createSpy('setStart');
+        const setEndSpy = jasmine.createSpy('setEnd');
+
+        createRangeSpy.and.returnValue({
+            setStart: setStartSpy,
+            setEnd: setEndSpy,
+            commonAncestorContainer: table1,
+        });
+
+        mouseDispatcher.mousemove.beforeDispatch!({
+            target: td1,
+            preventDefault: preventDefaultSpy,
+        } as any);
+
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(2);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'table',
+            table: table1,
+            firstRow: 0,
+            firstColumn: 0,
+            lastRow: 0,
+            lastColumn: 0,
+        });
+        expect(state.tableSelection).toEqual({
+            table: table1,
+            parsedTable: [[td1]],
+            firstCo: { row: 0, col: 0 },
+            lastCo: { row: 0, col: 0 },
+            startNode: td2,
+        });
+        expect(setStartSpy).toHaveBeenCalledWith(td2, 0);
+        expect(setEndSpy).toHaveBeenCalledWith(td1, 0);
+
+        createRangeSpy.and.returnValue({
+            setStart: setStartSpy,
+            setEnd: setEndSpy,
+            commonAncestorContainer: table2,
+        });
+
+        mouseDispatcher.mousemove.beforeDispatch!({
+            target: td2,
+            preventDefault: preventDefaultSpy,
+        } as any);
+
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(2);
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(3);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'table',
+            table: table2,
+            firstRow: 0,
+            firstColumn: 0,
+            lastRow: 0,
+            lastColumn: 0,
+        });
+        expect(state.tableSelection).toEqual({
+            table: table2,
+            parsedTable: [[td2]],
+            firstCo: { row: 0, col: 0 },
+            lastCo: { row: 0, col: 0 },
+            startNode: td2,
+        });
+
+        const mockedRange = {
+            setStart: setStartSpy,
+            setEnd: setEndSpy,
+            commonAncestorContainer: contentDiv,
+        } as any;
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        mouseDispatcher.mousemove.beforeDispatch!({
+            target: div,
+            preventDefault: preventDefaultSpy,
+        } as any);
+
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(2);
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(4);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range: mockedRange,
+            isReverted: false,
+        });
+        expect(state.tableSelection).toEqual({
+            table: table2,
+            parsedTable: [[td2]],
+            firstCo: { row: 0, col: 0 },
+            lastCo: { row: 0, col: 0 },
+            startNode: td2,
         });
     });
 
@@ -1057,6 +1214,7 @@ describe('SelectionPlugin handle table selection', () => {
                     ],
                     firstCo: { row: 1, col: 1 },
                     lastCo: { row: 0, col: 1 },
+                    startNode: td4,
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1120,6 +1278,7 @@ describe('SelectionPlugin handle table selection', () => {
                     ],
                     firstCo: { row: 0, col: 1 },
                     lastCo: { row: 1, col: 1 },
+                    startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1182,6 +1341,7 @@ describe('SelectionPlugin handle table selection', () => {
                         [td3, td4],
                     ],
                     firstCo: { row: 0, col: 1 },
+                    startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1200,6 +1360,7 @@ describe('SelectionPlugin handle table selection', () => {
                 ],
                 firstCo: { row: 0, col: 1 },
                 lastCo: { row: 1, col: 1 },
+                startNode: td2,
             };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
@@ -1223,6 +1384,7 @@ describe('SelectionPlugin handle table selection', () => {
                     ],
                     firstCo: { row: 0, col: 1 },
                     lastCo: { row: 1, col: 1 },
+                    startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1242,6 +1404,7 @@ describe('SelectionPlugin handle table selection', () => {
                 ],
                 firstCo: { row: 0, col: 1 },
                 lastCo: { row: 1, col: 1 },
+                startNode: td2,
             };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
@@ -1282,6 +1445,7 @@ describe('SelectionPlugin handle table selection', () => {
                     ],
                     firstCo: { row: 0, col: 1 },
                     lastCo: { row: 1, col: 1 },
+                    startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1303,6 +1467,7 @@ describe('SelectionPlugin handle table selection', () => {
                 ],
                 firstCo: { row: 0, col: 1 },
                 lastCo: { row: 1, col: 1 },
+                startNode: td2,
             };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
@@ -1328,6 +1493,7 @@ describe('SelectionPlugin handle table selection', () => {
                     ],
                     firstCo: { row: 0, col: 1 },
                     lastCo: { row: 1, col: 0 },
+                    startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
             });
@@ -1356,6 +1522,7 @@ describe('SelectionPlugin handle table selection', () => {
                 ],
                 firstCo: { row: 1, col: 0 },
                 lastCo: { row: 1, col: 1 },
+                startNode: td3,
             };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
@@ -1381,6 +1548,7 @@ describe('SelectionPlugin handle table selection', () => {
                     ],
                     firstCo: { row: 1, col: 0 },
                     lastCo: { row: 0, col: 1 },
+                    startNode: td3,
                 },
                 imageSelectionBorderColor: undefined,
             });

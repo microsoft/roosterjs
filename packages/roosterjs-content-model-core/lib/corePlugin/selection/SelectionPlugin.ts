@@ -175,15 +175,55 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private onMouseMove = (event: Event) => {
         if (this.editor && this.state.tableSelection) {
             const hasTableSelection = !!this.state.tableSelection.lastCo;
-            const lastCo = findCoordinate(
-                this.state.tableSelection.parsedTable,
-                event.target as Node,
-                this.editor.getDOMHelper()
-            );
-            const updated = lastCo && this.updateTableSelection(lastCo);
+            const currentNode = event.target as Node;
+            const domHelper = this.editor.getDOMHelper();
 
-            if (hasTableSelection || updated) {
-                event.preventDefault();
+            const range = this.editor.getDocument().createRange();
+            const startNode = this.state.tableSelection.startNode;
+            const isReverted =
+                currentNode.compareDocumentPosition(startNode) == Node.DOCUMENT_POSITION_FOLLOWING;
+
+            if (isReverted) {
+                range.setStart(currentNode, 0);
+                range.setEnd(
+                    startNode,
+                    isNodeOfType(startNode, 'TEXT_NODE')
+                        ? startNode.nodeValue?.length ?? 0
+                        : startNode.childNodes.length
+                );
+            } else {
+                range.setStart(startNode, 0);
+                range.setEnd(currentNode, 0);
+            }
+
+            // Use common container of the range to search a common table that covers both start and end node
+            const tableStart = range.commonAncestorContainer;
+            const newTableSelection = this.parseTableSelection(tableStart, startNode, domHelper);
+
+            if (newTableSelection) {
+                let lastCo = findCoordinate(newTableSelection.parsedTable, currentNode, domHelper);
+
+                if (newTableSelection.table != this.state.tableSelection.table) {
+                    // Move mouse into another table (nest table scenario)
+                    this.state.tableSelection = newTableSelection;
+                    this.state.tableSelection.lastCo = lastCo ?? undefined;
+                }
+
+                const updated = lastCo && this.updateTableSelection(lastCo);
+
+                if (hasTableSelection || updated) {
+                    event.preventDefault();
+                }
+            } else if (this.editor.getDOMSelection()?.type == 'table') {
+                // Move mouse out of table
+                this.setDOMSelection(
+                    {
+                        type: 'range',
+                        range,
+                        isReverted,
+                    },
+                    this.state.tableSelection
+                );
             }
         }
     };
@@ -457,7 +497,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             (parsedTable = parseTableCells(table)) &&
             (firstCo = findCoordinate(parsedTable, tdStart, domHelper))
         ) {
-            return { table, parsedTable, firstCo };
+            return { table, parsedTable, firstCo, startNode: tdStart };
         } else {
             return null;
         }
@@ -465,7 +505,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private updateTableSelection(lastCo: TableCellCoordinate) {
         if (this.state.tableSelection && this.editor) {
-            const { table, firstCo, parsedTable, lastCo: oldCo } = this.state.tableSelection;
+            const {
+                table,
+                firstCo,
+                parsedTable,
+                startNode,
+                lastCo: oldCo,
+            } = this.state.tableSelection;
 
             if (oldCo || firstCo.row != lastCo.row || firstCo.col != lastCo.col) {
                 this.state.tableSelection.lastCo = lastCo;
@@ -479,7 +525,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         lastRow: lastCo.row,
                         lastColumn: lastCo.col,
                     },
-                    { table, firstCo, lastCo, parsedTable }
+                    { table, firstCo, lastCo, parsedTable, startNode }
                 );
 
                 return true;

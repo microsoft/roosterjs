@@ -31,6 +31,11 @@ export interface TableSelectionInfo {
     parsedTable: ParsedTable;
 
     /**
+     * The node where the focus is at when start selection
+     */
+    startNode: Node;
+
+    /**
      * Coordinate for first selected table cell
      */
     firstCo: TableCellCoordinate;
