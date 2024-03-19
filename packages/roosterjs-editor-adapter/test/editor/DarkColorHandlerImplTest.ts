@@ -1,6 +1,6 @@
 import { ColorKeyAndValue, DarkColorHandler } from 'roosterjs-editor-types';
 import { createDarkColorHandler } from '../../lib/editor/DarkColorHandlerImpl';
-import { createDarkColorHandler as createInnderDarkColorHandler } from 'roosterjs-content-model-core/lib/editor/DarkColorHandlerImpl';
+import { createDarkColorHandler as createInnerDarkColorHandler } from 'roosterjs-content-model-core/lib/editor/core/DarkColorHandlerImpl';
 
 function getDarkColor(color: string) {
     return 'Dark_' + color;
@@ -9,7 +9,7 @@ function getDarkColor(color: string) {
 describe('DarkColorHandlerImpl.ctor', () => {
     it('No additional param', () => {
         const div = document.createElement('div');
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         const handler = createDarkColorHandler(innerHandler);
 
         expect(handler).toBeDefined();
@@ -17,7 +17,7 @@ describe('DarkColorHandlerImpl.ctor', () => {
 
     it('Calculate color using customized base color', () => {
         const div = document.createElement('div');
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         const handler = createDarkColorHandler(innerHandler);
 
         const darkColor = handler.registerColor('red', true);
@@ -38,7 +38,7 @@ describe('DarkColorHandlerImpl.parseColorValue', () => {
 
     beforeEach(() => {
         div = document.createElement('div');
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         handler = createDarkColorHandler(innerHandler);
     });
 
@@ -142,7 +142,7 @@ describe('DarkColorHandlerImpl.registerColor', () => {
                 setProperty,
             },
         } as any) as HTMLElement;
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         handler = createDarkColorHandler(innerHandler);
     });
 
@@ -233,7 +233,7 @@ describe('DarkColorHandlerImpl.reset', () => {
                 removeProperty,
             },
         } as any) as HTMLElement;
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         const handler = createDarkColorHandler(innerHandler);
 
         (handler as any).innerHandler.knownColors = {
@@ -258,7 +258,7 @@ describe('DarkColorHandlerImpl.reset', () => {
 describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
     it('Not found', () => {
         const div = ({} as any) as HTMLElement;
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         const handler = createDarkColorHandler(innerHandler);
 
         const result = handler.findLightColorFromDarkColor('#010203');
@@ -268,7 +268,7 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 
     it('Found: HEX to RGB', () => {
         const div = ({} as any) as HTMLElement;
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         const handler = createDarkColorHandler(innerHandler);
 
         (handler as any).innerHandler.knownColors = {
@@ -289,7 +289,7 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 
     it('Found: HEX to HEX', () => {
         const div = ({} as any) as HTMLElement;
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         const handler = createDarkColorHandler(innerHandler);
 
         (handler as any).innerHandler.knownColors = {
@@ -310,7 +310,7 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 
     it('Found: RGB to HEX', () => {
         const div = ({} as any) as HTMLElement;
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         const handler = createDarkColorHandler(innerHandler);
 
         (handler as any).innerHandler.knownColors = {
@@ -331,7 +331,7 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
 
     it('Found: RGB to RGB', () => {
         const div = ({} as any) as HTMLElement;
-        const innerHandler = createInnderDarkColorHandler(div, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(div, getDarkColor);
         const handler = createDarkColorHandler(innerHandler);
 
         (handler as any).innerHandler.knownColors = {
@@ -357,7 +357,7 @@ describe('DarkColorHandlerImpl.transformElementColor', () => {
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
-        const innerHandler = createInnderDarkColorHandler(contentDiv, getDarkColor);
+        const innerHandler = createInnerDarkColorHandler(contentDiv, getDarkColor);
         handler = createDarkColorHandler(innerHandler);
     });
 

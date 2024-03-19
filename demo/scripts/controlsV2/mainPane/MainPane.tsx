@@ -6,6 +6,7 @@ import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-m
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
+import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
 import { createLegacyPlugins } from '../plugins/createLegacyPlugins';
 import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
@@ -50,6 +51,7 @@ import {
     PastePlugin,
     ShortcutPlugin,
     TableEditPlugin,
+    WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
 
 const styles = require('./MainPane.scss');
@@ -86,6 +88,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
     private snapshots: Snapshots;
+    private buttons: RibbonButton<any>[];
+    private buttonsWithPopout: RibbonButton<any>[];
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -122,6 +126,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.presetPlugin = new PresetPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
+
+        const baseButtons = [createFormatPainterButton(this.formatPainterPlugin)];
+        this.buttons = baseButtons.concat(buttons);
+        this.buttonsWithPopout = baseButtons.concat(buttonsWithPopout);
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -470,6 +478,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             listMenu,
             tableMenu,
             imageMenu,
+            watermarkText,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(),
@@ -477,6 +486,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
+            pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),

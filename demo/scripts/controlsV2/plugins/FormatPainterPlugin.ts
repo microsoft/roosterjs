@@ -1,5 +1,4 @@
 import { applySegmentFormat, getFormatState } from 'roosterjs-content-model-api';
-import { MainPane } from '../mainPane/MainPane';
 import {
     ContentModelSegmentFormat,
     EditorPlugin,
@@ -9,16 +8,26 @@ import {
 
 const FORMATPAINTERCURSOR_SVG = require('./formatpaintercursor.svg');
 const FORMATPAINTERCURSOR_STYLE = `cursor: url("${FORMATPAINTERCURSOR_SVG}") 8.5 16, auto`;
+const FORMAT_PAINTER_STYLE_KEY = '_FormatPainter';
 
-export class FormatPainterPlugin implements EditorPlugin {
+/**
+ * Format painter handler works together with a format painter button tot let implement format painter functioinality
+ */
+export interface FormatPainterHandler {
+    /**
+     * Let editor enter format painter state
+     */
+    startFormatPainter(): void;
+}
+
+/**
+ * Format painter plugin helps implement format painter functionality.
+ * To use this plugin, you need a button to let editor enter format painter state by calling formatPainterPlugin.startFormatPainter(),
+ * then this plugin will handle the rest work.
+ */
+export class FormatPainterPlugin implements EditorPlugin, FormatPainterHandler {
     private editor: IEditor | null = null;
-    private styleNode: HTMLStyleElement | null = null;
     private painterFormat: ContentModelSegmentFormat | null = null;
-    private static instance: FormatPainterPlugin | undefined;
-
-    constructor() {
-        FormatPainterPlugin.instance = this;
-    }
 
     getName() {
         return 'FormatPainter';
@@ -26,20 +35,10 @@ export class FormatPainterPlugin implements EditorPlugin {
 
     initialize(editor: IEditor) {
         this.editor = editor;
-
-        const doc = this.editor.getDocument();
-        this.styleNode = doc.createElement('style');
-
-        doc.head.appendChild(this.styleNode);
     }
 
     dispose() {
         this.editor = null;
-
-        if (this.styleNode) {
-            this.styleNode.parentNode?.removeChild(this.styleNode);
-            this.styleNode = null;
-        }
     }
 
     onPluginEvent(event: PluginEvent) {
@@ -53,26 +52,19 @@ export class FormatPainterPlugin implements EditorPlugin {
     }
 
     private setFormatPainterCursor(format: ContentModelSegmentFormat | null) {
-        const sheet = this.styleNode.sheet;
-
-        if (this.painterFormat) {
-            for (let i = sheet.cssRules.length - 1; i >= 0; i--) {
-                sheet.deleteRule(i);
-            }
-        }
-
         this.painterFormat = format;
 
-        if (this.painterFormat) {
-            sheet.insertRule(`#${MainPane.editorDivId} {${FORMATPAINTERCURSOR_STYLE}}`);
-        }
+        this.editor?.setEditorStyle(
+            FORMAT_PAINTER_STYLE_KEY,
+            this.painterFormat ? FORMATPAINTERCURSOR_STYLE : null
+        );
     }
 
-    static startFormatPainter() {
-        const format = getSegmentFormat(this.instance.editor);
+    startFormatPainter() {
+        if (this.editor) {
+            const format = getSegmentFormat(this.editor);
 
-        if (format) {
-            this.instance.setFormatPainterCursor(format);
+            this.setFormatPainterCursor(format);
         }
     }
 }
