@@ -123,6 +123,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.presetPlugin = new PresetPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
+
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
