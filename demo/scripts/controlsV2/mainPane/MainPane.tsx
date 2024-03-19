@@ -52,6 +52,7 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
+import { TestingPlugin } from '../sidePane/TestingPlugin';
 
 const styles = require('./MainPane.scss');
 
@@ -86,6 +87,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private ribbonPlugin: RibbonPlugin;
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
+    private testingPlugin: TestingPlugin;
     private snapshots: Snapshots;
 
     protected sidePane = React.createRef<SidePane>();
@@ -123,7 +125,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.presetPlugin = new PresetPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
-
+        this.testingPlugin = new TestingPlugin();
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -328,6 +330,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             ...this.getToggleablePlugins(),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,
+            this.testingPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
