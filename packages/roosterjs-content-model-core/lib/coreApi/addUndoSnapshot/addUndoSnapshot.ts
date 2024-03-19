@@ -1,5 +1,4 @@
-import { parseEntityFormat } from 'roosterjs-content-model-dom';
-import { ENTITY_INFO_NAME } from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
+import { ENTITY_INFO_NAME, parseEntityFormat } from 'roosterjs-content-model-dom';
 import type {
     AddUndoSnapshot,
     EntityOperationEvent,
