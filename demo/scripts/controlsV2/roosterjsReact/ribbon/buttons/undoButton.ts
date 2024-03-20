@@ -14,4 +14,9 @@ export const undoButton: RibbonButton<UndoButtonStringKey> = {
     onClick: editor => {
         undo(editor);
     },
+    commandBarProperties: {
+        buttonStyles: {
+            icon: { paddingBottom: '10px' },
+        },
+    },
 };

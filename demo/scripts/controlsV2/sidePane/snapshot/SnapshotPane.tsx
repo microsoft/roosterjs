@@ -20,6 +20,7 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
     private entityStates = React.createRef<HTMLTextAreaElement>();
     private isDarkColor = React.createRef<HTMLInputElement>();
     private selection = React.createRef<HTMLTextAreaElement>();
+    private logicalRootPath = React.createRef<HTMLInputElement>();
 
     constructor(props: SnapshotPaneProps) {
         super(props);
@@ -50,6 +51,8 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
                 <textarea ref={this.selection} className={styles.textarea} spellCheck={false} />
                 <div>Entity states:</div>
                 <textarea ref={this.entityStates} className={styles.textarea} spellCheck={false} />
+                <div>Logical root path:</div>
+                <input ref={this.logicalRootPath} className={styles.input} spellCheck={false} />
                 <div>
                     <input type="checkbox" ref={this.isDarkColor} id="isUndoInDarkColor" />
                     <label htmlFor="isUndoInDarkColor">Is in dark mode</label>
@@ -66,6 +69,9 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
         const entityStates = this.entityStates.current.value
             ? (JSON.parse(this.entityStates.current.value) as EntityState[])
             : undefined;
+        const logicalRootPath = this.logicalRootPath.current.value
+            ? (JSON.parse(this.logicalRootPath.current.value) as number[])
+            : undefined;
         const isDarkMode = !!this.isDarkColor.current.checked;
 
         return {
@@ -73,6 +79,7 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
             entityStates,
             isDarkMode,
             selection,
+            logicalRootPath,
         };
     }
 
@@ -87,6 +94,7 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
         const metadata = {
             ...snapshot.selection,
             isDarkMode: snapshot.isDarkMode,
+            logicalRootPath: snapshot.logicalRootPath,
         };
         const textToCopy = snapshot.html + `<!--${JSON.stringify(metadata)}-->`;
 
@@ -106,14 +114,17 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
                 try {
                     const metadata = JSON.parse(json);
                     const isDarkMode = !!metadata.isDarkMode;
+                    const logicalRootPath = metadata.logicalRootPath;
 
                     delete metadata.isDarkMode;
+                    delete metadata.logicalRootPath;
 
                     this.setSnapshot({
                         html: html,
                         entityStates: [],
-                        isDarkMode: isDarkMode,
+                        isDarkMode,
                         selection: metadata as SnapshotSelection,
+                        logicalRootPath,
                     });
 
                     event.preventDefault();
@@ -148,6 +159,9 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
             ? JSON.stringify(snapshot.entityStates)
             : '';
         this.selection.current.value = snapshot.selection ? JSON.stringify(snapshot.selection) : '';
+        this.logicalRootPath.current.value = snapshot.logicalRootPath
+            ? JSON.stringify(snapshot.logicalRootPath)
+            : '';
         this.isDarkColor.current.checked = !!snapshot.isDarkMode;
     };
 

@@ -1,5 +1,6 @@
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
+import { normalizePos } from '../../publicApi/domUtils/normalizePos';
 import {
     addDelimiters,
     createBr,
@@ -132,14 +133,10 @@ function getFocusedElement(
     let node: Node | null = isReverted ? range.startContainer : range.endContainer;
     let offset = isReverted ? range.startOffset : range.endOffset;
 
-    while (node?.lastChild) {
-        if (offset == node.childNodes.length) {
-            node = node.lastChild;
-            offset = node.childNodes.length;
-        } else {
-            node = node.childNodes[offset];
-            offset = 0;
-        }
+    if (node) {
+        const pos = normalizePos(node, offset);
+        node = pos.node;
+        offset = pos.offset;
     }
 
     if (!isNodeOfType(node, 'ELEMENT_NODE')) {
