@@ -28,7 +28,6 @@ describe('restoreSnapshotLogicalRoot', () => {
             const snapshot: Snapshot = {
                 isDarkMode: false,
                 html: '',
-                logicalRootPath: [0],
             };
 
             restoreSnapshotLogicalRoot(core, snapshot);
@@ -66,7 +65,6 @@ describe('restoreSnapshotLogicalRoot', () => {
             const snapshot: Snapshot = {
                 isDarkMode: false,
                 html: '',
-                logicalRootPath: [0],
             };
 
             restoreSnapshotLogicalRoot(core, snapshot);

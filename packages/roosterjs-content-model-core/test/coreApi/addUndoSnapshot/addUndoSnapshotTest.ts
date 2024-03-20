@@ -80,7 +80,6 @@ describe('addUndoSnapshot', () => {
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
-                logicalRootPath: [0],
             },
             false
         );
@@ -90,7 +89,6 @@ describe('addUndoSnapshot', () => {
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
-            logicalRootPath: [0],
         });
     });
 
@@ -117,7 +115,6 @@ describe('addUndoSnapshot', () => {
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
-                logicalRootPath: [0],
             },
             true
         );
@@ -127,7 +124,6 @@ describe('addUndoSnapshot', () => {
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
-            logicalRootPath: [0],
         });
     });
 
@@ -155,7 +151,6 @@ describe('addUndoSnapshot', () => {
                 entityStates: mockedEntityStates,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
-                logicalRootPath: [0],
             },
             false
         );
@@ -164,7 +159,6 @@ describe('addUndoSnapshot', () => {
             entityStates: mockedEntityStates,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
-            logicalRootPath: [0],
         });
     });
 
@@ -195,7 +189,6 @@ describe('addUndoSnapshot', () => {
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
-                logicalRootPath: [0],
             },
             false
         );
@@ -205,7 +198,6 @@ describe('addUndoSnapshot', () => {
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
-            logicalRootPath: [0],
         });
     });
 
