@@ -19,6 +19,13 @@ export type EntityLifecycleOperation =
      * because it will always return false.
      */
     | 'replaceTemporaryContent'
+
+    /**
+     * This event is triggered when an undo snapshot is taken while a custom logical root is used
+     * Plugins can handle this event to include entity state to include in the snapshot
+     */
+    | 'snapshotEntityState'
+
     /**
      * Notify plugins that a new entity state need to be updated to an entity.
      * This is normally happened when user undo/redo the content with an entity snapshot added by a plugin that handles entity

@@ -73,6 +73,13 @@ export type SetDOMSelection = (
 ) => void;
 
 /**
+ * Set a new logical root (most likely due to focus change)
+ * @param core The EditorCore object
+ * @param logicalRoot The new logical root (has to be child of physicalRoot or null to use physicalRoot as logical root)
+ */
+export type SetLogicalRoot = (core: EditorCore, logicalRoot: HTMLDivElement | null) => void;
+
+/**
  * The general API to do format change with Content Model
  * It will grab a Content Model for current editor content, and invoke a callback function
  * to do format change. Then according to the return value, write back the modified content model into editor.
@@ -205,6 +212,13 @@ export interface CoreApiMap {
      * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
      */
     setDOMSelection: SetDOMSelection;
+
+    /**
+     * Set a new logical root (most likely due to focus change)
+     * @param core The StandaloneEditorCore object
+     * @param logicalRoot The new logical root (has to be child of physicalRoot)
+     */
+    setLogicalRoot: SetLogicalRoot;
 
     /**
      * The general API to do format change with Content Model
