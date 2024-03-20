@@ -1,5 +1,5 @@
 import { isNodeOfType } from 'roosterjs-content-model-dom';
-import { Pos } from '../../coreApi/restoreUndoSnapshot/getPositionFromPath';
+import type { Pos } from '../../coreApi/restoreUndoSnapshot/getPositionFromPath';
 
 /**
  * @internal
