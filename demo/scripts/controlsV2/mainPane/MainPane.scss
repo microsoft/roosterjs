@@ -12,6 +12,13 @@
     overflow-x: hidden;
 }
 
+.menuTab {
+    border-radius: 30% 30% 0 0;
+    background-color: $primaryLighter;
+    color: white;
+    font-weight: bold;
+}
+
 .body {
     flex: 1 1 auto;
     position: relative;
