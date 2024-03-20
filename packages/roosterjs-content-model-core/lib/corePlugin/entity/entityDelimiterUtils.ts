@@ -1,16 +1,6 @@
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import { normalizePos } from '../../publicApi/domUtils/normalizePos';
-import type {
-    CompositionEndEvent,
-    ContentModelBlockGroup,
-    ContentModelFormatter,
-    ContentModelParagraph,
-    ContentModelSegmentFormat,
-    IEditor,
-    KeyDownEvent,
-    RangeSelection,
-} from 'roosterjs-content-model-types';
 import {
     addDelimiters,
     createBr,
@@ -22,6 +12,16 @@ import {
     parseEntityFormat,
     findClosestEntityWrapper,
 } from 'roosterjs-content-model-dom';
+import type {
+    CompositionEndEvent,
+    ContentModelBlockGroup,
+    ContentModelFormatter,
+    ContentModelParagraph,
+    ContentModelSegmentFormat,
+    IEditor,
+    KeyDownEvent,
+    RangeSelection,
+} from 'roosterjs-content-model-types';
 
 const DelimiterBefore = 'entityDelimiterBefore';
 const DelimiterAfter = 'entityDelimiterAfter';
