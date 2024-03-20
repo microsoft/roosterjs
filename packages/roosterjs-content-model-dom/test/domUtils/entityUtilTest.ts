@@ -1,6 +1,7 @@
 import { ContentModelEntityFormat } from 'roosterjs-content-model-types';
 import {
     addDelimiters,
+    findClosestEntityWrapper,
     generateEntityClassNames,
     getAllEntityWrappers,
     isEntityDelimiter,
@@ -276,5 +277,35 @@ describe('addDelimiters', () => {
         );
         expect(result[0]).toBe(parent.lastChild as any);
         expect(result[1]).toBe(parent.firstChild as any);
+    });
+});
+
+describe('findClosestEntityWrapper', () => {
+    it('no wrapper', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+
+        div.appendChild(span);
+
+        const result = findClosestEntityWrapper(span, {
+            findClosestElementAncestor: (): null => null,
+        } as any);
+
+        expect(result).toBeNull();
+    });
+
+    it('has wrapper', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        const wrapper = document.createElement('div');
+
+        div.appendChild(wrapper);
+        wrapper.appendChild(span);
+
+        const result = findClosestEntityWrapper(span, {
+            findClosestElementAncestor: (): HTMLElement => wrapper,
+        } as any);
+
+        expect(result).toBe(wrapper);
     });
 });

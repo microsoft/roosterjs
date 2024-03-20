@@ -25,7 +25,9 @@ export function isEntityElement(node: Node): boolean {
 }
 
 /**
- * Get the entity wrapper element for a given DOM node
+ * Find the closest entity wrapper element from a given DOM node
+ * @param node The node to start looking for entity wrapper
+ * @param domHelper The DOM helper to use
  */
 export function findClosestEntityWrapper(
     startNode: Node,
