@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.59% </span>
+                <span class="strong">97.3% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>70/71</span>
+                <span class='fraction'>72/74</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.84% </span>
+                <span class="strong">86.52% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>198/228</span>
+                <span class='fraction'>199/230</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.59% </span>
+                <span class="strong">97.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>70/71</span>
+                <span class='fraction'>72/74</span>
             </div>
         
             
@@ -614,7 +614,13 @@
 <a name='L555'></a><a href='#L555'>555</a>
 <a name='L556'></a><a href='#L556'>556</a>
 <a name='L557'></a><a href='#L557'>557</a>
-<a name='L558'></a><a href='#L558'>558</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L558'></a><a href='#L558'>558</a>
+<a name='L559'></a><a href='#L559'>559</a>
+<a name='L560'></a><a href='#L560'>560</a>
+<a name='L561'></a><a href='#L561'>561</a>
+<a name='L562'></a><a href='#L562'>562</a>
+<a name='L563'></a><a href='#L563'>563</a>
+<a name='L564'></a><a href='#L564'>564</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -678,6 +684,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1056,6 +1063,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1063,6 +1072,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1234,13 +1246,14 @@ const EntityOperationOldToNew: Record&lt;OldEntityOperation, NewEntityOperation 
     [OldEntityOperation.RemoveShadowRoot]: undefined,
 };
 &nbsp;
-const EntityOperationNewToOld: Record&lt;NewEntityOperation, OldEntityOperation&gt; = {
+const EntityOperationNewToOld: Record&lt;NewEntityOperation, OldEntityOperation | null&gt; = {
     newEntity: OldEntityOperation.NewEntity,
     overwrite: OldEntityOperation.Overwrite,
     removeFromEnd: OldEntityOperation.RemoveFromEnd,
     removeFromStart: OldEntityOperation.RemoveFromStart,
     replaceTemporaryContent: OldEntityOperation.ReplaceTemporaryContent,
     updateEntityState: OldEntityOperation.UpdateEntityState,
+    snapshotEntityState: null,
     click: OldEntityOperation.Click,
 };
 &nbsp;
@@ -1612,15 +1625,20 @@ export function newEventToOldEvent(input: NewEvent, refEvent?: OldEvent): OldEve
             };
 &nbsp;
         case 'entityOperation':
-            return {
-                eventType: PluginEventType.EntityOperation,
-                eventDataCache: input.eventDataCache,
-                rawEvent: input.rawEvent,
-                entity: input.entity,
-                operation: EntityOperationNewToOld[input.operation],
-                shouldPersist: input.shouldPersist,
-                state: input.state,
-            };
+            const oldOperation = EntityOperationNewToOld[input.operation];
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (oldOperation !== null) {
+                return {
+                    eventType: PluginEventType.EntityOperation,
+                    eventDataCache: input.eventDataCache,
+                    rawEvent: input.rawEvent,
+                    entity: input.entity,
+                    operation: oldOperation,
+                    shouldPersist: input.shouldPersist,
+                    state: input.state,
+                };
+            } else {
+<span class="cstat-no" title="statement not covered" >                return undefined;</span>
+            }
 &nbsp;
         case 'extractContentWithDom':
             return {
@@ -1735,7 +1753,7 @@ function announceDataNewToOld(data: NewAnnounceData | undefined): OldAnnounceDat
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Mar 20 2024 17:06:51 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 20 2024 17:15:16 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
