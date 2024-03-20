@@ -23,6 +23,7 @@ export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
 export {
     isEntityElement,
+    findClosestEntityWrapper,
     getAllEntityWrappers,
     parseEntityFormat,
     generateEntityClassNames,

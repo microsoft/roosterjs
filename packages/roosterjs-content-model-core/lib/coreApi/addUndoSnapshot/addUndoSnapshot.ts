@@ -1,5 +1,11 @@
+import { findClosestEntityWrapper, parseEntityFormat } from 'roosterjs-content-model-dom';
+import type {
+    AddUndoSnapshot,
+    EntityOperationEvent,
+    Snapshot,
+} from 'roosterjs-content-model-types';
 import { createSnapshotSelection } from './createSnapshotSelection';
-import type { AddUndoSnapshot, Snapshot } from 'roosterjs-content-model-types';
+import { getPath } from './getPath';
 
 /**
  * @internal
@@ -11,7 +17,7 @@ import type { AddUndoSnapshot, Snapshot } from 'roosterjs-content-model-types';
  * when undo/redo to this snapshot
  */
 export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entityStates) => {
-    const { lifecycle, physicalRoot, undo } = core;
+    const { lifecycle, physicalRoot, logicalRoot, undo } = core;
     let snapshot: Snapshot | null = null;
 
     if (!lifecycle.shadowEditFragment) {
@@ -19,12 +25,50 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
         const selection = createSnapshotSelection(core);
         const html = physicalRoot.innerHTML;
 
+        // Give plugins the chance to share entity states to include in the snapshot if the logical root is in an entity
+        if (logicalRoot !== physicalRoot) {
+            const entityWrapper = findClosestEntityWrapper(logicalRoot, core.domHelper);
+            if (!entityStates && entityWrapper) {
+                const entityFormat = parseEntityFormat(entityWrapper);
+                if (entityFormat.entityType && entityFormat.id) {
+                    const event = <EntityOperationEvent>{
+                        eventType: 'entityOperation',
+                        operation: 'snapshotEntityState',
+                        entity: {
+                            type: entityFormat.entityType,
+                            id: entityFormat.id,
+                            wrapper: entityWrapper,
+                            isReadonly: entityFormat.isReadonly,
+                        },
+                        state: undefined,
+                    };
+
+                    core.api.triggerEvent(core, event, false);
+
+                    // Copy out any entity states from the plugins
+                    if (event.state) {
+                        entityStates = [
+                            {
+                                type: entityFormat.entityType,
+                                id: entityFormat.id,
+                                state: event.state,
+                            },
+                        ];
+                    }
+                }
+            }
+        }
+
         snapshot = {
             html,
             entityStates,
             isDarkMode: !!lifecycle.isDarkMode,
             selection,
         };
+
+        if (logicalRoot !== physicalRoot) {
+            snapshot.logicalRootPath = getPath(logicalRoot, 0, physicalRoot);
+        }
 
         undo.snapshotsManager.addSnapshot(snapshot, !!canUndoByBackspace);
         undo.snapshotsManager.hasNewContent = false;

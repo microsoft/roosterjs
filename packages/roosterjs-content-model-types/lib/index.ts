@@ -209,6 +209,7 @@ export {
     GetDOMSelection,
     SetContentModel,
     SetDOMSelection,
+    SetLogicalRoot,
     FormatContentModel,
     CoreApiMap,
     EditorCore,
@@ -232,7 +233,11 @@ export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
-export { SelectionPluginState } from './pluginState/SelectionPluginState';
+export {
+    SelectionPluginState,
+    TableSelectionInfo,
+    TableCellCoordinate,
+} from './pluginState/SelectionPluginState';
 export { UndoPluginState } from './pluginState/UndoPluginState';
 export {
     PluginKey,
@@ -293,6 +298,7 @@ export {
 export { NodeTypeMap } from './parameter/NodeTypeMap';
 export { TypeOfBlockGroup } from './parameter/TypeOfBlockGroup';
 export { OperationalBlocks } from './parameter/OperationalBlocks';
+export { ParsedTable, ParsedTableCell } from './parameter/ParsedTable';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
@@ -313,6 +319,7 @@ export {
     KeyUpEvent,
     CompositionEndEvent,
 } from './event/KeyboardEvent';
+export { LogicalRootChangedEvent } from './event/LogicalRootChangedEvent';
 export { MouseDownEvent, MouseUpEvent } from './event/MouseEvent';
 export { PluginEvent } from './event/PluginEvent';
 export {

@@ -1,5 +1,6 @@
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
+import { normalizePos } from '../../publicApi/domUtils/normalizePos';
 import {
     addDelimiters,
     createBr,
@@ -8,6 +9,8 @@ import {
     isEntityDelimiter,
     isEntityElement,
     isNodeOfType,
+    parseEntityFormat,
+    findClosestEntityWrapper,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,
@@ -132,14 +135,10 @@ function getFocusedElement(
     let node: Node | null = isReverted ? range.startContainer : range.endContainer;
     let offset = isReverted ? range.startOffset : range.endOffset;
 
-    while (node?.lastChild) {
-        if (offset == node.childNodes.length) {
-            node = node.lastChild;
-            offset = node.childNodes.length;
-        } else {
-            node = node.childNodes[offset];
-            offset = 0;
-        }
+    if (node) {
+        const pos = normalizePos(node, offset);
+        node = pos.node;
+        offset = pos.offset;
     }
 
     if (!isNodeOfType(node, 'ELEMENT_NODE')) {
@@ -201,6 +200,7 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
         return;
     }
     const isEnter = rawEvent.key === 'Enter';
+    const helper = editor.getDOMHelper();
     if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
         const helper = editor.getDOMHelper();
         const node = getFocusedElement(selection);
@@ -240,6 +240,11 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
                         );
                 }
             }
+        }
+    } else if (isEnter) {
+        const entity = findClosestEntityWrapper(selection.range.startContainer, helper);
+        if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
+            triggerEntityEventOnEnter(editor, entity, rawEvent);
         }
     }
 }
@@ -292,6 +297,16 @@ export const handleEnterInlineEntity: ContentModelFormatter = model => {
                 selectionBlock.segmentFormat,
                 selectionBlock.decorator
             );
+
+            if (
+                selectionBlock.segments.every(
+                    x => x.segmentType == 'SelectionMarker' || x.segmentType == 'Br'
+                ) ||
+                segmentsAfterMarker.every(x => x.segmentType == 'SelectionMarker')
+            ) {
+                newPara.segments.push(createBr(selectionBlock.format));
+            }
+
             newPara.segments.push(...segmentsAfterMarker);
 
             const selectionBlockIndex = selectionBlockParent.blocks.indexOf(selectionBlock);
@@ -302,4 +317,24 @@ export const handleEnterInlineEntity: ContentModelFormatter = model => {
     }
 
     return true;
+};
+
+const triggerEntityEventOnEnter = (
+    editor: IEditor,
+    wrapper: HTMLElement,
+    rawEvent: KeyboardEvent
+) => {
+    const format = parseEntityFormat(wrapper);
+    if (format.id && format.entityType && !format.isFakeEntity) {
+        editor.triggerEvent('entityOperation', {
+            operation: 'click',
+            entity: {
+                id: format.id,
+                type: format.entityType,
+                isReadonly: !!format.isReadonly,
+                wrapper,
+            },
+            rawEvent: rawEvent,
+        });
+    }
 };

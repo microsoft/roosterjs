@@ -58,6 +58,13 @@ export interface IEditor {
     setDOMSelection(selection: DOMSelection | null): void;
 
     /**
+     * Set a new logical root (most likely due to focus change)
+     * @param core The StandaloneEditorCore object
+     * @param logicalRoot The new logical root (has to be child of physicalRoot or null to use physicalRoot as logical root)
+     */
+    setLogicalRoot(logicalRoot: HTMLDivElement | null): void;
+
+    /**
      * The general API to do format change with Content Model
      * It will grab a Content Model for current editor content, and invoke a callback function
      * to do format change. Then according to the return value, write back the modified content model into editor.

@@ -5,7 +5,6 @@ import {
     CustomReplace,
     HyperLink,
     ImageEdit,
-    TableCellSelection,
 } from 'roosterjs-editor-plugins';
 import {
     LegacyPluginList,
@@ -33,7 +32,6 @@ export function createLegacyPlugins(initState: OptionState): LegacyEditorPlugin[
                   applyChangesOnMouseUp: initState.applyChangesOnMouseUp,
               })
             : null,
-        tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
         customReplace: pluginList.customReplace ? new CustomReplace() : null,
         announce: pluginList.announce ? new Announce(getDefaultStringsMap()) : null,
     };

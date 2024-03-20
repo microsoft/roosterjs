@@ -150,5 +150,20 @@ module.exports = {
         'prefer-const': 'error',
         'no-var': 'error',
         'etc/no-const-enum': ['error', { allowLocal: true }],
+        'import/no-default-export': 'error',
     },
+    overrides: [
+        {
+            files: [
+                'roosterjs-editor-*/**/*.ts',
+                'roosterjs-react/**/*.ts',
+                'roosterjs-react/**/*.tsx',
+                'roosterjs-color-utils/**/*.ts',
+                'roosterjs/**/*.ts',
+            ],
+            rules: {
+                'import/no-default-export': 'off',
+            },
+        },
+    ],
 };
