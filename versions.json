@@ -3,5 +3,8 @@
     "react": "8.55.0",
     "main": "0.28.0",
     "legacyAdapter": "0.28.0",
-    "overrides": {}
+    "overrides": {
+        "roosterjs-content-model-core": "0.28.1",
+        "roosterjs-content-model-plugins": "0.28.1"
+    }
 }
