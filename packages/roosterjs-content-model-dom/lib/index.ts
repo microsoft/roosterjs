@@ -23,12 +23,12 @@ export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
 export {
     isEntityElement,
+    findClosestEntityWrapper,
     getAllEntityWrappers,
     parseEntityFormat,
     generateEntityClassNames,
     addDelimiters,
     isEntityDelimiter,
-    findClosestEntityWrapper,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';

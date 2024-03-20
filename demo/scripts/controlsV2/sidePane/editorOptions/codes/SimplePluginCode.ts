@@ -51,9 +51,3 @@ export class CustomReplaceCode extends SimplePluginCode {
         super('CustomReplace', 'roosterjs');
     }
 }
-
-export class TableCellSelectionCode extends SimplePluginCode {
-    constructor() {
-        super('TableCellSelection', 'roosterjs');
-    }
-}

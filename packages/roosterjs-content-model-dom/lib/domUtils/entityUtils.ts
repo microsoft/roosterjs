@@ -25,6 +25,18 @@ export function isEntityElement(node: Node): boolean {
 }
 
 /**
+ * Find the closest entity wrapper element from a given DOM node
+ * @param node The node to start looking for entity wrapper
+ * @param domHelper The DOM helper to use
+ */
+export function findClosestEntityWrapper(
+    startNode: Node,
+    domHelper: DOMHelper
+): HTMLElement | null {
+    return domHelper.findClosestElementAncestor(startNode, `.${ENTITY_INFO_NAME}`);
+}
+
+/**
  * Get all entity wrapper elements under the given root element
  * @param root The root element to query from
  * @returns An array of entity wrapper elements
@@ -130,15 +142,6 @@ export function addDelimiters(
     }
 
     return [delimiterAfter, delimiterBefore];
-}
-
-/**
- * Find the closest entity wrapper element from a given DOM node
- * @param node The node to start looking for entity wrapper
- * @param domHelper The DOM helper to use
- */
-export function findClosestEntityWrapper(node: Node, domHelper: DOMHelper): HTMLElement | null {
-    return domHelper.findClosestElementAncestor(node, `.${ENTITY_INFO_NAME}`);
 }
 
 function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {

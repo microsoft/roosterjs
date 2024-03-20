@@ -5,6 +5,7 @@ import type {
     ContentModelSegment,
     ContentModelTable,
     Selectable,
+    TableCellCoordinate,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -133,7 +134,7 @@ function setSelectionToTable(
     return isInSelection;
 }
 
-function findCell(table: ContentModelTable, cell: Selectable | null): { row: number; col: number } {
+function findCell(table: ContentModelTable, cell: Selectable | null): TableCellCoordinate {
     let col = -1;
     const row = cell
         ? table.rows.findIndex(row => (col = (row.cells as Selectable[]).indexOf(cell)) >= 0)

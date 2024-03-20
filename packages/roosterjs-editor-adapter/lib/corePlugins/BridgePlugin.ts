@@ -1,6 +1,7 @@
 import { cacheGetEventData } from 'roosterjs-content-model-core';
 import { createDarkColorHandler } from '../editor/DarkColorHandlerImpl';
 import { createEditPlugin } from './EditPlugin';
+import { IgnoredPluginNames } from '../editor/IgnoredPluginNames';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
 import type {
     EditorPlugin as LegacyEditorPlugin,
@@ -71,7 +72,10 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     ) {
         const editPlugin = createEditPlugin();
 
-        this.legacyPlugins = [editPlugin, ...legacyPlugins.filter(x => !!x)];
+        this.legacyPlugins = [
+            editPlugin,
+            ...legacyPlugins.filter(x => !!x && IgnoredPluginNames.indexOf(x.getName()) < 0),
+        ];
         this.edit = editPlugin.getState();
         this.contextMenuProviders = this.legacyPlugins.filter(isContextMenuProvider);
         this.checkExclusivelyHandling = this.legacyPlugins.some(

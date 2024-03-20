@@ -3,6 +3,7 @@ import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { insertTable } from 'roosterjs-content-model-api';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
+import { TableCellCoordinate } from 'roosterjs-content-model-types';
 import type { RibbonButton } from '../type/RibbonButton';
 import type { InsertTableButtonStringKey } from '../type/RibbonButtonStringKeys';
 import type { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
@@ -57,7 +58,7 @@ export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
     },
 };
 
-function parseKey(key: string): { row: number; col: number } {
+function parseKey(key: string): TableCellCoordinate {
     const [row, col] = key.split(',');
     return {
         row: parseInt(row),
