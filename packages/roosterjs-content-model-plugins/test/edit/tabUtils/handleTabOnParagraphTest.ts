@@ -131,7 +131,7 @@ describe('handleTabOnParagraph', () => {
         runTest(model, paragraph, rawEvent, selection, true);
     });
 
-    it('Outdent - collapsed range should return true when cursor is at the start', () => {
+    it('Outdent - collapsed range should return false when cursor is at the start', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -150,6 +150,45 @@ describe('handleTabOnParagraph', () => {
                         },
                     ],
                     format: {},
+                },
+            ],
+            format: {},
+        };
+        const paragraph = model.blocks[0] as ContentModelParagraph;
+        const rawEvent = new KeyboardEvent('keydown', {
+            key: 'Tab',
+            shiftKey: true,
+        });
+        const selection = {
+            type: 'range',
+            range: {
+                collapsed: true,
+            },
+        } as RangeSelection;
+        runTest(model, paragraph, rawEvent, selection, false);
+    });
+
+    it('Outdent - collapsed range should return true when cursor is at the start and exist indentation', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginLeft: '4px',
+                    },
                 },
             ],
             format: {},

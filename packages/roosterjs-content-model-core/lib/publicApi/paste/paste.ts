@@ -1,7 +1,7 @@
+import { cloneModelForPaste, mergePasteContent } from '../../utils/paste/mergePasteContent';
 import { convertInlineCss } from '../../utils/convertInlineCss';
 import { createPasteFragment } from '../../utils/paste/createPasteFragment';
 import { generatePasteOptionFromPlugins } from '../../utils/paste/generatePasteOptionFromPlugins';
-import { mergePasteContent } from '../../utils/paste/mergePasteContent';
 import { retrieveHtmlInfo } from '../../utils/paste/retrieveHtmlInfo';
 import type {
     PasteType,
@@ -26,7 +26,9 @@ export function paste(
     const trustedHTMLHandler = editor.getTrustedHTMLHandler();
 
     if (!clipboardData.modelBeforePaste) {
-        clipboardData.modelBeforePaste = editor.getContentModelCopy('connected');
+        clipboardData.modelBeforePaste = cloneModelForPaste(
+            editor.getContentModelCopy('connected')
+        );
     }
 
     // 1. Prepare variables

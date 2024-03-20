@@ -30,6 +30,15 @@ export function handleTabOnParagraph(
         selectedSegments.length === 1 && selectedSegments[0].segmentType === 'SelectionMarker';
     const isAllSelected = paragraph.segments.every(segment => segment.isSelected);
     if ((paragraph.segments[0].segmentType === 'SelectionMarker' && isCollapsed) || isAllSelected) {
+        const { marginLeft, marginRight, direction } = paragraph.format;
+        const isRtl = direction === 'rtl';
+        if (
+            rawEvent.shiftKey &&
+            ((!isRtl && (!marginLeft || marginLeft == '0px')) ||
+                (isRtl && (!marginRight || marginRight == '0px')))
+        ) {
+            return false;
+        }
         setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
     } else {
         if (!isCollapsed) {
@@ -84,7 +93,6 @@ export function handleTabOnParagraph(
             }
         }
     }
-
     rawEvent.preventDefault();
     return true;
 }

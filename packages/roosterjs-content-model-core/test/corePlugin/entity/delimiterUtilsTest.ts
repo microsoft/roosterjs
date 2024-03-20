@@ -1,5 +1,6 @@
 import * as DelimiterFile from '../../../lib/corePlugin/entity/entityDelimiterUtils';
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
+import * as isNodeOfType from 'roosterjs-content-model-dom/lib/domUtils/isNodeOfType';
 import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 import {
     handleDelimiterContentChangedEvent,
@@ -157,12 +158,14 @@ describe('EntityDelimiterUtils |', () => {
         let mockedSelection: DOMSelection;
         let rafSpy: jasmine.Spy;
         let takeSnapshotSpy: jasmine.Spy;
+        let triggerEventSpy: jasmine.Spy;
 
         beforeEach(() => {
             mockedSelection = undefined!;
             rafSpy = jasmine.createSpy('requestAnimationFrame');
             formatContentModelSpy = jasmine.createSpy('formatContentModel');
             takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
+            triggerEventSpy = jasmine.createSpy('triggerEvent');
 
             mockedEditor = (<any>{
                 getDOMSelection: () => mockedSelection,
@@ -177,6 +180,7 @@ describe('EntityDelimiterUtils |', () => {
                     queryElements: queryElementsSpy,
                     isNodeInEditor: () => true,
                 }),
+                triggerEvent: triggerEventSpy,
                 takeSnapshot: takeSnapshotSpy,
             }) as Partial<IEditor>;
             spyOn(DelimiterFile, 'preventTypeInDelimiter').and.callThrough();
@@ -499,7 +503,7 @@ describe('EntityDelimiterUtils |', () => {
             );
         });
 
-        it('Handle, range selection & delimiter after wrapped in block entity', () => {
+        it('Handle, range selection & delimiter after wrapped in block entity | Enter key', () => {
             const div = document.createElement('div');
             const parent = document.createElement('span');
             const el = document.createElement('span');
@@ -552,6 +556,80 @@ describe('EntityDelimiterUtils |', () => {
                     selectionOverride: mockedSelection,
                 }
             );
+        });
+
+        it('Handle, range expanded selection | EnterKey', () => {
+            const div = document.createElement('div');
+            const parent = document.createElement('span');
+            const el = document.createElement('span');
+            const textSpan = document.createElement('span');
+            const text = document.createTextNode('span');
+            textSpan.appendChild(text);
+            textSpan.classList.add('_Entity');
+            el.appendChild(textSpan);
+            parent.appendChild(el);
+            el.classList.add('entityDelimiterAfter');
+            div.classList.add(BlockEntityContainer);
+            div.appendChild(parent);
+
+            const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
+            const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
+            const collapseSpy = jasmine.createSpy('collapseSpy');
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
+
+            mockedSelection = {
+                type: 'range',
+                range: <any>{
+                    endContainer: text,
+                    endOffset: 0,
+                    collapsed: false,
+                    setStartAfter: setStartAfterSpy,
+                    setStartBefore: setStartBeforeSpy,
+                    collapse: collapseSpy,
+                    startContainer: textSpan,
+                },
+                isReverted: false,
+            };
+            spyOn(entityUtils, 'isEntityElement').and.returnValue(true);
+            spyOn(isNodeOfType, 'isNodeOfType').and.returnValue(true);
+            spyOn(mockedEditor, 'getDOMSelection').and.returnValue({
+                type: 'range',
+                range: mockedSelection.range,
+            });
+            spyOn(entityUtils, 'parseEntityFormat').and.returnValue({
+                isReadonly: true,
+                id: 'test',
+                entityType: 'test',
+            });
+            spyOn(entityUtils, 'findClosestEntityWrapper').and.returnValue(textSpan);
+            const mockedEvent = <any>{
+                ctrlKey: false,
+                altKey: false,
+                metaKey: false,
+                key: 'Enter',
+                preventDefault: preventDefaultSpy,
+            };
+
+            handleDelimiterKeyDownEvent(mockedEditor, {
+                eventType: 'keyDown',
+                rawEvent: mockedEvent,
+            });
+
+            expect(rafSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(setStartAfterSpy).not.toHaveBeenCalled();
+            expect(setStartBeforeSpy).not.toHaveBeenCalled();
+            expect(collapseSpy).not.toHaveBeenCalled();
+            expect(triggerEventSpy).toHaveBeenCalledWith('entityOperation', {
+                operation: 'click',
+                entity: {
+                    id: 'test',
+                    type: 'test',
+                    isReadonly: true,
+                    wrapper: textSpan,
+                },
+                rawEvent: mockedEvent,
+            });
         });
     });
 });
@@ -1116,6 +1194,167 @@ describe('handleEnterInlineEntity', () => {
                         {
                             segmentType: 'Text',
                             text: '_',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('handle before entity as first segment', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                entityType: '',
+                                isReadonly: true,
+                            },
+                            wrapper: <any>{},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '_',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                entityType: '',
+                                isReadonly: true,
+                            },
+                            wrapper: jasmine.anything(),
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '_',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('handle after entity as last segment', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '_',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                entityType: '',
+                                isReadonly: true,
+                            },
+                            wrapper: <any>{},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '_',
+                            format: {},
+                        },
+
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {},
+                            entityFormat: {
+                                entityType: '',
+                                isReadonly: true,
+                            },
+                            wrapper: jasmine.anything(),
+                        },
+                    ],
+
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
                             format: {},
                         },
                     ],
