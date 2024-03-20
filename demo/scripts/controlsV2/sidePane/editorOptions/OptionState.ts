@@ -6,7 +6,6 @@ export interface LegacyPluginList {
     contentEdit: boolean;
     hyperlink: boolean;
     imageEdit: boolean;
-    tableCellSelection: boolean;
     customReplace: boolean;
     announce: boolean;
 }

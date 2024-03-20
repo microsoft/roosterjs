@@ -19,24 +19,13 @@ function getNewSelection(core: EditorCore): DOMSelection | null {
     const selection = core.logicalRoot.ownerDocument.defaultView?.getSelection();
     const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
 
-    return range && core.logicalRoot.contains(range.commonAncestorContainer)
+    return selection && range && core.logicalRoot.contains(range.commonAncestorContainer)
         ? {
               type: 'range',
               range,
-              isReverted: isSelectionReverted(selection),
+              isReverted:
+                  selection.focusNode != range.endContainer ||
+                  selection.focusOffset != range.endOffset,
           }
         : null;
-}
-
-function isSelectionReverted(selection: Selection | null | undefined): boolean {
-    if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        return (
-            !range.collapsed &&
-            selection.focusNode != range.endContainer &&
-            selection.focusOffset != range.endOffset
-        );
-    }
-
-    return false;
 }
