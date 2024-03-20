@@ -601,6 +601,7 @@ describe('EntityDelimiterUtils |', () => {
                 id: 'test',
                 entityType: 'test',
             });
+            spyOn(entityUtils, 'findClosestEntityWrapper').and.returnValue(textSpan);
             const mockedEvent = <any>{
                 ctrlKey: false,
                 altKey: false,

@@ -1,3 +1,4 @@
+import { findClosestEntityWrapper } from 'roosterjs-content-model-dom';
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import type {
@@ -244,7 +245,7 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
             }
         }
     } else if (isEnter) {
-        const entity = getSelectedEntity(selection);
+        const entity = findClosestEntityWrapper(selection.range.startContainer, helper);
         if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
             triggerEntityEventOnEnter(editor, entity, rawEvent);
         }
@@ -339,12 +340,4 @@ const triggerEntityEventOnEnter = (
             rawEvent: rawEvent,
         });
     }
-};
-
-const getSelectedEntity = (selection: RangeSelection) => {
-    let node = selection.range.startContainer;
-    while (node && node.parentElement && !isEntityElement(node)) {
-        node = node.parentElement;
-    }
-    return isEntityElement(node) ? node : null;
 };
