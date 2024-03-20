@@ -1,4 +1,3 @@
-import { findClosestEntityWrapper } from 'roosterjs-content-model-dom';
 import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import type {
@@ -20,6 +19,7 @@ import {
     isEntityElement,
     isNodeOfType,
     parseEntityFormat,
+    findClosestEntityWrapper,
 } from 'roosterjs-content-model-dom';
 
 const DelimiterBefore = 'entityDelimiterBefore';
