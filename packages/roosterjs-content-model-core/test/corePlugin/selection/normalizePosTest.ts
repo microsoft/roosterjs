@@ -1,4 +1,4 @@
-import { normalizePos } from '../../../lib/publicApi/domUtils/normalizePos';
+import { normalizePos } from '../../../lib/corePlugin/selection/normalizePos';
 
 describe('normalizePos()', () => {
     function runTest(

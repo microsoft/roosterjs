@@ -1,6 +1,7 @@
 import type { LogicalRootChangedEvent, SetLogicalRoot } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * Change which node is the current logical root
  * @param core The StandaloneEditorCore object
  * @param logicalRoot The new logical root (has to be child of physicalRoot), pass null to use physicalRoot as logical root

@@ -1,6 +1,6 @@
 import { isCharacterValue, isModifierKey } from '../../publicApi/domUtils/eventUtils';
 import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
-import { normalizePos } from '../../publicApi/domUtils/normalizePos';
+import { normalizePos } from './normalizePos';
 import {
     findCoordinate,
     findTableCellElement,

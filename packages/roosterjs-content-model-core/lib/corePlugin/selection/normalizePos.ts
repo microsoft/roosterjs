@@ -1,9 +1,10 @@
 import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { Pos } from '../../coreApi/restoreUndoSnapshot/getPositionFromPath';
 
 /**
  * @internal
  */
-export function normalizePos(node: Node, offset: number): { node: Node; offset: number } {
+export function normalizePos(node: Node, offset: number): Pos {
     const len = isNodeOfType(node, 'TEXT_NODE')
         ? node.nodeValue?.length ?? 0
         : node.childNodes.length;
