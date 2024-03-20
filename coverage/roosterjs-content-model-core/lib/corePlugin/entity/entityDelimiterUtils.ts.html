@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.73% </span>
+                <span class="strong">84.78% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>115/139</span>
+                <span class='fraction'>117/138</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.61% </span>
+                <span class="strong">62.22% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>106/184</span>
+                <span class='fraction'>112/180</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.35% </span>
+                <span class="strong">84.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>112/136</span>
+                <span class='fraction'>114/135</span>
             </div>
         
             
@@ -359,10 +359,8 @@
 <a name='L300'></a><a href='#L300'>300</a>
 <a name='L301'></a><a href='#L301'>301</a>
 <a name='L302'></a><a href='#L302'>302</a>
-<a name='L303'></a><a href='#L303'>303</a>
-<a name='L304'></a><a href='#L304'>304</a>
-<a name='L305'></a><a href='#L305'>305</a>
-<a name='L306'></a><a href='#L306'>306</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L303'></a><a href='#L303'>303</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -497,13 +495,9 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
@@ -512,9 +506,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -669,6 +663,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
 import { iterateSelections } from '../../publicApi/selection/iterateSelections';
+import { normalizePos } from '../../publicApi/domUtils/normalizePos';
 import {
     addDelimiters,
     createBr,
@@ -801,14 +796,10 @@ function getFocusedElement(
     let node: Node | null = isReverted ? <span class="branch-0 cbranch-no" title="branch not covered" >range.startContainer </span>: range.endContainer;
     let offset = isReverted ? <span class="branch-0 cbranch-no" title="branch not covered" >range.startOffset </span>: range.endOffset;
 &nbsp;
-    while (node<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>astChild) {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (offset == node.childNodes.length) {
-            node = node.lastChild;
-            offset = node.childNodes.length;
-        } else {
-<span class="cstat-no" title="statement not covered" >            node = node.childNodes[offset];</span>
-<span class="cstat-no" title="statement not covered" >            offset = 0;</span>
-        }
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (node) {
+        const pos = normalizePos(node, offset);
+        node = pos.node;
+        offset = pos.offset;
     }
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (!isNodeOfType(node, 'ELEMENT_NODE')) {
@@ -816,8 +807,8 @@ function getFocusedElement(
             ? <span class="branch-0 cbranch-no" title="branch not covered" >ZeroWidthSpace + existingTextInDelimiter</span>
             : ZeroWidthSpace;
 &nbsp;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (node.textContent != textToCheck &amp;&amp; (node.textContent || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.length == offset) {
-<span class="cstat-no" title="statement not covered" >            node = node.nextSibling ?? node.parentElement?.closest(DelimiterSelector) ?? null;</span>
+        if (node.textContent != textToCheck &amp;&amp; (node.textContent || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.length == offset) {
+            node = node.nextSibling<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" > ?? n</span></span>ode.parentElement<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>losest(DelimiterSelector) ?? <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
         } else {
             node = node<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>arentElement<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>losest(DelimiterSelector) ?? <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
         }
@@ -979,7 +970,7 @@ export const handleEnterInlineEntity: ContentModelFormatter = model =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 19 2024 20:20:16 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 20 2024 17:06:51 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
