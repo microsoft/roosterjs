@@ -58,7 +58,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should trigger keyboardListTrigger', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
-                rawEvent: { data: ' ', defaultPrevented: false } as any,
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
             runTest(event, true);
         });
@@ -66,25 +66,23 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should not trigger keyboardListTrigger', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
-                rawEvent: { data: '*', defaultPrevented: false } as any,
+                rawEvent: { data: '*', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-
             runTest(event, false);
         });
 
         it('should not trigger keyboardListTrigger', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
-                rawEvent: { data: ' ', defaultPrevented: false } as any,
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-
             runTest(event, true, { autoBullet: false, autoNumbering: false } as AutoFormatOptions);
         });
 
         it('should trigger keyboardListTrigger with auto bullet only', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
-                rawEvent: { key: ' ', defaultPrevented: false } as any,
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
             runTest(event, true, { autoBullet: true, autoNumbering: false } as AutoFormatOptions);
         });
@@ -92,9 +90,17 @@ describe('Content Model Auto Format Plugin Test', () => {
         it('should trigger keyboardListTrigger with auto numbering only', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
-                rawEvent: { key: ' ', defaultPrevented: false } as any,
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
             runTest(event, true, { autoBullet: false, autoNumbering: true } as AutoFormatOptions);
+        });
+
+        it('should not trigger keyboardListTrigger if the input type is different from insertText', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { key: ' ', defaultPrevented: false, inputType: 'test' } as any,
+            };
+            runTest(event, false, { autoBullet: true, autoNumbering: true } as AutoFormatOptions);
         });
     });
 

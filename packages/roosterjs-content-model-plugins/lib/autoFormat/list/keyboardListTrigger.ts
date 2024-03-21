@@ -1,6 +1,5 @@
 import { findListItemsInSameThread, setListType } from 'roosterjs-content-model-api';
 import { getListTypeStyle } from './getListTypeStyle';
-import { normalizeContentModel } from 'roosterjs-content-model-dom/lib';
 
 import {
     getFirstSelectedListItem,
@@ -33,7 +32,7 @@ export function keyboardListTrigger(
                     const { listType, styleType, index } = listStyleType;
                     triggerList(model, listType, styleType, index);
                     context.canUndoByBackspace = true;
-                    normalizeContentModel(model);
+
                     return true;
                 }
 
@@ -58,7 +57,6 @@ const triggerList = (
     if (listItem) {
         const listItems = findListItemsInSameThread(model, listItem);
         const levelIndex = listItem.levels.length - 1;
-        console.log('listItems', levelIndex, index);
         // If the index < 1, it is a new list, so it will be starting by 1, then no need to set startNumber
         if (index && index > 1 && isOrderedList) {
             const level = listItem?.levels[levelIndex];

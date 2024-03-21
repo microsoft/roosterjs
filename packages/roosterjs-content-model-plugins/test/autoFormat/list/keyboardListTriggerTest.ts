@@ -74,6 +74,7 @@ describe('keyboardListTrigger', () => {
                                         isSelected: true,
                                         format: {},
                                     },
+                                    { segmentType: 'Br', format: {} },
                                 ],
                                 format: {},
                             },
@@ -163,6 +164,10 @@ describe('keyboardListTrigger', () => {
                                 isSelected: true,
                                 format: {},
                             },
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
                         ],
                         format: {},
                     },
@@ -181,7 +186,7 @@ describe('keyboardListTrigger', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: ' test',
+                                        text: 'test',
                                         format: {},
                                     },
                                 ],
@@ -216,6 +221,10 @@ describe('keyboardListTrigger', () => {
                                     {
                                         segmentType: 'SelectionMarker',
                                         isSelected: true,
+                                        format: {},
+                                    },
+                                    {
+                                        segmentType: 'Br',
                                         format: {},
                                     },
                                 ],
@@ -344,6 +353,10 @@ describe('keyboardListTrigger', () => {
                                     {
                                         segmentType: 'SelectionMarker',
                                         isSelected: true,
+                                        format: {},
+                                    },
+                                    {
+                                        segmentType: 'Br',
                                         format: {},
                                     },
                                 ],
@@ -690,6 +703,10 @@ describe('keyboardListTrigger', () => {
                                         isSelected: true,
                                         format: {},
                                     },
+                                    {
+                                        segmentType: 'Br',
+                                        format: {},
+                                    },
                                 ],
                                 format: {},
                             },
@@ -1000,6 +1017,10 @@ describe('keyboardListTrigger', () => {
                                     {
                                         segmentType: 'SelectionMarker',
                                         isSelected: true,
+                                        format: {},
+                                    },
+                                    {
+                                        segmentType: 'Br',
                                         format: {},
                                     },
                                 ],
