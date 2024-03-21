@@ -1,5 +1,5 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelParagraph,

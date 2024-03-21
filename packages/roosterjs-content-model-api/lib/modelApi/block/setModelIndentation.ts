@@ -1,11 +1,11 @@
-import { createListLevel, parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
 import {
+    createListLevel,
     getOperationalBlocks,
     isBlockGroupOfType,
+    parseValueWithUnit,
     updateListMetadata,
-} from 'roosterjs-content-model-core';
-
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlock,
     ContentModelBlockFormat,

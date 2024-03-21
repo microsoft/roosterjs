@@ -1,5 +1,5 @@
 import { getIndex } from './getIndex';
-import { NumberingListType } from 'roosterjs-content-model-core';
+import { NumberingListType } from 'roosterjs-content-model-dom';
 
 const enum NumberingTypes {
     Decimal = 1,

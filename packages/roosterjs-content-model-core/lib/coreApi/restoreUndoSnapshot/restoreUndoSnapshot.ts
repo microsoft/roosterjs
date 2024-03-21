@@ -1,9 +1,9 @@
-import type { ContentChangedEvent, RestoreUndoSnapshot } from 'roosterjs-content-model-types';
-import { ChangeSource } from '../../constants/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { restoreSnapshotColors } from './restoreSnapshotColors';
 import { restoreSnapshotHTML } from './restoreSnapshotHTML';
 import { restoreSnapshotLogicalRoot } from './restoreSnapshotLogicalRoot';
 import { restoreSnapshotSelection } from './restoreSnapshotSelection';
+import type { ContentChangedEvent, RestoreUndoSnapshot } from 'roosterjs-content-model-types';
 
 /**
  * @internal

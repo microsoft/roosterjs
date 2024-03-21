@@ -1,6 +1,6 @@
 import * as DelimiterUtils from '../../../lib/corePlugin/entity/entityDelimiterUtils';
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
-import * as transformColor from '../../../lib/publicApi/color/transformColor';
+import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
 import { createContentModelDocument, createEntity } from 'roosterjs-content-model-dom';
 import { createEntityPlugin } from '../../../lib/corePlugin/entity/EntityPlugin';
 import {

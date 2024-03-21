@@ -1,5 +1,9 @@
-import { entityProcessor, hasMetadata, tableProcessor } from 'roosterjs-content-model-dom';
-import { getSelectionRootNode } from '../publicApi/selection/getSelectionRootNode';
+import {
+    entityProcessor,
+    getSelectionRootNode,
+    hasMetadata,
+    tableProcessor,
+} from 'roosterjs-content-model-dom';
 import type { DomToModelContext, ElementProcessor } from 'roosterjs-content-model-types';
 
 /**

@@ -1,5 +1,3 @@
-import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
-import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import { normalizePos } from '../selection/normalizePos';
 import {
     addDelimiters,
@@ -11,6 +9,8 @@ import {
     isNodeOfType,
     parseEntityFormat,
     findClosestEntityWrapper,
+    iterateSelections,
+    isCharacterValue,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,

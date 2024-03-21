@@ -1,6 +1,6 @@
-import { getSelectionRootNode } from '../publicApi/selection/getSelectionRootNode';
 import {
     getRegularSelectionOffsets,
+    getSelectionRootNode,
     handleRegularSelection,
     isNodeOfType,
     processChildNode,

@@ -1,4 +1,4 @@
-import * as deleteSelection from '../../../lib/publicApi/selection/deleteSelection';
+import * as deleteSelection from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyDefaultFormat } from '../../../lib/corePlugin/format/applyDefaultFormat';
 import {

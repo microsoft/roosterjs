@@ -1,4 +1,4 @@
-import * as sanitizeElement from '../../lib/utils/sanitizeElement';
+import * as sanitizeElement from '../../lib/command/createModelFromHtml/sanitizeElement';
 import { ContentModelDocument, DomToModelContext } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createPasteEntityProcessor } from '../../lib/override/pasteEntityProcessor';

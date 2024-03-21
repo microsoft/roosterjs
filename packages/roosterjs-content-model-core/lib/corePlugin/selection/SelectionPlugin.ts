@@ -1,11 +1,14 @@
-import { isCharacterValue, isModifierKey } from '../../publicApi/domUtils/eventUtils';
-import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { findCoordinate } from './findCoordinate';
+import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
 import { normalizePos } from './normalizePos';
 import {
-    findCoordinate,
-    findTableCellElement,
+    isCharacterValue,
+    isElementOfType,
+    isModifierKey,
+    isNodeOfType,
     parseTableCells,
-} from '../../publicApi/domUtils/tableCellUtils';
+    toArray,
+} from 'roosterjs-content-model-dom';
 import type {
     DOMSelection,
     IEditor,

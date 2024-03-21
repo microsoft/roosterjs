@@ -1,4 +1,4 @@
-import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core';
+import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-dom';
 import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
 
 /**
