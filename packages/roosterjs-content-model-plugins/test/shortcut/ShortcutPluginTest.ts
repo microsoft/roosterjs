@@ -1,13 +1,13 @@
 import * as changeFontSize from 'roosterjs-content-model-api/lib/publicApi/segment/changeFontSize';
 import * as clearFormat from 'roosterjs-content-model-api/lib/publicApi/format/clearFormat';
-import * as redo from 'roosterjs-content-model-core/lib/publicApi/undo/redo';
+import * as redo from 'roosterjs-content-model-core/lib/command/redo/redo';
 import * as setShortcutIndentationCommand from '../../lib/shortcut/utils/setShortcutIndentationCommand';
 import * as toggleBold from 'roosterjs-content-model-api/lib/publicApi/segment/toggleBold';
 import * as toggleBullet from 'roosterjs-content-model-api/lib/publicApi/list/toggleBullet';
 import * as toggleItalic from 'roosterjs-content-model-api/lib/publicApi/segment/toggleItalic';
 import * as toggleNumbering from 'roosterjs-content-model-api/lib/publicApi/list/toggleNumbering';
 import * as toggleUnderline from 'roosterjs-content-model-api/lib/publicApi/segment/toggleUnderline';
-import * as undo from 'roosterjs-content-model-core/lib/publicApi/undo/undo';
+import * as undo from 'roosterjs-content-model-core/lib/command/undo/undo';
 import { EditorEnvironment, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { ShortcutPlugin } from '../../lib/shortcut/ShortcutPlugin';
 

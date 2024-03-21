@@ -1,4 +1,4 @@
-import * as convertInlineCss from '../../../lib/utils/convertInlineCss';
+import * as convertInlineCss from '../../../lib/command/createModelFromHtml/convertInlineCss';
 import * as createDomToModelContextForSanitizing from '../../../lib/command/createModelFromHtml/createDomToModelContextForSanitizing';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as parseFormat from 'roosterjs-content-model-dom/lib/domToModel/utils/parseFormat';

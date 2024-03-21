@@ -1,4 +1,4 @@
-import { validate } from '../../../lib/domUtils/metadata/validate';
+import { validate } from '../../../lib/modelApi/metadata/validate';
 import {
     ArrayDefinition,
     BooleanDefinition,

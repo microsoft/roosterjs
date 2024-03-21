@@ -1,4 +1,4 @@
-import { isGeneralSegment } from '../../../lib/modelApi/common/isGeneralSegment';
+import { isGeneralSegment } from '../../../lib/modelApi/typeCheck/isGeneralSegment';
 
 describe('isGeneralSegment', () => {
     it('Not a general model', () => {

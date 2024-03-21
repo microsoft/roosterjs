@@ -1,5 +1,5 @@
 import { getNumberingListStyle } from '../../../lib/autoFormat/list/getNumberingListStyle';
-import { NumberingListType } from 'roosterjs-content-model-core';
+import { NumberingListType } from 'roosterjs-content-model-dom';
 
 describe('getNumberingListStyle', () => {
     function runTest(
