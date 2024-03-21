@@ -3,7 +3,7 @@ import { tablePreProcessor } from '../../override/tablePreProcessor';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
-} from 'roosterjs-content-model-core/lib/override/listMetadataApplier';
+} from '../../override/listMetadataApplier';
 import type {
     ContentModelSettings,
     DomToModelOption,
