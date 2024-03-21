@@ -59,8 +59,6 @@ export function getListTypeStyle(
                 previousListStyle
             );
 
-            console.log('numberingType', isNewList(listMarker));
-
             if (numberingType) {
                 return {
                     listType: 'OL',
