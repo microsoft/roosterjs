@@ -1,18 +1,18 @@
 import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
-import { ChangeSource } from '../../constants/ChangeSource';
 import { deleteEmptyList } from './deleteEmptyList';
-import { deleteSelection } from '../../publicApi/selection/deleteSelection';
-import { extractClipboardItems } from '../../utils/extractClipboardItems';
-import { getSelectedCells } from '../../publicApi/table/getSelectedCells';
-import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
-import { paste } from '../../publicApi/paste/paste';
+import { paste } from '../../command/paste/paste';
 
 import {
+    ChangeSource,
     contentModelToDom,
     createModelToDomContext,
+    deleteSelection,
+    extractClipboardItems,
+    getSelectedCells,
     isElementOfType,
     isNodeOfType,
+    iterateSelections,
     moveChildNodes,
     normalizeContentModel,
     toArray,

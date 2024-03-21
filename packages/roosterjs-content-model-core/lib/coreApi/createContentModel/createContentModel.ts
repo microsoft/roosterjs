@@ -1,5 +1,5 @@
-import { cloneModel } from '../../publicApi/model/cloneModel';
 import {
+    cloneModel,
     createDomToModelContext,
     createDomToModelContextWithConfig,
     domToContentModel,

@@ -1,8 +1,4 @@
 import {
-    getClosestAncestorBlockGroupIndex,
-    isBlockGroupOfType,
-} from 'roosterjs-content-model-core';
-import {
     createBr,
     createListItem,
     createListLevel,
@@ -11,6 +7,8 @@ import {
     normalizeContentModel,
     normalizeParagraph,
     setParagraphNotImplicit,
+    getClosestAncestorBlockGroupIndex,
+    isBlockGroupOfType,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockGroup,

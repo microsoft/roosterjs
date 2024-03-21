@@ -1,5 +1,4 @@
 import { findAllEntities } from './findAllEntities';
-import { transformColor } from '../../publicApi/color/transformColor';
 import {
     createEntity,
     generateEntityClassNames,
@@ -7,6 +6,7 @@ import {
     getObjectKeys,
     isEntityElement,
     parseEntityFormat,
+    transformColor,
 } from 'roosterjs-content-model-dom';
 import {
     handleCompositionEndEvent,

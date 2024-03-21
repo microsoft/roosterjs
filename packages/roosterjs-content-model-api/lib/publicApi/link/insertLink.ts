@@ -1,5 +1,5 @@
 import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
-import { ChangeSource, getSelectedSegments, mergeModel } from 'roosterjs-content-model-core';
+import { ChangeSource, getSelectedSegments, mergeModel } from 'roosterjs-content-model-dom';
 import { matchLink } from '../../modelApi/link/matchLink';
 import type { ContentModelLink, IEditor } from 'roosterjs-content-model-types';
 import {

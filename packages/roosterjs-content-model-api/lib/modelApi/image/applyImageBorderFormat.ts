@@ -1,5 +1,4 @@
-import { extractBorderValues } from 'roosterjs-content-model-core';
-import { parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { extractBorderValues, parseValueWithUnit } from 'roosterjs-content-model-dom';
 import type { Border, ContentModelImage } from 'roosterjs-content-model-types';
 
 /**

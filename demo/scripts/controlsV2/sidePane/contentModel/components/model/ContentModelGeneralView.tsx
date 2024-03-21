@@ -3,7 +3,7 @@ import { BlockGroupContentView } from './BlockGroupContentView';
 import { ContentModelCodeView } from './ContentModelCodeView';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
-import { hasSelectionInBlock } from 'roosterjs-content-model-core';
+import { hasSelectionInBlock } from 'roosterjs-content-model-dom';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import {
     ContentModelGeneralBlock,

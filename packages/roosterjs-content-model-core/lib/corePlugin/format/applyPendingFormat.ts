@@ -1,6 +1,6 @@
-import { iterateSelections } from '../../publicApi/selection/iterateSelections';
 import {
     createText,
+    iterateSelections,
     normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';

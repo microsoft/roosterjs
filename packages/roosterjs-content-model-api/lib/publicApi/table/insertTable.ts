@@ -1,12 +1,13 @@
-import { createContentModelDocument, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import {
+    createContentModelDocument,
+    createSelectionMarker,
     applyTableFormat,
     deleteSelection,
     mergeModel,
     normalizeTable,
     setSelection,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**

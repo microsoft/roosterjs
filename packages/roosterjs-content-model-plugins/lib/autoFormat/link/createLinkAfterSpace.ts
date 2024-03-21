@@ -1,5 +1,4 @@
-import { createText } from 'roosterjs-content-model-dom';
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
+import { createText, getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { matchLink } from 'roosterjs-content-model-api';
 import type { IEditor } from 'roosterjs-content-model-types';
 
