@@ -1,13 +1,7 @@
-import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { keyboardListTrigger } from '../../../lib/autoFormat/list/keyboardListTrigger';
 
 describe('keyboardListTrigger', () => {
-    let normalizeContentModelSpy: jasmine.Spy;
-    beforeEach(() => {
-        normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
-    });
-
     function runTest(
         input: ContentModelDocument,
         expectedModel: ContentModelDocument,
@@ -22,8 +16,10 @@ describe('keyboardListTrigger', () => {
                     newEntities: [],
                     deletedEntities: [],
                     newImages: [],
+                    canUndoByBackspace: true,
                 });
                 expect(result).toBe(expectedResult);
+                expect(options.apiName).toBe('autoToggleList');
             });
 
         keyboardListTrigger(
@@ -31,18 +27,9 @@ describe('keyboardListTrigger', () => {
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
-            {
-                preventDefault: () => {},
-            } as KeyboardEvent,
             shouldSearchForBullet,
             shouldSearchForNumbering
         );
-
-        if (expectedResult) {
-            expect(normalizeContentModelSpy).toHaveBeenCalled();
-        } else {
-            expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        }
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         expect(input).toEqual(expectedModel);

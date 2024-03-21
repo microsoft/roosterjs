@@ -17,7 +17,6 @@ export function keyboardListTrigger(
     shouldSearchForNumbering: boolean = true
 ) {
     if (shouldSearchForBullet || shouldSearchForNumbering) {
-        editor.takeSnapshot();
         editor.formatContentModel(
             (model, context) => {
                 const listStyleType = getListTypeStyle(
