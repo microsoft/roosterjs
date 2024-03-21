@@ -121,9 +121,9 @@ export class MarkdownPlugin implements EditorPlugin {
                                 format: { italic: true },
                             };
                         }
-                        break;
                 }
             }
+
             if (rawEvent.key === ' ' && this.lastCharacterAndFormat) {
                 const { character, format } = this.lastCharacterAndFormat;
                 setFormat(editor, character, format);
