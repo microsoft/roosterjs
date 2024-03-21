@@ -1,13 +1,15 @@
 import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
-import { ChangeSource, getSelectedSegments, mergeModel } from 'roosterjs-content-model-dom';
 import { matchLink } from '../../modelApi/link/matchLink';
-import type { ContentModelLink, IEditor } from 'roosterjs-content-model-types';
 import {
     addLink,
     addSegment,
+    ChangeSource,
     createContentModelDocument,
     createText,
+    getSelectedSegments,
+    mergeModel,
 } from 'roosterjs-content-model-dom';
+import type { ContentModelLink, IEditor } from 'roosterjs-content-model-types';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
