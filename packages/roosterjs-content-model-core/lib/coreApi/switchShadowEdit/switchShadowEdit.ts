@@ -1,5 +1,4 @@
-import { iterateSelections } from '../../publicApi/selection/iterateSelections';
-import { moveChildNodes } from 'roosterjs-content-model-dom';
+import { iterateSelections, moveChildNodes } from 'roosterjs-content-model-dom';
 import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
 
 /**

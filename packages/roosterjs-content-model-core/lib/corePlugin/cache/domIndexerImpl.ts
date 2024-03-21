@@ -1,5 +1,9 @@
-import { createSelectionMarker, createText, isNodeOfType } from 'roosterjs-content-model-dom';
-import { setSelection } from '../../publicApi/selection/setSelection';
+import {
+    createSelectionMarker,
+    createText,
+    isNodeOfType,
+    setSelection,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelParagraph,

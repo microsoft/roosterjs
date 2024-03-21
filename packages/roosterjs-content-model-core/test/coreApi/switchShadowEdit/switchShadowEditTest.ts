@@ -1,4 +1,4 @@
-import * as iterateSelections from '../../../lib/publicApi/selection/iterateSelections';
+import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import { EditorCore } from 'roosterjs-content-model-types';
 import { switchShadowEdit } from '../../../lib/coreApi/switchShadowEdit/switchShadowEdit';
 

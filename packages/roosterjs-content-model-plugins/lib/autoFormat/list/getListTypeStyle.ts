@@ -11,7 +11,7 @@ import {
     updateListMetadata,
     getOperationalBlocks,
     getSelectedSegmentsAndParagraphs,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 
 /**
  * @internal

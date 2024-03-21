@@ -1,8 +1,9 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
-import { cloneModel, paste } from 'roosterjs-content-model-core';
+import { cloneModel } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
+import { paste } from 'roosterjs-content-model-core';
 
 const ID = 'CM_Paste_From_WORD_E2E';
 const clipboardData = <ClipboardData>(<any>{

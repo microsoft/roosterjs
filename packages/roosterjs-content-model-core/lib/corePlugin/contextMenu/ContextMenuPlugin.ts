@@ -1,4 +1,4 @@
-import { getSelectionRootNode } from '../../publicApi/selection/getSelectionRootNode';
+import { getSelectionRootNode } from 'roosterjs-content-model-dom';
 import type {
     ContextMenuPluginState,
     ContextMenuProvider,

@@ -3,7 +3,7 @@ import { tablePreProcessor } from '../../override/tablePreProcessor';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
-} from '../../metadata/updateListMetadata';
+} from '../../override/listMetadataApplier';
 import type {
     ContentModelSettings,
     DomToModelOption,

@@ -1,6 +1,4 @@
-import { isCharacterValue } from '../../publicApi/domUtils/eventUtils';
-import { iterateSelections } from '../../publicApi/selection/iterateSelections';
-import { normalizePos } from '../../publicApi/domUtils/normalizePos';
+import { normalizePos } from '../selection/normalizePos';
 import {
     addDelimiters,
     createBr,
@@ -11,6 +9,8 @@ import {
     isNodeOfType,
     parseEntityFormat,
     findClosestEntityWrapper,
+    iterateSelections,
+    isCharacterValue,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,

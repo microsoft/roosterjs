@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { isModifierKey, iterateSelections, undo } from 'roosterjs-content-model-core';
-import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { isModifierKey, isNodeOfType, iterateSelections } from 'roosterjs-content-model-dom';
 import { KeyCodes } from '@fluentui/react/lib/Utilities';
 import { MoreEmoji } from '../utils/emojiList';
 import { showEmojiCallout } from '../components/showEmojiCallout';
+import { undo } from 'roosterjs-content-model-core';
 import type { EmojiICallout } from '../components/showEmojiCallout';
 import type { Emoji } from '../type/Emoji';
 import type { EmojiPane } from '../components/EmojiPane';

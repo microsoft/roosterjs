@@ -1,4 +1,4 @@
-import { BulletListType } from 'roosterjs-content-model-core';
+import { BulletListType } from 'roosterjs-content-model-dom';
 import { setListStyle } from 'roosterjs-content-model-api';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 

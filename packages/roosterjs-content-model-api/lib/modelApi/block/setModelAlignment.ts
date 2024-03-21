@@ -1,5 +1,5 @@
 import { alignTable } from '../table/alignTable';
-import { getOperationalBlocks } from 'roosterjs-content-model-core';
+import { getOperationalBlocks } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelListItem,

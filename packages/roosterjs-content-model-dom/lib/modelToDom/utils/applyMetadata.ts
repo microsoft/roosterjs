@@ -1,4 +1,4 @@
-import { updateMetadata } from '../../domUtils/metadata/updateMetadata';
+import { updateMetadata } from '../../modelApi/metadata/updateMetadata';
 import type {
     ContentModelFormatBase,
     ContentModelWithDataset,

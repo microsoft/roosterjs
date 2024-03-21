@@ -1,13 +1,14 @@
-import { getListStyleTypeFromString, updateListMetadata } from 'roosterjs-content-model-core';
 import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
-import type { WordMetadata } from './WordMetadata';
 import {
     addBlock,
     createListItem,
     createListLevel,
+    getListStyleTypeFromString,
     isEmpty,
     parseFormat,
+    updateListMetadata,
 } from 'roosterjs-content-model-dom';
+import type { WordMetadata } from './WordMetadata';
 import type {
     ContentModelBlockGroup,
     ContentModelListItem,

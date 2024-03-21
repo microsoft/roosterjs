@@ -1,9 +1,8 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteEmptyQuote } from '../../../lib/edit/deleteSteps/deleteEmptyQuote';
-import { deleteSelection } from 'roosterjs-content-model-core';
+import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { editingTestCommon } from '../editingTestCommon';
 import { keyboardInput } from '../../../lib/edit/keyboardInput';
-import { normalizeContentModel } from 'roosterjs-content-model-dom';
 
 describe('deleteEmptyQuote', () => {
     function runTest(

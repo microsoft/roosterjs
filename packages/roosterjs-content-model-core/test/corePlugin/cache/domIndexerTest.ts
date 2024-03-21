@@ -1,4 +1,4 @@
-import * as setSelection from '../../../lib/publicApi/selection/setSelection';
+import * as setSelection from 'roosterjs-content-model-dom/lib/modelApi/selection/setSelection';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { domIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
 import {

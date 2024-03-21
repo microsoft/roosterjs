@@ -1,6 +1,6 @@
 import { ContentModelBlockGroup, ContentModelSelectionMarker } from 'roosterjs-content-model-types';
 import { deleteEmptyList } from '../../../lib/corePlugin/copyPaste/deleteEmptyList';
-import { deleteSelection } from '../../../lib/publicApi/selection/deleteSelection';
+import { deleteSelection } from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import {
     createContentModelDocument,
     createListItem,

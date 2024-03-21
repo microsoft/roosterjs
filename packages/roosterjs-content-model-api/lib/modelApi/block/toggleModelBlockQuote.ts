@@ -1,6 +1,11 @@
-import { areSameFormats, createFormatContainer, unwrapBlock } from 'roosterjs-content-model-dom';
-import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-core';
 import { wrapBlockStep1, wrapBlockStep2 } from '../common/wrapBlock';
+import {
+    getOperationalBlocks,
+    isBlockGroupOfType,
+    areSameFormats,
+    createFormatContainer,
+    unwrapBlock,
+} from 'roosterjs-content-model-dom';
 import type { WrapBlockStep1Result } from '../common/wrapBlock';
 import type {
     ContentModelBlock,

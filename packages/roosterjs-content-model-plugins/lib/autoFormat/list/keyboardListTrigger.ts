@@ -1,11 +1,10 @@
 import { findListItemsInSameThread, setListType } from 'roosterjs-content-model-api';
 import { getListTypeStyle } from './getListTypeStyle';
-
 import {
     getFirstSelectedListItem,
     getSelectedSegmentsAndParagraphs,
     updateListMetadata,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 
 /**
