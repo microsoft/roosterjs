@@ -6,6 +6,6 @@ export class WatermarkCode extends CodeElement {
     }
 
     getCode() {
-        return `new roosterjsLegacy.Watermark('${this.encode(this.watermarkText)}')`;
+        return `new roosterjs.WatermarkPlugin('${this.encode(this.watermarkText)}')`;
     }
 }
