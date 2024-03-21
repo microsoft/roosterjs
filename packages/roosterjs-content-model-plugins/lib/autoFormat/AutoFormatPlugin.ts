@@ -4,6 +4,7 @@ import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { unlink } from './link/unlink';
 import type {
     ContentChangedEvent,
+    EditorInputEvent,
     EditorPlugin,
     IEditor,
     KeyDownEvent,
@@ -94,6 +95,9 @@ export class AutoFormatPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
+                case 'input':
+                    this.handleEditorInputEvent(this.editor, event);
+                    break;
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
@@ -104,13 +108,24 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 
+    private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
+        const rawEvent = event.rawEvent;
+        if (rawEvent.inputType === 'insertText') {
+            const { autoBullet, autoNumbering } = this.options;
+            switch (rawEvent.data) {
+                case ' ':
+                    keyboardListTrigger(editor, autoBullet, autoNumbering);
+                    break;
+            }
+        }
+    }
+
     private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
-            const { autoBullet, autoNumbering, autoUnlink, autoLink } = this.options;
+            const { autoUnlink, autoLink } = this.options;
             switch (rawEvent.key) {
                 case ' ':
-                    keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
                     if (autoLink) {
                         createLinkAfterSpace(editor);
                     }

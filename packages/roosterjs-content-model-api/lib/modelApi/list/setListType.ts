@@ -2,7 +2,7 @@ import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-mode
 import {
     createListItem,
     createListLevel,
-    normalizeContentModel,
+    //normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -123,7 +123,7 @@ export function setListType(
         }
     });
 
-    normalizeContentModel(model);
+    // normalizeContentModel(model);
 
     return paragraphOrListItems.length > 0;
 }

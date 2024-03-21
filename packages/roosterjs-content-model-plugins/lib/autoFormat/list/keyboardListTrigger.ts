@@ -1,7 +1,11 @@
+import { findListItemsInSameThread, setListType } from 'roosterjs-content-model-api';
 import { getListTypeStyle } from './getListTypeStyle';
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
-import { normalizeContentModel } from 'roosterjs-content-model-dom';
-import { setListStartNumber, setListStyle, setListType } from 'roosterjs-content-model-api';
+
+import {
+    getFirstSelectedListItem,
+    getSelectedSegmentsAndParagraphs,
+    updateListMetadata,
+} from 'roosterjs-content-model-core';
 import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -9,36 +13,39 @@ import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-type
  */
 export function keyboardListTrigger(
     editor: IEditor,
-    rawEvent: KeyboardEvent,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ) {
     if (shouldSearchForBullet || shouldSearchForNumbering) {
-        editor.formatContentModel((model, _context) => {
-            const listStyleType = getListTypeStyle(
-                model,
-                shouldSearchForBullet,
-                shouldSearchForNumbering
-            );
-            if (listStyleType) {
-                const segmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, false);
-                if (segmentsAndParagraphs[0] && segmentsAndParagraphs[0][1]) {
-                    segmentsAndParagraphs[0][1].segments.splice(0, 1);
+        editor.takeSnapshot();
+        editor.formatContentModel(
+            (model, context) => {
+                const listStyleType = getListTypeStyle(
+                    model,
+                    shouldSearchForBullet,
+                    shouldSearchForNumbering
+                );
+                if (listStyleType) {
+                    const segmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, false);
+                    if (segmentsAndParagraphs[0] && segmentsAndParagraphs[0][1]) {
+                        segmentsAndParagraphs[0][1].segments.splice(0, 1);
+                    }
+                    const { listType, styleType, index } = listStyleType;
+                    triggerList(model, listType, styleType, index);
+                    context.canUndoByBackspace = true;
+                    return true;
                 }
-                const { listType, styleType, index } = listStyleType;
-                triggerList(editor, model, listType, styleType, index);
-                rawEvent.preventDefault();
-                normalizeContentModel(model);
 
-                return true;
+                return false;
+            },
+            {
+                apiName: 'autoToggleList',
             }
-            return false;
-        });
+        );
     }
 }
 
 const triggerList = (
-    editor: IEditor,
     model: ContentModelDocument,
     listType: 'OL' | 'UL',
     styleType: number,
@@ -46,18 +53,35 @@ const triggerList = (
 ) => {
     setListType(model, listType);
     const isOrderedList = listType == 'OL';
-    // If the index < 1, it is a new list, so it will be starting by 1, then no need to set startNumber
-    if (index && index > 1 && isOrderedList) {
-        setListStartNumber(editor, index);
+    const listItem = getFirstSelectedListItem(model);
+    if (listItem) {
+        const listItems = findListItemsInSameThread(model, listItem);
+        const levelIndex = listItem.levels.length - 1;
+        // If the index < 1, it is a new list, so it will be starting by 1, then no need to set startNumber
+        if (index && index > 1 && isOrderedList) {
+            const level = listItem?.levels[levelIndex];
+            if (level) {
+                level.format.startNumberOverride = index;
+            }
+        }
+
+        listItems.forEach(listItem => {
+            const level = listItem.levels[levelIndex];
+            if (level) {
+                updateListMetadata(level, metadata =>
+                    Object.assign(
+                        {},
+                        metadata,
+                        isOrderedList
+                            ? {
+                                  orderedStyleType: styleType,
+                              }
+                            : {
+                                  unorderedStyleType: styleType,
+                              }
+                    )
+                );
+            }
+        });
     }
-    setListStyle(
-        editor,
-        isOrderedList
-            ? {
-                  orderedStyleType: styleType,
-              }
-            : {
-                  unorderedStyleType: styleType,
-              }
-    );
 };
