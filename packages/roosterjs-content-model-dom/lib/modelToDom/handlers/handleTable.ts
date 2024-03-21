@@ -1,5 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { hasMetadata } from 'roosterjs-content-model-dom';
+import { hasMetadata } from '../../modelApi/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { moveChildNodes } from '../../domUtils/moveChildNodes';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';

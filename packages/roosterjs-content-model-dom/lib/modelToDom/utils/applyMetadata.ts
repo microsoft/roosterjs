@@ -1,4 +1,4 @@
-import { updateMetadata } from 'roosterjs-content-model-dom';
+import { updateMetadata } from '../../modelApi/metadata/updateMetadata';
 import type {
     ContentModelFormatBase,
     ContentModelWithDataset,

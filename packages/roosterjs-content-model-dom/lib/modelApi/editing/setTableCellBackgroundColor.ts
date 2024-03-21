@@ -1,4 +1,4 @@
-import { parseColor } from 'roosterjs-content-model-dom';
+import { parseColor } from '../../formatHandlers/utils/color';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
 import type { ContentModelTableCell } from 'roosterjs-content-model-types';
 
