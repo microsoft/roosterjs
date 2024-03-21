@@ -76,7 +76,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             }
 
             if (shouldAddSnapshot) {
-                core.api.addUndoSnapshot(core, !!canUndoByBackspace, entityStates);
+                core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/, entityStates);
             } else {
                 core.undo.snapshotsManager.hasNewContent = true;
             }

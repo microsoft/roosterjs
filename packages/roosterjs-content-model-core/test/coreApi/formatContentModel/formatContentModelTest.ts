@@ -774,6 +774,7 @@ describe('formatContentModel', () => {
             expect(callback).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
+            expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
             expect(core.undo).toEqual({
