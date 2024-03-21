@@ -1,4 +1,5 @@
-import { extractClipboardItems, paste } from 'roosterjs-content-model-core';
+import { extractClipboardItems } from 'roosterjs-content-model-dom';
+import { paste } from 'roosterjs-content-model-core';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 /**

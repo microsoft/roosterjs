@@ -1,4 +1,4 @@
-import * as cloneModel from '../../../lib/publicApi/model/cloneModel';
+import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import { createContentModel } from '../../../lib/coreApi/createContentModel/createContentModel';

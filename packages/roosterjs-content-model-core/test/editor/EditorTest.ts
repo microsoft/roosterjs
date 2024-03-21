@@ -1,12 +1,11 @@
-import * as cloneModel from '../../lib/publicApi/model/cloneModel';
+import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import * as createEditorCore from '../../lib/editor/core/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
-import * as transformColor from '../../lib/publicApi/color/transformColor';
+import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
 import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
-import { ChangeSource } from '../../lib/constants/ChangeSource';
+import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
 import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
-import { tableProcessor } from 'roosterjs-content-model-dom';
 
 describe('Editor', () => {
     let createEditorCoreSpy: jasmine.Spy;

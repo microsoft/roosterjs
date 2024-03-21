@@ -1,6 +1,6 @@
-import { ChangeSource } from 'roosterjs-content-model-core';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
 import {
+    ChangeSource,
     createEntity,
     normalizeContentModel,
     parseEntityFormat,

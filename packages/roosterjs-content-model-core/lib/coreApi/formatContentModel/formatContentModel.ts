@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../constants/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import type {
     ChangedEntity,
     ContentChangedEvent,

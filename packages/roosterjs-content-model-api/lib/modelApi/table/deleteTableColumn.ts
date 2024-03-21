@@ -1,5 +1,5 @@
 import { collapseTableSelection } from '../selection/collapseTableSelection';
-import { getSelectedCells } from 'roosterjs-content-model-core';
+import { getSelectedCells } from 'roosterjs-content-model-dom';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 /**

@@ -2,7 +2,7 @@ import {
     applyTableFormat,
     getFirstSelectedTable,
     updateTableCellMetadata,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**

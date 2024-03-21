@@ -1,11 +1,11 @@
-import { BulletListType } from 'roosterjs-content-model-core/lib/constants/BulletListType';
+import { BulletListType } from '../../../lib/constants/BulletListType';
 import { ContentModelListItem, ModelToDomContext } from 'roosterjs-content-model-types';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { expectHtml } from '../../testUtils';
 import { handleList } from '../../../lib/modelToDom/handlers/handleList';
-import { NumberingListType } from 'roosterjs-content-model-core/lib/constants/NumberingListType';
+import { NumberingListType } from '../../../lib/constants/NumberingListType';
 
 describe('handleList without format handlers', () => {
     let context: ModelToDomContext;

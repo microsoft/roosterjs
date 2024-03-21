@@ -1,7 +1,7 @@
-import * as applyTableFormat from 'roosterjs-content-model-core/lib/publicApi/table/applyTableFormat';
+import * as applyTableFormat from 'roosterjs-content-model-dom/lib/modelApi/editing/applyTableFormat';
 import * as ensureFocusableParagraphForTable from '../../../lib/modelApi/table/ensureFocusableParagraphForTable';
-import * as hasSelectionInBlock from 'roosterjs-content-model-core/lib/publicApi/selection/hasSelectionInBlock';
-import * as normalizeTable from 'roosterjs-content-model-core/lib/publicApi/table/normalizeTable';
+import * as hasSelectionInBlock from 'roosterjs-content-model-dom/lib/modelApi/selection/hasSelectionInBlock';
+import * as normalizeTable from 'roosterjs-content-model-dom/lib/modelApi/editing/normalizeTable';
 import { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 import { formatTableWithContentModel } from '../../../lib/publicApi/utils/formatTableWithContentModel';
 import {

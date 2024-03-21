@@ -1,4 +1,4 @@
-import { transformColor } from '../../publicApi/color/transformColor';
+import { transformColor } from 'roosterjs-content-model-dom';
 import type { EditorCore, Snapshot } from 'roosterjs-content-model-types';
 
 /**

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ButtonKeys, Buttons } from '../utils/buttons';
-import { ChangeSource, paste } from 'roosterjs-content-model-core';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { ClipboardData, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import { paste } from 'roosterjs-content-model-core';
 import { showPasteOptionPane } from '../component/showPasteOptionPane';
 import type { PasteOptionPane } from '../component/showPasteOptionPane';
 import type { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';

@@ -1,5 +1,5 @@
 import { createRange } from 'roosterjs-editor-dom';
-import { createTableRanges } from 'roosterjs-content-model-core';
+import { createTableRanges } from './createTableRanges';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type { DOMSelection } from 'roosterjs-content-model-types';
 import type { SelectionRangeEx } from 'roosterjs-editor-types';

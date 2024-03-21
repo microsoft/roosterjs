@@ -1,11 +1,8 @@
 import { addRangeToSelection } from './addRangeToSelection';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
-import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
-import {
-    findLastedCoInMergedCell,
-    findTableCellElement,
-    parseTableCells,
-} from '../../publicApi/domUtils/tableCellUtils';
+import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
+import { findTableCellElement } from './findTableCellElement';
+import { isNodeOfType, parseTableCells, toArray } from 'roosterjs-content-model-dom';
 import type {
     ParsedTable,
     SelectionChangedEvent,

@@ -1,4 +1,4 @@
-import { ChangeSource, Editor } from 'roosterjs-content-model-core';
+import { Editor } from 'roosterjs-content-model-core';
 import { IEditor } from 'roosterjs-content-model-types';
 import { insertLink } from '../../../lib/publicApi/link/insertLink';
 import {
@@ -8,6 +8,7 @@ import {
     FormatContentModelOptions,
 } from 'roosterjs-content-model-types';
 import {
+    ChangeSource,
     addSegment,
     createContentModelDocument,
     createImage,

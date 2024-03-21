@@ -1,4 +1,4 @@
-import * as iterateSelections from '../../../lib/publicApi/selection/iterateSelections';
+import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyPendingFormat } from '../../../lib/corePlugin/format/applyPendingFormat';
 import {
