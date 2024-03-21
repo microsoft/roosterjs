@@ -30,9 +30,17 @@ const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
     textColor: '',
     underline: false,
 };
+
 const CloneOption: CloneModelOptions = {
     includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
 };
+
+/**
+ * @internal
+ */
+export function cloneModelForPaste(model: ContentModelDocument) {
+    return cloneModel(model, CloneOption);
+}
 
 /**
  * @internal
@@ -47,7 +55,7 @@ export function mergePasteContent(
     editor.formatContentModel(
         (model, context) => {
             if (clipboardData.modelBeforePaste) {
-                const clonedModel = cloneModel(clipboardData.modelBeforePaste, CloneOption);
+                const clonedModel = cloneModelForPaste(clipboardData.modelBeforePaste);
                 model.blocks = clonedModel.blocks;
             }
 
