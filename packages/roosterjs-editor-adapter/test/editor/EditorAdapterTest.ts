@@ -36,11 +36,7 @@ describe('EditorAdapter', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
-            div,
-            mockedContext,
-            undefined
-        );
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext);
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
             editorContext
@@ -73,11 +69,7 @@ describe('EditorAdapter', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
-            div,
-            mockedContext,
-            undefined
-        );
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext);
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
             editorContext
