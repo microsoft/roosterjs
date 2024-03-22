@@ -1,6 +1,6 @@
-import { ContentModelDocument, ListMetadataFormat } from 'roosterjs-content-model-types';
 import { findListItemsInSameThread } from './findListItemsInSameThread';
 import { getFirstSelectedListItem, updateListMetadata } from 'roosterjs-content-model-dom';
+import type { ContentModelDocument, ListMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * Set style of list items with in same thread of current item

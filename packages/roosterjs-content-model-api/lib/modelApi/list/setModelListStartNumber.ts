@@ -1,5 +1,5 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { getFirstSelectedListItem } from 'roosterjs-content-model-dom';
+import type { ContentModelDocument } from 'roosterjs-content-model-types';
 
 /**
  * Set start number of a list item
