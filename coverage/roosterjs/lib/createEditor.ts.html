@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -94,31 +94,15 @@
 <a name='L35'></a><a href='#L35'>35</a>
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -129,43 +113,68 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentEdit, HyperLink, Paste } from 'roosterjs-editor-plugins';
-import { Editor } from 'roosterjs-editor-core';
-import { getDarkColor } from 'roosterjs-color-utils';
-import type { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Editor } from 'roosterjs-content-model-core';
+import { EditPlugin, PastePlugin, ShortcutPlugin } from 'roosterjs-content-model-plugins';
+import type {
+    ContentModelDocument,
+    EditorPlugin,
+    IEditor,
+    EditorOptions,
+} from 'roosterjs-content-model-types';
 &nbsp;
 /**
- * Create an editor instance with most common options
+ * Create a new Editor instance using the given options
  * @param contentDiv The html div element needed for creating the editor
  * @param additionalPlugins The additional user defined plugins. Currently the default plugins that are already included are
- * ContentEdit, HyperLink and Paste, user don't need to add those.
- * @param initialContent The initial content to show in editor. It can't be removed by undo, user need to manually remove it if needed.
- * @returns The editor instance
+ * PastePlugin, EditPlugin, user don't need to add those.
+ * @param initialModel The initial content model to show in editor. It can't be removed by undo, user need to manually remove it if needed.
+ * @returns The Editor instance
  */
-export default function createEditor(
+export function createEditor(
     contentDiv: HTMLDivElement,
     additionalPlugins?: EditorPlugin[],
-    initialContent?: string
+    initialModel?: ContentModelDocument
 ): IEditor {
-    let plugins: EditorPlugin[] = [new HyperLink(), new Paste(), new ContentEdit()];
-&nbsp;
-    if (additionalPlugins) {
-        plugins = plugins.concat(additionalPlugins);
-    }
+    const plugins = [
+        new PastePlugin(),
+        new EditPlugin(),
+        new ShortcutPlugin(),
+        ...(additionalPlugins ?? []),
+    ];
 &nbsp;
     const options: EditorOptions = {
         plugins: plugins,
-        initialContent: initialContent,
-        getDarkColor: getDarkColor,
-        defaultFormat: {
+        initialModel,
+        defaultSegmentFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
             fontSize: '11pt',
             textColor: '#000000',
         },
     };
-&nbsp;
     return new Editor(contentDiv, options);
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -175,7 +184,7 @@ export default function createEditor(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Mar 22 2024 15:33:00 GMT+0000 (Coordinated Universal Time)
+                at Fri Mar 22 2024 16:27:00 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
