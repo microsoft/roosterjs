@@ -28,6 +28,9 @@ const DELIMITER_SELECTOR =
 const ZERO_WIDTH_SPACE = '\u200B';
 const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
 
+/**
+ * @internal
+ */
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
         case PluginEventType.ContentChanged:

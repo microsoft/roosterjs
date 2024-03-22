@@ -1,7 +1,7 @@
 import { CodeElement } from './CodeElement';
 
 class SimplePluginCode extends CodeElement {
-    constructor(private name: string, private namespace: string = 'roosterjsContentModel') {
+    constructor(private name: string, private namespace: string = 'roosterjs') {
         super();
     }
 
@@ -42,12 +42,12 @@ export class TableEditPluginCode extends SimplePluginCode {
 
 export class ImageEditCode extends SimplePluginCode {
     constructor() {
-        super('ImageEdit', 'roosterjs');
+        super('ImageEdit', 'roosterjsLegacy');
     }
 }
 
 export class CustomReplaceCode extends SimplePluginCode {
     constructor() {
-        super('CustomReplace', 'roosterjs');
+        super('CustomReplace', 'roosterjsLegacy');
     }
 }

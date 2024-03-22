@@ -23,7 +23,7 @@ const htmlButtons =
     '<button id=buttonRedo>Redo</button>\n';
 const darkButton = '<button id=buttonDark>Dark Mode</button>\n';
 const htmlEnd =
-    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
+    '<script src="https://microsoft.github.io/roosterjs/rooster-legacy-min.js"></script>\n' +
     '</body>\n' +
     '</html>';
 
@@ -34,7 +34,7 @@ const htmlRoosterReact =
     '<script src="https://unpkg.com/react@16/umd/react.development.js"></script>\n' +
     '<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>\n' +
     '<script src="https://cdnjs.cloudflare.com/ajax/libs/fluentui-react/8.60.1/fluentui-react.min.js"></script>\n' +
-    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
+    '<script src="https://microsoft.github.io/roosterjs/rooster-legacy-min.js"></script>\n' +
     '<script src="https://microsoft.github.io/roosterjs/rooster-react-min.js"></script>\n' +
     '</body>\n' +
     '</html>';

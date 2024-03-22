@@ -1,4 +1,4 @@
-import announceNewListItem from '../../../lib/plugins/Announce/features/announceNewListItem';
+import { announceNewListItemNumber } from '../../../lib/plugins/Announce/features/announceNewListItem';
 import { createElement } from 'roosterjs-editor-dom';
 import {
     IEditor,
@@ -66,7 +66,7 @@ describe('announceNewListItem', () => {
             document
         ) as any;
 
-        const result = announceNewListItem.shouldHandle(mockEditor, null);
+        const result = announceNewListItemNumber.shouldHandle(mockEditor, null);
 
         expect(result).toEqual({
             defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
@@ -75,7 +75,7 @@ describe('announceNewListItem', () => {
     });
 
     it('announceNewListItem.shouldHandle | UL', () => {
-        const result = announceNewListItem.shouldHandle(mockEditor, null);
+        const result = announceNewListItemNumber.shouldHandle(mockEditor, null);
 
         expect(result).toEqual({ defaultStrings: 2 });
     });
@@ -94,7 +94,7 @@ describe('announceNewListItem', () => {
             document
         ) as any;
 
-        const result = announceNewListItem.shouldHandle(mockEditor, null);
+        const result = announceNewListItemNumber.shouldHandle(mockEditor, null);
 
         expect(result).toEqual({ defaultStrings: 1, formatStrings: ['1'] });
     });
@@ -102,7 +102,7 @@ describe('announceNewListItem', () => {
     it('announceNewListItem.shouldHandle | Null', () => {
         el = null as any;
 
-        const result = announceNewListItem.shouldHandle(mockEditor, null);
+        const result = announceNewListItemNumber.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });

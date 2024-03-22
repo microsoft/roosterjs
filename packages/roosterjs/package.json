@@ -3,12 +3,11 @@
     "description": "A simple facade for all roosterjs code",
     "dependencies": {
         "tslib": "^2.3.1",
-        "roosterjs-editor-types": "",
-        "roosterjs-editor-types-compatible": "",
-        "roosterjs-editor-dom": "",
-        "roosterjs-editor-core": "",
-        "roosterjs-editor-api": "",
-        "roosterjs-editor-plugins": "",
+        "roosterjs-content-model-types": "",
+        "roosterjs-content-model-dom": "",
+        "roosterjs-content-model-core": "",
+        "roosterjs-content-model-api": "",
+        "roosterjs-content-model-plugins": "",
         "roosterjs-color-utils": ""
     },
     "version": "0.0.0",

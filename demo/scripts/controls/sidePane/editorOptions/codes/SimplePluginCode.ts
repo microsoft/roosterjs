@@ -1,7 +1,7 @@
 import CodeElement from './CodeElement';
 
 class SimplePluginCode extends CodeElement {
-    constructor(private name: string, private namespace: string = 'roosterjs') {
+    constructor(private name: string, private namespace: string = 'roosterjsLegacy') {
         super();
     }
 
@@ -13,12 +13,6 @@ class SimplePluginCode extends CodeElement {
 export class PasteCode extends SimplePluginCode {
     constructor() {
         super('Paste');
-    }
-}
-
-export class ContentModelPasteCode extends SimplePluginCode {
-    constructor() {
-        super('PastePlugin', 'roosterjsContentModel');
     }
 }
 

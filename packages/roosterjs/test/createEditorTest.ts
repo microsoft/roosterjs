@@ -2,16 +2,9 @@ import * as roosterjs from '../lib/index';
 // Include from root to make sure all files are included and covered by code coverage tool
 
 describe('createEditor', () => {
-    it('Create editor with null inpout', () => {
+    it('Create editor with null input', () => {
         expect(() => {
-            roosterjs.createEditor(null);
-        }).toThrow();
-    });
-
-    it('Create editor with non-DIV inpout', () => {
-        expect(() => {
-            const span = document.createElement('span');
-            roosterjs.createEditor(span as any);
+            roosterjs.createEditor(null!);
         }).toThrow();
     });
 
@@ -38,23 +31,13 @@ describe('createEditor', () => {
         expect(initialize).toHaveBeenCalledWith(editor);
         expect(dispose).not.toHaveBeenCalled();
         expect(onPluginEvent).toHaveBeenCalledWith({
-            eventType: roosterjs.PluginEventType.EditorReady,
+            eventType: 'editorReady',
         });
 
         editor.dispose();
         expect(dispose).toHaveBeenCalled();
         expect(onPluginEvent).toHaveBeenCalledWith({
-            eventType: roosterjs.PluginEventType.BeforeDispose,
+            eventType: 'beforeDispose',
         });
-    });
-
-    it('Create an editor with initial content', () => {
-        const div = document.createElement('div');
-        const initContent = '<b>this is a test</b>';
-        const editor = roosterjs.createEditor(div, [], initContent);
-        expect(editor).not.toBeNull();
-        expect(div.innerHTML).toBe('<div><b>this is a test</b></div>');
-
-        editor.dispose();
     });
 });

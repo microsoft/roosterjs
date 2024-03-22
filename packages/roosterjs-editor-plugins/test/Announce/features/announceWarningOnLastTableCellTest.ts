@@ -1,4 +1,4 @@
-import announceWarningOnLastTableCell from '../../../lib/plugins/Announce/features/announceWarningOnLastTableCell';
+import { announceWarningOnLastCell } from '../../../lib/plugins/Announce/features/announceWarningOnLastTableCell';
 import { createElement } from 'roosterjs-editor-dom';
 import {
     IEditor,
@@ -69,7 +69,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.Normal,
         };
 
-        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
+        const result = announceWarningOnLastCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual({ defaultStrings: 3 });
     });
@@ -82,7 +82,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.Normal,
         };
 
-        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
+        const result = announceWarningOnLastCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });
@@ -95,7 +95,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.TableSelection,
         } as any;
 
-        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
+        const result = announceWarningOnLastCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });
@@ -108,7 +108,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.Normal,
         } as any;
 
-        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
+        const result = announceWarningOnLastCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });
@@ -121,7 +121,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.Normal,
         } as any;
 
-        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
+        const result = announceWarningOnLastCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });
