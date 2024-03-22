@@ -1,10 +1,10 @@
-import { findListItemsInSameThread, setListType } from 'roosterjs-content-model-api';
 import { getListTypeStyle } from './getListTypeStyle';
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import {
-    getFirstSelectedListItem,
-    getSelectedSegmentsAndParagraphs,
-    updateListMetadata,
-} from 'roosterjs-content-model-dom';
+    setListType,
+    setModelListStartNumber,
+    setModelListStyle,
+} from 'roosterjs-content-model-api';
 import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -52,35 +52,17 @@ const triggerList = (
 ) => {
     setListType(model, listType);
     const isOrderedList = listType == 'OL';
-    const listItem = getFirstSelectedListItem(model);
-    if (listItem) {
-        const listItems = findListItemsInSameThread(model, listItem);
-        const levelIndex = listItem.levels.length - 1;
-        // If the index < 1, it is a new list, so it will be starting by 1, then no need to set startNumber
-        if (index && index > 1 && isOrderedList) {
-            const level = listItem?.levels[levelIndex];
-            if (level) {
-                level.format.startNumberOverride = index;
-            }
-        }
-
-        listItems.forEach(listItem => {
-            const level = listItem.levels[levelIndex];
-            if (level) {
-                updateListMetadata(level, metadata =>
-                    Object.assign(
-                        {},
-                        metadata,
-                        isOrderedList
-                            ? {
-                                  orderedStyleType: styleType,
-                              }
-                            : {
-                                  unorderedStyleType: styleType,
-                              }
-                    )
-                );
-            }
-        });
+    if (index && index > 1 && isOrderedList) {
+        setModelListStartNumber(model, index);
     }
+    setModelListStyle(
+        model,
+        isOrderedList
+            ? {
+                  orderedStyleType: styleType,
+              }
+            : {
+                  unorderedStyleType: styleType,
+              }
+    );
 };

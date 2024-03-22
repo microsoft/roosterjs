@@ -111,9 +111,9 @@ export class AutoFormatPlugin implements EditorPlugin {
     private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
         if (rawEvent.inputType === 'insertText') {
-            const { autoBullet, autoNumbering } = this.options;
             switch (rawEvent.data) {
                 case ' ':
+                    const { autoBullet, autoNumbering } = this.options;
                     keyboardListTrigger(editor, autoBullet, autoNumbering);
                     break;
             }
@@ -123,15 +123,14 @@ export class AutoFormatPlugin implements EditorPlugin {
     private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
-            const { autoUnlink, autoLink } = this.options;
             switch (rawEvent.key) {
                 case ' ':
-                    if (autoLink) {
+                    if (this.options.autoLink) {
                         createLinkAfterSpace(editor);
                     }
                     break;
                 case 'Backspace':
-                    if (autoUnlink) {
+                    if (this.options.autoUnlink) {
                         unlink(editor, rawEvent);
                     }
                     break;

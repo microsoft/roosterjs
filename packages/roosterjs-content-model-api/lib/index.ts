@@ -49,6 +49,8 @@ export { formatParagraphWithContentModel } from './publicApi/utils/formatParagra
 export { formatSegmentWithContentModel } from './publicApi/utils/formatSegmentWithContentModel';
 
 export { setListType } from './modelApi/list/setListType';
+export { setModelListStyle } from './modelApi/list/setModelListStyle';
+export { setModelListStartNumber } from './modelApi/list/setModelListStartNumber';
 export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';
 export { matchLink } from './modelApi/link/matchLink';
