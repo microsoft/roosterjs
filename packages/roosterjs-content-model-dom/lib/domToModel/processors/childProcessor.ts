@@ -18,7 +18,7 @@ export const childProcessor: ElementProcessor<ParentNode> = (
     parent: ParentNode,
     context: DomToModelContext
 ) => {
-    var offsets = getRegularSelectionOffsets(context, parent);
+    const offsets = getRegularSelectionOffsets(context, parent);
     let index = 0;
     let shouldShiftPath = false;
 

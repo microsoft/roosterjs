@@ -49,7 +49,8 @@ export const createContentModel: CreateContentModel = (
                 path: [],
             };
         }
-        var model = domToContentModel(core.logicalRoot, domToModelContext);
+
+        const model = domToContentModel(core.logicalRoot, domToModelContext);
 
         if (saveIndex) {
             core.cache.cachedModel = model;

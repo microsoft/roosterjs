@@ -1,4 +1,4 @@
-import { ShadowInsertPoint } from '../context/DomToModelSelectionContext';
+import type { ShadowInsertPoint } from '../context/DomToModelSelectionContext';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { FormatContentModelContext } from './FormatContentModelContext';
