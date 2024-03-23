@@ -1,8 +1,6 @@
 import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
 import type { PluginEventType } from '../event/PluginEventType';
-import type { PasteType } from '../enum/PasteType';
-import type { ClipboardData } from '../parameter/ClipboardData';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
@@ -34,8 +32,12 @@ export interface IEditor {
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
      * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
      * instead to improve performance. This is mostly used for retrieve current format state.
+     * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
+     * This is usually used for exporting content
      */
-    getContentModelCopy(mode: 'connected' | 'disconnected' | 'reduced'): ContentModelDocument;
+    getContentModelCopy(
+        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
+    ): ContentModelDocument;
 
     /**
      * Get current running environment, such as if editor is running on Mac
@@ -161,13 +163,6 @@ export interface IEditor {
      * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
      */
     stopShadowEdit(): void;
-
-    /**
-     * Paste into editor using a clipboardData object
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param pasteType Type of paste
-     */
-    pasteFromClipboard(clipboardData: ClipboardData, pasteType?: PasteType): void;
 
     /**
      * Get a darkColorHandler object for this editor.

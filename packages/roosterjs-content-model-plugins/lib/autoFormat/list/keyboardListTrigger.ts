@@ -13,26 +13,28 @@ export function keyboardListTrigger(
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ) {
-    editor.formatContentModel((model, _context) => {
-        const listStyleType = getListTypeStyle(
-            model,
-            shouldSearchForBullet,
-            shouldSearchForNumbering
-        );
-        if (listStyleType) {
-            const segmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, false);
-            if (segmentsAndParagraphs[0] && segmentsAndParagraphs[0][1]) {
-                segmentsAndParagraphs[0][1].segments.splice(0, 1);
-            }
-            const { listType, styleType, index } = listStyleType;
-            triggerList(editor, model, listType, styleType, index);
-            rawEvent.preventDefault();
-            normalizeContentModel(model);
+    if (shouldSearchForBullet || shouldSearchForNumbering) {
+        editor.formatContentModel((model, _context) => {
+            const listStyleType = getListTypeStyle(
+                model,
+                shouldSearchForBullet,
+                shouldSearchForNumbering
+            );
+            if (listStyleType) {
+                const segmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, false);
+                if (segmentsAndParagraphs[0] && segmentsAndParagraphs[0][1]) {
+                    segmentsAndParagraphs[0][1].segments.splice(0, 1);
+                }
+                const { listType, styleType, index } = listStyleType;
+                triggerList(editor, model, listType, styleType, index);
+                rawEvent.preventDefault();
+                normalizeContentModel(model);
 
-            return true;
-        }
-        return false;
-    });
+                return true;
+            }
+            return false;
+        });
+    }
 }
 
 const triggerList = (

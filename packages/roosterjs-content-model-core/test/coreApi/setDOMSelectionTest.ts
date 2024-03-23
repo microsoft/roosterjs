@@ -52,8 +52,10 @@ describe('setDOMSelection', () => {
                 selectionStyleNode: mockedStyleNode,
             },
             api: {
-                hasFocus: hasFocusSpy,
                 triggerEvent: triggerEventSpy,
+            },
+            domHelper: {
+                hasFocus: hasFocusSpy,
             },
         } as any;
     });

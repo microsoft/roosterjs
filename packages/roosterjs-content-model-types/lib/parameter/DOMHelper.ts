@@ -63,4 +63,10 @@ export interface DOMHelper {
      * returns the given node
      */
     findClosestElementAncestor(node: Node, selector?: string): HTMLElement | null;
+
+    /**
+     * Check if the editor has focus now
+     * @returns True if the editor has focus, otherwise false
+     */
+    hasFocus(): boolean;
 }
