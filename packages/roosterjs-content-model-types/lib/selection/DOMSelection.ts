@@ -62,3 +62,8 @@ export interface TableSelection extends TableSelectionCoordinates, SelectionBase
  * The union type of 3 selection types
  */
 export type DOMSelection = RangeSelection | ImageSelection | TableSelection;
+
+export interface DOMInsertPoint {
+    node: Node;
+    offset: number;
+}

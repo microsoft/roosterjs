@@ -7,11 +7,12 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelEntity,
-    DOMSelection,
     InsertEntityPosition,
     InsertEntityOptions,
     IEditor,
     EntityState,
+    DOMInsertPoint,
+    ShadowInsertPoint,
 } from 'roosterjs-content-model-types';
 
 const BlockEntityTag = 'div';
@@ -32,7 +33,7 @@ export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: boolean,
-    position: 'focus' | 'begin' | 'end' | DOMSelection,
+    position: 'focus' | 'begin' | 'end' | DOMInsertPoint,
     options?: InsertEntityOptions
 ): ContentModelEntity | null;
 
@@ -51,7 +52,7 @@ export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: true,
-    position: InsertEntityPosition | DOMSelection,
+    position: InsertEntityPosition | DOMInsertPoint,
     options?: InsertEntityOptions
 ): ContentModelEntity | null;
 
@@ -59,7 +60,7 @@ export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: boolean,
-    position?: InsertEntityPosition | DOMSelection,
+    position?: InsertEntityPosition | DOMInsertPoint,
     options?: InsertEntityOptions
 ): ContentModelEntity | null {
     const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot, initialEntityState } =
@@ -85,6 +86,13 @@ export function insertEntity(
         editor.takeSnapshot();
     }
 
+    const shadowInsertPoint: ShadowInsertPoint | undefined =
+        typeof position == 'object'
+            ? {
+                  input: position,
+              }
+            : undefined;
+
     editor.formatContentModel(
         (model, context) => {
             insertEntityModel(
@@ -93,7 +101,8 @@ export function insertEntity(
                 typeof position == 'string' ? position : 'focus',
                 isBlock,
                 focusAfterEntity,
-                context
+                context,
+                shadowInsertPoint?.result
             );
 
             normalizeContentModel(model);
@@ -104,7 +113,7 @@ export function insertEntity(
             return true;
         },
         {
-            selectionOverride: typeof position === 'object' ? position : undefined,
+            shadowInsertPoint,
             changeSource: ChangeSource.InsertEntity,
             getChangeData: () => ({
                 wrapper,

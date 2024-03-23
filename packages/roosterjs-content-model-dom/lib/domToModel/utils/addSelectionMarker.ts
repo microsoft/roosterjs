@@ -14,7 +14,8 @@ export function addSelectionMarker(
     group: ContentModelBlockGroup,
     context: DomToModelContext,
     container?: Node,
-    offset?: number
+    offset?: number,
+    isShadowMarker?: boolean
 ) {
     const lastPara = group.blocks[group.blocks.length - 1];
     const formatFromParagraph: ContentModelSegmentFormat =
@@ -44,9 +45,20 @@ export function addSelectionMarker(
         ...context.segmentFormat,
         ...pendingFormat,
     };
-    const marker = createSelectionMarker(segmentFormat);
+    const marker = createSelectionMarker(segmentFormat, isShadowMarker);
 
     addDecorators(marker, context);
 
-    addSegment(group, marker, context.blockFormat, segmentFormat);
+    const para = addSegment(group, marker, context.blockFormat, segmentFormat);
+
+    if (isShadowMarker && context.shadowInsertPoint) {
+        const { path, tableContext } = context.shadowInsertPoint;
+
+        context.shadowInsertPoint.result = {
+            path: [...path],
+            tableContext,
+            paragraph: para,
+            marker,
+        };
+    }
 }

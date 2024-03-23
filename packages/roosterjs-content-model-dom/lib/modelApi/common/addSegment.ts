@@ -35,12 +35,16 @@ export function addSegment(
         delete paragraph.format.isTextIndentApplied;
     }
 
-    if (newSegment.segmentType == 'SelectionMarker') {
+    if (newSegment.segmentType == 'SelectionMarker' && !newSegment.isShadowMarker) {
         if (!lastSegment || !lastSegment.isSelected) {
             paragraph.segments.push(newSegment);
         }
     } else {
-        if (newSegment.isSelected && lastSegment?.segmentType == 'SelectionMarker') {
+        if (
+            newSegment.isSelected &&
+            lastSegment?.segmentType == 'SelectionMarker' &&
+            !lastSegment.isShadowMarker
+        ) {
             paragraph.segments.pop();
         }
 

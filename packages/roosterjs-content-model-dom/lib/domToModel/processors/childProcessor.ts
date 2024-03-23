@@ -18,18 +18,28 @@ export const childProcessor: ElementProcessor<ParentNode> = (
     parent: ParentNode,
     context: DomToModelContext
 ) => {
-    const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
+    var offsets = getRegularSelectionOffsets(context, parent);
     let index = 0;
+    let shouldShiftPath = false;
+
+    if (context.shadowInsertPoint && context.shadowInsertPoint.path[0] != group) {
+        context.shadowInsertPoint.path.unshift(group);
+        shouldShiftPath = true;
+    }
 
     for (let child = parent.firstChild; child; child = child.nextSibling) {
-        handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset, parent);
+        handleRegularSelection(index, context, group, offsets, parent);
 
         processChildNode(group, child, context);
 
         index++;
     }
 
-    handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset, parent);
+    handleRegularSelection(index, context, group, offsets, parent);
+
+    if (shouldShiftPath && context.shadowInsertPoint) {
+        context.shadowInsertPoint.path.shift();
+    }
 };
 
 /**
@@ -64,20 +74,23 @@ export function handleRegularSelection(
     index: number,
     context: DomToModelContext,
     group: ContentModelBlockGroup,
-    nodeStartOffset: number,
-    nodeEndOffset: number,
+    offsets: [number, number, number],
     container?: Node
 ) {
-    if (index == nodeStartOffset) {
+    if (index == offsets[0]) {
         context.isInSelection = true;
 
         addSelectionMarker(group, context, container, index);
     }
 
-    if (index == nodeEndOffset && context.selection?.type == 'range') {
+    if (index == offsets[1] && context.selection?.type == 'range') {
         if (!context.selection.range.collapsed) {
             addSelectionMarker(group, context, container, index);
         }
         context.isInSelection = false;
+    }
+
+    if (index == offsets[2]) {
+        addSelectionMarker(group, context, container, index, true /*isShadowMarker*/);
     }
 }

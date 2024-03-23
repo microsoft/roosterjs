@@ -1,3 +1,4 @@
+import { ShadowInsertPoint } from '../context/DomToModelSelectionContext';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { FormatContentModelContext } from './FormatContentModelContext';
@@ -38,6 +39,8 @@ export interface FormatContentModelOptions {
      * When specified, use this selection range to override current selection inside editor
      */
     selectionOverride?: DOMSelection;
+
+    shadowInsertPoint?: ShadowInsertPoint;
 }
 
 /**

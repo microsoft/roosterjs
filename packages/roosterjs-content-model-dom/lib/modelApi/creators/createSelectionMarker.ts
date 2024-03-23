@@ -8,11 +8,18 @@ import type {
  * @param format @optional The format of this model
  */
 export function createSelectionMarker(
-    format?: ContentModelSegmentFormat
+    format?: ContentModelSegmentFormat,
+    isShadowMarker?: boolean
 ): ContentModelSelectionMarker {
-    return {
+    const result: ContentModelSelectionMarker = {
         segmentType: 'SelectionMarker',
         isSelected: true,
         format: format ? { ...format } : {},
     };
+
+    if (isShadowMarker) {
+        result.isShadowMarker = true;
+    }
+
+    return result;
 }

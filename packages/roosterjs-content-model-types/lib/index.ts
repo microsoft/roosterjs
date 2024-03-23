@@ -128,6 +128,7 @@ export {
     ImageSelection,
     RangeSelection,
     TableSelection,
+    DOMInsertPoint,
 } from './selection/DOMSelection';
 export { InsertPoint } from './selection/InsertPoint';
 export { TableSelectionContext } from './selection/TableSelectionContext';
@@ -159,7 +160,11 @@ export {
 } from './context/DomToModelSettings';
 export { DomToModelContext } from './context/DomToModelContext';
 export { ElementProcessor } from './context/ElementProcessor';
-export { DomToModelSelectionContext } from './context/DomToModelSelectionContext';
+export {
+    DomToModelSelectionContext,
+    ShadowInsertPoint,
+    ShadowInsertPointInternal,
+} from './context/DomToModelSelectionContext';
 export { EditorContext } from './context/EditorContext';
 export {
     DomToModelFormatContext,

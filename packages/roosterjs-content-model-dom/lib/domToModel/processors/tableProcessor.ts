@@ -127,6 +127,17 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                     ) {
                         for (; tableRow.cells[targetCol]; targetCol++) {}
 
+                        const originalTableContext = context.shadowInsertPoint?.tableContext;
+
+                        if (context.shadowInsertPoint) {
+                            context.shadowInsertPoint.tableContext = {
+                                table,
+                                rowIndex: row,
+                                colIndex: targetCol,
+                                isWholeTableSelected: false,
+                            };
+                        }
+
                         const td = tr.cells[sourceCol];
                         const hasSelectionBeforeCell = context.isInSelection;
                         const colEnd = targetCol + td.colSpan;
@@ -247,6 +258,10 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                 }
                             }
                         );
+
+                        if (context.shadowInsertPoint) {
+                            context.shadowInsertPoint.tableContext = originalTableContext;
+                        }
                     }
                 });
 

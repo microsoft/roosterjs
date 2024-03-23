@@ -19,9 +19,21 @@ import type {
  * @param options More options, see FormatContentModelOptions
  */
 export const formatContentModel: FormatContentModel = (core, formatter, options) => {
-    const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
-        options || {};
-    const model = core.api.createContentModel(core, undefined /*option*/, selectionOverride);
+    const {
+        apiName,
+        onNodeCreated,
+        getChangeData,
+        changeSource,
+        rawEvent,
+        selectionOverride,
+        shadowInsertPoint,
+    } = options || {};
+    const model = core.api.createContentModel(
+        core,
+        undefined /*option*/,
+        selectionOverride,
+        shadowInsertPoint
+    );
     const context: FormatContentModelContext = {
         newEntities: [],
         deletedEntities: [],
@@ -38,6 +50,15 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
         const isNested = core.undo.isNested;
         const shouldAddSnapshot = !skipUndoSnapshot && !isNested;
         let selection: DOMSelection | undefined;
+
+        if (shadowInsertPoint?.result) {
+            const { paragraph, marker } = shadowInsertPoint.result;
+            const index = paragraph.segments.indexOf(marker);
+
+            if (index >= 0) {
+                paragraph.segments.splice(index, 1);
+            }
+        }
 
         if (shouldAddSnapshot) {
             core.undo.isNested = true;

@@ -10,11 +10,15 @@ import type { DomToModelContext } from 'roosterjs-content-model-types';
 export function getRegularSelectionOffsets(
     context: DomToModelContext,
     currentContainer: Node
-): [number, number] {
+): [number, number, number] {
     const range = context.selection?.type == 'range' ? context.selection.range : null;
 
     const startOffset = range?.startContainer == currentContainer ? range.startOffset : -1;
     const endOffset = range?.endContainer == currentContainer ? range.endOffset! : -1;
+    const shadowOffset =
+        context.shadowInsertPoint?.input.node == currentContainer
+            ? context.shadowInsertPoint.input.offset
+            : -1;
 
-    return [startOffset, endOffset];
+    return [startOffset, endOffset, shadowOffset];
 }

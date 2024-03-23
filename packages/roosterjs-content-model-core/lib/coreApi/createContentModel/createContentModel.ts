@@ -4,7 +4,7 @@ import {
     createDomToModelContextWithConfig,
     domToContentModel,
 } from 'roosterjs-content-model-dom';
-import type { CreateContentModel } from 'roosterjs-content-model-types';
+import type { CreateContentModel, DomToModelContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -13,11 +13,16 @@ import type { CreateContentModel } from 'roosterjs-content-model-types';
  * @param option The option to customize the behavior of DOM to Content Model conversion
  * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
-export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
+export const createContentModel: CreateContentModel = (
+    core,
+    option,
+    selectionOverride,
+    shadowInsertPoint
+) => {
     // Flush all mutations if any, so that we can get an up-to-date Content Model
     core.cache.textMutationObserver?.flushMutations();
 
-    let cachedModel = selectionOverride ? null : core.cache.cachedModel;
+    let cachedModel = selectionOverride || shadowInsertPoint ? null : core.cache.cachedModel;
 
     if (cachedModel && core.lifecycle.shadowEditFragment) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
@@ -34,15 +39,25 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         const saveIndex = !option && !selectionOverride;
         const editorContext = core.api.createEditorContext(core, saveIndex);
         const settings = core.environment.domToModelSettings;
-        const domToModelContext = option
+        const domToModelContext: DomToModelContext = option
             ? createDomToModelContext(editorContext, settings.builtIn, settings.customized, option)
             : createDomToModelContextWithConfig(settings.calculated, editorContext);
 
-        const model = domToContentModel(core.logicalRoot, domToModelContext, selection);
+        if (shadowInsertPoint) {
+            domToModelContext.shadowInsertPoint = {
+                input: shadowInsertPoint.input,
+                path: [],
+            };
+        }
+        var model = domToContentModel(core.logicalRoot, domToModelContext);
 
         if (saveIndex) {
             core.cache.cachedModel = model;
             core.cache.cachedSelection = selection;
+        }
+
+        if (domToModelContext.shadowInsertPoint && shadowInsertPoint?.result) {
+            shadowInsertPoint.result = shadowInsertPoint.result;
         }
 
         return model;

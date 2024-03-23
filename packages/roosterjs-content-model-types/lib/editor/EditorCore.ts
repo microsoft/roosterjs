@@ -1,3 +1,4 @@
+import type { ShadowInsertPoint } from '../context/DomToModelSelectionContext';
 import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from '../pluginState/PluginState';
@@ -34,10 +35,11 @@ export type CreateEditorContext = (core: EditorCore, saveIndex: boolean) => Edit
  * @param selectionOverride When passed a valid selection, use this selection range instead of current selection in editor.
  * When pass "none", it means we don't need a selection in content model
  */
-export type CreateContentModel = (
+export declare type CreateContentModel = (
     core: EditorCore,
     option?: DomToModelOption,
-    selectionOverride?: DOMSelection | 'none'
+    selectionOverride?: DOMSelection | 'none',
+    shadowInsertPoint?: ShadowInsertPoint
 ) => ContentModelDocument;
 
 /**

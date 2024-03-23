@@ -8,4 +8,6 @@ export interface ContentModelSelectionMarker extends ContentModelSegmentBase<'Se
      * Whether this segment is selected
      */
     isSelected: true;
+
+    isShadowMarker?: boolean;
 }

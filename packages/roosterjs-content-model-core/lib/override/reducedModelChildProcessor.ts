@@ -39,20 +39,19 @@ export function reducedModelChildProcessor(
     const stackChild = context.nodeStack.pop();
 
     if (stackChild) {
-        const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
+        const offsets = getRegularSelectionOffsets(context, parent);
 
         // If selection is not on this node, skip getting node index to save some time since we don't need it here
-        const index =
-            nodeStartOffset >= 0 || nodeEndOffset >= 0 ? getChildIndex(parent, stackChild) : -1;
+        const index = offsets[0] >= 0 || offsets[1] >= 0 ? getChildIndex(parent, stackChild) : -1;
 
         if (index >= 0) {
-            handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+            handleRegularSelection(index, context, group, offsets);
         }
 
         processChildNode(group, stackChild, context);
 
         if (index >= 0) {
-            handleRegularSelection(index + 1, context, group, nodeStartOffset, nodeEndOffset);
+            handleRegularSelection(index + 1, context, group, offsets);
         }
     } else {
         // No child node from node stack, that means we have reached the deepest node of selection.
