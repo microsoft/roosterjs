@@ -389,7 +389,7 @@ describe('formatContentModel', () => {
             });
 
             expect(addUndoSnapshot).toHaveBeenCalled();
-            expect(createContentModel).toHaveBeenCalledWith(core, undefined, range);
+            expect(createContentModel).toHaveBeenCalledWith(core, undefined, range, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
             expect(triggerEvent).toHaveBeenCalledTimes(1);

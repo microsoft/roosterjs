@@ -50,15 +50,15 @@ export const createContentModel: CreateContentModel = (
             };
         }
 
-        const model = domToContentModel(core.logicalRoot, domToModelContext);
+        const model = domToContentModel(core.logicalRoot, domToModelContext, selection);
 
         if (saveIndex) {
             core.cache.cachedModel = model;
             core.cache.cachedSelection = selection;
         }
 
-        if (domToModelContext.shadowInsertPoint && shadowInsertPoint?.result) {
-            shadowInsertPoint.result = shadowInsertPoint.result;
+        if (shadowInsertPoint && domToModelContext.shadowInsertPoint?.result) {
+            shadowInsertPoint.result = domToModelContext.shadowInsertPoint.result;
         }
 
         return model;

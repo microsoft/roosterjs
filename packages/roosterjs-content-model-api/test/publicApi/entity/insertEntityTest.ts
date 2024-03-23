@@ -105,7 +105,8 @@ describe('insertEntity', () => {
             'begin',
             false,
             undefined,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
@@ -153,7 +154,8 @@ describe('insertEntity', () => {
             'root',
             true,
             undefined,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
@@ -208,7 +210,8 @@ describe('insertEntity', () => {
             'focus',
             true,
             true,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
@@ -257,7 +260,8 @@ describe('insertEntity', () => {
             'begin',
             false,
             undefined,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
@@ -329,7 +333,8 @@ describe('insertEntity', () => {
             'begin',
             false,
             undefined,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
