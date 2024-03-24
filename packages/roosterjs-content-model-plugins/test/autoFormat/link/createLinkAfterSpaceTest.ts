@@ -14,6 +14,7 @@ describe('createLinkAfterSpace', () => {
                     newEntities: [],
                     deletedEntities: [],
                     newImages: [],
+                    canUndoByBackspace: true,
                 });
                 expect(result).toBe(expectedResult);
             });
