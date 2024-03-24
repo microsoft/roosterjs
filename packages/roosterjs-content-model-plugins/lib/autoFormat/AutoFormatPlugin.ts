@@ -127,11 +127,6 @@ export class AutoFormatPlugin implements EditorPlugin {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
-                // case ' ':
-                //     if (this.options.autoLink) {
-                //         createLinkAfterSpace(editor);
-                //     }
-                //     break;
                 case 'Backspace':
                     if (this.options.autoUnlink) {
                         unlink(editor, rawEvent);
