@@ -124,6 +124,11 @@ describe('createLinkAfterSpace', () => {
                             },
                         },
                         {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                        },
+                        {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {},
@@ -216,6 +221,11 @@ describe('createLinkAfterSpace', () => {
                                 },
                                 dataset: {},
                             },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
                         },
                         {
                             segmentType: 'SelectionMarker',
