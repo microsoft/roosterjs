@@ -32,7 +32,11 @@ export function createLinkAfterSpace(editor: IEditor) {
                         },
                         dataset: {},
                     });
+
                     selectedSegmentsAndParagraphs[0][1].segments.splice(length - 1, 0, linkSegment);
+                    const spaceText = createText(link.substring(url.length), marker.format);
+                    selectedSegmentsAndParagraphs[0][1].segments.splice(length, 0, spaceText);
+
                     context.canUndoByBackspace = true;
 
                     return true;
