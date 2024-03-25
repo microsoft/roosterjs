@@ -339,11 +339,15 @@ describe('changeFontSize', () => {
         div.appendChild(sub);
         div.style.fontSize = '20pt';
 
-        const model = domToContentModel(div, createDomToModelContext(undefined), {
+        const context = createDomToModelContext(undefined);
+
+        context.selection = {
             type: 'range',
             range: createRange(sub),
             isReverted: false,
-        });
+        };
+
+        const model = domToContentModel(div, context);
 
         let formatResult: boolean | undefined;
 

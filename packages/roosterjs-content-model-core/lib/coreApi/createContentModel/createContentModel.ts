@@ -50,7 +50,11 @@ export const createContentModel: CreateContentModel = (
             };
         }
 
-        const model = domToContentModel(core.logicalRoot, domToModelContext, selection);
+        if (selection) {
+            domToModelContext.selection = selection;
+        }
+
+        const model = domToContentModel(core.logicalRoot, domToModelContext);
 
         if (saveIndex) {
             core.cache.cachedModel = model;
