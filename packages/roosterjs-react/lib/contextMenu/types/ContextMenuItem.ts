@@ -1,4 +1,5 @@
 import type { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
+import type { IIconProps } from '@fluentui/react/lib/Icon';
 import type { IEditor } from 'roosterjs-editor-types';
 import type { LocalizedStrings, UIUtilities } from '../../common/index';
 
@@ -73,6 +74,11 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
      * CSS class name for drop down menu item
      */
     itemClassName?: string;
+
+    /**
+     * Icon props for the context menu item
+     */
+    iconProps?: IIconProps;
 
     /**
      * Use this property to pass in Fluent UI ContextMenu property directly. It will overwrite the values of other conflict properties
