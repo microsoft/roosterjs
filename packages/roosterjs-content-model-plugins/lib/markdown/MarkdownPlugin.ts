@@ -1,12 +1,16 @@
 import { setFormat } from './utils/setFormat';
 import type {
-    ContentModelSegmentFormat,
+    ContentChangedEvent,
+    EditorInputEvent,
     EditorPlugin,
     IEditor,
     KeyDownEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
+/**
+ * Options for Markdown plugin
+ */
 export interface MarkdownOptions {
     strikethrough?: boolean;
     bold?: boolean;
@@ -22,17 +26,15 @@ const DefaultOptions: Required<MarkdownOptions> = {
     italic: true,
 };
 
-interface Markdown {
-    character: string;
-    format: ContentModelSegmentFormat;
-}
-
 /**
  * Markdown plugin handles markdown formatting, such as transforming * characters into bold text.
  */
 export class MarkdownPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
-    private lastCharacterAndFormat: Markdown | undefined = undefined;
+    private shouldBold = false;
+    private shouldItalic = false;
+    private shouldStrikethrough = false;
+    private lastKeyTyped: string | null = null;
 
     /**
      * @param options An optional parameter that takes in an object of type MarkdownOptions, which includes the following properties:
@@ -66,7 +68,10 @@ export class MarkdownPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
-        this.lastCharacterAndFormat = undefined;
+        this.shouldBold = false;
+        this.shouldItalic = false;
+        this.shouldStrikethrough = false;
+        this.lastKeyTyped = null;
     }
 
     /**
@@ -78,57 +83,96 @@ export class MarkdownPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
+                case 'input':
+                    this.handleEditorInputEvent(this.editor, event);
+                    break;
                 case 'keyDown':
-                    this.handleKeyDownEvent(this.editor, event);
+                    this.handleKeyDownEvent(event);
+                    break;
+                case 'contentChanged':
+                    this.handleContentChangedEvent(event);
                     break;
             }
         }
     }
 
-    private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
+    private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
-        const { strikethrough, bold, italic } = this.options;
         const selection = editor.getDOMSelection();
         if (
-            !rawEvent.defaultPrevented &&
-            !event.handledByEditFeature &&
             selection &&
             selection.type == 'range' &&
-            selection.range.collapsed
+            selection.range.collapsed &&
+            rawEvent.inputType == 'insertText'
         ) {
-            if (rawEvent.shiftKey) {
-                switch (rawEvent.key) {
-                    case '*':
-                        if (bold) {
-                            this.lastCharacterAndFormat = {
-                                character: '*',
-                                format: { fontWeight: 'bold' },
-                            };
+            switch (rawEvent.data) {
+                case '*':
+                    if (this.options.bold) {
+                        if (this.shouldBold) {
+                            setFormat(editor, '*', { fontWeight: 'bold' });
+                            this.shouldBold = false;
+                        } else {
+                            this.shouldBold = true;
                         }
-                        break;
-                    case '~':
-                        if (strikethrough) {
-                            this.lastCharacterAndFormat = {
-                                character: '~',
-                                format: { strikethrough: true },
-                            };
-                        }
-                        break;
-                    case '_':
-                        if (italic) {
-                            this.lastCharacterAndFormat = {
-                                character: '_',
-                                format: { italic: true },
-                            };
-                        }
-                }
-            }
+                    }
 
-            if (rawEvent.key === ' ' && this.lastCharacterAndFormat) {
-                const { character, format } = this.lastCharacterAndFormat;
-                setFormat(editor, character, format);
-                this.lastCharacterAndFormat = undefined;
+                    break;
+                case '~':
+                    if (this.options.strikethrough) {
+                        if (this.shouldStrikethrough) {
+                            setFormat(editor, '~', { strikethrough: true });
+                            this.shouldStrikethrough = false;
+                        } else {
+                            this.shouldStrikethrough = true;
+                        }
+                    }
+                    break;
+                case '_':
+                    if (this.options.italic) {
+                        if (this.shouldItalic) {
+                            setFormat(editor, '_', { italic: true });
+                            this.shouldItalic = false;
+                        } else {
+                            this.shouldItalic = true;
+                        }
+                    }
+                    break;
             }
+        }
+    }
+
+    private handleKeyDownEvent(event: KeyDownEvent) {
+        const rawEvent = event.rawEvent;
+        if (!event.handledByEditFeature && !rawEvent.defaultPrevented) {
+            switch (rawEvent.key) {
+                case 'Enter':
+                    this.shouldBold = false;
+                    this.shouldItalic = false;
+                    this.shouldStrikethrough = false;
+                    break;
+                case 'Backspace':
+                case ' ':
+                    if (this.lastKeyTyped === '*' && this.shouldBold) {
+                        this.shouldBold = false;
+                    } else if (this.lastKeyTyped === '~' && this.shouldStrikethrough) {
+                        this.shouldStrikethrough = false;
+                    } else if (this.lastKeyTyped === '_' && this.shouldItalic) {
+                        this.shouldItalic = false;
+                    }
+                    this.lastKeyTyped = null;
+                    break;
+                default:
+                    this.lastKeyTyped = rawEvent.key;
+                    break;
+            }
+        }
+    }
+
+    private handleContentChangedEvent(event: ContentChangedEvent) {
+        if (event.source == 'Format') {
+            this.shouldBold = false;
+            this.shouldItalic = false;
+            this.shouldStrikethrough = false;
         }
     }
 }
