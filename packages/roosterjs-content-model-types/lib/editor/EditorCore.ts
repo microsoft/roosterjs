@@ -35,7 +35,7 @@ export type CreateEditorContext = (core: EditorCore, saveIndex: boolean) => Edit
  * @param selectionOverride When passed a valid selection, use this selection range instead of current selection in editor.
  * When pass "none", it means we don't need a selection in content model
  */
-export declare type CreateContentModel = (
+export type CreateContentModel = (
     core: EditorCore,
     option?: DomToModelOption,
     selectionOverride?: DOMSelection | 'none',

@@ -163,7 +163,6 @@ export { ElementProcessor } from './context/ElementProcessor';
 export {
     DomToModelSelectionContext,
     ShadowInsertPoint,
-    ShadowInsertPointInternal,
 } from './context/DomToModelSelectionContext';
 export { EditorContext } from './context/EditorContext';
 export {

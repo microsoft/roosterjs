@@ -46,7 +46,6 @@ export const createContentModel: CreateContentModel = (
         if (shadowInsertPoint) {
             domToModelContext.shadowInsertPoint = {
                 input: shadowInsertPoint.input,
-                path: [],
             };
         }
 

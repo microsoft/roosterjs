@@ -52,7 +52,7 @@ export function addSelectionMarker(
     const para = addSegment(group, marker, context.blockFormat, segmentFormat);
 
     if (isShadowMarker && context.shadowInsertPoint) {
-        const { path, tableContext } = context.shadowInsertPoint;
+        const { path, tableContext } = context;
 
         context.shadowInsertPoint.result = {
             path: [...path],

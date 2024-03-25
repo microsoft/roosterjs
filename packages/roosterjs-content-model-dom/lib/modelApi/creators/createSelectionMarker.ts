@@ -6,6 +6,8 @@ import type {
 /**
  * Create a ContentModelSelectionMarker model
  * @param format @optional The format of this model
+ * @param isShadowMarker @optional Whether mark this selection marker as a shadow marker.
+ * A shadow selection marker can be used for marking a position inside content model for further operation.
  */
 export function createSelectionMarker(
     format?: ContentModelSegmentFormat,

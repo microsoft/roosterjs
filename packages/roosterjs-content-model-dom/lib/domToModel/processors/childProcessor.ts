@@ -18,14 +18,15 @@ export const childProcessor: ElementProcessor<ParentNode> = (
     parent: ParentNode,
     context: DomToModelContext
 ) => {
-    const offsets = getRegularSelectionOffsets(context, parent);
-    let index = 0;
     let shouldShiftPath = false;
 
-    if (context.shadowInsertPoint && context.shadowInsertPoint.path[0] != group) {
-        context.shadowInsertPoint.path.unshift(group);
+    if (context.path[0] != group) {
+        context.path.unshift(group);
         shouldShiftPath = true;
     }
+
+    const offsets = getRegularSelectionOffsets(context, parent);
+    let index = 0;
 
     for (let child = parent.firstChild; child; child = child.nextSibling) {
         handleRegularSelection(index, context, group, offsets, parent);
@@ -37,8 +38,8 @@ export const childProcessor: ElementProcessor<ParentNode> = (
 
     handleRegularSelection(index, context, group, offsets, parent);
 
-    if (shouldShiftPath && context.shadowInsertPoint) {
-        context.shadowInsertPoint.path.shift();
+    if (shouldShiftPath) {
+        context.path.shift();
     }
 };
 

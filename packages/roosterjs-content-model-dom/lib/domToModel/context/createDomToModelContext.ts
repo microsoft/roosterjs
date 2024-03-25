@@ -51,7 +51,7 @@ export function createDomToModelContextWithConfig(
 }
 
 function createDomToModelSelectionContext(): DomToModelSelectionContext {
-    return { isInSelection: false };
+    return { isInSelection: false, path: [] };
 }
 
 function createDomToModelFormatContext(isRootRtl?: boolean): DomToModelFormatContext {
