@@ -36,14 +36,19 @@ export function addSegment(
     }
 
     if (newSegment.segmentType == 'SelectionMarker' && !newSegment.isShadowMarker) {
-        if (!lastSegment || !lastSegment.isSelected) {
+        if (
+            !lastSegment ||
+            !lastSegment.isSelected ||
+            (lastSegment.segmentType == 'SelectionMarker' && lastSegment.isShadowMarker)
+        ) {
             paragraph.segments.push(newSegment);
         }
     } else {
         if (
             newSegment.isSelected &&
             lastSegment?.segmentType == 'SelectionMarker' &&
-            !lastSegment.isShadowMarker
+            !lastSegment.isShadowMarker &&
+            !(newSegment.segmentType == 'SelectionMarker' && newSegment.isShadowMarker)
         ) {
             paragraph.segments.pop();
         }
