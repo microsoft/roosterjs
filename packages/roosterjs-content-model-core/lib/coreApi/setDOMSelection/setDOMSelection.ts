@@ -1,11 +1,13 @@
 import { addRangeToSelection } from './addRangeToSelection';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
-import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
-import { parseTableCells } from '../../publicApi/domUtils/tableCellUtils';
+import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
+import { findTableCellElement } from './findTableCellElement';
+import { isNodeOfType, parseTableCells, toArray } from 'roosterjs-content-model-dom';
 import type {
+    ParsedTable,
     SelectionChangedEvent,
     SetDOMSelection,
-    TableSelection,
+    TableCellCoordinate,
 } from 'roosterjs-content-model-types';
 
 const DOM_SELECTION_CSS_KEY = '_DOMSelection';
@@ -49,11 +51,47 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 setRangeSelection(doc, image);
                 break;
             case 'table':
-                const { table, firstColumn, firstRow } = selection;
-                const tableSelectors = buildTableSelectors(
-                    ensureUniqueId(table, TABLE_ID),
-                    selection
-                );
+                const { table, firstColumn, firstRow, lastColumn, lastRow } = selection;
+                const parsedTable = parseTableCells(selection.table);
+                let firstCell = {
+                    row: Math.min(firstRow, lastRow),
+                    col: Math.min(firstColumn, lastColumn),
+                    cell: <HTMLTableCellElement | null>null,
+                };
+                let lastCell = {
+                    row: Math.max(firstRow, lastRow),
+                    col: Math.max(firstColumn, lastColumn),
+                };
+
+                firstCell = findTableCellElement(parsedTable, firstCell) || firstCell;
+                lastCell = findLastedCoInMergedCell(parsedTable, lastCell) || lastCell;
+
+                if (
+                    isNaN(firstCell.row) ||
+                    isNaN(firstCell.col) ||
+                    isNaN(lastCell.row) ||
+                    isNaN(lastCell.col)
+                ) {
+                    return;
+                }
+
+                selection = {
+                    type: 'table',
+                    table,
+                    firstRow: firstCell.row,
+                    firstColumn: firstCell.col,
+                    lastRow: lastCell.row,
+                    lastColumn: lastCell.col,
+                };
+
+                const tableId = ensureUniqueId(table, TABLE_ID);
+                const tableSelectors =
+                    firstCell.row == 0 &&
+                    firstCell.col == 0 &&
+                    lastCell.row == parsedTable.length - 1 &&
+                    lastCell.col == (parsedTable[lastCell.row]?.length ?? 0) - 1
+                        ? [`#${tableId}`, `#${tableId} *`]
+                        : handleTableSelected(parsedTable, tableId, table, firstCell, lastCell);
 
                 core.selection.selection = selection;
                 core.api.setEditorStyle(
@@ -64,7 +102,12 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 );
                 core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
 
-                setRangeSelection(doc, table.rows[firstRow]?.cells[firstColumn]);
+                const nodeToSelect = firstCell.cell?.firstElementChild || firstCell.cell;
+
+                if (nodeToSelect) {
+                    setRangeSelection(doc, (nodeToSelect as HTMLElement) || undefined);
+                }
+
                 break;
             case 'range':
                 addRangeToSelection(doc, selection.range, selection.isReverted);
@@ -90,25 +133,13 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 };
 
-function buildTableSelectors(tableId: string, selection: TableSelection): string[] {
-    const { firstColumn, firstRow, lastColumn, lastRow } = selection;
-    const cells = parseTableCells(selection.table);
-    const isAllTableSelected =
-        firstRow == 0 &&
-        firstColumn == 0 &&
-        lastRow == cells.length - 1 &&
-        lastColumn == (cells[lastRow]?.length ?? 0) - 1;
-    return isAllTableSelected
-        ? [`#${tableId}`, `#${tableId} *`]
-        : handleTableSelected(tableId, selection, cells);
-}
-
 function handleTableSelected(
+    parsedTable: ParsedTable,
     tableId: string,
-    selection: TableSelection,
-    cells: (HTMLTableCellElement | null)[][]
+    table: HTMLTableElement,
+    firstCell: TableCellCoordinate,
+    lastCell: TableCellCoordinate
 ) {
-    const { firstRow, firstColumn, lastRow, lastColumn, table } = selection;
     const selectors: string[] = [];
 
     // Get whether table has thead, tbody or tfoot, then Set the start and end of each of the table children,
@@ -132,7 +163,7 @@ function handleTableSelected(
             return result;
         });
 
-    cells.forEach((row, rowIndex) => {
+    parsedTable.forEach((row, rowIndex) => {
         let tdCount = 0;
 
         //Get current TBODY/THEAD/TFOOT
@@ -146,14 +177,14 @@ function handleTableSelected(
         for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
             const cell = row[cellIndex];
 
-            if (cell) {
+            if (typeof cell == 'object') {
                 tdCount++;
 
                 if (
-                    rowIndex >= firstRow &&
-                    rowIndex <= lastRow &&
-                    cellIndex >= firstColumn &&
-                    cellIndex <= lastColumn
+                    rowIndex >= firstCell.row &&
+                    rowIndex <= lastCell.row &&
+                    cellIndex >= firstCell.col &&
+                    cellIndex <= lastCell.col
                 ) {
                     const selector = `#${tableId}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
 

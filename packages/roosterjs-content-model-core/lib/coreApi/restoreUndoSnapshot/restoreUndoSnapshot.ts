@@ -1,6 +1,7 @@
-import { ChangeSource } from '../../constants/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { restoreSnapshotColors } from './restoreSnapshotColors';
 import { restoreSnapshotHTML } from './restoreSnapshotHTML';
+import { restoreSnapshotLogicalRoot } from './restoreSnapshotLogicalRoot';
 import { restoreSnapshotSelection } from './restoreSnapshotSelection';
 import type { ContentChangedEvent, RestoreUndoSnapshot } from 'roosterjs-content-model-types';
 
@@ -24,6 +25,7 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, snapshot) => {
         core.undo.isRestoring = true;
 
         restoreSnapshotHTML(core, snapshot);
+        restoreSnapshotLogicalRoot(core, snapshot);
         restoreSnapshotSelection(core, snapshot);
         restoreSnapshotColors(core, snapshot);
 

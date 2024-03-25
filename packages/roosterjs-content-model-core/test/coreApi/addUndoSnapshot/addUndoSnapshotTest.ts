@@ -1,6 +1,7 @@
-import * as createSnapshotSelection from '../../../lib/coreApi/addUndoSnapshot/createSnapshotSelection';
-import { addUndoSnapshot } from '../../../lib/coreApi/addUndoSnapshot/addUndoSnapshot';
 import { EditorCore, SnapshotsManager } from 'roosterjs-content-model-types';
+import { addUndoSnapshot } from '../../../lib/coreApi/addUndoSnapshot/addUndoSnapshot';
+import * as createSnapshotSelection from '../../../lib/coreApi/addUndoSnapshot/createSnapshotSelection';
+import { setLogicalRoot } from '../../../lib/coreApi/setLogicalRoot/setLogicalRoot';
 
 describe('addUndoSnapshot', () => {
     let core: EditorCore;
@@ -8,13 +9,17 @@ describe('addUndoSnapshot', () => {
     let addSnapshotSpy: jasmine.Spy;
     let getKnownColorsCopySpy: jasmine.Spy;
     let createSnapshotSelectionSpy: jasmine.Spy;
+    let triggerEventSpy: jasmine.Spy;
+    let findClosestElementAncestorSpy: jasmine.Spy;
     let snapshotsManager: SnapshotsManager;
 
     beforeEach(() => {
         addSnapshotSpy = jasmine.createSpy('addSnapshot');
         getKnownColorsCopySpy = jasmine.createSpy('getKnownColorsCopy');
         createSnapshotSelectionSpy = spyOn(createSnapshotSelection, 'createSnapshotSelection');
-        contentDiv = { innerHTML: '' } as any;
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
+        findClosestElementAncestorSpy = jasmine.createSpy('findClosestElementAncestor');
+        contentDiv = document.createElement('div');
 
         snapshotsManager = {
             addSnapshot: addSnapshotSpy,
@@ -30,6 +35,14 @@ describe('addUndoSnapshot', () => {
             undo: {
                 snapshotsManager,
             },
+            api: {
+                triggerEvent: triggerEventSpy,
+            },
+            domHelper: {
+                findClosestElementAncestor: findClosestElementAncestorSpy,
+            },
+            selection: {},
+            cache: {},
         } as any;
     });
 
@@ -40,6 +53,7 @@ describe('addUndoSnapshot', () => {
 
         expect(createSnapshotSelectionSpy).not.toHaveBeenCalled();
         expect(addSnapshotSpy).not.toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
         expect(result).toEqual(null);
     });
 
@@ -69,6 +83,7 @@ describe('addUndoSnapshot', () => {
             },
             false
         );
+        expect(triggerEventSpy).not.toHaveBeenCalled();
         expect(result).toEqual({
             html: mockedHTML,
             entityStates: undefined,
@@ -103,6 +118,7 @@ describe('addUndoSnapshot', () => {
             },
             true
         );
+        expect(triggerEventSpy).not.toHaveBeenCalled();
         expect(result).toEqual({
             html: mockedHTML,
             entityStates: undefined,
@@ -176,11 +192,81 @@ describe('addUndoSnapshot', () => {
             },
             false
         );
+        expect(triggerEventSpy).not.toHaveBeenCalled();
         expect(result).toEqual({
             html: mockedHTML2,
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
         });
+    });
+
+    it('Has custom logical root', () => {
+        const insideElement = document.createElement('div');
+        contentDiv.appendChild(insideElement);
+        insideElement.innerHTML = 'TEST';
+        setLogicalRoot(core, insideElement);
+
+        const mockedColors = 'COLORS' as any;
+        const mockedHTML = contentDiv.innerHTML;
+        const mockedSnapshotSelection = 'SNAPSHOTSELECTION' as any;
+        const mockedEntityStates = 'ENTITYSTATES' as any;
+
+        getKnownColorsCopySpy.and.returnValue(mockedColors);
+        createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
+
+        const result = addUndoSnapshot(core, false, mockedEntityStates);
+
+        expect(core.undo).toEqual({
+            snapshotsManager: snapshotsManager,
+        } as any);
+        expect(snapshotsManager.hasNewContent).toBeFalse();
+        expect(createSnapshotSelectionSpy).toHaveBeenCalledWith(core);
+        expect(addSnapshotSpy).toHaveBeenCalledWith(
+            {
+                html: mockedHTML,
+                entityStates: mockedEntityStates,
+                isDarkMode: false,
+                selection: mockedSnapshotSelection,
+                logicalRootPath: [0, 0],
+            },
+            false
+        );
+        expect(result).toEqual({
+            html: mockedHTML,
+            entityStates: mockedEntityStates,
+            isDarkMode: false,
+            selection: mockedSnapshotSelection,
+            logicalRootPath: [0, 0],
+        });
+    });
+
+    it('Has custom logical root inside entity', () => {
+        contentDiv.innerHTML =
+            '<div class="_Entity _EType_Sample _EId_Sample _EReadonly_1" contenteditable="false"><div id="target">EDITABLE</div></div>';
+        setLogicalRoot(core, contentDiv.querySelector<HTMLDivElement>('#target'));
+        findClosestElementAncestorSpy.and.returnValue(
+            contentDiv.querySelector<HTMLDivElement>('._Entity')
+        );
+
+        addUndoSnapshot(core, false);
+
+        expect(core.undo).toEqual({
+            snapshotsManager: snapshotsManager,
+        } as any);
+        expect(snapshotsManager.hasNewContent).toBeFalse();
+        expect(createSnapshotSelectionSpy).toHaveBeenCalledWith(core);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'entityOperation',
+                operation: 'snapshotEntityState',
+                entity: jasmine.objectContaining({
+                    type: 'Sample',
+                }),
+                state: undefined,
+            },
+            false
+        );
     });
 });

@@ -9,7 +9,6 @@ import {
     EditPluginCode,
     ImageEditCode,
     PastePluginCode,
-    TableCellSelectionCode,
     TableEditPluginCode,
     ShortcutPluginCode,
     MarkdownPluginCode,
@@ -60,7 +59,6 @@ export class LegacyPluginCode extends PluginsCodeBase {
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
             pluginList.imageEdit && new ImageEditCode(),
             pluginList.customReplace && new CustomReplaceCode(),
-            pluginList.tableCellSelection && new TableCellSelectionCode(),
         ];
 
         super(plugins);

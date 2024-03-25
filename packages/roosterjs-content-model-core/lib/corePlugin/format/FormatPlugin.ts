@@ -1,7 +1,12 @@
 import { applyDefaultFormat } from './applyDefaultFormat';
 import { applyPendingFormat } from './applyPendingFormat';
-import { getObjectKeys, isBlockElement, isNodeOfType } from 'roosterjs-content-model-dom';
-import { isCharacterValue, isCursorMovingKey } from '../../publicApi/domUtils/eventUtils';
+import {
+    getObjectKeys,
+    isBlockElement,
+    isCharacterValue,
+    isCursorMovingKey,
+    isNodeOfType,
+} from 'roosterjs-content-model-dom';
 import type {
     BackgroundColorFormat,
     FontFamilyFormat,

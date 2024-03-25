@@ -1,5 +1,4 @@
-import { ChangeSource } from '../../constants/ChangeSource';
-import { getObjectKeys, setColor } from 'roosterjs-content-model-dom';
+import { ChangeSource, getObjectKeys, setColor } from 'roosterjs-content-model-dom';
 import type {
     IEditor,
     LifecyclePluginState,

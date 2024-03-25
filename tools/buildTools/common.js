@@ -110,8 +110,8 @@ function getWebpackExternalCallback(externalLibraryPairs) {
         ['react-dom', 'ReactDOM'],
         [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
         [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
-        ...legacyPackages.map(p => [p, 'roosterjs']),
         ...externalLibraryPairs,
+        ...legacyPackages.map(p => [p, 'roosterjsLegacy']),
     ]);
 
     return ({ request }, callback) => {
@@ -128,78 +128,64 @@ function getWebpackExternalCallback(externalLibraryPairs) {
 }
 
 const legacyPackages = [
-    'roosterjs',
     'roosterjs-editor-types',
     'roosterjs-editor-types-compatible',
     'roosterjs-editor-dom',
     'roosterjs-editor-core',
     'roosterjs-editor-api',
     'roosterjs-editor-plugins',
-    'roosterjs-color-utils',
 ];
 const reactPackages = ['roosterjs-react'];
 const mainPackages = [
-    'roosterjs-content-model',
+    'roosterjs',
     'roosterjs-content-model-types',
     'roosterjs-content-model-dom',
     'roosterjs-content-model-core',
     'roosterjs-content-model-api',
     'roosterjs-content-model-plugins',
+    'roosterjs-color-utils',
 ];
 const legacyAdapterPackages = ['roosterjs-editor-adapter'];
 
 const buildConfig = {
     legacy: {
-        targetPath: roosterJsDistPath,
-        packEntry: path.join(packagesPath, 'roosterjs/lib/index.ts'),
-        jsFileBaseName: 'rooster',
-        targetPackages: ['roosterjs'],
-        startFileName: 'roosterjs/lib/index.d.ts',
-        libraryName: 'roosterjs',
-        targetFileName: 'rooster',
+        jsFileBaseName: 'rooster-legacy',
+        libraryName: 'roosterjsLegacy',
         externalHandler: undefined,
         packages: legacyPackages,
+        entry: 'roosterjs-legacy',
     },
     react: {
-        targetPath: roosterJsDistPath,
-        packEntry: path.join(packagesPath, 'roosterjs-react/lib/index.ts'),
         jsFileBaseName: 'rooster-react',
-        targetPackages: ['roosterjs-react'],
-        startFileName: 'roosterjs-react/lib/index.d.ts',
         libraryName: 'roosterjsReact',
-        targetFileName: 'rooster-react',
         externalHandler: getWebpackExternalCallback([]),
-        dependsOnRoosterJs: true,
+        dependsOnLegacy: true,
         dependsOnReact: true,
         packages: reactPackages,
+        entry: 'roosterjs-react',
     },
     main: {
-        targetPath: roosterJsDistPath,
-        packEntry: path.join(packagesPath, 'roosterjs-content-model/lib/index.ts'),
-        jsFileBaseName: 'rooster-content-model',
-        targetPackages: ['roosterjs-content-model'],
-        startFileName: 'roosterjs-content-model/lib/index.d.ts',
-        libraryName: 'roosterjsContentModel',
-        targetFileName: 'rooster-content-model',
+        jsFileBaseName: 'rooster',
+        libraryName: 'roosterjs',
         externalHandler: undefined,
-        dependsOnRoosterJs: false,
+        dependsOnLegacy: false,
         packages: mainPackages,
+        entry: 'roosterjs',
     },
     legacyAdapter: {
-        targetPath: roosterJsDistPath,
-        packEntry: path.join(packagesPath, 'roosterjs-editor-adapter/lib/index.ts'),
         jsFileBaseName: 'rooster-adapter',
-        targetPackages: ['roosterjs-editor-adapter'],
-        startFileName: 'roosterjs-editor-adapter/lib/index.d.ts',
         libraryName: 'roosterjsAdapter',
-        targetFileName: 'rooster-adapter',
         externalHandler: getWebpackExternalCallback([
-            [/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjs'],
-            [/^roosterjs-content-model.*/, 'roosterjsContentModel'],
+            [/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjsLegacy'],
+            [/^roosterjs-content-model.*/, 'roosterjs'],
         ]),
-        dependsOnRoosterJs: true,
+        dependsOnLegacy: true,
         dependsOnMain: true,
         packages: legacyAdapterPackages,
+        entry: 'roosterjs-editor-adapter',
+    },
+    fakeEntry: {
+        packages: ['roosterjs-legacy'],
     },
 };
 

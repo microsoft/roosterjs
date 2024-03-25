@@ -3,7 +3,12 @@ import * as createLinkAfterSpace from '../../lib/autoFormat/link/createLinkAfter
 import * as keyboardTrigger from '../../lib/autoFormat/list/keyboardListTrigger';
 import * as unlink from '../../lib/autoFormat/link/unlink';
 import { AutoFormatOptions, AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
-import { ContentChangedEvent, IEditor, KeyDownEvent } from 'roosterjs-content-model-types';
+import {
+    ContentChangedEvent,
+    EditorInputEvent,
+    IEditor,
+    KeyDownEvent,
+} from 'roosterjs-content-model-types';
 
 describe('Content Model Auto Format Plugin Test', () => {
     let editor: IEditor;
@@ -27,7 +32,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         });
 
         function runTest(
-            event: KeyDownEvent,
+            event: EditorInputEvent,
             shouldCallTrigger: boolean,
             options?: {
                 autoBullet: boolean;
@@ -42,7 +47,6 @@ describe('Content Model Auto Format Plugin Test', () => {
             if (shouldCallTrigger) {
                 expect(keyboardListTriggerSpy).toHaveBeenCalledWith(
                     editor,
-                    event.rawEvent,
                     options ? options.autoBullet : true,
                     options ? options.autoNumbering : true
                 );
@@ -52,70 +56,51 @@ describe('Content Model Auto Format Plugin Test', () => {
         }
 
         it('should trigger keyboardListTrigger', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
-                handledByEditFeature: false,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
             runTest(event, true);
         });
 
         it('should not trigger keyboardListTrigger', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: '*', defaultPrevented: false, preventDefault: () => {} } as any,
-                handledByEditFeature: false,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: '*', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-
             runTest(event, false);
         });
 
         it('should not trigger keyboardListTrigger', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
-                handledByEditFeature: false,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-
             runTest(event, true, { autoBullet: false, autoNumbering: false } as AutoFormatOptions);
         });
 
         it('should trigger keyboardListTrigger with auto bullet only', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
-                handledByEditFeature: false,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
             runTest(event, true, { autoBullet: true, autoNumbering: false } as AutoFormatOptions);
         });
 
         it('should trigger keyboardListTrigger with auto numbering only', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
-                handledByEditFeature: false,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
             runTest(event, true, { autoBullet: false, autoNumbering: true } as AutoFormatOptions);
         });
 
-        it('should not trigger keyboardListTrigger, because handledByEditFeature', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: false, preventDefault: () => {} } as any,
-                handledByEditFeature: true,
+        it('should not trigger keyboardListTrigger if the input type is different from insertText', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { key: ' ', defaultPrevented: false, inputType: 'test' } as any,
             };
-
-            runTest(event, false);
-        });
-
-        it('should not trigger keyboardListTrigger, because defaultPrevented', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', defaultPrevented: true } as any,
-                handledByEditFeature: false,
-            };
-
-            runTest(event, false);
+            runTest(event, false, { autoBullet: true, autoNumbering: true } as AutoFormatOptions);
         });
     });
 

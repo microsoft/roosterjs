@@ -1,9 +1,12 @@
-import { ChangeSource } from '../constants/ChangeSource';
-import { cloneModel } from '../publicApi/model/cloneModel';
 import { createEditorCore } from './core/createEditorCore';
-import { createEmptyModel, tableProcessor } from 'roosterjs-content-model-dom';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
-import { transformColor } from '../publicApi/color/transformColor';
+import {
+    createEmptyModel,
+    tableProcessor,
+    ChangeSource,
+    cloneModel,
+    transformColor,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelFormatter,
@@ -150,6 +153,16 @@ export class Editor implements IEditor {
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
+    }
+
+    /**
+     * Set a new logical root (most likely due to focus change)
+     * @param logicalRoot The new logical root (has to be child of physicalRoot)
+     */
+    setLogicalRoot(logicalRoot: HTMLDivElement) {
+        const core = this.getCore();
+
+        core.api.setLogicalRoot(core, logicalRoot);
     }
 
     /**

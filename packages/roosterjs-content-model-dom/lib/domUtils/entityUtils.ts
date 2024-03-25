@@ -5,6 +5,7 @@ import { toArray } from './toArray';
 import type {
     ContentModelEntityFormat,
     ContentModelSegmentFormat,
+    DOMHelper,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
@@ -21,6 +22,18 @@ const DELIMITER_AFTER = 'entityDelimiterAfter';
  */
 export function isEntityElement(node: Node): boolean {
     return isNodeOfType(node, 'ELEMENT_NODE') && node.classList.contains(ENTITY_INFO_NAME);
+}
+
+/**
+ * Find the closest entity wrapper element from a given DOM node
+ * @param node The node to start looking for entity wrapper
+ * @param domHelper The DOM helper to use
+ */
+export function findClosestEntityWrapper(
+    startNode: Node,
+    domHelper: DOMHelper
+): HTMLElement | null {
+    return domHelper.findClosestElementAncestor(startNode, `.${ENTITY_INFO_NAME}`);
 }
 
 /**

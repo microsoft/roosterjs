@@ -1,4 +1,4 @@
-import * as updateMetadata from 'roosterjs-content-model-dom/lib/domUtils/metadata/updateMetadata';
+import * as updateMetadata from 'roosterjs-content-model-dom/lib/modelApi/metadata/updateMetadata';
 import { applyMetadata } from '../../../lib/modelToDom/utils/applyMetadata';
 import { MetadataApplier } from 'roosterjs-content-model-types';
 

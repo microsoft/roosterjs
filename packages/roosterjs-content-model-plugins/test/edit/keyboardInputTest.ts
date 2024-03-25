@@ -1,4 +1,4 @@
-import * as deleteSelection from 'roosterjs-content-model-core/lib/publicApi/selection/deleteSelection';
+import * as deleteSelection from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { deleteEmptyQuote } from '../../lib/edit/deleteSteps/deleteEmptyQuote';
 import { handleEnterOnList } from '../../lib/edit/inputSteps/handleEnterOnList';

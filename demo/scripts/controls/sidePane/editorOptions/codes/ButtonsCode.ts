@@ -2,11 +2,11 @@ import CodeElement from './CodeElement';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 
 const codeMap: { [id: string]: string } = {
-    buttonB: 'roosterjs.toggleBold(editor)',
-    buttonI: 'roosterjs.toggleItalic(editor)',
-    buttonU: 'roosterjs.toggleUnderline(editor)',
-    buttonBullet: 'roosterjs.toggleBullet(editor)',
-    buttonNumbering: 'roosterjs.toggleNumbering(editor)',
+    buttonB: 'roosterjsLegacy.toggleBold(editor)',
+    buttonI: 'roosterjsLegacy.toggleItalic(editor)',
+    buttonU: 'roosterjsLegacy.toggleUnderline(editor)',
+    buttonBullet: 'roosterjsLegacy.toggleBullet(editor)',
+    buttonNumbering: 'roosterjsLegacy.toggleNumbering(editor)',
     buttonUndo: 'editor.undo()',
     buttonRedo: 'editor.redo()',
 };

@@ -3,25 +3,31 @@ import * as ReactDOM from 'react-dom';
 import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-model-types';
-import { buttons, buttonsWithPopout } from './ribbonButtons';
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
-import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
 import { createLegacyPlugins } from '../plugins/createLegacyPlugins';
 import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
 import { createPasteOptionPlugin } from '../roosterjsReact/pasteOptions';
 import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
+import { darkModeButton } from '../demoButtons/darkModeButton';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorAdapter } from 'roosterjs-editor-adapter';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
+import { exportContentButton } from '../demoButtons/exportContentButton';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
 import { FormatStatePlugin } from '../sidePane/formatState/FormatStatePlugin';
+import { getButtons } from '../tabs/ribbonButtons';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { getPresetModelById } from '../sidePane/presets/allPresets/allPresets';
+import { getTabs, tabNames } from '../tabs/getTabs';
 import { getTheme } from '../theme/themes';
 import { OptionState } from '../sidePane/editorOptions/OptionState';
+import { popoutButton } from '../demoButtons/popoutButton';
+import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
+import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
 import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
 import { Rooster } from '../roosterjsReact/rooster';
 import { SidePane } from '../sidePane/SidePane';
@@ -30,8 +36,10 @@ import { SnapshotPlugin } from '../sidePane/snapshot/SnapshotPlugin';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
+import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+import { zoomButton } from '../demoButtons/zoomButton';
 import {
     createContextMenuPlugin,
     createTableEditMenuProvider,
@@ -55,6 +63,7 @@ export interface MainPaneState {
     scale: number;
     isDarkMode: boolean;
     isRtl: boolean;
+    activeTab: tabNames;
     tableBorderFormat?: Border;
     editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
 }
@@ -74,12 +83,11 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private contentModelPanePlugin: ContentModelPanePlugin;
+    private presetPlugin: PresetPlugin;
     private ribbonPlugin: RibbonPlugin;
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
     private snapshots: Snapshots;
-    private buttons: RibbonButton<any>[];
-    private buttonsWithPopout: RibbonButton<any>[];
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -113,12 +121,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin(this.snapshots);
         this.contentModelPanePlugin = new ContentModelPanePlugin();
+        this.presetPlugin = new PresetPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
 
-        const baseButtons = [createFormatPainterButton(this.formatPainterPlugin)];
-        this.buttons = baseButtons.concat(buttons);
-        this.buttonsWithPopout = baseButtons.concat(buttonsWithPopout);
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -132,17 +138,17 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                 style: 'solid',
                 color: '#ABABAB',
             },
+            activeTab: 'all',
         };
     }
 
     render() {
+        const theme = getTheme(this.state.isDarkMode);
         return (
-            <ThemeProvider
-                applyTo="body"
-                theme={getTheme(this.state.isDarkMode)}
-                className={styles.mainPane}>
+            <ThemeProvider applyTo="body" theme={theme} className={styles.mainPane}>
                 {this.renderTitleBar()}
-                {!this.state.popoutWindow && this.renderRibbon(false /*isPopout*/)}
+                {!this.state.popoutWindow && this.renderTabs()}
+                {!this.state.popoutWindow && this.renderRibbon()}
                 <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
                     {this.state.popoutWindow ? this.renderPopout() : this.renderMainPane()}
                 </div>
@@ -221,6 +227,16 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         });
     }
 
+    changeRibbon(id: tabNames): void {
+        this.setState({
+            activeTab: id,
+        });
+    }
+
+    setPreset(preset: ContentModelDocument) {
+        this.model = preset;
+    }
+
     setPageDirection(isRtl: boolean): void {
         this.setState({ isRtl: isRtl });
         [window, this.state.popoutWindow].forEach(win => {
@@ -234,10 +250,32 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         return <TitleBar className={styles.noGrow} />;
     }
 
-    private renderRibbon(isPopout: boolean) {
+    private renderTabs() {
+        const tabs = getTabs();
+        const topRightButtons: RibbonButton<any>[] = [
+            undoButton,
+            redoButton,
+            zoomButton,
+            darkModeButton,
+            exportContentButton,
+        ];
+        this.state.popoutWindow ? null : topRightButtons.push(popoutButton);
+
+        return (
+            <div
+                style={{ display: 'inline-flex', justifyContent: 'space-between', height: '30px' }}>
+                <Ribbon
+                    buttons={tabs}
+                    plugin={this.ribbonPlugin}
+                    dir={this.state.isRtl ? 'rtl' : 'ltr'}></Ribbon>
+                <Ribbon buttons={topRightButtons} plugin={this.ribbonPlugin}></Ribbon>
+            </div>
+        );
+    }
+    private renderRibbon() {
         return (
             <Ribbon
-                buttons={isPopout ? this.buttons : this.buttonsWithPopout}
+                buttons={getButtons(this.state.activeTab, this.formatPainterPlugin)}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
             />
@@ -272,6 +310,13 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     }
 
     private renderEditor() {
+        // Set preset if found
+        const search = new URLSearchParams(document.location.search);
+        const hasPreset = search.get('preset');
+        if (hasPreset) {
+            this.setPreset(getPresetModelById(hasPreset));
+        }
+
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
             transformOrigin: this.state.isRtl ? 'right top' : 'left top',
@@ -354,7 +399,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                     <WindowProvider window={this.state.popoutWindow}>
                         <ThemeProvider applyTo="body" theme={getTheme(this.state.isDarkMode)}>
                             <div className={styles.mainPane}>
-                                {this.renderRibbon(true /*isPopout*/)}
+                                {this.renderTabs()}
+                                {this.renderRibbon()}
                                 <div className={styles.body}>{this.renderEditor()}</div>
                             </div>
                         </ThemeProvider>
@@ -416,6 +462,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.apiPlaygroundPlugin,
             this.snapshotPlugin,
             this.contentModelPanePlugin,
+            this.presetPlugin,
         ];
     }
 

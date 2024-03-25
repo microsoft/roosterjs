@@ -1,7 +1,12 @@
 import { BridgePlugin } from '../corePlugins/BridgePlugin';
 import { buildRangeEx } from './utils/buildRangeEx';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { insertNode } from './utils/insertNode';
+import {
+    getObjectKeys,
+    isBold,
+    retrieveModelFormatState,
+    transformColor,
+} from 'roosterjs-content-model-dom';
 import type { EditorAdapterCore } from '../corePlugins/BridgePlugin';
 import {
     newEventToOldEvent,
@@ -11,11 +16,8 @@ import {
 import {
     createModelFromHtml,
     exportContent,
-    isBold,
     redo,
-    retrieveModelFormatState,
     Editor,
-    transformColor,
     undo,
     paste,
 } from 'roosterjs-content-model-core';
@@ -107,7 +109,6 @@ const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
 
 /**
  * Editor for Content Model.
- * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export class EditorAdapter extends Editor implements ILegacyEditor {
     private contentModelEditorCore: EditorAdapterCore | undefined;

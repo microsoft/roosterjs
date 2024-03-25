@@ -1,19 +1,21 @@
 import * as restoreSnapshotColors from '../../../lib/coreApi/restoreUndoSnapshot/restoreSnapshotColors';
 import * as restoreSnapshotHTML from '../../../lib/coreApi/restoreUndoSnapshot/restoreSnapshotHTML';
 import * as restoreSnapshotSelection from '../../../lib/coreApi/restoreUndoSnapshot/restoreSnapshotSelection';
-import { ChangeSource } from '../../../lib/constants/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { EditorCore, Snapshot } from 'roosterjs-content-model-types';
 import { restoreUndoSnapshot } from '../../../lib/coreApi/restoreUndoSnapshot/restoreUndoSnapshot';
 
 describe('restoreUndoSnapshot', () => {
     let core: EditorCore;
     let triggerEventSpy: jasmine.Spy;
+    let setLogicalRootSpy: jasmine.Spy;
     let restoreSnapshotColorsSpy: jasmine.Spy;
     let restoreSnapshotHTMLSpy: jasmine.Spy;
     let restoreSnapshotSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         triggerEventSpy = jasmine.createSpy('triggerEvent');
+        setLogicalRootSpy = jasmine.createSpy('setLogicalRoot');
         restoreSnapshotColorsSpy = spyOn(
             restoreSnapshotColors,
             'restoreSnapshotColors'
@@ -26,6 +28,7 @@ describe('restoreUndoSnapshot', () => {
         core = {
             api: {
                 triggerEvent: triggerEventSpy,
+                setLogicalRoot: setLogicalRootSpy,
             },
             undo: {},
         } as any;
@@ -57,6 +60,7 @@ describe('restoreUndoSnapshot', () => {
             },
             false
         );
+        expect(setLogicalRootSpy).toHaveBeenCalledWith(core, null);
         expect(restoreSnapshotColorsSpy).toHaveBeenCalledWith(core, snapshot);
         expect(restoreSnapshotHTMLSpy).toHaveBeenCalledWith(core, snapshot);
         expect(restoreSnapshotSelectionSpy).toHaveBeenCalledWith(core, snapshot);
@@ -90,6 +94,7 @@ describe('restoreUndoSnapshot', () => {
             },
             false
         );
+        expect(setLogicalRootSpy).toHaveBeenCalledWith(core, null);
         expect(restoreSnapshotColorsSpy).toHaveBeenCalledWith(core, snapshot);
         expect(restoreSnapshotHTMLSpy).toHaveBeenCalledWith(core, snapshot);
         expect(restoreSnapshotSelectionSpy).toHaveBeenCalledWith(core, snapshot);

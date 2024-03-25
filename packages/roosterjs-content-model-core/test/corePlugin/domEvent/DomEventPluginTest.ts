@@ -1,5 +1,5 @@
-import * as eventUtils from '../../../lib/publicApi/domUtils/eventUtils';
-import { ChangeSource } from '../../../lib/constants/ChangeSource';
+import * as eventUtils from 'roosterjs-content-model-dom/lib/domUtils/event/eventUtils';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createDOMEventPlugin } from '../../../lib/corePlugin/domEvent/DOMEventPlugin';
 import { DOMEventPluginState, IEditor, PluginWithState } from 'roosterjs-content-model-types';
 

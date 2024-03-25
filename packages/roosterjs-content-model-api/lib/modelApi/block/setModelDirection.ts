@@ -4,7 +4,7 @@ import {
     getOperationalBlocks,
     isBlockGroupOfType,
     updateTableCellMetadata,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type {
     BorderFormat,
     ContentModelBlock,

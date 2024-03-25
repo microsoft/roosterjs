@@ -1,7 +1,7 @@
 import { createContextMenuProvider } from '../utils/createContextMenuProvider';
 import { EditorPlugin, IEditor, ImageEditor } from 'roosterjs-content-model-types';
 import { formatImageWithContentModel } from 'roosterjs-content-model-api';
-import { iterateSelections, updateImageMetadata } from 'roosterjs-content-model-core';
+import { iterateSelections, updateImageMetadata } from 'roosterjs-content-model-dom';
 import { setImageAltText } from 'roosterjs-content-model-api';
 import { showInputDialog } from '../../inputDialog/utils/showInputDialog';
 import type { ContextMenuItem } from '../types/ContextMenuItem';

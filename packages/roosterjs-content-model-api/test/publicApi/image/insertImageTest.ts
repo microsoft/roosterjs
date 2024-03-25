@@ -1,4 +1,4 @@
-import * as readFile from 'roosterjs-content-model-core/lib/publicApi/domUtils/readFile';
+import * as readFile from 'roosterjs-content-model-dom/lib/domUtils/readFile';
 import { IEditor } from 'roosterjs-content-model-types';
 import { insertImage } from '../../../lib/publicApi/image/insertImage';
 import {

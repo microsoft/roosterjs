@@ -1,4 +1,8 @@
-import { AllowedTags, DisallowedTags, sanitizeElement } from '../utils/sanitizeElement';
+import {
+    AllowedTags,
+    DisallowedTags,
+    sanitizeElement,
+} from '../command/createModelFromHtml/sanitizeElement';
 import type {
     DomToModelOptionForSanitizing,
     ElementProcessor,

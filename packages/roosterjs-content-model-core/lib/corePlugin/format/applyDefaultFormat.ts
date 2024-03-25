@@ -1,5 +1,4 @@
-import { deleteSelection } from '../../publicApi/selection/deleteSelection';
-import { normalizeContentModel } from 'roosterjs-content-model-dom';
+import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 
 /**

@@ -1,5 +1,5 @@
 import * as createRange from 'roosterjs-editor-dom/lib/selection/createRange';
-import * as tableCellUtils from 'roosterjs-content-model-core/lib/publicApi/domUtils/tableCellUtils';
+import * as createTableRanges from '../../../lib/editor/utils/createTableRanges';
 import { DOMSelection } from 'roosterjs-content-model-types';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
@@ -100,7 +100,7 @@ describe('convertDomSelectionToRangeEx', () => {
 
     beforeEach(() => {
         createRangeSpy = spyOn(createRange, 'default');
-        tableCellUtilsSpy = spyOn(tableCellUtils, 'createTableRanges');
+        tableCellUtilsSpy = spyOn(createTableRanges, 'createTableRanges');
     });
 
     it('null selection', () => {

@@ -1,5 +1,4 @@
-import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
-import { getFirstSelectedListItem, updateListMetadata } from 'roosterjs-content-model-core';
+import { setModelListStyle } from '../../modelApi/list/setModelListStyle';
 import type { IEditor, ListMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
@@ -12,24 +11,7 @@ export function setListStyle(editor: IEditor, style: ListMetadataFormat) {
 
     editor.formatContentModel(
         model => {
-            const listItem = getFirstSelectedListItem(model);
-
-            if (listItem) {
-                const listItems = findListItemsInSameThread(model, listItem);
-                const levelIndex = listItem.levels.length - 1;
-
-                listItems.forEach(listItem => {
-                    const level = listItem.levels[levelIndex];
-
-                    if (level) {
-                        updateListMetadata(level, metadata => Object.assign({}, metadata, style));
-                    }
-                });
-
-                return true;
-            } else {
-                return false;
-            }
+            return setModelListStyle(model, style);
         },
         {
             apiName: 'setListStyle',

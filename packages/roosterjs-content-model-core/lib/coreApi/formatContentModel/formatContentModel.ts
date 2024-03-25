@@ -1,4 +1,4 @@
-import { ChangeSource } from '../../constants/ChangeSource';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import type {
     ChangedEntity,
     ContentChangedEvent,
@@ -76,7 +76,7 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             }
 
             if (shouldAddSnapshot) {
-                core.api.addUndoSnapshot(core, !!canUndoByBackspace, entityStates);
+                core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/, entityStates);
             } else {
                 core.undo.snapshotsManager.hasNewContent = true;
             }

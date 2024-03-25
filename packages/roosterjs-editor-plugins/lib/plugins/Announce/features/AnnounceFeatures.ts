@@ -1,5 +1,5 @@
-import announceNewListItemNumber from './announceNewListItem';
-import announceWarningOnLastCell from './announceWarningOnLastTableCell';
+import { announceNewListItemNumber } from './announceNewListItem';
+import { announceWarningOnLastCell } from './announceWarningOnLastTableCell';
 import type { AnnounceFeature } from '../AnnounceFeature';
 
 /**

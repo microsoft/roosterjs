@@ -1,4 +1,4 @@
-import { getFirstSelectedListItem } from 'roosterjs-content-model-core';
+import { setModelListStartNumber } from '../../modelApi/list/setModelListStartNumber';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -11,16 +11,7 @@ export function setListStartNumber(editor: IEditor, value: number) {
 
     editor.formatContentModel(
         model => {
-            const listItem = getFirstSelectedListItem(model);
-            const level = listItem?.levels[listItem?.levels.length - 1];
-
-            if (level) {
-                level.format.startNumberOverride = value;
-
-                return true;
-            } else {
-                return false;
-            }
+            return setModelListStartNumber(model, value);
         },
         {
             apiName: 'setListStartNumber',

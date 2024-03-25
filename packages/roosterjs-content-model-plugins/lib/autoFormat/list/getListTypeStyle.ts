@@ -11,7 +11,7 @@ import {
     updateListMetadata,
     getOperationalBlocks,
     getSelectedSegmentsAndParagraphs,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 
 /**
  * @internal
@@ -58,6 +58,7 @@ export function getListTypeStyle(
                 previousIndex,
                 previousListStyle
             );
+
             if (numberingType) {
                 return {
                     listType: 'OL',
@@ -124,7 +125,7 @@ const bulletListType: Record<string, number> = {
 };
 
 const isNewList = (listMarker: string) => {
-    const marker = listMarker.replace(/[^\w\s]/g, '');
+    const marker = listMarker.replace(/[^\w\s]/g, '').trim();
     const pattern = /^[1aAiI]$/;
     return pattern.test(marker);
 };
