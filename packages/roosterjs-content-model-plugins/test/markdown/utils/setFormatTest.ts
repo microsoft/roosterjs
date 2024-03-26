@@ -287,6 +287,64 @@ describe('setFormat', () => {
         runTest(input, '`', {}, expectedModel, true, { format: {} });
     });
 
+    it('should set code with format', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '`test`',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                            code: {
+                                format: {
+                                    fontFamily: 'arial',
+                                },
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, '`', {}, expectedModel, true, { format: { fontFamily: 'arial' } });
+    });
+
     it('should set bold in multiple words', () => {
         const input: ContentModelDocument = {
             blockGroupType: 'Document',

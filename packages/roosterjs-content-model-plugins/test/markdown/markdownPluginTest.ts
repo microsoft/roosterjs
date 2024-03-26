@@ -206,7 +206,7 @@ describe('MarkdownPlugin', () => {
                 } as EditorInputEvent,
             ],
             true,
-            { bold: true, italic: true, strikethrough: true, code: true },
+            { bold: true, italic: true, strikethrough: true, code: { format: {} } },
             '`',
             {},
             { format: {} }
@@ -230,7 +230,7 @@ describe('MarkdownPlugin', () => {
                 } as EditorInputEvent,
             ],
             false,
-            { bold: true, italic: true, strikethrough: true, code: false }
+            { bold: true, italic: true, strikethrough: true, code: undefined }
         );
     });
 

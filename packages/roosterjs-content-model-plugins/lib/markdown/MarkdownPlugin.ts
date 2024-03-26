@@ -1,6 +1,7 @@
 import { setFormat } from './utils/setFormat';
 import type {
     ContentChangedEvent,
+    ContentModelCode,
     EditorInputEvent,
     EditorPlugin,
     IEditor,
@@ -15,7 +16,7 @@ export interface MarkdownOptions {
     strikethrough?: boolean;
     bold?: boolean;
     italic?: boolean;
-    code?: boolean;
+    code?: ContentModelCode;
 }
 
 /**
@@ -25,7 +26,7 @@ const DefaultOptions: Required<MarkdownOptions> = {
     strikethrough: true,
     bold: true,
     italic: true,
-    code: true,
+    code: { format: {} },
 };
 
 /**
@@ -44,6 +45,7 @@ export class MarkdownPlugin implements EditorPlugin {
      *  - strikethrough: If true text between ~ will receive strikethrough format. Defaults to true.
      *  - bold: If true text between * will receive bold format. Defaults to true.
      *  - italic: If true text between _ will receive italic format. Defaults to true.
+     *  - code: If provided, text between ` will receive code format. Defaults to { format: {} }.
      */
     constructor(private options: MarkdownOptions = DefaultOptions) {}
 
@@ -141,7 +143,7 @@ export class MarkdownPlugin implements EditorPlugin {
                 case '`':
                     if (this.options.code) {
                         if (this.shouldCode) {
-                            setFormat(editor, '`', {} /* format */, { format: {} });
+                            setFormat(editor, '`', {} /* format */, this.options.code);
                             this.shouldCode = false;
                         } else {
                             this.shouldCode = true;
