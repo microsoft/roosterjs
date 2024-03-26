@@ -5,6 +5,7 @@ import type {
     ContentModelBlockGroup,
     DomToModelContext,
     ElementProcessor,
+    SelectionOffsets,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -75,23 +76,23 @@ export function handleRegularSelection(
     index: number,
     context: DomToModelContext,
     group: ContentModelBlockGroup,
-    offsets: [number, number, number],
+    offsets: SelectionOffsets,
     container?: Node
 ) {
-    if (index == offsets[0]) {
+    if (index == offsets.start) {
         context.isInSelection = true;
 
         addSelectionMarker(group, context, container, index);
     }
 
-    if (index == offsets[1] && context.selection?.type == 'range') {
+    if (index == offsets.end && context.selection?.type == 'range') {
         if (!context.selection.range.collapsed) {
             addSelectionMarker(group, context, container, index);
         }
         context.isInSelection = false;
     }
 
-    if (index == offsets[2]) {
+    if (index == offsets.shadow) {
         addSelectionMarker(group, context, container, index, true /*isShadowMarker*/);
     }
 }

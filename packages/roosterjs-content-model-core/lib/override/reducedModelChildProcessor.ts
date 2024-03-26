@@ -42,7 +42,8 @@ export function reducedModelChildProcessor(
         const offsets = getRegularSelectionOffsets(context, parent);
 
         // If selection is not on this node, skip getting node index to save some time since we don't need it here
-        const index = offsets[0] >= 0 || offsets[1] >= 0 ? getChildIndex(parent, stackChild) : -1;
+        const index =
+            offsets.start >= 0 || offsets.end >= 0 ? getChildIndex(parent, stackChild) : -1;
 
         if (index >= 0) {
             handleRegularSelection(index, context, group, offsets);

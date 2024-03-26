@@ -970,6 +970,7 @@ describe('textProcessor with shadow insert point', () => {
 
         it('No selection, but in selection', () => {
             runTest(-1, -1, -1, ['*abcdef'], true, true);
+            1081;
             runTest(-1, -1, 0, ['_', '*abcdef'], true, true);
             runTest(-1, -1, 3, ['*abc', '_', '*def'], true, true);
             runTest(-1, -1, 6, ['*abcdef', '_'], true, true);

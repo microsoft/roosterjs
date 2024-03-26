@@ -13,6 +13,7 @@ import type {
     ContentModelText,
     DomToModelContext,
     ElementProcessor,
+    SelectionOffsets,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -42,83 +43,71 @@ function internalTextProcessor(
 ) {
     let txt = textNode.nodeValue || '';
     const offsets = getRegularSelectionOffsets(context, textNode);
-    let [txtStartOffset, txtEndOffset, shadowOffset] = offsets;
+    const { start, end, shadow } = offsets;
     const segments: (ContentModelText | undefined)[] = [];
     const paragraph = ensureParagraph(group, context.blockFormat);
 
-    if (
-        shadowOffset >= 0 &&
-        (shadowOffset <= txtStartOffset || txtStartOffset < 0) &&
-        (shadowOffset < txtEndOffset || txtEndOffset < 0)
-    ) {
-        const subText = txt.substring(0, shadowOffset);
+    const adjustForShadowInsertPoint = (offsets: SelectionOffsets) => {
+        const subText = txt.substring(0, offsets.shadow);
 
         segments.push(addTextSegment(group, subText, paragraph, context));
 
         // Must use offsets[2] here as the unchanged offset value, cannot use txtEndOffset since it has been modified
         // Same for the rest
-        addSelectionMarker(group, context, textNode, offsets[2], true /*isShadowMarker*/);
+        addSelectionMarker(group, context, textNode, shadow, true /*isShadowMarker*/);
 
-        txt = txt.substring(shadowOffset);
-        txtStartOffset -= shadowOffset;
-        txtEndOffset -= shadowOffset;
-        shadowOffset = -1;
+        txt = txt.substring(offsets.shadow);
+        offsets.start -= offsets.shadow;
+        offsets.end -= offsets.shadow;
+        offsets.shadow = -1;
+    };
+
+    const adjustForRegularSelection = (
+        offsets: SelectionOffsets,
+        offset: number,
+        markerOffset: number
+    ) => {
+        const subText = txt.substring(0, offset);
+
+        segments.push(addTextSegment(group, subText, paragraph, context));
+        addSelectionMarker(group, context, textNode, markerOffset);
+
+        txt = txt.substring(offset);
+        offsets.start -= offset;
+        offsets.end -= offset;
+        offsets.shadow -= offset;
+    };
+
+    if (
+        offsets.shadow >= 0 &&
+        (offsets.shadow <= offsets.start || offsets.start < 0) &&
+        (offsets.shadow < offsets.end || offsets.end < 0)
+    ) {
+        adjustForShadowInsertPoint(offsets);
     }
 
-    if (txtStartOffset >= 0) {
-        const subText = txt.substring(0, txtStartOffset);
-        segments.push(addTextSegment(group, subText, paragraph, context));
+    if (offsets.start >= 0) {
+        adjustForRegularSelection(offsets, offsets.start, start);
+
         context.isInSelection = true;
-
-        addSelectionMarker(group, context, textNode, offsets[0]);
-
-        txt = txt.substring(txtStartOffset);
-        txtEndOffset -= txtStartOffset;
-        shadowOffset -= txtStartOffset;
-        txtStartOffset = 0;
     }
 
     if (
-        shadowOffset >= 0 &&
-        shadowOffset > txtStartOffset &&
-        (shadowOffset < txtEndOffset || txtEndOffset < 0)
+        offsets.shadow >= 0 &&
+        offsets.shadow > offsets.start &&
+        (offsets.shadow < offsets.end || offsets.end < 0)
     ) {
-        const subText = txt.substring(0, shadowOffset);
-
-        segments.push(addTextSegment(group, subText, paragraph, context));
-
-        addSelectionMarker(group, context, textNode, offsets[2], true /*isShadowMarker*/);
-
-        txt = txt.substring(shadowOffset);
-        txtEndOffset -= shadowOffset;
-        shadowOffset = -1;
+        adjustForShadowInsertPoint(offsets);
     }
 
-    if (txtEndOffset >= 0) {
-        const subText = txt.substring(0, txtEndOffset);
-        segments.push(addTextSegment(group, subText, paragraph, context));
-
-        if (
-            context.selection &&
-            (context.selection.type != 'range' || !context.selection.range.collapsed)
-        ) {
-            addSelectionMarker(group, context, textNode, offsets[1]);
-        }
+    if (offsets.end >= 0) {
+        adjustForRegularSelection(offsets, offsets.end, end);
 
         context.isInSelection = false;
-        txt = txt.substring(txtEndOffset);
-        shadowOffset -= txtEndOffset;
-        txtEndOffset = 0;
     }
 
-    if (shadowOffset >= 0 && shadowOffset >= txtEndOffset) {
-        const subText = txt.substring(0, shadowOffset);
-
-        segments.push(addTextSegment(group, subText, paragraph, context));
-
-        addSelectionMarker(group, context, textNode, offsets[2], true /*isShadowMarker*/);
-
-        txt = txt.substring(shadowOffset);
+    if (offsets.shadow >= 0 && offsets.shadow >= offsets.end) {
+        adjustForShadowInsertPoint(offsets);
     }
 
     segments.push(addTextSegment(group, txt, paragraph, context));
