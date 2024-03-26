@@ -1,10 +1,12 @@
-import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
-import * as createEditorCore from '../../lib/editor/core/createEditorCore';
-import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
-import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
-import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
 import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
+import * as createDomToModelContextWithConfig from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
+import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
+import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
+import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
+import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
+import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
 import { Editor } from '../../lib/editor/Editor';
+import * as createEditorCore from '../../lib/editor/core/createEditorCore';
 import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
 
 describe('Editor', () => {
@@ -234,6 +236,51 @@ describe('Editor', () => {
         editor.dispose();
         expect(() => editor.getContentModelCopy('disconnected')).toThrow();
         expect(resetSpy).toHaveBeenCalledWith();
+    });
+
+    it('getContentModelCopy, clean, custom logical root', () => {
+        const div = document.createElement('div');
+        const mockedEditorContext = 'EDITORCONTEXT' as any;
+        const mockedModelContext = 'MODELCONTEXT' as any;
+        const mockedModel = 'MODEL' as any;
+        const createEditorContextSpy = jasmine
+            .createSpy('createEditorContext')
+            .and.returnValue(mockedEditorContext);
+        const mockedCore = {
+            logicalRoot: 'LOGICAL',
+            physicalRoot: 'PHYSICAL',
+            api: {
+                createEditorContext: createEditorContextSpy,
+            },
+            environment: {
+                domToModelSettings: {
+                    calculated: undefined,
+                },
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        const createDomToModelContextWithConfigSpy = spyOn(
+            createDomToModelContextWithConfig,
+            'createDomToModelContextWithConfig'
+        ).and.returnValue(mockedModelContext);
+        const domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel').and.returnValue(
+            mockedModel
+        );
+
+        const model = editor.getContentModelCopy('clean');
+        expect(model).toBe(mockedModel);
+        expect(createDomToModelContextWithConfigSpy).toHaveBeenCalledWith(
+            mockedCore.environment.domToModelSettings.calculated,
+            mockedEditorContext
+        );
+        expect(domToContentModelSpy).toHaveBeenCalledWith(
+            mockedCore.physicalRoot,
+            mockedModelContext
+        );
     });
 
     it('getEnvironment', () => {

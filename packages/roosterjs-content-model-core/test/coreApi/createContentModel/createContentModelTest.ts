@@ -86,16 +86,6 @@ describe('createContentModel', () => {
         expect(domToContentModelSpy).not.toHaveBeenCalled();
         expect(model).toBe(mockedClonedModel);
     });
-
-    it('With custom logical root', () => {
-        core.cache.cachedModel = undefined;
-        core.logicalRoot = 'LOGICALROOT' as any;
-
-        const model = createContentModel(core);
-
-        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedContext);
-        expect(model).toBe(mockedModel);
-    });
 });
 
 describe('createContentModel with selection', () => {

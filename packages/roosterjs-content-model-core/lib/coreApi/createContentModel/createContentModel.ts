@@ -42,7 +42,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
             domToModelContext.selection = selection;
         }
 
-        const model = domToContentModel(core.physicalRoot, domToModelContext);
+        const model = domToContentModel(core.logicalRoot, domToModelContext);
 
         if (saveIndex) {
             core.cache.cachedModel = model;
