@@ -149,6 +149,7 @@ export class MarkdownPlugin implements EditorPlugin {
                     this.shouldBold = false;
                     this.shouldItalic = false;
                     this.shouldStrikethrough = false;
+                    this.lastKeyTyped = null;
                     break;
                 case 'Backspace':
                 case ' ':

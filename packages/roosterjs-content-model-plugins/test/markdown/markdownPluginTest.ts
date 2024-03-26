@@ -28,9 +28,7 @@ describe('MarkdownPlugin', () => {
     });
 
     function runTest(
-        event: KeyDownEvent | EditorInputEvent | ContentChangedEvent,
-        secondEvent: KeyDownEvent | EditorInputEvent | ContentChangedEvent,
-        thirdEvent: KeyDownEvent | EditorInputEvent | ContentChangedEvent,
+        events: (KeyDownEvent | EditorInputEvent | ContentChangedEvent)[],
         shouldCallTrigger: boolean,
         options?: MarkdownOptions,
         expectedChar?: string,
@@ -39,9 +37,7 @@ describe('MarkdownPlugin', () => {
         const plugin = new MarkdownPlugin(options);
         plugin.initialize(editor);
 
-        plugin.onPluginEvent(event);
-        plugin.onPluginEvent(secondEvent);
-        plugin.onPluginEvent(thirdEvent);
+        events.forEach(event => plugin.onPluginEvent(event));
 
         if (shouldCallTrigger) {
             expect(setFormatSpy).toHaveBeenCalledWith(editor, expectedChar, expectedFormat);
@@ -52,9 +48,20 @@ describe('MarkdownPlugin', () => {
 
     it('should trigger setFormat for bold', () => {
         runTest(
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: 't', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: 't', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             true,
             { bold: true, italic: false, strikethrough: false },
             '*',
@@ -64,9 +71,20 @@ describe('MarkdownPlugin', () => {
 
     it('Feature disabled - should not trigger setFormat for bold', () => {
         runTest(
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: 't', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: 't', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             false,
             { bold: false, italic: false, strikethrough: false }
         );
@@ -74,9 +92,20 @@ describe('MarkdownPlugin', () => {
 
     it('should trigger setFormat for strikethrough', () => {
         runTest(
-            { rawEvent: { data: '~', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: 't', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: '~', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '~', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: 't', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: '~', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             true,
             { bold: true, italic: true, strikethrough: true },
             '~',
@@ -86,9 +115,20 @@ describe('MarkdownPlugin', () => {
 
     it('Feature disabled - should not trigger setFormat for strikethrough', () => {
         runTest(
-            { rawEvent: { data: '~', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: 't', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: '~', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '~', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: 't', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: '~', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             false,
             { bold: false, italic: false, strikethrough: false }
         );
@@ -96,9 +136,20 @@ describe('MarkdownPlugin', () => {
 
     it('should trigger setFormat for italic', () => {
         runTest(
-            { rawEvent: { data: '_', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: 't', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: '_', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '_', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: 't', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: '_', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             true,
             { bold: true, italic: true, strikethrough: true },
             '_',
@@ -108,9 +159,20 @@ describe('MarkdownPlugin', () => {
 
     it('Feature disabled - should not trigger setFormat for italic', () => {
         runTest(
-            { rawEvent: { data: '_', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: 't', inputType: 'insertText' } } as EditorInputEvent,
-            { rawEvent: { data: '_', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '_', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: 't', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: '_', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             false,
             { bold: false, italic: false, strikethrough: false }
         );
@@ -118,12 +180,26 @@ describe('MarkdownPlugin', () => {
 
     it('Backspace - should not trigger setFormat for bold', () => {
         runTest(
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
-            {
-                rawEvent: { key: 'Backspace', defaultPrevented: false },
-                handledByEditFeature: false,
-            } as KeyDownEvent,
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { key: '*', defaultPrevented: false },
+                    handledByEditFeature: false,
+                    eventType: 'keyDown',
+                } as KeyDownEvent,
+                {
+                    rawEvent: { key: 'Backspace', defaultPrevented: false },
+                    handledByEditFeature: false,
+                    eventType: 'keyDown',
+                } as KeyDownEvent,
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             false,
             { bold: true, italic: false, strikethrough: false }
         );
@@ -131,12 +207,21 @@ describe('MarkdownPlugin', () => {
 
     it('Enter - should not trigger setFormat for bold', () => {
         runTest(
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
-            {
-                rawEvent: { key: 'Enter', defaultPrevented: false },
-                handledByEditFeature: false,
-            } as KeyDownEvent,
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { key: 'Enter', defaultPrevented: false },
+                    handledByEditFeature: false,
+                    eventType: 'keyDown',
+                } as KeyDownEvent,
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             false,
             { bold: true, italic: false, strikethrough: false }
         );
@@ -144,12 +229,26 @@ describe('MarkdownPlugin', () => {
 
     it('Space - should not trigger setFormat for bold', () => {
         runTest(
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
-            {
-                rawEvent: { key: ' ', defaultPrevented: false },
-                handledByEditFeature: false,
-            } as KeyDownEvent,
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { key: '*', defaultPrevented: false },
+                    handledByEditFeature: false,
+                    eventType: 'keyDown',
+                } as KeyDownEvent,
+                {
+                    rawEvent: { key: ' ', defaultPrevented: false },
+                    handledByEditFeature: false,
+                    eventType: 'keyDown',
+                } as KeyDownEvent,
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             false,
             { bold: true, italic: false, strikethrough: false }
         );
@@ -157,11 +256,20 @@ describe('MarkdownPlugin', () => {
 
     it('Event change - should not trigger setFormat for bold', () => {
         runTest(
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
-            {
-                source: 'Format',
-            } as ContentChangedEvent,
-            { rawEvent: { data: '*', inputType: 'insertText' } } as EditorInputEvent,
+            [
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    source: 'Format',
+                    eventType: 'contentChanged',
+                } as ContentChangedEvent,
+                {
+                    rawEvent: { data: '*', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
             false,
             { bold: true, italic: false, strikethrough: false }
         );
