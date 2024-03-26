@@ -198,9 +198,12 @@ describe('createContentModel with selection', () => {
     });
 
     it('Incorrect regular selection', () => {
+        const mockedRange = {
+            startContainer: null!,
+        } as any;
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
-            range: null!,
+            range: mockedRange,
         });
 
         createContentModel(core);
@@ -211,7 +214,7 @@ describe('createContentModel with selection', () => {
             ...originalContext,
             selection: {
                 type: 'range',
-                range: null!,
+                range: mockedRange,
             } as any,
         });
     });

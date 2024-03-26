@@ -5,6 +5,7 @@ import {
     setSelection,
 } from 'roosterjs-content-model-dom';
 import type {
+    CacheSelection,
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegment,
@@ -14,6 +15,7 @@ import type {
     ContentModelText,
     DomIndexer,
     DOMSelection,
+    RangeSelectionForCache,
     Selectable,
 } from 'roosterjs-content-model-types';
 
@@ -92,16 +94,16 @@ function onTable(tableElement: HTMLTableElement, table: ContentModelTable) {
 function reconcileSelection(
     model: ContentModelDocument,
     newSelection: DOMSelection,
-    oldSelection?: DOMSelection
+    oldSelection?: CacheSelection
 ): boolean {
     if (oldSelection) {
         if (
             oldSelection.type == 'range' &&
-            oldSelection.range.collapsed &&
-            isNodeOfType(oldSelection.range.startContainer, 'TEXT_NODE')
+            isCollapsed(oldSelection) &&
+            isNodeOfType(oldSelection.start.node, 'TEXT_NODE')
         ) {
-            if (isIndexedSegment(oldSelection.range.startContainer)) {
-                reconcileTextSelection(oldSelection.range.startContainer);
+            if (isIndexedSegment(oldSelection.start.node)) {
+                reconcileTextSelection(oldSelection.start.node);
             }
         } else {
             setSelection(model);
@@ -152,6 +154,12 @@ function reconcileSelection(
     }
 
     return false;
+}
+
+function isCollapsed(selection: RangeSelectionForCache): boolean {
+    const { start, end } = selection;
+
+    return start.node == end.node && start.offset == end.offset;
 }
 
 function reconcileNodeSelection(node: Node, offset: number): Selectable | undefined {
