@@ -15,6 +15,7 @@ export interface MarkdownOptions {
     strikethrough?: boolean;
     bold?: boolean;
     italic?: boolean;
+    code?: boolean;
 }
 
 /**
@@ -24,6 +25,7 @@ const DefaultOptions: Required<MarkdownOptions> = {
     strikethrough: true,
     bold: true,
     italic: true,
+    code: true,
 };
 
 /**
@@ -34,6 +36,7 @@ export class MarkdownPlugin implements EditorPlugin {
     private shouldBold = false;
     private shouldItalic = false;
     private shouldStrikethrough = false;
+    private shouldCode = false;
     private lastKeyTyped: string | null = null;
 
     /**
@@ -68,9 +71,7 @@ export class MarkdownPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
-        this.shouldBold = false;
-        this.shouldItalic = false;
-        this.shouldStrikethrough = false;
+        this.disableAllFeatures();
         this.lastKeyTyped = null;
     }
 
@@ -137,6 +138,16 @@ export class MarkdownPlugin implements EditorPlugin {
                         }
                     }
                     break;
+                case '`':
+                    if (this.options.code) {
+                        if (this.shouldCode) {
+                            setFormat(editor, '`', {} /* format */, { format: {} });
+                            this.shouldCode = false;
+                        } else {
+                            this.shouldCode = true;
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -146,9 +157,7 @@ export class MarkdownPlugin implements EditorPlugin {
         if (!event.handledByEditFeature && !rawEvent.defaultPrevented) {
             switch (rawEvent.key) {
                 case 'Enter':
-                    this.shouldBold = false;
-                    this.shouldItalic = false;
-                    this.shouldStrikethrough = false;
+                    this.disableAllFeatures();
                     this.lastKeyTyped = null;
                     break;
                 case 'Backspace':
@@ -159,6 +168,8 @@ export class MarkdownPlugin implements EditorPlugin {
                         this.shouldStrikethrough = false;
                     } else if (this.lastKeyTyped === '_' && this.shouldItalic) {
                         this.shouldItalic = false;
+                    } else if (this.lastKeyTyped === '`' && this.shouldCode) {
+                        this.shouldCode = false;
                     }
                     this.lastKeyTyped = null;
                     break;
@@ -171,9 +182,14 @@ export class MarkdownPlugin implements EditorPlugin {
 
     private handleContentChangedEvent(event: ContentChangedEvent) {
         if (event.source == 'Format') {
-            this.shouldBold = false;
-            this.shouldItalic = false;
-            this.shouldStrikethrough = false;
+            this.disableAllFeatures();
         }
+    }
+
+    private disableAllFeatures() {
+        this.shouldBold = false;
+        this.shouldItalic = false;
+        this.shouldStrikethrough = false;
+        this.shouldCode = false;
     }
 }

@@ -1,5 +1,6 @@
 import { createText, getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelCode,
     ContentModelSegmentFormat,
     ContentModelText,
     IEditor,
@@ -8,7 +9,12 @@ import type {
 /**
  * @internal
  */
-export function setFormat(editor: IEditor, character: string, format: ContentModelSegmentFormat) {
+export function setFormat(
+    editor: IEditor,
+    character: string,
+    format: ContentModelSegmentFormat,
+    code?: ContentModelCode
+) {
     editor.formatContentModel((model, context) => {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
             model,
@@ -75,6 +81,9 @@ export function setFormat(editor: IEditor, character: string, format: ContentMod
                                         ...paragraph.segments[i].format,
                                         ...format,
                                     };
+                                    if (code) {
+                                        segment.code = code;
+                                    }
                                 }
                             }
 
