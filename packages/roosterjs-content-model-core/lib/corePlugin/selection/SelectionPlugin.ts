@@ -382,13 +382,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         ;
                         col += step
                     ) {
-                        let tableCells = parsedTable ?? [];
-                        if (col < 0 || col >= tableCells[row].length) {
+                        if (col < 0 || col >= parsedTable[row].length) {
                             row += step;
                             if (row < 0) {
                                 this.selectBeforeOrAfterElement(this.editor, tableSel.table);
                                 break;
-                            } else if (row >= tableCells.length) {
+                            } else if (row >= parsedTable.length) {
                                 this.selectBeforeOrAfterElement(
                                     this.editor,
                                     tableSel.table,
@@ -396,9 +395,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                                 );
                                 break;
                             }
-                            col = revrse ? tableCells[row].length - 1 : 0;
+                            col = revrse ? parsedTable[row].length - 1 : 0;
                         }
-                        const cell = tableCells[row][col];
+                        const cell = parsedTable[row][col];
                         if (typeof cell != 'string') {
                             this.setRangeSelectionInTable(cell, 0, this.editor);
                             break;
