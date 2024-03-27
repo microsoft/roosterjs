@@ -228,7 +228,11 @@ export { EditorPlugin } from './editor/EditorPlugin';
 export { PluginWithState } from './editor/PluginWithState';
 export { ContextMenuProvider } from './editor/ContextMenuProvider';
 
-export { CachePluginState } from './pluginState/CachePluginState';
+export {
+    CachePluginState,
+    RangeSelectionForCache,
+    CacheSelection,
+} from './pluginState/CachePluginState';
 export { FormatPluginState, PendingFormat } from './pluginState/FormatPluginState';
 export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';

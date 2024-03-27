@@ -1,3 +1,4 @@
+import { updateCachedSelection } from '../../corePlugin/cache/updateCachedSelection';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -36,7 +37,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     );
 
     if (!core.lifecycle.shadowEditFragment) {
-        core.cache.cachedSelection = selection || undefined;
+        updateCachedSelection(core.cache, selection || undefined);
 
         if (!option?.ignoreSelection && selection) {
             core.api.setDOMSelection(core, selection);

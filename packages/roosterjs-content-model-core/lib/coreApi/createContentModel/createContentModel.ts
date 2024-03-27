@@ -1,3 +1,4 @@
+import { updateCachedSelection } from '../../corePlugin/cache/updateCachedSelection';
 import {
     cloneModel,
     createDomToModelContext,
@@ -46,7 +47,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 
         if (saveIndex) {
             core.cache.cachedModel = model;
-            core.cache.cachedSelection = selection;
+            updateCachedSelection(core.cache, selection);
         }
 
         return model;
