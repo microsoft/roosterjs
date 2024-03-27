@@ -5,6 +5,6 @@
     "legacyAdapter": "0.28.0",
     "overrides": {
         "roosterjs-content-model-core": "0.28.1",
-        "roosterjs-content-model-plugins": "0.28.1"
+        "roosterjs-content-model-plugins": "0.28.2"
     }
 }
