@@ -1,6 +1,7 @@
 import { areSameSelection } from './areSameSelection';
 import { createTextMutationObserver } from './textMutationObserver';
 import { domIndexerImpl } from './domIndexerImpl';
+import { updateCachedSelection } from './updateCachedSelection';
 import type {
     CachePluginState,
     IEditor,
@@ -102,7 +103,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
                 if (contentModel && this.state.domIndexer) {
                     this.state.cachedModel = contentModel;
-                    this.state.cachedSelection = selection;
+                    updateCachedSelection(this.state, selection);
                 } else {
                     this.invalidateCache();
                 }
@@ -154,7 +155,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             ) {
                 this.invalidateCache();
             } else {
-                this.state.cachedSelection = newRangeEx;
+                updateCachedSelection(this.state, newRangeEx);
             }
         } else {
             this.state.cachedSelection = cachedSelection;
