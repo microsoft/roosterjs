@@ -51,7 +51,7 @@ describe(ID, () => {
 
         paste(editor, clipboardData);
 
-        const model = editor.getContentModelCopy('connected');
+        const model = editor.getContentModelCopy('disconnected');
 
         expectEqual(model, {
             blockGroupType: 'Document',

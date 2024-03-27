@@ -130,11 +130,7 @@ describe('Editor', () => {
         const model1 = editor.getContentModelCopy('connected');
 
         expect(model1).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
-            },
-        });
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
 
         const model2 = editor.getContentModelCopy('reduced');
 
@@ -208,7 +204,11 @@ describe('Editor', () => {
         expect(cloneNodeSpy).toHaveBeenCalledWith(true);
 
         expect(model).toBe(mockedClonedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, undefined, undefined);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
+            processorOverride: {
+                table: tableProcessor,
+            },
+        });
         expect(transformColorSpy).not.toHaveBeenCalled();
 
         // Clone in dark mode
@@ -217,7 +217,11 @@ describe('Editor', () => {
         expect(cloneNodeSpy).toHaveBeenCalledWith(true);
 
         expect(model).toBe(mockedClonedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, undefined, undefined);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
+            processorOverride: {
+                table: tableProcessor,
+            },
+        });
         expect(transformColorSpy).toHaveBeenCalledWith(
             clonedNode,
             true,
@@ -354,14 +358,20 @@ describe('Editor', () => {
 
         editor.formatContentModel(mockedFormatter);
 
-        expect(formatContentModelSpy).toHaveBeenCalledWith(mockedCore, mockedFormatter, undefined);
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            mockedCore,
+            mockedFormatter,
+            undefined,
+            undefined
+        );
 
         editor.formatContentModel(mockedFormatter, mockedOptions);
 
         expect(formatContentModelSpy).toHaveBeenCalledWith(
             mockedCore,
             mockedFormatter,
-            mockedOptions
+            mockedOptions,
+            undefined
         );
 
         editor.dispose();

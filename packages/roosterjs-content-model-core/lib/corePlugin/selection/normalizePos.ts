@@ -1,10 +1,10 @@
 import { isNodeOfType } from 'roosterjs-content-model-dom';
-import type { Pos } from '../../coreApi/restoreUndoSnapshot/getPositionFromPath';
+import type { DOMInsertPoint } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function normalizePos(node: Node, offset: number): Pos {
+export function normalizePos(node: Node, offset: number): DOMInsertPoint {
     const len = isNodeOfType(node, 'TEXT_NODE')
         ? node.nodeValue?.length ?? 0
         : node.childNodes.length;
