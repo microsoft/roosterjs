@@ -1,5 +1,4 @@
-import { clearSelectedCells } from 'roosterjs-content-model-api/lib/modelApi/table/clearSelectedCells';
-import { insertTableRow } from 'roosterjs-content-model-api';
+import { clearSelectedCells, insertTableRow } from 'roosterjs-content-model-api';
 import {
     createSelectionMarker,
     getFirstSelectedTable,
