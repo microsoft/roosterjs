@@ -208,7 +208,8 @@ describe('insertEntity', () => {
             'focus',
             true,
             true,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();

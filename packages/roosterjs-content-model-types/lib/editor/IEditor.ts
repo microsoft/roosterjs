@@ -1,3 +1,4 @@
+import type { DomToModelOption } from '../context/DomToModelOption';
 import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
 import type { PluginEventType } from '../event/PluginEventType';
@@ -72,7 +73,11 @@ export interface IEditor {
      * @param formatter Formatter function, see ContentModelFormatter
      * @param options More options, see FormatContentModelOptions
      */
-    formatContentModel(formatter: ContentModelFormatter, options?: FormatContentModelOptions): void;
+    formatContentModel(
+        formatter: ContentModelFormatter,
+        options?: FormatContentModelOptions,
+        domToModelOption?: DomToModelOption
+    ): void;
 
     /**
      * Get pending format of editor if any, or return null

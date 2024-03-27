@@ -1,15 +1,10 @@
-import { addDecorators } from '../../modelApi/common/addDecorators';
-import { addSegment } from '../../modelApi/common/addSegment';
 import { addSelectionMarker } from '../utils/addSelectionMarker';
-import { createText } from '../../modelApi/creators/createText';
+import { addTextSegment } from '../../modelApi/common/addTextSegment';
 import { ensureParagraph } from '../../modelApi/common/ensureParagraph';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
-import { hasSpacesOnly } from '../../modelApi/common/hasSpacesOnly';
-import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
 import { stackFormat } from '../utils/stackFormat';
 import type {
     ContentModelBlockGroup,
-    ContentModelParagraph,
     ContentModelText,
     DomToModelContext,
     ElementProcessor,
@@ -79,33 +74,4 @@ function internalTextProcessor(
         paragraph,
         segments.filter((x): x is ContentModelText => !!x)
     );
-}
-
-function addTextSegment(
-    group: ContentModelBlockGroup,
-    text: string,
-    paragraph: ContentModelParagraph,
-    context: DomToModelContext
-): ContentModelText | undefined {
-    let textModel: ContentModelText | undefined;
-
-    if (text) {
-        if (
-            !hasSpacesOnly(text) ||
-            (paragraph?.segments.length ?? 0) > 0 ||
-            isWhiteSpacePreserved(paragraph?.format.whiteSpace)
-        ) {
-            textModel = createText(text, context.segmentFormat);
-
-            if (context.isInSelection) {
-                textModel.isSelected = true;
-            }
-
-            addDecorators(textModel, context);
-
-            addSegment(group, textModel, context.blockFormat);
-        }
-    }
-
-    return textModel;
 }

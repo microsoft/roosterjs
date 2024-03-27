@@ -128,6 +128,7 @@ export {
     ImageSelection,
     RangeSelection,
     TableSelection,
+    DOMInsertPoint,
 } from './selection/DOMSelection';
 export { InsertPoint } from './selection/InsertPoint';
 export { TableSelectionContext } from './selection/TableSelectionContext';

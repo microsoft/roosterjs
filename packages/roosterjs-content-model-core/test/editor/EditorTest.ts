@@ -3,7 +3,7 @@ import * as createEditorCore from '../../lib/editor/core/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
 import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
-import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
 import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
 
@@ -130,11 +130,7 @@ describe('Editor', () => {
         const model1 = editor.getContentModelCopy('connected');
 
         expect(model1).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
-            },
-        });
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
 
         const model2 = editor.getContentModelCopy('reduced');
 

@@ -2,7 +2,6 @@ import { createEditorCore } from './core/createEditorCore';
 import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import {
     createEmptyModel,
-    tableProcessor,
     ChangeSource,
     cloneModel,
     transformColor,
@@ -29,6 +28,7 @@ import type {
     Rect,
     EntityState,
     CachedElementHandler,
+    DomToModelOption,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -102,11 +102,7 @@ export class Editor implements IEditor {
 
         switch (mode) {
             case 'connected':
-                return core.api.createContentModel(core, {
-                    processorOverride: {
-                        table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
-                    },
-                });
+                return core.api.createContentModel(core);
 
             case 'disconnected':
             case 'clean':
@@ -175,11 +171,12 @@ export class Editor implements IEditor {
      */
     formatContentModel(
         formatter: ContentModelFormatter,
-        options?: FormatContentModelOptions
+        options?: FormatContentModelOptions,
+        domToModelOptions?: DomToModelOption
     ): void {
         const core = this.getCore();
 
-        core.api.formatContentModel(core, formatter, options);
+        core.api.formatContentModel(core, formatter, options, domToModelOptions);
     }
 
     /**
