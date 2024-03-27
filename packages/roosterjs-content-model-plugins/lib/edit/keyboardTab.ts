@@ -49,7 +49,7 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
  * - If it is a paragraph, call handleTabOnParagraph to handle the tab key.
  * - If it is a list item, call handleTabOnList to handle the tab key.
  */
-export function handleTab(model: ContentModelDocument, rawEvent: KeyboardEvent, editor: IEditor) {
+function handleTab(model: ContentModelDocument, rawEvent: KeyboardEvent, editor: IEditor) {
     const blocks = getOperationalBlocks<ContentModelListItem | ContentModelTableCell>(
         model,
         ['ListItem', 'TableCell'],
