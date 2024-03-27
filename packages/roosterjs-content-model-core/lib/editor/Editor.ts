@@ -111,16 +111,9 @@ export class Editor implements IEditor {
                 });
 
             case 'disconnected':
-                return cloneModel(
-                    core.api.createContentModel(
-                        core,
-                        undefined /*option*/,
-                        undefined /*selectionOverride*/
-                    ),
-                    {
-                        includeCachedElement: this.cloneOptionCallback,
-                    }
-                );
+                return cloneModel(core.api.createContentModel(core), {
+                    includeCachedElement: this.cloneOptionCallback,
+                });
 
             case 'clean':
                 const domToModelContext = createDomToModelContextWithConfig(
