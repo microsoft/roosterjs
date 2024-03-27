@@ -1,16 +1,42 @@
 import { createText } from 'roosterjs-content-model-dom';
-import type { ContentModelSegmentFormat, ContentModelText } from 'roosterjs-content-model-types';
+import type { ContentModelParagraph, ContentModelText } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function splitTextSegment(
-    text: string,
+    textSegment: ContentModelText,
+    parent: ContentModelParagraph,
     start: number,
-    end?: number,
-    format?: ContentModelSegmentFormat
+    end: number
 ): ContentModelText {
-    const newText = text.substring(start, end);
-    const newSegment = createText(newText, format);
-    return newSegment;
+    const text = textSegment.text;
+    const index = parent.segments.indexOf(textSegment);
+    const textBefore = createText(
+        text.substring(0, start),
+        textSegment.format,
+        textSegment.link,
+        textSegment.code
+    );
+    const middleText = createText(
+        text.substring(start, end),
+        textSegment.format,
+        textSegment.link,
+        textSegment.code
+    );
+    const textAfter = createText(
+        text.substring(end),
+        textSegment.format,
+        textSegment.link,
+        textSegment.code
+    );
+    textBefore.isSelected = textSegment.isSelected;
+    middleText.isSelected = textSegment.isSelected;
+    textAfter.isSelected = textSegment.isSelected;
+
+    parent.segments.splice(index, 1, textBefore);
+    parent.segments.splice(index + 1, 0, middleText);
+    parent.segments.splice(index + 2, 0, textAfter);
+
+    return middleText;
 }

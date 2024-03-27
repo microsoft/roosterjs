@@ -1,29 +1,100 @@
-import { ContentModelSegmentFormat, ContentModelText } from 'roosterjs-content-model-types';
 import { splitTextSegment } from '../../lib/pluginUtils/splitTextSegment';
+import {
+    ContentModelParagraph,
+    ContentModelSegmentFormat,
+    ContentModelText,
+} from 'roosterjs-content-model-types';
 
 describe('splitTextSegment', () => {
     function runTest(
-        text: string,
+        textSegment: ContentModelText,
+        parent: ContentModelParagraph,
         start: number,
-        expectedResult: ContentModelText,
-        end?: number | undefined,
-        format?: ContentModelSegmentFormat | undefined
+        end: number,
+        expectedResult: ContentModelText
     ) {
-        const result = splitTextSegment(text, start, end, format);
+        const result = splitTextSegment(textSegment, parent, start, end);
         expect(result).toEqual(expectedResult);
     }
 
-    it('splitTextSegment with end', () => {
-        runTest('test', 0, { text: 'te', format: {}, segmentType: 'Text' }, 2, undefined);
+    it('splitTextSegment', () => {
+        const textSegment: ContentModelText = {
+            text: 'test test',
+            format: {},
+            segmentType: 'Text',
+        };
+        const parent: ContentModelParagraph = {
+            segments: [textSegment],
+            blockType: 'Paragraph',
+            format: {},
+        };
+        runTest(textSegment, parent, 0, 2, {
+            text: 'te',
+            format: {},
+            segmentType: 'Text',
+            isSelected: undefined,
+        });
     });
 
-    it('splitTextSegment without end', () => {
-        runTest('test', 2, { text: 'st', format: {}, segmentType: 'Text' });
+    it('splitTextSegment with selection', () => {
+        const textSegment: ContentModelText = {
+            text: 'test test',
+            format: {},
+            segmentType: 'Text',
+            isSelected: true,
+        };
+        const parent: ContentModelParagraph = {
+            segments: [textSegment],
+            blockType: 'Paragraph',
+            format: {},
+        };
+        runTest(textSegment, parent, 0, 2, {
+            text: 'te',
+            format: {},
+            segmentType: 'Text',
+            isSelected: true,
+        });
     });
 
-    it('splitTextSegment with format', () => {
-        runTest('test', 0, { text: 'te', format: { italic: true }, segmentType: 'Text' }, 2, {
-            italic: true,
+    it('splitTextSegment with decorators', () => {
+        const textSegment: ContentModelText = {
+            text: 'test test',
+            format: {},
+            segmentType: 'Text',
+            isSelected: true,
+            link: {
+                format: {
+                    href: 'test',
+                },
+                dataset: {},
+            },
+            code: {
+                format: {
+                    fontFamily: 'Consolas',
+                },
+            },
+        };
+        const parent: ContentModelParagraph = {
+            segments: [textSegment],
+            blockType: 'Paragraph',
+            format: {},
+        };
+        runTest(textSegment, parent, 0, 2, {
+            text: 'te',
+            format: {},
+            segmentType: 'Text',
+            isSelected: true,
+            link: {
+                format: {
+                    href: 'test',
+                },
+                dataset: {},
+            },
+            code: {
+                format: {
+                    fontFamily: 'Consolas',
+                },
+            },
         });
     });
 });

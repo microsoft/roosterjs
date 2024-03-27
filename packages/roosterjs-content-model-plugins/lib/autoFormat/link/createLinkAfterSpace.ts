@@ -1,4 +1,4 @@
-import { createText, getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { matchLink } from 'roosterjs-content-model-api';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 import type { IEditor } from 'roosterjs-content-model-types';
@@ -30,29 +30,19 @@ export function createLinkAfterSpace(editor: IEditor) {
                     const url = link?.trim();
 
                     if (url && link && matchLink(url)) {
-                        const textBefore = splitTextSegment(
-                            textSegment.text,
-                            0,
+                        const linkSegment = splitTextSegment(
+                            textSegment,
+                            paragraph,
                             textSegment.text.length - link.trimLeft().length,
-                            marker.format
+                            textSegment.text.trimRight().length
                         );
-
-                        const spaceTextAfter = splitTextSegment(
-                            textSegment.text,
-                            textSegment.text.trimRight().length,
-                            undefined,
-                            marker.format
-                        );
-                        const linkSegment = createText(url, marker.format, {
+                        linkSegment.link = {
                             format: {
                                 href: url,
                                 underline: true,
                             },
                             dataset: {},
-                        });
-                        paragraph.segments.splice(markerIndex - 1, 1, textBefore);
-                        paragraph.segments.splice(markerIndex, 0, linkSegment);
-                        paragraph.segments.splice(markerIndex + 1, 0, spaceTextAfter);
+                        };
 
                         context.canUndoByBackspace = true;
 

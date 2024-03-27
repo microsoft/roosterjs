@@ -110,11 +110,13 @@ describe('createLinkAfterSpace', () => {
                             segmentType: 'Text',
                             text: '',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'Text',
                             text: 'www.bing.com',
                             format: {},
+                            isSelected: undefined,
                             link: {
                                 format: {
                                     href: 'www.bing.com',
@@ -127,6 +129,7 @@ describe('createLinkAfterSpace', () => {
                             segmentType: 'Text',
                             text: '',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -209,11 +212,13 @@ describe('createLinkAfterSpace', () => {
                             segmentType: 'Text',
                             text: 'this is the link ',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'Text',
                             text: 'www.bing.com',
                             format: {},
+                            isSelected: undefined,
                             link: {
                                 format: {
                                     underline: true,
@@ -226,6 +231,7 @@ describe('createLinkAfterSpace', () => {
                             segmentType: 'Text',
                             text: '',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -325,11 +331,13 @@ describe('createLinkAfterSpace', () => {
                             segmentType: 'Text',
                             text: ' ',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'Text',
                             text: 'www.bing.com',
                             format: {},
+                            isSelected: undefined,
                             link: {
                                 format: {
                                     href: 'www.bing.com',
@@ -342,6 +350,7 @@ describe('createLinkAfterSpace', () => {
                             segmentType: 'Text',
                             text: '',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
