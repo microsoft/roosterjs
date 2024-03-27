@@ -3,7 +3,7 @@ import { setModelIndentation } from 'roosterjs-content-model-api';
 import type { ContentModelDocument, ContentModelTable } from 'roosterjs-content-model-types';
 
 /**
- * 1. When the whole table is selected, indent or outdent the whole table with setModelIndentation.
+ * When the whole table is selected, indent or outdent the whole table with setModelIndentation.
  * @internal
  */
 export function handleTabOnTable(model: ContentModelDocument, rawEvent: KeyboardEvent) {
