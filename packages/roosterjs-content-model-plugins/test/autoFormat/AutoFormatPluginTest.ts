@@ -218,7 +218,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         });
 
         function runTest(
-            event: KeyDownEvent,
+            event: EditorInputEvent,
             shouldCallTrigger: boolean,
             options?: {
                 autoLink: boolean;
@@ -237,17 +237,17 @@ describe('Content Model Auto Format Plugin Test', () => {
         }
 
         it('should call createLinkAfterSpace', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', preventDefault: () => {} } as any,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
             runTest(event, true);
         });
 
         it('should not call createLinkAfterSpace - disable options', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', preventDefault: () => {} } as any,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
             runTest(event, false, {
                 autoLink: false,
@@ -255,9 +255,13 @@ describe('Content Model Auto Format Plugin Test', () => {
         });
 
         it('should not call createLinkAfterSpace - not backspace', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: 'Backspace', preventDefault: () => {} } as any,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: 'Backspace',
+                    preventDefault: () => {},
+                    inputType: 'insertText',
+                } as any,
             };
             runTest(event, false);
         });
