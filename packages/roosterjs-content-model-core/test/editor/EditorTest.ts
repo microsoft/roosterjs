@@ -246,11 +246,21 @@ describe('Editor', () => {
         const createEditorContextSpy = jasmine
             .createSpy('createEditorContext')
             .and.returnValue(mockedEditorContext);
+        const resetSpy = jasmine.createSpy('reset');
         const mockedCore = {
             logicalRoot: 'LOGICAL',
             physicalRoot: 'PHYSICAL',
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            lifecycle: {
+                isDarkMode: false,
+            },
             api: {
                 createEditorContext: createEditorContextSpy,
+                setContentModel: setContentModelSpy,
             },
             environment: {
                 domToModelSettings: {
