@@ -16,6 +16,7 @@ const initialState: OptionState = {
         emoji: true,
         pasteOption: true,
         sampleEntity: true,
+        markdown: true,
 
         // Legacy plugins
         contentEdit: false,

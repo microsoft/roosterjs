@@ -47,6 +47,7 @@ import {
 import {
     AutoFormatPlugin,
     EditPlugin,
+    MarkdownPlugin,
     PastePlugin,
     ShortcutPlugin,
     TableEditPlugin,
@@ -481,6 +482,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
+            pluginList.markdown && new MarkdownPlugin(),
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),
