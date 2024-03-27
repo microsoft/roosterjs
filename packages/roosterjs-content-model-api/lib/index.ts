@@ -42,6 +42,7 @@ export { toggleCode } from './publicApi/segment/toggleCode';
 export { insertEntity } from './publicApi/entity/insertEntity';
 export { insertTableRow } from './modelApi/table/insertTableRow';
 export { insertTableColumn } from './modelApi/table/insertTableColumn';
+export { clearSelectedCells } from './modelApi/table/clearSelectedCells';
 
 export { formatTableWithContentModel } from './publicApi/utils/formatTableWithContentModel';
 export { formatImageWithContentModel } from './publicApi/utils/formatImageWithContentModel';
