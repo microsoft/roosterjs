@@ -13,9 +13,9 @@ import type {
     ContentModelDocument,
     ContentModelEntity,
     ContentModelParagraph,
-    DeleteSelectionResult,
     FormatContentModelContext,
     InsertEntityPosition,
+    InsertPoint,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -27,11 +27,11 @@ export function insertEntityModel(
     position: InsertEntityPosition,
     isBlock: boolean,
     focusAfterEntity?: boolean,
-    context?: FormatContentModelContext
+    context?: FormatContentModelContext,
+    insertPointOverride?: InsertPoint
 ) {
     let blockParent: ContentModelBlockGroup | undefined;
     let blockIndex = -1;
-    let deleteResult: DeleteSelectionResult;
 
     if (position == 'begin' || position == 'end') {
         blockParent = model;
@@ -40,36 +40,48 @@ export function insertEntityModel(
         if (!isBlock) {
             Object.assign(entityModel.format, model.format);
         }
-    } else if ((deleteResult = deleteSelection(model, [], context)).insertPoint) {
-        const { marker, paragraph, path } = deleteResult.insertPoint;
+    } else {
+        let insertPoint: InsertPoint | null = null;
 
-        if (deleteResult.deleteResult == 'range') {
-            normalizeContentModel(model);
+        if (insertPointOverride) {
+            insertPoint = insertPointOverride;
+        } else {
+            const deleteResult = deleteSelection(model, [], context);
+
+            insertPoint = deleteResult.insertPoint;
+
+            if (deleteResult.deleteResult == 'range') {
+                normalizeContentModel(model);
+            }
         }
 
-        if (!isBlock) {
-            const index = paragraph.segments.indexOf(marker);
+        if (insertPoint) {
+            const { marker, paragraph, path } = insertPoint;
 
-            Object.assign(entityModel.format, marker.format);
+            if (!isBlock) {
+                const index = paragraph.segments.indexOf(marker);
 
-            if (index >= 0) {
-                paragraph.segments.splice(focusAfterEntity ? index : index + 1, 0, entityModel);
+                Object.assign(entityModel.format, marker.format);
+
+                if (index >= 0) {
+                    paragraph.segments.splice(focusAfterEntity ? index : index + 1, 0, entityModel);
+                }
+            } else {
+                const pathIndex =
+                    position == 'root'
+                        ? getClosestAncestorBlockGroupIndex(path, ['TableCell', 'Document'])
+                        : 0;
+                blockParent = path[pathIndex];
+                const child = path[pathIndex - 1];
+                const directChild: ContentModelBlock =
+                    child?.blockGroupType == 'FormatContainer' ||
+                    child?.blockGroupType == 'General' ||
+                    child?.blockGroupType == 'ListItem'
+                        ? child
+                        : paragraph;
+                const childIndex = blockParent.blocks.indexOf(directChild);
+                blockIndex = childIndex >= 0 ? childIndex + 1 : -1;
             }
-        } else {
-            const pathIndex =
-                position == 'root'
-                    ? getClosestAncestorBlockGroupIndex(path, ['TableCell', 'Document'])
-                    : 0;
-            blockParent = path[pathIndex];
-            const child = path[pathIndex - 1];
-            const directChild: ContentModelBlock =
-                child?.blockGroupType == 'FormatContainer' ||
-                child?.blockGroupType == 'General' ||
-                child?.blockGroupType == 'ListItem'
-                    ? child
-                    : paragraph;
-            const childIndex = blockParent.blocks.indexOf(directChild);
-            blockIndex = childIndex >= 0 ? childIndex + 1 : -1;
         }
     }
 

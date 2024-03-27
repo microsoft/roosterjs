@@ -13,6 +13,7 @@ export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelecti
 export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { isBlockElement } from './domToModel/utils/isBlockElement';
+export { buildSelectionMarker } from './domToModel/utils/buildSelectionMarker';
 
 export { updateMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
 export { isNodeOfType } from './domUtils/isNodeOfType';
@@ -55,6 +56,7 @@ export { createEmptyModel } from './modelApi/creators/createEmptyModel';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
+export { addTextSegment } from './modelApi/common/addTextSegment';
 export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';

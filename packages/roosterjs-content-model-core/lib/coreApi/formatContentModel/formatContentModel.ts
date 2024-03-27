@@ -18,10 +18,15 @@ import type {
  * @param formatter Formatter function, see ContentModelFormatter
  * @param options More options, see FormatContentModelOptions
  */
-export const formatContentModel: FormatContentModel = (core, formatter, options) => {
+export const formatContentModel: FormatContentModel = (
+    core,
+    formatter,
+    options,
+    domToModelOptions
+) => {
     const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
         options || {};
-    const model = core.api.createContentModel(core, undefined /*option*/, selectionOverride);
+    const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
         newEntities: [],
         deletedEntities: [],

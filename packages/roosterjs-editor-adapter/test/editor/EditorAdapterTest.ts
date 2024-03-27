@@ -149,7 +149,7 @@ describe('EditorAdapter', () => {
 
         editor.formatContentModel(callback, options);
 
-        expect(formatContentModelSpy).toHaveBeenCalledWith(core, callback, options);
+        expect(formatContentModelSpy).toHaveBeenCalledWith(core, callback, options, undefined);
     });
 
     it('default format', () => {

@@ -91,7 +91,8 @@ export type SetLogicalRoot = (core: EditorCore, logicalRoot: HTMLDivElement | nu
 export type FormatContentModel = (
     core: EditorCore,
     formatter: ContentModelFormatter,
-    options?: FormatContentModelOptions
+    options?: FormatContentModelOptions,
+    domToModelOptions?: DomToModelOption
 ) => void;
 
 /**

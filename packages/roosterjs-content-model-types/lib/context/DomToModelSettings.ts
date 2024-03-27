@@ -86,6 +86,12 @@ export type ElementProcessorMap = {
         '#text': ElementProcessor<Text>;
 
         /**
+         * Processor for text node with selection.
+         * This is an internal processor used by #text processor
+         */
+        textWithSelection: ElementProcessor<Text>;
+
+        /**
          * Processor for entity
          */
         entity: ElementProcessor<HTMLElement>;
