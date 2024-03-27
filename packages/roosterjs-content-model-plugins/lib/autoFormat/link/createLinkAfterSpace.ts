@@ -1,5 +1,6 @@
 import { createText, getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { matchLink } from 'roosterjs-content-model-api';
+import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -11,35 +12,52 @@ export function createLinkAfterSpace(editor: IEditor) {
             model,
             false /* includingFormatHolder */
         );
-        if (selectedSegmentsAndParagraphs[0] && selectedSegmentsAndParagraphs[0][1]) {
-            const length = selectedSegmentsAndParagraphs[0][1].segments.length;
-            const marker = selectedSegmentsAndParagraphs[0][1].segments[length - 1];
-            const textSegment = selectedSegmentsAndParagraphs[0][1].segments[length - 2];
+        if (selectedSegmentsAndParagraphs.length > 0 && selectedSegmentsAndParagraphs[0][1]) {
+            const markerIndex = selectedSegmentsAndParagraphs[0][1].segments.findIndex(
+                segment => segment.segmentType == 'SelectionMarker'
+            );
+            const paragraph = selectedSegmentsAndParagraphs[0][1];
+            if (markerIndex > 0) {
+                const textSegment = paragraph.segments[markerIndex - 1];
+                const marker = paragraph.segments[markerIndex];
+                if (
+                    marker.segmentType == 'SelectionMarker' &&
+                    textSegment &&
+                    textSegment.segmentType == 'Text' &&
+                    !textSegment.link
+                ) {
+                    const link = textSegment.text.split(' ').pop();
+                    const url = link?.trim();
 
-            if (
-                marker.segmentType == 'SelectionMarker' &&
-                textSegment.segmentType == 'Text' &&
-                !textSegment.link
-            ) {
-                const link = textSegment.text.split(' ').pop();
-                const url = link?.trimRight();
-                if (url && link && matchLink(url)) {
-                    textSegment.text = textSegment.text.replace(link, '');
-                    const linkSegment = createText(url, marker.format, {
-                        format: {
-                            href: url,
-                            underline: true,
-                        },
-                        dataset: {},
-                    });
+                    if (url && link && matchLink(url)) {
+                        const textBefore = splitTextSegment(
+                            textSegment.text,
+                            0,
+                            textSegment.text.length - link.trimLeft().length,
+                            marker.format
+                        );
 
-                    selectedSegmentsAndParagraphs[0][1].segments.splice(length - 1, 0, linkSegment);
-                    const spaceText = createText(link.substring(url.length), marker.format);
-                    selectedSegmentsAndParagraphs[0][1].segments.splice(length, 0, spaceText);
+                        const spaceTextAfter = splitTextSegment(
+                            textSegment.text,
+                            textSegment.text.trimRight().length,
+                            undefined,
+                            marker.format
+                        );
+                        const linkSegment = createText(url, marker.format, {
+                            format: {
+                                href: url,
+                                underline: true,
+                            },
+                            dataset: {},
+                        });
+                        paragraph.segments.splice(markerIndex - 1, 1, textBefore);
+                        paragraph.segments.splice(markerIndex, 0, linkSegment);
+                        paragraph.segments.splice(markerIndex + 1, 0, spaceTextAfter);
 
-                    context.canUndoByBackspace = true;
+                        context.canUndoByBackspace = true;
 
-                    return true;
+                        return true;
+                    }
                 }
             }
         }
