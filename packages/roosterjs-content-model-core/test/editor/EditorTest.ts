@@ -350,14 +350,20 @@ describe('Editor', () => {
 
         editor.formatContentModel(mockedFormatter);
 
-        expect(formatContentModelSpy).toHaveBeenCalledWith(mockedCore, mockedFormatter, undefined);
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            mockedCore,
+            mockedFormatter,
+            undefined,
+            undefined
+        );
 
         editor.formatContentModel(mockedFormatter, mockedOptions);
 
         expect(formatContentModelSpy).toHaveBeenCalledWith(
             mockedCore,
             mockedFormatter,
-            mockedOptions
+            mockedOptions,
+            undefined
         );
 
         editor.dispose();

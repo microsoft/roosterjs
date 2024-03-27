@@ -7,6 +7,14 @@ import type {
     DomToModelContext,
 } from 'roosterjs-content-model-types';
 
+/**
+ * Build a new selection marker with correct format according to its parent paragraph
+ * @param group The BlockGroup that paragraph belongs to
+ * @param context Current DOM to Model context
+ * @param container @optional Container Node, used for retrieving pending format
+ * @param offset @optional Container offset, used for retrieving pending format
+ * @returns A new selection marker
+ */
 export function buildSelectionMarker(
     group: ContentModelBlockGroup,
     context: DomToModelContext,
