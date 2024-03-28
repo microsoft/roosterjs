@@ -34,8 +34,8 @@ export function addSelectionMarker(
 
     const pendingFormat =
         context.pendingFormat &&
-        context.pendingFormat.posContainer === container &&
-        context.pendingFormat.posOffset === offset
+        context.pendingFormat.insertPoint.node === container &&
+        context.pendingFormat.insertPoint.offset === offset
             ? context.pendingFormat.format
             : undefined;
     const segmentFormat = {

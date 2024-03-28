@@ -583,8 +583,10 @@ describe('formatContentModel', () => {
         it('Has pending format, callback returns true, preserve pending format', () => {
             core.format.pendingFormat = {
                 format: mockedFormat1,
-                posContainer: mockedStartContainer1,
-                posOffset: mockedStartOffset1,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
             };
 
             formatContentModel(core, (model, context) => {
@@ -594,16 +596,20 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat1,
-                posContainer: mockedStartContainer2,
-                posOffset: mockedStartOffset2,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
             } as any);
         });
 
         it('Has pending format, callback returns false, preserve pending format', () => {
             core.format.pendingFormat = {
                 format: mockedFormat1,
-                posContainer: mockedStartContainer1,
-                posOffset: mockedStartOffset1,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
             };
 
             formatContentModel(core, (model, context) => {
@@ -613,8 +619,10 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat1,
-                posContainer: mockedStartContainer2,
-                posOffset: mockedStartOffset2,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
             } as any);
         });
 
@@ -626,8 +634,10 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
-                posContainer: mockedStartContainer2,
-                posOffset: mockedStartOffset2,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
             });
         });
 
@@ -639,16 +649,20 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
-                posContainer: mockedStartContainer2,
-                posOffset: mockedStartOffset2,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
             });
         });
 
         it('Has pending format, callback returns true, new format', () => {
             core.format.pendingFormat = {
                 format: mockedFormat1,
-                posContainer: mockedStartContainer1,
-                posOffset: mockedStartOffset1,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
             };
 
             formatContentModel(core, (model, context) => {
@@ -658,16 +672,20 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
-                posContainer: mockedStartContainer2,
-                posOffset: mockedStartOffset2,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
             });
         });
 
         it('Has pending format, callback returns false, new format', () => {
             core.format.pendingFormat = {
                 format: mockedFormat1,
-                posContainer: mockedStartContainer1,
-                posOffset: mockedStartOffset1,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
             };
 
             formatContentModel(core, (model, context) => {
@@ -677,16 +695,20 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
-                posContainer: mockedStartContainer2,
-                posOffset: mockedStartOffset2,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
             });
         });
 
         it('Has pending format, callback returns false, preserve format, selection is not collapsed', () => {
             core.format.pendingFormat = {
                 format: mockedFormat1,
-                posContainer: mockedStartContainer1,
-                posOffset: mockedStartOffset1,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
             };
 
             core.api.getDOMSelection = () =>
@@ -706,8 +728,10 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat1,
-                posContainer: mockedStartContainer1,
-                posOffset: mockedStartOffset1,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
             });
         });
     });
@@ -809,8 +833,10 @@ describe('formatContentModel', () => {
             expect(core.undo).toEqual({
                 isNested: false,
                 snapshotsManager: {},
-                posContainer: mockedContainer,
-                posOffset: mockedOffset,
+                autoCompleteInsertPoint: {
+                    node: mockedContainer,
+                    offset: mockedOffset,
+                },
             } as any);
         });
 

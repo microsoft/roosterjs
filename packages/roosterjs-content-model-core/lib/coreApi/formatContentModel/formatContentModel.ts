@@ -71,8 +71,10 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             core.api.triggerEvent(core, eventData, true /*broadcast*/);
 
             if (canUndoByBackspace && selection?.type == 'range') {
-                core.undo.posContainer = selection.range.startContainer;
-                core.undo.posOffset = selection.range.startOffset;
+                core.undo.autoCompleteInsertPoint = {
+                    node: selection.range.startContainer,
+                    offset: selection.range.startOffset,
+                };
             }
 
             if (shouldAddSnapshot) {
@@ -123,8 +125,10 @@ function handlePendingFormat(
     if (pendingFormat && selection?.type == 'range' && selection.range.collapsed) {
         core.format.pendingFormat = {
             format: { ...pendingFormat },
-            posContainer: selection.range.startContainer,
-            posOffset: selection.range.startOffset,
+            insertPoint: {
+                node: selection.range.startContainer,
+                offset: selection.range.startOffset,
+            },
         };
     }
 }
