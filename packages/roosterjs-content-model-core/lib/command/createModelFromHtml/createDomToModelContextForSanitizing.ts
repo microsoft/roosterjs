@@ -30,7 +30,7 @@ export function createDomToModelContextForSanitizing(
     document: Document,
     defaultFormat?: ContentModelSegmentFormat,
     defaultOption?: DomToModelOption,
-    additionalSanitizingOption?: DomToModelOptionForSanitizing
+    additionalSanitizingOption?: Partial<DomToModelOptionForSanitizing>
 ): DomToModelContext {
     const sanitizingOption: DomToModelOptionForSanitizing = {
         ...DefaultSanitizingOption,
