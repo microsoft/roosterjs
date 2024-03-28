@@ -6,6 +6,8 @@ import {
     ChangeSource,
     cloneModel,
     transformColor,
+    createDomToModelContextWithConfig,
+    domToContentModel,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
@@ -109,17 +111,18 @@ export class Editor implements IEditor {
                 });
 
             case 'disconnected':
+                return cloneModel(core.api.createContentModel(core), {
+                    includeCachedElement: this.cloneOptionCallback,
+                });
+
             case 'clean':
-                return cloneModel(
-                    core.api.createContentModel(
-                        core,
-                        undefined /*option*/,
-                        mode == 'clean' ? 'none' : undefined /*selectionOverride*/
-                    ),
-                    {
-                        includeCachedElement: this.cloneOptionCallback,
-                    }
+                const domToModelContext = createDomToModelContextWithConfig(
+                    core.environment.domToModelSettings.calculated,
+                    core.api.createEditorContext(core, false /*saveIndex*/)
                 );
+
+                return domToContentModel(core.physicalRoot, domToModelContext);
+
             case 'reduced':
                 return core.api.createContentModel(core, {
                     processorOverride: {

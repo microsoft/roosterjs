@@ -1,3 +1,4 @@
+import type { CacheSelection } from '../pluginState/CachePluginState';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelParagraph } from '../block/ContentModelParagraph';
 import type { ContentModelSegment } from '../segment/ContentModelSegment';
@@ -44,6 +45,6 @@ export interface DomIndexer {
     reconcileSelection: (
         model: ContentModelDocument,
         newSelection: DOMSelection,
-        oldSelection?: DOMSelection
+        oldSelection?: CacheSelection
     ) => boolean;
 }

@@ -476,7 +476,13 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             watermarkText,
         } = this.state.initState;
         return [
-            pluginList.autoFormat && new AutoFormatPlugin(),
+            pluginList.autoFormat &&
+                new AutoFormatPlugin({
+                    autoBullet: true,
+                    autoNumbering: true,
+                    autoUnlink: true,
+                    autoLink: true,
+                }),
             pluginList.edit && new EditPlugin(),
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
