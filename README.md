@@ -14,6 +14,10 @@ To view the demo site, please click the link below:
 
 [RoosterJs Demo Site](https://microsoft.github.io/roosterjs/index.html).
 
+## Upgrade from RoosterJs 8.\*
+
+Please see [here](https://github.com/microsoft/roosterjs/wiki/RoosterJs-9).
+
 ## Features
 
 ### Packages
