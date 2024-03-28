@@ -58,8 +58,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(undefined);
@@ -81,8 +80,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(createSnapshotsManagerSpy).toHaveBeenCalledWith(mockedSnapshots);
@@ -217,8 +215,7 @@ describe('UndoPlugin', () => {
         it('Not handled exclusively for KeyDown event, selection is not the same', () => {
             const state = plugin.getState();
 
-            state.posContainer = 'P1' as any;
-            state.posOffset = 'O1' as any;
+            state.autoCompleteInsertPoint = { node: 'P1' as any, offset: 'O1' as any };
 
             canUndoAutoCompleteSpy.and.returnValue(true);
             getDOMSelectionSpy.and.returnValue({
@@ -245,8 +242,7 @@ describe('UndoPlugin', () => {
         it('Handled exclusively for KeyDown event', () => {
             const state = plugin.getState();
 
-            state.posContainer = 'P1' as any;
-            state.posOffset = 'O1' as any;
+            state.autoCompleteInsertPoint = { node: 'P1' as any, offset: 'O1' as any };
 
             canUndoAutoCompleteSpy.and.returnValue(true);
             getDOMSelectionSpy.and.returnValue({
@@ -296,8 +292,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalse();
@@ -318,8 +313,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalse();
@@ -340,8 +334,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalse();
@@ -362,8 +355,7 @@ describe('UndoPlugin', () => {
 
             const state = plugin.getState();
 
-            state.posContainer = 'C1' as any;
-            state.posOffset = 'O1' as any;
+            state.autoCompleteInsertPoint = { node: 'C1' as any, offset: 'O1' as any };
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
@@ -384,8 +376,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'Backspace',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalse();
@@ -418,8 +409,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'Backspace',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -448,8 +438,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'Delete',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -478,8 +467,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
@@ -511,8 +499,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -545,8 +532,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'Backspace',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -576,8 +562,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
@@ -611,8 +596,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'Enter',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -646,8 +630,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'A',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
@@ -677,8 +660,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: ' ',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
@@ -708,8 +690,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: ' ',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -736,8 +717,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'Enter',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -764,8 +744,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'A',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -789,8 +768,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -815,8 +793,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: true,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
@@ -838,8 +815,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
@@ -861,8 +837,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
@@ -884,8 +859,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
@@ -907,8 +881,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: null,
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -935,8 +908,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'B',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
@@ -963,8 +935,7 @@ describe('UndoPlugin', () => {
                 snapshotsManager: mockedSnapshotsManager,
                 isRestoring: false,
                 isNested: false,
-                posContainer: null,
-                posOffset: null,
+                autoCompleteInsertPoint: null,
                 lastKeyPress: 'A',
             });
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();

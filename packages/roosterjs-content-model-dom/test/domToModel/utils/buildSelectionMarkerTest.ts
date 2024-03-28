@@ -55,8 +55,10 @@ describe('buildSelectionMarker', () => {
         const mockedOffset = 'OFFSET' as any;
 
         context.pendingFormat = {
-            posContainer: mockedContainer,
-            posOffset: mockedOffset,
+            insertPoint: {
+                node: mockedContainer,
+                offset: mockedOffset,
+            },
             format: {
                 textColor: 'blue',
                 backgroundColor: 'green',
@@ -95,8 +97,10 @@ describe('buildSelectionMarker', () => {
         const mockedOffset2 = 'OFFSET2' as any;
 
         context.pendingFormat = {
-            posContainer: mockedContainer,
-            posOffset: mockedOffset1,
+            insertPoint: {
+                node: mockedContainer,
+                offset: mockedOffset1,
+            },
             format: {
                 textColor: 'blue',
                 backgroundColor: 'green',
@@ -193,8 +197,10 @@ describe('buildSelectionMarker', () => {
         const mockedOffset = 'OFFSET' as any;
 
         context.pendingFormat = {
-            posContainer: mockedContainer,
-            posOffset: mockedOffset,
+            insertPoint: {
+                node: mockedContainer,
+                offset: mockedOffset,
+            },
             format: {
                 textColor: 'blue',
                 backgroundColor: 'green',

@@ -576,8 +576,10 @@ describe('textWithSelectionProcessor', () => {
             format: {
                 a: 'a',
             } as any,
-            posContainer: text,
-            posOffset: 2,
+            insertPoint: {
+                node: text,
+                offset: 2,
+            },
         };
 
         textWithSelectionProcessor(doc, text, context);
@@ -635,8 +637,10 @@ describe('textWithSelectionProcessor', () => {
             format: {
                 a: 'a',
             } as any,
-            posContainer: text,
-            posOffset: 3,
+            insertPoint: {
+                node: text,
+                offset: 3,
+            },
         };
 
         textWithSelectionProcessor(doc, text, context);
@@ -696,8 +700,10 @@ describe('textWithSelectionProcessor', () => {
             format: {
                 a: 'a',
             } as any,
-            posContainer: text,
-            posOffset: 3,
+            insertPoint: {
+                node: text,
+                offset: 3,
+            },
         };
 
         textWithSelectionProcessor(doc, text, context);
