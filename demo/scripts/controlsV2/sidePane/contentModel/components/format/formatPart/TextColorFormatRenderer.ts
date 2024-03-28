@@ -7,7 +7,13 @@ export const TextColorFormatRenderer: FormatRenderer<TextColorFormat> = createCo
     TextColorFormat
 >(
     'Text color',
-    format => (format.textColor ? Color(format.textColor).hex() : ''),
+    format => {
+        try {
+            return format.textColor ? Color(format.textColor).hex() : '';
+        } catch (e) {
+            console.log(e);
+        }
+    },
     (format, value) => {
         format.textColor = value;
         return undefined;
