@@ -86,6 +86,20 @@ describe('createContentModel', () => {
         expect(domToContentModelSpy).not.toHaveBeenCalled();
         expect(model).toBe(mockedClonedModel);
     });
+
+    it('Do not reuse model, with cache, no shadow edit, has option', () => {
+        const currentContext = 'CURRENTCONTEXT' as any;
+
+        spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(currentContext);
+
+        const model = createContentModel(core, {});
+
+        expect(cloneModelSpy).not.toHaveBeenCalled();
+        expect(createEditorContext).toHaveBeenCalledWith(core, false);
+        expect(getDOMSelection).toHaveBeenCalledWith(core);
+        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, currentContext);
+        expect(model).toBe(mockedModel);
+    });
 });
 
 describe('createContentModel with selection', () => {

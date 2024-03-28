@@ -31,6 +31,7 @@ import type {
     Rect,
     EntityState,
     CachedElementHandler,
+    DomToModelOption,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -104,23 +105,25 @@ export class Editor implements IEditor {
 
         switch (mode) {
             case 'connected':
-                return core.api.createContentModel(core, {
-                    processorOverride: {
-                        table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
-                    },
-                });
+                return core.api.createContentModel(core);
 
             case 'disconnected':
-                return cloneModel(core.api.createContentModel(core), {
-                    includeCachedElement: this.cloneOptionCallback,
-                });
+                return cloneModel(
+                    core.api.createContentModel(core, {
+                        processorOverride: {
+                            table: tableProcessor,
+                        },
+                    }),
+                    {
+                        includeCachedElement: this.cloneOptionCallback,
+                    }
+                );
 
             case 'clean':
                 const domToModelContext = createDomToModelContextWithConfig(
                     core.environment.domToModelSettings.calculated,
                     core.api.createEditorContext(core, false /*saveIndex*/)
                 );
-
                 return domToContentModel(core.physicalRoot, domToModelContext);
 
             case 'reduced':
@@ -178,11 +181,12 @@ export class Editor implements IEditor {
      */
     formatContentModel(
         formatter: ContentModelFormatter,
-        options?: FormatContentModelOptions
+        options?: FormatContentModelOptions,
+        domToModelOptions?: DomToModelOption
     ): void {
         const core = this.getCore();
 
-        core.api.formatContentModel(core, formatter, options);
+        core.api.formatContentModel(core, formatter, options, domToModelOptions);
     }
 
     /**
