@@ -6,7 +6,6 @@ import {
     contentModelToDom,
     createDomToModelContext,
     createModelToDomContext,
-    createTable,
     createTableCell,
     domToContentModel,
     moveChildNodes,
