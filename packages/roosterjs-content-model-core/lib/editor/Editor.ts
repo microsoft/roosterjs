@@ -1,5 +1,4 @@
 import { createEditorCore } from './core/createEditorCore';
-import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import {
     createEmptyModel,
     tableProcessor,
@@ -93,14 +92,10 @@ export class Editor implements IEditor {
      * - disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won't impact the editor content.
      * If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
-     * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
-     * instead to improve performance. This is mostly used for retrieve current format state.
      * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
      * This is usually used for exporting content
      */
-    getContentModelCopy(
-        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
-    ): ContentModelDocument {
+    getContentModelCopy(mode: 'connected' | 'disconnected' | 'clean'): ContentModelDocument {
         const core = this.getCore();
 
         switch (mode) {
@@ -125,13 +120,6 @@ export class Editor implements IEditor {
                     core.api.createEditorContext(core, false /*saveIndex*/)
                 );
                 return domToContentModel(core.physicalRoot, domToModelContext);
-
-            case 'reduced':
-                return core.api.createContentModel(core, {
-                    processorOverride: {
-                        child: reducedModelChildProcessor,
-                    },
-                });
         }
     }
 
