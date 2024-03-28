@@ -82,7 +82,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                 fontSize: '11pt',
                                 textColor: 'black',
                             },
-                            isSelected: true,
+                            isSelected: false,
                         },
                     },
                     {
@@ -129,7 +129,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                 fontSize: '11pt',
                                 textColor: 'black',
                             },
-                            isSelected: true,
+                            isSelected: false,
                         },
                     },
                 ],
@@ -159,7 +159,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         levels: [{ listType: 'OL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -181,7 +181,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -206,7 +206,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -225,7 +225,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         levels: [{ listType: 'OL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -2082,7 +2082,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         levels: [

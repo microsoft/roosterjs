@@ -71,7 +71,7 @@ describe('setListStartNumber', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -108,7 +108,7 @@ describe('setListStartNumber', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -139,7 +139,7 @@ describe('setListStartNumber', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -166,7 +166,7 @@ describe('setListStartNumber', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: { startNumberOverride: 2 } }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -201,7 +201,7 @@ describe('setListStartNumber', () => {
                         { listType: 'OL', dataset: {}, format: { startNumberOverride: 1 } },
                         { listType: 'UL', dataset: {}, format: {} },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -231,7 +231,7 @@ describe('setListStartNumber', () => {
                         { listType: 'OL', dataset: {}, format: { startNumberOverride: 1 } },
                         { listType: 'UL', dataset: {}, format: { startNumberOverride: 2 } },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
