@@ -113,7 +113,7 @@ describe('createLinkAfterSpace', () => {
                             isSelected: undefined,
                             link: {
                                 format: {
-                                    href: 'www.bing.com',
+                                    href: 'http://www.bing.com',
                                     underline: true,
                                 },
                                 dataset: {},
@@ -210,7 +210,7 @@ describe('createLinkAfterSpace', () => {
                             link: {
                                 format: {
                                     underline: true,
-                                    href: 'www.bing.com',
+                                    href: 'http://www.bing.com',
                                 },
                                 dataset: {},
                             },
@@ -322,7 +322,7 @@ describe('createLinkAfterSpace', () => {
                             isSelected: undefined,
                             link: {
                                 format: {
-                                    href: 'www.bing.com',
+                                    href: 'http://www.bing.com',
                                     underline: true,
                                 },
                                 dataset: {},

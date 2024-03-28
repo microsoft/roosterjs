@@ -1,7 +1,7 @@
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { matchLink } from 'roosterjs-content-model-api';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
-import type { IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, LinkData } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -28,8 +28,8 @@ export function createLinkAfterSpace(editor: IEditor) {
                 ) {
                     const link = textSegment.text.split(' ').pop();
                     const url = link?.trim();
-
-                    if (url && link && matchLink(url)) {
+                    let linkData: LinkData | null = null;
+                    if (url && link && (linkData = matchLink(url))) {
                         const linkSegment = splitTextSegment(
                             textSegment,
                             paragraph,
@@ -38,7 +38,7 @@ export function createLinkAfterSpace(editor: IEditor) {
                         );
                         linkSegment.link = {
                             format: {
-                                href: url,
+                                href: linkData.normalizedUrl,
                                 underline: true,
                             },
                             dataset: {},
