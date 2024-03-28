@@ -40,10 +40,10 @@ export type AutoFormatOptions = {
  * @internal
  */
 const DefaultOptions: Required<AutoFormatOptions> = {
-    autoBullet: true,
-    autoNumbering: true,
+    autoBullet: false,
+    autoNumbering: false,
     autoUnlink: false,
-    autoLink: true,
+    autoLink: false,
 };
 
 /**
@@ -55,8 +55,10 @@ export class AutoFormatPlugin implements EditorPlugin {
 
     /**
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
-     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
-     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
+     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
+     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to false.
+     *  - autoLink: A boolean that enables or disables automatic hyperlink creation when pasting or typing content. Defaults to false.
+     *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
