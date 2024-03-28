@@ -7,7 +7,6 @@ import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/
 import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
 import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
-import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
 
 describe('Editor', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -134,18 +133,8 @@ describe('Editor', () => {
         expect(model1).toBe(mockedModel);
         expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
 
-        const model2 = editor.getContentModelCopy('reduced');
-
-        expect(model2).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                child: reducedModelChildProcessor,
-            },
-        });
-
         editor.dispose();
         expect(() => editor.getContentModelCopy('connected')).toThrow();
-        expect(() => editor.getContentModelCopy('reduced')).toThrow();
         expect(resetSpy).toHaveBeenCalledWith();
     });
 
