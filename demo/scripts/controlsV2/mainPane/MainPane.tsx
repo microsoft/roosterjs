@@ -488,7 +488,12 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
-            pluginList.markdown && new MarkdownPlugin(),
+            pluginList.markdown &&
+                new MarkdownPlugin({
+                    bold: true,
+                    italic: true,
+                    strikethrough: true,
+                }),
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),

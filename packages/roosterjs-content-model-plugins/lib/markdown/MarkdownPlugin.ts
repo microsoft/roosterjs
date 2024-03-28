@@ -21,9 +21,9 @@ export interface MarkdownOptions {
  * @internal
  */
 const DefaultOptions: Required<MarkdownOptions> = {
-    strikethrough: true,
-    bold: true,
-    italic: true,
+    strikethrough: false,
+    bold: false,
+    italic: false,
 };
 
 /**
