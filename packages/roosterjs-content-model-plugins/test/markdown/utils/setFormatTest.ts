@@ -122,7 +122,6 @@ describe('setFormat', () => {
                             segmentType: 'Text',
                             text: '~test~',
                             format: {},
-                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -147,6 +146,7 @@ describe('setFormat', () => {
                             format: {
                                 strikethrough: true,
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -198,6 +198,7 @@ describe('setFormat', () => {
                             format: {
                                 italic: true,
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
