@@ -12,31 +12,32 @@ export function splitTextSegment(
 ): ContentModelText {
     const text = textSegment.text;
     const index = parent.segments.indexOf(textSegment);
-    const textBefore = createText(
-        text.substring(0, start),
-        textSegment.format,
-        textSegment.link,
-        textSegment.code
-    );
-    const middleText = createText(
+    const middleSegment = createText(
         text.substring(start, end),
         textSegment.format,
         textSegment.link,
         textSegment.code
     );
-    const textAfter = createText(
-        text.substring(end),
-        textSegment.format,
-        textSegment.link,
-        textSegment.code
-    );
-    textBefore.isSelected = textSegment.isSelected;
-    middleText.isSelected = textSegment.isSelected;
-    textAfter.isSelected = textSegment.isSelected;
 
-    parent.segments.splice(index, 1, textBefore);
-    parent.segments.splice(index + 1, 0, middleText);
-    parent.segments.splice(index + 2, 0, textAfter);
+    const newSegments: ContentModelText[] = [middleSegment];
+    if (start > 0) {
+        newSegments.unshift(
+            createText(
+                text.substring(0, start),
+                textSegment.format,
+                textSegment.link,
+                textSegment.code
+            )
+        );
+    }
+    if (end < text.length) {
+        newSegments.push(
+            createText(text.substring(end), textSegment.format, textSegment.link, textSegment.code)
+        );
+    }
 
-    return middleText;
+    newSegments.forEach(segment => (segment.isSelected = textSegment.isSelected));
+    parent.segments.splice(index, 1, ...newSegments);
+
+    return middleSegment;
 }

@@ -108,12 +108,6 @@ describe('createLinkAfterSpace', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                            isSelected: undefined,
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'www.bing.com',
                             format: {},
                             isSelected: undefined,
@@ -124,12 +118,6 @@ describe('createLinkAfterSpace', () => {
                                 },
                                 dataset: {},
                             },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: '',
-                            format: {},
-                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -226,12 +214,6 @@ describe('createLinkAfterSpace', () => {
                                 },
                                 dataset: {},
                             },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: '',
-                            format: {},
-                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -345,12 +327,6 @@ describe('createLinkAfterSpace', () => {
                                 },
                                 dataset: {},
                             },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: '',
-                            format: {},
-                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
