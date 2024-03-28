@@ -40,7 +40,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -115,7 +115,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -164,7 +164,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -240,7 +240,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -314,7 +314,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -371,7 +371,7 @@ describe('deleteList', () => {
                                             ],
                                             formatHolder: {
                                                 segmentType: 'SelectionMarker',
-                                                isSelected: true,
+                                                isSelected: false,
                                                 format: {},
                                             },
                                             format: {},
@@ -498,7 +498,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },

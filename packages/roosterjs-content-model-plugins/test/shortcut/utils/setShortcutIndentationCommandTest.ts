@@ -93,7 +93,7 @@ describe('setShortcutIndentationCommand', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -127,7 +127,7 @@ describe('setShortcutIndentationCommand', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -172,7 +172,7 @@ describe('setShortcutIndentationCommand', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -211,7 +211,7 @@ describe('setShortcutIndentationCommand', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},

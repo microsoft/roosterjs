@@ -68,7 +68,7 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -105,7 +105,7 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -136,7 +136,7 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -169,7 +169,7 @@ describe('setListStyle', () => {
                             format: {},
                         },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -212,7 +212,7 @@ describe('setListStyle', () => {
                             format: {},
                         },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -250,7 +250,7 @@ describe('setListStyle', () => {
                             format: {},
                         },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -282,7 +282,7 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -302,7 +302,7 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -323,7 +323,7 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -355,7 +355,7 @@ describe('setListStyle', () => {
                             format: {},
                         },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -381,7 +381,7 @@ describe('setListStyle', () => {
                             format: {},
                         },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -408,7 +408,7 @@ describe('setListStyle', () => {
                             format: {},
                         },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',

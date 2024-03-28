@@ -635,7 +635,7 @@ describe('toggleModelBlockQuote', () => {
                             levels: [],
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
-                                isSelected: true,
+                                isSelected: false,
                                 format: {},
                             },
                             format: {},
@@ -693,7 +693,7 @@ describe('toggleModelBlockQuote', () => {
                     levels: [],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},

@@ -382,7 +382,7 @@ describe('mergeModel', () => {
             ],
             formatHolder: {
                 segmentType: 'SelectionMarker',
-                isSelected: true,
+                isSelected: false,
                 format: {},
             },
             format: {},
@@ -421,7 +421,7 @@ describe('mergeModel', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -451,7 +451,7 @@ describe('mergeModel', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -550,7 +550,7 @@ describe('mergeModel', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -591,7 +591,7 @@ describe('mergeModel', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -719,7 +719,7 @@ describe('mergeModel', () => {
             ],
             formatHolder: {
                 segmentType: 'SelectionMarker',
-                isSelected: true,
+                isSelected: false,
                 format: {},
             },
             format: {},
@@ -758,7 +758,7 @@ describe('mergeModel', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -793,7 +793,7 @@ describe('mergeModel', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -838,7 +838,7 @@ describe('mergeModel', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1878,7 +1878,7 @@ describe('mergeModel', () => {
                             color: 'red',
                             formatName: 'ToBeRemoved',
                         } as any,
-                        isSelected: true,
+                        isSelected: false,
                         segmentType: 'SelectionMarker',
                     },
                     levels: [
@@ -1943,7 +1943,7 @@ describe('mergeModel', () => {
                             backgroundColor: 'rgb(0,0,0)',
                             color: 'rgb(255,255,255)',
                         } as any,
-                        isSelected: true,
+                        isSelected: false,
                         segmentType: 'SelectionMarker',
                     },
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
@@ -3149,7 +3149,7 @@ describe('mergeModel', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
