@@ -60,7 +60,10 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-            runTest(event, true);
+            runTest(event, true, {
+                autoBullet: true,
+                autoNumbering: true,
+            });
         });
 
         it('should not trigger keyboardListTrigger', () => {
@@ -68,7 +71,10 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: '*', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-            runTest(event, false);
+            runTest(event, false, {
+                autoBullet: true,
+                autoNumbering: true,
+            });
         });
 
         it('should not trigger keyboardListTrigger', () => {
@@ -135,7 +141,9 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'contentChanged',
                 source: 'Paste',
             };
-            runTest(event, true);
+            runTest(event, true, {
+                autoLink: true,
+            });
         });
 
         it('should not  call createLink - autolink disabled', () => {
@@ -151,7 +159,9 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'contentChanged',
                 source: 'Format',
             };
-            runTest(event, false);
+            runTest(event, false, {
+                autoLink: true,
+            });
         });
     });
 
@@ -218,7 +228,7 @@ describe('Content Model Auto Format Plugin Test', () => {
         });
 
         function runTest(
-            event: KeyDownEvent,
+            event: EditorInputEvent,
             shouldCallTrigger: boolean,
             options?: {
                 autoLink: boolean;
@@ -237,29 +247,37 @@ describe('Content Model Auto Format Plugin Test', () => {
         }
 
         it('should call createLinkAfterSpace', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', preventDefault: () => {} } as any,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
-            runTest(event, true);
+            runTest(event, true, {
+                autoLink: true,
+            });
         });
 
         it('should not call createLinkAfterSpace - disable options', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: ' ', preventDefault: () => {} } as any,
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
             runTest(event, false, {
                 autoLink: false,
             });
         });
 
-        it('should not call createLinkAfterSpace - not backspace', () => {
-            const event: KeyDownEvent = {
-                eventType: 'keyDown',
-                rawEvent: { key: 'Backspace', preventDefault: () => {} } as any,
+        it('should not call createLinkAfterSpace - not space', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: 'Backspace',
+                    preventDefault: () => {},
+                    inputType: 'insertText',
+                } as any,
             };
-            runTest(event, false);
+            runTest(event, false, {
+                autoLink: true,
+            });
         });
     });
 });
