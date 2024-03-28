@@ -299,7 +299,7 @@ describe('setFormat', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'test  one ',
+                            text: 'test  one  ',
                             format: {},
                             isSelected: undefined,
                         },
