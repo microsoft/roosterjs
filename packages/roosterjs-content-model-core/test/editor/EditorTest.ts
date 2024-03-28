@@ -1,13 +1,12 @@
-import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
+import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import * as createDomToModelContextWithConfig from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
+import * as createEditorCore from '../../lib/editor/core/createEditorCore';
+import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
-import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
-import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
+import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
-import * as createEditorCore from '../../lib/editor/core/createEditorCore';
-import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
 
 describe('Editor', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -132,24 +131,10 @@ describe('Editor', () => {
         const model1 = editor.getContentModelCopy('connected');
 
         expect(model1).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
-            },
-        });
-
-        const model2 = editor.getContentModelCopy('reduced');
-
-        expect(model2).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                child: reducedModelChildProcessor,
-            },
-        });
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
 
         editor.dispose();
         expect(() => editor.getContentModelCopy('connected')).toThrow();
-        expect(() => editor.getContentModelCopy('reduced')).toThrow();
         expect(resetSpy).toHaveBeenCalledWith();
     });
 
@@ -210,7 +195,11 @@ describe('Editor', () => {
         expect(cloneNodeSpy).toHaveBeenCalledWith(true);
 
         expect(model).toBe(mockedClonedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
+            processorOverride: {
+                table: tableProcessor,
+            },
+        });
         expect(transformColorSpy).not.toHaveBeenCalled();
 
         // Clone in dark mode
@@ -219,7 +208,11 @@ describe('Editor', () => {
         expect(cloneNodeSpy).toHaveBeenCalledWith(true);
 
         expect(model).toBe(mockedClonedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
+            processorOverride: {
+                table: tableProcessor,
+            },
+        });
         expect(transformColorSpy).toHaveBeenCalledWith(
             clonedNode,
             true,
@@ -411,14 +404,20 @@ describe('Editor', () => {
 
         editor.formatContentModel(mockedFormatter);
 
-        expect(formatContentModelSpy).toHaveBeenCalledWith(mockedCore, mockedFormatter, undefined);
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            mockedCore,
+            mockedFormatter,
+            undefined,
+            undefined
+        );
 
         editor.formatContentModel(mockedFormatter, mockedOptions);
 
         expect(formatContentModelSpy).toHaveBeenCalledWith(
             mockedCore,
             mockedFormatter,
-            mockedOptions
+            mockedOptions,
+            undefined
         );
 
         editor.dispose();

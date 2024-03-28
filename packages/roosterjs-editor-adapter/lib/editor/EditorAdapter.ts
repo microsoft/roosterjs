@@ -1122,9 +1122,12 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     private retrieveFormatState(): ContentModelFormatState {
         const pendingFormat = this.getPendingFormat();
         const result: ContentModelFormatState = {};
-        const model = this.getContentModelCopy('reduced');
 
-        retrieveModelFormatState(model, pendingFormat, result);
+        this.formatContentModel(model => {
+            retrieveModelFormatState(model, pendingFormat, result);
+
+            return false;
+        });
 
         return result;
     }
