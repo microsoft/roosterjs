@@ -1,5 +1,5 @@
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
-import { splitTextSegment } from 'roosterjs-content-model-plugins/lib/pluginUtils/splitTextSegment';
+import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 
 import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 
