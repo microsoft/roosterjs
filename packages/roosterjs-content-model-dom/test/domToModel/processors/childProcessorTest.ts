@@ -127,8 +127,10 @@ describe('childProcessor', () => {
             format: {
                 a: 'a',
             } as any,
-            posContainer: div,
-            posOffset: 0,
+            insertPoint: {
+                node: div,
+                offset: 0,
+            },
         };
 
         childProcessor(doc, div, context);
@@ -173,8 +175,10 @@ describe('childProcessor', () => {
             format: {
                 a: 'a',
             } as any,
-            posContainer: div,
-            posOffset: 1,
+            insertPoint: {
+                node: div,
+                offset: 1,
+            },
         };
 
         childProcessor(doc, div, context);

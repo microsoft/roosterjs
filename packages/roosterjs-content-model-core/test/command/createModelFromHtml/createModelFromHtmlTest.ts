@@ -2,8 +2,12 @@ import * as convertInlineCss from '../../../lib/command/createModelFromHtml/conv
 import * as createDomToModelContextForSanitizing from '../../../lib/command/createModelFromHtml/createDomToModelContextForSanitizing';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as parseFormat from 'roosterjs-content-model-dom/lib/domToModel/utils/parseFormat';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createModelFromHtml } from '../../../lib/command/createModelFromHtml/createModelFromHtml';
+import {
+    ContentModelGeneralBlock,
+    ContentModelSegmentFormat,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 
 describe('createModelFromHtml', () => {
     it('Empty html, no options', () => {
@@ -134,6 +138,7 @@ describe('createModelFromHtml', () => {
         expect(createContextSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDefaultSegmentFormat,
+            undefined,
             mockedOptions
         );
         expect(domToContentModelSpy).toHaveBeenCalledWith('BODY' as any, mockedContext);
@@ -201,5 +206,52 @@ describe('createModelFromHtml', () => {
         expect(domToContentModelSpy).not.toHaveBeenCalled();
         expect(retrieveCssRulesSpy).not.toHaveBeenCalled();
         expect(convertInlineCssSpy).not.toHaveBeenCalled();
+    });
+
+    it('Treat DIV with id as general block, and preserve id', () => {
+        const divProcessor: ElementProcessor<HTMLDivElement> = (group, element, context) => {
+            const processor = element.id
+                ? context.elementProcessors['*']
+                : context.defaultElementProcessors.div;
+
+            processor?.(group, element, context);
+        };
+        const model = createModelFromHtml('<div id="div1">test</div>', {
+            processorOverride: {
+                div: divProcessor,
+            },
+            attributeSanitizers: {
+                id: true,
+            },
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'General',
+                    element: jasmine.anything(),
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'test',
+                                },
+                            ],
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect((model.blocks[0] as ContentModelGeneralBlock).element.outerHTML).toBe(
+            '<div id="div1">test</div>'
+        );
     });
 });
