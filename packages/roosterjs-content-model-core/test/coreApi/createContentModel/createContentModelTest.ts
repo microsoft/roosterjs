@@ -1,8 +1,14 @@
 import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
+import * as updateCachedSelection from '../../../lib/corePlugin/cache/updateCachedSelection';
 import { createContentModel } from '../../../lib/coreApi/createContentModel/createContentModel';
-import { DomToModelContext, EditorCore } from 'roosterjs-content-model-types';
+import {
+    DomToModelContext,
+    DomToModelOptionForCreateModel,
+    EditorCore,
+    TextMutationObserver,
+} from 'roosterjs-content-model-types';
 
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const originalContext = { context: 'Context' } as any;
@@ -92,7 +98,7 @@ describe('createContentModel', () => {
 
         spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(currentContext);
 
-        const model = createContentModel(core, {});
+        const model = createContentModel(core, { tryGetFromCache: false });
 
         expect(cloneModelSpy).not.toHaveBeenCalled();
         expect(createEditorContext).toHaveBeenCalledWith(core, false);
@@ -299,5 +305,125 @@ describe('createContentModel with selection', () => {
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext);
+    });
+});
+
+describe('createContentModel and cache management', () => {
+    let core: EditorCore;
+    let textMutationObserver: TextMutationObserver;
+    let flushMutationsSpy: jasmine.Spy;
+    let cloneModelSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let createEditorContextSpy: jasmine.Spy;
+    let updateCachedSelectionSpy: jasmine.Spy;
+
+    const mockedSelection = 'SELECTION' as any;
+    const mockedFragment = 'FRAGMENT' as any;
+    const mockedModel = { name: 'MODEL' } as any;
+    const mockedNewModel = { name: 'NEWMODEL' } as any;
+
+    function runTest(
+        option: DomToModelOptionForCreateModel | undefined,
+        hasSelection: boolean,
+        isInShadowEdit: boolean,
+        useCache: boolean,
+        allowIndex: boolean,
+        clone: boolean
+    ) {
+        flushMutationsSpy = jasmine.createSpy('flushMutations');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(mockedSelection);
+        createEditorContextSpy = jasmine.createSpy('createEditorContext');
+        updateCachedSelectionSpy = jasmine.createSpy('updateCachedSelection');
+
+        textMutationObserver = { flushMutations: flushMutationsSpy } as any;
+
+        core = {
+            cache: { textMutationObserver, cachedModel: mockedModel },
+            lifecycle: {
+                shadowEditFragment: isInShadowEdit ? mockedFragment : null,
+            },
+            api: {
+                getDOMSelection: getDOMSelectionSpy,
+                createEditorContext: createEditorContextSpy,
+            },
+            environment: {
+                domToModelSettings: {},
+            },
+        } as any;
+
+        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+
+        spyOn(domToContentModel, 'domToContentModel').and.returnValue(mockedNewModel);
+
+        const result = createContentModel(core, option, hasSelection ? mockedSelection : undefined);
+
+        expect(flushMutationsSpy).toHaveBeenCalled();
+        expect(cloneModelSpy).toHaveBeenCalledTimes(clone ? 1 : 0);
+
+        if (!useCache) {
+            expect(createEditorContextSpy).toHaveBeenCalledWith(core, allowIndex);
+        }
+
+        if (useCache) {
+            expect(result).toBe(mockedModel);
+        } else {
+            expect(result).toBe(mockedNewModel);
+        }
+
+        if (allowIndex) {
+            expect(core.cache.cachedModel).toBe(mockedNewModel);
+            expect(updateCachedSelectionSpy).toHaveBeenCalled();
+        } else {
+            expect(core.cache.cachedModel).toBe(mockedModel);
+            expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
+        }
+    }
+
+    it('no option, no selectionOverride, no shadow edit', () => {
+        runTest(undefined, false, false, true, true, false);
+    });
+
+    it('no option, no selectionOverride, has shadow edit', () => {
+        runTest(undefined, false, true, true, true, true);
+    });
+
+    it('no option, has selectionOverride, no shadow edit', () => {
+        runTest(undefined, true, false, false, false, false);
+    });
+
+    it('no option, has selectionOverride, has shadow edit', () => {
+        runTest(undefined, true, true, false, false, false);
+    });
+
+    it('option allow cache, no selectionOverride, no shadow edit', () => {
+        runTest({ tryGetFromCache: true }, false, false, true, false, false);
+    });
+
+    it('option allow cache, no selectionOverride, has shadow edit', () => {
+        runTest({ tryGetFromCache: true }, false, true, true, false, true);
+    });
+
+    it('option allow cache, has selectionOverride, no shadow edit', () => {
+        runTest({ tryGetFromCache: true }, true, false, false, false, false);
+    });
+
+    it('option allow cache, has selectionOverride, has shadow edit', () => {
+        runTest({ tryGetFromCache: true }, true, true, false, false, false);
+    });
+
+    it('option not allow cache, no selectionOverride, no shadow edit', () => {
+        runTest({ tryGetFromCache: false }, false, false, false, false, false);
+    });
+
+    it('option not allow cache, no selectionOverride, has shadow edit', () => {
+        runTest({ tryGetFromCache: false }, false, true, false, false, false);
+    });
+
+    it('option not allow cache, has selectionOverride, no shadow edit', () => {
+        runTest({ tryGetFromCache: false }, true, false, false, false, false);
+    });
+
+    it('option not allow cache, has selectionOverride, has shadow edit', () => {
+        runTest({ tryGetFromCache: false }, true, true, false, false, false);
     });
 });

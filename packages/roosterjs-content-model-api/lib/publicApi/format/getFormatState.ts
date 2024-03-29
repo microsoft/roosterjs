@@ -26,6 +26,7 @@ export function getFormatState(editor: IEditor): ContentModelFormatState {
             processorOverride: {
                 child: reducedModelChildProcessor,
             },
+            tryGetFromCache: true,
         }
     );
 

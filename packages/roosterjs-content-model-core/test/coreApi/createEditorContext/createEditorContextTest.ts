@@ -147,6 +147,55 @@ describe('createEditorContext', () => {
             rootFontSize: 16,
         });
     });
+
+    it('create with shadow edit', () => {
+        const isDarkMode = 'DARKMODE' as any;
+        const defaultFormat = 'DEFAULTFORMAT' as any;
+        const darkColorHandler = 'DARKHANDLER' as any;
+        const mockedPendingFormat = 'PENDINGFORMAT' as any;
+        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
+        const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
+
+        const div = {
+            ownerDocument: {
+                defaultView: {
+                    getComputedStyle: getComputedStyleSpy,
+                },
+            },
+        };
+
+        const core = ({
+            physicalRoot: div,
+            logicalRoot: div,
+            lifecycle: {
+                isDarkMode,
+                shadowEditFragment: {} as any,
+            },
+            format: {
+                defaultFormat,
+                pendingFormat: mockedPendingFormat,
+            },
+            darkColorHandler,
+            cache: {},
+            domHelper: {
+                calculateZoomScale: calculateZoomScaleSpy,
+            },
+        } as any) as EditorCore;
+
+        const context = createEditorContext(core, true);
+
+        expect(context).toEqual({
+            isDarkMode,
+            darkColorHandler,
+            defaultFormat,
+            addDelimiterForEntity: true,
+            allowCacheElement: true,
+            domIndexer: undefined,
+            pendingFormat: mockedPendingFormat,
+            zoomScale: 1,
+            rootFontSize: 16,
+        });
+    });
 });
 
 describe('createEditorContext - checkZoomScale', () => {

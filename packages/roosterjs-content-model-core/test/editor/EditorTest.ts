@@ -131,7 +131,7 @@ describe('Editor', () => {
         const model1 = editor.getContentModelCopy('connected');
 
         expect(model1).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, { tryGetFromCache: true });
 
         editor.dispose();
         expect(() => editor.getContentModelCopy('connected')).toThrow();
@@ -199,6 +199,7 @@ describe('Editor', () => {
             processorOverride: {
                 table: tableProcessor,
             },
+            tryGetFromCache: false,
         });
         expect(transformColorSpy).not.toHaveBeenCalled();
 
@@ -212,6 +213,7 @@ describe('Editor', () => {
             processorOverride: {
                 table: tableProcessor,
             },
+            tryGetFromCache: false,
         });
         expect(transformColorSpy).toHaveBeenCalledWith(
             clonedNode,

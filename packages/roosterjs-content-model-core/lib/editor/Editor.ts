@@ -30,7 +30,7 @@ import type {
     Rect,
     EntityState,
     CachedElementHandler,
-    DomToModelOption,
+    DomToModelOptionForCreateModel,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -100,7 +100,9 @@ export class Editor implements IEditor {
 
         switch (mode) {
             case 'connected':
-                return core.api.createContentModel(core);
+                return core.api.createContentModel(core, {
+                    tryGetFromCache: true, // Pass an option here to force disable save index
+                });
 
             case 'disconnected':
                 return cloneModel(
@@ -108,6 +110,7 @@ export class Editor implements IEditor {
                         processorOverride: {
                             table: tableProcessor,
                         },
+                        tryGetFromCache: false,
                     }),
                     {
                         includeCachedElement: this.cloneOptionCallback,
@@ -170,7 +173,7 @@ export class Editor implements IEditor {
     formatContentModel(
         formatter: ContentModelFormatter,
         options?: FormatContentModelOptions,
-        domToModelOptions?: DomToModelOption
+        domToModelOptions?: DomToModelOptionForCreateModel
     ): void {
         const core = this.getCore();
 
