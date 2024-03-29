@@ -122,7 +122,10 @@ export class Editor implements IEditor {
                     core.environment.domToModelSettings.calculated,
                     core.api.createEditorContext(core, false /*saveIndex*/)
                 );
-                return domToContentModel(core.physicalRoot, domToModelContext);
+
+                return cloneModel(domToContentModel(core.physicalRoot, domToModelContext), {
+                    includeCachedElement: this.cloneOptionCallback,
+                });
         }
     }
 
