@@ -6,6 +6,7 @@ import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/d
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
 import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
+import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
 import {
     CachedElementHandler,
     ContentModelDocument,
@@ -331,9 +332,11 @@ describe('Editor', () => {
                 },
             },
         });
-        expect(div.innerHTML).toBe(
-            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: var(--darkColor_red, red);"></div>'
-        );
+
+        expectHtml(div.innerHTML, [
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: var(--darkColor_red, red);"></div>',
+            '<div style="color: var(--darkColor_red, red);" class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false"></div>',
+        ]);
 
         const model = editor.getContentModelCopy('clean');
 
@@ -355,12 +358,14 @@ describe('Editor', () => {
             ],
             format: {},
         });
-        expect((model.blocks[0] as ContentModelEntity).wrapper.outerHTML).toBe(
-            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: red; background-color: inherit;"></div>'
-        );
-        expect(div.innerHTML).toBe(
-            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: var(--darkColor_red, red);"></div>'
-        );
+        expectHtml((model.blocks[0] as ContentModelEntity).wrapper.outerHTML, [
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: red; background-color: inherit;"></div>',
+            '<div style="color: red; background-color: inherit;" class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false"></div>',
+        ]);
+        expectHtml(div.innerHTML, [
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: var(--darkColor_red, red);"></div>',
+            '<div style="color: var(--darkColor_red, red);" class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false"></div>',
+        ]);
     });
 
     it('getEnvironment', () => {
