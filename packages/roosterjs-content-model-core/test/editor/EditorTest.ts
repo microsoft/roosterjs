@@ -4,9 +4,15 @@ import * as createEditorCore from '../../lib/editor/core/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
-import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
 import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
+import {
+    CachedElementHandler,
+    ContentModelDocument,
+    ContentModelEntity,
+    EditorCore,
+    Rect,
+} from 'roosterjs-content-model-types';
 
 describe('Editor', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -276,15 +282,84 @@ describe('Editor', () => {
             mockedModel
         );
 
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+
         const model = editor.getContentModelCopy('clean');
         expect(model).toBe(mockedModel);
         expect(createDomToModelContextWithConfigSpy).toHaveBeenCalledWith(
             mockedCore.environment.domToModelSettings.calculated,
             mockedEditorContext
         );
+        expect(cloneModelSpy).toHaveBeenCalledWith(mockedModel, {
+            includeCachedElement: jasmine.anything() as any,
+        });
         expect(domToContentModelSpy).toHaveBeenCalledWith(
             mockedCore.physicalRoot,
             mockedModelContext
+        );
+    });
+
+    it('getContentModelCopy, clean with entity', () => {
+        const div = document.createElement('div');
+        const entityDiv = document.createElement('div');
+
+        entityDiv.style.color = 'var(--darkColor_red, red)';
+
+        const initialModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Entity',
+                    segmentType: 'Entity',
+                    wrapper: entityDiv,
+                    format: {},
+                    entityFormat: {
+                        entityType: 'A',
+                        id: 'B',
+                        isReadonly: true,
+                    },
+                },
+            ],
+        };
+        const editor = new Editor(div, {
+            initialModel,
+            inDarkMode: true,
+            knownColors: {
+                red: {
+                    darkModeColor: 'blue',
+                    lightModeColor: 'red',
+                },
+            },
+        });
+        expect(div.innerHTML).toBe(
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: var(--darkColor_red, red);"></div>'
+        );
+
+        const model = editor.getContentModelCopy('clean');
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Entity',
+                    segmentType: 'Entity',
+                    format: {},
+                    wrapper: jasmine.anything(),
+                    entityFormat: {
+                        entityType: 'A',
+                        id: 'B',
+                        isReadonly: true,
+                    },
+                    isSelected: undefined,
+                },
+            ],
+            format: {},
+        });
+        expect((model.blocks[0] as ContentModelEntity).wrapper.outerHTML).toBe(
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: red; background-color: inherit;"></div>'
+        );
+        expect(div.innerHTML).toBe(
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: var(--darkColor_red, red);"></div>'
         );
     });
 
