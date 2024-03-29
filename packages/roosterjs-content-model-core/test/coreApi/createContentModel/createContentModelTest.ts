@@ -308,6 +308,16 @@ describe('createContentModel with selection', () => {
     });
 });
 
+/*
+| Scenarios                         | can use cache | can write cache | comment                                                                                                        |
+|-----------------------------------|---------------|-----------------|----------------------------------------------------------------------------------------------------------------|
+| getContentModelCopy: connected    | true          | false           | Mostly used by demo site, we can use existing model but this should not impact cache                           |
+| getContentModelCopy: disconnected | false         | false           | Used by plugins and test code to read current model. We will return a cloned model, and do not impact cache    |
+| getContentModelCopy: clean        | false         | false           | Used by export HTML, do not use cache to make sure the model is up to date                                     |
+| formatInsertPointWithContentModel | false         | false           | Used by insertEntity (recent change), do not use cache since we need to add shadow insert point                |
+| getFormatState                    | true          | false           | We can reuse cache if we have, but when there is no cache, we will create reduced model so do not impact cache |
+| other formatContentModel cases    | true          | true            | Normal case, we can reuse cache, and should update cache                                                       |
+*/
 describe('createContentModel and cache management', () => {
     let core: EditorCore;
     let textMutationObserver: TextMutationObserver;
@@ -322,7 +332,8 @@ describe('createContentModel and cache management', () => {
     const mockedModel = { name: 'MODEL' } as any;
     const mockedNewModel = { name: 'NEWMODEL' } as any;
 
-    function runTest(
+    function globalRunTest(
+        hasCache: boolean,
         option: DomToModelOptionForCreateModel | undefined,
         hasSelection: boolean,
         isInShadowEdit: boolean,
@@ -333,12 +344,12 @@ describe('createContentModel and cache management', () => {
         flushMutationsSpy = jasmine.createSpy('flushMutations');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(mockedSelection);
         createEditorContextSpy = jasmine.createSpy('createEditorContext');
-        updateCachedSelectionSpy = jasmine.createSpy('updateCachedSelection');
+        updateCachedSelectionSpy = spyOn(updateCachedSelection, 'updateCachedSelection');
 
         textMutationObserver = { flushMutations: flushMutationsSpy } as any;
 
         core = {
-            cache: { textMutationObserver, cachedModel: mockedModel },
+            cache: { textMutationObserver, cachedModel: hasCache ? mockedModel : null },
             lifecycle: {
                 shadowEditFragment: isInShadowEdit ? mockedFragment : null,
             },
@@ -370,60 +381,137 @@ describe('createContentModel and cache management', () => {
             expect(result).toBe(mockedNewModel);
         }
 
-        if (allowIndex) {
+        if (allowIndex && !useCache) {
             expect(core.cache.cachedModel).toBe(mockedNewModel);
             expect(updateCachedSelectionSpy).toHaveBeenCalled();
-        } else {
+        } else if (hasCache) {
             expect(core.cache.cachedModel).toBe(mockedModel);
+            expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
+        } else {
+            expect(core.cache.cachedModel).toBe(null!);
             expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
         }
     }
 
-    it('no option, no selectionOverride, no shadow edit', () => {
-        runTest(undefined, false, false, true, true, false);
+    describe('Has cache', () => {
+        function runTest(
+            option: DomToModelOptionForCreateModel | undefined,
+            hasSelection: boolean,
+            isInShadowEdit: boolean,
+            useCache: boolean,
+            allowIndex: boolean,
+            clone: boolean
+        ) {
+            globalRunTest(true, option, hasSelection, isInShadowEdit, useCache, allowIndex, clone);
+        }
+
+        it('no option, no selectionOverride, no shadow edit', () => {
+            runTest(undefined, false, false, true, true, false);
+        });
+
+        it('no option, no selectionOverride, has shadow edit', () => {
+            runTest(undefined, false, true, true, true, true);
+        });
+
+        it('no option, has selectionOverride, no shadow edit', () => {
+            runTest(undefined, true, false, false, false, false);
+        });
+
+        it('no option, has selectionOverride, has shadow edit', () => {
+            runTest(undefined, true, true, false, false, false);
+        });
+
+        it('option allow cache, no selectionOverride, no shadow edit', () => {
+            runTest({ tryGetFromCache: true }, false, false, true, false, false);
+        });
+
+        it('option allow cache, no selectionOverride, has shadow edit', () => {
+            runTest({ tryGetFromCache: true }, false, true, true, false, true);
+        });
+
+        it('option allow cache, has selectionOverride, no shadow edit', () => {
+            runTest({ tryGetFromCache: true }, true, false, false, false, false);
+        });
+
+        it('option allow cache, has selectionOverride, has shadow edit', () => {
+            runTest({ tryGetFromCache: true }, true, true, false, false, false);
+        });
+
+        it('option not allow cache, no selectionOverride, no shadow edit', () => {
+            runTest({ tryGetFromCache: false }, false, false, false, false, false);
+        });
+
+        it('option not allow cache, no selectionOverride, has shadow edit', () => {
+            runTest({ tryGetFromCache: false }, false, true, false, false, false);
+        });
+
+        it('option not allow cache, has selectionOverride, no shadow edit', () => {
+            runTest({ tryGetFromCache: false }, true, false, false, false, false);
+        });
+
+        it('option not allow cache, has selectionOverride, has shadow edit', () => {
+            runTest({ tryGetFromCache: false }, true, true, false, false, false);
+        });
     });
 
-    it('no option, no selectionOverride, has shadow edit', () => {
-        runTest(undefined, false, true, true, true, true);
-    });
+    describe('No cache', () => {
+        function runTest(
+            option: DomToModelOptionForCreateModel | undefined,
+            hasSelection: boolean,
+            isInShadowEdit: boolean,
+            useCache: boolean,
+            allowIndex: boolean,
+            clone: boolean
+        ) {
+            globalRunTest(false, option, hasSelection, isInShadowEdit, useCache, allowIndex, clone);
+        }
 
-    it('no option, has selectionOverride, no shadow edit', () => {
-        runTest(undefined, true, false, false, false, false);
-    });
+        it('no option, no selectionOverride, no shadow edit', () => {
+            runTest(undefined, false, false, false, true, false);
+        });
 
-    it('no option, has selectionOverride, has shadow edit', () => {
-        runTest(undefined, true, true, false, false, false);
-    });
+        it('no option, no selectionOverride, has shadow edit', () => {
+            runTest(undefined, false, true, false, true, false);
+        });
 
-    it('option allow cache, no selectionOverride, no shadow edit', () => {
-        runTest({ tryGetFromCache: true }, false, false, true, false, false);
-    });
+        it('no option, has selectionOverride, no shadow edit', () => {
+            runTest(undefined, true, false, false, false, false);
+        });
 
-    it('option allow cache, no selectionOverride, has shadow edit', () => {
-        runTest({ tryGetFromCache: true }, false, true, true, false, true);
-    });
+        it('no option, has selectionOverride, has shadow edit', () => {
+            runTest(undefined, true, true, false, false, false);
+        });
 
-    it('option allow cache, has selectionOverride, no shadow edit', () => {
-        runTest({ tryGetFromCache: true }, true, false, false, false, false);
-    });
+        it('option allow cache, no selectionOverride, no shadow edit', () => {
+            runTest({ tryGetFromCache: true }, false, false, false, false, false);
+        });
 
-    it('option allow cache, has selectionOverride, has shadow edit', () => {
-        runTest({ tryGetFromCache: true }, true, true, false, false, false);
-    });
+        it('option allow cache, no selectionOverride, has shadow edit', () => {
+            runTest({ tryGetFromCache: true }, false, true, false, false, false);
+        });
 
-    it('option not allow cache, no selectionOverride, no shadow edit', () => {
-        runTest({ tryGetFromCache: false }, false, false, false, false, false);
-    });
+        it('option allow cache, has selectionOverride, no shadow edit', () => {
+            runTest({ tryGetFromCache: true }, true, false, false, false, false);
+        });
 
-    it('option not allow cache, no selectionOverride, has shadow edit', () => {
-        runTest({ tryGetFromCache: false }, false, true, false, false, false);
-    });
+        it('option allow cache, has selectionOverride, has shadow edit', () => {
+            runTest({ tryGetFromCache: true }, true, true, false, false, false);
+        });
 
-    it('option not allow cache, has selectionOverride, no shadow edit', () => {
-        runTest({ tryGetFromCache: false }, true, false, false, false, false);
-    });
+        it('option not allow cache, no selectionOverride, no shadow edit', () => {
+            runTest({ tryGetFromCache: false }, false, false, false, false, false);
+        });
 
-    it('option not allow cache, has selectionOverride, has shadow edit', () => {
-        runTest({ tryGetFromCache: false }, true, true, false, false, false);
+        it('option not allow cache, no selectionOverride, has shadow edit', () => {
+            runTest({ tryGetFromCache: false }, false, true, false, false, false);
+        });
+
+        it('option not allow cache, has selectionOverride, no shadow edit', () => {
+            runTest({ tryGetFromCache: false }, true, false, false, false, false);
+        });
+
+        it('option not allow cache, has selectionOverride, has shadow edit', () => {
+            runTest({ tryGetFromCache: false }, true, true, false, false, false);
+        });
     });
 });
