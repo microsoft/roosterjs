@@ -51,9 +51,3 @@ export class CustomReplaceCode extends SimplePluginCode {
         super('CustomReplace', 'roosterjsLegacy');
     }
 }
-
-export class MarkdownPluginCode extends SimplePluginCode {
-    constructor() {
-        super('MarkdownPlugin');
-    }
-}
