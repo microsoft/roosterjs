@@ -1,4 +1,4 @@
-import type { DomToModelOption } from '../context/DomToModelOption';
+import type { DomToModelOptionForCreateModel } from '../context/DomToModelOption';
 import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
 import type { PluginEventType } from '../event/PluginEventType';
@@ -72,7 +72,7 @@ export interface IEditor {
     formatContentModel(
         formatter: ContentModelFormatter,
         options?: FormatContentModelOptions,
-        domToModelOption?: DomToModelOption
+        domToModelOption?: DomToModelOptionForCreateModel
     ): void;
 
     /**

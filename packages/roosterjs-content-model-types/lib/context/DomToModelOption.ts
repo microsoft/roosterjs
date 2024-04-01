@@ -26,6 +26,16 @@ export interface DomToModelOption {
 }
 
 /**
+ * Options for creating DomToModelContext, used by formatContentModel and createContentModel API
+ */
+export interface DomToModelOptionForCreateModel extends DomToModelOption {
+    /**
+     * When set to true, it will try to reuse cached content model if any
+     */
+    tryGetFromCache: boolean;
+}
+
+/**
  * Options for DOM to Content Model conversion for paste only
  */
 export interface DomToModelOptionForSanitizing extends Required<DomToModelOption> {
