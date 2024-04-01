@@ -52,34 +52,26 @@ export function formatInsertPointWithContentModel(
         {
             processorOverride: {
                 child: getShadowChildProcessor(bundle),
-                '#text': getShadowTextProcessor(bundle),
+                textWithSelection: getShadowTextProcessor(bundle),
             },
+            tryGetFromCache: false,
         }
     );
 }
 
-/**
- * @internal Export for test only
- */
-export interface InsertPointBundle {
+interface InsertPointBundle {
     input: DOMInsertPoint;
     result?: InsertPoint;
 }
 
-/**
- * @internal Export for test only
- */
-export interface DomToModelContextWithPath extends DomToModelContext {
+interface DomToModelContextWithPath extends DomToModelContext {
     /**
      * Block group path of this insert point, from direct parent group to the root group
      */
     path?: ContentModelBlockGroup[];
 }
 
-/**
- * @internal Export for test only
- */
-export function getShadowChildProcessor(bundle: InsertPointBundle): ElementProcessor<ParentNode> {
+function getShadowChildProcessor(bundle: InsertPointBundle): ElementProcessor<ParentNode> {
     return (group, parent, context) => {
         const contextWithPath = context as DomToModelContextWithPath;
 
@@ -147,10 +139,7 @@ function handleElementShadowSelection(
     }
 }
 
-/**
- * @internal export for test only
- */
-export const getShadowTextProcessor = (bundle: InsertPointBundle): ElementProcessor<Text> => (
+const getShadowTextProcessor = (bundle: InsertPointBundle): ElementProcessor<Text> => (
     group,
     textNode,
     context

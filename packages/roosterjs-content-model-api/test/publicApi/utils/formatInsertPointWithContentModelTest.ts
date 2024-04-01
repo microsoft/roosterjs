@@ -1,15 +1,11 @@
 import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model-dom';
+import { formatInsertPointWithContentModel } from '../../../lib/publicApi/utils/formatInsertPointWithContentModel';
 import {
     ContentModelParagraph,
     ContentModelSegment,
     DomToModelOption,
+    ElementProcessor,
 } from 'roosterjs-content-model-types';
-import {
-    DomToModelContextWithPath,
-    formatInsertPointWithContentModel,
-    getShadowChildProcessor,
-    getShadowTextProcessor,
-} from '../../../lib/publicApi/utils/formatInsertPointWithContentModel';
 
 describe('formatInsertPointWithContentModel', () => {
     it('format with insertPoint', () => {
@@ -25,7 +21,7 @@ describe('formatInsertPointWithContentModel', () => {
             .createSpy('formatContentModel')
             .and.callFake((callback: Function, options: any, override: DomToModelOption) => {
                 expect(override.processorOverride?.child).toBeDefined();
-                expect(override.processorOverride?.['#text']).toBeDefined();
+                expect(override.processorOverride?.textWithSelection).toBeDefined();
 
                 override.processorOverride?.child!(mockedModel, node, mockedContext);
 
@@ -45,7 +41,13 @@ describe('formatInsertPointWithContentModel', () => {
         expect(formatContentModelSpy).toHaveBeenCalledWith(
             jasmine.anything() as any,
             mockedOptions,
-            jasmine.anything() as any
+            {
+                processorOverride: {
+                    child: jasmine.anything() as any,
+                    textWithSelection: jasmine.anything() as any,
+                },
+                tryGetFromCache: false,
+            }
         );
 
         const marker = {
@@ -84,7 +86,7 @@ describe('formatInsertPointWithContentModel', () => {
             .createSpy('formatContentModel')
             .and.callFake((callback: Function, options: any, override: DomToModelOption) => {
                 expect(override.processorOverride?.child).toBeDefined();
-                expect(override.processorOverride?.['#text']).toBeDefined();
+                expect(override.processorOverride?.textWithSelection).toBeDefined();
 
                 override.processorOverride?.child!(mockedModel, node2, mockedContext);
 
@@ -104,7 +106,13 @@ describe('formatInsertPointWithContentModel', () => {
         expect(formatContentModelSpy).toHaveBeenCalledWith(
             jasmine.anything() as any,
             mockedOptions,
-            jasmine.anything() as any
+            {
+                processorOverride: {
+                    child: jasmine.anything() as any,
+                    textWithSelection: jasmine.anything() as any,
+                },
+                tryGetFromCache: false,
+            }
         );
 
         expect(mockedCallback).toHaveBeenCalledWith(mockedModel, mockedContext, undefined);
@@ -128,14 +136,23 @@ describe('getShadowChildProcessor', () => {
         div.appendChild(span2);
 
         const group = createContentModelDocument();
-        const context: DomToModelContextWithPath = createDomToModelContext();
-        const bundle = {
-            input: {
+        const context = createDomToModelContext();
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const mockedEditor = {
+            formatContentModel: formatContentModelSpy,
+        } as any;
+
+        formatInsertPointWithContentModel(
+            mockedEditor,
+            {
                 node: div,
                 offset: shadow,
             },
-        };
-        const processor = getShadowChildProcessor(bundle);
+            () => {}
+        );
+
+        const processor = formatContentModelSpy.calls.argsFor(0)[2].processorOverride
+            .child as ElementProcessor<Node>;
 
         context.selection = {
             type: 'range',
@@ -204,7 +221,7 @@ describe('getShadowTextProcessor', () => {
     ) {
         const text = document.createTextNode(inputText);
         const group = createContentModelDocument();
-        const context: DomToModelContextWithPath = createDomToModelContext();
+        const context = createDomToModelContext();
 
         context.selection = {
             type: 'range',
@@ -221,13 +238,22 @@ describe('getShadowTextProcessor', () => {
             context.isInSelection = true;
         }
 
-        const bundle = {
-            input: {
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const mockedEditor = {
+            formatContentModel: formatContentModelSpy,
+        } as any;
+
+        formatInsertPointWithContentModel(
+            mockedEditor,
+            {
                 node: text,
                 offset: shadowOffset,
             },
-        };
-        const processor = getShadowTextProcessor(bundle);
+            () => {}
+        );
+
+        const processor = formatContentModelSpy.calls.argsFor(0)[2].processorOverride
+            .textWithSelection as ElementProcessor<Node>;
 
         processor(group, text, context);
 
