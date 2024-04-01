@@ -474,6 +474,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             tableMenu,
             imageMenu,
             watermarkText,
+            markdownOptions,
         } = this.state.initState;
         return [
             pluginList.autoFormat &&
@@ -488,13 +489,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
-            pluginList.markdown &&
-                new MarkdownPlugin({
-                    bold: true,
-                    italic: true,
-                    strikethrough: true,
-                    codeFormat: {},
-                }),
+            pluginList.markdown && new MarkdownPlugin(markdownOptions),
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),

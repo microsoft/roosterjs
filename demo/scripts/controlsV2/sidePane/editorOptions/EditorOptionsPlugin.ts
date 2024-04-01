@@ -38,6 +38,12 @@ const initialState: OptionState = {
     imageMenu: true,
     tableMenu: true,
     listMenu: true,
+    markdownOptions: {
+        bold: true,
+        italic: true,
+        strikethrough: true,
+        codeFormat: {},
+    },
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {
