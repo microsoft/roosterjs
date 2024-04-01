@@ -44,6 +44,12 @@ const initialState: OptionState = {
         autoNumbering: true,
         autoUnlink: false,
     },
+    markdownOptions: {
+        bold: true,
+        italic: true,
+        strikethrough: true,
+        codeFormat: {},
+    },
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {
