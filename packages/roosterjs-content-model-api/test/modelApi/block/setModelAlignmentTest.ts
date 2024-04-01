@@ -191,7 +191,7 @@ describe('align left', () => {
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -254,7 +254,7 @@ describe('align left', () => {
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -369,7 +369,7 @@ describe('align left', () => {
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: { textAlign: 'center' },
@@ -482,7 +482,7 @@ describe('align left', () => {
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: { textAlign: 'end' },
@@ -597,7 +597,7 @@ describe('align left', () => {
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -717,7 +717,7 @@ describe('align left', () => {
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -838,7 +838,7 @@ describe('align left', () => {
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -964,7 +964,7 @@ describe('align left', () => {
                     blocks: [para, para2],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: { textAlign: 'justify' },

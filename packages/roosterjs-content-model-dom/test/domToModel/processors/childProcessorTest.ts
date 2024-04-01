@@ -454,7 +454,7 @@ describe('childProcessor', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', format: {}, dataset: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -503,7 +503,7 @@ describe('childProcessor', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', format: { startNumberOverride: 1 }, dataset: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',

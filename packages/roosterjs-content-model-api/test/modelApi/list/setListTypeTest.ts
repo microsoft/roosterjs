@@ -89,7 +89,7 @@ describe('indent', () => {
                             fontSize: undefined,
                             textColor: undefined,
                         },
-                        isSelected: true,
+                        isSelected: false,
                     },
                     format: {},
                 },
@@ -149,7 +149,7 @@ describe('indent', () => {
                             fontSize: undefined,
                             textColor: undefined,
                         },
-                        isSelected: true,
+                        isSelected: false,
                     },
                     format: {},
                 },
@@ -191,7 +191,7 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [{ listType: 'OL', format: {}, dataset: {} }],
                     blocks: [para],
-                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: false },
                     format: {},
                 },
             ],
@@ -221,7 +221,7 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [],
                     blocks: [para],
-                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: false },
                     format: {},
                 },
             ],
@@ -275,7 +275,7 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [],
                     blocks: [para],
-                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: false },
                     format: {},
                 },
             ],
@@ -332,7 +332,7 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     blocks: [para1],
-                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: false },
                     format: {},
                 },
                 {
@@ -343,7 +343,7 @@ describe('indent', () => {
                         { listType: 'OL', dataset: {}, format: {} },
                     ],
                     blocks: [para2],
-                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: false },
                     format: {},
                 },
                 {
@@ -375,7 +375,7 @@ describe('indent', () => {
                                     fontSize: undefined,
                                     textColor: undefined,
                                 },
-                                isSelected: true,
+                                isSelected: false,
                             },
                             format: {},
                         },
@@ -438,7 +438,7 @@ describe('indent', () => {
                             fontSize: '10px',
                             textColor: 'black',
                         },
-                        isSelected: true,
+                        isSelected: false,
                     },
                     format: {
                         textAlign: 'start',
@@ -512,7 +512,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontFamily: undefined,
                             fontSize: undefined,
@@ -541,7 +541,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontFamily: undefined,
                             fontSize: undefined,
@@ -596,7 +596,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontFamily: undefined,
                             fontSize: undefined,
@@ -653,7 +653,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontFamily: undefined,
                             fontSize: undefined,
@@ -681,7 +681,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontFamily: undefined,
                             fontSize: undefined,
@@ -709,7 +709,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontFamily: undefined,
                             fontSize: undefined,
@@ -745,7 +745,7 @@ describe('indent', () => {
                     blockGroupType: 'ListItem',
                     blocks: [para1],
                     levels: [{ listType: 'UL', format: {}, dataset: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     format: {},
                 },
             ],
@@ -784,7 +784,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontFamily: undefined,
                             fontSize: undefined,
@@ -814,7 +814,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontFamily: undefined,
                             fontSize: undefined,
@@ -864,7 +864,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -902,7 +902,7 @@ describe('indent', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
