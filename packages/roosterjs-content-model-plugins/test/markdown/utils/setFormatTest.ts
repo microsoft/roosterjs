@@ -97,15 +97,11 @@ describe('setFormat', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'test',
                             format: {
                                 fontWeight: 'bold',
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -152,15 +148,11 @@ describe('setFormat', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'test',
                             format: {
                                 strikethrough: true,
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -187,6 +179,7 @@ describe('setFormat', () => {
                             segmentType: 'Text',
                             text: '_test_',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -207,15 +200,11 @@ describe('setFormat', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'test',
                             format: {
                                 italic: true,
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -377,15 +366,11 @@ describe('setFormat', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'test  one  two',
                             format: {
                                 fontWeight: 'bold',
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -436,13 +421,16 @@ describe('setFormat', () => {
                             segmentType: 'Text',
                             text: 'test  one  ',
                             format: {},
+                            isSelected: undefined,
                         },
+
                         {
                             segmentType: 'Text',
                             text: 'two',
                             format: {
                                 fontWeight: 'bold',
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -457,33 +445,6 @@ describe('setFormat', () => {
         };
 
         runTest(input, '*', { fontWeight: 'bold' }, expectedModel, true);
-    });
-
-    it('should not set bold', () => {
-        const input: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: '*test**',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
-
-        runTest(input, '*', { fontWeight: 'bold' }, input, false);
     });
 
     it('should not set bold - only one *', () => {

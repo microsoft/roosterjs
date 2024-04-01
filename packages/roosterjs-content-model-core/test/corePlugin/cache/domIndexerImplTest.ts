@@ -2,6 +2,7 @@ import * as setSelection from 'roosterjs-content-model-dom/lib/modelApi/selectio
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { domIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
 import {
+    CacheSelection,
     ContentModelDocument,
     ContentModelSegment,
     DOMSelection,
@@ -551,9 +552,16 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
     it('has old range - collapsed, expanded new range', () => {
         const node = document.createTextNode('test') as any;
-        const oldRangeEx: DOMSelection = {
+        const oldRangeEx: CacheSelection = {
             type: 'range',
-            range: createRange(node, 2),
+            start: {
+                node,
+                offset: 2,
+            },
+            end: {
+                node,
+                offset: 2,
+            },
             isReverted: false,
         };
         const newRangeEx: DOMSelection = {
@@ -602,9 +610,16 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
     it('has old range - expanded, expanded new range', () => {
         const node = document.createTextNode('test') as any;
-        const oldRangeEx: DOMSelection = {
+        const oldRangeEx: CacheSelection = {
             type: 'range',
-            range: createRange(node, 1, node, 3),
+            start: {
+                node,
+                offset: 1,
+            },
+            end: {
+                node,
+                offset: 3,
+            },
             isReverted: false,
         };
         const newRangeEx: DOMSelection = {

@@ -487,7 +487,7 @@ describe('handleList handles metadata', () => {
             formatHolder: {
                 segmentType: 'SelectionMarker',
                 format: {},
-                isSelected: true,
+                isSelected: false,
             },
             levels: [listLevel0, listLevel1],
         };

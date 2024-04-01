@@ -476,13 +476,24 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             watermarkText,
         } = this.state.initState;
         return [
-            pluginList.autoFormat && new AutoFormatPlugin(),
+            pluginList.autoFormat &&
+                new AutoFormatPlugin({
+                    autoBullet: true,
+                    autoNumbering: true,
+                    autoUnlink: true,
+                    autoLink: true,
+                }),
             pluginList.edit && new EditPlugin(),
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
-            pluginList.markdown && new MarkdownPlugin(),
+            pluginList.markdown &&
+                new MarkdownPlugin({
+                    bold: true,
+                    italic: true,
+                    strikethrough: true,
+                }),
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),

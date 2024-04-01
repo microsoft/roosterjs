@@ -1,7 +1,7 @@
 import { setFormat } from './utils/setFormat';
 import type {
     ContentChangedEvent,
-    ContentModelCode,
+    ContentModelCodeFormat,
     EditorInputEvent,
     EditorPlugin,
     IEditor,
@@ -16,17 +16,16 @@ export interface MarkdownOptions {
     strikethrough?: boolean;
     bold?: boolean;
     italic?: boolean;
-    code?: ContentModelCode;
+    code?: ContentModelCodeFormat;
 }
 
 /**
  * @internal
  */
-const DefaultOptions: Required<MarkdownOptions> = {
-    strikethrough: true,
-    bold: true,
-    italic: true,
-    code: { format: {} },
+const DefaultOptions: Partial<MarkdownOptions> = {
+    strikethrough: false,
+    bold: false,
+    italic: false,
 };
 
 /**
@@ -90,6 +89,7 @@ export class MarkdownPlugin implements EditorPlugin {
                     this.handleEditorInputEvent(this.editor, event);
                     break;
                 case 'keyDown':
+                    this.handleBackspaceEvent(event);
                     this.handleKeyDownEvent(event);
                     break;
                 case 'contentChanged':
@@ -162,7 +162,6 @@ export class MarkdownPlugin implements EditorPlugin {
                     this.disableAllFeatures();
                     this.lastKeyTyped = null;
                     break;
-                case 'Backspace':
                 case ' ':
                     if (this.lastKeyTyped === '*' && this.shouldBold) {
                         this.shouldBold = false;
@@ -179,6 +178,21 @@ export class MarkdownPlugin implements EditorPlugin {
                     this.lastKeyTyped = rawEvent.key;
                     break;
             }
+        }
+    }
+
+    private handleBackspaceEvent(event: KeyDownEvent) {
+        if (!event.handledByEditFeature && event.rawEvent.key === 'Backspace') {
+            if (this.lastKeyTyped === '*' && this.shouldBold) {
+                this.shouldBold = false;
+            } else if (this.lastKeyTyped === '~' && this.shouldStrikethrough) {
+                this.shouldStrikethrough = false;
+            } else if (this.lastKeyTyped === '_' && this.shouldItalic) {
+                this.shouldItalic = false;
+            } else if (this.lastKeyTyped === '`' && this.shouldCode) {
+                this.shouldCode = false;
+            }
+            this.lastKeyTyped = null;
         }
     }
 

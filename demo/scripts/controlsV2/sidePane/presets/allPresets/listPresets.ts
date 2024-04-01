@@ -35,7 +35,7 @@ export const simpleList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -78,7 +78,7 @@ export const simpleList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -130,7 +130,7 @@ export const simpleList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -191,7 +191,7 @@ export const simpleList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -266,7 +266,7 @@ export const simpleList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -307,7 +307,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -346,7 +346,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -385,7 +385,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -424,7 +424,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -472,7 +472,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -520,7 +520,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -568,7 +568,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -625,7 +625,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -682,7 +682,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -739,7 +739,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -769,7 +769,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -808,7 +808,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -856,7 +856,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -904,7 +904,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -943,7 +943,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -973,7 +973,7 @@ export const numberedList: Preset = {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},

@@ -220,7 +220,7 @@ describe('cloneModel', () => {
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         format: { fontSize: '20' },
-                        isSelected: true,
+                        isSelected: false,
                     },
                     levels: [
                         {

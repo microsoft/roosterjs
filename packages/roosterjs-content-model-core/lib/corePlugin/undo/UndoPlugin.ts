@@ -30,8 +30,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
             snapshotsManager: createSnapshotsManager(options.snapshots),
             isRestoring: false,
             isNested: false,
-            posContainer: null,
-            posOffset: null,
+            autoCompleteInsertPoint: null,
             lastKeyPress: null,
         };
     }
@@ -129,8 +128,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
             if (evt.key == Backspace && !evt.ctrlKey && this.canUndoAutoComplete(editor)) {
                 evt.preventDefault();
                 undo(editor);
-                this.state.posContainer = null;
-                this.state.posOffset = null;
+                this.state.autoCompleteInsertPoint = null;
                 this.state.lastKeyPress = evt.key;
             } else if (!evt.defaultPrevented) {
                 const selection = editor.getDOMSelection();
@@ -232,15 +230,14 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
             this.state.snapshotsManager.canUndoAutoComplete() &&
             selection?.type == 'range' &&
             selection.range.collapsed &&
-            selection.range.startContainer == this.state.posContainer &&
-            selection.range.startOffset == this.state.posOffset
+            selection.range.startContainer == this.state.autoCompleteInsertPoint?.node &&
+            selection.range.startOffset == this.state.autoCompleteInsertPoint.offset
         );
     }
 
     private addUndoSnapshot() {
         this.editor?.takeSnapshot();
-        this.state.posContainer = null;
-        this.state.posOffset = null;
+        this.state.autoCompleteInsertPoint = null;
     }
 
     private isCtrlOrMetaPressed(editor: IEditor, event: KeyboardEvent) {

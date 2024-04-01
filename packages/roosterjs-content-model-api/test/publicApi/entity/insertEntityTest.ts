@@ -1,8 +1,9 @@
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
+import * as formatInsertPointWithContentModel from '../../../lib/publicApi/utils/formatInsertPointWithContentModel';
 import * as insertEntityModel from '../../../lib/modelApi/entity/insertEntityModel';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { ChangeSource } from 'roosterjs-content-model-dom';
-import { IEditor } from 'roosterjs-content-model-types';
+import { DOMInsertPoint, IEditor } from 'roosterjs-content-model-types';
 import { insertEntity } from '../../../lib/publicApi/entity/insertEntity';
 import {
     FormatContentModelContext,
@@ -16,6 +17,7 @@ describe('insertEntity', () => {
     const model = 'MockedModel' as any;
 
     let formatWithContentModelSpy: jasmine.Spy;
+    let formatInsertPointWithContentModelSpy: jasmine.Spy;
     let triggerContentChangedEventSpy: jasmine.Spy;
     let getDocumentSpy: jasmine.Spy;
     let createElementSpy: jasmine.Spy;
@@ -57,6 +59,10 @@ describe('insertEntity', () => {
             .and.callFake((formatter: Function, options: FormatContentModelOptions) => {
                 formatter(model, context);
             });
+        formatInsertPointWithContentModelSpy = spyOn(
+            formatInsertPointWithContentModel,
+            'formatInsertPointWithContentModel'
+        );
 
         triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEventSpy');
         createElementSpy = jasmine.createSpy('createElementSpy').and.returnValue(wrapper);
@@ -105,7 +111,8 @@ describe('insertEntity', () => {
             'begin',
             false,
             undefined,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
@@ -153,7 +160,8 @@ describe('insertEntity', () => {
             'root',
             true,
             undefined,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
@@ -172,9 +180,9 @@ describe('insertEntity', () => {
     });
 
     it('block inline entity with more options', () => {
-        const range = { range: 'RangeEx' } as any;
+        const domPos: DOMInsertPoint = { pos: 'DOMPOS' } as any;
         const contentNode = 'ContentNode' as any;
-        const entity = insertEntity(editor, type, true, range, {
+        const entity = insertEntity(editor, type, true, domPos, {
             contentNode: contentNode,
             focusAfterEntity: true,
             skipUndoSnapshot: true,
@@ -187,10 +195,21 @@ describe('insertEntity', () => {
         expect(setPropertySpy).not.toHaveBeenCalledWith('display', 'inline-block');
         expect(setPropertySpy).not.toHaveBeenCalledWith('width', '100%');
         expect(appendChildSpy).toHaveBeenCalledWith(contentNode);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[1].apiName).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[1].changeSource).toEqual(
+        expect(formatWithContentModelSpy).not.toHaveBeenCalled();
+        expect(formatInsertPointWithContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(formatInsertPointWithContentModelSpy).toHaveBeenCalledWith(
+            editor,
+            domPos,
+            jasmine.anything() as any,
+            jasmine.anything() as any
+        );
+        expect(formatInsertPointWithContentModelSpy.calls.argsFor(0)[3].apiName).toBe(apiName);
+        expect(formatInsertPointWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
             ChangeSource.InsertEntity
         );
+
+        const mockedIP = 'IP' as any;
+        formatInsertPointWithContentModelSpy.calls.argsFor(0)[2](model, context, mockedIP);
 
         expect(insertEntityModelSpy).toHaveBeenCalledWith(
             model,
@@ -208,7 +227,8 @@ describe('insertEntity', () => {
             'focus',
             true,
             true,
-            context
+            context,
+            mockedIP
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
@@ -257,7 +277,8 @@ describe('insertEntity', () => {
             'begin',
             false,
             undefined,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
@@ -329,7 +350,8 @@ describe('insertEntity', () => {
             'begin',
             false,
             undefined,
-            context
+            context,
+            undefined
         );
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();

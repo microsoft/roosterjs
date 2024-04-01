@@ -13,9 +13,9 @@ import type {
     ContentModelDocument,
     ContentModelEntity,
     ContentModelParagraph,
-    DeleteSelectionResult,
     FormatContentModelContext,
     InsertEntityPosition,
+    InsertPoint,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -27,11 +27,12 @@ export function insertEntityModel(
     position: InsertEntityPosition,
     isBlock: boolean,
     focusAfterEntity?: boolean,
-    context?: FormatContentModelContext
+    context?: FormatContentModelContext,
+    insertPointOverride?: InsertPoint
 ) {
     let blockParent: ContentModelBlockGroup | undefined;
     let blockIndex = -1;
-    let deleteResult: DeleteSelectionResult;
+    let insertPoint: InsertPoint | null;
 
     if (position == 'begin' || position == 'end') {
         blockParent = model;
@@ -40,12 +41,8 @@ export function insertEntityModel(
         if (!isBlock) {
             Object.assign(entityModel.format, model.format);
         }
-    } else if ((deleteResult = deleteSelection(model, [], context)).insertPoint) {
-        const { marker, paragraph, path } = deleteResult.insertPoint;
-
-        if (deleteResult.deleteResult == 'range') {
-            normalizeContentModel(model);
-        }
+    } else if ((insertPoint = getInsertPoint(model, insertPointOverride, context))) {
+        const { marker, paragraph, path } = insertPoint;
 
         if (!isBlock) {
             const index = paragraph.segments.indexOf(marker);
@@ -109,5 +106,24 @@ export function insertEntityModel(
             isBlock ? segments.unshift(marker) : segments.push(marker);
             setSelection(model, marker, marker);
         }
+    }
+}
+
+function getInsertPoint(
+    model: ContentModelDocument,
+    insertPointOverride?: InsertPoint,
+    context?: FormatContentModelContext
+): InsertPoint | null {
+    if (insertPointOverride) {
+        return insertPointOverride;
+    } else {
+        const deleteResult = deleteSelection(model, [], context);
+        const insertPoint = deleteResult.insertPoint;
+
+        if (deleteResult.deleteResult == 'range') {
+            normalizeContentModel(model);
+        }
+
+        return insertPoint;
     }
 }
