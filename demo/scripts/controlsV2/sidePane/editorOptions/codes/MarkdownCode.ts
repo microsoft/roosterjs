@@ -7,6 +7,11 @@ export class MarkdownCode extends CodeElement {
     }
 
     getCode() {
-        return `new roosterjs.MarkdownPlugin('${this.markdownOptions}')`;
+        return `new roosterjs.MarkdownPlugin({
+            bold: ${this.markdownOptions.bold},
+            italic: ${this.markdownOptions.italic},
+            strikethrough: ${this.markdownOptions.strikethrough},
+            codeFormat: ${JSON.stringify(this.markdownOptions.codeFormat)},
+        })`;
     }
 }
