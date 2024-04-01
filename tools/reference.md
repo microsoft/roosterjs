@@ -1,5 +1,9 @@
 Welcome to RoosterJs API References!
 
+## Upgrade from RoosterJs 8.\*
+
+Please see [here](https://github.com/microsoft/roosterjs/wiki/RoosterJs-9).
+
 ## Content
 
 Rooster contains 6 basic packages.

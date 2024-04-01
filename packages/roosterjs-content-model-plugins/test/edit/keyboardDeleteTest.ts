@@ -433,7 +433,7 @@ describe('keyboardDelete', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                     },
@@ -476,7 +476,7 @@ describe('keyboardDelete', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                     },

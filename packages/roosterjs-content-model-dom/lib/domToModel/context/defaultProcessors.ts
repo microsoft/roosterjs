@@ -17,6 +17,7 @@ import { listProcessor } from '../processors/listProcessor';
 import { pProcessor } from '../processors/pProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
+import { textWithSelectionProcessor } from '../processors/textWithSelectionProcessor';
 import type { ElementProcessorMap } from 'roosterjs-content-model-types';
 
 /**
@@ -57,6 +58,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
 
     '*': generalProcessor,
     '#text': textProcessor,
+    textWithSelection: textWithSelectionProcessor,
     element: elementProcessor,
     entity: entityProcessor,
     child: childProcessor,

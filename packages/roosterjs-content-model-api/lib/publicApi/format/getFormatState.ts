@@ -1,3 +1,4 @@
+import { reducedModelChildProcessor } from '../../modelApi/common/reducedModelChildProcessor';
 import { retrieveModelFormatState } from 'roosterjs-content-model-dom';
 import type { IEditor, ContentModelFormatState } from 'roosterjs-content-model-types';
 
@@ -7,7 +8,6 @@ import type { IEditor, ContentModelFormatState } from 'roosterjs-content-model-t
  */
 export function getFormatState(editor: IEditor): ContentModelFormatState {
     const pendingFormat = editor.getPendingFormat();
-    const model = editor.getContentModelCopy('reduced');
     const manager = editor.getSnapshotsManager();
     const result: ContentModelFormatState = {
         canUndo: manager.hasNewContent || manager.canMove(-1),
@@ -15,7 +15,20 @@ export function getFormatState(editor: IEditor): ContentModelFormatState {
         isDarkMode: editor.isDarkMode(),
     };
 
-    retrieveModelFormatState(model, pendingFormat, result);
+    editor.formatContentModel(
+        model => {
+            retrieveModelFormatState(model, pendingFormat, result);
+
+            return false;
+        },
+        undefined /*options*/,
+        {
+            processorOverride: {
+                child: reducedModelChildProcessor,
+            },
+            tryGetFromCache: true,
+        }
+    );
 
     return result;
 }

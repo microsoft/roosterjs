@@ -15,6 +15,10 @@ export function createListItem(
     levels: ContentModelListLevel[],
     format?: ContentModelSegmentFormat
 ): ContentModelListItem {
+    const formatHolder = createSelectionMarker(format);
+
+    formatHolder.isSelected = false;
+
     return {
         blockType: 'BlockGroup',
         blockGroupType: 'ListItem',
@@ -22,7 +26,7 @@ export function createListItem(
         levels: levels
             ? levels.map(level => createListLevel(level.listType, level.format, level.dataset))
             : [],
-        formatHolder: createSelectionMarker(format),
+        formatHolder,
         format: {},
     };
 }

@@ -14,6 +14,7 @@ describe('createLinkAfterSpace', () => {
                     newEntities: [],
                     deletedEntities: [],
                     newImages: [],
+                    canUndoByBackspace: true,
                 });
                 expect(result).toBe(expectedResult);
             });
@@ -107,16 +108,12 @@ describe('createLinkAfterSpace', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'www.bing.com',
                             format: {},
+                            isSelected: undefined,
                             link: {
                                 format: {
-                                    href: 'www.bing.com',
+                                    href: 'http://www.bing.com',
                                     underline: true,
                                 },
                                 dataset: {},
@@ -203,15 +200,17 @@ describe('createLinkAfterSpace', () => {
                             segmentType: 'Text',
                             text: 'this is the link ',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'Text',
                             text: 'www.bing.com',
                             format: {},
+                            isSelected: undefined,
                             link: {
                                 format: {
                                     underline: true,
-                                    href: 'www.bing.com',
+                                    href: 'http://www.bing.com',
                                 },
                                 dataset: {},
                             },
@@ -255,5 +254,91 @@ describe('createLinkAfterSpace', () => {
             format: {},
         };
         runTest(input, input, false);
+    });
+
+    it('link after link', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.bing.com',
+                            format: {},
+                            link: {
+                                format: {
+                                    href: 'www.bing.com',
+                                    underline: true,
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: ' www.bing.com',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const expected: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.bing.com',
+                            format: {},
+                            link: {
+                                format: {
+                                    href: 'www.bing.com',
+                                    underline: true,
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: ' ',
+                            format: {},
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'www.bing.com',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                format: {
+                                    href: 'http://www.bing.com',
+                                    underline: true,
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, expected, true);
     });
 });

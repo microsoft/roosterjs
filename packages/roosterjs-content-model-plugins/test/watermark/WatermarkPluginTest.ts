@@ -44,13 +44,13 @@ describe('WatermarkPlugin', () => {
             'before'
         );
 
-        plugin.onPluginEvent({ eventType: 'input' } as any);
+        plugin.onPluginEvent({ eventType: 'input', rawEvent: {} } as any);
         expect(formatContentModelSpy).toHaveBeenCalledTimes(2);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
 
         isModelEmptyFastSpy.and.returnValue(false);
 
-        plugin.onPluginEvent({ eventType: 'input' } as any);
+        plugin.onPluginEvent({ eventType: 'input', rawEvent: {} } as any);
         expect(formatContentModelSpy).toHaveBeenCalledTimes(3);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
         expect(setEditorStyleSpy).toHaveBeenCalledWith('_WatermarkContent', null);
@@ -68,13 +68,13 @@ describe('WatermarkPlugin', () => {
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).not.toHaveBeenCalled();
 
-        plugin.onPluginEvent({ eventType: 'input' } as any);
+        plugin.onPluginEvent({ eventType: 'input', rawEvent: {} } as any);
         expect(formatContentModelSpy).toHaveBeenCalledTimes(2);
         expect(setEditorStyleSpy).not.toHaveBeenCalled();
 
         isModelEmptyFastSpy.and.returnValue(true);
 
-        plugin.onPluginEvent({ eventType: 'input' } as any);
+        plugin.onPluginEvent({ eventType: 'input', rawEvent: {} } as any);
         expect(formatContentModelSpy).toHaveBeenCalledTimes(3);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -105,15 +105,41 @@ describe('WatermarkPlugin', () => {
             'before'
         );
 
-        plugin.onPluginEvent({ eventType: 'input' } as any);
+        plugin.onPluginEvent({ eventType: 'input', rawEvent: {} } as any);
         expect(formatContentModelSpy).toHaveBeenCalledTimes(2);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
 
         isModelEmptyFastSpy.and.returnValue(false);
 
-        plugin.onPluginEvent({ eventType: 'input' } as any);
+        plugin.onPluginEvent({ eventType: 'input', rawEvent: {} } as any);
         expect(formatContentModelSpy).toHaveBeenCalledTimes(3);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
         expect(setEditorStyleSpy).toHaveBeenCalledWith('_WatermarkContent', null);
+    });
+
+    it('Input event with insertText', () => {
+        isModelEmptyFastSpy.and.returnValue(true);
+
+        const plugin = new WatermarkPlugin('test', {
+            fontFamily: 'Arial',
+            fontSize: '20pt',
+            textColor: 'red',
+        });
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({ eventType: 'editorReady' });
+
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            '_WatermarkContent',
+            'position: absolute; pointer-events: none; content: "test";font-family: Arial!important;font-size: 20pt!important;color: red!important;',
+            'before'
+        );
+
+        plugin.onPluginEvent({ eventType: 'input', rawEvent: { inputType: 'insertText' } } as any);
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
     });
 });
