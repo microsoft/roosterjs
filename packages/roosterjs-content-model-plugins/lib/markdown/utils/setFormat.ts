@@ -27,30 +27,36 @@ export function setFormat(editor: IEditor, character: string, format: ContentMod
                 const markerIndex = paragraph.segments.indexOf(marker);
                 if (markerIndex > 0 && paragraph.segments[markerIndex - 1]) {
                     const segmentBeforeMarker = paragraph.segments[markerIndex - 1];
+
                     if (
                         segmentBeforeMarker.segmentType == 'Text' &&
                         segmentBeforeMarker.text[segmentBeforeMarker.text.length - 1] == character
                     ) {
-                        const lastCharIndex = segmentBeforeMarker.text.length;
-                        const firstCharIndex = segmentBeforeMarker.text
-                            .substring(0, lastCharIndex - 1)
-                            .lastIndexOf(character);
+                        const textBeforeMarker = segmentBeforeMarker.text.slice(0, -1);
+                        if (textBeforeMarker.indexOf(character) > -1) {
+                            const lastCharIndex = segmentBeforeMarker.text.length;
+                            const firstCharIndex = segmentBeforeMarker.text
+                                .substring(0, lastCharIndex - 1)
+                                .lastIndexOf(character);
 
-                        const formattedText = splitTextSegment(
-                            segmentBeforeMarker,
-                            paragraph,
-                            firstCharIndex,
-                            lastCharIndex
-                        );
+                            const formattedText = splitTextSegment(
+                                segmentBeforeMarker,
+                                paragraph,
+                                firstCharIndex,
+                                lastCharIndex
+                            );
 
-                        formattedText.text = formattedText.text.replace(character, '').slice(0, -1);
-                        formattedText.format = {
-                            ...formattedText.format,
-                            ...format,
-                        };
+                            formattedText.text = formattedText.text
+                                .replace(character, '')
+                                .slice(0, -1);
+                            formattedText.format = {
+                                ...formattedText.format,
+                                ...format,
+                            };
 
-                        context.canUndoByBackspace = true;
-                        return true;
+                            context.canUndoByBackspace = true;
+                            return true;
+                        }
                     }
                 }
             }

@@ -87,6 +87,7 @@ export class MarkdownPlugin implements EditorPlugin {
                     this.handleEditorInputEvent(this.editor, event);
                     break;
                 case 'keyDown':
+                    this.handleBackspaceEvent(event);
                     this.handleKeyDownEvent(event);
                     break;
                 case 'contentChanged':
@@ -151,7 +152,6 @@ export class MarkdownPlugin implements EditorPlugin {
                     this.shouldStrikethrough = false;
                     this.lastKeyTyped = null;
                     break;
-                case 'Backspace':
                 case ' ':
                     if (this.lastKeyTyped === '*' && this.shouldBold) {
                         this.shouldBold = false;
@@ -166,6 +166,19 @@ export class MarkdownPlugin implements EditorPlugin {
                     this.lastKeyTyped = rawEvent.key;
                     break;
             }
+        }
+    }
+
+    private handleBackspaceEvent(event: KeyDownEvent) {
+        if (!event.handledByEditFeature && event.rawEvent.key === 'Backspace') {
+            if (this.lastKeyTyped === '*' && this.shouldBold) {
+                this.shouldBold = false;
+            } else if (this.lastKeyTyped === '~' && this.shouldStrikethrough) {
+                this.shouldStrikethrough = false;
+            } else if (this.lastKeyTyped === '_' && this.shouldItalic) {
+                this.shouldItalic = false;
+            }
+            this.lastKeyTyped = null;
         }
     }
 
