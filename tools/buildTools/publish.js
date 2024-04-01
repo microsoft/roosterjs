@@ -20,7 +20,7 @@ function publish(options) {
             npmVersion = exec(`npm view ${packageName}@${tagname} version`).toString().trim();
         } catch (e) {}
 
-        if (localVersion == '0.0.0') {
+        if (!localVersion || localVersion == '0.0.0') {
             console.log(
                 `Skip publishing package ${packageName}, because version (${localVersion}) is not ready to publish`
             );

@@ -128,6 +128,7 @@ export {
     ImageSelection,
     RangeSelection,
     TableSelection,
+    DOMInsertPoint,
 } from './selection/DOMSelection';
 export { InsertPoint } from './selection/InsertPoint';
 export { TableSelectionContext } from './selection/TableSelectionContext';
@@ -182,7 +183,11 @@ export {
     ContentModelSegmentHandler,
     ContentModelBlockHandler,
 } from './context/ContentModelHandler';
-export { DomToModelOption, DomToModelOptionForSanitizing } from './context/DomToModelOption';
+export {
+    DomToModelOption,
+    DomToModelOptionForSanitizing,
+    DomToModelOptionForCreateModel,
+} from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { DomIndexer } from './context/DomIndexer';
 export { TextMutationObserver } from './context/TextMutationObserver';
@@ -209,6 +214,7 @@ export {
     GetDOMSelection,
     SetContentModel,
     SetDOMSelection,
+    SetLogicalRoot,
     FormatContentModel,
     CoreApiMap,
     EditorCore,
@@ -219,19 +225,28 @@ export {
     AttachDomEvent,
     RestoreUndoSnapshot,
     GetVisibleViewport,
+    SetEditorStyle,
 } from './editor/EditorCore';
 export { EditorCorePlugins } from './editor/EditorCorePlugins';
 export { EditorPlugin } from './editor/EditorPlugin';
 export { PluginWithState } from './editor/PluginWithState';
 export { ContextMenuProvider } from './editor/ContextMenuProvider';
 
-export { CachePluginState } from './pluginState/CachePluginState';
+export {
+    CachePluginState,
+    RangeSelectionForCache,
+    CacheSelection,
+} from './pluginState/CachePluginState';
 export { FormatPluginState, PendingFormat } from './pluginState/FormatPluginState';
 export { CopyPastePluginState } from './pluginState/CopyPastePluginState';
 export { DOMEventPluginState } from './pluginState/DOMEventPluginState';
 export { LifecyclePluginState } from './pluginState/LifecyclePluginState';
 export { EntityPluginState, KnownEntityItem } from './pluginState/EntityPluginState';
-export { SelectionPluginState } from './pluginState/SelectionPluginState';
+export {
+    SelectionPluginState,
+    TableSelectionInfo,
+    TableCellCoordinate,
+} from './pluginState/SelectionPluginState';
 export { UndoPluginState } from './pluginState/UndoPluginState';
 export {
     PluginKey,
@@ -284,6 +299,15 @@ export { DOMHelper } from './parameter/DOMHelper';
 export { ImageEditOperation, ImageEditor } from './parameter/ImageEditor';
 export { CachedElementHandler, CloneModelOptions } from './parameter/CloneModelOptions';
 export { LinkData } from './parameter/LinkData';
+export { MergeModelOption } from './parameter/MergeModelOption';
+export {
+    IterateSelectionsCallback,
+    IterateSelectionsOption,
+} from './parameter/IterateSelectionsOption';
+export { NodeTypeMap } from './parameter/NodeTypeMap';
+export { TypeOfBlockGroup } from './parameter/TypeOfBlockGroup';
+export { OperationalBlocks } from './parameter/OperationalBlocks';
+export { ParsedTable, ParsedTableCell } from './parameter/ParsedTable';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
@@ -304,6 +328,7 @@ export {
     KeyUpEvent,
     CompositionEndEvent,
 } from './event/KeyboardEvent';
+export { LogicalRootChangedEvent } from './event/LogicalRootChangedEvent';
 export { MouseDownEvent, MouseUpEvent } from './event/MouseEvent';
 export { PluginEvent } from './event/PluginEvent';
 export {

@@ -36,11 +36,15 @@ export function addSegment(
     }
 
     if (newSegment.segmentType == 'SelectionMarker') {
-        if (!lastSegment || !lastSegment.isSelected) {
+        if (!lastSegment || !lastSegment.isSelected || !newSegment.isSelected) {
             paragraph.segments.push(newSegment);
         }
     } else {
-        if (newSegment.isSelected && lastSegment?.segmentType == 'SelectionMarker') {
+        if (
+            newSegment.isSelected &&
+            lastSegment?.segmentType == 'SelectionMarker' &&
+            lastSegment.isSelected
+        ) {
             paragraph.segments.pop();
         }
 

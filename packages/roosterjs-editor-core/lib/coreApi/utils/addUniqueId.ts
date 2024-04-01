@@ -1,4 +1,5 @@
 /**
+ * @internal
  * Add an unique id to element and ensure that is unique
  * @param el The HTMLElement that will receive the id
  * @param idPrefix The prefix that will antecede the id (Ex: tableSelected01)

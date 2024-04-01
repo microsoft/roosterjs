@@ -1,5 +1,5 @@
 import { BorderFormat } from 'roosterjs-content-model-types';
-import { combineBorderValue, extractBorderValues } from 'roosterjs-content-model-core';
+import { combineBorderValue, extractBorderValues } from 'roosterjs-content-model-dom';
 import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
 import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';

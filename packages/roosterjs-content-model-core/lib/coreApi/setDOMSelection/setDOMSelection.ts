@@ -1,0 +1,209 @@
+import { addRangeToSelection } from './addRangeToSelection';
+import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
+import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
+import { findTableCellElement } from './findTableCellElement';
+import { isNodeOfType, parseTableCells, toArray } from 'roosterjs-content-model-dom';
+import type {
+    ParsedTable,
+    SelectionChangedEvent,
+    SetDOMSelection,
+    TableCellCoordinate,
+} from 'roosterjs-content-model-types';
+
+const DOM_SELECTION_CSS_KEY = '_DOMSelection';
+const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
+const IMAGE_ID = 'image';
+const TABLE_ID = 'table';
+const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
+const TABLE_CSS_RULE = 'background-color:#C6C6C6!important;';
+const CARET_CSS_RULE = 'caret-color: transparent';
+
+/**
+ * @internal
+ */
+export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionChangedEvent) => {
+    // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
+    // Set skipReselectOnFocus to skip this behavior
+    const skipReselectOnFocus = core.selection.skipReselectOnFocus;
+
+    const doc = core.physicalRoot.ownerDocument;
+
+    core.selection.skipReselectOnFocus = true;
+    core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
+    core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
+
+    try {
+        switch (selection?.type) {
+            case 'image':
+                const image = selection.image;
+
+                core.selection.selection = selection;
+                core.api.setEditorStyle(
+                    core,
+                    DOM_SELECTION_CSS_KEY,
+                    `outline-style:auto!important; outline-color:${
+                        core.selection.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR
+                    }!important;`,
+                    [`#${ensureUniqueId(image, IMAGE_ID)}`]
+                );
+                core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
+
+                setRangeSelection(doc, image);
+                break;
+            case 'table':
+                const { table, firstColumn, firstRow, lastColumn, lastRow } = selection;
+                const parsedTable = parseTableCells(selection.table);
+                let firstCell = {
+                    row: Math.min(firstRow, lastRow),
+                    col: Math.min(firstColumn, lastColumn),
+                    cell: <HTMLTableCellElement | null>null,
+                };
+                let lastCell = {
+                    row: Math.max(firstRow, lastRow),
+                    col: Math.max(firstColumn, lastColumn),
+                };
+
+                firstCell = findTableCellElement(parsedTable, firstCell) || firstCell;
+                lastCell = findLastedCoInMergedCell(parsedTable, lastCell) || lastCell;
+
+                if (
+                    isNaN(firstCell.row) ||
+                    isNaN(firstCell.col) ||
+                    isNaN(lastCell.row) ||
+                    isNaN(lastCell.col)
+                ) {
+                    return;
+                }
+
+                selection = {
+                    type: 'table',
+                    table,
+                    firstRow: firstCell.row,
+                    firstColumn: firstCell.col,
+                    lastRow: lastCell.row,
+                    lastColumn: lastCell.col,
+                };
+
+                const tableId = ensureUniqueId(table, TABLE_ID);
+                const tableSelectors =
+                    firstCell.row == 0 &&
+                    firstCell.col == 0 &&
+                    lastCell.row == parsedTable.length - 1 &&
+                    lastCell.col == (parsedTable[lastCell.row]?.length ?? 0) - 1
+                        ? [`#${tableId}`, `#${tableId} *`]
+                        : handleTableSelected(parsedTable, tableId, table, firstCell, lastCell);
+
+                core.selection.selection = selection;
+                core.api.setEditorStyle(
+                    core,
+                    DOM_SELECTION_CSS_KEY,
+                    TABLE_CSS_RULE,
+                    tableSelectors
+                );
+                core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
+
+                const nodeToSelect = firstCell.cell?.firstElementChild || firstCell.cell;
+
+                if (nodeToSelect) {
+                    setRangeSelection(doc, (nodeToSelect as HTMLElement) || undefined);
+                }
+
+                break;
+            case 'range':
+                addRangeToSelection(doc, selection.range, selection.isReverted);
+
+                core.selection.selection = core.domHelper.hasFocus() ? null : selection;
+                break;
+
+            default:
+                core.selection.selection = null;
+                break;
+        }
+    } finally {
+        core.selection.skipReselectOnFocus = skipReselectOnFocus;
+    }
+
+    if (!skipSelectionChangedEvent) {
+        const eventData: SelectionChangedEvent = {
+            eventType: 'selectionChanged',
+            newSelection: selection,
+        };
+
+        core.api.triggerEvent(core, eventData, true /*broadcast*/);
+    }
+};
+
+function handleTableSelected(
+    parsedTable: ParsedTable,
+    tableId: string,
+    table: HTMLTableElement,
+    firstCell: TableCellCoordinate,
+    lastCell: TableCellCoordinate
+) {
+    const selectors: string[] = [];
+
+    // Get whether table has thead, tbody or tfoot, then Set the start and end of each of the table children,
+    // so we can build the selector according the element between the table and the row.
+    let cont = 0;
+    const indexes = toArray(table.childNodes)
+        .filter(
+            (node): node is HTMLTableSectionElement =>
+                ['THEAD', 'TBODY', 'TFOOT'].indexOf(
+                    isNodeOfType(node, 'ELEMENT_NODE') ? node.tagName : ''
+                ) > -1
+        )
+        .map(node => {
+            const result = {
+                el: node.tagName,
+                start: cont,
+                end: node.childNodes.length + cont,
+            };
+
+            cont = result.end;
+            return result;
+        });
+
+    parsedTable.forEach((row, rowIndex) => {
+        let tdCount = 0;
+
+        //Get current TBODY/THEAD/TFOOT
+        const midElement = indexes.filter(ind => ind.start <= rowIndex && ind.end > rowIndex)[0];
+        const middleElSelector = midElement ? '>' + midElement.el + '>' : '>';
+        const currentRow =
+            midElement && rowIndex + 1 >= midElement.start
+                ? rowIndex + 1 - midElement.start
+                : rowIndex + 1;
+
+        for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
+            const cell = row[cellIndex];
+
+            if (typeof cell == 'object') {
+                tdCount++;
+
+                if (
+                    rowIndex >= firstCell.row &&
+                    rowIndex <= lastCell.row &&
+                    cellIndex >= firstCell.col &&
+                    cellIndex <= lastCell.col
+                ) {
+                    const selector = `#${tableId}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
+
+                    selectors.push(selector, selector + ' *');
+                }
+            }
+        }
+    });
+
+    return selectors;
+}
+
+function setRangeSelection(doc: Document, element: HTMLElement | undefined) {
+    if (element && doc.contains(element)) {
+        const range = doc.createRange();
+
+        range.selectNode(element);
+        range.collapse();
+
+        addRangeToSelection(doc, range);
+    }
+}

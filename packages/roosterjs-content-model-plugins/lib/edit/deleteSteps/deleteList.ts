@@ -1,4 +1,4 @@
-import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-core';
+import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-dom';
 import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
 
 /**
@@ -14,9 +14,7 @@ export const deleteList: DeleteSelectionStep = context => {
             item &&
             index >= 0 &&
             paragraph.segments[0] == marker &&
-            item.blockGroupType == 'ListItem' &&
-            (paragraph.segments.length == 1 ||
-                (paragraph.segments.length == 2 && paragraph.segments[1].segmentType == 'Br'))
+            item.blockGroupType == 'ListItem'
         ) {
             item.levels = [];
             context.deleteResult = 'range';

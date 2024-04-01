@@ -1,6 +1,6 @@
 {
     "name": "roosterjs-content-model-core",
-    "description": "Content Model for roosterjs (Under development)",
+    "description": "Core editor for roosterjs",
     "dependencies": {
         "tslib": "^2.3.1",
         "roosterjs-content-model-dom": "",

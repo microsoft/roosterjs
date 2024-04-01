@@ -85,6 +85,11 @@ export interface Snapshot {
      * Selection of this snapshot
      */
     selection?: SnapshotSelection;
+
+    /**
+     * Path to logical root from physical at the time of snapshot
+     */
+    logicalRootPath?: number[];
 }
 
 /**

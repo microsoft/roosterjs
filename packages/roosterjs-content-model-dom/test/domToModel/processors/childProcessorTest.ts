@@ -127,8 +127,10 @@ describe('childProcessor', () => {
             format: {
                 a: 'a',
             } as any,
-            posContainer: div,
-            posOffset: 0,
+            insertPoint: {
+                node: div,
+                offset: 0,
+            },
         };
 
         childProcessor(doc, div, context);
@@ -173,8 +175,10 @@ describe('childProcessor', () => {
             format: {
                 a: 'a',
             } as any,
-            posContainer: div,
-            posOffset: 1,
+            insertPoint: {
+                node: div,
+                offset: 1,
+            },
         };
 
         childProcessor(doc, div, context);
@@ -450,7 +454,7 @@ describe('childProcessor', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', format: {}, dataset: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -499,7 +503,7 @@ describe('childProcessor', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [{ listType: 'OL', format: { startNumberOverride: 1 }, dataset: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
                             blockType: 'Paragraph',

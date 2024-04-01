@@ -1,7 +1,8 @@
-import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-core';
 import {
     createListItem,
     createListLevel,
+    getOperationalBlocks,
+    isBlockGroupOfType,
     normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';

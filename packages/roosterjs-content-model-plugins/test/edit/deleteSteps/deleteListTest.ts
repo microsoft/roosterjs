@@ -1,7 +1,6 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteList } from '../../../lib/edit/deleteSteps/deleteList';
-import { deleteSelection } from 'roosterjs-content-model-core';
-import { normalizeContentModel } from 'roosterjs-content-model-dom';
+import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 
 describe('deleteList', () => {
     it('deletes the list item when there is only one list item', () => {
@@ -41,7 +40,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -116,7 +115,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -165,7 +164,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -241,7 +240,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -315,7 +314,7 @@ describe('deleteList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                 },
@@ -372,7 +371,7 @@ describe('deleteList', () => {
                                             ],
                                             formatHolder: {
                                                 segmentType: 'SelectionMarker',
-                                                isSelected: true,
+                                                isSelected: false,
                                                 format: {},
                                             },
                                             format: {},
@@ -455,5 +454,80 @@ describe('deleteList', () => {
             format: {},
         });
         expect(result.deleteResult).toEqual('range');
+    });
+
+    it('delete list if the cursor is before text', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {
+                        listStyleType: '"1. "',
+                    },
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'text',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                            ],
+                            isImplicit: true,
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                },
+            ],
+        };
+        const result = deleteSelection(model, [deleteList]);
+        normalizeContentModel(model);
+        expect(result.deleteResult).toEqual('range');
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'text',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    isImplicit: false,
+                },
+            ],
+        });
     });
 });

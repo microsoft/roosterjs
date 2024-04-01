@@ -21,17 +21,16 @@ const htmlButtons =
     '<button id=buttonTable>Insert Table</button>\n' +
     '<button id=buttonDark>Dark mode</button>\n';
 '<button id=buttonDark>Dark Mode</button>\n';
+const jsCode = '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n';
 const legacyJsCode =
-    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n';
-const jsCode =
-    '<script src="https://microsoft.github.io/roosterjs/rooster-content-model-min.js"></script>\n';
+    '<script src="https://microsoft.github.io/roosterjs/rooster-legacy-min.js"></script>\n<script src="https://microsoft.github.io/roosterjs/rooster-adapter-min.js"></script>\n';
 const htmlEnd = '</body>\n' + '</html>';
 
 export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
     private exportForm = React.createRef<HTMLFormElement>();
     private exportData = React.createRef<HTMLInputElement>();
     private rtl = React.createRef<HTMLInputElement>();
-    private cacheModel = React.createRef<HTMLInputElement>();
+    private disableCache = React.createRef<HTMLInputElement>();
 
     constructor(props: OptionPaneProps) {
         super(props);
@@ -79,13 +78,13 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                 </div>
                 <div>
                     <input
-                        id="cacheModel"
+                        id="disableCache"
                         type="checkbox"
-                        checked={this.state.cacheModel}
+                        checked={this.state.disableCache}
                         onChange={this.onToggleCacheModel}
-                        ref={this.cacheModel}
+                        ref={this.disableCache}
                     />
-                    <label htmlFor="cacheModel">Use Content Model Cache</label>
+                    <label htmlFor="disableCache">Disable Content Model Cache</label>
                 </div>
                 <hr />
                 <div>
@@ -133,7 +132,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             forcePreserveRatio: this.state.forcePreserveRatio,
             applyChangesOnMouseUp: this.state.applyChangesOnMouseUp,
             isRtl: this.state.isRtl,
-            cacheModel: this.state.cacheModel,
+            disableCache: this.state.disableCache,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
             allowExcelNoBorderTable: this.state.allowExcelNoBorderTable,
             listMenu: this.state.listMenu,
@@ -175,13 +174,13 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
 
     private onToggleCacheModel = () => {
         this.resetState(state => {
-            state.cacheModel = this.cacheModel.current.checked;
+            state.disableCache = this.disableCache.current.checked;
         }, true);
     };
 
     private getHtml(requireLegacyCode: boolean) {
-        return `${htmlStart}${htmlButtons}${
+        return `${htmlStart}${htmlButtons}${jsCode}${
             requireLegacyCode ? legacyJsCode : ''
-        }${jsCode}${htmlEnd}`;
+        }${htmlEnd}`;
     }
 }

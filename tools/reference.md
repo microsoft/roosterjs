@@ -1,5 +1,9 @@
 Welcome to RoosterJs API References!
 
+## Upgrade from RoosterJs 8.\*
+
+Please see [here](https://github.com/microsoft/roosterjs/wiki/RoosterJs-9).
+
 ## Content
 
 Rooster contains 6 basic packages.
@@ -9,24 +13,22 @@ Rooster contains 6 basic packages.
    `createEditor()` function in roosterjs to create an editor with default
    configurations.
 
-2. [roosterjs-editor-core](modules/roosterjs_editor_core.html):
-   Defines the core editor and plugin infrastructure. Use `roosterjs-editor-core`
+2. [roosterjs-content-model-core](modules/roosterjs_content_model_core.html):
+   Defines the core editor and plugin infrastructure. Use `roosterjs-content-model-core`
    instead of `roosterjs` to build and customize your own editor.
 
-3. [roosterjs-editor-api](modules/roosterjs_editor_api.html):
+3. [roosterjs-content-model-api](modules/roosterjs_content_model_api.html):
    Defines APIs for editor operations. Use these APIs to modify content and
-   formatting in the editor you built using `roosterjs-editor-core`.
+   formatting in the editor you built using `roosterjs-content-model-core`.
 
-4. [roosterjs-editor-dom](modules/roosterjs_editor_dom.html):
-   Defines APIs for DOM operations. Use `roosterjs-editor-api` instead unless
-   you want to access DOM API directly.
+4. [roosterjs-content-model-dom](modules/roosterjs_content_model_dom.html):
+   Defines APIs for Content Model and DOM operations. This package do conversion between DOM tree and roosterjs Content Model.
 
-5. [roosterjs-editor-plugins](modules/roosterjs_editor_plugins.html):
-   Defines basic plugins for common features. Examples: making hyperlinks,
-   pasting HTML content, inserting inline images.
+5. [roosterjs-content-model-plugins](modules/roosterjs_content_model_plugins.html):
+   Defines basic plugins for common features.
 
-6. [roosterjs-editor-types](modules/roosterjs_editor_types.html):
-   Defines public interfaces and enumerations.
+6. [roosterjs-content-model-types](modules/roosterjs_content_model_types.html):
+   Defines public interfaces and enumerations, including Content Model types, API parameters and other types.
 
 There are also some extension packages to provide additional functionalities.
 
@@ -36,10 +38,19 @@ There are also some extension packages to provide additional functionalities.
 2. [roosterjs-react](modules/roosterjs_react.html):
    Provide a React wrapper of roosterjs so it can be easily used with React.
 
-3. [roosterjs-editor-types-compatible](modules/roosterjs_editor_types_compatible.html):
-   Provide types that are compatible with isolatedModules mode. When using isolatedModules mode,
-   "const enum" will not work correctly, this package provides enums with prefix "Compatible" in
-   their names and they have the same value with const enums in roosterjs-editor-types package
+To be compatible with old (8.\*) versions, you can use `EditorAdapter` class from the following package which can act as a 8.\* Editor:
+
+1. [roosterjs-editor-adapter](modules/roosterjs_editor_adapter.html):
+   Provide a adapter class `EditorAdapter` to work with Editor (9.\*) and legacy plugins (via [EditorAdapterOptions.legacyPlugins](interfaces/roosterjs_editor_adapter.editoradapteroptions.html#legacyplugins))
+
+And the following packages are for old (8.\*) compatibility:
+
+1. [roosterjs-editor-core](modules/roosterjs_editor_core.html):
+2. [roosterjs-editor-api](modules/roosterjs_editor_api.html):
+3. [roosterjs-editor-dom](modules/roosterjs_editor_dom.html):
+4. [roosterjs-editor-plugins](modules/roosterjs_editor_plugins.html):
+5. [roosterjs-editor-types](modules/roosterjs_editor_types.html):
+6. [roosterjs-editor-types-compatible](modules/roosterjs_editor_types_compatible.html):
 
 ## See also
 

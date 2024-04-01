@@ -79,6 +79,7 @@ class ContextMenuProviderImpl<TString extends string, TContext>
             text: getLocalizedString(this.strings, item.key, item.unlocalizedText),
             ariaLabel: getLocalizedString(this.strings, item.key, item.unlocalizedText),
             onClick: () => this.onClick(item, item.key),
+            iconProps: item.iconProps,
             subMenuProps: item.subItems
                 ? {
                       onItemClick: (_, menuItem) => menuItem && this.onClick(item, menuItem.data),

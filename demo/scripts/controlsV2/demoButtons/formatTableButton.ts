@@ -1,5 +1,5 @@
 import { formatTable } from 'roosterjs-content-model-api';
-import { TableBorderFormat } from 'roosterjs-content-model-core';
+import { TableBorderFormat } from 'roosterjs-content-model-dom';
 import { TableMetadataFormat } from 'roosterjs-content-model-types';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 

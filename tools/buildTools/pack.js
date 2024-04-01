@@ -1,15 +1,23 @@
 'use strict';
 
-const { packagesPath, nodeModulesPath, rootPath, runWebPack, buildConfig } = require('./common');
+const {
+    packagesPath,
+    nodeModulesPath,
+    rootPath,
+    runWebPack,
+    buildConfig,
+    roosterJsDistPath,
+} = require('./common');
+const path = require('path');
 
 async function pack(isProduction, isAmd, target, filename) {
-    const { packEntry, targetPath, libraryName, externalHandler } = buildConfig[target];
+    const { entry, libraryName, externalHandler } = buildConfig[target];
     const webpackConfig = {
-        entry: packEntry,
+        entry: path.join(packagesPath, entry, 'lib/index.ts'),
         devtool: 'source-map',
         output: {
             filename,
-            path: targetPath,
+            path: roosterJsDistPath,
             libraryTarget: isAmd ? 'amd' : undefined,
             library: isAmd ? undefined : libraryName,
         },

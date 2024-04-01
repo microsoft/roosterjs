@@ -3,14 +3,12 @@ import {
     createSelectionMarker,
     hasMetadata,
     setParagraphNotImplicit,
-} from 'roosterjs-content-model-dom';
-import {
     hasSelectionInBlock,
     applyTableFormat,
     getFirstSelectedTable,
     normalizeTable,
     setSelection,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type { ContentModelTable, IEditor, TableSelection } from 'roosterjs-content-model-types';
 
 /**

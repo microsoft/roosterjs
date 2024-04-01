@@ -1,5 +1,9 @@
-import { AllowedTags, createSanitizedElement, DisallowedTags } from '../utils/sanitizeElement';
 import { moveChildNodes } from 'roosterjs-content-model-dom';
+import {
+    AllowedTags,
+    createSanitizedElement,
+    DisallowedTags,
+} from '../command/createModelFromHtml/sanitizeElement';
 import type {
     DomToModelOptionForSanitizing,
     ElementProcessor,
