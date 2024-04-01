@@ -1,17 +1,22 @@
-import { ChangeSource } from 'roosterjs-content-model-core';
+import { formatInsertPointWithContentModel } from '../utils/formatInsertPointWithContentModel';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
 import {
+    ChangeSource,
     createEntity,
     normalizeContentModel,
     parseEntityFormat,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelEntity,
-    DOMSelection,
     InsertEntityPosition,
     InsertEntityOptions,
     IEditor,
     EntityState,
+    DOMInsertPoint,
+    FormatContentModelOptions,
+    ContentModelDocument,
+    FormatContentModelContext,
+    InsertPoint,
 } from 'roosterjs-content-model-types';
 
 const BlockEntityTag = 'div';
@@ -32,7 +37,7 @@ export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: boolean,
-    position: 'focus' | 'begin' | 'end' | DOMSelection,
+    position: 'focus' | 'begin' | 'end' | DOMInsertPoint,
     options?: InsertEntityOptions
 ): ContentModelEntity | null;
 
@@ -51,7 +56,7 @@ export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: true,
-    position: InsertEntityPosition | DOMSelection,
+    position: InsertEntityPosition | DOMInsertPoint,
     options?: InsertEntityOptions
 ): ContentModelEntity | null;
 
@@ -59,7 +64,7 @@ export function insertEntity(
     editor: IEditor,
     type: string,
     isBlock: boolean,
-    position?: InsertEntityPosition | DOMSelection,
+    position?: InsertEntityPosition | DOMInsertPoint,
     options?: InsertEntityOptions
 ): ContentModelEntity | null {
     const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot, initialEntityState } =
@@ -85,36 +90,45 @@ export function insertEntity(
         editor.takeSnapshot();
     }
 
-    editor.formatContentModel(
-        (model, context) => {
-            insertEntityModel(
-                model,
-                entityModel,
-                typeof position == 'string' ? position : 'focus',
-                isBlock,
-                focusAfterEntity,
-                context
-            );
+    const formatOptions: FormatContentModelOptions = {
+        changeSource: ChangeSource.InsertEntity,
+        getChangeData: () => ({
+            wrapper,
+            type,
+            id: '',
+            isReadonly: true,
+        }),
+        apiName: 'insertEntity',
+    };
 
-            normalizeContentModel(model);
+    const callback = (
+        model: ContentModelDocument,
+        context: FormatContentModelContext,
+        insertPoint?: InsertPoint
+    ) => {
+        insertEntityModel(
+            model,
+            entityModel,
+            typeof position == 'string' ? position : 'focus',
+            isBlock,
+            focusAfterEntity,
+            context,
+            insertPoint
+        );
 
-            context.skipUndoSnapshot = true;
-            context.newEntities.push(entityModel);
+        normalizeContentModel(model);
 
-            return true;
-        },
-        {
-            selectionOverride: typeof position === 'object' ? position : undefined,
-            changeSource: ChangeSource.InsertEntity,
-            getChangeData: () => ({
-                wrapper,
-                type,
-                id: '',
-                isReadonly: true,
-            }),
-            apiName: 'insertEntity',
-        }
-    );
+        context.skipUndoSnapshot = true;
+        context.newEntities.push(entityModel);
+
+        return true;
+    };
+
+    if (typeof position == 'object') {
+        formatInsertPointWithContentModel(editor, position, callback, formatOptions);
+    } else {
+        editor.formatContentModel(callback, formatOptions);
+    }
 
     if (!skipUndoSnapshot) {
         let entityState: EntityState | undefined;

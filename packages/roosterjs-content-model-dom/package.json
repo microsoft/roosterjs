@@ -1,6 +1,6 @@
 {
     "name": "roosterjs-content-model-dom",
-    "description": "Content Model for roosterjs (Under development)",
+    "description": "Content Model for roosterjs",
     "dependencies": {
         "tslib": "^2.3.1",
         "roosterjs-content-model-types": ""

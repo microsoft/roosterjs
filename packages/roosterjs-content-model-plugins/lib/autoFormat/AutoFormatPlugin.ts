@@ -4,6 +4,7 @@ import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { unlink } from './link/unlink';
 import type {
     ContentChangedEvent,
+    EditorInputEvent,
     EditorPlugin,
     IEditor,
     KeyDownEvent,
@@ -39,10 +40,10 @@ export type AutoFormatOptions = {
  * @internal
  */
 const DefaultOptions: Required<AutoFormatOptions> = {
-    autoBullet: true,
-    autoNumbering: true,
+    autoBullet: false,
+    autoNumbering: false,
     autoUnlink: false,
-    autoLink: true,
+    autoLink: false,
 };
 
 /**
@@ -54,8 +55,10 @@ export class AutoFormatPlugin implements EditorPlugin {
 
     /**
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
-     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
-     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
+     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
+     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to false.
+     *  - autoLink: A boolean that enables or disables automatic hyperlink creation when pasting or typing content. Defaults to false.
+     *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -94,6 +97,9 @@ export class AutoFormatPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
+                case 'input':
+                    this.handleEditorInputEvent(this.editor, event);
+                    break;
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
@@ -104,19 +110,27 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
+    private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
-        if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
-            const { autoBullet, autoNumbering, autoUnlink, autoLink } = this.options;
-            switch (rawEvent.key) {
+        if (rawEvent.inputType === 'insertText') {
+            switch (rawEvent.data) {
                 case ' ':
-                    keyboardListTrigger(editor, rawEvent, autoBullet, autoNumbering);
+                    const { autoBullet, autoNumbering, autoLink } = this.options;
+                    keyboardListTrigger(editor, autoBullet, autoNumbering);
                     if (autoLink) {
                         createLinkAfterSpace(editor);
                     }
                     break;
+            }
+        }
+    }
+
+    private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
+        const rawEvent = event.rawEvent;
+        if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
+            switch (rawEvent.key) {
                 case 'Backspace':
-                    if (autoUnlink) {
+                    if (this.options.autoUnlink) {
                         unlink(editor, rawEvent);
                     }
                     break;

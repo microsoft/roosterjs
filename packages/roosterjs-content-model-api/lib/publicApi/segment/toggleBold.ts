@@ -1,5 +1,5 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { isBold } from 'roosterjs-content-model-core';
+import { isBold } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**

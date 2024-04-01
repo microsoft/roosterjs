@@ -1,11 +1,11 @@
 import { getLeafSiblingBlock } from '../utils/getLeafSiblingBlock';
 import { setModelIndentation } from 'roosterjs-content-model-api';
-import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 import {
     deleteBlock,
     deleteSegment,
     getClosestAncestorBlockGroupIndex,
-} from 'roosterjs-content-model-core';
+    setParagraphNotImplicit,
+} from 'roosterjs-content-model-dom';
 import type { BlockAndPath } from '../utils/getLeafSiblingBlock';
 import type {
     ContentModelBlockGroup,

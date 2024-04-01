@@ -150,7 +150,7 @@ describe('isEmpty', () => {
             formatHolder: {
                 segmentType: 'SelectionMarker',
                 format: {},
-                isSelected: true,
+                isSelected: false,
             },
         });
 
@@ -166,7 +166,7 @@ describe('isEmpty', () => {
             formatHolder: {
                 segmentType: 'SelectionMarker',
                 format: {},
-                isSelected: true,
+                isSelected: false,
             },
             blocks: [
                 {

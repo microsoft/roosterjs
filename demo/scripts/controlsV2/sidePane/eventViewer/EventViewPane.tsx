@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
-import { readFile } from 'roosterjs-content-model-core';
+import { getObjectKeys, readFile } from 'roosterjs-content-model-dom';
 import { SidePaneElementProps } from '../SidePaneElement';
 import type { PluginEvent } from 'roosterjs-content-model-types';
 

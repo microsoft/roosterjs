@@ -13,7 +13,7 @@ import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
-import { updateImageMetadata } from 'roosterjs-content-model-core';
+import { updateImageMetadata } from 'roosterjs-content-model-dom';
 import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelImageView.scss');

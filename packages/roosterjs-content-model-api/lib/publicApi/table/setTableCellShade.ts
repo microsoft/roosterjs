@@ -3,7 +3,7 @@ import {
     getFirstSelectedTable,
     normalizeTable,
     setTableCellBackgroundColor,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**

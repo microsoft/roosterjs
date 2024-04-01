@@ -17,4 +17,9 @@ export const popoutButton: RibbonButton<PopoutButtonStringKey> = {
     onClick: _ => {
         MainPane.getInstance().popout();
     },
+    commandBarProperties: {
+        buttonStyles: {
+            icon: { paddingBottom: '10px' },
+        },
+    },
 };

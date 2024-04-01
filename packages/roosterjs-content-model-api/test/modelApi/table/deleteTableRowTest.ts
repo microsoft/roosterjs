@@ -1,6 +1,5 @@
-import { createTable, createTableCell } from 'roosterjs-content-model-dom';
+import { createTable, createTableCell, hasSelectionInBlock } from 'roosterjs-content-model-dom';
 import { deleteTableRow } from '../../../lib/modelApi/table/deleteTableRow';
-import { hasSelectionInBlock } from 'roosterjs-content-model-core';
 
 describe('deleteTableRow', () => {
     it('empty table', () => {

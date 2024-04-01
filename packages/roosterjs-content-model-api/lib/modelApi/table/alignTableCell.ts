@@ -1,4 +1,4 @@
-import { getSelectedCells, updateTableCellMetadata } from 'roosterjs-content-model-core';
+import { getSelectedCells, updateTableCellMetadata } from 'roosterjs-content-model-dom';
 import type {
     ContentModelTable,
     ContentModelTableCell,

@@ -1,9 +1,9 @@
-import { deleteSelection } from 'roosterjs-content-model-core';
 import {
     createContentModelDocument,
     createParagraph,
     createSelectionMarker,
     createText,
+    deleteSelection,
 } from 'roosterjs-content-model-dom';
 import {
     backwardDeleteWordSelection,

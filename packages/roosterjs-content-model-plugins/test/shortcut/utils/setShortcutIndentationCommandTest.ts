@@ -1,4 +1,4 @@
-import * as getFirstSelectedListItem from 'roosterjs-content-model-core/lib/publicApi/selection/collectSelections';
+import * as getFirstSelectedListItem from 'roosterjs-content-model-dom/lib/modelApi/selection/collectSelections';
 import * as setModelIndentation from 'roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
 import { setShortcutIndentationCommand } from '../../../lib/shortcut/utils/setShortcutIndentationCommand';
 import type {
@@ -93,7 +93,7 @@ describe('setShortcutIndentationCommand', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -127,7 +127,7 @@ describe('setShortcutIndentationCommand', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -172,7 +172,7 @@ describe('setShortcutIndentationCommand', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -211,7 +211,7 @@ describe('setShortcutIndentationCommand', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},

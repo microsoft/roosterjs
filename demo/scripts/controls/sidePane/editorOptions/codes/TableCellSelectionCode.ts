@@ -6,6 +6,6 @@ export default class TableCellSelectionCode extends CodeElement {
     }
 
     getCode() {
-        return 'new roosterjs.TableCellSelection()';
+        return 'new roosterjsLegacy.TableCellSelection()';
     }
 }

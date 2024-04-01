@@ -11,6 +11,6 @@ export class ContentEditCode extends CodeElement {
     }
 
     getCode() {
-        return 'new roosterjs.ContentEdit(' + this.features.getCode() + ')';
+        return 'new roosterjsLegacy.ContentEdit(' + this.features.getCode() + ')';
     }
 }

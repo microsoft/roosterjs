@@ -1,9 +1,13 @@
-import { ChangeSource } from '../constants/ChangeSource';
-import { cloneModel } from '../publicApi/model/cloneModel';
-import { createEditorCore } from './createEditorCore';
-import { createEmptyModel, tableProcessor } from 'roosterjs-content-model-dom';
-import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
-import { transformColor } from '../publicApi/color/transformColor';
+import { createEditorCore } from './core/createEditorCore';
+import {
+    createEmptyModel,
+    tableProcessor,
+    ChangeSource,
+    cloneModel,
+    transformColor,
+    createDomToModelContextWithConfig,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
     ContentModelFormatter,
@@ -26,6 +30,7 @@ import type {
     Rect,
     EntityState,
     CachedElementHandler,
+    DomToModelOptionForCreateModel,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -87,41 +92,39 @@ export class Editor implements IEditor {
      * - disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won't impact the editor content.
      * If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
-     * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
-     * instead to improve performance. This is mostly used for retrieve current format state.
      * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
      * This is usually used for exporting content
      */
-    getContentModelCopy(
-        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
-    ): ContentModelDocument {
+    getContentModelCopy(mode: 'connected' | 'disconnected' | 'clean'): ContentModelDocument {
         const core = this.getCore();
 
         switch (mode) {
             case 'connected':
                 return core.api.createContentModel(core, {
-                    processorOverride: {
-                        table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
-                    },
+                    tryGetFromCache: true, // Pass an option here to force disable save index
                 });
 
             case 'disconnected':
-            case 'clean':
                 return cloneModel(
-                    core.api.createContentModel(
-                        core,
-                        undefined /*option*/,
-                        mode == 'clean' ? 'none' : undefined /*selectionOverride*/
-                    ),
+                    core.api.createContentModel(core, {
+                        processorOverride: {
+                            table: tableProcessor,
+                        },
+                        tryGetFromCache: false,
+                    }),
                     {
                         includeCachedElement: this.cloneOptionCallback,
                     }
                 );
-            case 'reduced':
-                return core.api.createContentModel(core, {
-                    processorOverride: {
-                        child: reducedModelChildProcessor,
-                    },
+
+            case 'clean':
+                const domToModelContext = createDomToModelContextWithConfig(
+                    core.environment.domToModelSettings.calculated,
+                    core.api.createEditorContext(core, false /*saveIndex*/)
+                );
+
+                return cloneModel(domToContentModel(core.physicalRoot, domToModelContext), {
+                    includeCachedElement: this.cloneOptionCallback,
                 });
         }
     }
@@ -153,6 +156,16 @@ export class Editor implements IEditor {
     }
 
     /**
+     * Set a new logical root (most likely due to focus change)
+     * @param logicalRoot The new logical root (has to be child of physicalRoot)
+     */
+    setLogicalRoot(logicalRoot: HTMLDivElement) {
+        const core = this.getCore();
+
+        core.api.setLogicalRoot(core, logicalRoot);
+    }
+
+    /**
      * The general API to do format change with Content Model
      * It will grab a Content Model for current editor content, and invoke a callback function
      * to do format change. Then according to the return value, write back the modified content model into editor.
@@ -162,11 +175,12 @@ export class Editor implements IEditor {
      */
     formatContentModel(
         formatter: ContentModelFormatter,
-        options?: FormatContentModelOptions
+        options?: FormatContentModelOptions,
+        domToModelOptions?: DomToModelOptionForCreateModel
     ): void {
         const core = this.getCore();
 
-        core.api.formatContentModel(core, formatter, options);
+        core.api.formatContentModel(core, formatter, options, domToModelOptions);
     }
 
     /**
@@ -369,6 +383,23 @@ export class Editor implements IEditor {
      */
     getVisibleViewport(): Rect | null {
         return this.getCore().api.getVisibleViewport(this.getCore());
+    }
+
+    /**
+     * Add CSS rules for editor
+     * @param key A string to identify the CSS rule type. When set CSS rules with the same key again, existing rules with the same key will be replaced.
+     * @param cssRule The CSS rule string, must be a valid CSS rule string, or browser may throw exception. Pass null to clear existing rules
+     * @param subSelectors @optional If the rule is used for child element under editor, use this parameter to specify the child elements. Each item will be
+     * combined with root selector together to build a separate rule.
+     */
+    setEditorStyle(
+        key: string,
+        cssRule: string | null,
+        subSelectors?: 'before' | 'after' | string[]
+    ): void {
+        const core = this.getCore();
+
+        core.api.setEditorStyle(core, key, cssRule, subSelectors);
     }
 
     /**

@@ -19,4 +19,9 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
         const html = exportContent(editor);
         win.document.write(editor.getTrustedHTMLHandler()(html));
     },
+    commandBarProperties: {
+        buttonStyles: {
+            icon: { paddingBottom: '10px' },
+        },
+    },
 };

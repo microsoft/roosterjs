@@ -1,4 +1,4 @@
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-core';
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { matchLink } from 'roosterjs-content-model-api';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 

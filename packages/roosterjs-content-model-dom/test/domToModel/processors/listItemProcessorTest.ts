@@ -57,7 +57,7 @@ describe('listItemProcessor', () => {
                     levels: [
                         { listType: 'UL', format: { displayForDummyItem: 'block' }, dataset: {} },
                     ],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     format: {},
                 },
             ],
@@ -91,7 +91,7 @@ describe('listItemProcessor', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -129,7 +129,7 @@ describe('listItemProcessor', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontSize: '10px',
                         },
@@ -181,7 +181,7 @@ describe('listItemProcessor', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -232,7 +232,7 @@ describe('listItemProcessor', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -293,7 +293,7 @@ describe('listItemProcessor', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -345,7 +345,7 @@ describe('listItemProcessor', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: { lineHeight: '2' },
@@ -410,7 +410,7 @@ describe('listItemProcessor without format handlers', () => {
                     blockGroupType: 'ListItem',
                     blocks: [],
                     levels: [{ listType: 'UL', format: {}, dataset: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     format: {},
                 },
             ],
@@ -444,7 +444,7 @@ describe('listItemProcessor without format handlers', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -482,7 +482,7 @@ describe('listItemProcessor without format handlers', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {
                             fontSize: '10px',
                         },
@@ -534,7 +534,7 @@ describe('listItemProcessor without format handlers', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},

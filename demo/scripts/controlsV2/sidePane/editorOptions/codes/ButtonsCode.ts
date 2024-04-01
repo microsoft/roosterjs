@@ -2,14 +2,14 @@ import { CodeElement } from './CodeElement';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 
 const codeMap: { [id: string]: string } = {
-    buttonB: 'roosterjsContentModel.toggleBold(editor)',
-    buttonI: 'roosterjsContentModel.toggleItalic(editor)',
-    buttonU: 'roosterjsContentModel.toggleUnderline(editor)',
-    buttonBullet: 'roosterjsContentModel.toggleBullet(editor)',
-    buttonNumbering: 'roosterjsContentModel.toggleNumbering(editor)',
-    buttonUndo: 'roosterjsContentModel.undo(editor)',
-    buttonRedo: 'roosterjsContentModel.redo(editor)',
-    buttonTable: 'roosterjsContentModel.insertTable(editor, 3, 3)',
+    buttonB: 'roosterjs.toggleBold(editor)',
+    buttonI: 'roosterjs.toggleItalic(editor)',
+    buttonU: 'roosterjs.toggleUnderline(editor)',
+    buttonBullet: 'roosterjs.toggleBullet(editor)',
+    buttonNumbering: 'roosterjs.toggleNumbering(editor)',
+    buttonUndo: 'roosterjs.undo(editor)',
+    buttonRedo: 'roosterjs.redo(editor)',
+    buttonTable: 'roosterjs.insertTable(editor, 3, 3)',
     buttonDark: 'editor.setDarkModeState(!editor.isDarkMode())',
 };
 

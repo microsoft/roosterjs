@@ -88,6 +88,9 @@ function splitCode(event: PluginKeyboardEvent, editor: IEditor) {
     editor.select(currentContainer, PositionType.Begin);
 }
 
+/**
+ * @internal
+ */
 export const CodeFeatures: Record<
     keyof CodeFeatureSettings,
     BuildInEditFeature<PluginKeyboardEvent>

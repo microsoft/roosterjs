@@ -8,7 +8,7 @@ import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
-import type { DomToModelOption } from '../context/DomToModelOption';
+import type { DomToModelOptionForCreateModel } from '../context/DomToModelOption';
 import type { EditorContext } from '../context/EditorContext';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
@@ -36,7 +36,7 @@ export type CreateEditorContext = (core: EditorCore, saveIndex: boolean) => Edit
  */
 export type CreateContentModel = (
     core: EditorCore,
-    option?: DomToModelOption,
+    option?: DomToModelOptionForCreateModel,
     selectionOverride?: DOMSelection | 'none'
 ) => ContentModelDocument;
 
@@ -73,6 +73,13 @@ export type SetDOMSelection = (
 ) => void;
 
 /**
+ * Set a new logical root (most likely due to focus change)
+ * @param core The EditorCore object
+ * @param logicalRoot The new logical root (has to be child of physicalRoot or null to use physicalRoot as logical root)
+ */
+export type SetLogicalRoot = (core: EditorCore, logicalRoot: HTMLDivElement | null) => void;
+
+/**
  * The general API to do format change with Content Model
  * It will grab a Content Model for current editor content, and invoke a callback function
  * to do format change. Then according to the return value, write back the modified content model into editor.
@@ -84,7 +91,8 @@ export type SetDOMSelection = (
 export type FormatContentModel = (
     core: EditorCore,
     formatter: ContentModelFormatter,
-    options?: FormatContentModelOptions
+    options?: FormatContentModelOptions,
+    domToModelOptions?: DomToModelOptionForCreateModel
 ) => void;
 
 /**
@@ -146,6 +154,24 @@ export type AttachDomEvent = (
 export type RestoreUndoSnapshot = (core: EditorCore, snapshot: Snapshot) => void;
 
 /**
+ * Add CSS rules for editor
+ * @param core The EditorCore object
+ * @param key A string to identify the CSS rule type. When set CSS rules with the same key again, existing rules with the same key will be replaced.
+ * @param cssRule The CSS rule string, must be a valid CSS rule string, or browser may throw exception. Pass null to remove existing rules
+ * @param subSelectors @optional If the rule is used for child element under editor, use this parameter to specify the child elements. Each item will be
+ * combined with root selector together to build a separate rule. It also accepts pseudo classes "before" and "after" to create pseudo class rule "::before"
+ * and "::after" to the editor root element itself
+ * @param maxRuleLength @optional Set maximum length for a single rule. This is used by test code only
+ */
+export type SetEditorStyle = (
+    core: EditorCore,
+    key: string,
+    cssRule: string | null,
+    subSelectors?: 'before' | 'after' | string[],
+    maxRuleLength?: number
+) => void;
+
+/**
  * The interface for the map of core API for Editor.
  * Editor can call call API from this map under EditorCore object
  */
@@ -187,6 +213,13 @@ export interface CoreApiMap {
      * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
      */
     setDOMSelection: SetDOMSelection;
+
+    /**
+     * Set a new logical root (most likely due to focus change)
+     * @param core The StandaloneEditorCore object
+     * @param logicalRoot The new logical root (has to be child of physicalRoot)
+     */
+    setLogicalRoot: SetLogicalRoot;
 
     /**
      * The general API to do format change with Content Model
@@ -249,6 +282,16 @@ export interface CoreApiMap {
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
+
+    /**
+     * Add CSS rules for editor
+     * @param core The EditorCore object
+     * @param key A string to identify the CSS rule type. When set CSS rules with the same key again, existing rules with the same key will be replaced.
+     * @param cssRule The CSS rule string, must be a valid CSS rule string, or browser may throw exception
+     * @param subSelectors @optional If the rule is used for child element under editor, use this parameter to specify the child elements. Each item will be
+     * combined with root selector together to build a separate rule.
+     */
+    setEditorStyle: SetEditorStyle;
 }
 
 /**

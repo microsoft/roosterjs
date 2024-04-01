@@ -1,11 +1,12 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { isElementOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import {
+    isElementOfType,
+    normalizeRect,
     getFirstSelectedTable,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     normalizeTable,
-} from 'roosterjs-content-model-core';
+} from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
 import type { TableEditFeature } from './TableEditFeature';

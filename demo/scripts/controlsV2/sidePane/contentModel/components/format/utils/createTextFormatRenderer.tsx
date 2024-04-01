@@ -20,7 +20,7 @@ function TextFormatItem<T>(props: {
         (newValue: string) => {
             setValue(newValue);
             setter?.(format, newValue);
-            onUpdate();
+            onUpdate?.();
         },
         [setter, format]
     );

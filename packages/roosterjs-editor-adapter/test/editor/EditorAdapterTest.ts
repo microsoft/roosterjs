@@ -1,9 +1,9 @@
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/utils/findAllEntities';
+import * as findAllEntities from 'roosterjs-content-model-core/lib/corePlugin/entity/findAllEntities';
+import { ContentModelDocument, EditorContext, EditorCore } from 'roosterjs-content-model-types';
 import { EditorAdapter } from '../../lib/editor/EditorAdapter';
 import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelDocument, EditorContext, EditorCore } from 'roosterjs-content-model-types';
 
 const editorContext: EditorContext = {
     isDarkMode: false,
@@ -36,11 +36,7 @@ describe('EditorAdapter', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
-            div,
-            mockedContext,
-            undefined
-        );
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext);
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
             editorContext
@@ -73,11 +69,7 @@ describe('EditorAdapter', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
-            div,
-            mockedContext,
-            undefined
-        );
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext);
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
             editorContext
@@ -105,6 +97,7 @@ describe('EditorAdapter', () => {
         };
         const editor = new EditorAdapter(div, {
             legacyPlugins: [plugin],
+            disableCache: true,
         });
         editor.dispose();
 
@@ -156,7 +149,7 @@ describe('EditorAdapter', () => {
 
         editor.formatContentModel(callback, options);
 
-        expect(formatContentModelSpy).toHaveBeenCalledWith(core, callback, options);
+        expect(formatContentModelSpy).toHaveBeenCalledWith(core, callback, options, undefined);
     });
 
     it('default format', () => {

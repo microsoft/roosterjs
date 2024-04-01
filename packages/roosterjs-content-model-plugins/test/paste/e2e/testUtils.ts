@@ -1,5 +1,6 @@
-import { cloneModel, Editor } from 'roosterjs-content-model-core';
+import { cloneModel } from 'roosterjs-content-model-dom';
 import { ContentModelDocument, EditorOptions, IEditor } from 'roosterjs-content-model-types';
+import { Editor } from 'roosterjs-content-model-core';
 import { PastePlugin } from '../../../lib/paste/PastePlugin';
 
 export function initEditor(id: string): IEditor {
@@ -9,6 +10,7 @@ export function initEditor(id: string): IEditor {
 
     let options: EditorOptions = {
         plugins: [new PastePlugin()],
+        disableCache: true,
         coreApiOverride: {
             getVisibleViewport: () => {
                 return {
