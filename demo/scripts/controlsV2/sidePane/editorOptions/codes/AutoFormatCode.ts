@@ -7,6 +7,11 @@ export class AutoFormatCode extends CodeElement {
     }
 
     getCode() {
-        return `new roosterjs.AutoFormatPlugin('${this.options}')`;
+        return `new roosterjs.AutoFormatPlugin({
+            autoBullet: ${this.options.autoBullet},
+            autoLink: ${this.options.autoLink},
+            autoNumbering: ${this.options.autoNumbering},
+            autoUnlink: ${this.options.autoUnlink},
+        })`;
     }
 }
