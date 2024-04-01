@@ -1,6 +1,7 @@
 import { setFormat } from './utils/setFormat';
 import type {
     ContentChangedEvent,
+    ContentModelCodeFormat,
     EditorInputEvent,
     EditorPlugin,
     IEditor,
@@ -9,18 +10,24 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
+ *
  * Options for Markdown plugin
+ *  - strikethrough: If true text between ~ will receive strikethrough format.
+ *  - bold: If true text between * will receive bold format.
+ *  - italic: If true text between _ will receive italic format.
+ *  - codeFormat: If provided, text between ` will receive code format. If equal to {}, it will set the default code format.
  */
 export interface MarkdownOptions {
     strikethrough?: boolean;
     bold?: boolean;
     italic?: boolean;
+    codeFormat?: ContentModelCodeFormat;
 }
 
 /**
  * @internal
  */
-const DefaultOptions: Required<MarkdownOptions> = {
+const DefaultOptions: Partial<MarkdownOptions> = {
     strikethrough: false,
     bold: false,
     italic: false,
@@ -34,13 +41,15 @@ export class MarkdownPlugin implements EditorPlugin {
     private shouldBold = false;
     private shouldItalic = false;
     private shouldStrikethrough = false;
+    private shouldCode = false;
     private lastKeyTyped: string | null = null;
 
     /**
      * @param options An optional parameter that takes in an object of type MarkdownOptions, which includes the following properties:
-     *  - strikethrough: If true text between ~ will receive strikethrough format. Defaults to true.
-     *  - bold: If true text between * will receive bold format. Defaults to true.
-     *  - italic: If true text between _ will receive italic format. Defaults to true.
+     *  - strikethrough: If true text between ~ will receive strikethrough format. Defaults to false.
+     *  - bold: If true text between * will receive bold format. Defaults to false.
+     *  - italic: If true text between _ will receive italic format. Defaults to false.
+     *  - codeFormat: If provided, text between ` will receive code format. Defaults to undefined.
      */
     constructor(private options: MarkdownOptions = DefaultOptions) {}
 
@@ -68,9 +77,7 @@ export class MarkdownPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
-        this.shouldBold = false;
-        this.shouldItalic = false;
-        this.shouldStrikethrough = false;
+        this.disableAllFeatures();
         this.lastKeyTyped = null;
     }
 
@@ -138,6 +145,16 @@ export class MarkdownPlugin implements EditorPlugin {
                         }
                     }
                     break;
+                case '`':
+                    if (this.options.codeFormat) {
+                        if (this.shouldCode) {
+                            setFormat(editor, '`', {} /* format */, this.options.codeFormat);
+                            this.shouldCode = false;
+                        } else {
+                            this.shouldCode = true;
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -147,9 +164,7 @@ export class MarkdownPlugin implements EditorPlugin {
         if (!event.handledByEditFeature && !rawEvent.defaultPrevented) {
             switch (rawEvent.key) {
                 case 'Enter':
-                    this.shouldBold = false;
-                    this.shouldItalic = false;
-                    this.shouldStrikethrough = false;
+                    this.disableAllFeatures();
                     this.lastKeyTyped = null;
                     break;
                 case ' ':
@@ -159,6 +174,8 @@ export class MarkdownPlugin implements EditorPlugin {
                         this.shouldStrikethrough = false;
                     } else if (this.lastKeyTyped === '_' && this.shouldItalic) {
                         this.shouldItalic = false;
+                    } else if (this.lastKeyTyped === '`' && this.shouldCode) {
+                        this.shouldCode = false;
                     }
                     this.lastKeyTyped = null;
                     break;
@@ -177,6 +194,8 @@ export class MarkdownPlugin implements EditorPlugin {
                 this.shouldStrikethrough = false;
             } else if (this.lastKeyTyped === '_' && this.shouldItalic) {
                 this.shouldItalic = false;
+            } else if (this.lastKeyTyped === '`' && this.shouldCode) {
+                this.shouldCode = false;
             }
             this.lastKeyTyped = null;
         }
@@ -184,9 +203,14 @@ export class MarkdownPlugin implements EditorPlugin {
 
     private handleContentChangedEvent(event: ContentChangedEvent) {
         if (event.source == 'Format') {
-            this.shouldBold = false;
-            this.shouldItalic = false;
-            this.shouldStrikethrough = false;
+            this.disableAllFeatures();
         }
+    }
+
+    private disableAllFeatures() {
+        this.shouldBold = false;
+        this.shouldItalic = false;
+        this.shouldStrikethrough = false;
+        this.shouldCode = false;
     }
 }

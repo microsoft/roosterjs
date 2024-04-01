@@ -1,12 +1,21 @@
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 
-import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelCodeFormat,
+    ContentModelSegmentFormat,
+    IEditor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function setFormat(editor: IEditor, character: string, format: ContentModelSegmentFormat) {
+export function setFormat(
+    editor: IEditor,
+    character: string,
+    format: ContentModelSegmentFormat,
+    codeFormat?: ContentModelCodeFormat
+) {
     editor.formatContentModel((model, context) => {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
             model,
@@ -53,6 +62,11 @@ export function setFormat(editor: IEditor, character: string, format: ContentMod
                                 ...formattedText.format,
                                 ...format,
                             };
+                            if (codeFormat) {
+                                formattedText.code = {
+                                    format: codeFormat,
+                                };
+                            }
 
                             context.canUndoByBackspace = true;
                             return true;

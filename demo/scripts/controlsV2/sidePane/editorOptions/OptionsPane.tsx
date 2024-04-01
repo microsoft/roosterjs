@@ -138,6 +138,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             listMenu: this.state.listMenu,
             tableMenu: this.state.tableMenu,
             imageMenu: this.state.imageMenu,
+            markdownOptions: { ...this.state.markdownOptions },
         };
 
         if (callback) {

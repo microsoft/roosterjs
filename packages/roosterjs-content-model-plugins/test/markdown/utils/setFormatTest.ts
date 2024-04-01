@@ -1,5 +1,9 @@
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { setFormat } from '../../../lib/markdown/utils/setFormat';
+import {
+    ContentModelCodeFormat,
+    ContentModelDocument,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
 
 describe('setFormat', () => {
     function runTest(
@@ -7,7 +11,8 @@ describe('setFormat', () => {
         char: string,
         format: ContentModelSegmentFormat,
         expectedModel: ContentModelDocument,
-        expectedResult: boolean
+        expectedResult: boolean,
+        code: ContentModelCodeFormat | undefined = undefined
     ) {
         const formatWithContentModelSpy = jasmine
             .createSpy('formatWithContentModel')
@@ -27,7 +32,8 @@ describe('setFormat', () => {
                 formatContentModel: formatWithContentModelSpy,
             } as any,
             char,
-            format
+            format,
+            code
         );
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
@@ -212,6 +218,112 @@ describe('setFormat', () => {
             format: {},
         };
         runTest(input, '_', { italic: true }, expectedModel, true);
+    });
+
+    it('should set code', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '`test`',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                            code: {
+                                format: {},
+                            },
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, '`', {}, expectedModel, true, {});
+    });
+
+    it('should set code with format', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '`test`',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                            code: {
+                                format: {
+                                    fontFamily: 'arial',
+                                },
+                            },
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, '`', {}, expectedModel, true, { fontFamily: 'arial' });
     });
 
     it('should set bold in multiple words', () => {

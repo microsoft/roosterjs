@@ -2,6 +2,7 @@ import * as setFormat from '../../lib/markdown/utils/setFormat';
 import { MarkdownOptions, MarkdownPlugin } from '../../lib/markdown/MarkdownPlugin';
 import {
     ContentChangedEvent,
+    ContentModelCodeFormat,
     ContentModelSegmentFormat,
     EditorInputEvent,
     IEditor,
@@ -32,7 +33,8 @@ describe('MarkdownPlugin', () => {
         shouldCallTrigger: boolean,
         options?: MarkdownOptions,
         expectedChar?: string,
-        expectedFormat?: ContentModelSegmentFormat
+        expectedFormat?: ContentModelSegmentFormat,
+        expectedCode?: ContentModelCodeFormat
     ) {
         const plugin = new MarkdownPlugin(options);
         plugin.initialize(editor);
@@ -40,7 +42,16 @@ describe('MarkdownPlugin', () => {
         events.forEach(event => plugin.onPluginEvent(event));
 
         if (shouldCallTrigger) {
-            expect(setFormatSpy).toHaveBeenCalledWith(editor, expectedChar, expectedFormat);
+            if (expectedCode) {
+                expect(setFormatSpy).toHaveBeenCalledWith(
+                    editor,
+                    expectedChar,
+                    expectedFormat,
+                    expectedCode
+                );
+            } else {
+                expect(setFormatSpy).toHaveBeenCalledWith(editor, expectedChar, expectedFormat);
+            }
         } else {
             expect(setFormatSpy).not.toHaveBeenCalled();
         }
@@ -175,6 +186,51 @@ describe('MarkdownPlugin', () => {
             ],
             false,
             { bold: false, italic: false, strikethrough: false }
+        );
+    });
+
+    it('should trigger setFormat for code', () => {
+        runTest(
+            [
+                {
+                    rawEvent: { data: '`', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: 't', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: '`', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
+            true,
+            { bold: true, italic: true, strikethrough: true, codeFormat: {} },
+            '`',
+            {},
+            {}
+        );
+    });
+
+    it('Feature disabled - should not trigger setFormat for code', () => {
+        runTest(
+            [
+                {
+                    rawEvent: { data: '`', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: 't', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+                {
+                    rawEvent: { data: '`', inputType: 'insertText' },
+                    eventType: 'input',
+                } as EditorInputEvent,
+            ],
+            false,
+            { bold: true, italic: true, strikethrough: true, codeFormat: undefined }
         );
     });
 
