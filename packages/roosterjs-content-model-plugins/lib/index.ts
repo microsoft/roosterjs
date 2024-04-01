@@ -24,3 +24,4 @@ export { ShortcutKeyDefinition, ShortcutCommand } from './shortcut/ShortcutComma
 export { ContextMenuPluginBase, ContextMenuOptions } from './contextMenuBase/ContextMenuPluginBase';
 export { WatermarkPlugin } from './watermark/WatermarkPlugin';
 export { WatermarkFormat } from './watermark/WatermarkFormat';
+export { MarkdownPlugin, MarkdownOptions } from './markdown/MarkdownPlugin';
