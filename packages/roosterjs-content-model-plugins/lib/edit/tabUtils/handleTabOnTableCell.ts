@@ -18,33 +18,36 @@ export function handleTabOnTableCell(
     rawEvent: KeyboardEvent
 ) {
     const tableModel = getFirstSelectedTable(model)[0];
-    if (!rawEvent.shiftKey && tableModel) {
-        // Check if cursor is on last cell of the table
-        if (
-            tableModel.rows[tableModel.rows.length - 1].cells[tableModel.widths.length - 1] === cell
-        ) {
-            insertTableRow(tableModel, 'insertBelow');
-            clearSelectedCells(tableModel, {
-                firstRow: tableModel.rows.length - 1,
-                firstColumn: 0,
-                lastRow: tableModel.rows.length - 1,
-                lastColumn: tableModel.widths.length - 1,
-            });
-            normalizeTable(tableModel, model.format);
-            const markerParagraph = tableModel.rows[tableModel.rows.length - 1].cells[0].blocks[0];
+    // Check if cursor is on last cell of the table
+    if (
+        !rawEvent.shiftKey &&
+        tableModel &&
+        tableModel.rows[tableModel.rows.length - 1]?.cells[tableModel.widths.length - 1] === cell
+    ) {
+        insertTableRow(tableModel, 'insertBelow');
 
-            if (markerParagraph.blockType == 'Paragraph') {
-                const marker = createSelectionMarker(model.format);
+        // Clear Table selection
+        clearSelectedCells(tableModel, {
+            firstRow: tableModel.rows.length - 1,
+            firstColumn: 0,
+            lastRow: tableModel.rows.length - 1,
+            lastColumn: tableModel.widths.length - 1,
+        });
+        normalizeTable(tableModel, model.format);
 
-                markerParagraph.segments.unshift(marker);
-                setParagraphNotImplicit(markerParagraph);
-                setSelection(tableModel.rows[tableModel.rows.length - 1].cells[0], marker);
-            }
+        // Add selection marker to the first cell of the new row
+        const markerParagraph = tableModel.rows[tableModel.rows.length - 1]?.cells[0]?.blocks[0];
+        if (markerParagraph.blockType == 'Paragraph') {
+            const marker = createSelectionMarker(model.format);
 
-            rawEvent.preventDefault();
-            return true;
+            markerParagraph.segments.unshift(marker);
+            setParagraphNotImplicit(markerParagraph);
+            setSelection(tableModel.rows[tableModel.rows.length - 1].cells[0], marker);
         }
-        return false;
+
+        rawEvent.preventDefault();
+        return true;
     }
+
     return false;
 }

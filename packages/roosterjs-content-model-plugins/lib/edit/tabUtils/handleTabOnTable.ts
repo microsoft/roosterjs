@@ -18,7 +18,7 @@ export function handleTabOnTable(model: ContentModelDocument, rawEvent: Keyboard
 
 function isWholeTableSelected(tableModel: ContentModelTable) {
     return (
-        tableModel.rows[0].cells[0].isSelected &&
-        tableModel.rows[tableModel.rows.length - 1].cells[tableModel.widths.length - 1].isSelected
+        tableModel.rows[0]?.cells[0]?.isSelected &&
+        tableModel.rows[tableModel.rows.length - 1]?.cells[tableModel.widths.length - 1]?.isSelected
     );
 }
