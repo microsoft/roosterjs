@@ -1227,6 +1227,67 @@ describe('SelectionPlugin handle table selection', () => {
             expect(setStartSpy).toHaveBeenCalledWith(td1, 0);
         });
 
+        it('From Range, Press Tab - Next Row', () => {
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2,
+                    startOffset: 0,
+                    endContainer: td2,
+                    endOffset: 0,
+                    commonAncestorContainer: tr1,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td2,
+                        startOffset: 0,
+                        endContainer: td2,
+                        endOffset: 0,
+                        commonAncestorContainer: tr1,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(plugin.getState()).toEqual({
+                selection: null,
+                tableSelection: null,
+                imageSelectionBorderColor: undefined,
+            });
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+            expect(setStartSpy).toHaveBeenCalledWith(td3, 0);
+        });
+
         it('From Range, First cell - Press Shift+Tab', () => {
             getDOMSelectionSpy.and.returnValue({
                 type: 'range',

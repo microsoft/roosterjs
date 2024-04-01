@@ -1,6 +1,5 @@
 import { findCoordinate } from './findCoordinate';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
-import { normalizePos } from './normalizePos';
 import {
     isCharacterValue,
     isElementOfType,
@@ -374,9 +373,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         );
                     }
                 } else if (key == 'TabLeft' || key == 'TabRight') {
-                    const revrse = key == 'TabLeft';
+                    const reverse = key == 'TabLeft';
                     for (
-                        let step = revrse ? -1 : 1,
+                        let step = reverse ? -1 : 1,
                             row = lastCo.row ?? 0,
                             col = (lastCo.col ?? 0) + step;
                         ;
@@ -395,7 +394,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                                 );
                                 break;
                             }
-                            col = revrse ? parsedTable[row].length - 1 : 0;
+                            col = reverse ? parsedTable[row].length - 1 : 0;
                         }
                         const cell = parsedTable[row][col];
                         if (typeof cell != 'string') {
@@ -416,10 +415,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     private setRangeSelectionInTable(cell: Node, nodeOffset: number, editor: IEditor) {
-        const { node, offset } = normalizePos(cell, nodeOffset);
         const range = editor.getDocument().createRange();
 
-        range.setStart(node, offset);
+        range.setStart(cell, nodeOffset);
         range.collapse(true /*toStart*/);
 
         this.setDOMSelection(
