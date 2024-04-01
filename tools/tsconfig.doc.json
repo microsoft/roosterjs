@@ -28,14 +28,13 @@
             "../packages/roosterjs-editor-plugins/lib/index.ts",
             "../packages/roosterjs-color-utils/lib/index.ts",
             "../packages/roosterjs-react/lib/index.ts",
-            "../packages/roosterjs/lib/index.ts",
             "../packages/roosterjs-content-model-types/lib/index.ts",
             "../packages/roosterjs-content-model-dom/lib/index.ts",
             "../packages/roosterjs-content-model-core/lib/index.ts",
             "../packages/roosterjs-content-model-api/lib/index.ts",
             "../packages/roosterjs-content-model-plugins/lib/index.ts",
             "../packages/roosterjs-editor-adapter/lib/index.ts",
-            "../packages/roosterjs-content-model/lib/index.ts"
+            "../packages/roosterjs/lib/index.ts"
         ],
         "plugin": ["typedoc-plugin-remove-references", "typedoc-plugin-external-module-map"],
         "out": "../dist/deploy/docs",

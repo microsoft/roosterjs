@@ -20,7 +20,6 @@ interface FormatStateContext extends DomToModelContext {
 
 /**
  * @internal
- * Export for test only
  * In order to get format, we can still use the regular child processor. However, to improve performance, we don't need to create
  * content model for the whole doc, instead we only need to traverse the tree path that can arrive current selected node.
  * This "reduced" child processor will first create a node stack that stores DOM node from root to current common ancestor node of selection,

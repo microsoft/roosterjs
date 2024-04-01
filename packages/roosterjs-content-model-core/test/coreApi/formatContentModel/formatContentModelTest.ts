@@ -408,6 +408,38 @@ describe('formatContentModel', () => {
             );
         });
 
+        it('With domToModelOptions', () => {
+            const options = 'Options' as any;
+
+            formatContentModel(
+                core,
+                () => true,
+                {
+                    apiName,
+                },
+                options
+            );
+
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(createContentModel).toHaveBeenCalledWith(core, options, undefined);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    formatApiName: apiName,
+                    changedEntities: [],
+                },
+                true
+            );
+        });
+
         it('Has image', () => {
             const image = createImage('test');
             const rawEvent = 'RawEvent' as any;
