@@ -1,3 +1,4 @@
+import { AutoFormatOptions } from 'roosterjs-content-model-plugins';
 import type { ContentEditFeatureSettings } from 'roosterjs-editor-types';
 import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
@@ -35,6 +36,7 @@ export interface OptionState {
     tableMenu: boolean;
     imageMenu: boolean;
     watermarkText: string;
+    autoFormatOptions: AutoFormatOptions;
 
     // Legacy plugin options
     contentEditFeatures: ContentEditFeatureSettings;

@@ -38,6 +38,12 @@ const initialState: OptionState = {
     imageMenu: true,
     tableMenu: true,
     listMenu: true,
+    autoFormatOptions: {
+        autoBullet: true,
+        autoLink: true,
+        autoNumbering: true,
+        autoUnlink: false,
+    },
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {
