@@ -183,7 +183,11 @@ export {
     ContentModelSegmentHandler,
     ContentModelBlockHandler,
 } from './context/ContentModelHandler';
-export { DomToModelOption, DomToModelOptionForSanitizing } from './context/DomToModelOption';
+export {
+    DomToModelOption,
+    DomToModelOptionForSanitizing,
+    DomToModelOptionForCreateModel,
+} from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { DomIndexer } from './context/DomIndexer';
 export { TextMutationObserver } from './context/TextMutationObserver';
