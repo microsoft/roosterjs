@@ -10,13 +10,18 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
+ *
  * Options for Markdown plugin
+ *  - strikethrough: If true text between ~ will receive strikethrough format.
+ *  - bold: If true text between * will receive bold format.
+ *  - italic: If true text between _ will receive italic format.
+ *  - codeFormat: If provided, text between ` will receive code format. If equal to {}, it will set the default code format.
  */
 export interface MarkdownOptions {
     strikethrough?: boolean;
     bold?: boolean;
     italic?: boolean;
-    code?: ContentModelCodeFormat;
+    codeFormat?: ContentModelCodeFormat;
 }
 
 /**
@@ -41,10 +46,10 @@ export class MarkdownPlugin implements EditorPlugin {
 
     /**
      * @param options An optional parameter that takes in an object of type MarkdownOptions, which includes the following properties:
-     *  - strikethrough: If true text between ~ will receive strikethrough format. Defaults to true.
-     *  - bold: If true text between * will receive bold format. Defaults to true.
-     *  - italic: If true text between _ will receive italic format. Defaults to true.
-     *  - code: If provided, text between ` will receive code format. Defaults to { format: {} }.
+     *  - strikethrough: If true text between ~ will receive strikethrough format. Defaults to false.
+     *  - bold: If true text between * will receive bold format. Defaults to false.
+     *  - italic: If true text between _ will receive italic format. Defaults to false.
+     *  - codeFormat: If provided, text between ` will receive code format. Defaults to undefined.
      */
     constructor(private options: MarkdownOptions = DefaultOptions) {}
 
@@ -141,9 +146,9 @@ export class MarkdownPlugin implements EditorPlugin {
                     }
                     break;
                 case '`':
-                    if (this.options.code) {
+                    if (this.options.codeFormat) {
                         if (this.shouldCode) {
-                            setFormat(editor, '`', {} /* format */, this.options.code);
+                            setFormat(editor, '`', {} /* format */, this.options.codeFormat);
                             this.shouldCode = false;
                         } else {
                             this.shouldCode = true;

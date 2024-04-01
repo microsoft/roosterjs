@@ -1,6 +1,6 @@
 import { setFormat } from '../../../lib/markdown/utils/setFormat';
 import {
-    ContentModelCode,
+    ContentModelCodeFormat,
     ContentModelDocument,
     ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
@@ -12,7 +12,7 @@ describe('setFormat', () => {
         format: ContentModelSegmentFormat,
         expectedModel: ContentModelDocument,
         expectedResult: boolean,
-        code: ContentModelCode | undefined = undefined
+        code: ContentModelCodeFormat | undefined = undefined
     ) {
         const formatWithContentModelSpy = jasmine
             .createSpy('formatWithContentModel')
@@ -251,16 +251,12 @@ describe('setFormat', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'test',
                             format: {},
                             code: {
                                 format: {},
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -273,7 +269,7 @@ describe('setFormat', () => {
             ],
             format: {},
         };
-        runTest(input, '`', {}, expectedModel, true, { format: {} });
+        runTest(input, '`', {}, expectedModel, true, {});
     });
 
     it('should set code with format', () => {
@@ -307,11 +303,6 @@ describe('setFormat', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'test',
                             format: {},
                             code: {
@@ -319,6 +310,7 @@ describe('setFormat', () => {
                                     fontFamily: 'arial',
                                 },
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -331,7 +323,7 @@ describe('setFormat', () => {
             ],
             format: {},
         };
-        runTest(input, '`', {}, expectedModel, true, { format: { fontFamily: 'arial' } });
+        runTest(input, '`', {}, expectedModel, true, { fontFamily: 'arial' });
     });
 
     it('should set bold in multiple words', () => {

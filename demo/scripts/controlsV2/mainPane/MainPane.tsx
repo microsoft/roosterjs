@@ -493,6 +493,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                     bold: true,
                     italic: true,
                     strikethrough: true,
+                    codeFormat: {},
                 }),
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),

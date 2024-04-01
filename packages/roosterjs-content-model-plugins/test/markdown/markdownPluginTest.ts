@@ -2,7 +2,7 @@ import * as setFormat from '../../lib/markdown/utils/setFormat';
 import { MarkdownOptions, MarkdownPlugin } from '../../lib/markdown/MarkdownPlugin';
 import {
     ContentChangedEvent,
-    ContentModelCode,
+    ContentModelCodeFormat,
     ContentModelSegmentFormat,
     EditorInputEvent,
     IEditor,
@@ -34,7 +34,7 @@ describe('MarkdownPlugin', () => {
         options?: MarkdownOptions,
         expectedChar?: string,
         expectedFormat?: ContentModelSegmentFormat,
-        expectedCode?: ContentModelCode
+        expectedCode?: ContentModelCodeFormat
     ) {
         const plugin = new MarkdownPlugin(options);
         plugin.initialize(editor);
@@ -206,10 +206,10 @@ describe('MarkdownPlugin', () => {
                 } as EditorInputEvent,
             ],
             true,
-            { bold: true, italic: true, strikethrough: true, code: { format: {} } },
+            { bold: true, italic: true, strikethrough: true, codeFormat: {} },
             '`',
             {},
-            { format: {} }
+            {}
         );
     });
 
@@ -230,7 +230,7 @@ describe('MarkdownPlugin', () => {
                 } as EditorInputEvent,
             ],
             false,
-            { bold: true, italic: true, strikethrough: true, code: undefined }
+            { bold: true, italic: true, strikethrough: true, codeFormat: undefined }
         );
     });
 
