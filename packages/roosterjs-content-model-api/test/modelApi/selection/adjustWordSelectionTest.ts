@@ -587,7 +587,7 @@ describe('adjustWordSelection', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -617,7 +617,7 @@ describe('adjustWordSelection', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},

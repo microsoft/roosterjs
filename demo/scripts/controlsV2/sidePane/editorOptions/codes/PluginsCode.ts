@@ -1,6 +1,7 @@
 import { CodeElement } from './CodeElement';
 import { ContentEditCode } from './ContentEditCode';
 import { HyperLinkCode } from './HyperLinkCode';
+import { MarkdownCode } from './MarkdownCode';
 import { OptionState } from '../OptionState';
 import { WatermarkCode } from './WatermarkCode';
 import {
@@ -44,6 +45,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.tableEdit && new TableEditPluginCode(),
             pluginList.shortcut && new ShortcutPluginCode(),
             pluginList.watermark && new WatermarkCode(state.watermarkText),
+            pluginList.markdown && new MarkdownCode(state.markdownOptions),
         ]);
     }
 }

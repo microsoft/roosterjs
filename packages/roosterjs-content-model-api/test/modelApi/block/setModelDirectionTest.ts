@@ -113,7 +113,7 @@ describe('setModelDirection', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {},
-                            isSelected: true,
+                            isSelected: false,
                         },
                         levels: [
                             {
@@ -142,7 +142,7 @@ describe('setModelDirection', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {},
-                            isSelected: true,
+                            isSelected: false,
                         },
                         levels: [
                             {
@@ -178,7 +178,7 @@ describe('setModelDirection', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {},
-                            isSelected: true,
+                            isSelected: false,
                         },
                         levels: [
                             {
@@ -209,7 +209,7 @@ describe('setModelDirection', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {},
-                            isSelected: true,
+                            isSelected: false,
                         },
                         levels: [
                             {

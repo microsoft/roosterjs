@@ -47,6 +47,7 @@ import {
 import {
     AutoFormatPlugin,
     EditPlugin,
+    MarkdownPlugin,
     PastePlugin,
     ShortcutPlugin,
     TableEditPlugin,
@@ -473,14 +474,22 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             tableMenu,
             imageMenu,
             watermarkText,
+            markdownOptions,
         } = this.state.initState;
         return [
-            pluginList.autoFormat && new AutoFormatPlugin(),
+            pluginList.autoFormat &&
+                new AutoFormatPlugin({
+                    autoBullet: true,
+                    autoNumbering: true,
+                    autoUnlink: true,
+                    autoLink: true,
+                }),
             pluginList.edit && new EditPlugin(),
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
+            pluginList.markdown && new MarkdownPlugin(markdownOptions),
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),

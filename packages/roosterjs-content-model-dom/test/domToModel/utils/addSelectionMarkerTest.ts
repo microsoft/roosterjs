@@ -218,8 +218,10 @@ describe('addSelectionMarker', () => {
                     c: 'c3',
                     e: 'e',
                 } as any,
-                posContainer: mockedContainer,
-                posOffset: mockedOffset,
+                insertPoint: {
+                    node: mockedContainer,
+                    offset: mockedOffset,
+                },
             },
         });
 

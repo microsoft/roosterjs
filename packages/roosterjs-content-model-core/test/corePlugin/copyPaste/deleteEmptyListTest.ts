@@ -63,7 +63,7 @@ describe('deleteEmptyList -  when cut', () => {
                 levels: [],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -174,7 +174,7 @@ describe('deleteEmptyList -  when cut', () => {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -211,7 +211,7 @@ describe('deleteEmptyList -  when cut', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -241,7 +241,7 @@ describe('deleteEmptyList -  when cut', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -289,7 +289,7 @@ describe('deleteEmptyList -  when cut', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -319,7 +319,7 @@ describe('deleteEmptyList -  when cut', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -378,7 +378,7 @@ describe('deleteEmptyList -  when cut', () => {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -415,7 +415,7 @@ describe('deleteEmptyList -  when cut', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -463,7 +463,7 @@ describe('deleteEmptyList -  when cut', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -540,7 +540,7 @@ describe('deleteEmptyList -  when cut', () => {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -573,7 +573,7 @@ describe('deleteEmptyList -  when cut', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -607,7 +607,7 @@ describe('deleteEmptyList -  when cut', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -637,7 +637,7 @@ describe('deleteEmptyList -  when cut', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -695,7 +695,7 @@ describe('deleteEmptyList -  when cut', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -729,7 +729,7 @@ describe('deleteEmptyList -  when cut', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -759,7 +759,7 @@ describe('deleteEmptyList -  when cut', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -871,7 +871,7 @@ describe('deleteEmptyList -  when cut', () => {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {},
@@ -932,7 +932,7 @@ describe('deleteEmptyList -  when cut', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -1061,7 +1061,7 @@ describe('deleteEmptyList -  when cut', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},

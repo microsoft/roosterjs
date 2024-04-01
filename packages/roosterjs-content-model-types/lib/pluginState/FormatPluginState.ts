@@ -1,3 +1,4 @@
+import type { DOMInsertPoint } from '../selection/DOMSelection';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
@@ -10,14 +11,9 @@ export interface PendingFormat {
     format: ContentModelSegmentFormat;
 
     /**
-     * Container node of pending format
+     * Insert point of pending format
      */
-    posContainer: Node;
-
-    /**
-     * Offset under container node of pending format
-     */
-    posOffset: number;
+    insertPoint: DOMInsertPoint;
 }
 
 /**

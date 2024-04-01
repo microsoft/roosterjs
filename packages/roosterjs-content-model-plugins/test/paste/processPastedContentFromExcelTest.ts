@@ -6,6 +6,7 @@ import {
     contentModelToDom,
     createDomToModelContext,
     createModelToDomContext,
+    createTableCell,
     domToContentModel,
     moveChildNodes,
 } from 'roosterjs-content-model-dom';
@@ -374,5 +375,48 @@ describe('Do not run scenarios', () => {
             '<table><tbody><tr><td height="19" width="67" style="height:14.4pt;width:50pt">asd</td><td width="67" style="width:50pt">asd</td></tr></tbody></table>',
             source
         );
+    });
+});
+
+describe('childProcessorTest', () => {
+    it('Remove segmentFormat', () => {
+        const spy = jasmine.createSpy('childProcessor');
+
+        const element: any = {};
+        const context: any = {
+            segmentFormat: {
+                textColor: undefined,
+            },
+            defaultElementProcessors: {
+                child: spy,
+            },
+        };
+        const tableCell = createTableCell();
+        tableCell.format.textColor = 'black';
+
+        PastePluginFile.childProcessor(tableCell, element, context);
+
+        expect(tableCell.format.textColor).toBeUndefined();
+        expect(context.segmentFormat.textColor).toBeUndefined();
+    });
+    it('Dont remove segmentFormat', () => {
+        const spy = jasmine.createSpy('childProcessor');
+
+        const element: any = {};
+        const context: any = {
+            segmentFormat: {
+                textColor: 'blue',
+            },
+            defaultElementProcessors: {
+                child: spy,
+            },
+        };
+        const tableCell = createTableCell();
+        tableCell.format.textColor = 'black';
+
+        PastePluginFile.childProcessor(tableCell, element, context);
+
+        expect(tableCell.format.textColor).toBeUndefined();
+        expect(context.segmentFormat.textColor).toEqual('blue');
     });
 });

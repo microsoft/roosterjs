@@ -3,7 +3,7 @@ import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-conte
 import { ContentModelFormatState } from 'roosterjs-content-model-types';
 import { getFormatState } from '../../../lib/publicApi/format/getFormatState';
 import { IEditor } from 'roosterjs-content-model-types';
-import { reducedModelChildProcessor } from 'roosterjs-content-model-core/lib/override/reducedModelChildProcessor';
+import { reducedModelChildProcessor } from '../../../lib/modelApi/common/reducedModelChildProcessor';
 import {
     createContentModelDocument,
     createDomToModelContext,
@@ -31,7 +31,7 @@ describe('getFormatState', () => {
             isDarkMode: () => false,
             getZoomScale: () => 1,
             getPendingFormat: () => pendingFormat,
-            getContentModelCopy: () => {
+            formatContentModel: (callback: Function) => {
                 const model = createContentModelDocument();
                 const editorDiv = document.createElement('div');
 
@@ -58,7 +58,7 @@ describe('getFormatState', () => {
 
                 normalizeContentModel(model);
 
-                return model;
+                callback(model);
             },
         } as any) as IEditor;
 

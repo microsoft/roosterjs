@@ -1,3 +1,4 @@
+import { MarkdownOptions } from 'roosterjs-content-model-plugins';
 import type { ContentEditFeatureSettings } from 'roosterjs-editor-types';
 import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
@@ -21,6 +22,7 @@ export interface NewPluginList {
     emoji: boolean;
     pasteOption: boolean;
     sampleEntity: boolean;
+    markdown: boolean;
 }
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
@@ -34,6 +36,7 @@ export interface OptionState {
     tableMenu: boolean;
     imageMenu: boolean;
     watermarkText: string;
+    markdownOptions: MarkdownOptions;
 
     // Legacy plugin options
     contentEditFeatures: ContentEditFeatureSettings;

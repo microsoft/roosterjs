@@ -681,7 +681,7 @@ describe('deleteSelection - forward', () => {
                     format: {},
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     levels: [],
@@ -879,7 +879,7 @@ describe('deleteSelection - forward', () => {
                     levels: [],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     blocks: [
@@ -2261,7 +2261,7 @@ describe('deleteSelection - backward', () => {
                     format: {},
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     levels: [],
@@ -2440,7 +2440,7 @@ describe('deleteSelection - backward', () => {
                     levels: [],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     blocks: [
@@ -3307,7 +3307,7 @@ describe('deleteSelection - backward', () => {
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         format: {},
-                        isSelected: true,
+                        isSelected: false,
                     },
                     format: {},
                     blocks: [
@@ -3495,7 +3495,7 @@ describe('deleteSelection - backward', () => {
                     levels: [],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},

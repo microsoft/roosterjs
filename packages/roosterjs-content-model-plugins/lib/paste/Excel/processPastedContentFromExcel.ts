@@ -1,7 +1,11 @@
 import { addParser } from '../utils/addParser';
 import { isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
-import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-content-model-types';
+import type {
+    BeforePasteEvent,
+    ElementProcessor,
+    TrustedHTMLHandler,
+} from 'roosterjs-content-model-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
@@ -61,20 +65,30 @@ export function processPastedContentFromExcel(
         }
     });
 
-    setProcessor(event.domToModelOption, 'child', (group, element, context) => {
-        const segmentFormat = { ...context.segmentFormat };
-        if (group.blockGroupType === 'TableCell' && group.format.textColor) {
-            context.segmentFormat.textColor = group.format.textColor;
-        }
-
-        context.defaultElementProcessors.child(group, element, context);
-
-        if (group.blockGroupType === 'TableCell' && group.format.textColor) {
-            context.segmentFormat = segmentFormat;
-            delete group.format.textColor;
-        }
-    });
+    setProcessor(event.domToModelOption, 'child', childProcessor);
 }
+
+/**
+ * @internal
+ * Exported only for unit test
+ */
+export const childProcessor: ElementProcessor<ParentNode> = (group, element, context) => {
+    const segmentFormat = { ...context.segmentFormat };
+    if (
+        group.blockGroupType === 'TableCell' &&
+        group.format.textColor &&
+        !context.segmentFormat.textColor
+    ) {
+        context.segmentFormat.textColor = group.format.textColor;
+    }
+
+    context.defaultElementProcessors.child(group, element, context);
+
+    if (group.blockGroupType === 'TableCell' && group.format.textColor) {
+        context.segmentFormat = segmentFormat;
+        delete group.format.textColor;
+    }
+};
 
 /**
  * @internal Export for test only

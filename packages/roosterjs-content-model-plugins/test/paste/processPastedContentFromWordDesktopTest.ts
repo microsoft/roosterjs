@@ -327,7 +327,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -365,7 +365,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -419,7 +419,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -466,7 +466,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -520,7 +520,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -575,7 +575,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -628,7 +628,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -683,7 +683,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -785,7 +785,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 ],
                                                 formatHolder: {
                                                     segmentType: 'SelectionMarker',
-                                                    isSelected: true,
+                                                    isSelected: false,
                                                     format: {},
                                                 },
                                                 format: { marginTop: '1em', marginBottom: '1em' },
@@ -838,7 +838,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 ],
                                                 formatHolder: {
                                                     segmentType: 'SelectionMarker',
-                                                    isSelected: true,
+                                                    isSelected: false,
                                                     format: {},
                                                 },
                                                 format: { marginTop: '1em', marginBottom: '1em' },
@@ -882,7 +882,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 ],
                                                 formatHolder: {
                                                     segmentType: 'SelectionMarker',
-                                                    isSelected: true,
+                                                    isSelected: false,
                                                     format: {},
                                                 },
                                                 format: { marginTop: '1em', marginBottom: '1em' },
@@ -953,7 +953,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 ],
                                                 formatHolder: {
                                                     segmentType: 'SelectionMarker',
-                                                    isSelected: true,
+                                                    isSelected: false,
                                                     format: {},
                                                 },
                                                 format: { marginTop: '1em', marginBottom: '1em' },
@@ -1014,7 +1014,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     blocks: [
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1051,7 +1051,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1097,7 +1097,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1156,7 +1156,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1328,7 +1328,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -1396,7 +1396,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             ],
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
-                                isSelected: true,
+                                isSelected: false,
                                 format: {},
                             },
                             format: { marginTop: '1em', marginBottom: '1em' },
@@ -1432,7 +1432,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             ],
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
-                                isSelected: true,
+                                isSelected: false,
                                 format: {},
                             },
                             format: { marginTop: '1em', marginBottom: '1em' },
@@ -1484,7 +1484,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     blocks: [
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1530,7 +1530,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1575,7 +1575,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1641,7 +1641,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1687,7 +1687,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1771,7 +1771,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1811,7 +1811,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1850,7 +1850,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1890,7 +1890,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1947,7 +1947,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -1987,7 +1987,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2044,7 +2044,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2084,7 +2084,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2141,7 +2141,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2181,7 +2181,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2238,7 +2238,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2278,7 +2278,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2335,7 +2335,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2375,7 +2375,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2432,7 +2432,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2498,7 +2498,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     blocks: [
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -2550,7 +2550,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -2617,7 +2617,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -2696,7 +2696,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -2787,7 +2787,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -2890,7 +2890,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3005,7 +3005,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3132,7 +3132,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3271,7 +3271,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3422,7 +3422,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3560,7 +3560,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3686,7 +3686,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3800,7 +3800,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3902,7 +3902,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -3992,7 +3992,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -4070,7 +4070,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -4136,7 +4136,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {
                                     fontFamily: 'Aptos, sans-serif',
@@ -4235,7 +4235,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4281,7 +4281,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4321,7 +4321,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4373,7 +4373,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4413,7 +4413,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4465,7 +4465,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4527,7 +4527,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4567,7 +4567,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4675,7 +4675,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4716,7 +4716,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4768,7 +4768,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4808,7 +4808,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4887,7 +4887,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     blocks: [
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -4927,7 +4927,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -5002,7 +5002,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -5059,7 +5059,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },
@@ -5130,7 +5130,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         },
                         {
                             formatHolder: {
-                                isSelected: true,
+                                isSelected: false,
                                 segmentType: 'SelectionMarker',
                                 format: {},
                             },

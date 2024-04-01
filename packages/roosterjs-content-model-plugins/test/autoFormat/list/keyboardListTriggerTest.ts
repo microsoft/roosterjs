@@ -96,7 +96,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {
                                 fontFamily: undefined,
                                 fontSize: undefined,
@@ -144,7 +144,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -204,7 +204,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -248,7 +248,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {
                                 fontFamily: undefined,
                                 fontSize: undefined,
@@ -380,7 +380,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {
                                 fontFamily: undefined,
                                 fontSize: undefined,
@@ -479,7 +479,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -513,7 +513,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -575,7 +575,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -609,7 +609,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -650,7 +650,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -684,7 +684,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -728,7 +728,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {
                                 fontFamily: undefined,
                                 fontSize: undefined,
@@ -776,7 +776,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -810,7 +810,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -856,7 +856,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -890,7 +890,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -956,7 +956,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -990,7 +990,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {
@@ -1044,7 +1044,7 @@ describe('keyboardListTrigger', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {
                                 fontFamily: undefined,
                                 fontSize: undefined,

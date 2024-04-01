@@ -1,3 +1,4 @@
+import { updateCachedSelection } from '../../corePlugin/cache/updateCachedSelection';
 import {
     cloneModel,
     createDomToModelContext,
@@ -17,7 +18,8 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
     // Flush all mutations if any, so that we can get an up-to-date Content Model
     core.cache.textMutationObserver?.flushMutations();
 
-    let cachedModel = selectionOverride ? null : core.cache.cachedModel;
+    let cachedModel =
+        selectionOverride || (option && !option.tryGetFromCache) ? null : core.cache.cachedModel;
 
     if (cachedModel && core.lifecycle.shadowEditFragment) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
@@ -46,7 +48,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 
         if (saveIndex) {
             core.cache.cachedModel = model;
-            core.cache.cachedSelection = selection;
+            updateCachedSelection(core.cache, selection);
         }
 
         return model;
