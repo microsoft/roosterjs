@@ -44,7 +44,7 @@ export function getListTypeStyle(
         listMarkerSegment &&
         listMarkerSegment.segmentType == 'Text'
     ) {
-        const listMarker = listMarkerSegment.text;
+        const listMarker = listMarkerSegment.text.trim();
         const bulletType = bulletListType[listMarker];
 
         if (bulletType && shouldSearchForBullet) {
@@ -125,7 +125,7 @@ const bulletListType: Record<string, number> = {
 };
 
 const isNewList = (listMarker: string) => {
-    const marker = listMarker.replace(/[^\w\s]/g, '').trim();
+    const marker = listMarker.replace(/[^\w\s]/g, '');
     const pattern = /^[1aAiI]$/;
     return pattern.test(marker);
 };
