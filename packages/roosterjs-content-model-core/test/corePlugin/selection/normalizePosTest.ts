@@ -99,4 +99,17 @@ describe('normalizePos()', () => {
     it('VOID - With offset out of range', () => {
         runTest('test1<img id=id1>test3', () => document.getElementById('id1'), 2, '', 0);
     });
+    it('VOID - from parent', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        const br = document.createElement('br');
+
+        span.appendChild(br);
+        div.appendChild(span);
+
+        const { node, offset } = normalizePos(div, 0);
+
+        expect(node).toBe(span);
+        expect(offset).toBe(0);
+    });
 });

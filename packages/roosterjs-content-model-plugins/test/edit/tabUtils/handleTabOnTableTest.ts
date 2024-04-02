@@ -26,6 +26,8 @@ describe('handleTabOnTable', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -44,6 +46,8 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -62,66 +66,8 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                        {
-                            height: 22,
-                            format: {},
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -146,6 +92,8 @@ describe('handleTabOnTable', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -164,6 +112,8 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -182,6 +132,74 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -235,6 +253,8 @@ describe('handleTabOnTable', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -253,6 +273,8 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -271,66 +293,8 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                        {
-                            height: 22,
-                            format: {},
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -355,6 +319,8 @@ describe('handleTabOnTable', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -373,6 +339,8 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -391,6 +359,74 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -444,6 +480,8 @@ describe('handleTabOnTable', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -462,6 +500,8 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -480,66 +520,8 @@ describe('handleTabOnTable', () => {
                                     isSelected: true,
                                 },
                                 {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                            ],
-                        },
-                        {
-                            height: 22,
-                            format: {},
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                    isSelected: true,
-                                },
-                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -564,6 +546,74 @@ describe('handleTabOnTable', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -581,6 +631,8 @@ describe('handleTabOnTable', () => {
                                     dataset: {},
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -598,6 +650,8 @@ describe('handleTabOnTable', () => {
                                     dataset: {},
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -646,6 +700,8 @@ describe('handleTabOnTable', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -663,6 +719,8 @@ describe('handleTabOnTable', () => {
                                     dataset: {},
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -680,63 +738,8 @@ describe('handleTabOnTable', () => {
                                     dataset: {},
                                 },
                                 {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                        {
-                            height: 22,
-                            format: {},
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                },
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                },
-                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -760,6 +763,8 @@ describe('handleTabOnTable', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -777,6 +782,8 @@ describe('handleTabOnTable', () => {
                                     dataset: {},
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -794,6 +801,71 @@ describe('handleTabOnTable', () => {
                                     dataset: {},
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
