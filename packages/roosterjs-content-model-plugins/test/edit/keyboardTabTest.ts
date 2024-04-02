@@ -680,6 +680,8 @@ describe('keyboardTab', () => {
                             format: {},
                             cells: [
                                 {
+                                    spanLeft: false,
+                                    spanAbove: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
