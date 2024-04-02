@@ -4,6 +4,7 @@ import {
     ContentModelDocument,
     ContentModelTableCell,
     ContentModelTable,
+    ContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 describe('handleTabOnTableCell', () => {
@@ -252,9 +253,9 @@ describe('handleTabOnTableCell', () => {
             lastRow: 3,
             lastColumn: 0,
         });
-        expect(table.rows[3]?.cells[0]?.blocks[0]?.segments[0]?.segmentType).toEqual(
-            'SelectionMarker'
-        );
+        expect(
+            (table.rows[3]?.cells[0]?.blocks[0] as ContentModelParagraph)?.segments[0]?.segmentType
+        ).toEqual('SelectionMarker');
     });
 
     it('Not create new row - Shift+Tab', () => {
