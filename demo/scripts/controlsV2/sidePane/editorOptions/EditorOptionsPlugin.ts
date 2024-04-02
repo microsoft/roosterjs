@@ -38,6 +38,12 @@ const initialState: OptionState = {
     imageMenu: true,
     tableMenu: true,
     listMenu: true,
+    autoFormatOptions: {
+        autoBullet: true,
+        autoLink: true,
+        autoNumbering: true,
+        autoUnlink: false,
+    },
     markdownOptions: {
         bold: true,
         italic: true,
