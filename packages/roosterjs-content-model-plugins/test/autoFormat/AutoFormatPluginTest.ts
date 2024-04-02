@@ -1,6 +1,7 @@
 import * as createLink from '../../lib/autoFormat/link/createLink';
 import * as createLinkAfterSpace from '../../lib/autoFormat/link/createLinkAfterSpace';
 import * as keyboardTrigger from '../../lib/autoFormat/list/keyboardListTrigger';
+import * as transformHyphen from '../../lib/autoFormat/hyphen/transformHyphen';
 import * as unlink from '../../lib/autoFormat/link/unlink';
 import { AutoFormatOptions, AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
 import {
@@ -18,7 +19,10 @@ describe('Content Model Auto Format Plugin Test', () => {
             focus: () => {},
             getDOMSelection: () =>
                 ({
-                    type: -1,
+                    type: 'range',
+                    range: {
+                        collapsed: true,
+                    },
                 } as any), // Force return invalid range to go through content model code
             formatContentModel: () => {},
         } as any) as IEditor;
@@ -277,6 +281,67 @@ describe('Content Model Auto Format Plugin Test', () => {
             };
             runTest(event, false, {
                 autoLink: true,
+            });
+        });
+    });
+
+    describe('onPluginEvent - transformHyphen', () => {
+        let transformHyphenSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            transformHyphenSpy = spyOn(transformHyphen, 'transformHyphen');
+        });
+
+        function runTest(
+            event: EditorInputEvent,
+            shouldCallTrigger: boolean,
+            options?: {
+                autoHyphen: boolean;
+            }
+        ) {
+            const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent(event);
+
+            if (shouldCallTrigger) {
+                expect(transformHyphenSpy).toHaveBeenCalledWith(editor);
+            } else {
+                expect(transformHyphenSpy).not.toHaveBeenCalled();
+            }
+        }
+
+        it('should call transformHyphen', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            runTest(event, true, {
+                autoHyphen: true,
+            });
+        });
+
+        it('should not call transformHyphen - disable options', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            runTest(event, false, {
+                autoHyphen: false,
+            });
+        });
+
+        it('should not call transformHyphen - not space', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: 'Backspace',
+                    preventDefault: () => {},
+                    inputType: 'insertText',
+                } as any,
+            };
+            runTest(event, false, {
+                autoHyphen: true,
             });
         });
     });
