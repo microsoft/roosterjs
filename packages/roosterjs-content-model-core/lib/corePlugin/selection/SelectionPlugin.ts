@@ -1,5 +1,6 @@
 import { findCoordinate } from './findCoordinate';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
+import { normalizePos } from './normalizePos';
 import {
     isCharacterValue,
     isElementOfType,
@@ -415,9 +416,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     private setRangeSelectionInTable(cell: Node, nodeOffset: number, editor: IEditor) {
-        const range = editor.getDocument().createRange();
+        // Get deepest editable position in the cell
+        const { node, offset } = normalizePos(cell, nodeOffset);
 
-        range.setStart(cell, nodeOffset);
+        const range = editor.getDocument().createRange();
+        range.setStart(node, offset);
         range.collapse(true /*toStart*/);
 
         this.setDOMSelection(
