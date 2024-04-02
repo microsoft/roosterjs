@@ -1,3 +1,4 @@
+import { AutoFormatCode } from './AutoFormatCode';
 import { CodeElement } from './CodeElement';
 import { ContentEditCode } from './ContentEditCode';
 import { HyperLinkCode } from './HyperLinkCode';
@@ -5,7 +6,6 @@ import { MarkdownCode } from './MarkdownCode';
 import { OptionState } from '../OptionState';
 import { WatermarkCode } from './WatermarkCode';
 import {
-    AutoFormatPluginCode,
     CustomReplaceCode,
     EditPluginCode,
     ImageEditCode,
@@ -39,7 +39,7 @@ export class PluginsCode extends PluginsCodeBase {
         const pluginList = state.pluginList;
 
         super([
-            pluginList.autoFormat && new AutoFormatPluginCode(),
+            pluginList.autoFormat && new AutoFormatCode(state.autoFormatOptions),
             pluginList.edit && new EditPluginCode(),
             pluginList.paste && new PastePluginCode(),
             pluginList.tableEdit && new TableEditPluginCode(),
