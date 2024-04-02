@@ -348,7 +348,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             const { parsedTable, firstCo: oldCo, table } = this.state.tableSelection;
 
             if (lastCo && tableSel.table == table) {
-                if ((lastCo.col != oldCo.col && key == Up) || key == Down) {
+                if (lastCo.col != oldCo.col && (key == Up || key == Down)) {
                     const change = key == Up ? -1 : 1;
                     const originalTd = findTableCellElement(parsedTable, oldCo)?.cell;
                     let td: HTMLTableCellElement | null = null;
