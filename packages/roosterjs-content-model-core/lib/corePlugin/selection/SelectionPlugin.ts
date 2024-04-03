@@ -30,6 +30,7 @@ const Up = 'ArrowUp';
 const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
+const Tab = 'Tab';
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: IEditor | null = null;
@@ -132,8 +133,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             return;
         } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
-            this.selectBeforeImage(editor, selection.image);
-
+            this.selectBeforeOrAfterElement(editor, selection.image);
             return;
         }
 
@@ -265,16 +265,16 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             case 'image':
                 if (!isModifierKey(rawEvent) && !rawEvent.shiftKey && selection.image.parentNode) {
                     if (key === 'Escape') {
-                        this.selectBeforeImage(editor, selection.image);
+                        this.selectBeforeOrAfterElement(editor, selection.image);
                         rawEvent.stopPropagation();
                     } else if (key !== 'Delete' && key !== 'Backspace') {
-                        this.selectBeforeImage(editor, selection.image);
+                        this.selectBeforeOrAfterElement(editor, selection.image);
                     }
                 }
                 break;
 
             case 'range':
-                if (key == Up || key == Down || key == Left || key == Right) {
+                if (key == Up || key == Down || key == Left || key == Right || key == Tab) {
                     const start = selection.range.startContainer;
                     this.state.tableSelection = this.parseTableSelection(
                         start,
@@ -282,8 +282,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         editor.getDOMHelper()
                     );
 
+                    const rangeKey = key == Tab ? this.getTabKey(rawEvent) : key;
+
                     if (this.state.tableSelection) {
-                        win?.requestAnimationFrame(() => this.handleSelectionInTable(key));
+                        win?.requestAnimationFrame(() => this.handleSelectionInTable(rangeKey));
                     }
                 }
                 break;
@@ -316,7 +318,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private handleSelectionInTable(key: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') {
+    private getTabKey(rawEvent: KeyboardEvent) {
+        return rawEvent.shiftKey ? 'TabLeft' : 'TabRight';
+    }
+
+    private handleSelectionInTable(
+        key: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'TabLeft' | 'TabRight'
+    ) {
         if (!this.editor || !this.state.tableSelection) {
             return;
         }
@@ -340,8 +348,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             let lastCo = findCoordinate(tableSel?.parsedTable, end, domHelper);
             const { parsedTable, firstCo: oldCo, table } = this.state.tableSelection;
 
-            if (lastCo && tableSel.table == table && lastCo.col != oldCo.col) {
-                if (key == Up || key == Down) {
+            if (lastCo && tableSel.table == table) {
+                if (lastCo.col != oldCo.col && (key == Up || key == Down)) {
                     const change = key == Up ? -1 : 1;
                     const originalTd = findTableCellElement(parsedTable, oldCo)?.cell;
                     let td: HTMLTableCellElement | null = null;
@@ -359,23 +367,41 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     }
 
                     if (collapsed && td) {
-                        const { node, offset } = normalizePos(
+                        this.setRangeSelectionInTable(
                             td,
-                            key == Up ? td.childNodes.length : 0
+                            key == Up ? td.childNodes.length : 0,
+                            this.editor
                         );
-                        const range = this.editor.getDocument().createRange();
-
-                        range.setStart(node, offset);
-                        range.collapse(true /*toStart*/);
-
-                        this.setDOMSelection(
-                            {
-                                type: 'range',
-                                range,
-                                isReverted: false,
-                            },
-                            null /*tableSelection*/
-                        );
+                    }
+                } else if (key == 'TabLeft' || key == 'TabRight') {
+                    const reverse = key == 'TabLeft';
+                    for (
+                        let step = reverse ? -1 : 1,
+                            row = lastCo.row ?? 0,
+                            col = (lastCo.col ?? 0) + step;
+                        ;
+                        col += step
+                    ) {
+                        if (col < 0 || col >= parsedTable[row].length) {
+                            row += step;
+                            if (row < 0) {
+                                this.selectBeforeOrAfterElement(this.editor, tableSel.table);
+                                break;
+                            } else if (row >= parsedTable.length) {
+                                this.selectBeforeOrAfterElement(
+                                    this.editor,
+                                    tableSel.table,
+                                    true /*after*/
+                                );
+                                break;
+                            }
+                            col = reverse ? parsedTable[row].length - 1 : 0;
+                        }
+                        const cell = parsedTable[row][col];
+                        if (typeof cell != 'string') {
+                            this.setRangeSelectionInTable(cell, 0, this.editor);
+                            break;
+                        }
                     }
                 } else {
                     this.state.tableSelection = null;
@@ -387,6 +413,24 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 this.updateTableSelection(lastCo);
             }
         }
+    }
+
+    private setRangeSelectionInTable(cell: Node, nodeOffset: number, editor: IEditor) {
+        // Get deepest editable position in the cell
+        const { node, offset } = normalizePos(cell, nodeOffset);
+
+        const range = editor.getDocument().createRange();
+        range.setStart(node, offset);
+        range.collapse(true /*toStart*/);
+
+        this.setDOMSelection(
+            {
+                type: 'range',
+                range,
+                isReverted: false,
+            },
+            null /*tableSelection*/
+        );
     }
 
     private updateTableSelectionFromKeyboard(rowChange: number, colChange: number) {
@@ -411,14 +455,14 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         );
     }
 
-    private selectBeforeImage(editor: IEditor, image: HTMLImageElement) {
+    private selectBeforeOrAfterElement(editor: IEditor, element: HTMLElement, after?: boolean) {
         const doc = editor.getDocument();
-        const parent = image.parentNode;
-        const index = parent && toArray(parent.childNodes).indexOf(image);
+        const parent = element.parentNode;
+        const index = parent && toArray(parent.childNodes).indexOf(element);
 
         if (parent && index !== null && index >= 0) {
             const range = doc.createRange();
-            range.setStart(parent, index);
+            range.setStart(parent, index + (after ? 1 : 0));
             range.collapse();
 
             this.setDOMSelection(
