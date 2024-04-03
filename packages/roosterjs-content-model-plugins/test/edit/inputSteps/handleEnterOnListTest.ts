@@ -301,6 +301,7 @@ describe('handleEnterOnList', () => {
                                 marginBottom: '0px',
                                 listStyleType: 'decimal',
                                 startNumberOverride: undefined,
+                                displayForDummyItem: undefined,
                             },
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
@@ -436,6 +437,7 @@ describe('handleEnterOnList', () => {
                                 marginBottom: '0px',
                                 listStyleType: 'decimal',
                                 startNumberOverride: undefined,
+                                displayForDummyItem: undefined,
                             },
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
@@ -817,6 +819,7 @@ describe('handleEnterOnList', () => {
                                 marginTop: '0px',
                                 marginBottom: '0px',
                                 startNumberOverride: undefined,
+                                displayForDummyItem: undefined,
                             },
                             dataset: {
                                 editingInfo: '{"orderedStyleType":10}',
@@ -1898,6 +1901,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                                 marginBottom: '0px',
                                 listStyleType: 'decimal',
                                 startNumberOverride: undefined,
+                                displayForDummyItem: undefined,
                             },
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
