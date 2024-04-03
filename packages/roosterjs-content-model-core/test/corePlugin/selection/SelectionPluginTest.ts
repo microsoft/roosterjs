@@ -155,7 +155,6 @@ describe('SelectionPlugin handle image selection', () => {
     let createRangeSpy: jasmine.Spy;
     let domHelperSpy: jasmine.Spy;
     let requestAnimationFrameSpy: jasmine.Spy;
-    let getSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
