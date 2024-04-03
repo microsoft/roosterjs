@@ -296,7 +296,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     if (this.state.tableSelection) {
                         win?.requestAnimationFrame(() => this.handleSelectionInTable(rangeKey));
                     } else if ((key == Left || key == Right) && rawEvent.shiftKey) {
-                        win?.requestAnimationFrame(() => this.trySelectSingleImage(editor, win));
+                        win?.requestAnimationFrame(() => this.trySelectSingleImage(editor));
                     }
                 }
                 break;
@@ -613,7 +613,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private trySelectSingleImage(editor: IEditor, win: Window) {
+    private trySelectSingleImage(editor: IEditor) {
         const selection = editor.getDOMSelection();
         if (selection?.type == 'range' && !selection.range.collapsed) {
             const { endContainer, startContainer, endOffset, startOffset } = selection.range;
