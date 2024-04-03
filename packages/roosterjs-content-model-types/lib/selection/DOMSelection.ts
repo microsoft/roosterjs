@@ -45,6 +45,12 @@ export interface ImageSelection extends SelectionBase<'image'> {
      * The image that this selection is representing
      */
     image: HTMLImageElement;
+
+    /**
+     * Whether the selection was from left to right (in document order) or
+     * right to left (reverse of document order)
+     */
+    isReverted?: boolean;
 }
 
 /**

@@ -259,7 +259,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private onKeyDown(editor: IEditor, rawEvent: KeyboardEvent) {
         const key = rawEvent.key;
         const selection = editor.getDOMSelection();
-        const win = editor.getDocument().defaultView;
+        const doc = editor.getDocument();
+        const win = doc.defaultView;
 
         switch (selection?.type) {
             case 'image':
@@ -269,6 +270,22 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         rawEvent.stopPropagation();
                     } else if (key !== 'Delete' && key !== 'Backspace') {
                         this.selectBeforeOrAfterElement(editor, selection.image);
+                    }
+                } else if ((key == Left || key == Right) && rawEvent.shiftKey) {
+                    const parent = selection.image.parentNode;
+                    const index = parent && toArray(parent.childNodes).indexOf(selection.image);
+                    if (index != null && parent) {
+                        const endIndex = index + (selection.isReverted ? 1 : 0);
+                        const newRange = doc.createRange();
+
+                        newRange.setStart(parent, index);
+                        newRange.setEnd(parent, endIndex);
+
+                        this.editor?.setDOMSelection({
+                            type: 'range',
+                            range: newRange,
+                            isReverted: !!selection.isReverted,
+                        });
                     }
                 }
                 break;
@@ -286,6 +303,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
                     if (this.state.tableSelection) {
                         win?.requestAnimationFrame(() => this.handleSelectionInTable(rangeKey));
+                    } else if ((key == Left || key == Right) && rawEvent.shiftKey) {
+                        win?.requestAnimationFrame(() => this.trySelectSingleImage(editor, win));
                     }
                 }
                 break;
@@ -445,11 +464,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private selectImage(image: HTMLImageElement) {
+    private selectImage(image: HTMLImageElement, isReverted?: boolean) {
         this.setDOMSelection(
             {
                 type: 'image',
                 image: image,
+                isReverted,
             },
             null /*tableSelection*/
         );
@@ -598,6 +618,21 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         if (this.state.mouseDisposer) {
             this.state.mouseDisposer();
             this.state.mouseDisposer = undefined;
+        }
+    }
+
+    private trySelectSingleImage(editor: IEditor, win: Window) {
+        const selection = editor.getDOMSelection();
+        if (selection?.type == 'range' && !selection.range.collapsed) {
+            const { endContainer, startContainer, endOffset, startOffset } = selection.range;
+            const max = Math.max(endOffset, startOffset);
+            const min = Math.min(endOffset, startOffset);
+            if (startContainer == endContainer && max - min == 1) {
+                const node = startContainer.childNodes.item(min);
+                if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'img')) {
+                    this.selectImage(node, win.getSelection()?.focusOffset != endOffset);
+                }
+            }
         }
     }
 }
