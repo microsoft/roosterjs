@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>17/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/10</span>
+                <span class='fraction'>16/18</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">92.86% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>13/14</span>
             </div>
         
             
@@ -80,48 +80,78 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-dom';
-import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
+import type { DeleteSelectionStep, ContentModelListItem } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
  */
 export const deleteList: DeleteSelectionStep = context =&gt; {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (context.deleteResult != 'notDeleted') {
+<span class="cstat-no" title="statement not covered" >        return;</span>
+    }
+&nbsp;
     const { paragraph, marker, path } = context.insertPoint;
 &nbsp;
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (context.deleteResult == 'nothingToDelete' || context.deleteResult == 'notDeleted') {
-        const index = getClosestAncestorBlockGroupIndex(path, ['ListItem', 'TableCell']);
-        const item = path[index];
-        if (
-            item &amp;&amp;
-            index &gt;= 0 &amp;&amp;
-            paragraph.segments[0] == marker &amp;&amp;
-            item.blockGroupType == 'ListItem'
-        ) {
-            item.levels = [];
+    if (paragraph.segments[0] == marker) {
+        const index = getClosestAncestorBlockGroupIndex&lt;ContentModelListItem&gt;(
+            path,
+            ['ListItem'],
+            ['TableCell', 'FormatContainer']
+        );
+        const item = path[index] as ContentModelListItem | undefined;
+        const lastLevel = item?.levels[item.levels.length - 1];
+&nbsp;
+        if (lastLevel &amp;&amp; item<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>locks[0] == paragraph) {
+            if (lastLevel.format.displayForDummyItem == 'block') {
+                item.levels.pop();
+            } else {
+                lastLevel.format.displayForDummyItem = 'block';
+            }
+&nbsp;
             context.deleteResult = 'range';
         }
     }
@@ -133,7 +163,7 @@ export const deleteList: DeleteSelectionStep = context =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Apr 03 2024 00:09:04 GMT+0000 (Coordinated Universal Time)
+                at Wed Apr 03 2024 22:26:57 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
