@@ -162,12 +162,10 @@ describe('SelectionPlugin handle image selection', () => {
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         createRangeSpy = jasmine.createSpy('createRange');
         requestAnimationFrameSpy = jasmine.createSpy('requestAnimationFrame');
-        getSelectionSpy = jasmine.createSpy('getSelectionSpy');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
             defaultView: {
                 requestAnimationFrame: requestAnimationFrameSpy,
-                getSelection: getSelectionSpy,
             },
         });
         domHelperSpy = jasmine.createSpy('domHelperSpy');
@@ -568,9 +566,6 @@ describe('SelectionPlugin handle image selection', () => {
         requestAnimationFrameSpy.and.callFake((cb?: Function) => {
             cb?.();
         });
-        getSelectionSpy.and.returnValue({
-            focusOffset: 0,
-        });
         getDOMSelectionSpy.and.callFake(() => {
             if (getDOMSelectionSpy.calls.count() == 0) {
                 return {
@@ -582,6 +577,7 @@ describe('SelectionPlugin handle image selection', () => {
                         endOffset: 0,
                         collapsed: true,
                     },
+                    isReverted: true,
                 };
             }
 
@@ -594,6 +590,7 @@ describe('SelectionPlugin handle image selection', () => {
                     endOffset: 1,
                     collapsed: false,
                 },
+                isReverted: true,
             };
         });
 
@@ -628,9 +625,6 @@ describe('SelectionPlugin handle image selection', () => {
         requestAnimationFrameSpy.and.callFake((cb?: Function) => {
             cb?.();
         });
-        getSelectionSpy.and.returnValue({
-            focusOffset: 0,
-        });
         getDOMSelectionSpy.and.callFake(() => {
             if (getDOMSelectionSpy.calls.count() == 0) {
                 return {
@@ -642,6 +636,7 @@ describe('SelectionPlugin handle image selection', () => {
                         endOffset: 0,
                         collapsed: true,
                     },
+                    isReverted: true,
                 };
             }
 
@@ -654,6 +649,7 @@ describe('SelectionPlugin handle image selection', () => {
                     endOffset: 1,
                     collapsed: false,
                 },
+                isReverted: true,
             };
         });
 
@@ -687,9 +683,6 @@ describe('SelectionPlugin handle image selection', () => {
 
         requestAnimationFrameSpy.and.callFake((cb?: Function) => {
             cb?.();
-        });
-        getSelectionSpy.and.returnValue({
-            focusOffset: 0,
         });
         getDOMSelectionSpy.and.callFake(() => {
             if (getDOMSelectionSpy.calls.count() == 0) {
@@ -748,9 +741,6 @@ describe('SelectionPlugin handle image selection', () => {
         requestAnimationFrameSpy.and.callFake((cb?: Function) => {
             cb?.();
         });
-        getSelectionSpy.and.returnValue({
-            focusOffset: 0,
-        });
         getDOMSelectionSpy.and.callFake(() => {
             if (getDOMSelectionSpy.calls.count() == 0) {
                 return {
@@ -762,6 +752,7 @@ describe('SelectionPlugin handle image selection', () => {
                         endOffset: 0,
                         collapsed: true,
                     },
+                    isReverted: true,
                 };
             }
 
@@ -774,6 +765,7 @@ describe('SelectionPlugin handle image selection', () => {
                     endOffset: 1,
                     collapsed: false,
                 },
+                isReverted: true,
             };
         });
 
@@ -807,9 +799,6 @@ describe('SelectionPlugin handle image selection', () => {
 
         requestAnimationFrameSpy.and.callFake((cb?: Function) => {
             cb?.();
-        });
-        getSelectionSpy.and.returnValue({
-            focusOffset: 0,
         });
         getDOMSelectionSpy.and.callFake(() => {
             if (getDOMSelectionSpy.calls.count() == 0) {
@@ -868,9 +857,6 @@ describe('SelectionPlugin handle image selection', () => {
         requestAnimationFrameSpy.and.callFake((cb?: Function) => {
             cb?.();
         });
-        getSelectionSpy.and.returnValue({
-            focusOffset: 0,
-        });
         getDOMSelectionSpy.and.callFake(() => {
             if (getDOMSelectionSpy.calls.count() == 0) {
                 return {
@@ -928,9 +914,6 @@ describe('SelectionPlugin handle image selection', () => {
         requestAnimationFrameSpy.and.callFake((cb?: Function) => {
             cb?.();
         });
-        getSelectionSpy.and.returnValue({
-            focusOffset: 0,
-        });
         getDOMSelectionSpy.and.callFake(() => {
             if (getDOMSelectionSpy.calls.count() == 0) {
                 return {
@@ -987,9 +970,6 @@ describe('SelectionPlugin handle image selection', () => {
 
         requestAnimationFrameSpy.and.callFake((cb?: Function) => {
             cb?.();
-        });
-        getSelectionSpy.and.returnValue({
-            focusOffset: 0,
         });
         getDOMSelectionSpy.and.callFake(() => {
             if (getDOMSelectionSpy.calls.count() == 0) {

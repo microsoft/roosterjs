@@ -622,7 +622,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             if (startContainer == endContainer && max - min == 1) {
                 const node = startContainer.childNodes.item(min);
                 if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'img')) {
-                    this.selectImage(node, win.getSelection()?.focusOffset != endOffset);
+                    this.selectImage(node, selection.isReverted);
                 }
             }
         }
