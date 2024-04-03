@@ -77,6 +77,7 @@ describe('transformHyphen', () => {
 
     it('with hyphen', () => {
         const text = 'test--test';
+        spyOn(text, 'split').and.returnValue(['test--test ']);
         const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -108,13 +109,15 @@ describe('transformHyphen', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'test—test',
+                            text: 'test—tes',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'Text',
-                            text: ' ',
+                            text: 't',
                             format: {},
+                            isSelected: undefined,
                         },
 
                         {
@@ -186,6 +189,8 @@ describe('transformHyphen', () => {
     });
 
     it('with hyphen between spaces', () => {
+        const text = 'test -- test';
+        spyOn(text, 'split').and.returnValue(['test', '--', 'test']);
         const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -219,17 +224,85 @@ describe('transformHyphen', () => {
                             segmentType: 'Text',
                             text: 'test ',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'Text',
                             text: '—',
                             format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'Text',
-                            text: ' test ',
+                            text: ' test',
+                            format: {},
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
                             format: {},
                         },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, expected, true);
+    });
+
+    it('with hyphen and multiple words', () => {
+        const text = 'testing test--test';
+        spyOn(text, 'split').and.returnValue(['testing', 'test--test ']);
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: text,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expected: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'testing ',
+                            format: {},
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test—tes',
+                            format: {},
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 't',
+                            format: {},
+                            isSelected: undefined,
+                        },
+
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,

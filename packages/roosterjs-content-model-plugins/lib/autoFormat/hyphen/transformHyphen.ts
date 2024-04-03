@@ -37,7 +37,7 @@ export function transformHyphen(editor: IEditor) {
                             context.canUndoByBackspace = true;
                             return true;
                         } else {
-                            const text = previousSegment.text.split(' ').pop();
+                            const text = segments.pop();
                             const hasDashes = text && text?.indexOf('--') > -1;
                             if (hasDashes && text.trim() !== '--') {
                                 const textIndex = previousSegment.text.indexOf(text);
