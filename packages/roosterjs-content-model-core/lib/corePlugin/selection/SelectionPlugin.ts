@@ -272,21 +272,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         this.selectBeforeOrAfterElement(editor, selection.image);
                     }
                 } else if ((key == Left || key == Right) && rawEvent.shiftKey) {
-                    const parent = selection.image.parentNode;
-                    const index = parent && toArray(parent.childNodes).indexOf(selection.image);
-                    if (index != null && parent) {
-                        const endIndex = index + (selection.isReverted ? 1 : 0);
-                        const newRange = doc.createRange();
-
-                        newRange.setStart(parent, index);
-                        newRange.setEnd(parent, endIndex);
-
-                        this.editor?.setDOMSelection({
-                            type: 'range',
-                            range: newRange,
-                            isReverted: !!selection.isReverted,
-                        });
-                    }
+                    const newRange = doc.createRange();
+                    newRange.selectNode(selection.image);
+                    this.editor?.setDOMSelection({
+                        type: 'range',
+                        range: newRange,
+                        isReverted: !!selection.isReverted,
+                    });
                 }
                 break;
 

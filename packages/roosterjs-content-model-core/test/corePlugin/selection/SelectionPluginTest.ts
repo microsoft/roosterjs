@@ -1045,54 +1045,24 @@ describe('SelectionPlugin handle image selection', () => {
         });
 
         const mockedRange = {
-            setStart: jasmine.createSpy('setStart'),
-            collapse: jasmine.createSpy('collapse'),
+            selectNode: jasmine.createSpy('selectNode'),
         };
 
         createRangeSpy.and.returnValue(mockedRange);
 
-        const rawEvent = {
+        const rawEvent = (<Partial<KeyboardEvent>>{
             key: 'ArrowRight',
-        } as any;
+            shiftKey: true,
+        }) as any;
         plugin.onPluginEvent!({
             eventType: 'keyDown',
             rawEvent,
         });
 
         expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(mockedRange.selectNode).toHaveBeenCalledTimes(1);
+        expect(mockedRange.selectNode).toHaveBeenCalledWith(mockedImage);
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'range',
-            range: mockedRange,
-            isReverted: false,
-        });
-    });
-
-    it('Key down + Shift and Right/Left Key, do not handle the image was not found', () => {
-        const mockedImage = {} as any;
-        mockedImage.parentNode = { childNodes: [] };
-
-        getDOMSelectionSpy.and.returnValue({
-            type: 'image',
-            image: mockedImage,
-        });
-
-        const mockedRange = {
-            setStart: jasmine.createSpy('setStart'),
-            collapse: jasmine.createSpy('collapse'),
-        };
-
-        createRangeSpy.and.returnValue(mockedRange);
-
-        const rawEvent = {
-            key: 'ArrowRight',
-        } as any;
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent,
-        });
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
-        expect(setDOMSelectionSpy).not.toHaveBeenCalledWith({
             type: 'range',
             range: mockedRange,
             isReverted: false,
