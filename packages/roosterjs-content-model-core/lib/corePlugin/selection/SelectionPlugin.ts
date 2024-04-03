@@ -271,7 +271,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     } else if (key !== 'Delete' && key !== 'Backspace') {
                         this.selectBeforeOrAfterElement(editor, selection.image);
                     }
-                } else if ((key == Left || key == Right) && rawEvent.shiftKey) {
+                } else if (
+                    (key == Up || key == Down || key == Left || key == Right) &&
+                    rawEvent.shiftKey
+                ) {
                     const newRange = doc.createRange();
                     newRange.selectNode(selection.image);
                     this.editor?.setDOMSelection({
