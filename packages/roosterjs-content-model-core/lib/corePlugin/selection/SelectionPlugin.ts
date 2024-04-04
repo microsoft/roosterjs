@@ -22,6 +22,7 @@ import type {
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
+    RangeSelection,
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
@@ -257,8 +258,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private onKeyDown(editor: IEditor, rawEvent: KeyboardEvent) {
         const key = rawEvent.key;
         const selection = editor.getDOMSelection();
-        const doc = editor.getDocument();
-        const win = doc.defaultView;
+        const win = editor.getDocument().defaultView;
 
         switch (selection?.type) {
             case 'image':
@@ -617,8 +617,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private trySelectSingleImage(selection: DOMSelection) {
-        if (selection?.type == 'range' && !selection.range.collapsed) {
+    private trySelectSingleImage(selection: RangeSelection) {
+        if (!selection.range.collapsed) {
             const image = isSingleImageInSelection(selection.range);
             if (image) {
                 this.selectImage(image, selection.isReverted);
