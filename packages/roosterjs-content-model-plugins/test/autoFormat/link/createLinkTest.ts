@@ -110,7 +110,7 @@ describe('createLink', () => {
                             format: {},
                             link: {
                                 format: {
-                                    href: 'www.bing.com',
+                                    href: 'http://www.bing.com',
                                     underline: true,
                                 },
                                 dataset: {},

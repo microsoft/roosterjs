@@ -1,18 +1,18 @@
-import { getLinkSegment } from './getLinkSegment';
+import { formatTextSegmentBeforeSelectionMarker } from '../../pluginUtils/formatTextSegmentBeforeSelectionMarker';
+
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function unlink(editor: IEditor, rawEvent: KeyboardEvent) {
-    editor.formatContentModel(model => {
-        const link = getLinkSegment(model);
-        if (link?.link) {
-            link.link = undefined;
+    formatTextSegmentBeforeSelectionMarker(editor, (_model, linkSegment, _paragraph) => {
+        if (linkSegment?.link) {
+            linkSegment.link = undefined;
             rawEvent.preventDefault();
+
             return true;
         }
-
         return false;
     });
 }
