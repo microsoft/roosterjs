@@ -31,6 +31,7 @@ export const formatContentModel: FormatContentModel = (
         rawEvent,
         selectionOverride,
         scrollCaretIntoView: scroll,
+        shouldMaintainSelection,
     } = options || {};
     const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
@@ -58,12 +59,16 @@ export const formatContentModel: FormatContentModel = (
 
         try {
             handleImages(core, context);
-
             selection =
                 core.api.setContentModel(
                     core,
                     model,
-                    hasFocus ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
+                    hasFocus || shouldMaintainSelection
+                        ? {
+                              ignoreSelection: hasFocus, // ..... (move the comment here)
+                              shouldMaintainSelection,
+                          }
+                        : undefined,
                     onNodeCreated
                 ) ?? undefined;
 

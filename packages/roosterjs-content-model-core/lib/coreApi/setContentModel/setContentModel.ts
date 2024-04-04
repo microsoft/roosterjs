@@ -1,4 +1,5 @@
 import { updateCache } from '../../corePlugin/cache/updateCache';
+import { isWindowWithHighlight, persistHighlight } from './persistHighlight';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -6,6 +7,8 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { SetContentModel } from 'roosterjs-content-model-types';
 
+const SelectionClassName = '__persistedSelection';
+const SelectionSelector = '.' + SelectionClassName;
 /**
  * @internal
  * Set content with content model
@@ -15,6 +18,18 @@ import type { SetContentModel } from 'roosterjs-content-model-types';
  */
 export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
     const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
+    const currentWindow = core.logicalRoot.ownerDocument.defaultView;
+    if (currentWindow && isWindowWithHighlight(currentWindow)) {
+        if (option?.shouldMaintainSelection) {
+            editorContext.selectionClassName = SelectionClassName;
+            core.api.setEditorStyle(core, SelectionClassName, 'background-color: #ddd!important', [
+                SelectionSelector,
+            ]);
+        } else {
+            core.api.setEditorStyle(core, SelectionClassName, null /*rule*/);
+        }
+    }
+
     const modelToDomContext = option
         ? createModelToDomContext(
               editorContext,
@@ -35,6 +50,8 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         model,
         modelToDomContext
     );
+
+    persistHighlight(core, !!option?.shouldMaintainSelection, selection);
 
     if (!core.lifecycle.shadowEditFragment) {
         // Clear pending mutations since we will use our latest model object to replace existing cache

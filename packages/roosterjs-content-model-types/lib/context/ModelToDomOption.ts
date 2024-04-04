@@ -33,4 +33,9 @@ export interface ModelToDomOption {
      * When set to true, selection from content model will not be applied
      */
     ignoreSelection?: boolean;
+
+    /**
+     * When set to true, selection will be maintained on text even if cursor has moved away from editor.
+     */
+    shouldMaintainSelection?: boolean;
 }

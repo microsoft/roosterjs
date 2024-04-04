@@ -43,6 +43,11 @@ export interface FormatContentModelOptions {
      * When pass to true, scroll the editing caret into view after write DOM tree if need
      */
     scrollCaretIntoView?: boolean;
+
+    /**
+     * When pass to true, selection is maintained even when focus is moved out of editor.
+     */
+    shouldMaintainSelection?: boolean;
 }
 
 /**
