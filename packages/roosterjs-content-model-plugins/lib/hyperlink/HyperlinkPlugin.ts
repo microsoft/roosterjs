@@ -67,6 +67,9 @@ export class HyperlinkPlugin implements EditorPlugin {
             this.disposer();
             this.disposer = null;
         }
+
+        this.currentNode = null;
+        this.currentLink = null;
         this.editor = null;
     }
 

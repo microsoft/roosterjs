@@ -96,6 +96,8 @@ describe('HyperlinkPlugin', () => {
         expect(getAttributeSpy).toHaveBeenCalledWith('href');
         expect(tooltipSpy).toHaveBeenCalledWith(mockedUrl, mockedLink);
         expect(setDomAttributeSpy).toHaveBeenCalledWith('title', MockedTooltip);
+
+        plugin.dispose();
     });
 
     it('MouseOut', () => {
@@ -132,6 +134,8 @@ describe('HyperlinkPlugin', () => {
         expect(getAttributeSpy).toHaveBeenCalledWith('href');
         expect(tooltipSpy).not.toHaveBeenCalled();
         expect(setDomAttributeSpy).toHaveBeenCalledWith('title', null);
+
+        plugin.dispose();
     });
 
     it('mouseUp', () => {
@@ -195,6 +199,8 @@ describe('HyperlinkPlugin', () => {
 
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(openSpy).toHaveBeenCalledWith(mockedUrl, '_blank');
+
+        plugin.dispose();
     });
 
     it('mouseUp with target', () => {
@@ -224,6 +230,8 @@ describe('HyperlinkPlugin', () => {
 
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(openSpy).toHaveBeenCalledWith(mockedUrl, mockedTarget);
+
+        plugin.dispose();
     });
 
     it('mouseUp with onLinkClick parameter', () => {
@@ -279,6 +287,8 @@ describe('HyperlinkPlugin', () => {
         });
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(openSpy).toHaveBeenCalledWith(mockedUrl, '_blank');
+
+        plugin.dispose();
     });
 
     it('keyDown and keyUp', () => {
@@ -337,6 +347,8 @@ describe('HyperlinkPlugin', () => {
 
         expect(containsSpy).toHaveBeenCalledWith(mockedNode);
         expect(setAttributeSpy).toHaveBeenCalledWith('href', mockedUrl2);
+
+        plugin.dispose();
     });
 
     it('keyDown and keyUp, not contain', () => {
@@ -389,6 +401,8 @@ describe('HyperlinkPlugin', () => {
 
         expect(containsSpy).toHaveBeenCalledWith(mockedNode);
         expect(setAttributeSpy).not.toHaveBeenCalled();
+
+        plugin.dispose();
     });
 
     it('keyDown and keyUp, url not match', () => {
@@ -438,5 +452,7 @@ describe('HyperlinkPlugin', () => {
 
         expect(containsSpy).not.toHaveBeenCalled();
         expect(setAttributeSpy).not.toHaveBeenCalled();
+
+        plugin.dispose();
     });
 });
