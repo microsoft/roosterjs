@@ -5,7 +5,7 @@ import { setContentModel } from '../../../lib/coreApi/setContentModel/setContent
 
 const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
-const mockedEditorContext = 'EDITORCONTEXT' as any;
+const mockedEditorContext = { context: 'EDITORCONTEXT' } as any;
 const mockedContext = { name: 'CONTEXT' } as any;
 const mockedDiv = { ownerDocument: mockedDoc } as any;
 const mockedConfig = 'CONFIG' as any;
@@ -18,6 +18,7 @@ describe('setContentModel', () => {
     let createModelToDomContextWithConfigSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
+    let setEditorStyleSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
@@ -34,6 +35,7 @@ describe('setContentModel', () => {
         ).and.returnValue(mockedContext);
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         core = ({
             physicalRoot: mockedDiv,
@@ -42,6 +44,7 @@ describe('setContentModel', () => {
                 createEditorContext,
                 setDOMSelection: setDOMSelectionSpy,
                 getDOMSelection: getDOMSelectionSpy,
+                setEditorStyle: setEditorStyleSpy,
             },
             lifecycle: {},
             cache: {},
@@ -76,6 +79,7 @@ describe('setContentModel', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
         expect(core.cache.cachedSelection).toBe(mockedRange);
         expect(core.cache.cachedModel).toBe(mockedModel);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '__shadowEditSelection', null);
     });
 
     it('with default option, no shadow edit', () => {
@@ -98,6 +102,7 @@ describe('setContentModel', () => {
             mockedContext
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '__shadowEditSelection', null);
     });
 
     it('with default option, no shadow edit, with additional option', () => {
@@ -125,6 +130,7 @@ describe('setContentModel', () => {
             mockedContext
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '__shadowEditSelection', null);
     });
 
     it('no default option, with shadow edit', () => {
@@ -148,6 +154,12 @@ describe('setContentModel', () => {
             mockedContext
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            '__shadowEditSelection',
+            'background-color: #ddd!important',
+            ['.__shadowEditSelection']
+        );
     });
 
     it('restore selection ', () => {
@@ -181,6 +193,7 @@ describe('setContentModel', () => {
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(core.selection.selection).toBe(mockedRange);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '__shadowEditSelection', null);
     });
 
     it('restore range selection ', () => {
@@ -215,6 +228,7 @@ describe('setContentModel', () => {
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(core.selection.selection).toBe(mockedRange);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '__shadowEditSelection', null);
     });
 
     it('restore null selection ', () => {
@@ -244,5 +258,6 @@ describe('setContentModel', () => {
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(core.selection.selection).toBe(null);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '__shadowEditSelection', null);
     });
 });

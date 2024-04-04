@@ -60,4 +60,41 @@ describe('handleSegmentCommon', () => {
         expect(segmentNodes.length).toBe(1);
         expect(segmentNodes[0]).toBe(parent);
     });
+
+    it('selected text', () => {
+        const txt = document.createTextNode('test');
+        const container = document.createElement('span');
+        const segment = createText('test', {
+            textColor: 'red',
+            fontSize: '10pt',
+            lineHeight: '2',
+            fontWeight: 'bold',
+        });
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const context = createModelToDomContext();
+
+        segment.isSelected = true;
+        context.onNodeCreated = onNodeCreated;
+        context.selectionClassName = 'test';
+
+        segment.link = {
+            dataset: {},
+            format: {
+                href: 'href',
+            },
+        };
+        container.appendChild(txt);
+        const segmentNodes: Node[] = [];
+
+        handleSegmentCommon(document, txt, container, segment, context, segmentNodes);
+
+        expect(context.regularSelection.current.segment).toBe(txt);
+        expect(container.outerHTML).toBe(
+            '<span class="test" style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href">test</a></b></span>'
+        );
+        expect(onNodeCreated).toHaveBeenCalledWith(segment, txt);
+        expect(segmentNodes.length).toBe(2);
+        expect(segmentNodes[0]).toBe(txt);
+        expect(segmentNodes[1]).toBe(txt.parentNode!);
+    });
 });
