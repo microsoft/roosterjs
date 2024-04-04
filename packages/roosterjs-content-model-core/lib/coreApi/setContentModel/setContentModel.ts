@@ -6,6 +6,9 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { SetContentModel } from 'roosterjs-content-model-types';
 
+const SelectionClassName = '__persistedSelection';
+const SelectionSelector = '.' + SelectionClassName;
+
 /**
  * @internal
  * Set content with content model
@@ -15,6 +18,16 @@ import type { SetContentModel } from 'roosterjs-content-model-types';
  */
 export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
     const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
+
+    if (option?.shouldMaintainSelection) {
+        editorContext.selectionClassName = SelectionClassName;
+        core.api.setEditorStyle(core, SelectionClassName, 'background-color: #ddd!important', [
+            SelectionSelector,
+        ]);
+    } else {
+        core.api.setEditorStyle(core, SelectionClassName, null /*rule*/);
+    }
+
     const modelToDomContext = option
         ? createModelToDomContext(
               editorContext,

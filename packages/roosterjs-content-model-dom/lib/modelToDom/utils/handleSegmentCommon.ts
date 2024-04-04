@@ -23,5 +23,9 @@ export function handleSegmentCommon(
 
     applyFormat(containerNode, context.formatAppliers.elementBasedSegment, segment.format, context);
 
+    if (segment.isSelected && context.selectionClassName) {
+        containerNode.className = context.selectionClassName;
+    }
+
     context.onNodeCreated?.(segment, segmentNode);
 }

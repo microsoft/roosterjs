@@ -1,5 +1,6 @@
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { expectHtml } from '../../testUtils';
 import { handleSegmentCommon } from '../../../lib/modelToDom/utils/handleSegmentCommon';
 
 describe('handleSegmentCommon', () => {
@@ -59,5 +60,43 @@ describe('handleSegmentCommon', () => {
         expect(onNodeCreated).toHaveBeenCalledWith(segment, parent);
         expect(segmentNodes.length).toBe(1);
         expect(segmentNodes[0]).toBe(parent);
+    });
+
+    it('selected text', () => {
+        const txt = document.createTextNode('test');
+        const container = document.createElement('span');
+        const segment = createText('test', {
+            textColor: 'red',
+            fontSize: '10pt',
+            lineHeight: '2',
+            fontWeight: 'bold',
+        });
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const context = createModelToDomContext();
+
+        segment.isSelected = true;
+        context.onNodeCreated = onNodeCreated;
+        context.selectionClassName = 'test';
+
+        segment.link = {
+            dataset: {},
+            format: {
+                href: 'href',
+            },
+        };
+        container.appendChild(txt);
+        const segmentNodes: Node[] = [];
+
+        handleSegmentCommon(document, txt, container, segment, context, segmentNodes);
+
+        expect(context.regularSelection.current.segment).toBe(txt);
+        expectHtml(container.outerHTML, [
+            '<span class="test" style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href">test</a></b></span>',
+            '<span style="font-size: 10pt; color: red; line-height: 2;" class="test"><b><a href="href">test</a></b></span>',
+        ]);
+        expect(onNodeCreated).toHaveBeenCalledWith(segment, txt);
+        expect(segmentNodes.length).toBe(2);
+        expect(segmentNodes[0]).toBe(txt);
+        expect(segmentNodes[1]).toBe(txt.parentNode!);
     });
 });
