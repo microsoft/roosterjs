@@ -2,6 +2,7 @@ import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
 import { createSelectionPlugin } from '../../../lib/corePlugin/selection/SelectionPlugin';
 import {
     DOMEventRecord,
+    DOMSelection,
     EditorPlugin,
     IEditor,
     PluginWithState,
@@ -14,8 +15,10 @@ describe('SelectionPlugin', () => {
         const disposer = jasmine.createSpy('disposer');
         const attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
         const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
         const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
         });
         const state = plugin.getState();
         const editor = ({
@@ -46,13 +49,14 @@ describe('SelectionPlugin', () => {
             imageSelectionBorderColor: 'red',
         });
         const state = plugin.getState();
-
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
         const attachDomEvent = jasmine
             .createSpy('attachDomEvent')
             .and.returnValue(jasmine.createSpy('disposer'));
         const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
         });
 
         plugin.initialize(<IEditor>(<any>{
@@ -81,6 +85,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let getDocumentSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
 
     let editor: IEditor;
 
@@ -88,8 +93,10 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         triggerEvent = jasmine.createSpy('triggerEvent');
         getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
         });
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
 
@@ -153,13 +160,16 @@ describe('SelectionPlugin handle image selection', () => {
     let setDOMSelectionSpy: jasmine.Spy;
     let getDocumentSpy: jasmine.Spy;
     let createRangeSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         createRangeSpy = jasmine.createSpy('createRange');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
+            addEventListener: addEventListenerSpy,
         });
 
         editor = {
@@ -557,6 +567,7 @@ describe('SelectionPlugin handle table selection', () => {
     let mouseMoveDisposer: jasmine.Spy;
     let requestAnimationFrameSpy: jasmine.Spy;
     let getComputedStyleSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
@@ -565,12 +576,14 @@ describe('SelectionPlugin handle table selection', () => {
         createRangeSpy = jasmine.createSpy('createRange');
         requestAnimationFrameSpy = jasmine.createSpy('requestAnimationFrame');
         getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
             defaultView: {
                 requestAnimationFrame: requestAnimationFrameSpy,
                 getComputedStyle: getComputedStyleSpy,
             },
+            addEventListener: addEventListenerSpy,
         });
         focusDisposer = jasmine.createSpy('focus');
         mouseMoveDisposer = jasmine.createSpy('mouseMove');
@@ -1875,6 +1888,7 @@ describe('SelectionPlugin on Safari', () => {
     let isInShadowEditSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let editor: IEditor;
+    let getSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposer = jasmine.createSpy('disposer');
@@ -1882,12 +1896,14 @@ describe('SelectionPlugin on Safari', () => {
         attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
+        getSelectionSpy = jasmine.createSpy('getSelection');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             head: {
                 appendChild: appendChildSpy,
             },
             addEventListener: addEventListenerSpy,
             removeEventListener: removeEventListenerSpy,
+            getSelection: getSelectionSpy,
         });
         hasFocusSpy = jasmine.createSpy('hasFocus');
         isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
@@ -2092,5 +2108,156 @@ describe('SelectionPlugin on Safari', () => {
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('', () => {});
+});
+
+describe('SelectionPlugin selectionChange on image selected', () => {
+    let disposer: jasmine.Spy;
+    let appendChildSpy: jasmine.Spy;
+    let attachDomEvent: jasmine.Spy;
+    let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
+    let getDocumentSpy: jasmine.Spy;
+    let hasFocusSpy: jasmine.Spy;
+    let isInShadowEditSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let editor: IEditor;
+    let setDOMSelectionSpy: jasmine.Spy;
+    let containsNodeSpy: jasmine.Spy;
+    let getRangeAtSpy: jasmine.Spy;
+    let getSelectionSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        disposer = jasmine.createSpy('disposer');
+        appendChildSpy = jasmine.createSpy('appendChild');
+        attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
+        removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
+        containsNodeSpy = jasmine.createSpy('containsNode');
+        getRangeAtSpy = jasmine.createSpy('getRangeAt');
+        getSelectionSpy = jasmine.createSpy('getSelection').and.returnValue({
+            containsNode: containsNodeSpy,
+            getRangeAt: getRangeAtSpy,
+        });
+        getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            head: {
+                appendChild: appendChildSpy,
+            },
+            addEventListener: addEventListenerSpy,
+            removeEventListener: removeEventListenerSpy,
+            getSelection: getSelectionSpy,
+        });
+        hasFocusSpy = jasmine.createSpy('hasFocus');
+        isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
+
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: true,
+            }),
+            hasFocus: hasFocusSpy,
+            isInShadowEdit: isInShadowEditSpy,
+            getDOMSelection: getDOMSelectionSpy,
+            setDOMSelection: setDOMSelectionSpy,
+        } as any) as IEditor;
+    });
+
+    it('onSelectionChange on image', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'image',
+            image: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        containsNodeSpy.and.returnValue(true);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range: { startContainer: {} } as Range,
+            isReverted: false,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange on image', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'image',
+            image: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        containsNodeSpy.and.returnValue(false);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange on image', () => {
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'range',
+            range: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        containsNodeSpy.and.returnValue(true);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });
