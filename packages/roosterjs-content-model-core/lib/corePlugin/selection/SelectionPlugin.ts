@@ -128,8 +128,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 this.getContainedTargetImage(rawEvent, selection)) &&
             image.isContentEditable
         ) {
-            this.selectImage(image);
-
+            this.selectImageWithRange(image, rawEvent);
             return;
         } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
             this.selectBeforeOrAfterElement(editor, selection.image);
@@ -234,6 +233,25 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
+    private selectImageWithRange(image: HTMLImageElement, event: Event) {
+        const range = image.ownerDocument.createRange();
+        range.selectNode(image);
+
+        const domSelection = this.editor?.getDOMSelection();
+        if (domSelection?.type == 'image' && image == domSelection.image) {
+            event.preventDefault();
+        } else {
+            this.setDOMSelection(
+                {
+                    type: 'range',
+                    isReverted: false,
+                    range,
+                },
+                null
+            );
+        }
+    }
+
     private onMouseUp(event: MouseUpEvent) {
         let image: HTMLImageElement | null;
 
@@ -245,7 +263,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 MouseRightButton /* it's not possible to drag using right click */ ||
                 event.isClicking)
         ) {
-            this.selectImage(image);
+            this.selectImageWithRange(image, event.rawEvent);
         }
 
         this.detachMouseEvent();
@@ -444,17 +462,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private selectImage(image: HTMLImageElement, isReverted?: boolean) {
-        this.setDOMSelection(
-            {
-                type: 'image',
-                image: image,
-                isReverted,
-            },
-            null /*tableSelection*/
-        );
-    }
-
     private selectBeforeOrAfterElement(editor: IEditor, element: HTMLElement, after?: boolean) {
         const doc = editor.getDocument();
         const parent = element.parentNode;
@@ -531,10 +538,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             if (newSelection?.type == 'image' && selection) {
                 if (selection && !isSingleImageInSelection(selection)) {
+                    const range = selection.getRangeAt(0);
                     this.editor.setDOMSelection({
                         type: 'range',
-                        range: selection.getRangeAt(0),
-                        isReverted: !!newSelection.isReverted,
+                        range,
+                        isReverted:
+                            selection.focusNode != range.endContainer ||
+                            selection.focusOffset != range.endOffset,
                     });
                 }
             }
@@ -621,7 +631,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         if (!selection.range.collapsed) {
             const image = isSingleImageInSelection(selection.range);
             if (image) {
-                this.selectImage(image, selection.isReverted);
+                this.setDOMSelection(
+                    {
+                        type: 'image',
+                        image: image,
+                    },
+                    null /*tableSelection*/
+                );
             }
         }
     }

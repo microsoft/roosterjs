@@ -288,7 +288,13 @@ describe('SelectionPlugin handle image selection', () => {
     });
 
     it('Image selection, mouse down to same image right click', () => {
+        const parent = document.createElement('div');
         const mockedImage = document.createElement('img');
+        parent.appendChild(mockedImage);
+        const range = document.createRange();
+        range.selectNode(mockedImage);
+
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
         mockedImage.contentEditable = 'true';
 
@@ -299,17 +305,21 @@ describe('SelectionPlugin handle image selection', () => {
 
         plugin.onPluginEvent!({
             eventType: 'mouseDown',
-            rawEvent: {
+            rawEvent: (<Partial<Event>>{
                 target: mockedImage,
                 button: 2,
-            } as any,
+                preventDefault: preventDefaultSpy,
+            }) as any,
         });
 
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+        expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
     it('Image selection, mouse down to image right click', () => {
+        const parent = document.createElement('div');
         const mockedImage = document.createElement('img');
+        parent.appendChild(mockedImage);
 
         mockedImage.contentEditable = 'true';
         plugin.onPluginEvent!({
@@ -338,7 +348,11 @@ describe('SelectionPlugin handle image selection', () => {
     });
 
     it('no selection, mouse up to image, is clicking, isEditable', () => {
+        const parent = document.createElement('div');
         const mockedImage = document.createElement('img');
+        parent.appendChild(mockedImage);
+        const range = document.createRange();
+        range.selectNode(mockedImage);
 
         mockedImage.contentEditable = 'true';
 
@@ -352,9 +366,9 @@ describe('SelectionPlugin handle image selection', () => {
 
         expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: undefined,
+            type: 'range',
+            range,
+            isReverted: false,
         });
     });
 
@@ -2306,7 +2320,6 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'image',
             image,
-            isReverted: undefined,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });

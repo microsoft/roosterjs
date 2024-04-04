@@ -220,7 +220,7 @@ function setRangeSelection(doc: Document, element: HTMLElement | undefined, coll
             range.collapse();
         } else {
             const selection = doc.defaultView?.getSelection();
-            const range = selection?.getRangeAt(0);
+            const range = selection && selection.rangeCount > 0 && selection.getRangeAt(0);
             if (selection && range) {
                 isReverted =
                     selection.focusNode != range.endContainer ||
