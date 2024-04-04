@@ -46,6 +46,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.shortcut && new ShortcutPluginCode(),
             pluginList.watermark && new WatermarkCode(state.watermarkText),
             pluginList.markdown && new MarkdownCode(state.markdownOptions),
+            pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
         ]);
     }
 }
@@ -56,7 +57,6 @@ export class LegacyPluginCode extends PluginsCodeBase {
 
         const plugins: CodeElement[] = [
             pluginList.contentEdit && new ContentEditCode(state.contentEditFeatures),
-            pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
             pluginList.imageEdit && new ImageEditCode(),
             pluginList.customReplace && new CustomReplaceCode(),
         ];
