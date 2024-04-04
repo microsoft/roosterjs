@@ -12,17 +12,20 @@ export function getLinkSegment(model: ContentModelDocument) {
     );
     if (selectedSegmentsAndParagraphs.length == 1 && selectedSegmentsAndParagraphs[0][1]) {
         const selectedParagraph = selectedSegmentsAndParagraphs[0][1];
-        const marker = selectedParagraph.segments[selectedParagraph.segments.length - 1];
-        const link = selectedParagraph.segments[selectedParagraph.segments.length - 2];
-        if (
-            marker &&
-            link &&
-            marker.segmentType === 'SelectionMarker' &&
-            marker.isSelected &&
-            link.segmentType === 'Text' &&
-            (matchLink(link.text) || link.link)
-        ) {
-            return link;
+        const marker = selectedSegmentsAndParagraphs[0][0];
+        if (marker && marker.segmentType === 'SelectionMarker') {
+            const markerIndex = selectedParagraph.segments.indexOf(marker);
+            const link = selectedParagraph.segments[markerIndex - 1];
+            if (
+                marker &&
+                link &&
+                marker.segmentType === 'SelectionMarker' &&
+                marker.isSelected &&
+                link.segmentType === 'Text' &&
+                (matchLink(link.text) || link.link)
+            ) {
+                return link;
+            }
         }
     }
     return undefined;

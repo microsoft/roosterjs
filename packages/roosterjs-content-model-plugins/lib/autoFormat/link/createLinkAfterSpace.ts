@@ -1,57 +1,41 @@
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { matchLink } from 'roosterjs-content-model-api';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
-import type { IEditor, LinkData } from 'roosterjs-content-model-types';
+import type {
+    ContentModelParagraph,
+    ContentModelText,
+    FormatContentModelContext,
+    LinkData,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function createLinkAfterSpace(editor: IEditor) {
-    editor.formatContentModel((model, context) => {
-        const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
-            model,
-            false /* includingFormatHolder */
+export function createLinkAfterSpace(
+    previousSegment: ContentModelText,
+    paragraph: ContentModelParagraph,
+    context: FormatContentModelContext
+) {
+    const link = previousSegment.text.split(' ').pop();
+    const url = link?.trim();
+    let linkData: LinkData | null = null;
+    if (url && link && (linkData = matchLink(url))) {
+        const linkSegment = splitTextSegment(
+            previousSegment,
+            paragraph,
+            previousSegment.text.length - link.trimLeft().length,
+            previousSegment.text.trimRight().length
         );
-        if (selectedSegmentsAndParagraphs.length > 0 && selectedSegmentsAndParagraphs[0][1]) {
-            const markerIndex = selectedSegmentsAndParagraphs[0][1].segments.findIndex(
-                segment => segment.segmentType == 'SelectionMarker'
-            );
-            const paragraph = selectedSegmentsAndParagraphs[0][1];
-            if (markerIndex > 0) {
-                const textSegment = paragraph.segments[markerIndex - 1];
-                const marker = paragraph.segments[markerIndex];
-                if (
-                    marker.segmentType == 'SelectionMarker' &&
-                    textSegment &&
-                    textSegment.segmentType == 'Text' &&
-                    !textSegment.link
-                ) {
-                    const link = textSegment.text.split(' ').pop();
-                    const url = link?.trim();
-                    let linkData: LinkData | null = null;
-                    if (url && link && (linkData = matchLink(url))) {
-                        const linkSegment = splitTextSegment(
-                            textSegment,
-                            paragraph,
-                            textSegment.text.length - link.trimLeft().length,
-                            textSegment.text.trimRight().length
-                        );
-                        linkSegment.link = {
-                            format: {
-                                href: linkData.normalizedUrl,
-                                underline: true,
-                            },
-                            dataset: {},
-                        };
+        linkSegment.link = {
+            format: {
+                href: linkData.normalizedUrl,
+                underline: true,
+            },
+            dataset: {},
+        };
 
-                        context.canUndoByBackspace = true;
+        context.canUndoByBackspace = true;
 
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    });
+        return true;
+    }
+    return false;
 }

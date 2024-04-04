@@ -1,7 +1,7 @@
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelDocument,
     ContentModelParagraph,
-    ContentModelSelectionMarker,
     ContentModelText,
     FormatContentModelContext,
     IEditor,
@@ -13,10 +13,9 @@ import type {
 export function formatTextSegmentBeforeSelectionMarker(
     editor: IEditor,
     callback: (
+        model: ContentModelDocument,
         previousSegment: ContentModelText,
         paragraph: ContentModelParagraph,
-        marker: ContentModelSelectionMarker,
-        markerIndex: number,
         context: FormatContentModelContext
     ) => boolean
 ) {
@@ -33,7 +32,7 @@ export function formatTextSegmentBeforeSelectionMarker(
             if (marker.segmentType === 'SelectionMarker' && markerIndex > 0) {
                 const previousSegment = paragraph.segments[markerIndex - 1];
                 if (previousSegment && previousSegment.segmentType === 'Text') {
-                    return callback(previousSegment, paragraph, marker, markerIndex, context);
+                    return callback(model, previousSegment, paragraph, context);
                 }
             }
         }

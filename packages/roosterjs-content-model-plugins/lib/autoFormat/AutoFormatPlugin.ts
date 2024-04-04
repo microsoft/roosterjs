@@ -1,5 +1,6 @@
 import { createLink } from './link/createLink';
 import { createLinkAfterSpace } from './link/createLinkAfterSpace';
+import { formatTextSegmentBeforeSelectionMarker } from '../pluginUtils/formatTextSegmentBeforeSelectionMarker';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformHyphen } from './hyphen/transformHyphen';
 import { unlink } from './link/unlink';
@@ -128,14 +129,43 @@ export class AutoFormatPlugin implements EditorPlugin {
         ) {
             switch (rawEvent.data) {
                 case ' ':
-                    const { autoBullet, autoNumbering, autoLink, autoHyphen } = this.options;
-                    keyboardListTrigger(editor, autoBullet, autoNumbering);
-                    if (autoLink) {
-                        createLinkAfterSpace(editor);
-                    }
-                    if (autoHyphen) {
-                        transformHyphen(editor);
-                    }
+                    formatTextSegmentBeforeSelectionMarker(
+                        editor,
+                        (model, previousSegment, paragraph, context) => {
+                            const {
+                                autoBullet,
+                                autoNumbering,
+                                autoLink,
+                                autoHyphen,
+                            } = this.options;
+                            let shouldHyphen = false;
+                            let shouldLink = false;
+
+                            if (autoLink) {
+                                shouldLink = createLinkAfterSpace(
+                                    previousSegment,
+                                    paragraph,
+                                    context
+                                );
+                            }
+
+                            if (autoHyphen) {
+                                shouldHyphen = transformHyphen(previousSegment, paragraph, context);
+                            }
+
+                            return (
+                                keyboardListTrigger(
+                                    model,
+                                    paragraph,
+                                    context,
+                                    autoBullet,
+                                    autoNumbering
+                                ) ||
+                                shouldHyphen ||
+                                shouldLink
+                            );
+                        }
+                    );
                     break;
             }
         }
