@@ -1,47 +1,41 @@
 import { getListTypeStyle } from './getListTypeStyle';
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import {
     setListType,
     setModelListStartNumber,
     setModelListStyle,
 } from 'roosterjs-content-model-api';
-import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelDocument,
+    ContentModelParagraph,
+    FormatContentModelContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function keyboardListTrigger(
-    editor: IEditor,
+    model: ContentModelDocument,
+    paragraph: ContentModelParagraph,
+    context: FormatContentModelContext,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ) {
     if (shouldSearchForBullet || shouldSearchForNumbering) {
-        editor.formatContentModel(
-            (model, context) => {
-                const listStyleType = getListTypeStyle(
-                    model,
-                    shouldSearchForBullet,
-                    shouldSearchForNumbering
-                );
-                if (listStyleType) {
-                    const segmentsAndParagraphs = getSelectedSegmentsAndParagraphs(model, false);
-                    if (segmentsAndParagraphs[0] && segmentsAndParagraphs[0][1]) {
-                        segmentsAndParagraphs[0][1].segments.splice(0, 1);
-                    }
-                    const { listType, styleType, index } = listStyleType;
-                    triggerList(model, listType, styleType, index);
-                    context.canUndoByBackspace = true;
-
-                    return true;
-                }
-
-                return false;
-            },
-            {
-                apiName: 'autoToggleList',
-            }
+        const listStyleType = getListTypeStyle(
+            model,
+            shouldSearchForBullet,
+            shouldSearchForNumbering
         );
+        if (listStyleType) {
+            paragraph.segments.splice(0, 1);
+            const { listType, styleType, index } = listStyleType;
+            triggerList(model, listType, styleType, index);
+            context.canUndoByBackspace = true;
+
+            return true;
+        }
     }
+    return false;
 }
 
 const triggerList = (
