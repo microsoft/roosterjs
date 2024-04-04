@@ -1,5 +1,6 @@
 import { findCoordinate } from './findCoordinate';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
+import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
     isCharacterValue,
@@ -59,9 +60,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         this.isSafari = !!env.isSafari;
         this.isMac = !!env.isMac;
-
+        document.addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
-            document.addEventListener('selectionchange', this.onSelectionChangeSafari);
             this.disposer = this.editor.attachDomEvent({
                 focus: { beforeDispatch: this.onFocus },
                 drop: { beforeDispatch: this.onDrop },
@@ -76,9 +76,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     dispose() {
-        this.editor
-            ?.getDocument()
-            .removeEventListener('selectionchange', this.onSelectionChangeSafari);
+        this.editor?.getDocument().removeEventListener('selectionchange', this.onSelectionChange);
 
         if (this.disposer) {
             this.disposer();
@@ -271,17 +269,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     } else if (key !== 'Delete' && key !== 'Backspace') {
                         this.selectBeforeOrAfterElement(editor, selection.image);
                     }
-                } else if (
-                    (key == Up || key == Down || key == Left || key == Right) &&
-                    rawEvent.shiftKey
-                ) {
-                    const newRange = doc.createRange();
-                    newRange.selectNode(selection.image);
-                    this.editor?.setDOMSelection({
-                        type: 'range',
-                        range: newRange,
-                        isReverted: !!selection.isReverted,
-                    });
                 }
                 break;
 
@@ -298,8 +285,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
                     if (this.state.tableSelection) {
                         win?.requestAnimationFrame(() => this.handleSelectionInTable(rangeKey));
-                    } else if ((key == Left || key == Right) && rawEvent.shiftKey) {
-                        win?.requestAnimationFrame(() => this.trySelectSingleImage(editor));
                     }
                 }
                 break;
@@ -537,14 +522,30 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private onSelectionChangeSafari = () => {
+    private onSelectionChange = () => {
         if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
-            // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
-            // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
             const newSelection = this.editor.getDOMSelection();
 
+            //If am image selection changed to a wider range due a keyboard event, we should update the selection
+            const selection = this.editor.getDocument().getSelection();
+
+            if (newSelection?.type == 'image' && selection) {
+                if (selection && !isSingleImageInSelection(selection)) {
+                    this.editor.setDOMSelection({
+                        type: 'range',
+                        range: selection.getRangeAt(0),
+                        isReverted: !!newSelection.isReverted,
+                    });
+                }
+            }
+
+            // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
+            // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
             if (newSelection?.type == 'range') {
-                this.state.selection = newSelection;
+                if (this.isSafari) {
+                    this.state.selection = newSelection;
+                }
+                this.trySelectSingleImage(newSelection);
             }
         }
     };
@@ -616,17 +617,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private trySelectSingleImage(editor: IEditor) {
-        const selection = editor.getDOMSelection();
+    private trySelectSingleImage(selection: DOMSelection) {
         if (selection?.type == 'range' && !selection.range.collapsed) {
-            const { endContainer, startContainer, endOffset, startOffset } = selection.range;
-            const max = Math.max(endOffset, startOffset);
-            const min = Math.min(endOffset, startOffset);
-            if (startContainer == endContainer && max - min == 1) {
-                const node = startContainer.childNodes.item(min);
-                if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'img')) {
-                    this.selectImage(node, selection.isReverted);
-                }
+            const image = isSingleImageInSelection(selection.range);
+            if (image) {
+                this.selectImage(image, selection.isReverted);
             }
         }
     }

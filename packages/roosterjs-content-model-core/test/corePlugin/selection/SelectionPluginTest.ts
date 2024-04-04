@@ -1,7 +1,9 @@
+import * as isSingleImageInSelection from '../../../lib/corePlugin/selection/isSingleImageInSelection';
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
 import { createSelectionPlugin } from '../../../lib/corePlugin/selection/SelectionPlugin';
 import {
     DOMEventRecord,
+    DOMSelection,
     EditorPlugin,
     IEditor,
     PluginWithState,
@@ -14,8 +16,10 @@ describe('SelectionPlugin', () => {
         const disposer = jasmine.createSpy('disposer');
         const attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
         const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
         const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
         });
         const state = plugin.getState();
         const editor = ({
@@ -46,13 +50,14 @@ describe('SelectionPlugin', () => {
             imageSelectionBorderColor: 'red',
         });
         const state = plugin.getState();
-
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
         const attachDomEvent = jasmine
             .createSpy('attachDomEvent')
             .and.returnValue(jasmine.createSpy('disposer'));
         const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
         });
 
         plugin.initialize(<IEditor>(<any>{
@@ -81,6 +86,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let getDocumentSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
 
     let editor: IEditor;
 
@@ -88,8 +94,10 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         triggerEvent = jasmine.createSpy('triggerEvent');
         getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
         });
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
 
@@ -155,14 +163,17 @@ describe('SelectionPlugin handle image selection', () => {
     let createRangeSpy: jasmine.Spy;
     let domHelperSpy: jasmine.Spy;
     let requestAnimationFrameSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         createRangeSpy = jasmine.createSpy('createRange');
         requestAnimationFrameSpy = jasmine.createSpy('requestAnimationFrame');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
+            addEventListener: addEventListenerSpy,
             defaultView: {
                 requestAnimationFrame: requestAnimationFrameSpy,
             },
@@ -550,503 +561,6 @@ describe('SelectionPlugin handle image selection', () => {
         expect(stopPropagationSpy).not.toHaveBeenCalled();
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
     });
-
-    it('Select single image on Left', () => {
-        const div = document.createElement('div');
-        const domHelper = createDOMHelper(div);
-        domHelperSpy.and.returnValue(domHelper);
-        const mockedImage = document.createElement('img');
-        const mockedContainer = (<Node>{
-            childNodes: <any>{
-                item: () => mockedImage,
-            },
-        }) as any;
-
-        requestAnimationFrameSpy.and.callFake((cb?: Function) => {
-            cb?.();
-        });
-        getDOMSelectionSpy.and.callFake(() => {
-            if (getDOMSelectionSpy.calls.count() == 0) {
-                return {
-                    type: 'range',
-                    range: <Partial<Range>>{
-                        startContainer: mockedContainer,
-                        endContainer: mockedContainer,
-                        startOffset: 0,
-                        endOffset: 0,
-                        collapsed: true,
-                    },
-                    isReverted: true,
-                };
-            }
-
-            return {
-                type: 'range',
-                range: <Partial<Range>>{
-                    startContainer: mockedContainer,
-                    endContainer: mockedContainer,
-                    startOffset: 0,
-                    endOffset: 1,
-                    collapsed: false,
-                },
-                isReverted: true,
-            };
-        });
-
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent: (<Partial<KeyboardEvent>>{
-                key: 'ArrowLeft',
-                shiftKey: true,
-            }) as any,
-        });
-
-        expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(2);
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: true,
-        });
-    });
-
-    it('Select single image on Right', () => {
-        const div = document.createElement('div');
-        const domHelper = createDOMHelper(div);
-        domHelperSpy.and.returnValue(domHelper);
-        const mockedImage = document.createElement('img');
-        const mockedContainer = (<Node>{
-            childNodes: <any>{
-                item: () => mockedImage,
-            },
-        }) as any;
-
-        requestAnimationFrameSpy.and.callFake((cb?: Function) => {
-            cb?.();
-        });
-        getDOMSelectionSpy.and.callFake(() => {
-            if (getDOMSelectionSpy.calls.count() == 0) {
-                return {
-                    type: 'range',
-                    range: <Partial<Range>>{
-                        startContainer: mockedContainer,
-                        endContainer: mockedContainer,
-                        startOffset: 0,
-                        endOffset: 0,
-                        collapsed: true,
-                    },
-                    isReverted: true,
-                };
-            }
-
-            return {
-                type: 'range',
-                range: <Partial<Range>>{
-                    startContainer: mockedContainer,
-                    endContainer: mockedContainer,
-                    startOffset: 0,
-                    endOffset: 1,
-                    collapsed: false,
-                },
-                isReverted: true,
-            };
-        });
-
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent: (<Partial<KeyboardEvent>>{
-                key: 'ArrowRight',
-                shiftKey: true,
-            }) as any,
-        });
-
-        expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(2);
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: true,
-        });
-    });
-
-    it('Do not Select single image on Right/Left, offset invalid, (start - end offsets should equal 1)', () => {
-        const div = document.createElement('div');
-        const domHelper = createDOMHelper(div);
-        domHelperSpy.and.returnValue(domHelper);
-        const mockedImage = document.createElement('img');
-        const mockedContainer = (<Node>{
-            childNodes: <any>{
-                item: () => mockedImage,
-            },
-        }) as any;
-
-        requestAnimationFrameSpy.and.callFake((cb?: Function) => {
-            cb?.();
-        });
-        getDOMSelectionSpy.and.callFake(() => {
-            if (getDOMSelectionSpy.calls.count() == 0) {
-                return {
-                    type: 'range',
-                    range: <Partial<Range>>{
-                        startContainer: mockedContainer,
-                        endContainer: mockedContainer,
-                        startOffset: 0,
-                        endOffset: 0,
-                        collapsed: true,
-                    },
-                };
-            }
-
-            return {
-                type: 'range',
-                range: <Partial<Range>>{
-                    startContainer: mockedContainer,
-                    endContainer: mockedContainer,
-                    startOffset: 0,
-                    endOffset: 2,
-                    collapsed: false,
-                },
-            };
-        });
-
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent: (<Partial<KeyboardEvent>>{
-                key: 'ArrowRight',
-                shiftKey: true,
-            }) as any,
-        });
-
-        expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(2);
-        expect(setDOMSelectionSpy).not.toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: true,
-        });
-    });
-
-    it('Do not Select single image on Right/Left, not shift key', () => {
-        const div = document.createElement('div');
-        const domHelper = createDOMHelper(div);
-        domHelperSpy.and.returnValue(domHelper);
-        const mockedImage = document.createElement('img');
-        const mockedContainer = (<Node>{
-            childNodes: <any>{
-                item: () => mockedImage,
-            },
-        }) as any;
-
-        requestAnimationFrameSpy.and.callFake((cb?: Function) => {
-            cb?.();
-        });
-        getDOMSelectionSpy.and.callFake(() => {
-            if (getDOMSelectionSpy.calls.count() == 0) {
-                return {
-                    type: 'range',
-                    range: <Partial<Range>>{
-                        startContainer: mockedContainer,
-                        endContainer: mockedContainer,
-                        startOffset: 0,
-                        endOffset: 0,
-                        collapsed: true,
-                    },
-                    isReverted: true,
-                };
-            }
-
-            return {
-                type: 'range',
-                range: <Partial<Range>>{
-                    startContainer: mockedContainer,
-                    endContainer: mockedContainer,
-                    startOffset: 0,
-                    endOffset: 1,
-                    collapsed: false,
-                },
-                isReverted: true,
-            };
-        });
-
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent: (<Partial<KeyboardEvent>>{
-                key: 'ArrowRight',
-                shiftKey: false,
-            }) as any,
-        });
-
-        expect(requestAnimationFrameSpy).not.toHaveBeenCalledTimes(1);
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setDOMSelectionSpy).not.toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: true,
-        });
-    });
-
-    it('Do not Select single image on Right/Left, invalid key', () => {
-        const div = document.createElement('div');
-        const domHelper = createDOMHelper(div);
-        domHelperSpy.and.returnValue(domHelper);
-        const mockedImage = document.createElement('img');
-        const mockedContainer = (<Node>{
-            childNodes: <any>{
-                item: () => mockedImage,
-            },
-        }) as any;
-
-        requestAnimationFrameSpy.and.callFake((cb?: Function) => {
-            cb?.();
-        });
-        getDOMSelectionSpy.and.callFake(() => {
-            if (getDOMSelectionSpy.calls.count() == 0) {
-                return {
-                    type: 'range',
-                    range: <Partial<Range>>{
-                        startContainer: mockedContainer,
-                        endContainer: mockedContainer,
-                        startOffset: 0,
-                        endOffset: 0,
-                        collapsed: true,
-                    },
-                };
-            }
-
-            return {
-                type: 'range',
-                range: <Partial<Range>>{
-                    startContainer: mockedContainer,
-                    endContainer: mockedContainer,
-                    startOffset: 0,
-                    endOffset: 1,
-                    collapsed: false,
-                },
-            };
-        });
-
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent: (<Partial<KeyboardEvent>>{
-                key: 'ArrowRight_Invalid',
-                shiftKey: true,
-            }) as any,
-        });
-
-        expect(requestAnimationFrameSpy).not.toHaveBeenCalledTimes(1);
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setDOMSelectionSpy).not.toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: true,
-        });
-    });
-
-    it('Do not Select single image on Right/Left, item element is not an image', () => {
-        const div = document.createElement('div');
-        const domHelper = createDOMHelper(div);
-        domHelperSpy.and.returnValue(domHelper);
-        const mockedImage = document.createElement('div');
-        const mockedContainer = (<Node>{
-            childNodes: <any>{
-                item: () => mockedImage,
-            },
-        }) as any;
-
-        requestAnimationFrameSpy.and.callFake((cb?: Function) => {
-            cb?.();
-        });
-        getDOMSelectionSpy.and.callFake(() => {
-            if (getDOMSelectionSpy.calls.count() == 0) {
-                return {
-                    type: 'range',
-                    range: <Partial<Range>>{
-                        startContainer: mockedContainer,
-                        endContainer: mockedContainer,
-                        startOffset: 0,
-                        endOffset: 0,
-                        collapsed: true,
-                    },
-                };
-            }
-
-            return {
-                type: 'range',
-                range: <Partial<Range>>{
-                    startContainer: mockedContainer,
-                    endContainer: mockedContainer,
-                    startOffset: 0,
-                    endOffset: 1,
-                    collapsed: false,
-                },
-            };
-        });
-
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent: (<Partial<KeyboardEvent>>{
-                key: 'ArrowRight',
-                shiftKey: true,
-            }) as any,
-        });
-
-        expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(2);
-        expect(setDOMSelectionSpy).not.toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: true,
-        });
-    });
-
-    it('Do not Select single image on Right/Left, item node is not an element', () => {
-        const div = document.createElement('div');
-        const domHelper = createDOMHelper(div);
-        domHelperSpy.and.returnValue(domHelper);
-        const mockedImage = document.createTextNode('div');
-        const mockedContainer = (<Node>{
-            childNodes: <any>{
-                item: () => mockedImage,
-            },
-        }) as any;
-
-        requestAnimationFrameSpy.and.callFake((cb?: Function) => {
-            cb?.();
-        });
-        getDOMSelectionSpy.and.callFake(() => {
-            if (getDOMSelectionSpy.calls.count() == 0) {
-                return {
-                    type: 'range',
-                    range: <Partial<Range>>{
-                        startContainer: mockedContainer,
-                        endContainer: mockedContainer,
-                        startOffset: 0,
-                        endOffset: 0,
-                        collapsed: true,
-                    },
-                };
-            }
-
-            return {
-                type: 'range',
-                range: <Partial<Range>>{
-                    startContainer: mockedContainer,
-                    endContainer: mockedContainer,
-                    startOffset: 0,
-                    endOffset: 1,
-                    collapsed: false,
-                },
-            };
-        });
-
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent: (<Partial<KeyboardEvent>>{
-                key: 'ArrowRight',
-                shiftKey: true,
-            }) as any,
-        });
-
-        expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(2);
-        expect(setDOMSelectionSpy).not.toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: true,
-        });
-    });
-
-    it('Do not Select single image on Right/Left, containers are different', () => {
-        const div = document.createElement('div');
-        const domHelper = createDOMHelper(div);
-        domHelperSpy.and.returnValue(domHelper);
-        const mockedImage = document.createTextNode('div');
-        const mockedContainer = (<Node>{
-            childNodes: <any>{
-                item: () => mockedImage,
-            },
-        }) as any;
-
-        requestAnimationFrameSpy.and.callFake((cb?: Function) => {
-            cb?.();
-        });
-        getDOMSelectionSpy.and.callFake(() => {
-            if (getDOMSelectionSpy.calls.count() == 0) {
-                return {
-                    type: 'range',
-                    range: <Partial<Range>>{
-                        startContainer: mockedContainer,
-                        endContainer: mockedContainer,
-                        startOffset: 0,
-                        endOffset: 0,
-                        collapsed: true,
-                    },
-                };
-            }
-
-            return {
-                type: 'range',
-                range: <Partial<Range>>{
-                    startContainer: mockedContainer,
-                    endContainer: { ...mockedContainer },
-                    startOffset: 0,
-                    endOffset: 1,
-                    collapsed: false,
-                },
-            };
-        });
-
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent: (<Partial<KeyboardEvent>>{
-                key: 'ArrowRight',
-                shiftKey: true,
-            }) as any,
-        });
-
-        expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(2);
-        expect(setDOMSelectionSpy).not.toHaveBeenCalledWith({
-            type: 'image',
-            image: mockedImage,
-            isReverted: true,
-        });
-    });
-
-    it('Key down + Shift and Right/Left Key', () => {
-        const mockedImage = {} as any;
-        mockedImage.parentNode = { childNodes: [mockedImage] };
-
-        mockedImage.parentNode.childNodes.push(mockedImage);
-        getDOMSelectionSpy.and.returnValue({
-            type: 'image',
-            image: mockedImage,
-        });
-
-        const mockedRange = {
-            selectNode: jasmine.createSpy('selectNode'),
-        };
-
-        createRangeSpy.and.returnValue(mockedRange);
-
-        const rawEvent = (<Partial<KeyboardEvent>>{
-            key: 'ArrowRight',
-            shiftKey: true,
-        }) as any;
-        plugin.onPluginEvent!({
-            eventType: 'keyDown',
-            rawEvent,
-        });
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(mockedRange.selectNode).toHaveBeenCalledTimes(1);
-        expect(mockedRange.selectNode).toHaveBeenCalledWith(mockedImage);
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'range',
-            range: mockedRange,
-            isReverted: false,
-        });
-    });
 });
 
 describe('SelectionPlugin handle table selection', () => {
@@ -1063,6 +577,7 @@ describe('SelectionPlugin handle table selection', () => {
     let mouseMoveDisposer: jasmine.Spy;
     let requestAnimationFrameSpy: jasmine.Spy;
     let getComputedStyleSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
@@ -1071,12 +586,14 @@ describe('SelectionPlugin handle table selection', () => {
         createRangeSpy = jasmine.createSpy('createRange');
         requestAnimationFrameSpy = jasmine.createSpy('requestAnimationFrame');
         getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
             defaultView: {
                 requestAnimationFrame: requestAnimationFrameSpy,
                 getComputedStyle: getComputedStyleSpy,
             },
+            addEventListener: addEventListenerSpy,
         });
         focusDisposer = jasmine.createSpy('focus');
         mouseMoveDisposer = jasmine.createSpy('mouseMove');
@@ -2381,6 +1898,7 @@ describe('SelectionPlugin on Safari', () => {
     let isInShadowEditSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let editor: IEditor;
+    let getSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposer = jasmine.createSpy('disposer');
@@ -2388,12 +1906,14 @@ describe('SelectionPlugin on Safari', () => {
         attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
+        getSelectionSpy = jasmine.createSpy('getSelection');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             head: {
                 appendChild: appendChildSpy,
             },
             addEventListener: addEventListenerSpy,
             removeEventListener: removeEventListenerSpy,
+            getSelection: getSelectionSpy,
         });
         hasFocusSpy = jasmine.createSpy('hasFocus');
         isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
@@ -2472,6 +1992,9 @@ describe('SelectionPlugin on Safari', () => {
         const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
         const mockedNewSelection = {
             type: 'range',
+            range: <Partial<Range>>{
+                collapsed: true,
+            },
         } as any;
 
         hasFocusSpy.and.returnValue(true);
@@ -2598,5 +2121,193 @@ describe('SelectionPlugin on Safari', () => {
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('', () => {});
+});
+
+describe('SelectionPlugin selectionChange on image selected', () => {
+    let disposer: jasmine.Spy;
+    let appendChildSpy: jasmine.Spy;
+    let attachDomEvent: jasmine.Spy;
+    let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
+    let getDocumentSpy: jasmine.Spy;
+    let hasFocusSpy: jasmine.Spy;
+    let isInShadowEditSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let editor: IEditor;
+    let setDOMSelectionSpy: jasmine.Spy;
+    let getRangeAtSpy: jasmine.Spy;
+    let getSelectionSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        disposer = jasmine.createSpy('disposer');
+        appendChildSpy = jasmine.createSpy('appendChild');
+        attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
+        removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
+        getRangeAtSpy = jasmine.createSpy('getRangeAt');
+        getSelectionSpy = jasmine.createSpy('getSelection').and.returnValue({
+            getRangeAt: getRangeAtSpy,
+        });
+        getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            head: {
+                appendChild: appendChildSpy,
+            },
+            addEventListener: addEventListenerSpy,
+            removeEventListener: removeEventListenerSpy,
+            getSelection: getSelectionSpy,
+        });
+        hasFocusSpy = jasmine.createSpy('hasFocus');
+        isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
+
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: true,
+            }),
+            hasFocus: hasFocusSpy,
+            isInShadowEdit: isInShadowEditSpy,
+            getDOMSelection: getDOMSelectionSpy,
+            setDOMSelection: setDOMSelectionSpy,
+        } as any) as IEditor;
+    });
+
+    it('onSelectionChange on image | 1', () => {
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'image',
+            image: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range: { startContainer: {} } as Range,
+            isReverted: false,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange on image | 2', () => {
+        const image = document.createElement('img');
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
+
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'image',
+            image: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange on image | 3', () => {
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'range',
+            range: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange on image | 4', () => {
+        const image = document.createElement('img');
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
+
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'range',
+            range: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).toHaveBeenCalled();
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'image',
+            image,
+            isReverted: undefined,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });
