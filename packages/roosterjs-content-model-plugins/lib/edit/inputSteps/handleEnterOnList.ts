@@ -115,6 +115,7 @@ const createNewListLevel = (listItem: ContentModelListItem) => {
             {
                 ...level.format,
                 startNumberOverride: undefined,
+                displayForDummyItem: undefined, // When ENTER, we should create a new regular list item, so force its dummy item display to undefined
             },
             level.dataset
         );

@@ -59,9 +59,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         this.isSafari = !!env.isSafari;
         this.isMac = !!env.isMac;
-
+        document.addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
-            document.addEventListener('selectionchange', this.onSelectionChangeSafari);
             this.disposer = this.editor.attachDomEvent({
                 focus: { beforeDispatch: this.onFocus },
                 drop: { beforeDispatch: this.onDrop },
@@ -76,9 +75,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     dispose() {
-        this.editor
-            ?.getDocument()
-            .removeEventListener('selectionchange', this.onSelectionChangeSafari);
+        this.editor?.getDocument().removeEventListener('selectionchange', this.onSelectionChange);
 
         if (this.disposer) {
             this.disposer();
@@ -522,13 +519,27 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private onSelectionChangeSafari = () => {
+    private onSelectionChange = () => {
         if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
-            // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
-            // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
             const newSelection = this.editor.getDOMSelection();
 
-            if (newSelection?.type == 'range') {
+            //If am image selection changed to a wider range due a keyboard event, we should update the selection
+            const selection = this.editor.getDocument().getSelection();
+            if (
+                newSelection?.type == 'image' &&
+                selection &&
+                selection.containsNode(newSelection.image, false /*partiallyContained*/)
+            ) {
+                this.editor.setDOMSelection({
+                    type: 'range',
+                    range: selection.getRangeAt(0),
+                    isReverted: false,
+                });
+            }
+
+            // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
+            // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
+            if (newSelection?.type == 'range' && this.isSafari) {
                 this.state.selection = newSelection;
             }
         }
