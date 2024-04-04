@@ -1,5 +1,6 @@
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { expectHtml } from '../../testUtils';
 import { handleSegmentCommon } from '../../../lib/modelToDom/utils/handleSegmentCommon';
 
 describe('handleSegmentCommon', () => {
@@ -89,9 +90,10 @@ describe('handleSegmentCommon', () => {
         handleSegmentCommon(document, txt, container, segment, context, segmentNodes);
 
         expect(context.regularSelection.current.segment).toBe(txt);
-        expect(container.outerHTML).toBe(
-            '<span class="test" style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href">test</a></b></span>'
-        );
+        expectHtml(container.outerHTML, [
+            '<span class="test" style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href">test</a></b></span>',
+            '<span style="font-size: 10pt; color: red; line-height: 2;" class="test"><b><a href="href">test</a></b></span>',
+        ]);
         expect(onNodeCreated).toHaveBeenCalledWith(segment, txt);
         expect(segmentNodes.length).toBe(2);
         expect(segmentNodes[0]).toBe(txt);
