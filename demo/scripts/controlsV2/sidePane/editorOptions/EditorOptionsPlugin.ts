@@ -43,6 +43,7 @@ const initialState: OptionState = {
         autoLink: true,
         autoNumbering: true,
         autoUnlink: false,
+        autoHyphen: true,
     },
     markdownOptions: {
         bold: true,

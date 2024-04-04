@@ -475,15 +475,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             imageMenu,
             watermarkText,
             markdownOptions,
+            autoFormatOptions,
         } = this.state.initState;
         return [
-            pluginList.autoFormat &&
-                new AutoFormatPlugin({
-                    autoBullet: true,
-                    autoNumbering: true,
-                    autoUnlink: true,
-                    autoLink: true,
-                }),
+            pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
             pluginList.edit && new EditPlugin(),
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
