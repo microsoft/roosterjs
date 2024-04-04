@@ -57,4 +57,6 @@ export interface EditorContext {
      * Root Font size in Px.
      */
     rootFontSize?: number;
+
+    selectionClassName?: string;
 }
