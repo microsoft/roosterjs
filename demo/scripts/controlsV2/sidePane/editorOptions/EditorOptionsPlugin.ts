@@ -17,6 +17,7 @@ const initialState: OptionState = {
         pasteOption: true,
         sampleEntity: true,
         markdown: true,
+        imageEditPlugin: true,
 
         // Legacy plugins
         contentEdit: false,

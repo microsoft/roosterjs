@@ -23,6 +23,7 @@ export interface NewPluginList {
     pasteOption: boolean;
     sampleEntity: boolean;
     markdown: boolean;
+    imageEditPlugin: boolean;
 }
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}

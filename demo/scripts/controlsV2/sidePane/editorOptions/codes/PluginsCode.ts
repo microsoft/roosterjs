@@ -12,6 +12,7 @@ import {
     PastePluginCode,
     TableEditPluginCode,
     ShortcutPluginCode,
+    ImageEditPluginCode,
 } from './SimplePluginCode';
 
 export class PluginsCodeBase extends CodeElement {
@@ -46,6 +47,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.shortcut && new ShortcutPluginCode(),
             pluginList.watermark && new WatermarkCode(state.watermarkText),
             pluginList.markdown && new MarkdownCode(state.markdownOptions),
+            pluginList.imageEditPlugin && new ImageEditPluginCode(),
         ]);
     }
 }

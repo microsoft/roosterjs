@@ -45,3 +45,9 @@ export class CustomReplaceCode extends SimplePluginCode {
         super('CustomReplace', 'roosterjsLegacy');
     }
 }
+
+export class ImageEditPluginCode extends SimplePluginCode {
+    constructor() {
+        super('ImageEditPlugin');
+    }
+}
