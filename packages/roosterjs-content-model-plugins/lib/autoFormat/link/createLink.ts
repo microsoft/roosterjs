@@ -1,6 +1,5 @@
 import { addLink } from 'roosterjs-content-model-dom';
-import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
-import { matchLink } from 'roosterjs-content-model-api';
+import { formatTextSegmentBeforeSelectionMarker, matchLink } from 'roosterjs-content-model-api';
 import type { IEditor, LinkData } from 'roosterjs-content-model-types';
 
 /**
