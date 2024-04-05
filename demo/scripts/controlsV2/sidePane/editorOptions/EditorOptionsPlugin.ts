@@ -21,13 +21,16 @@ const initialState: OptionState = {
 
         // Legacy plugins
         contentEdit: false,
-        hyperlink: false,
         imageEdit: false,
         customReplace: false,
         announce: false,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
-    defaultFormat: {},
+    defaultFormat: {
+        fontFamily: 'Calibri',
+        fontSize: '11pt',
+        textColor: '#000000',
+    },
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,

@@ -24,7 +24,7 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { getPresetModelById } from '../sidePane/presets/allPresets/allPresets';
 import { getTabs, tabNames } from '../tabs/getTabs';
 import { getTheme } from '../theme/themes';
-import { OptionState } from '../sidePane/editorOptions/OptionState';
+import { OptionState, UrlPlaceholder } from '../sidePane/editorOptions/OptionState';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
 import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';

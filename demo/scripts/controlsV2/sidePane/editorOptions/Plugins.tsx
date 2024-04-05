@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ContentEditFeatures from './ContentEditFeatures';
-import { UrlPlaceholder } from './OptionState';
-import type {
+import {
+    UrlPlaceholder,
     BuildInPluginList,
     LegacyPluginList,
     NewPluginList,
@@ -103,7 +103,6 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
 }
 
 export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
-    private linkTitle = React.createRef<HTMLInputElement>();
     private forcePreserveRatio = React.createRef<HTMLInputElement>();
 
     render() {
@@ -117,17 +116,6 @@ export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
                             state={this.props.state.contentEditFeatures}
                             resetState={this.props.resetState}
                         />
-                    )}
-                    {this.renderPluginItem(
-                        'hyperlink',
-                        'Hyperlink Plugin',
-                        this.renderInputBox(
-                            'Label title: ',
-                            this.linkTitle,
-                            this.props.state.linkTitle,
-                            'Use "' + UrlPlaceholder + '" for the url string',
-                            (state, value) => (state.linkTitle = value)
-                        )
                     )}
                     {this.renderPluginItem(
                         'imageEdit',
@@ -153,6 +141,7 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
     private tableMenu = React.createRef<HTMLInputElement>();
     private imageMenu = React.createRef<HTMLInputElement>();
     private watermarkText = React.createRef<HTMLInputElement>();
+    private linkTitle = React.createRef<HTMLInputElement>();
 
     render(): JSX.Element {
         return (
@@ -210,6 +199,17 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                     {this.renderPluginItem('emoji', 'Emoji')}
                     {this.renderPluginItem('pasteOption', 'PasteOptions')}
                     {this.renderPluginItem('sampleEntity', 'SampleEntity')}
+                    {this.renderPluginItem(
+                        'hyperlink',
+                        'Hyperlink Plugin',
+                        this.renderInputBox(
+                            'Label title: ',
+                            this.linkTitle,
+                            this.props.state.linkTitle,
+                            'Use "' + UrlPlaceholder + '" for the url string',
+                            (state, value) => (state.linkTitle = value)
+                        )
+                    )}
                 </tbody>
             </table>
         );
