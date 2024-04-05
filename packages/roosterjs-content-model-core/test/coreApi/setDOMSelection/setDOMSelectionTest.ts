@@ -74,9 +74,14 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(3);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
         }
 
         it('From null selection', () => {
@@ -127,9 +132,14 @@ describe('setDOMSelection', () => {
                 skipReselectOnFocus: undefined,
                 selection: null,
             } as any);
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(3);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
@@ -163,9 +173,14 @@ describe('setDOMSelection', () => {
             } as any);
             expect(triggerEventSpy).not.toHaveBeenCalled();
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(3);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
         });
 
         it('range selection, editor id is unique, editor does not have focus', () => {
@@ -193,9 +208,14 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(3);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
         });
     });
 
@@ -240,22 +260,21 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
-            expect(collapseSpy).toHaveBeenCalledWith();
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
+            expect(collapseSpy).not.toHaveBeenCalledWith();
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
             expect(mockedImage.id).toBe('image_0');
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:#DB626C!important;',
                 ['#image_0']
-            );
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(
-                core,
-                '_DOMSelectionHideCursor',
-                'caret-color: transparent'
             );
         });
 
@@ -294,11 +313,15 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
-            expect(collapseSpy).toHaveBeenCalledWith();
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(collapseSpy).not.toHaveBeenCalledWith();
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
@@ -307,8 +330,9 @@ describe('setDOMSelection', () => {
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
-                '_DOMSelectionHideCursor',
-                'caret-color: transparent'
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important',
+                ['*::selection']
             );
         });
 
@@ -347,11 +371,16 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
-            expect(collapseSpy).toHaveBeenCalledWith();
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange);
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(collapseSpy).not.toHaveBeenCalledWith();
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
@@ -360,8 +389,9 @@ describe('setDOMSelection', () => {
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
-                '_DOMSelectionHideCursor',
-                'caret-color: transparent'
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important',
+                ['*::selection']
             );
         });
 
@@ -402,7 +432,7 @@ describe('setDOMSelection', () => {
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
             expect(mockedImage.id).toBe('image_0');
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -413,8 +443,9 @@ describe('setDOMSelection', () => {
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
-                '_DOMSelectionHideCursor',
-                'caret-color: transparent'
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important',
+                ['*::selection']
             );
         });
     });
@@ -458,9 +489,14 @@ describe('setDOMSelection', () => {
             expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
             expect(mockedTable.id).toBeUndefined();
 
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(3);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
         });
 
         function runTest(
@@ -506,9 +542,14 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(mockedTable.id).toBe('table_0');
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
@@ -641,9 +682,14 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(table.id).toBe('table_0');
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(4);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
