@@ -12,11 +12,14 @@ import type {
 
 const DOM_SELECTION_CSS_KEY = '_DOMSelection';
 const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
+const HIDE_SELECTION_CSS_KEY = '_DOMSelectionHideSelection';
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
 const TABLE_CSS_RULE = 'background-color:#C6C6C6!important;';
 const CARET_CSS_RULE = 'caret-color: transparent';
+const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important';
+const SELECTION_SELECTOR = '*::selection';
 
 /**
  * @internal
@@ -31,6 +34,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     core.selection.skipReselectOnFocus = true;
     core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
     core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
+    core.api.setEditorStyle(core, HIDE_SELECTION_CSS_KEY, null /*cssRule*/);
 
     try {
         switch (selection?.type) {
@@ -46,9 +50,14 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     }!important;`,
                     [`#${ensureUniqueId(image, IMAGE_ID)}`]
                 );
-                core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
+                core.api.setEditorStyle(
+                    core,
+                    HIDE_SELECTION_CSS_KEY,
+                    TRANSPARENT_SELECTION_CSS_RULE,
+                    [SELECTION_SELECTOR]
+                );
 
-                setRangeSelection(doc, image);
+                setRangeSelection(doc, image, false /* collapse */);
                 break;
             case 'table':
                 const { table, firstColumn, firstRow, lastColumn, lastRow } = selection;
@@ -105,7 +114,11 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 const nodeToSelect = firstCell.cell?.firstElementChild || firstCell.cell;
 
                 if (nodeToSelect) {
-                    setRangeSelection(doc, (nodeToSelect as HTMLElement) || undefined);
+                    setRangeSelection(
+                        doc,
+                        (nodeToSelect as HTMLElement) || undefined,
+                        true /* collapse */
+                    );
                 }
 
                 break;
@@ -197,13 +210,24 @@ function handleTableSelected(
     return selectors;
 }
 
-function setRangeSelection(doc: Document, element: HTMLElement | undefined) {
+function setRangeSelection(doc: Document, element: HTMLElement | undefined, collapse: boolean) {
     if (element && doc.contains(element)) {
         const range = doc.createRange();
+        let isReverted: boolean | undefined = undefined;
 
         range.selectNode(element);
-        range.collapse();
+        if (collapse) {
+            range.collapse();
+        } else {
+            const selection = doc.defaultView?.getSelection();
+            const range = selection && selection.rangeCount > 0 && selection.getRangeAt(0);
+            if (selection && range) {
+                isReverted =
+                    selection.focusNode != range.endContainer ||
+                    selection.focusOffset != range.endOffset;
+            }
+        }
 
-        addRangeToSelection(doc, range);
+        addRangeToSelection(doc, range, isReverted);
     }
 }
