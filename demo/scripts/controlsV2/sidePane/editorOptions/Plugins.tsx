@@ -132,13 +132,57 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
     private tableMenu = React.createRef<HTMLInputElement>();
     private imageMenu = React.createRef<HTMLInputElement>();
     private watermarkText = React.createRef<HTMLInputElement>();
+    private autoBullet = React.createRef<HTMLInputElement>();
+    private autoNumbering = React.createRef<HTMLInputElement>();
+    private autoLink = React.createRef<HTMLInputElement>();
+    private autoUnlink = React.createRef<HTMLInputElement>();
+    private autoHyphen = React.createRef<HTMLInputElement>();
+    private markdownBold = React.createRef<HTMLInputElement>();
+    private markdownItalic = React.createRef<HTMLInputElement>();
+    private markdownStrikethrough = React.createRef<HTMLInputElement>();
+    private markdownCode = React.createRef<HTMLInputElement>();
     private linkTitle = React.createRef<HTMLInputElement>();
 
     render(): JSX.Element {
         return (
             <table>
                 <tbody>
-                    {this.renderPluginItem('autoFormat', 'AutoFormat')}
+                    {this.renderPluginItem(
+                        'autoFormat',
+                        'AutoFormat',
+                        <>
+                            {this.renderCheckBox(
+                                'Bullet',
+                                this.autoBullet,
+                                this.props.state.autoFormatOptions.autoBullet,
+                                (state, value) => (state.autoFormatOptions.autoBullet = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Numbering',
+                                this.autoNumbering,
+                                this.props.state.autoFormatOptions.autoNumbering,
+                                (state, value) => (state.autoFormatOptions.autoNumbering = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Link',
+                                this.autoLink,
+                                this.props.state.autoFormatOptions.autoLink,
+                                (state, value) => (state.autoFormatOptions.autoLink = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Unlink',
+                                this.autoUnlink,
+                                this.props.state.autoFormatOptions.autoUnlink,
+                                (state, value) => (state.autoFormatOptions.autoUnlink = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Hyphen',
+                                this.autoHyphen,
+                                this.props.state.autoFormatOptions.autoHyphen,
+                                (state, value) => (state.autoFormatOptions.autoHyphen = value)
+                            )}
+                        </>
+                    )}
                     {this.renderPluginItem('edit', 'Edit')}
                     {this.renderPluginItem(
                         'paste',
@@ -190,6 +234,40 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                     {this.renderPluginItem('emoji', 'Emoji')}
                     {this.renderPluginItem('pasteOption', 'PasteOptions')}
                     {this.renderPluginItem('sampleEntity', 'SampleEntity')}
+                    {this.renderPluginItem(
+                        'markdown',
+                        'Markdown',
+                        <>
+                            {this.renderCheckBox(
+                                'Bold',
+                                this.markdownBold,
+                                this.props.state.markdownOptions.bold,
+                                (state, value) => (state.markdownOptions.bold = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Italic',
+                                this.markdownItalic,
+                                this.props.state.markdownOptions.italic,
+                                (state, value) => (state.markdownOptions.italic = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Strikethrough',
+                                this.markdownStrikethrough,
+                                this.props.state.markdownOptions.strikethrough,
+                                (state, value) => (state.markdownOptions.strikethrough = value)
+                            )}
+
+                            {this.renderCheckBox(
+                                'Code',
+                                this.markdownCode,
+                                this.props.state.markdownOptions.codeFormat !== undefined,
+                                (state, value) =>
+                                    value
+                                        ? (state.markdownOptions.codeFormat = {})
+                                        : (state.markdownOptions.codeFormat = undefined)
+                            )}
+                        </>
+                    )}
                     {this.renderPluginItem(
                         'hyperlink',
                         'Hyperlink Plugin',

@@ -18,9 +18,15 @@ export function setFormat(
 ) {
     formatTextSegmentBeforeSelectionMarker(
         editor,
-        (_model, previousSegment, paragraph, context) => {
+        (_model, previousSegment, paragraph, markerFormat, context) => {
             if (previousSegment.text[previousSegment.text.length - 1] == character) {
                 const textBeforeMarker = previousSegment.text.slice(0, -1);
+                context.newPendingFormat = {
+                    ...markerFormat,
+                    strikethrough: !!markerFormat.strikethrough,
+                    italic: !!markerFormat.italic,
+                    fontWeight: markerFormat?.fontWeight ? 'bold' : undefined,
+                };
                 if (textBeforeMarker.indexOf(character) > -1) {
                     const lastCharIndex = previousSegment.text.length;
                     const firstCharIndex = previousSegment.text

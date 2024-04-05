@@ -131,7 +131,7 @@ export class AutoFormatPlugin implements EditorPlugin {
                 case ' ':
                     formatTextSegmentBeforeSelectionMarker(
                         editor,
-                        (model, previousSegment, paragraph, context) => {
+                        (model, previousSegment, paragraph, _markerFormat, context) => {
                             const {
                                 autoBullet,
                                 autoNumbering,
