@@ -9,7 +9,9 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Invoke a callback to format the text segment before the selection marker using Content Model
+ * @param editor The editor object
+ * @param callback The callback to format the text segment.
  */
 export function formatTextSegmentBeforeSelectionMarker(
     editor: IEditor,

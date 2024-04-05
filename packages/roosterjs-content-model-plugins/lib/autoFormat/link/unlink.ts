@@ -1,4 +1,4 @@
-import { formatTextSegmentBeforeSelectionMarker } from '../../pluginUtils/formatTextSegmentBeforeSelectionMarker';
+import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 
 import type { IEditor } from 'roosterjs-content-model-types';
 
