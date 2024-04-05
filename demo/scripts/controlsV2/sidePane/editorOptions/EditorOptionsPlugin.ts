@@ -19,7 +19,6 @@ const initialState: OptionState = {
         markdown: true,
 
         // Legacy plugins
-        contentEdit: false,
         hyperlink: false,
         imageEdit: false,
         customReplace: false,

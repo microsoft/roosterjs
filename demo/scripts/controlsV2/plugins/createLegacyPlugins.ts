@@ -1,11 +1,5 @@
+import { Announce, CustomReplace, HyperLink, ImageEdit } from 'roosterjs-editor-plugins';
 import { EditorPlugin as LegacyEditorPlugin, KnownAnnounceStrings } from 'roosterjs-editor-types';
-import {
-    Announce,
-    ContentEdit,
-    CustomReplace,
-    HyperLink,
-    ImageEdit,
-} from 'roosterjs-editor-plugins';
 import {
     LegacyPluginList,
     OptionState,
@@ -16,7 +10,6 @@ export function createLegacyPlugins(initState: OptionState): LegacyEditorPlugin[
     const { pluginList, linkTitle } = initState;
 
     const plugins: Record<keyof LegacyPluginList, LegacyEditorPlugin | null> = {
-        contentEdit: pluginList.contentEdit ? new ContentEdit(initState.contentEditFeatures) : null,
         hyperlink: pluginList.hyperlink
             ? new HyperLink(
                   linkTitle?.indexOf(UrlPlaceholder) >= 0

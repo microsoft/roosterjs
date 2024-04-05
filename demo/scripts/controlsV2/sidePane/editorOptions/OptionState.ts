@@ -4,7 +4,6 @@ import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 export interface LegacyPluginList {
-    contentEdit: boolean;
     hyperlink: boolean;
     imageEdit: boolean;
     customReplace: boolean;

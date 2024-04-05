@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ContentEditFeatures from './ContentEditFeatures';
 import { UrlPlaceholder } from './OptionState';
 import type {
     BuildInPluginList,
@@ -110,14 +109,6 @@ export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
         return (
             <table>
                 <tbody>
-                    {this.renderPluginItem(
-                        'contentEdit',
-                        'Content Edit',
-                        <ContentEditFeatures
-                            state={this.props.state.contentEditFeatures}
-                            resetState={this.props.resetState}
-                        />
-                    )}
                     {this.renderPluginItem(
                         'hyperlink',
                         'Hyperlink Plugin',
