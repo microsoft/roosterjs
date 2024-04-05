@@ -17,6 +17,7 @@ const initialState: OptionState = {
         sampleEntity: true,
         markdown: true,
         imageEditPlugin: true,
+        hyperlink: true,
 
         // Legacy plugins
         imageEdit: false,
@@ -52,6 +53,7 @@ const initialState: OptionState = {
         strikethrough: true,
         codeFormat: {},
     },
+    hyperlink: true,
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

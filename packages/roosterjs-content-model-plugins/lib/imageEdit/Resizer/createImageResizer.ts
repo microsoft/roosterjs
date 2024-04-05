@@ -1,10 +1,7 @@
-import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
-import ImageEditInfo, { ResizeInfo } from '../types/ImageEditInfo';
-import { DragAndDropHelper } from 'roosterjs-content-model-plugins/lib/pluginUtils/DragAndDrop/DragAndDropHelper';
+import { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 import { IEditor } from 'roosterjs-content-model-types/lib';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { ImageEditOptions } from '../types/ImageEditOptions';
-import { Resizer } from './resizerContext';
 
 const RESIZE_HANDLE_MARGIN = 6;
 const RESIZE_HANDLE_SIZE = 10;
@@ -22,18 +19,13 @@ const HANDLES: { x: DNDDirectionX; y: DnDDirectionY }[] = [
 export function createImageResizer(
     editor: IEditor,
     image: HTMLImageElement,
-    editInfo: ImageEditInfo,
-    options: ImageEditOptions,
-    updateWrapper: () => {}
+    options: ImageEditOptions
 ) {
     const imageClone = image.cloneNode(true) as HTMLImageElement;
     const handles = HANDLES.map(handle => createHandles(editor, handle.y, handle.x));
-    const dragAndDropHelpers = handles.map(handle =>
-        createDropAndDragHelpers(handle, editInfo, options, updateWrapper)
-    );
     const resizer = createResizer(editor, imageClone, options, handles);
-    const shadowSpan = createShadowSpan(editor, resizer, imageClone);
-    return { resizer, dragAndDropHelpers, shadowSpan };
+    const shadowSpan = createShadowSpan(editor, resizer, image);
+    return { resizer, handles, shadowSpan, imageClone };
 }
 
 const createShadowSpan = (editor: IEditor, wrapper: HTMLElement, image: HTMLImageElement) => {
@@ -42,6 +34,7 @@ const createShadowSpan = (editor: IEditor, wrapper: HTMLElement, image: HTMLImag
         const shadowRoot = shadowSpan.attachShadow({
             mode: 'open',
         });
+        shadowSpan.style.position = 'absolute';
         shadowSpan.style.verticalAlign = 'bottom';
         wrapper.style.fontSize = '24px';
         shadowRoot.appendChild(wrapper);
@@ -56,7 +49,7 @@ const createResizer = (
     handles: HTMLDivElement[]
 ) => {
     const doc = editor.getDocument();
-    const resize = doc.createElement('div');
+    const resize = doc.createElement('span');
     const imageBox = doc.createElement('div');
     imageBox.setAttribute(
         `styles`,
@@ -107,25 +100,4 @@ const createHandles = (editor: IEditor, y: DnDDirectionY, x: DNDDirectionX) => {
     handleChild.dataset.x = x;
     handleChild.dataset.y = y;
     return handle;
-};
-
-const createDropAndDragHelpers = (
-    handle: HTMLDivElement,
-    editInfo: ImageEditInfo,
-    options: ImageEditOptions,
-    updateWrapper: () => {}
-) => {
-    return new DragAndDropHelper<DragAndDropContext, ResizeInfo>(
-        handle,
-        {
-            elementClass: ImageEditElementClass.ResizeHandle,
-            editInfo: editInfo,
-            options: options,
-            x: handle.dataset.x as DNDDirectionX,
-            y: handle.dataset.y as DnDDirectionY,
-        },
-        updateWrapper,
-        Resizer,
-        1
-    );
 };

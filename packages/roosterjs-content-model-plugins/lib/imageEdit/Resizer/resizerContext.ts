@@ -11,7 +11,6 @@ export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
     onDragging: ({ x, y, editInfo, options }, e, base, deltaX, deltaY) => {
         const ratio =
             base.widthPx > 0 && base.heightPx > 0 ? (base.widthPx * 1.0) / base.heightPx : 0;
-
         [deltaX, deltaY] = rotateCoordinate(deltaX, deltaY, editInfo.angleRad);
         if (options.minWidth !== undefined && options.minHeight !== undefined) {
             const horizontalOnly = x == '';
@@ -42,6 +41,7 @@ export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
                     }
                 }
             }
+
             editInfo.widthPx = newWidth;
             editInfo.heightPx = newHeight;
             return true;

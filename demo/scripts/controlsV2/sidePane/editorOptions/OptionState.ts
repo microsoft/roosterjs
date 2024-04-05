@@ -21,6 +21,7 @@ export interface NewPluginList {
     sampleEntity: boolean;
     markdown: boolean;
     imageEditPlugin: boolean;
+    hyperlink: boolean;
 }
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
@@ -36,6 +37,7 @@ export interface OptionState {
     watermarkText: string;
     autoFormatOptions: AutoFormatOptions;
     markdownOptions: MarkdownOptions;
+    hyperlink: boolean;
 
     // Legacy plugin options
     defaultFormat: ContentModelSegmentFormat;

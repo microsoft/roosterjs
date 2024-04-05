@@ -29,6 +29,7 @@ export { toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
 export { setSpacing } from './publicApi/block/setSpacing';
 export { setImageBorder } from './publicApi/image/setImageBorder';
 export { setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
+export { setImageSize } from './publicApi/image/setImageSize';
 export { changeImage } from './publicApi/image/changeImage';
 export { getFormatState } from './publicApi/format/getFormatState';
 export { clearFormat } from './publicApi/format/clearFormat';

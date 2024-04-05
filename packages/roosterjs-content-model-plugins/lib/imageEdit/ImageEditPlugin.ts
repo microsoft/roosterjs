@@ -1,6 +1,15 @@
+import DragAndDropContext from './types/DragAndDropContext';
+import ImageEditInfo, { ResizeInfo } from './types/ImageEditInfo';
 import { createImageResizer } from './Resizer/createImageResizer';
-import { getEditInfoFromImage } from 'roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/editInfo';
+import { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { getImageEditInfo } from './utils/getImageEditInfo';
+import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { ImageEditOptions } from './types/ImageEditOptions';
+import { isNodeOfType } from 'roosterjs-content-model-dom/';
+import { Resizer } from './Resizer/resizerContext';
+import { startDropAndDragHelpers } from './utils/startDropAndDragHelpers';
+//import { setImageSize } from 'roosterjs-content-model-api';
+
 import type {
     EditorPlugin,
     IEditor,
@@ -22,6 +31,11 @@ const DefaultOptions: Partial<ImageEditOptions> = {
  */
 export class ImageEditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
+    private shadowSpan: HTMLElement | null = null;
+    private resizeHelpers: DragAndDropHelper<DragAndDropContext, ResizeInfo>[] = [];
+    private selectedImage: HTMLImageElement | null = null;
+    private resizer: HTMLSpanElement | null = null;
+    private imageEditInfo: ImageEditInfo | null = null;
 
     constructor(private options: ImageEditOptions = DefaultOptions) {}
 
@@ -63,22 +77,99 @@ export class ImageEditPlugin implements EditorPlugin {
                 case 'selectionChanged':
                     this.handleSelectionChangedEvent(this.editor, event);
                     break;
+                case 'mouseDown':
+                    if (this.selectedImage && this.shadowSpan && this.imageEditInfo) {
+                        this.removeImageResizer(
+                            this.editor,
+                            this.shadowSpan,
+                            this.imageEditInfo,
+                            this.resizeHelpers
+                        );
+                    }
+                    break;
             }
         }
     }
 
     private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {
-        if (event.newSelection?.type == 'image') {
-            const imageEditInfo = getEditInfoFromImage(event.newSelection.image);
-            createImageResizer(
+        if (event.newSelection?.type == 'image' && event.newSelection.image != this.selectedImage) {
+            this.startResizer(editor, event.newSelection.image);
+        } else if (
+            this.imageEditInfo &&
+            this.selectedImage &&
+            (event.newSelection?.type == 'table' ||
+                (event.newSelection?.type == 'range' &&
+                    this.shadowSpan &&
+                    !isImageContainer(event.newSelection.range, this.shadowSpan)))
+        ) {
+            this.removeImageResizer(
                 editor,
-                event.newSelection.image,
-                imageEditInfo,
-                this.options,
-                () => {
-                    return {};
-                }
+                this.shadowSpan,
+                this.imageEditInfo,
+                this.resizeHelpers
             );
+            this.selectedImage = null;
         }
     }
+
+    private startResizer(editor: IEditor, image: HTMLImageElement) {
+        this.imageEditInfo = getImageEditInfo(image);
+        const { shadowSpan, handles, resizer, imageClone } = createImageResizer(
+            editor,
+            image,
+            this.options
+        );
+        this.shadowSpan = shadowSpan;
+        this.selectedImage = image;
+        this.resizer = resizer;
+
+        this.resizeHelpers = startDropAndDragHelpers(
+            handles,
+            this.imageEditInfo,
+            this.options,
+            ImageEditElementClass.ResizeHandle,
+            Resizer,
+            (context: DragAndDropContext, _handle?: HTMLElement) => {
+                this.resizeImage(context, imageClone);
+            }
+        );
+    }
+
+    private resizeImage(context: DragAndDropContext, image?: HTMLImageElement) {
+        if (image && this.resizer && this.shadowSpan && this.imageEditInfo) {
+            const { widthPx, heightPx } = context.editInfo;
+            image.style.width = `${widthPx}px`;
+            image.style.height = `${heightPx}px`;
+            this.resizer.style.width = `${widthPx}px`;
+            this.resizer.style.height = `${heightPx}px`;
+            this.imageEditInfo.widthPx = widthPx;
+            this.imageEditInfo.heightPx = heightPx;
+        }
+    }
+
+    private removeImageResizer(
+        editor: IEditor,
+        shadowSpan: HTMLElement | null,
+        imageEditInfo: ImageEditInfo,
+        resizeHelpers: DragAndDropHelper<DragAndDropContext, ResizeInfo>[]
+    ) {
+        const helper = editor.getDOMHelper();
+        if (shadowSpan && shadowSpan.parentElement) {
+            helper.unwrap(shadowSpan);
+        }
+        shadowSpan = null;
+        resizeHelpers.forEach(helper => helper.dispose());
+        // setImageSize(editor, imageEditInfo.widthPx, imageEditInfo.heightPx);
+    }
 }
+
+const isImageContainer = (currentRange: Range, image: HTMLElement) => {
+    const content = currentRange.commonAncestorContainer;
+    if (content.firstChild && content.childNodes.length == 1) {
+        return (
+            isNodeOfType(content.firstChild, 'ELEMENT_NODE') &&
+            content.firstChild.isEqualNode(image)
+        );
+    }
+    return false;
+};

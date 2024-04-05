@@ -72,6 +72,21 @@ class DOMHelperImpl implements DOMHelper {
         }
         return wrapperElement;
     }
+
+    unwrap(node: Node): Node | null {
+        // Unwrap requires a parentNode
+        const parentNode = node ? node.parentNode : null;
+        if (!parentNode) {
+            return null;
+        }
+
+        while (node.firstChild) {
+            parentNode.insertBefore(node.firstChild, node);
+        }
+
+        parentNode.removeChild(node);
+        return parentNode;
+    }
 }
 
 /**

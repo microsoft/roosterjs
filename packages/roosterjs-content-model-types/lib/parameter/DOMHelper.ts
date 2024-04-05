@@ -88,4 +88,10 @@ export interface DOMHelper {
      * @param tag The tag name of the wrapper element
      */
     wrap(node: Node, tag: keyof HTMLElementTagNameMap): HTMLElement;
+
+    /**
+     * Unwrap a node, keep all children in place, return the parentNode where the children are attached
+     * @param node The node to unwrap
+     */
+    unwrap(node: Node): Node | null;
 }
