@@ -5,6 +5,7 @@ import { transformHyphen } from '../../lib/autoFormat/hyphen/transformHyphen';
 import {
     ContentModelDocument,
     ContentModelParagraph,
+    ContentModelSegmentFormat,
     ContentModelText,
     FormatContentModelContext,
 } from 'roosterjs-content-model-types';
@@ -16,6 +17,7 @@ describe('formatTextSegmentBeforeSelectionMarker', () => {
             model: ContentModelDocument,
             previousSegment: ContentModelText,
             paragraph: ContentModelParagraph,
+            markerFormat: ContentModelSegmentFormat,
             context: FormatContentModelContext
         ) => boolean,
         expectedModel: ContentModelDocument,
@@ -203,7 +205,7 @@ describe('formatTextSegmentBeforeSelectionMarker - keyboardListTrigger', () => {
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
-            (model, _previousSegment, paragraph, context) => {
+            (model, _previousSegment, paragraph, _markerFormat, context) => {
                 return keyboardListTrigger(model, paragraph, context, autoBullet, autoNumbering);
             }
         );
@@ -1260,7 +1262,7 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
-            (_model, previousSegment, paragraph, context) => {
+            (_model, previousSegment, paragraph, _markerFormat, context) => {
                 return createLinkAfterSpace(previousSegment, paragraph, context);
             }
         );
@@ -1586,7 +1588,7 @@ describe('formatTextSegmentBeforeSelectionMarker - transformHyphen', () => {
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
-            (_model, previousSegment, paragraph, context) => {
+            (_model, previousSegment, paragraph, _markerFormat, context) => {
                 return transformHyphen(previousSegment, paragraph, context);
             }
         );
