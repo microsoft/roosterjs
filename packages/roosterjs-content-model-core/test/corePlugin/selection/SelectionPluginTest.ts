@@ -87,6 +87,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let setDOMSelectionSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
+    let getScrollContainerSpy: jasmine.Spy;
 
     let editor: IEditor;
 
@@ -100,6 +101,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
             addEventListener: addEventListenerSpy,
         });
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
+        getScrollContainerSpy = jasmine.createSpy('getScrollContainer');
 
         plugin = createSelectionPlugin({});
 
@@ -113,6 +115,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
             },
             getElementAtCursor: getElementAtCursorSpy,
             setDOMSelection: setDOMSelectionSpy,
+            getScrollContainer: getScrollContainerSpy,
         });
         plugin.initialize(editor);
     });
@@ -151,6 +154,109 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
             skipReselectOnFocus: true,
             tableSelection: null,
         });
+    });
+
+    it('Trigger onFocusEvent, use cached scrollTop', () => {
+        const scMock: any = {};
+        const scrollTop = 5;
+        getScrollContainerSpy.and.returnValue(scMock);
+        (plugin as any).scrollTopCache = scrollTop;
+
+        eventMap.focus.beforeDispatch();
+
+        expect(scMock.scrollTop).toEqual(scrollTop);
+        expect((plugin as any).scrollTopCache).toEqual(0);
+    });
+
+    it('onBlur cache scrollTop', () => {
+        const scrollTop = 5;
+        const scMock: any = { scrollTop };
+        getScrollContainerSpy.and.returnValue(scMock);
+        plugin.getState().selection = <any>true;
+
+        eventMap.blur.beforeDispatch();
+
+        expect((plugin as any).scrollTopCache).toEqual(scrollTop);
+    });
+});
+
+describe('SelectionPlugin scroll event ', () => {
+    let plugin: PluginWithState<SelectionPluginState>;
+    let triggerEvent: jasmine.Spy;
+    let getElementAtCursorSpy: jasmine.Spy;
+    let getDocumentSpy: jasmine.Spy;
+    let setDOMSelectionSpy: jasmine.Spy;
+    let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
+    let getScrollContainerSpy: jasmine.Spy;
+    let hasFocusSpy: jasmine.Spy;
+
+    let editor: IEditor;
+
+    beforeEach(() => {
+        triggerEvent = jasmine.createSpy('triggerEvent');
+        getElementAtCursorSpy = jasmine.createSpy('getElementAtCursor');
+        removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
+        getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
+        });
+        setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
+        getScrollContainerSpy = jasmine.createSpy('getScrollContainer');
+        hasFocusSpy = jasmine.createSpy('hasFocus');
+
+        plugin = createSelectionPlugin({});
+
+        editor = <IEditor>(<any>{
+            getDocument: getDocumentSpy,
+            triggerEvent,
+            getEnvironment: () => ({}),
+            attachDomEvent: () => {
+                return jasmine.createSpy('disposer');
+            },
+            getElementAtCursor: getElementAtCursorSpy,
+            setDOMSelection: setDOMSelectionSpy,
+            getScrollContainer: getScrollContainerSpy,
+            hasFocus: hasFocusSpy,
+        });
+        plugin.initialize(editor);
+    });
+
+    afterEach(() => {
+        plugin.dispose();
+    });
+
+    it('Cache scrollTop', () => {
+        hasFocusSpy.and.returnValue(false);
+        const scrollTop = 5;
+        const scMock: any = { scrollTop };
+        getScrollContainerSpy.and.returnValue(scMock);
+        (plugin as any).scrollTopCache = undefined;
+
+        plugin.onPluginEvent?.({
+            eventType: 'scroll',
+            rawEvent: <any>{},
+            scrollContainer: scMock,
+        });
+
+        expect((plugin as any).scrollTopCache).toEqual(scrollTop);
+    });
+
+    it('Do not cache scrollTop', () => {
+        hasFocusSpy.and.returnValue(true);
+        const scrollTop = 5;
+        const scMock: any = { scrollTop };
+        getScrollContainerSpy.and.returnValue(scMock);
+        (plugin as any).scrollTopCache = undefined;
+
+        plugin.onPluginEvent?.({
+            eventType: 'scroll',
+            rawEvent: <any>{},
+            scrollContainer: scMock,
+        });
+
+        expect((plugin as any).scrollTopCache).toEqual(undefined);
     });
 });
 

@@ -40,6 +40,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private disposer: (() => void) | null = null;
     private isSafari = false;
     private isMac = false;
+    private scrollTopCache: number = 0;
 
     constructor(options: EditorOptions) {
         this.state = {
@@ -112,6 +113,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             case 'contentChanged':
                 this.state.tableSelection = null;
+                break;
+
+            case 'scroll':
+                if (!this.editor.hasFocus()) {
+                    this.scrollTopCache = event.scrollContainer.scrollTop;
+                }
                 break;
         }
     }
@@ -521,11 +528,21 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             // Editor is focused, now we can get live selection. So no need to keep a selection if the selection type is range.
             this.state.selection = null;
         }
+
+        if (this.scrollTopCache && this.editor) {
+            const sc = this.editor.getScrollContainer();
+            sc.scrollTop = this.scrollTopCache;
+            this.scrollTopCache = 0;
+        }
     };
 
     private onBlur = () => {
-        if (!this.state.selection && this.editor) {
-            this.state.selection = this.editor.getDOMSelection();
+        if (this.editor) {
+            if (!this.state.selection) {
+                this.state.selection = this.editor.getDOMSelection();
+            }
+            const sc = this.editor.getScrollContainer();
+            this.scrollTopCache = sc.scrollTop;
         }
     };
 

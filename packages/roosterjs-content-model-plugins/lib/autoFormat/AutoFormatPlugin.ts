@@ -1,6 +1,6 @@
 import { createLink } from './link/createLink';
 import { createLinkAfterSpace } from './link/createLinkAfterSpace';
-import { formatTextSegmentBeforeSelectionMarker } from '../pluginUtils/formatTextSegmentBeforeSelectionMarker';
+import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformHyphen } from './hyphen/transformHyphen';
 import { unlink } from './link/unlink';
