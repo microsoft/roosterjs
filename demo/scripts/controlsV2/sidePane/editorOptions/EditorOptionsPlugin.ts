@@ -1,4 +1,3 @@
-import { getDefaultContentEditFeatureSettings } from './getDefaultContentEditFeatureSettings';
 import { OptionPaneProps, OptionState, UrlPlaceholder } from './OptionState';
 import { OptionsPane } from './OptionsPane';
 import { SidePaneElementProps } from '../SidePaneElement';
@@ -24,7 +23,6 @@ const initialState: OptionState = {
         customReplace: false,
         announce: false,
     },
-    contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {
         fontFamily: 'Calibri',
         fontSize: '11pt',

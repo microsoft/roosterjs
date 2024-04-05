@@ -1,5 +1,4 @@
 import { AutoFormatOptions, MarkdownOptions } from 'roosterjs-content-model-plugins';
-import type { ContentEditFeatureSettings } from 'roosterjs-editor-types';
 import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
@@ -39,7 +38,6 @@ export interface OptionState {
     markdownOptions: MarkdownOptions;
 
     // Legacy plugin options
-    contentEditFeatures: ContentEditFeatureSettings;
     defaultFormat: ContentModelSegmentFormat;
     linkTitle: string;
     forcePreserveRatio: boolean;
