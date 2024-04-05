@@ -27,3 +27,6 @@ export { WatermarkFormat } from './watermark/WatermarkFormat';
 export { MarkdownPlugin, MarkdownOptions } from './markdown/MarkdownPlugin';
 export { HyperlinkPlugin } from './hyperlink/HyperlinkPlugin';
 export { HyperlinkToolTip } from './hyperlink/HyperlinkToolTip';
+export { PickerPluginBase } from './picker/PickerPluginBase';
+export { IPickerPlugin } from './picker/IPickerPlugin';
+export { PickerPluginOptions } from './picker/PickerPluginOptions';

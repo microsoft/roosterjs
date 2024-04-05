@@ -5,6 +5,7 @@ import type {
     ContentModelSegmentFormat,
     ContentModelText,
     FormatContentModelContext,
+    FormatContentModelOptions,
     IEditor,
 } from 'roosterjs-content-model-types';
 
@@ -21,7 +22,8 @@ export function formatTextSegmentBeforeSelectionMarker(
         paragraph: ContentModelParagraph,
         markerFormat: ContentModelSegmentFormat,
         context: FormatContentModelContext
-    ) => boolean
+    ) => boolean,
+    options?: FormatContentModelOptions
 ) {
     editor.formatContentModel((model, context) => {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
@@ -41,5 +43,5 @@ export function formatTextSegmentBeforeSelectionMarker(
             }
         }
         return false;
-    });
+    }, options);
 }
