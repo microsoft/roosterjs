@@ -112,6 +112,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             case 'contentChanged':
                 this.state.tableSelection = null;
                 break;
+
+            case 'scroll':
+                if (!this.editor.hasFocus()) {
+                    this.scrollTopCache = event.scrollContainer.scrollTop;
+                }
+                break;
         }
     }
 
@@ -521,12 +527,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     };
 
     private onBlur = () => {
-        if (!this.state.selection && this.editor) {
-            this.state.selection = this.editor.getDOMSelection();
+        if (this.editor) {
+            if (!this.state.selection) {
+                this.state.selection = this.editor.getDOMSelection();
+            }
+            const sc = this.editor.getScrollContainer();
+            this.scrollTopCache = sc.scrollTop;
         }
-
-        const sc = this.editor?.getScrollContainer();
-        this.scrollTopCache = sc?.scrollTop || 0;
     };
 
     private onSelectionChange = () => {
