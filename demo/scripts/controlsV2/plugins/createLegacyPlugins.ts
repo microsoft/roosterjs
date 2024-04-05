@@ -1,4 +1,4 @@
-import { Announce, ContentEdit, CustomReplace, ImageEdit } from 'roosterjs-editor-plugins';
+import { Announce, CustomReplace, ImageEdit } from 'roosterjs-editor-plugins';
 import { EditorPlugin as LegacyEditorPlugin, KnownAnnounceStrings } from 'roosterjs-editor-types';
 import { LegacyPluginList, OptionState } from '../sidePane/editorOptions/OptionState';
 
@@ -6,7 +6,6 @@ export function createLegacyPlugins(initState: OptionState): LegacyEditorPlugin[
     const { pluginList } = initState;
 
     const plugins: Record<keyof LegacyPluginList, LegacyEditorPlugin | null> = {
-        contentEdit: pluginList.contentEdit ? new ContentEdit(initState.contentEditFeatures) : null,
         imageEdit: pluginList.imageEdit
             ? new ImageEdit({
                   preserveRatio: initState.forcePreserveRatio,
