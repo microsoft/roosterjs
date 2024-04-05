@@ -81,4 +81,11 @@ export interface DOMHelper {
      * @returns True if the editor has focus, otherwise false
      */
     hasFocus(): boolean;
+
+    /**
+     * Wrap a node with a wrapper element
+     * @param node The node to wrap
+     * @param tag The tag name of the wrapper element
+     */
+    wrap(node: Node, tag: keyof HTMLElementTagNameMap): HTMLElement;
 }

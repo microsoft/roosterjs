@@ -1,3 +1,5 @@
+import { createImageResizer } from './Resizer/createImageResizer';
+import { getEditInfoFromImage } from 'roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/editInfo';
 import { ImageEditOptions } from './types/ImageEditOptions';
 import type {
     EditorPlugin,
@@ -65,5 +67,18 @@ export class ImageEditPlugin implements EditorPlugin {
         }
     }
 
-    private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {}
+    private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {
+        if (event.newSelection?.type == 'image') {
+            const imageEditInfo = getEditInfoFromImage(event.newSelection.image);
+            createImageResizer(
+                editor,
+                event.newSelection.image,
+                imageEditInfo,
+                this.options,
+                () => {
+                    return {};
+                }
+            );
+        }
+    }
 }

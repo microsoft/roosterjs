@@ -32,8 +32,22 @@ export function createImageResizer(
         createDropAndDragHelpers(handle, editInfo, options, updateWrapper)
     );
     const resizer = createResizer(editor, imageClone, options, handles);
-    return { resizer, dragAndDropHelpers };
+    const shadowSpan = createShadowSpan(editor, resizer, imageClone);
+    return { resizer, dragAndDropHelpers, shadowSpan };
 }
+
+const createShadowSpan = (editor: IEditor, wrapper: HTMLElement, image: HTMLImageElement) => {
+    const shadowSpan = editor.getDOMHelper().wrap(image, 'span');
+    if (shadowSpan) {
+        const shadowRoot = shadowSpan.attachShadow({
+            mode: 'open',
+        });
+        shadowSpan.style.verticalAlign = 'bottom';
+        wrapper.style.fontSize = '24px';
+        shadowRoot.appendChild(wrapper);
+    }
+    return shadowSpan;
+};
 
 const createResizer = (
     editor: IEditor,
