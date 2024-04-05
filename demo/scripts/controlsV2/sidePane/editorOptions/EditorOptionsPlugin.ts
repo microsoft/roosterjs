@@ -1,4 +1,3 @@
-import { getDefaultContentEditFeatureSettings } from './getDefaultContentEditFeatureSettings';
 import { OptionPaneProps, OptionState, UrlPlaceholder } from './OptionState';
 import { OptionsPane } from './OptionsPane';
 import { SidePaneElementProps } from '../SidePaneElement';
@@ -17,16 +16,18 @@ const initialState: OptionState = {
         pasteOption: true,
         sampleEntity: true,
         markdown: true,
+        hyperlink: true,
 
         // Legacy plugins
-        contentEdit: false,
-        hyperlink: false,
         imageEdit: false,
         customReplace: false,
         announce: false,
     },
-    contentEditFeatures: getDefaultContentEditFeatureSettings(),
-    defaultFormat: {},
+    defaultFormat: {
+        fontFamily: 'Calibri',
+        fontSize: '11pt',
+        textColor: '#000000',
+    },
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
