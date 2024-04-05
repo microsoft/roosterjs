@@ -7,7 +7,7 @@ export class HyperLinkCode extends CodeElement {
     }
 
     getCode() {
-        return 'new roosterjsLegacy.HyperLink(' + this.getLinkCallback() + ')';
+        return 'new roosterjs.HyperlinkPlugin(' + this.getLinkCallback() + ')';
     }
 
     private getLinkCallback() {

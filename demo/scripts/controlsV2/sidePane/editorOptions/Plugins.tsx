@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ContentEditFeatures from './ContentEditFeatures';
 import { UrlPlaceholder } from './OptionState';
 import type {
     BuildInPluginList,
@@ -103,32 +102,12 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
 }
 
 export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
-    private linkTitle = React.createRef<HTMLInputElement>();
     private forcePreserveRatio = React.createRef<HTMLInputElement>();
 
     render() {
         return (
             <table>
                 <tbody>
-                    {this.renderPluginItem(
-                        'contentEdit',
-                        'Content Edit',
-                        <ContentEditFeatures
-                            state={this.props.state.contentEditFeatures}
-                            resetState={this.props.resetState}
-                        />
-                    )}
-                    {this.renderPluginItem(
-                        'hyperlink',
-                        'Hyperlink Plugin',
-                        this.renderInputBox(
-                            'Label title: ',
-                            this.linkTitle,
-                            this.props.state.linkTitle,
-                            'Use "' + UrlPlaceholder + '" for the url string',
-                            (state, value) => (state.linkTitle = value)
-                        )
-                    )}
                     {this.renderPluginItem(
                         'imageEdit',
                         'Image Edit Plugin',
@@ -162,6 +141,7 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
     private markdownItalic = React.createRef<HTMLInputElement>();
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
     private markdownCode = React.createRef<HTMLInputElement>();
+    private linkTitle = React.createRef<HTMLInputElement>();
 
     render(): JSX.Element {
         return (
@@ -287,6 +267,17 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                                         : (state.markdownOptions.codeFormat = undefined)
                             )}
                         </>
+                    )}
+                    {this.renderPluginItem(
+                        'hyperlink',
+                        'Hyperlink Plugin',
+                        this.renderInputBox(
+                            'Label title: ',
+                            this.linkTitle,
+                            this.props.state.linkTitle,
+                            'Use "' + UrlPlaceholder + '" for the url string',
+                            (state, value) => (state.linkTitle = value)
+                        )
                     )}
                 </tbody>
             </table>
