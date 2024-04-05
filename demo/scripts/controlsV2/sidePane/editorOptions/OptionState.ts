@@ -3,7 +3,6 @@ import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 export interface LegacyPluginList {
-    hyperlink: boolean;
     imageEdit: boolean;
     customReplace: boolean;
     announce: boolean;
@@ -21,6 +20,7 @@ export interface NewPluginList {
     pasteOption: boolean;
     sampleEntity: boolean;
     markdown: boolean;
+    hyperlink: boolean;
 }
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
