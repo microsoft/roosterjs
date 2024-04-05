@@ -1,6 +1,5 @@
 import { AutoFormatCode } from './AutoFormatCode';
 import { CodeElement } from './CodeElement';
-import { ContentEditCode } from './ContentEditCode';
 import { MarkdownCode } from './MarkdownCode';
 import { OptionState } from '../OptionState';
 import { WatermarkCode } from './WatermarkCode';
@@ -56,7 +55,6 @@ export class LegacyPluginCode extends PluginsCodeBase {
         const pluginList = state.pluginList;
 
         const plugins: CodeElement[] = [
-            pluginList.contentEdit && new ContentEditCode(state.contentEditFeatures),
             pluginList.imageEdit && new ImageEditCode(),
             pluginList.customReplace && new CustomReplaceCode(),
         ];
