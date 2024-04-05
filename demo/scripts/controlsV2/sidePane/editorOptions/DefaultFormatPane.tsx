@@ -39,6 +39,7 @@ export class DefaultFormatPane extends React.Component<DefaultFormatProps, {}> {
                             [NOT_SET]: 'Not Set',
                             '8pt': '8',
                             '10pt': '10',
+                            '11pt': '11',
                             '12pt': '12',
                             '16pt': '16',
                             '20pt': '20',
