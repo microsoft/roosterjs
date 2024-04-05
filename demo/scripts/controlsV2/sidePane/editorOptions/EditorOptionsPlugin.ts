@@ -17,10 +17,10 @@ const initialState: OptionState = {
         pasteOption: true,
         sampleEntity: true,
         markdown: true,
+        hyperlink: true,
 
         // Legacy plugins
         contentEdit: false,
-        hyperlink: false,
         imageEdit: false,
         customReplace: false,
         announce: false,

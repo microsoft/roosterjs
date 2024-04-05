@@ -24,7 +24,7 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { getPresetModelById } from '../sidePane/presets/allPresets/allPresets';
 import { getTabs, tabNames } from '../tabs/getTabs';
 import { getTheme } from '../theme/themes';
-import { OptionState } from '../sidePane/editorOptions/OptionState';
+import { OptionState, UrlPlaceholder } from '../sidePane/editorOptions/OptionState';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
 import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
@@ -47,6 +47,7 @@ import {
 import {
     AutoFormatPlugin,
     EditPlugin,
+    HyperlinkPlugin,
     MarkdownPlugin,
     PastePlugin,
     ShortcutPlugin,
@@ -476,6 +477,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             watermarkText,
             markdownOptions,
             autoFormatOptions,
+            linkTitle,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
@@ -492,6 +494,12 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.contextMenu && listMenu && createListEditMenuProvider(),
             pluginList.contextMenu && tableMenu && createTableEditMenuProvider(),
             pluginList.contextMenu && imageMenu && createImageEditMenuProvider(),
+            pluginList.hyperlink &&
+                new HyperlinkPlugin(
+                    linkTitle?.indexOf(UrlPlaceholder) >= 0
+                        ? url => linkTitle.replace(UrlPlaceholder, url)
+                        : linkTitle
+                ),
         ].filter(x => !!x);
     }
 }
