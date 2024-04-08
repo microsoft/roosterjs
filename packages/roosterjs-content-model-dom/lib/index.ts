@@ -125,10 +125,15 @@ export { retrieveModelFormatState } from './modelApi/editing/retrieveModelFormat
 export { getListStyleTypeFromString } from './modelApi/editing/getListStyleTypeFromString';
 export { getSegmentTextFormat } from './modelApi/editing/getSegmentTextFormat';
 
-export { updateImageMetadata } from './modelApi/metadata/updateImageMetadata';
+export {
+    updateImageMetadata,
+    ImageMetadataFormatDefinition,
+} from './modelApi/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './modelApi/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './modelApi/metadata/updateTableMetadata';
 export { updateListMetadata, ListMetadataDefinition } from './modelApi/metadata/updateListMetadata';
+export { validate } from './modelApi/metadata/validate';
+export { EditingInfoDatasetName } from './modelApi/metadata/updateMetadata';
 
 export { ChangeSource } from './constants/ChangeSource';
 export { BulletListType } from './constants/BulletListType';

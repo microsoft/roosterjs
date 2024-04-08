@@ -8,7 +8,7 @@ import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-m
 
 const NumberDefinition = createNumberDefinition();
 
-const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetadataFormat>>({
+export const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetadataFormat>>({
     widthPx: NumberDefinition,
     heightPx: NumberDefinition,
     leftPercent: NumberDefinition,

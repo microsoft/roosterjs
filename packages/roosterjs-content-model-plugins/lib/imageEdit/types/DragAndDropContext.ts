@@ -1,6 +1,6 @@
-import ImageEditInfo from './ImageEditInfo';
 import { ImageEditElementClass } from './ImageEditElementClass';
 import { ImageEditOptions } from './ImageEditOptions';
+import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
 
 /**
  * Horizontal direction types for image edit
@@ -25,7 +25,7 @@ export default interface DragAndDropContext {
     /**
      * Edit info of current image, can be modified by handlers
      */
-    editInfo: ImageEditInfo;
+    editInfo: ImageMetadataFormat;
 
     /**
      * Horizontal direction

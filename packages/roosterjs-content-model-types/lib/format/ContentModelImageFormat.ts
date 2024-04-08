@@ -1,3 +1,4 @@
+import { RotateFormat } from './formatParts/RotateFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
 import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
@@ -21,4 +22,5 @@ export type ContentModelImageFormat = ContentModelSegmentFormat &
     BoxShadowFormat &
     DisplayFormat &
     FloatFormat &
+    RotateFormat &
     VerticalAlignFormat;

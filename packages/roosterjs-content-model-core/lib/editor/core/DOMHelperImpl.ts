@@ -61,16 +61,19 @@ class DOMHelperImpl implements DOMHelper {
         return !!(activeElement && this.contentDiv.contains(activeElement));
     }
 
-    wrap(node: Node, tag: keyof HTMLElementTagNameMap): HTMLElement {
-        const wrapperElement = this.contentDiv.ownerDocument.createElement(tag);
+    wrap(node: Node, wrapper: keyof HTMLElementTagNameMap | HTMLElement): HTMLElement {
+        if (!(wrapper instanceof HTMLElement)) {
+            wrapper = this.contentDiv.ownerDocument.createElement(wrapper);
+        }
+
         if (isNodeOfType(node, 'ELEMENT_NODE')) {
             const parent = node.parentNode;
             if (parent) {
-                parent.insertBefore(wrapperElement, node);
-                wrapperElement.appendChild(node);
+                parent.insertBefore(wrapper, node);
+                wrapper.appendChild(node);
             }
         }
-        return wrapperElement;
+        return wrapper;
     }
 
     unwrap(node: Node): Node | null {

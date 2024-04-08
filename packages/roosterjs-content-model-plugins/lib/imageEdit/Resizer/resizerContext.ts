@@ -1,18 +1,23 @@
 import DragAndDropContext from '../types/DragAndDropContext';
 import { DragAndDropHandler } from 'roosterjs-content-model-plugins/lib/pluginUtils/DragAndDrop/DragAndDropHandler';
-import { ResizeInfo } from '../types/ImageEditInfo';
+import { ImageResizeMetadataFormat } from 'roosterjs-content-model-types/lib';
 
 /**
  * @internal
  * The resize drag and drop handler
  */
-export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
+export const Resizer: DragAndDropHandler<DragAndDropContext, ImageResizeMetadataFormat> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
     onDragging: ({ x, y, editInfo, options }, e, base, deltaX, deltaY) => {
-        const ratio =
-            base.widthPx > 0 && base.heightPx > 0 ? (base.widthPx * 1.0) / base.heightPx : 0;
-        [deltaX, deltaY] = rotateCoordinate(deltaX, deltaY, editInfo.angleRad);
-        if (options.minWidth !== undefined && options.minHeight !== undefined) {
+        if (
+            base.heightPx &&
+            base.widthPx &&
+            options.minWidth !== undefined &&
+            options.minHeight !== undefined
+        ) {
+            const ratio =
+                base.widthPx > 0 && base.heightPx > 0 ? (base.widthPx * 1.0) / base.heightPx : 0;
+            [deltaX, deltaY] = rotateCoordinate(deltaX, deltaY, editInfo.angleRad ?? 0);
             const horizontalOnly = x == '';
             const verticalOnly = y == '';
             const shouldPreserveRatio =

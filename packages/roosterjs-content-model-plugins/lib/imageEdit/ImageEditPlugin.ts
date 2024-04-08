@@ -1,18 +1,21 @@
 import DragAndDropContext from './types/DragAndDropContext';
-import ImageEditInfo, { ResizeInfo } from './types/ImageEditInfo';
-import { createImageResizer } from './Resizer/createImageResizer';
+import ImageHtmlOptions from './types/ImageHtmlOptions';
+import { applyChanges } from './utils/applyChanges';
+import { createImageWrapper } from './utils/createImageWrapper';
 import { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getImageEditInfo } from './utils/getImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { ImageEditOptions } from './types/ImageEditOptions';
-import { isNodeOfType } from 'roosterjs-content-model-dom/';
 import { Resizer } from './Resizer/resizerContext';
+import { Rotator } from './Rotator/rotatorContext';
 import { startDropAndDragHelpers } from './utils/startDropAndDragHelpers';
-//import { setImageSize } from 'roosterjs-content-model-api';
+import { updateRotateHandle } from './Rotator/updateRotateHandle';
 
 import type {
     EditorPlugin,
     IEditor,
+    ImageMetadataFormat,
     PluginEvent,
     SelectionChangedEvent,
 } from 'roosterjs-content-model-types';
@@ -21,6 +24,10 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     borderColor: '#DB626C',
     minWidth: 10,
     minHeight: 10,
+    preserveRatio: true,
+    disableRotate: false,
+    disableSideResize: false,
+    onSelectState: 'resizeAndRotate',
 };
 
 /**
@@ -31,11 +38,13 @@ const DefaultOptions: Partial<ImageEditOptions> = {
  */
 export class ImageEditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
-    private shadowSpan: HTMLElement | null = null;
-    private resizeHelpers: DragAndDropHelper<DragAndDropContext, ResizeInfo>[] = [];
+    private shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
-    private resizer: HTMLSpanElement | null = null;
-    private imageEditInfo: ImageEditInfo | null = null;
+    private wrapper: HTMLSpanElement | null = null;
+    private imageEditInfo: ImageMetadataFormat | null = null;
+    private imageHTMLOptions: ImageHtmlOptions | null = null;
+    private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
+    private initialEditInfo: ImageMetadataFormat | null = null;
 
     constructor(private options: ImageEditOptions = DefaultOptions) {}
 
@@ -63,6 +72,14 @@ export class ImageEditPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+        this.dndHelpers.forEach(helper => helper.dispose());
+        this.dndHelpers = [];
+        this.selectedImage = null;
+        this.shadowSpan = null;
+        this.wrapper = null;
+        this.imageEditInfo = null;
+        this.imageHTMLOptions = null;
+        this.initialEditInfo = null;
     }
 
     /**
@@ -78,98 +95,156 @@ export class ImageEditPlugin implements EditorPlugin {
                     this.handleSelectionChangedEvent(this.editor, event);
                     break;
                 case 'mouseDown':
-                    if (this.selectedImage && this.shadowSpan && this.imageEditInfo) {
-                        this.removeImageResizer(
-                            this.editor,
-                            this.shadowSpan,
-                            this.imageEditInfo,
-                            this.resizeHelpers
-                        );
+                    if (
+                        this.selectedImage &&
+                        this.imageEditInfo &&
+                        this.shadowSpan !== event.rawEvent.target
+                    ) {
+                        this.removeImageWrapper(this.editor, this.dndHelpers);
                     }
+
                     break;
             }
         }
     }
 
     private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {
-        if (event.newSelection?.type == 'image' && event.newSelection.image != this.selectedImage) {
-            this.startResizer(editor, event.newSelection.image);
-        } else if (
-            this.imageEditInfo &&
-            this.selectedImage &&
-            (event.newSelection?.type == 'table' ||
-                (event.newSelection?.type == 'range' &&
-                    this.shadowSpan &&
-                    !isImageContainer(event.newSelection.range, this.shadowSpan)))
-        ) {
-            this.removeImageResizer(
-                editor,
-                this.shadowSpan,
-                this.imageEditInfo,
-                this.resizeHelpers
-            );
-            this.selectedImage = null;
+        if (event.newSelection?.type == 'image' && !this.selectedImage) {
+            this.startEditing(editor, event.newSelection.image);
         }
     }
 
-    private startResizer(editor: IEditor, image: HTMLImageElement) {
-        this.imageEditInfo = getImageEditInfo(image);
-        const { shadowSpan, handles, resizer, imageClone } = createImageResizer(
+    private startEditing(editor: IEditor, image: HTMLImageElement) {
+        this.imageEditInfo = getImageEditInfo(editor, image);
+        this.initialEditInfo = { ...this.imageEditInfo };
+        this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
+        const { handles, rotators, wrapper, shadowSpan, imageClone } = createImageWrapper(
             editor,
             image,
-            this.options
+            this.options,
+            this.imageEditInfo,
+            this.imageHTMLOptions
         );
         this.shadowSpan = shadowSpan;
         this.selectedImage = image;
-        this.resizer = resizer;
+        this.wrapper = wrapper;
 
-        this.resizeHelpers = startDropAndDragHelpers(
-            handles,
-            this.imageEditInfo,
-            this.options,
-            ImageEditElementClass.ResizeHandle,
-            Resizer,
-            (context: DragAndDropContext, _handle?: HTMLElement) => {
-                this.resizeImage(context, imageClone);
-            }
-        );
+        if (handles.length > 0) {
+            this.dndHelpers = [
+                ...startDropAndDragHelpers(
+                    handles,
+                    this.imageEditInfo,
+                    this.options,
+                    ImageEditElementClass.ResizeHandle,
+                    Resizer,
+                    (context: DragAndDropContext, _handle?: HTMLElement) => {
+                        this.resizeImage(context, imageClone);
+                    }
+                ),
+            ];
+        }
+
+        if (rotators) {
+            this.dndHelpers.push(
+                ...startDropAndDragHelpers(
+                    [rotators.rotator],
+                    this.imageEditInfo,
+                    this.options,
+                    ImageEditElementClass.RotateHandle,
+                    Rotator,
+                    (context: DragAndDropContext, _handle?: HTMLElement) => {
+                        this.rotateImage(
+                            editor,
+                            context,
+                            imageClone,
+                            rotators.rotator,
+                            rotators.rotatorHandle,
+                            !!this.imageHTMLOptions?.isSmallImage
+                        );
+                    }
+                )
+            );
+            this.updateRotateHandleState(
+                editor,
+                this.imageEditInfo,
+                wrapper,
+                rotators.rotator,
+                rotators.rotatorHandle,
+                this.imageHTMLOptions.isSmallImage
+            );
+        }
     }
 
     private resizeImage(context: DragAndDropContext, image?: HTMLImageElement) {
-        if (image && this.resizer && this.shadowSpan && this.imageEditInfo) {
+        if (image && this.wrapper && this.imageEditInfo) {
             const { widthPx, heightPx } = context.editInfo;
             image.style.width = `${widthPx}px`;
             image.style.height = `${heightPx}px`;
-            this.resizer.style.width = `${widthPx}px`;
-            this.resizer.style.height = `${heightPx}px`;
+            this.wrapper.style.width = `${widthPx}px`;
+            this.wrapper.style.height = `${heightPx}px`;
             this.imageEditInfo.widthPx = widthPx;
             this.imageEditInfo.heightPx = heightPx;
         }
     }
 
-    private removeImageResizer(
+    private updateRotateHandleState(
         editor: IEditor,
-        shadowSpan: HTMLElement | null,
-        imageEditInfo: ImageEditInfo,
-        resizeHelpers: DragAndDropHelper<DragAndDropContext, ResizeInfo>[]
+        editInfo: ImageMetadataFormat,
+        wrapper: HTMLSpanElement,
+        rotator: HTMLElement,
+        rotatorHandle: HTMLElement,
+        isSmallImage: boolean
     ) {
-        const helper = editor.getDOMHelper();
-        if (shadowSpan && shadowSpan.parentElement) {
-            helper.unwrap(shadowSpan);
+        const viewport = editor.getVisibleViewport();
+        if (viewport) {
+            updateRotateHandle(
+                viewport,
+                editInfo.angleRad ?? 0,
+                wrapper,
+                rotator,
+                rotatorHandle,
+                isSmallImage
+            );
         }
-        shadowSpan = null;
+    }
+
+    private rotateImage(
+        editor: IEditor,
+        context: DragAndDropContext,
+        image: HTMLImageElement,
+        rotator: HTMLElement,
+        rotatorHandle: HTMLElement,
+        isSmallImage: boolean
+    ) {
+        if (image && this.wrapper && this.imageEditInfo && this.shadowSpan && this.selectedImage) {
+            const { angleRad } = context.editInfo;
+            this.shadowSpan.style.transform = `rotate(${angleRad}rad)`;
+            this.imageEditInfo.angleRad = angleRad;
+            this.updateRotateHandleState(
+                editor,
+                this.imageEditInfo,
+                this.wrapper,
+                rotator,
+                rotatorHandle,
+                isSmallImage
+            );
+        }
+    }
+
+    private removeImageWrapper(
+        editor: IEditor,
+        resizeHelpers: DragAndDropHelper<DragAndDropContext, any>[]
+    ) {
+        if (this.selectedImage && this.imageEditInfo && this.initialEditInfo) {
+            applyChanges(this.selectedImage, this.imageEditInfo, this.initialEditInfo);
+        }
+        const helper = editor.getDOMHelper();
+        if (this.shadowSpan && this.shadowSpan.parentElement) {
+            helper.unwrap(this.shadowSpan);
+        }
         resizeHelpers.forEach(helper => helper.dispose());
-        // setImageSize(editor, imageEditInfo.widthPx, imageEditInfo.heightPx);
+        this.selectedImage = null;
+        this.shadowSpan = null;
+        this.wrapper = null;
     }
 }
-
-const isImageContainer = (currentRange: Range, image: HTMLElement) => {
-    const content = currentRange.commonAncestorContainer;
-    if (content.firstChild && content.childNodes.length == 1) {
-        return (
-            isNodeOfType(content.firstChild, 'ELEMENT_NODE') &&
-            content.firstChild.isEqualNode(image)
-        );
-    }
-    return false;
-};

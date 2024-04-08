@@ -49,6 +49,7 @@ export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListStyleFormat } from './format/formatParts/ListStyleFormat';
 export { FloatFormat } from './format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './format/formatParts/EntityInfoFormat';
+export { RotateFormat } from './format/formatParts/RotateFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';

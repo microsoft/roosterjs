@@ -1,13 +1,13 @@
 import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
-import ImageEditInfo from 'roosterjs-editor-plugins/lib/plugins/ImageEdit/types/ImageEditInfo';
 import { DragAndDropHandler } from '../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import { DragAndDropHelper } from '../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { ImageEditOptions } from 'roosterjs-content-model-plugins/lib';
+import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
 
 export function startDropAndDragHelpers(
     handles: HTMLDivElement[],
-    editInfo: ImageEditInfo,
+    editInfo: ImageMetadataFormat,
     options: ImageEditOptions,
     elementClass: ImageEditElementClass,
     helper: DragAndDropHandler<DragAndDropContext, any>,

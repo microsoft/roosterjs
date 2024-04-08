@@ -1,7 +1,7 @@
 import { validate } from './validate';
 import type { ContentModelWithDataset, Definition } from 'roosterjs-content-model-types';
 
-const EditingInfoDatasetName = 'editingInfo';
+export const EditingInfoDatasetName = 'editingInfo';
 
 /**
  * Update metadata of the given model

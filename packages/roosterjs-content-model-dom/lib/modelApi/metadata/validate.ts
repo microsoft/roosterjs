@@ -2,7 +2,6 @@ import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type { Definition } from 'roosterjs-content-model-types';
 
 /**
- * @internal
  * Validate the given object with a type definition object
  * @param input The object to validate
  * @param def The type definition object used for validation

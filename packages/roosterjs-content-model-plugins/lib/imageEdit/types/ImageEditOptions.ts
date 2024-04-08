@@ -41,13 +41,6 @@ export interface ImageEditOptions {
     imageSelector?: string;
 
     /**
-     * @deprecated
-     * HTML for the rotate icon
-     * @default A predefined SVG icon
-     */
-    rotateIconHTML?: string;
-
-    /**
      * Whether side resizing (single direction resizing) is disabled. @default false
      */
     disableSideResize?: boolean;
