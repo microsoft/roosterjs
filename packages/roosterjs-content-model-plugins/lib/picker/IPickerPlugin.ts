@@ -1,4 +1,4 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import type { ContentModelDocument } from 'roosterjs-content-model-types';
 
 /**
  * Interface for PickerPlugin
