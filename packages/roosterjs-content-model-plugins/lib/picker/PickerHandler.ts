@@ -1,3 +1,6 @@
+import type { IPickerPlugin } from './IPickerPlugin';
+import type { DOMInsertPoint, IEditor } from 'roosterjs-content-model-types';
+
 /**
  * Direction option for picker
  */
@@ -79,3 +82,50 @@ export type PickerSelectionChangMode =
      * Select the very last item
      */
     | 'last';
+
+/**
+ * Represents the interface a handler for picker plugin. Developer need to implement this interface to create a new type of picker
+ */
+export interface PickerHandler {
+    /**
+     * Initialize the picker handler, pass in editor and PickerPlugin instance so that the handler can save them
+     * @param editor The editor instance
+     * @param pickerPlugin The PickerPlugin instance
+     */
+    onInitialize: (editor: IEditor, pickerPlugin: IPickerPlugin<PickerHandler>) => void;
+
+    /**
+     * Dispose the picker handler
+     */
+    onDispose: () => void;
+
+    /**
+     * Notify the picker handler that user has typed trigger character so handler should show picker now
+     * @param queryString Current query string
+     * @param insertPoint Insert point where user is typing, can be used for calculating picker position
+     * @returns A picker direction to let picker plugin know what kind of picker is opened. Picker plugin will use this value
+     * to decide how to handle keyboard event to change selection. Return null means picker is not actually opened
+     */
+    onTrigger: (queryString: string, insertPoint: DOMInsertPoint) => PickerDirection | null;
+
+    /**
+     * Notify the picker handler that picker should be closed now
+     */
+    onClosePicker?(): void;
+
+    /**
+     * Notify the picker handler that user has changed current typed query string
+     */
+    onQueryStringChanged?(queryString: string): void;
+
+    /**
+     * Notify the picker handler that user has decide to select the current option in picker
+     */
+    onSelect?(): void;
+
+    /**
+     * Notify the picker handler that user is using keyboard to change current selection
+     * @param mode The moving mode. Handler code can use this value to decide which item need to be selected
+     */
+    onSelectionChanged?(mode: PickerSelectionChangMode): void;
+}

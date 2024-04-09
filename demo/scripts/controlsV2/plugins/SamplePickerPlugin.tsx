@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { Callout } from '@fluentui/react/lib/Callout';
+import { DOMInsertPoint, IEditor } from 'roosterjs-content-model-types';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { ReactEditorPlugin, UIUtilities } from '../roosterjsReact/common';
 import {
+    IPickerPlugin,
     PickerDirection,
-    PickerPluginBase,
+    PickerHandler,
+    PickerPlugin,
     PickerSelectionChangMode,
+    getDOMInsertPointRect,
 } from 'roosterjs-content-model-plugins';
 import {
     createContentModelDocument,
@@ -27,31 +31,61 @@ const selectedItemStyle = mergeStyles({
     fontWeight: 'bold',
 });
 
-export class SamplePickerPlugin extends PickerPluginBase implements ReactEditorPlugin {
-    private index = 0;
+export class SamplePickerPlugin extends PickerPlugin<SamplePickerHandler>
+    implements ReactEditorPlugin {
+    constructor() {
+        super('@', new SamplePickerHandler());
+    }
+
+    setUIUtilities(uiUtilities: UIUtilities): void {
+        this.handler.setUIUtilities(uiUtilities);
+    }
+}
+
+class SamplePickerHandler implements PickerHandler {
     private uiUtilities: UIUtilities;
+    private index = 0;
     private ref: IPickerMenu | null = null;
     private queryString: string;
     private items: IContextualMenuItem[] = [];
     private onClose: (() => void) | null = null;
+    private editor: IEditor | null = null;
+    private pickerPlugin: IPickerPlugin<PickerHandler> | null = null;
 
-    constructor() {
-        super('@');
+    onInitialize(editor: IEditor, pickerPlugin: IPickerPlugin<PickerHandler>) {
+        this.editor = editor;
+        this.pickerPlugin = pickerPlugin;
+    }
+
+    onDispose() {
+        this.editor = null;
+        this.pickerPlugin = null;
     }
 
     setUIUtilities(uiUtilities: UIUtilities): void {
         this.uiUtilities = uiUtilities;
     }
 
-    onTrigger(x: number, y: number, buffer: number, queryString: string): PickerDirection {
+    onTrigger(queryString: string, pos: DOMInsertPoint): PickerDirection | null {
+        this.index = 0;
         this.queryString = queryString;
         this.items = buildItems(queryString, this.index);
 
-        this.onClose = this.uiUtilities.renderComponent(
-            <PickerMenu x={x} y={y} ref={ref => (this.ref = ref)} items={this.items} />
-        );
+        const rect = getDOMInsertPointRect(this.editor.getDocument(), pos);
 
-        return 'vertical';
+        if (rect) {
+            this.onClose = this.uiUtilities.renderComponent(
+                <PickerMenu
+                    x={rect.left}
+                    y={(rect.bottom + rect.top) / 2}
+                    ref={ref => (this.ref = ref)}
+                    items={this.items}
+                />
+            );
+            return 'vertical';
+        } else {
+            return null;
+        }
     }
 
     onClosePicker() {
@@ -107,7 +141,7 @@ export class SamplePickerPlugin extends PickerPluginBase implements ReactEditorP
             paragraph.segments.push(entity);
             doc.blocks.push(paragraph);
 
-            this.commitChange(
+            this.pickerPlugin?.replaceQueryString(
                 doc,
                 {
                     changeSource: 'SamplePicker',
@@ -119,14 +153,15 @@ export class SamplePickerPlugin extends PickerPluginBase implements ReactEditorP
         this.onClose?.();
         this.onClose = null;
         this.ref = null;
-        this.closePicker();
+        this.pickerPlugin?.closePicker();
     }
 
     onQueryStringChanged(queryString: string): void {
         this.queryString = queryString;
 
-        if (queryString.split(' ').length > 4) {
-            this.closePicker(); // too long
+        if (queryString.length > 100 || queryString.split(' ').length > 4) {
+            // Querystring is too long, so close picker
+            this.pickerPlugin?.closePicker();
         } else {
             this.items = buildItems(this.queryString, this.index);
             this.ref?.setMenuItems(this.items);

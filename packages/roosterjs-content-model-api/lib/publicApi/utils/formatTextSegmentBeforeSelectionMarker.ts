@@ -13,6 +13,7 @@ import type {
  * Invoke a callback to format the text segment before the selection marker using Content Model
  * @param editor The editor object
  * @param callback The callback to format the text segment.
+ * @returns True if the segment before cursor is found and callback is called, otherwise false
  */
 export function formatTextSegmentBeforeSelectionMarker(
     editor: IEditor,
@@ -24,7 +25,9 @@ export function formatTextSegmentBeforeSelectionMarker(
         context: FormatContentModelContext
     ) => boolean,
     options?: FormatContentModelOptions
-) {
+): boolean {
+    let result = false;
+
     editor.formatContentModel((model, context) => {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
             model,
@@ -38,10 +41,15 @@ export function formatTextSegmentBeforeSelectionMarker(
             if (marker.segmentType === 'SelectionMarker' && markerIndex > 0) {
                 const previousSegment = paragraph.segments[markerIndex - 1];
                 if (previousSegment && previousSegment.segmentType === 'Text') {
+                    result = true;
+
                     return callback(model, previousSegment, paragraph, marker.format, context);
                 }
             }
         }
+
         return false;
     }, options);
+
+    return result;
 }

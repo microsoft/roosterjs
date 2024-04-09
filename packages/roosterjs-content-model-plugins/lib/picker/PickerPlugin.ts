@@ -1,8 +1,13 @@
-import { ChangeSource, isPunctuation, mergeModel } from 'roosterjs-content-model-dom';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
-import { getDOMInsertPointRect } from '../pluginUtils/Rect/getDOMInsertPointRect';
 import { splitTextSegment } from '../pluginUtils/splitTextSegment';
-import type { PickerDirection, PickerSelectionChangMode } from './PickerHandler';
+import {
+    ChangeSource,
+    isCursorMovingKey,
+    isPunctuation,
+    mergeModel,
+} from 'roosterjs-content-model-dom';
+import type { IPickerPlugin } from './IPickerPlugin';
+import type { PickerDirection, PickerHandler } from './PickerHandler';
 import type {
     ContentModelDocument,
     ContentModelParagraph,
@@ -23,36 +28,18 @@ import type {
  *
  * PickerPlugin doesn't provide any UI, it just wraps related DOM events and invoke callback functions.
  */
-export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
+export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPickerPlugin<T> {
     protected editor: IEditor | null = null;
     private isMac: boolean = false;
     private lastQueryString = '';
-    private direction?: PickerDirection;
-
-    constructor(private triggerCharacter: string) {}
-
-    onTrigger?(
-        x: number,
-        y: number,
-        buffer: number,
-        queryString: string
-    ): PickerDirection | undefined;
-    onClosePicker?(): void;
+    private direction: PickerDirection | null = null;
 
     /**
-     * Function called when the query string (text after the trigger symbol) is updated.
+     * Construct a new instance of PickerPlugin class
+     * @param triggerCharacter The character to trigger a picker to be shown
+     * @param handler Picker handler for receiving picker state change events
      */
-    onQueryStringChanged?(queryString: string): void;
-
-    /**
-     * Function called when a keypress is issued that would "select" a currently highlighted option.
-     */
-    onSelect?(): void;
-
-    /**
-     * Function called when a keypress is issued that would move the highlight on any picker UX.
-     */
-    onSelectionChanged?(mode: PickerSelectionChangMode): void;
+    constructor(private triggerCharacter: string, public readonly handler: T) {}
 
     /**
      * Get a friendly name
@@ -75,14 +62,21 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
      */
     dispose() {
         this.editor = null;
-        this.direction = undefined;
+        this.direction = null;
     }
 
-    commitChange(
-        modelToMerge: ContentModelDocument,
+    /**
+     * Replace the query string with a given Content Model.
+     * This is used for commit a change from picker and insert the committed content into editor.
+     * @param model The Content Model to insert
+     * @param options Options for formatting content model
+     * @param canUndoByBackspace Whether this change can be undone using Backspace key
+     */
+    replaceQueryString(
+        model: ContentModelDocument,
         options?: FormatContentModelOptions,
         canUndoByBackspace?: boolean
-    ) {
+    ): void {
         const editor = this.editor;
 
         if (editor) {
@@ -90,7 +84,7 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
 
             formatTextSegmentBeforeSelectionMarker(
                 editor,
-                (model, previousSegment, paragraph, _, context) => {
+                (target, previousSegment, paragraph, _, context) => {
                     const potentialSegments: ContentModelText[] = [];
                     const queryString = this.internalGetQueryString(
                         paragraph,
@@ -100,7 +94,7 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
 
                     if (queryString) {
                         potentialSegments.forEach(x => (x.isSelected = true));
-                        mergeModel(model, modelToMerge, context);
+                        mergeModel(target, model, context);
                         context.canUndoByBackspace = canUndoByBackspace;
                         return true;
                     } else {
@@ -112,10 +106,13 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
         }
     }
 
+    /**
+     * Notify Picker Plugin that picker is closed from the handler code, so picker plugin can quit the suggesting state
+     */
     closePicker() {
         if (this.direction) {
-            this.direction = undefined;
-            this.onClosePicker?.();
+            this.direction = null;
+            this.handler.onClosePicker?.();
         }
     }
 
@@ -129,10 +126,7 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
      */
     willHandleEventExclusively(event: PluginEvent) {
         return (
-            !!this.direction &&
-            (event.eventType == 'keyDown' ||
-                event.eventType == 'keyUp' ||
-                event.eventType == 'input')
+            !!this.direction && event.eventType == 'keyDown' && isCursorMovingKey(event.rawEvent)
         );
     }
 
@@ -173,6 +167,14 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
                     this.closePicker();
                 }
                 break;
+
+            case 'editorReady':
+                this.handler.onInitialize(this.editor, this);
+                break;
+
+            case 'beforeDispose':
+                this.handler.onDispose();
+                break;
         }
     }
 
@@ -187,7 +189,7 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
                         isIncrement = !isIncrement;
                     }
 
-                    this.onSelectionChanged?.(isIncrement ? 'next' : 'previous');
+                    this.handler.onSelectionChanged?.(isIncrement ? 'next' : 'previous');
                 }
 
                 event.preventDefault();
@@ -198,7 +200,7 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
                     const isIncrement = event.key == 'ArrowDown';
 
                     if (direction != 'horizontal') {
-                        this.onSelectionChanged?.(
+                        this.handler.onSelectionChanged?.(
                             direction == 'both'
                                 ? isIncrement
                                     ? 'nextRow'
@@ -214,14 +216,16 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
                 break;
             case 'PageUp':
             case 'PageDown':
-                this.onSelectionChanged?.(event.key == 'PageDown' ? 'nextPage' : 'previousPage');
+                this.handler.onSelectionChanged?.(
+                    event.key == 'PageDown' ? 'nextPage' : 'previousPage'
+                );
 
                 event.preventDefault();
                 break;
             case 'Home':
             case 'End':
                 const hasCtrl = this.isMac ? event.metaKey : event.ctrlKey;
-                this.onSelectionChanged?.(
+                this.handler.onSelectionChanged?.(
                     event.key == 'Home'
                         ? hasCtrl
                             ? 'first'
@@ -240,40 +244,44 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
 
             case 'Enter':
             case 'Tab':
-                this.onSelect?.();
+                this.handler.onSelect?.();
                 event.preventDefault();
                 break;
         }
     }
 
     private onSuggestingInput(editor: IEditor) {
-        formatTextSegmentBeforeSelectionMarker(editor, (_, segment, paragraph) => {
-            const newQueryString = this.internalGetQueryString(paragraph, segment).replace(
-                /[\u0020\u00A0]/g,
-                ' '
-            );
-            const oldQueryString = this.lastQueryString;
+        if (
+            !formatTextSegmentBeforeSelectionMarker(editor, (_, segment, paragraph) => {
+                const newQueryString = this.internalGetQueryString(paragraph, segment).replace(
+                    /[\u0020\u00A0]/g,
+                    ' '
+                );
+                const oldQueryString = this.lastQueryString;
 
-            if (
-                newQueryString &&
-                ((newQueryString.length >= oldQueryString.length &&
-                    newQueryString.indexOf(oldQueryString) == 0) ||
-                    (newQueryString.length < oldQueryString.length &&
-                        oldQueryString.indexOf(newQueryString) == 0))
-            ) {
-                this.lastQueryString = newQueryString;
-                this.onQueryStringChanged?.(newQueryString);
-            } else {
-                this.closePicker();
-            }
+                if (
+                    newQueryString &&
+                    ((newQueryString.length >= oldQueryString.length &&
+                        newQueryString.indexOf(oldQueryString) == 0) ||
+                        (newQueryString.length < oldQueryString.length &&
+                            oldQueryString.indexOf(newQueryString) == 0))
+                ) {
+                    this.lastQueryString = newQueryString;
+                    this.handler.onQueryStringChanged?.(newQueryString);
+                } else {
+                    this.closePicker();
+                }
 
-            return false;
-        });
+                return false;
+            })
+        ) {
+            this.closePicker();
+        }
     }
 
     private onInput(editor: IEditor, event: InputEvent) {
         if (event.inputType == 'insertText' && event.data == this.triggerCharacter) {
-            formatTextSegmentBeforeSelectionMarker(editor, (_, segment, paragraph) => {
+            formatTextSegmentBeforeSelectionMarker(editor, (_, segment) => {
                 if (segment.text.endsWith(this.triggerCharacter)) {
                     const charBeforeTrigger = segment.text[segment.text.length - 2];
 
@@ -290,15 +298,10 @@ export class PickerPluginBase implements EditorPlugin, PickerPluginBase {
                                       offset: selection.range.startOffset,
                                   }
                                 : null;
-                        const rect = pos && getDOMInsertPointRect(editor.getDocument(), pos);
 
-                        if (rect) {
-                            const x = rect.left;
-                            const y = (rect.bottom + rect.top) / 2;
-                            const buffer = (rect.bottom - rect.top) / 2;
-
-                            this.lastQueryString = this.internalGetQueryString(paragraph, segment);
-                            this.direction = this.onTrigger?.(x, y, buffer, this.lastQueryString);
+                        if (pos) {
+                            this.lastQueryString = this.triggerCharacter;
+                            this.direction = this.handler.onTrigger(this.lastQueryString, pos);
                         }
                     }
                 }
