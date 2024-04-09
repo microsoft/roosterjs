@@ -219,7 +219,7 @@ describe('listProcessor', () => {
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         format: {},
-                        isSelected: true,
+                        isSelected: false,
                     },
                     format: {},
                 },
@@ -261,7 +261,7 @@ describe('listProcessor', () => {
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         format: {},
-                        isSelected: true,
+                        isSelected: false,
                     },
                     format: {},
                 },
@@ -646,7 +646,7 @@ describe('listProcessor process metadata', () => {
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         format: {},
-                        isSelected: true,
+                        isSelected: false,
                     },
                     format: {},
                 },

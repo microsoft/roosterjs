@@ -58,23 +58,34 @@ export class WatermarkPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         const editor = this.editor;
 
-        if (
-            editor &&
-            (event.eventType == 'editorReady' ||
-                event.eventType == 'contentChanged' ||
-                event.eventType == 'input' ||
-                event.eventType == 'beforeDispose')
+        if (!editor) {
+            return;
+        }
+
+        if (event.eventType == 'input' && event.rawEvent.inputType == 'insertText') {
+            // When input text, editor must not be empty, so we can do hide watermark now without checking content model
+            this.showHide(editor, false /*isEmpty*/);
+        } else if (
+            event.eventType == 'editorReady' ||
+            event.eventType == 'contentChanged' ||
+            event.eventType == 'input' ||
+            event.eventType == 'beforeDispose'
         ) {
             editor.formatContentModel(model => {
                 const isEmpty = isModelEmptyFast(model);
 
-                if (this.isShowing && !isEmpty) {
-                    this.hide(editor);
-                } else if (!this.isShowing && isEmpty) {
-                    this.show(editor);
-                }
+                this.showHide(editor, isEmpty);
+
                 return false;
             });
+        }
+    }
+
+    private showHide(editor: IEditor, isEmpty: boolean) {
+        if (this.isShowing && !isEmpty) {
+            this.hide(editor);
+        } else if (!this.isShowing && isEmpty) {
+            this.show(editor);
         }
     }
 

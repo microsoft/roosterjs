@@ -1,11 +1,12 @@
 import { createEditorCore } from './core/createEditorCore';
-import { reducedModelChildProcessor } from '../override/reducedModelChildProcessor';
 import {
     createEmptyModel,
     tableProcessor,
     ChangeSource,
     cloneModel,
     transformColor,
+    createDomToModelContextWithConfig,
+    domToContentModel,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
@@ -29,6 +30,7 @@ import type {
     Rect,
     EntityState,
     CachedElementHandler,
+    DomToModelOptionForCreateModel,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -90,41 +92,39 @@ export class Editor implements IEditor {
      * - disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won't impact the editor content.
      * If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
-     * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
-     * instead to improve performance. This is mostly used for retrieve current format state.
      * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
      * This is usually used for exporting content
      */
-    getContentModelCopy(
-        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
-    ): ContentModelDocument {
+    getContentModelCopy(mode: 'connected' | 'disconnected' | 'clean'): ContentModelDocument {
         const core = this.getCore();
 
         switch (mode) {
             case 'connected':
                 return core.api.createContentModel(core, {
-                    processorOverride: {
-                        table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
-                    },
+                    tryGetFromCache: true, // Pass an option here to force disable save index
                 });
 
             case 'disconnected':
-            case 'clean':
                 return cloneModel(
-                    core.api.createContentModel(
-                        core,
-                        undefined /*option*/,
-                        mode == 'clean' ? 'none' : undefined /*selectionOverride*/
-                    ),
+                    core.api.createContentModel(core, {
+                        processorOverride: {
+                            table: tableProcessor,
+                        },
+                        tryGetFromCache: false,
+                    }),
                     {
                         includeCachedElement: this.cloneOptionCallback,
                     }
                 );
-            case 'reduced':
-                return core.api.createContentModel(core, {
-                    processorOverride: {
-                        child: reducedModelChildProcessor,
-                    },
+
+            case 'clean':
+                const domToModelContext = createDomToModelContextWithConfig(
+                    core.environment.domToModelSettings.calculated,
+                    core.api.createEditorContext(core, false /*saveIndex*/)
+                );
+
+                return cloneModel(domToContentModel(core.physicalRoot, domToModelContext), {
+                    includeCachedElement: this.cloneOptionCallback,
                 });
         }
     }
@@ -175,11 +175,12 @@ export class Editor implements IEditor {
      */
     formatContentModel(
         formatter: ContentModelFormatter,
-        options?: FormatContentModelOptions
+        options?: FormatContentModelOptions,
+        domToModelOptions?: DomToModelOptionForCreateModel
     ): void {
         const core = this.getCore();
 
-        core.api.formatContentModel(core, formatter, options);
+        core.api.formatContentModel(core, formatter, options, domToModelOptions);
     }
 
     /**

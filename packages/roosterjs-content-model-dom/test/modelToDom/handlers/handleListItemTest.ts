@@ -236,7 +236,7 @@ describe('handleListItem without format handler', () => {
             formatHolder: {
                 segmentType: 'SelectionMarker',
                 format: {},
-                isSelected: true,
+                isSelected: false,
             },
             levels: [listLevel0],
         };

@@ -10,12 +10,6 @@ class SimplePluginCode extends CodeElement {
     }
 }
 
-export class AutoFormatPluginCode extends SimplePluginCode {
-    constructor() {
-        super('AutoFormatPlugin');
-    }
-}
-
 export class EditPluginCode extends SimplePluginCode {
     constructor() {
         super('EditPlugin');

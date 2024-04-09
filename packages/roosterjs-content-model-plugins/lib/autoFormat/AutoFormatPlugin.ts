@@ -1,6 +1,8 @@
 import { createLink } from './link/createLink';
 import { createLinkAfterSpace } from './link/createLinkAfterSpace';
+import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
+import { transformHyphen } from './hyphen/transformHyphen';
 import { unlink } from './link/unlink';
 import type {
     ContentChangedEvent,
@@ -34,16 +36,22 @@ export type AutoFormatOptions = {
      * When paste content, create hyperlink for the pasted link
      */
     autoLink: boolean;
+
+    /**
+     * Transform -- into hyphen, if typed between two words
+     */
+    autoHyphen: boolean;
 };
 
 /**
  * @internal
  */
 const DefaultOptions: Required<AutoFormatOptions> = {
-    autoBullet: true,
-    autoNumbering: true,
+    autoBullet: false,
+    autoNumbering: false,
     autoUnlink: false,
-    autoLink: true,
+    autoLink: false,
+    autoHyphen: false,
 };
 
 /**
@@ -52,11 +60,13 @@ const DefaultOptions: Required<AutoFormatOptions> = {
  */
 export class AutoFormatPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
-
     /**
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
-     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
-     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
+     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
+     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to false.
+     *  - autoLink: A boolean that enables or disables automatic hyperlink creation when pasting or typing content. Defaults to false.
+     *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
+     *  - autoHyphen: A boolean that enables or disables automatic hyphen transformation. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -110,11 +120,52 @@ export class AutoFormatPlugin implements EditorPlugin {
 
     private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
-        if (rawEvent.inputType === 'insertText') {
+        const selection = editor.getDOMSelection();
+        if (
+            rawEvent.inputType === 'insertText' &&
+            selection &&
+            selection.type === 'range' &&
+            selection.range.collapsed
+        ) {
             switch (rawEvent.data) {
                 case ' ':
-                    const { autoBullet, autoNumbering } = this.options;
-                    keyboardListTrigger(editor, autoBullet, autoNumbering);
+                    formatTextSegmentBeforeSelectionMarker(
+                        editor,
+                        (model, previousSegment, paragraph, _markerFormat, context) => {
+                            const {
+                                autoBullet,
+                                autoNumbering,
+                                autoLink,
+                                autoHyphen,
+                            } = this.options;
+                            let shouldHyphen = false;
+                            let shouldLink = false;
+
+                            if (autoLink) {
+                                shouldLink = createLinkAfterSpace(
+                                    previousSegment,
+                                    paragraph,
+                                    context
+                                );
+                            }
+
+                            if (autoHyphen) {
+                                shouldHyphen = transformHyphen(previousSegment, paragraph, context);
+                            }
+
+                            return (
+                                keyboardListTrigger(
+                                    model,
+                                    paragraph,
+                                    context,
+                                    autoBullet,
+                                    autoNumbering
+                                ) ||
+                                shouldHyphen ||
+                                shouldLink
+                            );
+                        }
+                    );
                     break;
             }
         }
@@ -124,11 +175,6 @@ export class AutoFormatPlugin implements EditorPlugin {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
-                case ' ':
-                    if (this.options.autoLink) {
-                        createLinkAfterSpace(editor);
-                    }
-                    break;
                 case 'Backspace':
                     if (this.options.autoUnlink) {
                         unlink(editor, rawEvent);

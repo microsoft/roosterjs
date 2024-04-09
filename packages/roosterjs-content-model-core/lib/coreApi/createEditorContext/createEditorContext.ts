@@ -8,6 +8,8 @@ import type { EditorContext, CreateEditorContext } from 'roosterjs-content-model
 export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
     const { lifecycle, format, darkColorHandler, logicalRoot, cache, domHelper } = core;
 
+    saveIndex = saveIndex && !core.lifecycle.shadowEditFragment;
+
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,
         defaultFormat: format.defaultFormat,

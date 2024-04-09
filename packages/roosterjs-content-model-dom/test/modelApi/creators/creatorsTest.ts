@@ -429,7 +429,7 @@ describe('Creators', () => {
             levels: [],
             formatHolder: {
                 segmentType: 'SelectionMarker',
-                isSelected: true,
+                isSelected: false,
                 format: {},
             },
             format: {},
@@ -448,7 +448,7 @@ describe('Creators', () => {
             levels: [{ listType: 'OL', dataset: {}, format: {} }],
             formatHolder: {
                 segmentType: 'SelectionMarker',
-                isSelected: true,
+                isSelected: false,
                 format: { fontSize: 'a' },
             },
             format: {},
@@ -466,7 +466,7 @@ describe('Creators', () => {
             levels: [{ listType: 'OL', dataset: {}, format: {} }],
             formatHolder: {
                 segmentType: 'SelectionMarker',
-                isSelected: true,
+                isSelected: false,
                 format: { fontSize: 'a' },
             },
             format: {},
