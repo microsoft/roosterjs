@@ -60,6 +60,16 @@ class DOMHelperImpl implements DOMHelper {
         const activeElement = this.contentDiv.ownerDocument.activeElement;
         return !!(activeElement && this.contentDiv.contains(activeElement));
     }
+
+    /**
+     * Check if the root element is in RTL mode
+     */
+    isRightToLeft(): boolean {
+        const contentDiv = this.contentDiv;
+        const style = contentDiv.ownerDocument.defaultView?.getComputedStyle(contentDiv);
+
+        return style?.direction == 'rtl';
+    }
 }
 
 /**

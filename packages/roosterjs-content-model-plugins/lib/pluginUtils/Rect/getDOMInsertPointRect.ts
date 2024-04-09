@@ -1,14 +1,16 @@
+import { DOMInsertPoint, Rect } from 'roosterjs-content-model-types';
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
-import { Rect } from 'roosterjs-content-model-types';
 
 /**
- * Get bounding rect of this position
- * @param position The position to get rect from
+ * Get bounding rect of the given DOM insert point
+ * @param doc The document object
+ * @param pos The input DOM insert point
  */
-export function getPositionRect(container: Node, offset: number): Rect | null {
-    let range = container.ownerDocument.createRange();
+export function getDOMInsertPointRect(doc: Document, pos: DOMInsertPoint): Rect | null {
+    let { node, offset } = pos;
+    let range = doc.createRange();
 
-    range.setStart(container, offset);
+    range.setStart(node, offset);
 
     // 1) try to get rect using range.getBoundingClientRect()
     let rect = normalizeRect(range.getBoundingClientRect());
@@ -18,12 +20,12 @@ export function getPositionRect(container: Node, offset: number): Rect | null {
     }
 
     // 2) try to get rect using range.getClientRects
-    while (container.lastChild) {
-        if (offset == container.childNodes.length) {
-            container = container.lastChild;
-            offset = container.childNodes.length;
+    while (node.lastChild) {
+        if (offset == node.childNodes.length) {
+            node = node.lastChild;
+            offset = node.childNodes.length;
         } else {
-            container = container.childNodes[offset];
+            node = node.childNodes[offset];
             offset = 0;
         }
     }
@@ -35,13 +37,13 @@ export function getPositionRect(container: Node, offset: number): Rect | null {
     }
 
     // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
-    if (isNodeOfType(container, 'TEXT_NODE')) {
-        const span = container.ownerDocument.createElement('span');
+    if (isNodeOfType(node, 'TEXT_NODE')) {
+        const span = node.ownerDocument.createElement('span');
 
         span.textContent = '\u200b';
         range.insertNode(span);
         rect = normalizeRect(span.getBoundingClientRect());
-        span.parentNode.removeChild(span);
+        span.parentNode?.removeChild(span);
 
         if (rect) {
             return rect;
@@ -49,8 +51,8 @@ export function getPositionRect(container: Node, offset: number): Rect | null {
     }
 
     // 4) try getBoundingClientRect on element
-    if (isNodeOfType(container, 'ELEMENT_NODE') && container.getBoundingClientRect) {
-        rect = normalizeRect(container.getBoundingClientRect());
+    if (isNodeOfType(node, 'ELEMENT_NODE') && node.getBoundingClientRect) {
+        rect = normalizeRect(node.getBoundingClientRect());
 
         if (rect) {
             return rect;

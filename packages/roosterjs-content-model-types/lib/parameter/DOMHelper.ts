@@ -81,4 +81,9 @@ export interface DOMHelper {
      * @returns True if the editor has focus, otherwise false
      */
     hasFocus(): boolean;
+
+    /**
+     * Check if the root element is in RTL mode
+     */
+    isRightToLeft(): boolean;
 }

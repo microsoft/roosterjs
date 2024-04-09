@@ -28,5 +28,6 @@ export { MarkdownPlugin, MarkdownOptions } from './markdown/MarkdownPlugin';
 export { HyperlinkPlugin } from './hyperlink/HyperlinkPlugin';
 export { HyperlinkToolTip } from './hyperlink/HyperlinkToolTip';
 export { PickerPluginBase } from './picker/PickerPluginBase';
-export { IPickerPlugin } from './picker/IPickerPlugin';
-export { PickerPluginOptions } from './picker/PickerPluginOptions';
+export { PickerSelectionChangMode, PickerDirection } from './picker/PickerHandler';
+
+export { getDOMInsertPointRect } from './pluginUtils/Rect/getDOMInsertPointRect';
