@@ -1,5 +1,5 @@
-import { DOMInsertPoint, Rect } from 'roosterjs-content-model-types';
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import type { DOMInsertPoint, Rect } from 'roosterjs-content-model-types';
 
 /**
  * Get bounding rect of the given DOM insert point
@@ -8,7 +8,7 @@ import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
  */
 export function getDOMInsertPointRect(doc: Document, pos: DOMInsertPoint): Rect | null {
     let { node, offset } = pos;
-    let range = doc.createRange();
+    const range = doc.createRange();
 
     range.setStart(node, offset);
 
