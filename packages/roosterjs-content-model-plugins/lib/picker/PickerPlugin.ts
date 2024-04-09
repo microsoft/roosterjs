@@ -1,17 +1,11 @@
+import { ChangeSource, isCursorMovingKey, isPunctuation } from 'roosterjs-content-model-dom';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
-import { splitTextSegment } from '../pluginUtils/splitTextSegment';
-import {
-    ChangeSource,
-    isCursorMovingKey,
-    isPunctuation,
-    mergeModel,
-} from 'roosterjs-content-model-dom';
+import { getQueryString } from './getQueryString';
+import { replaceQueryString } from './replaceQueryString';
 import type { IPickerPlugin } from './IPickerPlugin';
 import type { PickerDirection, PickerHandler } from './PickerHandler';
 import type {
     ContentModelDocument,
-    ContentModelParagraph,
-    ContentModelText,
     DOMInsertPoint,
     EditorPlugin,
     FormatContentModelOptions,
@@ -77,31 +71,13 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
         options?: FormatContentModelOptions,
         canUndoByBackspace?: boolean
     ): void {
-        const editor = this.editor;
-
-        if (editor) {
-            editor.focus();
-
-            formatTextSegmentBeforeSelectionMarker(
-                editor,
-                (target, previousSegment, paragraph, _, context) => {
-                    const potentialSegments: ContentModelText[] = [];
-                    const queryString = this.internalGetQueryString(
-                        paragraph,
-                        previousSegment,
-                        potentialSegments
-                    );
-
-                    if (queryString) {
-                        potentialSegments.forEach(x => (x.isSelected = true));
-                        mergeModel(target, model, context);
-                        context.canUndoByBackspace = canUndoByBackspace;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                },
-                options
+        if (this.editor) {
+            replaceQueryString(
+                this.editor,
+                this.triggerCharacter,
+                model,
+                options,
+                canUndoByBackspace
             );
         }
     }
@@ -253,10 +229,11 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
     private onSuggestingInput(editor: IEditor) {
         if (
             !formatTextSegmentBeforeSelectionMarker(editor, (_, segment, paragraph) => {
-                const newQueryString = this.internalGetQueryString(paragraph, segment).replace(
-                    /[\u0020\u00A0]/g,
-                    ' '
-                );
+                const newQueryString = getQueryString(
+                    this.triggerCharacter,
+                    paragraph,
+                    segment
+                ).replace(/[\u0020\u00A0]/g, ' ');
                 const oldQueryString = this.lastQueryString;
 
                 if (
@@ -309,42 +286,5 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
                 return false;
             });
         }
-    }
-
-    private internalGetQueryString(
-        paragraph: ContentModelParagraph,
-        previousSegment: ContentModelText,
-        splittedSegmentResult?: ContentModelText[]
-    ): string {
-        let result = '';
-
-        for (let i = paragraph.segments.indexOf(previousSegment); i >= 0; i--) {
-            const segment = paragraph.segments[i];
-
-            if (segment.segmentType != 'Text') {
-                result = '';
-                break;
-            }
-
-            const index = segment.text.lastIndexOf(this.triggerCharacter);
-
-            if (index >= 0) {
-                result = segment.text.substring(index) + result;
-
-                splittedSegmentResult?.push(
-                    index > 0
-                        ? splitTextSegment(segment, paragraph, index, segment.text.length)
-                        : segment
-                );
-
-                break;
-            } else {
-                result = segment.text + result;
-
-                splittedSegmentResult?.push(segment);
-            }
-        }
-
-        return result;
     }
 }
