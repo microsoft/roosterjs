@@ -11,8 +11,9 @@ export function getQueryString(
     splittedSegmentResult?: ContentModelText[]
 ): string {
     let result = '';
+    let i = paragraph.segments.indexOf(previousSegment);
 
-    for (let i = paragraph.segments.indexOf(previousSegment); i >= 0; i--) {
+    for (; i >= 0; i--) {
         const segment = paragraph.segments[i];
 
         if (segment.segmentType != 'Text') {
@@ -25,7 +26,7 @@ export function getQueryString(
         if (index >= 0) {
             result = segment.text.substring(index) + result;
 
-            splittedSegmentResult?.push(
+            splittedSegmentResult?.unshift(
                 index > 0
                     ? splitTextSegment(segment, paragraph, index, segment.text.length)
                     : segment
@@ -35,8 +36,12 @@ export function getQueryString(
         } else {
             result = segment.text + result;
 
-            splittedSegmentResult?.push(segment);
+            splittedSegmentResult?.unshift(segment);
         }
+    }
+
+    if (i < 0) {
+        result = '';
     }
 
     return result;
